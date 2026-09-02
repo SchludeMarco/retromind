@@ -1,14 +1,20 @@
 
-import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 // Note: Re-initializing in functions as per instructions to ensure latest API key usage
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-export async function generateDeepQuestion(term: string, name: string, interests: string, decade: string): Promise<string> {
+export async function generateDeepQuestion(
+  term: string,
+  name: string,
+  interests: string,
+  decade: string,
+  fallback: string,
+): Promise<string> {
   const ai = getAI();
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite-latest", // Using Flash-Lite for fast, low-latency interaction
+      model: "gemini-flash-lite-latest", // Using Flash-Lite for fast, low-latency interaction
       contents: `Handle als ein einfühlsamer Biografie-Begleiter. 
       Erstelle eine hochgradig personalisierte, tiefgreifende Frage für ${name}, um eine spezifische Kindheitserinnerung zu reaktivieren.
       Begriff: "${term}"
@@ -23,10 +29,10 @@ export async function generateDeepQuestion(term: string, name: string, interests
       
       Antworte NUR mit der Frage. Kein Einleitungssatz.`,
     });
-    return response.text?.trim() || "Welche ganz persönliche Geschichte verbindest du mit diesem Teil deiner Vergangenheit?";
+    return response.text?.trim() || fallback;
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "Wenn du heute an diesen Gegenstand denkst, welches Bild aus deinem damaligen Kinderzimmer erscheint sofort vor deinem inneren Auge?";
+    return fallback;
   }
 }
 
@@ -66,7 +72,12 @@ export async function generateVeoVideo(prompt: string, imageBase64?: string, mim
     }
   });
 
+  // Poll for completion, but give up after ~10 minutes so the UI never hangs
+  // indefinitely in the "generating" state.
+  const MAX_POLLS = 60;
+  let polls = 0;
   while (!operation.done) {
+    if (polls++ >= MAX_POLLS) throw new Error("Video generation timed out");
     await new Promise(resolve => setTimeout(resolve, 10000));
     operation = await ai.operations.getVideosOperation({ operation: operation });
   }
@@ -74,5 +85,9 @@ export async function generateVeoVideo(prompt: string, imageBase64?: string, mim
   const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
   if (!downloadLink) throw new Error("Video generation failed");
   
-  return `${downloadLink}&key=${process.env.API_KEY}`;
+  // The download endpoint needs the API key as a query parameter, which exposes
+  // it in the resulting URL (DOM / network). Acceptable only for a
+  // referrer-restricted demo key; a server-side proxy is the real fix.
+  const separator = downloadLink.includes("?") ? "&" : "?";
+  return `${downloadLink}${separator}key=${process.env.API_KEY}`;
 }

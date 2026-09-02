@@ -1,4 +1,4 @@
-# RetroMind: Deine Zeitreise (V1.0.0)
+# RetroMind: Deine Zeitreise (V1.1.0)
 
 Eine interaktive Reise durch die eigene Biografie. RetroMind reaktiviert
 Kindheitserinnerungen über ein personalisiertes Onboarding, visuelle
@@ -26,7 +26,9 @@ Studio prototypisiert) im Umfeld der Sm@rt-App-Familie.
   - per **Veo** zu einem kurzen Video „zum Leben erwecken“ (Premium-Feature,
     benötigt API-Key mit Billing).
 - **Nostalgie-Begleiter** – Chat-Widget auf Basis von Gemini.
-- **Erinnerungs-Tagebuch** – freies Textfeld zum Festhalten der Sitzung.
+- **Erinnerungs-Tagebuch** – freies Textfeld; Eintrag und Profil werden im
+  Browser (`localStorage`) gesichert und überstehen einen Reload, plus
+  `.txt`-Export.
 
 ## Tech-Stack
 
@@ -72,10 +74,15 @@ Der Schlüssel wird zur Build-Zeit über [`vite.config.ts`](vite.config.ts)
   Download-URL an ([`services/geminiService.ts`](services/geminiService.ts))
   und benötigt ein Google-Cloud-Projekt mit aktivem Billing.
 - Die **Key-Auswahl über `window.aistudio`** funktioniert nur innerhalb von
-  Google AI Studio. Standalone startet die App ohne Schlüssel; die
-  Text-/Bild-KI-Funktionen liefern dann vordefinierte Fallback-Texte.
+  Google AI Studio. Standalone wird ein per `GEMINI_API_KEY` eingebauter
+  Schlüssel erkannt; fehlt er ganz, liefern die KI-Funktionen vordefinierte
+  Fallback-Texte (Erinnerungsfragen kommen dann aus [`constants.ts`](constants.ts)).
 - Es werden **Vorschau-Modelle** genutzt (`gemini-3-pro-preview`,
   `veo-3.1-fast-generate-preview`) – deren IDs können sich ändern.
+- **Kein Backend:** Profil und Tagebuch werden nur im `localStorage` des
+  Browsers gehalten (plus manueller `.txt`-Export). Kein Sync über Geräte.
+- Die **Tailwind-Play-CDN** ([`index.html`](index.html)) ist bequem, aber nicht
+  für Produktion optimiert (JIT im Browser, kein Purge).
 
 ## Lizenz
 

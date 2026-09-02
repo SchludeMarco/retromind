@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Chat } from "@google/genai";
 import { AppPhase, UserProfile, DecadeData, ChatMessage, VideoStatus, GalleryItem } from './types';
 import { DECADES_DB } from './constants';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo } from './services/geminiService';
@@ -103,6 +103,20 @@ const ChatBot: React.FC<{ isOpen: boolean, onClose: () => void, playSFX: (t: any
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // One persistent chat session so the model keeps the conversation history
+  // instead of starting fresh on every message.
+  const chatRef = useRef<Chat | null>(null);
+
+  const getChat = (): Chat => {
+    if (!chatRef.current) {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      chatRef.current = ai.chats.create({
+        model: 'gemini-3-pro-preview',
+        config: { systemInstruction: "Du bist ein nostalgischer Begleiter. Halte Antworten kurz und herzlich." }
+      });
+    }
+    return chatRef.current;
+  };
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -117,12 +131,7 @@ const ChatBot: React.FC<{ isOpen: boolean, onClose: () => void, playSFX: (t: any
     setIsTyping(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const chat = ai.chats.create({
-        model: 'gemini-3-pro-preview',
-        config: { systemInstruction: "Du bist ein nostalgischer Begleiter. Halte Antworten kurz und herzlich." }
-      });
-      const response = await chat.sendMessage({ message: userMsg });
+      const response = await getChat().sendMessage({ message: userMsg });
       setMessages(prev => [...prev, { role: 'model', text: response.text || '' }]);
     } catch (e) {
       setMessages(prev => [...prev, { role: 'model', text: "Entschuldige, ich habe gerade Verbindungsprobleme." }]);
@@ -163,16 +172,39 @@ const ChatBot: React.FC<{ isOpen: boolean, onClose: () => void, playSFX: (t: any
   );
 };
 
+// --- Persistence (per-browser, best effort) ---
+
+const STORAGE_KEYS = { user: 'retromind.user', diary: 'retromind.diary' } as const;
+
+function loadStored<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw != null ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveStored(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* storage unavailable (private mode / quota) — non-fatal */
+  }
+}
+
 // --- Main Application ---
 
 const App: React.FC = () => {
   const [phase, setPhase] = useState<AppPhase>('intro');
-  const [user, setUser] = useState<UserProfile>({ name: '', gender: 'divers', birthDate: '', interests: [] });
+  const [user, setUser] = useState<UserProfile>(() =>
+    loadStored<UserProfile>(STORAGE_KEYS.user, { name: '', gender: 'divers', birthDate: '', interests: [] })
+  );
   const [clickedBuzzwords, setClickedBuzzwords] = useState<Set<string>>(new Set());
   const [selectedWord, setSelectedWord] = useState<{ term: string, knowledge: string, aiQuestion: string } | null>(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [diaryEntry, setDiaryEntry] = useState('');
+  const [diaryEntry, setDiaryEntry] = useState<string>(() => loadStored<string>(STORAGE_KEYS.diary, ''));
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [volume, setVolume] = useState(0.05); // Initial volume set to very quiet (5%)
   const [manualDecade, setManualDecade] = useState<string | null>(null);
@@ -192,10 +224,48 @@ const App: React.FC = () => {
       if (window.aistudio?.hasSelectedApiKey) {
         const has = await window.aistudio.hasSelectedApiKey();
         setHasApiKey(has);
+        return;
       }
+      // Standalone build: a key baked in via GEMINI_API_KEY also counts.
+      setHasApiKey(Boolean(process.env.API_KEY));
     };
     checkKey();
   }, []);
+
+  // Persist profile and diary so a reload does not wipe the session.
+  useEffect(() => { saveStored(STORAGE_KEYS.user, user); }, [user]);
+  useEffect(() => { saveStored(STORAGE_KEYS.diary, diaryEntry); }, [diaryEntry]);
+
+  const downloadDiary = () => {
+    playSFX('click');
+    const stamp = new Date().toLocaleString('de-DE');
+    const body = [
+      'RetroMind – Erinnerungs-Tagebuch',
+      user.name ? `Für: ${user.name}` : null,
+      `Erstellt: ${stamp}`,
+      '',
+      diaryEntry.trim() || '(noch kein Eintrag)',
+      '',
+    ].filter((l): l is string => l !== null).join('\n');
+    const url = URL.createObjectURL(new Blob([body], { type: 'text/plain;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `retromind-tagebuch-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const startNewJourney = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.user);
+      localStorage.removeItem(STORAGE_KEYS.diary);
+    } catch {
+      /* ignore */
+    }
+    window.location.reload();
+  };
 
   const selectKey = async () => {
     if (window.aistudio?.openSelectKey) {
@@ -216,8 +286,11 @@ const App: React.FC = () => {
   const calculatedChildhoodDecade = useMemo(() => {
     if (!user.birthDate) return '1980';
     const birthYear = new Date(user.birthDate).getFullYear();
+    if (Number.isNaN(birthYear)) return '1980';
     const childhoodMid = birthYear + 8;
-    const decade = Math.floor(childhoodMid / 10) * 10;
+    const rawDecade = Math.floor(childhoodMid / 10) * 10;
+    // Clamp to the decades we actually have content for (1960–2000).
+    const decade = Math.min(2000, Math.max(1960, rawDecade));
     return decade.toString();
   }, [user.birthDate]);
 
@@ -226,7 +299,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (audioRef.current) {
       const currentTrack = DECADES_DB[currentAudioDecade]?.audioUrl;
-      if (audioRef.current.src !== currentTrack) {
+      if (currentTrack && audioRef.current.src !== currentTrack) {
         audioRef.current.src = currentTrack;
         audioRef.current.load();
         if (isMusicPlaying) audioRef.current.play().catch(console.debug);
@@ -264,12 +337,12 @@ const App: React.FC = () => {
     }));
   };
 
-  const handleBuzzwordClick = async (wordId: string, term: string, knowledge: string, decade: string) => {
+  const handleBuzzwordClick = async (wordId: string, term: string, knowledge: string, decade: string, fallbackQuestion: string) => {
     playSFX('click');
     setClickedBuzzwords(prev => new Set(prev).add(wordId));
     setIsGenerating(true);
     const interestsString = user.interests.length > 0 ? user.interests.join(', ') : "Allgemeine Kindheitserinnerungen";
-    const question = await generateDeepQuestion(term, user.name, interestsString, decade);
+    const question = await generateDeepQuestion(term, user.name, interestsString, decade, fallbackQuestion);
     setSelectedWord({ term, knowledge, aiQuestion: question });
     setIsGenerating(false);
   };
@@ -552,7 +625,7 @@ const App: React.FC = () => {
                     return (
                       <button 
                         key={bw.id} 
-                        onClick={() => handleBuzzwordClick(bw.id, bw.term, bw.knowledge, year)} 
+                        onClick={() => handleBuzzwordClick(bw.id, bw.term, bw.knowledge, year, bw.question)}
                         className={`px-6 py-3 border-2 font-bold transition-all relative ${isClicked ? 'bg-[#8b5cf6] text-white border-transparent' : 'bg-white border-[#2c1810] text-[#2c1810] hover:bg-[#fff9eb]'}`}
                       >
                         {bw.term}
@@ -607,9 +680,13 @@ const App: React.FC = () => {
               value={diaryEntry} 
               onChange={e => setDiaryEntry(e.target.value)} 
             />
-            <div className="flex justify-between items-center">
+            <p className="text-[10px] opacity-50 mb-4 uppercase font-bold tracking-widest">Dein Eintrag wird automatisch in diesem Browser gespeichert.</p>
+            <div className="flex flex-wrap justify-between items-center gap-3">
               <button onClick={() => { playSFX('click'); setPhase('exploration'); }} className="px-6 py-3 border-2 border-[#2c1810] font-bold text-xs uppercase">← Zurück zur Wand</button>
-              <button onClick={() => { playSFX('success'); setPhase('finish'); }} className="retro-button bg-[#2c1810] text-white px-12 py-3 font-bold uppercase">Reise beenden</button>
+              <div className="flex flex-wrap gap-3">
+                <button onClick={downloadDiary} className="px-6 py-3 border-2 border-[#2c1810] font-bold text-xs uppercase bg-white hover:bg-gray-100">Als Textdatei speichern</button>
+                <button onClick={() => { playSFX('success'); setPhase('finish'); }} className="retro-button bg-[#2c1810] text-white px-12 py-3 font-bold uppercase">Reise beenden</button>
+              </div>
             </div>
           </div>
         </div>
@@ -620,7 +697,10 @@ const App: React.FC = () => {
           <div className="inline-block p-12 bg-white border-8 border-double border-[#2c1810] shadow-2xl">
             <h2 className="text-5xl font-bold mb-6 text-[#2c1810]">Alles Gute, {user.name}!</h2>
             <p className="text-xl opacity-80 mb-12">Deine Zeitreise ist für heute vorbei. Mögen die Erinnerungen lebendig bleiben.</p>
-            <button onClick={() => window.location.reload()} className="retro-button bg-[#d97706] text-white px-12 py-4 font-bold uppercase">Eine neue Reise planen</button>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button onClick={downloadDiary} className="px-8 py-4 border-2 border-[#2c1810] font-bold uppercase bg-white hover:bg-gray-100">Tagebuch speichern</button>
+              <button onClick={startNewJourney} className="retro-button bg-[#d97706] text-white px-12 py-4 font-bold uppercase">Eine neue Reise planen</button>
+            </div>
           </div>
         </div>
       )}
