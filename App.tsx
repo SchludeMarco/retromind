@@ -154,6 +154,7 @@ const App: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<string | null>(null);
+  const [analysisOk, setAnalysisOk] = useState(false);
   const [analysisSaved, setAnalysisSaved] = useState(false);
   const [videoStatus, setVideoStatus] = useState<VideoStatus>({ status: 'idle' });
 
@@ -315,6 +316,16 @@ const App: React.FC = () => {
     });
   };
 
+  // Tracks which buzzword's question is currently being awaited, so a slow
+  // request for a word the user has since left doesn't clobber the modal
+  // that's open (or reopen one they already closed) when it finally resolves.
+  const activeWordRequestRef = useRef<string | null>(null);
+
+  const closeBuzzwordModal = () => {
+    activeWordRequestRef.current = null;
+    setSelectedWord(null);
+  };
+
   const openBuzzword = async (
     wordId: string,
     term: string,
@@ -327,6 +338,7 @@ const App: React.FC = () => {
     const existing = memoryFor(wordId);
     setAnswerDraft(existing?.answer ?? '');
     setIsGenerating(!existing);
+    activeWordRequestRef.current = wordId;
     // Reuse the stored question if we already have one for this word.
     const question =
       existing?.prompt ??
@@ -337,6 +349,7 @@ const App: React.FC = () => {
         decade,
         fallbackQuestion
       ));
+    if (activeWordRequestRef.current !== wordId) return; // user moved on or closed the modal
     setSelectedWord({ id: wordId, term, knowledge, question, decade });
     setIsGenerating(false);
   };
@@ -344,6 +357,7 @@ const App: React.FC = () => {
   const saveBuzzwordAnswer = () => {
     if (!selectedWord) return;
     playSFX('success');
+    activeWordRequestRef.current = null;
     upsertMemory({
       id: `bw-${selectedWord.id}`,
       kind: 'buzzword',
@@ -372,6 +386,7 @@ const App: React.FC = () => {
     }
     setUploadError(null);
     setAnalysis(null);
+    setAnalysisOk(false);
     setAnalysisSaved(false);
     setVideoStatus({ status: 'idle' });
     const dataUrl = await new Promise<string>((resolve) => {
@@ -386,14 +401,17 @@ const App: React.FC = () => {
     if (!uploadedImage) return;
     playSFX('click');
     setAnalysis('Analysiere…');
+    setAnalysisOk(false);
     setAnalysisSaved(false);
     const base64 = uploadedImage.split(',')[1];
     const mime = uploadedImage.split(';')[0].split(':')[1] || 'image/jpeg';
-    setAnalysis(await analyzeMemoryImage(base64, mime));
+    const result = await analyzeMemoryImage(base64, mime);
+    setAnalysis(result.text);
+    setAnalysisOk(result.ok);
   };
 
   const saveAnalysisAsMemory = () => {
-    if (!analysis || !uploadedImage) return;
+    if (!analysis || !analysisOk || !uploadedImage) return;
     playSFX('success');
     upsertMemory({
       id: `photo-${uid()}`,
@@ -482,7 +500,10 @@ const App: React.FC = () => {
 
   // --- render helpers ---
   const decadeData = DECADES_DB[focusDecade];
-  const aiOff = aiAvailability === 'not_configured';
+  // Treat an inconclusive ping the same as "not configured": if we can't
+  // confirm the AI server is reachable, offering buttons that then fail with
+  // a confusing "try again" error is worse than showing the honest demo notice.
+  const aiOff = aiAvailability !== 'available';
 
   const AiNotice = () =>
     aiOff ? (
@@ -683,7 +704,7 @@ const App: React.FC = () => {
                 {uploadedImage ? (
                   <>
                     <img src={uploadedImage} alt="Dein hochgeladenes Foto" className="max-h-56 border-2 border-[#2c1810] shadow-md" />
-                    <button onClick={() => { playSFX('click'); setUploadedImage(null); setAnalysis(null); }} className="mt-3 text-xs underline font-bold text-[#5b4636]">
+                    <button onClick={() => { playSFX('click'); setUploadedImage(null); setAnalysis(null); setAnalysisOk(false); }} className="mt-3 text-xs underline font-bold text-[#5b4636]">
                       Anderes Bild wählen
                     </button>
                   </>
@@ -723,7 +744,7 @@ const App: React.FC = () => {
                   <div className="p-4 bg-white border-2 border-[#2c1810] text-sm leading-relaxed">
                     <p className="font-bold mb-2 uppercase text-[#b45309]">Nostalgische Beschreibung</p>
                     <div className="whitespace-pre-wrap">{analysis}</div>
-                    {analysis !== 'Analysiere…' && (
+                    {analysisOk && (
                       <button
                         onClick={saveAnalysisAsMemory}
                         disabled={analysisSaved}
@@ -969,9 +990,9 @@ const App: React.FC = () => {
 
       {/* Buzzword / memory-capture modal */}
       {selectedWord && (
-        <Modal onClose={() => setSelectedWord(null)} label={`Erinnerung: ${selectedWord.term}`}>
+        <Modal onClose={closeBuzzwordModal} label={`Erinnerung: ${selectedWord.term}`}>
           <button
-            onClick={() => { playSFX('click'); setSelectedWord(null); }}
+            onClick={() => { playSFX('click'); closeBuzzwordModal(); }}
             aria-label="Schließen"
             className="absolute top-3 right-3 text-2xl leading-none"
           >
@@ -1000,7 +1021,7 @@ const App: React.FC = () => {
             <button onClick={saveBuzzwordAnswer} className="retro-button bg-[#2c1810] text-white px-6 py-3 font-bold flex-grow">
               {memoryFor(selectedWord.id) ? 'Erinnerung aktualisieren' : 'Erinnerung speichern'}
             </button>
-            <button onClick={() => { playSFX('click'); setSelectedWord(null); }} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
+            <button onClick={() => { playSFX('click'); closeBuzzwordModal(); }} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
               Später
             </button>
           </div>

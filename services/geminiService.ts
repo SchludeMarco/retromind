@@ -55,18 +55,26 @@ export async function generateDeepQuestion(
   }
 }
 
+export interface ImageAnalysisResult {
+  text: string;
+  ok: boolean;
+}
+
 export async function analyzeMemoryImage(
   imageBase64: string,
   mimeType: string
-): Promise<string> {
+): Promise<ImageAnalysisResult> {
   try {
     const { text } = await callApi("analyzeImage", { imageBase64, mimeType });
-    return (text as string) || "Ich konnte dieses Bild leider nicht beschreiben.";
+    return (text as string)
+      ? { text: text as string, ok: true }
+      : { text: "Ich konnte dieses Bild leider nicht beschreiben.", ok: false };
   } catch (e) {
-    if ((e as ApiError).code === "not_configured") {
-      return "Die Bildanalyse ist in diesem Demo nicht aktiv (kein Server-Schlüssel).";
-    }
-    return "Die Bildanalyse ist gerade fehlgeschlagen. Versuch es später noch einmal.";
+    const message =
+      (e as ApiError).code === "not_configured"
+        ? "Die Bildanalyse ist in diesem Demo nicht aktiv (kein Server-Schlüssel)."
+        : "Die Bildanalyse ist gerade fehlgeschlagen. Versuch es später noch einmal.";
+    return { text: message, ok: false };
   }
 }
 
