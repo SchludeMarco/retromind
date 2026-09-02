@@ -7,64 +7,7 @@
     <meta name="theme-color" content="#f4e4bc">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B0%EF%B8%8F%3C/text%3E%3C/svg%3E">
     <title>RetroMind: Deine Zeitreise</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
-        html { font-size: 18px; }
-        body {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            background-color: #f4e4bc; /* Vintage paper */
-            color: #2c1810;
-        }
-        h1, h2, h3, .retro-serif {
-            font-family: 'Playfair Display', Georgia, serif;
-        }
-        .grainy-bg {
-            background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
-            opacity: 0.05;
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .retro-card {
-            background: #fffdf7;
-            border: 2px solid #2c1810;
-            box-shadow: 8px 8px 0 #2c1810;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .retro-card:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 10px 10px 0 #2c1810;
-        }
-        .retro-button {
-            border: 2px solid #2c1810;
-            box-shadow: 4px 4px 0 #2c1810;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-        }
-        .retro-button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 0 0 0 #2c1810;
-        }
-        /* Every button gets a visible press response, even the plain/secondary
-           ones that don't carry the .retro-button shadow treatment. */
-        button:not(:disabled) {
-            transition: transform 0.1s ease;
-        }
-        button:not(:disabled):active {
-            transform: scale(0.96);
-        }
-        :focus-visible { outline: 3px solid #d97706; outline-offset: 2px; }
-        @media (prefers-reduced-motion: reduce) {
-            .retro-card, .retro-button, button { transition: none !important; }
-            .retro-card:hover { transform: none !important; }
-            button:active { transform: none !important; }
-        }
-        @media print {
-            .grainy-bg { display: none !important; }
-        }
-    </style>
 </head>
 <body>
     <div id="root"></div>
