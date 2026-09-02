@@ -272,6 +272,7 @@ const App: React.FC = () => {
   };
 
   const resetJourney = () => {
+    playSFX('click');
     clearSession();
     setResumeTarget(null);
     setUser(EMPTY_USER);
@@ -682,7 +683,7 @@ const App: React.FC = () => {
                 {uploadedImage ? (
                   <>
                     <img src={uploadedImage} alt="Dein hochgeladenes Foto" className="max-h-56 border-2 border-[#2c1810] shadow-md" />
-                    <button onClick={() => { setUploadedImage(null); setAnalysis(null); }} className="mt-3 text-xs underline font-bold text-[#5b4636]">
+                    <button onClick={() => { playSFX('click'); setUploadedImage(null); setAnalysis(null); }} className="mt-3 text-xs underline font-bold text-[#5b4636]">
                       Anderes Bild wählen
                     </button>
                   </>
@@ -940,7 +941,7 @@ const App: React.FC = () => {
       {selectedGalleryItem && (
         <Modal onClose={() => setSelectedGalleryItem(null)} label={selectedGalleryItem.title}>
           <button
-            onClick={() => setSelectedGalleryItem(null)}
+            onClick={() => { playSFX('click'); setSelectedGalleryItem(null); }}
             aria-label="Schließen"
             className="absolute top-3 right-3 text-2xl leading-none"
           >
@@ -958,7 +959,7 @@ const App: React.FC = () => {
             <p className="text-xs text-[#8a6a3f] mt-2">{selectedGalleryItem.credit}</p>
           )}
           <button
-            onClick={() => setSelectedGalleryItem(null)}
+            onClick={() => { playSFX('click'); setSelectedGalleryItem(null); }}
             className="w-full mt-6 retro-button bg-[#2c1810] text-white py-3 font-bold uppercase"
           >
             Schließen
@@ -970,7 +971,7 @@ const App: React.FC = () => {
       {selectedWord && (
         <Modal onClose={() => setSelectedWord(null)} label={`Erinnerung: ${selectedWord.term}`}>
           <button
-            onClick={() => setSelectedWord(null)}
+            onClick={() => { playSFX('click'); setSelectedWord(null); }}
             aria-label="Schließen"
             className="absolute top-3 right-3 text-2xl leading-none"
           >
@@ -999,7 +1000,7 @@ const App: React.FC = () => {
             <button onClick={saveBuzzwordAnswer} className="retro-button bg-[#2c1810] text-white px-6 py-3 font-bold flex-grow">
               {memoryFor(selectedWord.id) ? 'Erinnerung aktualisieren' : 'Erinnerung speichern'}
             </button>
-            <button onClick={() => setSelectedWord(null)} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
+            <button onClick={() => { playSFX('click'); setSelectedWord(null); }} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
               Später
             </button>
           </div>
