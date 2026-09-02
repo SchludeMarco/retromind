@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/* RetroMind design tokens — the vintage-paper palette used throughout the app.
+   Change a value here to re-tint the whole UI instead of hunting hex codes. */
+@theme {
+  --color-retro-ink: #2c1810;
+  --color-retro-brown: #5b4636;
+  --color-retro-tan: #8a6a3f;
+  --color-retro-amber: #d97706;
+  --color-retro-amber-dark: #b45309;
+  --color-retro-paper: #f4e4bc;
+  --color-retro-paper-white: #fffdf7;
+  --color-retro-cream: #fff9eb;
+  --color-retro-cream-light: #fffcf5;
+  --color-retro-highlight: #fef3c7;
+  --color-retro-purple: #8b5cf6;
+  --color-retro-green: #3f7d4f;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+}
+
+/* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
+html {
+  font-size: 18px;
+}
+body {
+  font-family: var(--font-mono);
+  background-color: var(--color-retro-paper);
+  color: var(--color-retro-ink);
+}
+h1, h2, h3, .retro-serif {
+  font-family: var(--font-serif);
+}
+.grainy-bg {
+  background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
+  opacity: 0.05;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.retro-card {
+  background: var(--color-retro-paper-white);
+  border: 2px solid var(--color-retro-ink);
+  box-shadow: 8px 8px 0 var(--color-retro-ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.retro-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 var(--color-retro-ink);
+}
+.retro-button {
+  border: 2px solid var(--color-retro-ink);
+  box-shadow: 4px 4px 0 var(--color-retro-ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.retro-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--color-retro-ink);
+}
+/* Every button gets a visible press response, even the plain/secondary
+   ones that don't carry the .retro-button shadow treatment. */
+button:not(:disabled) {
+  transition: transform 0.1s ease;
+}
+button:not(:disabled):active {
+  transform: scale(0.96);
+}
+:focus-visible {
+  outline: 3px solid var(--color-retro-amber-dark);
+  outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+.animate-popIn { animation: popIn 0.25s ease-out forwards; }
+.animate-spin { animation: spin 4s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .retro-card, .retro-button, button { transition: none !important; }
+  .retro-card:hover { transform: none !important; }
+  button:active { transform: none !important; }
+  .animate-fadeIn, .animate-popIn, .animate-spin, .animate-pulse { animation: none !important; }
+  * { scroll-behavior: auto !important; }
+}
+@media print {
+  .grainy-bg { display: none !important; }
+  body { background: #fff !important; }
+  .rm-fixed, .no-print { display: none !important; }
+  #memory-book { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  .retro-card { box-shadow: none !important; }
+}

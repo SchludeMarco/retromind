@@ -17,9 +17,9 @@ export const SpeechRecognitionImpl: any =
     : undefined;
 
 export const ProgressBar: React.FC<{ current: number; total: number }> = ({ current, total }) => (
-  <div className="rm-fixed fixed bottom-0 left-0 w-full h-3 bg-[#2c1810]/10 z-40" aria-hidden="true">
+  <div className="rm-fixed fixed bottom-0 left-0 w-full h-3 bg-retro-ink/10 z-40" aria-hidden="true">
     <div
-      className="h-full bg-[#d97706] transition-all duration-500 ease-out border-t border-[#2c1810]"
+      className="h-full bg-retro-amber transition-all duration-500 ease-out border-t border-retro-ink"
       style={{ width: `${(current / total) * 100}%` }}
     />
   </div>
@@ -27,21 +27,21 @@ export const ProgressBar: React.FC<{ current: number; total: number }> = ({ curr
 
 export const Header: React.FC = () => (
   <header className="py-8 text-center">
-    <h1 className="text-5xl md:text-7xl font-bold text-[#2c1810] mb-2 tracking-tighter">RetroMind</h1>
-    <p className="text-lg italic text-[#5b4636]">Deine Reise zurück in die Zeit</p>
-    <div className="w-32 h-1 bg-[#2c1810] mx-auto mt-4" />
+    <h1 className="text-5xl md:text-7xl font-bold text-retro-ink mb-2 tracking-tighter">RetroMind</h1>
+    <p className="text-lg italic text-retro-brown">Deine Reise zurück in die Zeit</p>
+    <div className="w-32 h-1 bg-retro-ink mx-auto mt-4" />
   </header>
 );
 
 export const FontSizeControl: React.FC<{ scale: number; onChange: (n: number) => void }> = ({ scale, onChange }) => (
-  <div className="rm-fixed fixed top-3 right-3 z-50 flex gap-1 bg-[#fff9eb] border-2 border-[#2c1810] p-1" role="group" aria-label="Schriftgröße">
+  <div className="rm-fixed fixed top-3 right-3 z-50 flex gap-1 bg-retro-cream border-2 border-retro-ink p-1" role="group" aria-label="Schriftgröße">
     {[1, 2, 3].map((n) => (
       <button
         key={n}
         onClick={() => onChange(n)}
         aria-pressed={scale === n}
         aria-label={`Schrift ${['normal', 'groß', 'sehr groß'][n - 1]}`}
-        className={`w-8 h-8 font-bold border border-[#2c1810] ${scale === n ? 'bg-[#2c1810] text-white' : 'bg-white text-[#2c1810]'}`}
+        className={`w-8 h-8 font-bold border border-retro-ink ${scale === n ? 'bg-retro-ink text-white' : 'bg-white text-retro-ink'}`}
         style={{ fontSize: `${0.7 + n * 0.15}rem` }}
       >
         A
@@ -105,7 +105,7 @@ export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> =
   const [imgFailed, setImgFailed] = useState(false);
   const showImage = item.image && !imgFailed;
   return (
-    <button onClick={onClick} className="retro-card overflow-hidden h-56 group relative text-left bg-[#fff9eb]">
+    <button onClick={onClick} className="retro-card overflow-hidden h-56 group relative text-left bg-retro-cream">
       {showImage ? (
         <img
           src={item.image}
@@ -115,12 +115,12 @@ export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> =
           className="w-full h-full object-cover sepia-[0.25] group-hover:sepia-0 transition-all duration-300"
         />
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-[#f4e4bc]">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#8a6a3f]">Zeit-Impression</span>
-          <span className="retro-serif text-2xl font-bold text-[#2c1810] mt-2 leading-tight">{item.title}</span>
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-retro-paper">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-retro-tan">Zeit-Impression</span>
+          <span className="retro-serif text-2xl font-bold text-retro-ink mt-2 leading-tight">{item.title}</span>
         </div>
       )}
-      <div className="absolute bottom-0 left-0 w-full bg-[#2c1810]/85 text-white p-2 text-sm font-bold text-center">
+      <div className="absolute bottom-0 left-0 w-full bg-retro-ink/85 text-white p-2 text-sm font-bold text-center">
         {item.title}
       </div>
     </button>
@@ -164,26 +164,26 @@ export const ChatBot: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="rm-fixed fixed bottom-24 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-[#fff9eb] flex flex-col animate-fadeIn overflow-hidden">
-      <div className="bg-[#2c1810] text-white p-3 flex justify-between items-center">
+    <div className="rm-fixed fixed bottom-24 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-retro-cream flex flex-col animate-fadeIn overflow-hidden">
+      <div className="bg-retro-ink text-white p-3 flex justify-between items-center">
         <span className="font-bold text-sm">Nostalgie-Begleiter</span>
         <button onClick={onClose} aria-label="Chat schließen" className="text-lg leading-none px-1">
           ✕
         </button>
       </div>
-      <div ref={scrollRef} className="flex-grow p-4 overflow-y-auto space-y-3 bg-[#fffcf5]">
+      <div ref={scrollRef} className="flex-grow p-4 overflow-y-auto space-y-3 bg-retro-cream-light">
         {disabled ? (
-          <p className="text-xs text-[#5b4636]">
+          <p className="text-xs text-retro-brown">
             Der Chat-Begleiter braucht den KI-Server und ist in diesem Demo gerade nicht verfügbar.
           </p>
         ) : messages.length === 0 ? (
-          <p className="text-xs text-[#5b4636]">Frag mich etwas über „damals" – oder erzähl einfach los.</p>
+          <p className="text-xs text-retro-brown">Frag mich etwas über „damals" – oder erzähl einfach los.</p>
         ) : (
           messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-[85%] p-2 text-sm border-2 border-[#2c1810] ${
-                  m.role === 'user' ? 'bg-[#d97706] text-white' : 'bg-white text-[#2c1810]'
+                className={`max-w-[85%] p-2 text-sm border-2 border-retro-ink ${
+                  m.role === 'user' ? 'bg-retro-amber text-white' : 'bg-white text-retro-ink'
                 }`}
               >
                 {m.text}
@@ -191,19 +191,19 @@ export const ChatBot: React.FC<{
             </div>
           ))
         )}
-        {isTyping && <div className="text-xs text-[#5b4636] animate-pulse">Schreibt…</div>}
+        {isTyping && <div className="text-xs text-retro-brown animate-pulse">Schreibt…</div>}
       </div>
       {!disabled && (
-        <div className="p-3 border-t-2 border-[#2c1810] flex gap-2">
+        <div className="p-3 border-t-2 border-retro-ink flex gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Frag nach damals…"
             aria-label="Nachricht an den Begleiter"
-            className="flex-grow text-sm p-2 border-2 border-[#2c1810] bg-white focus:outline-none focus:ring-2 focus:ring-[#d97706]"
+            className="flex-grow text-sm p-2 border-2 border-retro-ink bg-white focus:outline-none focus:ring-2 focus:ring-retro-amber"
           />
-          <button onClick={handleSend} aria-label="Senden" className="bg-[#2c1810] text-white px-3 font-bold">
+          <button onClick={handleSend} aria-label="Senden" className="bg-retro-ink text-white px-3 font-bold">
             ↑
           </button>
         </div>
@@ -249,15 +249,15 @@ export const MemoryAnswer: React.FC<{
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="w-full p-3 border-2 border-[#2c1810] bg-white text-[#2c1810] focus:outline-none focus:ring-2 focus:ring-[#d97706]"
+        className="w-full p-3 border-2 border-retro-ink bg-white text-retro-ink focus:outline-none focus:ring-2 focus:ring-retro-amber"
       />
       {SpeechRecognitionImpl && (
         <button
           type="button"
           onClick={toggleVoice}
           aria-pressed={listening}
-          className={`mt-2 text-xs font-bold uppercase border-2 border-[#2c1810] px-3 py-1.5 ${
-            listening ? 'bg-[#d97706] text-white animate-pulse' : 'bg-white text-[#2c1810]'
+          className={`mt-2 text-xs font-bold uppercase border-2 border-retro-ink px-3 py-1.5 ${
+            listening ? 'bg-retro-amber text-white animate-pulse' : 'bg-white text-retro-ink'
           }`}
         >
           {listening ? '● Höre zu…' : '🎙 Antwort sprechen'}
@@ -278,25 +278,25 @@ export const RetroPlayer: React.FC<{
   const info = DECADES_DB[currentDecade];
   return (
     <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
-      <div className="retro-card bg-[#fff9eb] p-4 flex flex-col gap-3 border-2 border-[#2c1810] w-64 max-w-[80vw]">
+      <div className="retro-card bg-retro-cream p-4 flex flex-col gap-3 border-2 border-retro-ink w-64 max-w-[80vw]">
         <div className="flex items-center gap-3">
           <div
             aria-hidden="true"
-            className={`w-11 h-11 rounded-full border-2 border-[#2c1810] flex items-center justify-center bg-[#d97706] flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`}
+            className={`w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`}
           >
-            <div className="w-3.5 h-3.5 rounded-full bg-[#fff9eb] border border-[#2c1810]" />
+            <div className="w-3.5 h-3.5 rounded-full bg-retro-cream border border-retro-ink" />
           </div>
           <div className="overflow-hidden flex-grow">
-            <p className="text-[10px] uppercase font-bold text-[#8a6a3f] tracking-widest">Nostalgie-Radio</p>
+            <p className="text-[10px] uppercase font-bold text-retro-tan tracking-widest">Nostalgie-Radio</p>
             <p className="text-xs font-bold truncate">{info?.audioLabel || '—'}</p>
           </div>
           <button onClick={onToggle} aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'} className="retro-button p-2 bg-white min-w-[40px]">
             {isPlaying ? '⏸' : '▶'}
           </button>
         </div>
-        <div className="flex flex-col gap-2 pt-2 border-t border-[#2c1810]/20">
+        <div className="flex flex-col gap-2 pt-2 border-t border-retro-ink/20">
           <div className="flex justify-between items-center">
-            <label htmlFor="rm-era" className="text-[10px] font-bold uppercase text-[#8a6a3f]">Ära wählen</label>
+            <label htmlFor="rm-era" className="text-[10px] font-bold uppercase text-retro-tan">Ära wählen</label>
             <select
               id="rm-era"
               value={currentDecade}
@@ -318,7 +318,7 @@ export const RetroPlayer: React.FC<{
               value={volume}
               onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
               aria-label="Lautstärke"
-              className="flex-grow accent-[#d97706] cursor-pointer h-1.5"
+              className="flex-grow accent-retro-amber cursor-pointer h-1.5"
             />
             <span aria-hidden="true" className="text-xs">🔊</span>
           </div>
