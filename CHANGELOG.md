@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- **Favicon ergänzt:** Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
+  Favicon (bisher 404 im Browser, kein Wiedererkennungsmerkmal im Tab).
+
 ## 2.0.0
 
 Großer Ausbau: aus dem Prototyp wird ein rundes Produkt. **Breaking:** die App
