@@ -9,7 +9,6 @@ export type AppPhase =
 
 export interface UserProfile {
   name: string;
-  gender: string;
   birthDate: string;
   interests: string[];
 }

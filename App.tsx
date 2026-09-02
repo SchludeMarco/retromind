@@ -31,7 +31,7 @@ import {
 // --- Persistence & helpers ---
 const STORAGE_KEY = 'retromind.session.v2';
 const PHASES: AppPhase[] = ['intro', 'onboarding', 'induction', 'exploration', 'diary', 'book', 'finish'];
-const EMPTY_USER: UserProfile = { name: '', gender: 'divers', birthDate: '', interests: [] };
+const EMPTY_USER: UserProfile = { name: '', birthDate: '', interests: [] };
 const INTEREST_LABELS = ['Musik', 'Technik', 'Spielzeug', 'Alltag', 'Mode', 'Essen'];
 const INTEREST_TO_CATEGORY: Record<string, BuzzwordCategory> = {
   Musik: 'music', Technik: 'tech', Spielzeug: 'toy', Alltag: 'lifestyle', Mode: 'lifestyle', Essen: 'food',
@@ -47,11 +47,15 @@ function loadSession(): Partial<SessionState> {
     return {};
   }
 }
-function persistSession(s: SessionState) {
+/** @returns whether the session actually made it into localStorage. */
+function persistSession(s: SessionState): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    return true;
   } catch {
-    /* storage unavailable — non-fatal */
+    // Storage unavailable or quota exceeded (photo memories can be large) —
+    // the caller surfaces this so a save doesn't silently vanish.
+    return false;
   }
 }
 function clearSession() {
@@ -150,6 +154,7 @@ const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
+  const [storageFull, setStorageFull] = useState(false);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -219,7 +224,7 @@ const App: React.FC = () => {
       fontScale,
       updatedAt: Date.now(),
     };
-    persistSession(state);
+    setStorageFull(!persistSession(state));
   }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
 
   useEffect(() => {
@@ -545,6 +550,21 @@ const App: React.FC = () => {
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-[#2c1810] text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
+        </div>
+      )}
+
+      {storageFull && phase !== 'intro' && (
+        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] w-[92vw] max-w-md bg-red-800 text-white px-4 py-3 text-sm shadow-lg animate-fadeIn">
+          <p className="font-bold">⚠️ Speicher voll — die letzte Änderung wurde nicht gespeichert.</p>
+          <p className="mt-1">
+            Sichere deine Reise jetzt als Datei, damit nichts verloren geht.
+          </p>
+          <button
+            onClick={exportSession}
+            className="mt-2 border-2 border-white px-3 py-1.5 font-bold text-xs uppercase"
+          >
+            Sitzung sichern (.json)
+          </button>
         </div>
       )}
 
