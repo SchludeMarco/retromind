@@ -47,10 +47,19 @@
             transform: translate(2px, 2px);
             box-shadow: 0 0 0 #2c1810;
         }
+        /* Every button gets a visible press response, even the plain/secondary
+           ones that don't carry the .retro-button shadow treatment. */
+        button:not(:disabled) {
+            transition: transform 0.1s ease;
+        }
+        button:not(:disabled):active {
+            transform: scale(0.96);
+        }
         :focus-visible { outline: 3px solid #d97706; outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {
-            .retro-card, .retro-button { transition: none !important; }
+            .retro-card, .retro-button, button { transition: none !important; }
             .retro-card:hover { transform: none !important; }
+            button:active { transform: none !important; }
         }
         @media print {
             .grainy-bg { display: none !important; }
