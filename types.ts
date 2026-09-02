@@ -1,5 +1,11 @@
-
-export type AppPhase = 'intro' | 'onboarding' | 'induction' | 'exploration' | 'diary' | 'finish';
+export type AppPhase =
+  | 'intro'
+  | 'onboarding'
+  | 'induction'
+  | 'exploration'
+  | 'diary'
+  | 'book'
+  | 'finish';
 
 export interface UserProfile {
   name: string;
@@ -8,17 +14,26 @@ export interface UserProfile {
   interests: string[];
 }
 
+export type BuzzwordCategory = 'music' | 'tech' | 'toy' | 'lifestyle' | 'food';
+
 export interface Buzzword {
   id: string;
   term: string;
-  category: 'music' | 'tech' | 'toy' | 'lifestyle' | 'food';
+  category: BuzzwordCategory;
   knowledge: string;
   question: string;
 }
 
 export interface GalleryItem {
+  /** stable id / seed */
   keyword: string;
+  /** human-readable German heading */
+  title: string;
   description: string;
+  /** optional real public-domain image; falls back to a typographic card */
+  image?: string;
+  /** attribution shown under a real image */
+  credit?: string;
 }
 
 export interface DecadeData {
@@ -38,8 +53,36 @@ export interface ChatMessage {
   text: string;
 }
 
+export type VideoStage = 'idle' | 'generating' | 'done' | 'error';
+
 export interface VideoStatus {
-  status: 'idle' | 'generating' | 'done' | 'error';
+  status: VideoStage;
   url?: string;
   message?: string;
+}
+
+/** A memory the user actually captured during the journey. */
+export interface CapturedMemory {
+  id: string;
+  kind: 'buzzword' | 'photo' | 'note';
+  decade: string;
+  term: string;
+  prompt: string;
+  answer: string;
+  /** downscaled data URL, only for photo memories */
+  photo?: string;
+  createdAt: number;
+}
+
+/** Everything that is persisted / exported for one journey. */
+export interface SessionState {
+  version: 2;
+  phase: AppPhase;
+  user: UserProfile;
+  diaryEntry: string;
+  memories: CapturedMemory[];
+  clickedBuzzwords: string[];
+  manualDecade: string | null;
+  fontScale: number;
+  updatedAt: number;
 }

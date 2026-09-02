@@ -1,53 +1,65 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RetroMind – eine interaktive, KI-gestützte Zeitreise durch die eigene Biografie mit exportierbarem Erinnerungs-Buch.">
+    <meta name="theme-color" content="#f4e4bc">
     <title>RetroMind: Deine Zeitreise</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
+        html { font-size: 18px; }
         body {
-            font-family: 'Space Mono', monospace;
-            background-color: #f4e4bc; /* Vintage paper color */
+            font-family: 'Space Mono', 'Courier New', monospace;
+            background-color: #f4e4bc; /* Vintage paper */
             color: #2c1810;
         }
         h1, h2, h3, .retro-serif {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Playfair Display', Georgia, serif;
         }
         .grainy-bg {
             background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
             opacity: 0.05;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            inset: 0;
             pointer-events: none;
-            z-index: 50;
+            z-index: 0;
         }
         .retro-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: #fffdf7;
             border: 2px solid #2c1810;
-            box-shadow: 8px 8px 0px #2c1810;
-            transition: all 0.2s ease;
+            box-shadow: 8px 8px 0 #2c1810;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .retro-card:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 10px 10px 0px #2c1810;
+            box-shadow: 10px 10px 0 #2c1810;
         }
         .retro-button {
             border: 2px solid #2c1810;
-            box-shadow: 4px 4px 0px #2c1810;
-            transition: all 0.1s ease;
+            box-shadow: 4px 4px 0 #2c1810;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
         .retro-button:active {
             transform: translate(2px, 2px);
-            box-shadow: 0px 0px 0px #2c1810;
+            box-shadow: 0 0 0 #2c1810;
+        }
+        :focus-visible { outline: 3px solid #d97706; outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) {
+            .retro-card, .retro-button { transition: none !important; }
+            .retro-card:hover { transform: none !important; }
+        }
+        @media print {
+            .grainy-bg { display: none !important; }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
     <div class="grainy-bg"></div>
-<script type="module" src="/index.tsx"></script>
+    <noscript>RetroMind benötigt JavaScript.</noscript>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

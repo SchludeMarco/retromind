@@ -1,93 +1,113 @@
+import { ChatMessage } from "../types";
 
-import { GoogleGenAI } from "@google/genai";
+// Thin client for the /api/gemini serverless proxy. The API key lives on the
+// server only; this module never sees it.
 
-// Note: Re-initializing in functions as per instructions to ensure latest API key usage
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+export type AiAvailability = "available" | "not_configured" | "unknown";
+
+interface ApiError extends Error {
+  code?: string;
+}
+
+async function callApi(action: string, payload?: unknown): Promise<any> {
+  const res = await fetch("/api/gemini", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, payload }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(data?.message || `API-Fehler ${res.status}`) as ApiError;
+    err.code = data?.error;
+    throw err;
+  }
+  return data;
+}
+
+export async function getAiAvailability(): Promise<AiAvailability> {
+  try {
+    const res = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "ping" }),
+    });
+    if (res.status === 503) return "not_configured";
+    if (res.ok) return "available";
+    return "unknown";
+  } catch {
+    return "unknown";
+  }
+}
 
 export async function generateDeepQuestion(
   term: string,
   name: string,
   interests: string,
   decade: string,
-  fallback: string,
+  fallback: string
 ): Promise<string> {
-  const ai = getAI();
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-flash-lite-latest", // Using Flash-Lite for fast, low-latency interaction
-      contents: `Handle als ein einfühlsamer Biografie-Begleiter. 
-      Erstelle eine hochgradig personalisierte, tiefgreifende Frage für ${name}, um eine spezifische Kindheitserinnerung zu reaktivieren.
-      Begriff: "${term}"
-      Jahrzehnt-Kontext: "${decade}er Jahre"
-      Interessen des Nutzers: "${interests}"
-      
-      Die Frage muss:
-      1. Direkt auf den Begriff "${term}" Bezug nehmen.
-      2. Die Interessen "${interests}" (wenn möglich) subtil einweben.
-      3. Den Nutzer dazu anregen, ein spezifisches Detail, einen Geruch, ein Geräusch oder ein Gefühl von damals zu beschreiben.
-      4. Im "Du"-Stil formuliert sein und nostalgisch wirken.
-      
-      Antworte NUR mit der Frage. Kein Einleitungssatz.`,
-    });
-    return response.text?.trim() || fallback;
-  } catch (error) {
-    console.error("Gemini Error:", error);
+    const { text } = await callApi("deepQuestion", { term, name, interests, decade });
+    return (text as string)?.trim() || fallback;
+  } catch (e) {
+    console.warn("deepQuestion failed:", e);
     return fallback;
   }
 }
 
-export async function analyzeMemoryImage(base64Image: string, mimeType: string): Promise<string> {
-  const ai = getAI();
+export async function analyzeMemoryImage(
+  imageBase64: string,
+  mimeType: string
+): Promise<string> {
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: {
-        parts: [
-          { inlineData: { data: base64Image, mimeType } },
-          { text: "Analysiere dieses Foto aus der Vergangenheit. Was siehst du? Beschreibe die Atmosphäre, die Details und versuche, die Zeitperiode zu schätzen. Sei nostalgisch und einfühlsam." }
-        ]
-      }
-    });
-    return response.text || "Ich konnte dieses Bild leider nicht analysieren.";
-  } catch (error) {
-    console.error("Image Analysis Error:", error);
-    return "Fehler bei der Bildanalyse.";
+    const { text } = await callApi("analyzeImage", { imageBase64, mimeType });
+    return (text as string) || "Ich konnte dieses Bild leider nicht beschreiben.";
+  } catch (e) {
+    if ((e as ApiError).code === "not_configured") {
+      return "Die Bildanalyse ist in diesem Demo nicht aktiv (kein Server-Schlüssel).";
+    }
+    return "Die Bildanalyse ist gerade fehlgeschlagen. Versuch es später noch einmal.";
   }
 }
 
-export async function generateVeoVideo(prompt: string, imageBase64?: string, mimeType?: string): Promise<string> {
-  const ai = getAI();
-  
-  let operation = await ai.models.generateVideos({
-    model: 'veo-3.1-fast-generate-preview',
-    prompt: prompt,
-    image: imageBase64 ? {
-      imageBytes: imageBase64,
-      mimeType: mimeType || 'image/png'
-    } : undefined,
-    config: {
-      numberOfVideos: 1,
-      resolution: '720p',
-      aspectRatio: '16:9'
-    }
-  });
+export async function sendChatMessage(history: ChatMessage[]): Promise<string> {
+  const { text } = await callApi("chat", { history });
+  return (text as string) || "";
+}
 
-  // Poll for completion, but give up after ~10 minutes so the UI never hangs
-  // indefinitely in the "generating" state.
-  const MAX_POLLS = 60;
-  let polls = 0;
-  while (!operation.done) {
-    if (polls++ >= MAX_POLLS) throw new Error("Video generation timed out");
-    await new Promise(resolve => setTimeout(resolve, 10000));
-    operation = await ai.operations.getVideosOperation({ operation: operation });
+export interface VeoResult {
+  url?: string;
+  error?: "not_configured" | "timeout" | "failed";
+}
+
+// Starts a Veo generation and polls until it is done (or ~10 min pass).
+export async function generateVeoVideo(
+  prompt: string,
+  imageBase64?: string,
+  mimeType?: string
+): Promise<VeoResult> {
+  let started: any;
+  try {
+    started = await callApi("veoStart", { prompt, imageBase64, mimeType });
+  } catch (e) {
+    return { error: (e as ApiError).code === "not_configured" ? "not_configured" : "failed" };
   }
 
-  const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-  if (!downloadLink) throw new Error("Video generation failed");
-  
-  // The download endpoint needs the API key as a query parameter, which exposes
-  // it in the resulting URL (DOM / network). Acceptable only for a
-  // referrer-restricted demo key; a server-side proxy is the real fix.
-  const separator = downloadLink.includes("?") ? "&" : "?";
-  return `${downloadLink}${separator}key=${process.env.API_KEY}`;
+  let operation = started.operation;
+  const MAX_POLLS = 60;
+  for (let i = 0; i < MAX_POLLS; i++) {
+    await new Promise((r) => setTimeout(r, 10000));
+    let poll: any;
+    try {
+      poll = await callApi("veoPoll", { operation });
+    } catch {
+      return { error: "failed" };
+    }
+    if (poll.done) {
+      if (poll.videoUri) return { url: `/api/video?uri=${encodeURIComponent(poll.videoUri)}` };
+      return { error: "failed" };
+    }
+    operation = poll.operation;
+  }
+  return { error: "timeout" };
 }

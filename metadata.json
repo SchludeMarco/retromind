@@ -1,8 +1,5 @@
-
 {
   "name": "RetroMind: Deine Zeitreise",
-  "description": "Eine interaktive Reise durch deine Biografie. Reaktiviere Kindheitserinnerungen mit personalisierten Onboarding, visuellen Zeitreisen und einer interaktiven Buzzword-Wand aus den Jahrzehnten 1960 bis 2000.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "description": "Eine interaktive Reise durch die eigene Biografie: personalisiertes Onboarding, Jahrzehnt-Impressionen (1960–2010), eine Erinnerungs-Wand mit KI-Fragen, Foto-Analyse und ein exportierbares Erinnerungs-Buch.",
+  "requestFramePermissions": []
 }

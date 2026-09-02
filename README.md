@@ -1,42 +1,60 @@
-# RetroMind: Deine Zeitreise (V1.1.0)
+# RetroMind: Deine Zeitreise (V2.0.0)
 
-Eine interaktive Reise durch die eigene Biografie. RetroMind reaktiviert
-Kindheitserinnerungen über ein personalisiertes Onboarding, visuelle
-Jahrzehnt-Galerien, eine interaktive Buzzword-Wand (1960–2000), ein
-„Nostalgie-Radio“ und mehrere KI-Funktionen auf Basis von Google Gemini.
+Eine interaktive, KI-gestützte Reise durch die eigene Biografie. RetroMind führt
+Jahrzehnt für Jahrzehnt (1960–2010) zurück, stellt persönliche Erinnerungsfragen,
+**sammelt die Antworten** und fasst sie zu einem exportierbaren **Erinnerungs-Buch**
+zusammen.
 
-Entstanden als eigenständiges Portfolio-Projekt (ursprünglich in Google AI
-Studio prototypisiert) im Umfeld der Sm@rt-App-Familie.
+Entstanden als eigenständiges Portfolio-Projekt (ursprünglich in Google AI Studio
+prototypisiert) im Umfeld der Sm@rt-App-Familie.
 
 ## Features
 
-- **Geführte 6-Phasen-Reise** – `intro → onboarding → induction → exploration → diary → finish`
-  mit Fortschrittsanzeige.
-- **Personalisiertes Onboarding** – Name, Geburtsdatum und Interessen; das
-  Kindheits-Jahrzehnt wird aus dem Geburtsjahr berechnet.
-- **Jahrzehnt-Datenbank 1960–2000** – handkuratierte Inhalte je Dekade
-  ([`constants.ts`](constants.ts)): Galerie-Motive, Buzzwords mit Wissenstext
-  und Erinnerungsfragen, passender Radio-Stream.
-- **Nostalgie-Radio** – dekadenabhängige Hintergrundmusik mit Lautstärke- und
-  Ära-Auswahl, dazu UI-Soundeffekte.
-- **KI-Erinnerungsfragen** (Gemini Flash-Lite) – zu jedem Buzzword eine
-  individuell auf Name, Interessen und Jahrzehnt zugeschnittene Frage.
-- **Memory-Labor** – altes Foto hochladen und
-  - per **Gemini** analysieren lassen (nostalgische Bildbeschreibung), oder
-  - per **Veo** zu einem kurzen Video „zum Leben erwecken“ (Premium-Feature,
-    benötigt API-Key mit Billing).
-- **Nostalgie-Begleiter** – Chat-Widget auf Basis von Gemini.
-- **Erinnerungs-Tagebuch** – freies Textfeld; Eintrag und Profil werden im
-  Browser (`localStorage`) gesichert und überstehen einen Reload, plus
-  `.txt`-Export.
+- **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
+  mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
+- **Personalisiertes Onboarding** – Name, Geburtsdatum, Interessen. Das Kindheits-
+  Jahrzehnt wird berechnet und auf 1960–2010 begrenzt.
+- **Jahrzehnt-Impressionen** – kuratierte Zeit-„Postkarten“ je Dekade
+  ([`constants.ts`](constants.ts)); wo ein echtes gemeinfreies Bild hinterlegt ist
+  (z. B. NASA-Mondlandung), wird es gezeigt, sonst greift eine typografische Karte.
+  Ehrlich als *symbolische Impressionen* gekennzeichnet.
+- **Erinnerungs-Wand** – Stichworte aus fünf Jahrzehnten, sortiert nach deinen
+  Interessen. Pro Stichwort eine **KI-generierte persönliche Frage** und ein
+  Antwortfeld – **mit Spracheingabe** (Web Speech API) wo verfügbar. Antworten
+  landen automatisch im Buch.
+- **Memory-Labor** – altes Foto hochladen (client-seitig verkleinert), von
+  **Gemini** beschreiben lassen und die Beschreibung als Erinnerung übernehmen;
+  optional per **Veo** zu einem kurzen Video animieren (benötigt Google-Billing).
+- **Nostalgie-Radio** – dekadenabhängiges Instrumental-Ambiente (ehrlich
+  gelabelt, kein Ära-Sound), Lautstärke- und Ära-Wahl, UI-Sounds.
+- **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
+- **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
+  Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
+  `.json` lässt sich auf einem anderen Gerät wieder laden.
+- **Fortsetzen** – die komplette Sitzung liegt im `localStorage`; ein Reload bietet
+  „Weitermachen“ an.
+- **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
+  schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
+  `prefers-reduced-motion`, ARIA-Labels.
+- **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
+
+## Architektur
+
+```
+Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function)  ──▶  Google Gemini / Veo
+                          ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
+```
+
+Der **Gemini-Schlüssel liegt ausschließlich serverseitig** (Vercel-Env-Var
+`GEMINI_API_KEY`) und ist nie im Client-Bundle. `@google/genai` wird nur von den
+Functions genutzt.
 
 ## Tech-Stack
 
-- **React 19** + **TypeScript**, Build über **Vite 6**
+- **React 19** + **TypeScript** (strict), Build über **Vite 6**
 - **Tailwind CSS** (Play-CDN) + eigenes Retro-Theme in [`index.html`](index.html)
-- **@google/genai** – Gemini (Text, Vision, Chat) und Veo (Video)
-- Externe Assets: Google Fonts, picsum.photos (Galeriebilder),
-  soundhelix.com (Radio), mixkit (SFX), transparenttextures.com (Textur)
+- **Vercel Functions** (`api/*.js`) als KI-Proxy · **@google/genai** (Gemini + Veo)
+- Web Speech API (Diktat), `window.print()` (PDF), `localStorage` (Sitzung)
 
 ## Lokal ausführen
 
@@ -44,45 +62,46 @@ Studio prototypisiert) im Umfeld der Sm@rt-App-Familie.
 
 ```bash
 npm install
-cp .env.example .env.local   # und GEMINI_API_KEY eintragen
+cp .env.example .env.local        # GEMINI_API_KEY eintragen
+
+# Nur Frontend (KI-Funktionen zeigen den Demo-Hinweis):
 npm run dev
+
+# Mit /api-Funktionen (empfohlen):
+npm i -g vercel && npm run dev:full   # = vercel dev
 ```
 
-| Skript            | Zweck                          |
-| ----------------- | ------------------------------ |
-| `npm run dev`     | Dev-Server (Port 3000)         |
-| `npm run build`   | Produktions-Build nach `dist/` |
-| `npm run preview` | Build lokal testen             |
+| Skript              | Zweck                                   |
+| ------------------- | --------------------------------------- |
+| `npm run dev`       | Vite-Dev-Server (Port 3000)             |
+| `npm run dev:full`  | `vercel dev` – Frontend **und** `/api`  |
+| `npm run build`     | Produktions-Build nach `dist/`          |
+| `npm run typecheck` | `tsc --noEmit`                          |
 
-## Konfiguration
+## Deployment (Vercel)
 
-| Variable         | Beschreibung                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| `GEMINI_API_KEY` | Google-Gemini-API-Schlüssel. Wird in `.env.local` gesetzt.    |
+1. Repo in Vercel importieren (Framework-Preset **Vite** wird erkannt, siehe
+   [`vercel.json`](vercel.json)).
+2. **Environment Variable** setzen: `GEMINI_API_KEY` = dein Gemini-Schlüssel
+   (Settings → Environment Variables). Ohne diese Variable läuft die App im
+   Fallback-Modus (Fragen aus der Sammlung, keine Bild-/Video-/Chat-KI).
+3. Redeploy. Fertig.
 
-Der Schlüssel wird zur Build-Zeit über [`vite.config.ts`](vite.config.ts)
-(`define: process.env.API_KEY / process.env.GEMINI_API_KEY`) eingebettet.
+| Variable         | Ort            | Beschreibung                                  |
+| ---------------- | -------------- | -------------------------------------------- |
+| `GEMINI_API_KEY` | Vercel-Env     | Google-Gemini-API-Schlüssel (nur serverseitig) |
 
 ## Bekannte Einschränkungen
 
-- **API-Key im Client-Bundle.** Da die App rein clientseitig läuft, ist der
-  Gemini-Schlüssel im ausgelieferten JavaScript sichtbar. Für ein
-  öffentliches Deployment sollte ein per Referrer eingeschränkter,
-  ausschließlich für die Gemini-API freigegebener Schlüssel verwendet werden –
-  oder ein serverseitiger Proxy vorgeschaltet werden.
-- Die **Veo-Video-Funktion** hängt den Schlüssel als Query-Parameter an die
-  Download-URL an ([`services/geminiService.ts`](services/geminiService.ts))
-  und benötigt ein Google-Cloud-Projekt mit aktivem Billing.
-- Die **Key-Auswahl über `window.aistudio`** funktioniert nur innerhalb von
-  Google AI Studio. Standalone wird ein per `GEMINI_API_KEY` eingebauter
-  Schlüssel erkannt; fehlt er ganz, liefern die KI-Funktionen vordefinierte
-  Fallback-Texte (Erinnerungsfragen kommen dann aus [`constants.ts`](constants.ts)).
-- Es werden **Vorschau-Modelle** genutzt (`gemini-3-pro-preview`,
-  `veo-3.1-fast-generate-preview`) – deren IDs können sich ändern.
-- **Kein Backend:** Profil und Tagebuch werden nur im `localStorage` des
-  Browsers gehalten (plus manueller `.txt`-Export). Kein Sync über Geräte.
-- Die **Tailwind-Play-CDN** ([`index.html`](index.html)) ist bequem, aber nicht
-  für Produktion optimiert (JIT im Browser, kein Purge).
+- **Veo-Video** braucht ein Google-Cloud-Projekt mit aktivem Billing; ohne das
+  meldet das Labor einen Fehler statt eines Videos.
+- **Vorschau-Modell** für Video (`veo-3.1-fast-generate-preview`) – ID kann sich
+  ändern. Text/Vision/Chat nutzen GA-Modelle.
+- **Bilder & Musik** sind bewusst symbolisch (Lizenzgründe) und als solche
+  gekennzeichnet – kein echtes Ära-Material außer dem einen NASA-Foto.
+- **Kein geräteübergreifender Sync** – Kontinuität über `localStorage` + manuellen
+  `.json`-Export/Import, nicht über ein Konto.
+- **Tailwind Play-CDN** ist nicht für Hochlast-Produktion optimiert.
 
 ## Lizenz
 
