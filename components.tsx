@@ -78,7 +78,15 @@ export const BootOverlay: React.FC = () => {
 
     ctx.resume().catch(() => {});
 
+    // Browsers refuse to actually produce sound until the page has seen a
+    // user gesture. If the boot chime was born suspended, the first tap,
+    // click or key anywhere on the page unlocks it — better late than never.
+    const unlock = () => { ctx.resume().catch(() => {}); };
+    const gestureEvents: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
+    gestureEvents.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
+
     return () => {
+      gestureEvents.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
       ctx.close().catch(() => {});
     };
   }, [prefersReducedMotion]);
