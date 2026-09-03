@@ -392,7 +392,7 @@ const App: React.FC = () => {
       <button
         onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
         aria-label="App-Einstellungen öffnen"
-        className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
+        className="rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
       >
         ⚙️
       </button>
@@ -421,7 +421,7 @@ const App: React.FC = () => {
           <button
             onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
             aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-            className="rm-fixed fixed bottom-28 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+            className="rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
           >
             {isChatOpen ? '✕' : '💬'}
           </button>
