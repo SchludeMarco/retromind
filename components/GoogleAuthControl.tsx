@@ -17,11 +17,16 @@ export const GoogleAuthControl: React.FC<{
   syncState: DriveSyncState;
   onSignIn: () => void;
   onSignOut: () => void;
-}> = ({ status, user, syncState, onSignIn, onSignOut }) => {
+  visible: boolean;
+}> = ({ status, user, syncState, onSignIn, onSignOut, visible }) => {
   if (status === 'not_configured') return null;
 
   return (
-    <div className="rm-fixed fixed bottom-2 left-4 md:left-10 z-50 flex items-center gap-2 bg-retro-cream border-2 border-retro-ink px-2 py-1 text-xs max-w-[70vw]">
+    <div
+      className={`rm-fixed fixed bottom-2 left-4 md:left-10 z-50 flex items-center gap-2 bg-retro-cream border-2 border-retro-ink px-2 py-1 text-xs max-w-[70vw] transition-opacity duration-300 ${
+        visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
       {status === 'signed_in' && user ? (
         <>
           {user.picture && (
