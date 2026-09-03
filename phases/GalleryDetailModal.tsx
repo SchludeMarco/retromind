@@ -14,7 +14,9 @@ export const GalleryDetailModal: React.FC<{
     <span className="text-xs uppercase font-bold text-retro-amber-dark block">Zeit-Impression</span>
     <h3 className="text-3xl font-bold mb-3">{item.title}</h3>
     {item.image && (
-      <img src={item.image} alt={item.title} className="w-full border-2 border-retro-ink mb-3" />
+      <div className="retro-photo-frame mb-3">
+        <img src={item.image} alt={item.title} className="w-full border-2 border-retro-ink retro-photo retro-photo-live" />
+      </div>
     )}
     <p className="text-lg leading-relaxed italic border-t-2 border-retro-ink pt-3">
       {item.description}

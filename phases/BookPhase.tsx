@@ -41,7 +41,7 @@ export const BookPhase: React.FC<{
             <p className="text-xs uppercase font-bold text-retro-tan">{m.decade}er · {m.term}</p>
             {m.prompt && <p className="retro-serif italic text-lg mt-1 mb-2">{m.prompt}</p>}
             {m.photo && (
-              <img src={m.photo} alt="" className="my-3 max-h-64 border-2 border-retro-ink" />
+              <img src={m.photo} alt="" className="my-3 max-h-64 border-2 border-retro-ink retro-photo" />
             )}
             <p className="whitespace-pre-wrap leading-relaxed">{m.answer.trim() || '(keine Notiz)'}</p>
           </div>
