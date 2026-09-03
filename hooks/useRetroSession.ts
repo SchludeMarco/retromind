@@ -44,6 +44,11 @@ export function useRetroSession() {
     [memories]
   );
 
+  const perspectiveFor = useCallback(
+    (id: string) => memories.find((m) => m.kind === 'perspective' && m.id === `pw-${id}`),
+    [memories]
+  );
+
   const upsertMemory = useCallback((mem: CapturedMemory) => {
     setMemories((prev) => {
       const idx = prev.findIndex((m) => m.id === mem.id);
@@ -105,7 +110,7 @@ export function useRetroSession() {
     phase, setPhase,
     resumeTarget, setResumeTarget,
     user, setUser,
-    memories, setMemories, memoryFor, upsertMemory,
+    memories, setMemories, memoryFor, perspectiveFor, upsertMemory,
     diaryEntry, setDiaryEntry,
     clickedBuzzwords, setClickedBuzzwords,
     manualDecade, setManualDecade,
