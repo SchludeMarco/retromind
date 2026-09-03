@@ -1,7 +1,9 @@
 // Synthesized retro UI sound effects, built with the Web Audio API instead of
 // audio files so every "click" actually sounds like the time machine the app
 // is themed around — a spark of a lever engaging, or the machine winding up
-// and clunking into place for a screen change.
+// and clunking into place for a screen change. Waveforms stick to the app's
+// 8-bit identity: square for melodic/lead tones, triangle for bass, noise
+// for crackle/percussion — the classic chiptune channel roles.
 export type SfxType = 'click' | 'transition' | 'success';
 
 let sharedCtx: AudioContext | null = null;
@@ -33,7 +35,7 @@ function playClick(ctx: AudioContext, peakGain: number) {
   master.connect(ctx.destination);
 
   const osc = ctx.createOscillator();
-  osc.type = 'sawtooth';
+  osc.type = 'square';
   osc.frequency.setValueAtTime(220, now);
   osc.frequency.exponentialRampToValueAtTime(760, now + 0.05);
   osc.frequency.exponentialRampToValueAtTime(140, now + 0.15);
@@ -76,7 +78,7 @@ function playTransition(ctx: AudioContext, peakGain: number) {
   whirGain.connect(ctx.destination);
 
   const whir = ctx.createOscillator();
-  whir.type = 'sawtooth';
+  whir.type = 'square';
   whir.frequency.setValueAtTime(70, now);
   whir.frequency.exponentialRampToValueAtTime(260, now + 0.55);
 
@@ -109,7 +111,7 @@ function playTransition(ctx: AudioContext, peakGain: number) {
   clunkGain.connect(ctx.destination);
 
   const clunk = ctx.createOscillator();
-  clunk.type = 'sine';
+  clunk.type = 'triangle';
   clunk.frequency.setValueAtTime(120, clunkTime);
   clunk.frequency.exponentialRampToValueAtTime(45, clunkTime + 0.22);
   clunk.connect(clunkGain);
@@ -119,12 +121,12 @@ function playTransition(ctx: AudioContext, peakGain: number) {
   // A short metallic ring right after, like a temporal lock engaging.
   const ringTime = clunkTime + 0.03;
   const ringGain = ctx.createGain();
-  ringGain.gain.setValueAtTime(peakGain * 0.5, ringTime);
+  ringGain.gain.setValueAtTime(peakGain * 0.35, ringTime);
   ringGain.gain.exponentialRampToValueAtTime(0.001, ringTime + 0.3);
   ringGain.connect(ctx.destination);
 
   const ring = ctx.createOscillator();
-  ring.type = 'triangle';
+  ring.type = 'square';
   ring.frequency.value = 1200;
   ring.connect(ringGain);
   ring.start(ringTime);
@@ -138,14 +140,19 @@ function playSuccess(ctx: AudioContext, peakGain: number) {
     const start = now + i * 0.09;
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(peakGain, start + 0.02);
+    gain.gain.linearRampToValueAtTime(peakGain * 0.7, start + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
     gain.connect(ctx.destination);
 
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 3200;
+
     const osc = ctx.createOscillator();
-    osc.type = 'triangle';
+    osc.type = 'square';
     osc.frequency.value = freq;
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     osc.start(start);
     osc.stop(start + 0.22);
   });
