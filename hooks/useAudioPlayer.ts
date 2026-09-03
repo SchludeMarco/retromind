@@ -5,7 +5,9 @@ import { SFX } from '../lib/sfx';
 // Owns the ambient-music <audio> element, the click/success sound effects,
 // and the volume/decade controls for the fixed RetroPlayer widget.
 export function useAudioPlayer(currentAudioDecade: string) {
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  // Calm ambient music starts right at app boot and loops continuously; a
+  // time travel (decade change) just swaps the track underneath it.
+  const [isMusicPlaying, setIsMusicPlaying] = useState(true);
   const [volume, setVolume] = useState(0.05);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -37,6 +39,20 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (!audioRef.current) return;
     if (isMusicPlaying) audioRef.current.play().catch(() => {});
     else audioRef.current.pause();
+  }, [isMusicPlaying]);
+
+  // Browsers refuse actual autoplay-with-sound before the page has seen a
+  // user gesture, so the initial play() attempt above is silently swallowed.
+  // The first tap, click or key anywhere unlocks it — same trick BootOverlay
+  // uses for its own audio.
+  useEffect(() => {
+    if (!isMusicPlaying) return;
+    const resume = () => {
+      if (audioRef.current?.paused) audioRef.current.play().catch(() => {});
+    };
+    const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
+    events.forEach((evt) => document.addEventListener(evt, resume, { once: true, capture: true }));
+    return () => events.forEach((evt) => document.removeEventListener(evt, resume, { capture: true }));
   }, [isMusicPlaying]);
 
   useEffect(() => {
