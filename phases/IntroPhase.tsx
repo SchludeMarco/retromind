@@ -11,6 +11,16 @@ export const IntroPhase: React.FC<{
   <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
       <h2 className="text-4xl mb-6">Willkommen, Zeitreisende:r</h2>
+
+      {!resumeTarget && (
+        <button
+          onClick={onStart}
+          className="retro-button bg-retro-amber text-white px-12 py-5 text-2xl font-bold hover:bg-retro-amber-dark w-full md:w-auto mb-8"
+        >
+          Zeitreise starten
+        </button>
+      )}
+
       <p className="text-lg mb-8 leading-relaxed">
         Öffne die Truhe deiner Kindheit. RetroMind führt dich Jahrzehnt für Jahrzehnt zurück, stellt dir
         persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
@@ -30,15 +40,6 @@ export const IntroPhase: React.FC<{
             </button>
           </div>
         </div>
-      )}
-
-      {!resumeTarget && (
-        <button
-          onClick={onStart}
-          className="retro-button bg-retro-amber text-white px-12 py-5 text-2xl font-bold hover:bg-retro-amber-dark w-full md:w-auto"
-        >
-          Zeitreise starten
-        </button>
       )}
 
       <details className="mt-10 text-left text-sm text-retro-brown">
