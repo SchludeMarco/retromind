@@ -15,6 +15,7 @@ const BOOT_MIN_DURATION_MS = 1200;
 const BOOT_MAX_EXTRA_DURATION_MS = 700;
 const BOOT_TOTAL_MS = BOOT_HOLD_MS + BOOT_MAX_DELAY_MS + BOOT_MIN_DURATION_MS + BOOT_MAX_EXTRA_DURATION_MS;
 const BOOT_REDUCED_MOTION_MS = 900;
+const BOOT_CHIME_PEAK_GAIN = 0.16;
 
 export const BootOverlay: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -52,36 +53,50 @@ export const BootOverlay: React.FC = () => {
     if (!AudioCtx) return;
 
     const totalSec = (prefersReducedMotion ? BOOT_REDUCED_MOTION_MS : BOOT_TOTAL_MS) / 1000;
-    const ctx: AudioContext = new AudioCtx();
-    const now = ctx.currentTime;
 
-    const master = ctx.createGain();
-    master.gain.setValueAtTime(0, now);
-    master.gain.linearRampToValueAtTime(0.05, now + totalSec * 0.35);
-    master.gain.setValueAtTime(0.05, now + totalSec * 0.7);
-    master.gain.linearRampToValueAtTime(0, now + totalSec);
-    master.connect(ctx.destination);
+    const buildChime = (ctx: AudioContext) => {
+      const now = ctx.currentTime;
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, now);
+      master.gain.linearRampToValueAtTime(BOOT_CHIME_PEAK_GAIN, now + totalSec * 0.35);
+      master.gain.setValueAtTime(BOOT_CHIME_PEAK_GAIN, now + totalSec * 0.7);
+      master.gain.linearRampToValueAtTime(0, now + totalSec);
+      master.connect(ctx.destination);
 
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 800;
-    filter.connect(master);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1500;
+      filter.connect(master);
 
-    [110, 165].forEach((freq) => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      osc.connect(filter);
-      osc.start(now);
-      osc.stop(now + totalSec);
-    });
+      [110, 220, 330].forEach((freq) => {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.connect(filter);
+        osc.start(now);
+        osc.stop(now + totalSec);
+      });
+    };
 
+    let ctx = new AudioCtx();
+    buildChime(ctx);
     ctx.resume().catch(() => {});
 
     // Browsers refuse to actually produce sound until the page has seen a
     // user gesture. If the boot chime was born suspended, the first tap,
     // click or key anywhere on the page unlocks it — better late than never.
-    const unlock = () => { ctx.resume().catch(() => {}); };
+    // Some engines (older Safari) never unsuspend a context created outside
+    // a gesture at all, so as a last resort build a fresh one right here,
+    // synchronously inside the gesture handler.
+    let unlocked = false;
+    const unlock = () => {
+      if (unlocked) return;
+      unlocked = true;
+      ctx.resume().catch(() => {
+        ctx = new AudioCtx();
+        buildChime(ctx);
+      });
+    };
     const gestureEvents: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     gestureEvents.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
 
