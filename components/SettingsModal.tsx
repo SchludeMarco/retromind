@@ -111,6 +111,9 @@ export const SettingsModal: React.FC<{
               />
               <p className="mt-2 text-[10px] text-retro-tan">
                 Streamt direkt von Spotify (Drittanbieter) – ersetzt nicht das Ambiente-Radio oben.
+                Nur eine 30-Sekunden-Vorschau? Rechts oben im Player bei Spotify einloggen – dein
+                Google-Konto zählt dafür nicht, das ist ein eigener Login. Mit Premium läuft der volle
+                Song.
               </p>
             </>
           )}
