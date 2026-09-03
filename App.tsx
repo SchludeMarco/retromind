@@ -306,6 +306,17 @@ const App: React.FC = () => {
       <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
       <Header />
 
+      {/* The ambient player stays available from the very first screen, since
+          music already starts playing at app boot. */}
+      <RetroPlayer
+        currentDecade={currentAudioDecade}
+        onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+        isPlaying={isMusicPlaying}
+        onToggle={() => { playSFX('click'); setIsMusicPlaying((v) => !v); }}
+        volume={volume}
+        onVolumeChange={setVolume}
+      />
+
       {phase !== 'intro' && (
         <>
           <button
@@ -316,14 +327,6 @@ const App: React.FC = () => {
             {isChatOpen ? '✕' : '💬'}
           </button>
           <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
-          <RetroPlayer
-            currentDecade={currentAudioDecade}
-            onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-            isPlaying={isMusicPlaying}
-            onToggle={() => { playSFX('click'); setIsMusicPlaying((v) => !v); }}
-            volume={volume}
-            onVolumeChange={setVolume}
-          />
         </>
       )}
 
