@@ -4,6 +4,7 @@ export { ProgressBar } from './ProgressBar';
 export { Header } from './Header';
 export { FontSizeControl } from './FontSizeControl';
 export { GoogleAuthControl } from './GoogleAuthControl';
+export { SettingsModal } from './SettingsModal';
 export { Modal } from './Modal';
 export { GalleryCard } from './GalleryCard';
 export { ChatBot } from './ChatBot';
