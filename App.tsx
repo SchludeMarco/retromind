@@ -421,7 +421,7 @@ const App: React.FC = () => {
           <button
             onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
             aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-            className="rm-fixed fixed bottom-10 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+            className="rm-fixed fixed bottom-28 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
           >
             {isChatOpen ? '✕' : '💬'}
           </button>

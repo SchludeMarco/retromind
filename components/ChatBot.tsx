@@ -40,7 +40,7 @@ export const ChatBot: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="rm-fixed fixed bottom-24 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-retro-cream flex flex-col animate-fadeIn overflow-hidden">
+    <div className="rm-fixed fixed bottom-44 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-retro-cream flex flex-col animate-fadeIn overflow-hidden">
       <div className="bg-retro-ink text-white p-3 flex justify-between items-center">
         <span className="font-bold text-sm">Nostalgie-Begleiter</span>
         <button onClick={onClose} aria-label="Chat schließen" className="text-lg leading-none px-1">
