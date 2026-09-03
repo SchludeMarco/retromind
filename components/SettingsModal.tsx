@@ -87,7 +87,7 @@ export const SettingsModal: React.FC<{
         </div>
       </div>
 
-      <p className="mt-6 pt-4 border-t border-retro-ink/20 text-[10px] uppercase tracking-widest text-retro-tan">
+      <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}
       </p>
     </Modal>
