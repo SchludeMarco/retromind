@@ -40,6 +40,86 @@ h1, h2, h3, .retro-serif {
   pointer-events: none;
   z-index: 0;
 }
+
+/* App-wide "old CRT screen" pane: sits above everything from the moment the
+   app mounts. Faint scanlines + vignette tint the whole app old/washed-out,
+   a permanent light backdrop blur softens it further, and it periodically
+   dips into a brief flicker/tear. Decorative only — see CrtOverlay.tsx. */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(44, 24, 16, 0.1) 0px,
+      rgba(44, 24, 16, 0.1) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(ellipse at center, transparent 45%, rgba(44, 24, 16, 0.34) 100%);
+  mix-blend-mode: multiply;
+  -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  animation: crt-flicker 6.5s ease-in-out infinite;
+}
+@keyframes crt-flicker {
+  0%, 44%, 46%, 92%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  }
+  44.7% {
+    opacity: 0.62;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.4) contrast(1.25) brightness(1.55);
+    backdrop-filter: blur(1.2px) saturate(0.4) contrast(1.25) brightness(1.55);
+  }
+  45.4% {
+    opacity: 1;
+    transform: translateY(3px);
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  }
+  92.3% {
+    opacity: 0.5;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.5) contrast(1.3) brightness(1.5);
+    backdrop-filter: blur(1.2px) saturate(0.5) contrast(1.3) brightness(1.5);
+  }
+  92.6% {
+    opacity: 1;
+    transform: translateY(-5px);
+    filter: hue-rotate(25deg);
+    -webkit-backdrop-filter: blur(3px) saturate(1.15) contrast(0.75) brightness(0.65) hue-rotate(15deg);
+    backdrop-filter: blur(3px) saturate(1.15) contrast(0.75) brightness(0.65) hue-rotate(15deg);
+  }
+  92.9% {
+    opacity: 0.75;
+    transform: translateY(4px);
+    filter: none;
+    -webkit-backdrop-filter: blur(1.6px) saturate(0.85) contrast(1.15) brightness(1.2);
+    backdrop-filter: blur(1.6px) saturate(0.85) contrast(1.15) brightness(1.2);
+  }
+  93.2% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  }
+  97%, 97.15% {
+    opacity: 0.55;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
+    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
+  }
+  97.3% {
+    opacity: 1;
+    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  }
+}
 .retro-card {
   background: var(--color-retro-paper-white);
   border: 2px solid var(--color-retro-ink);
@@ -175,6 +255,7 @@ button:not(:disabled):active {
   button:active { transform: none !important; }
   .animate-fadeIn, .animate-popIn, .animate-spin, .animate-pulse { animation: none !important; }
   .retro-photo-live, .retro-photo-frame::after { animation: none !important; }
+  .crt-overlay { animation: none !important; }
   * { scroll-behavior: auto !important; }
 }
 @media print {
@@ -185,4 +266,5 @@ button:not(:disabled):active {
   .retro-card { box-shadow: none !important; }
   .retro-photo, .retro-photo-live { filter: none !important; }
   .retro-photo-frame::after { display: none !important; }
+  .crt-overlay { display: none !important; }
 }
