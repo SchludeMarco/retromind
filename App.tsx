@@ -6,7 +6,7 @@ import {
   BuzzwordCategory,
 } from './types';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, FontSizeControl, GoogleAuthControl, ChatBot, RetroPlayer, BootOverlay } from './components';
+import { ProgressBar, Header, FontSizeControl, GoogleAuthControl, ChatBot, RetroPlayer, BootOverlay, CrtOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -41,8 +41,13 @@ const App: React.FC = () => {
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX } =
-    useAudioPlayer(currentAudioDecade);
+  const {
+    sfxRef,
+    isMusicPlaying, setIsMusicPlaying,
+    isAudioBlocked, resumeBlockedPlayback,
+    volume, setVolume,
+    playSFX,
+  } = useAudioPlayer(currentAudioDecade);
 
   const googleAuth = useGoogleAuth();
   const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -364,7 +369,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
-      <audio ref={audioRef} loop />
+      <CrtOverlay />
       <audio ref={sfxRef} />
 
       <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
@@ -377,6 +382,22 @@ const App: React.FC = () => {
       />
       <Header />
 
+      {/* The ambient player stays available from the very first screen, since
+          music already starts playing at app boot. */}
+      <RetroPlayer
+        currentDecade={currentAudioDecade}
+        onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+        isPlaying={isMusicPlaying}
+        isBlocked={isAudioBlocked}
+        onToggle={() => {
+          playSFX('click');
+          if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
+          else setIsMusicPlaying((v) => !v);
+        }}
+        volume={volume}
+        onVolumeChange={setVolume}
+      />
+
       {phase !== 'intro' && (
         <>
           <button
@@ -387,14 +408,6 @@ const App: React.FC = () => {
             {isChatOpen ? '✕' : '💬'}
           </button>
           <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
-          <RetroPlayer
-            currentDecade={currentAudioDecade}
-            onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-            isPlaying={isMusicPlaying}
-            onToggle={() => { playSFX('click'); setIsMusicPlaying((v) => !v); }}
-            volume={volume}
-            onVolumeChange={setVolume}
-          />
         </>
       )}
 

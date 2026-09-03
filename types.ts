@@ -38,7 +38,6 @@ export interface GalleryItem {
 
 export interface DecadeData {
   title: string;
-  audioUrl: string;
   audioLabel: string;
   galleryItems: GalleryItem[];
   buzzwords: Buzzword[];

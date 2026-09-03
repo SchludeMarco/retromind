@@ -1,31 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DECADES_DB } from '../constants';
 
 export const RetroPlayer: React.FC<{
   currentDecade: string;
   onDecadeChange: (d: string) => void;
   isPlaying: boolean;
+  isBlocked?: boolean;
   onToggle: () => void;
   volume: number;
   onVolumeChange: (v: number) => void;
-}> = ({ currentDecade, onDecadeChange, isPlaying, onToggle, volume, onVolumeChange }) => {
+}> = ({ currentDecade, onDecadeChange, isPlaying, isBlocked, onToggle, volume, onVolumeChange }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const info = DECADES_DB[currentDecade];
+  const needsTap = isPlaying && !!isBlocked;
+
+  if (!isExpanded) {
+    return (
+      <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
+        <button
+          onClick={() => setIsExpanded(true)}
+          aria-label={needsTap ? 'Musik antippen zum Starten' : 'Radio-Player öffnen'}
+          title={needsTap ? 'Antippen, um die Musik zu starten' : undefined}
+          className={`relative retro-button w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber ${isPlaying && !needsTap ? 'animate-spin' : ''}`}
+        >
+          <div className="w-3.5 h-3.5 rounded-full bg-retro-cream border border-retro-ink" />
+          {needsTap && (
+            <span
+              aria-hidden="true"
+              className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-white border-2 border-retro-ink animate-pulse"
+            />
+          )}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
       <div className="retro-card bg-retro-cream p-4 flex flex-col gap-3 border-2 border-retro-ink w-64 max-w-[80vw]">
         <div className="flex items-center gap-3">
-          <div
-            aria-hidden="true"
-            className={`w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`}
+          <button
+            onClick={() => setIsExpanded(false)}
+            aria-label="Radio-Player minimieren"
+            className={`retro-button w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber flex-shrink-0 ${isPlaying && !needsTap ? 'animate-spin' : ''}`}
           >
             <div className="w-3.5 h-3.5 rounded-full bg-retro-cream border border-retro-ink" />
-          </div>
+          </button>
           <div className="overflow-hidden flex-grow">
             <p className="text-[10px] uppercase font-bold text-retro-tan tracking-widest">Nostalgie-Radio</p>
-            <p className="text-xs font-bold truncate">{info?.audioLabel || '—'}</p>
+            <p className="text-xs font-bold truncate">
+              {needsTap ? 'Play antippen, um zu starten' : info?.audioLabel || '—'}
+            </p>
           </div>
           <button onClick={onToggle} aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'} className="retro-button p-2 bg-white min-w-[40px]">
-            {isPlaying ? '⏸' : '▶'}
+            {isPlaying && !needsTap ? '⏸' : '▶'}
           </button>
         </div>
         <div className="flex flex-col gap-2 pt-2 border-t border-retro-ink/20">
