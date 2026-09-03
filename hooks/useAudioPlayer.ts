@@ -1,23 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { DECADES_DB } from '../constants';
+import { startAmbientPad, AmbientVoice } from '../lib/ambientSynth';
 import { SFX } from '../lib/sfx';
 
-// Owns the ambient-music <audio> element, the click/success sound effects,
-// and the volume/decade controls for the fixed RetroPlayer widget.
+// Owns the generative ambient-music synth, the click/success sound effects,
+// and the volume/decade controls for the fixed RetroPlayer widget. Music
+// starts right at app boot and loops forever (it's a sustained synthesized
+// pad, not a file); a time travel (decade change) just crossfades to a new
+// chord underneath it.
 export function useAudioPlayer(currentAudioDecade: string) {
-  // Calm ambient music starts right at app boot and loops continuously; a
-  // time travel (decade change) just swaps the track underneath it.
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
-  const [volume, setVolume] = useState(0.2);
-  // True while music is *meant* to be playing but the browser is refusing
-  // (autoplay-with-sound needs a gesture first) — lets the UI tell "silently
-  // blocked" apart from "actually playing", instead of just spinning either way.
+  const [volume, setVolume] = useState(0.35);
+  // True while music is *meant* to be playing but the browser is refusing to
+  // let audio actually start (needs a user gesture first) — lets the UI tell
+  // "silently blocked" apart from "actually playing".
   const [isAudioBlocked, setIsAudioBlocked] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<HTMLAudioElement | null>(null);
   const volumeRef = useRef(volume);
   volumeRef.current = volume;
+
+  const ctxRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const voiceRef = useRef<AmbientVoice | null>(null);
+  const decadeRef = useRef(currentAudioDecade);
+  decadeRef.current = currentAudioDecade;
 
   // Stable identity (reads volume from a ref) so effects that depend on it
   // don't re-fire when the volume slider moves.
@@ -29,63 +35,93 @@ export function useAudioPlayer(currentAudioDecade: string) {
     sfxRef.current.play().catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const track = DECADES_DB[currentAudioDecade]?.audioUrl;
-    if (track && audioRef.current.src !== track) {
-      audioRef.current.src = track;
-      audioRef.current.load();
-      if (isMusicPlaying) audioRef.current.play().catch(() => setIsAudioBlocked(true));
-    }
-  }, [currentAudioDecade]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    if (isMusicPlaying) audioRef.current.play().catch(() => setIsAudioBlocked(true));
-    else {
-      audioRef.current.pause();
-      setIsAudioBlocked(false);
-    }
-  }, [isMusicPlaying]);
-
-  // The 'playing' event is the one reliable signal that sound is actually
-  // coming out — clears the "blocked" flag whenever it fires.
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const onPlaying = () => setIsAudioBlocked(false);
-    audio.addEventListener('playing', onPlaying);
-    return () => audio.removeEventListener('playing', onPlaying);
+  const ensureContext = useCallback((): AudioContext | null => {
+    if (ctxRef.current) return ctxRef.current;
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return null;
+    const ctx: AudioContext = new AudioCtx();
+    const master = ctx.createGain();
+    master.gain.value = volumeRef.current;
+    const compressor = ctx.createDynamicsCompressor(); // gentle safety limiter
+    master.connect(compressor);
+    compressor.connect(ctx.destination);
+    ctxRef.current = ctx;
+    masterGainRef.current = master;
+    return ctx;
   }, []);
 
-  // Browsers refuse actual autoplay-with-sound before the page has seen a
-  // user gesture, so the initial play() attempt above is silently swallowed.
+  const startVoiceForCurrentDecade = useCallback(() => {
+    const ctx = ctxRef.current;
+    const master = masterGainRef.current;
+    if (!ctx || !master || ctx.state !== 'running') return;
+    voiceRef.current?.stop(1.2);
+    voiceRef.current = startAmbientPad(ctx, master, decadeRef.current);
+  }, []);
+
+  // Browsers refuse to actually run an AudioContext before the page has seen
+  // a user gesture — attempt resume(), and note whether it actually worked.
+  const tryStart = useCallback(() => {
+    const ctx = ensureContext();
+    if (!ctx) return;
+    if (ctx.state === 'running') {
+      setIsAudioBlocked(false);
+      if (!voiceRef.current) startVoiceForCurrentDecade();
+      return;
+    }
+    ctx
+      .resume()
+      .then(() => {
+        const running = ctx.state === 'running';
+        setIsAudioBlocked(!running);
+        if (running) startVoiceForCurrentDecade();
+      })
+      .catch(() => setIsAudioBlocked(true));
+  }, [ensureContext, startVoiceForCurrentDecade]);
+
+  useEffect(() => {
+    if (isMusicPlaying) {
+      tryStart();
+      return;
+    }
+    voiceRef.current?.stop(1);
+    voiceRef.current = null;
+    setIsAudioBlocked(false);
+  }, [isMusicPlaying, tryStart]);
+
   // The first tap, click or key anywhere unlocks it — same trick BootOverlay
   // uses for its own audio.
   useEffect(() => {
     if (!isMusicPlaying) return;
-    const resume = () => {
-      if (audioRef.current?.paused) audioRef.current.play().catch(() => setIsAudioBlocked(true));
-    };
     const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
-    events.forEach((evt) => document.addEventListener(evt, resume, { once: true, capture: true }));
-    return () => events.forEach((evt) => document.removeEventListener(evt, resume, { capture: true }));
-  }, [isMusicPlaying]);
+    events.forEach((evt) => document.addEventListener(evt, tryStart, { once: true, capture: true }));
+    return () => events.forEach((evt) => document.removeEventListener(evt, tryStart, { capture: true }));
+  }, [isMusicPlaying, tryStart]);
+
+  // Time travel: crossfade to the new decade's chord.
+  useEffect(() => {
+    if (isMusicPlaying && ctxRef.current?.state === 'running') startVoiceForCurrentDecade();
+  }, [currentAudioDecade]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
+    const ctx = ctxRef.current;
+    const master = masterGainRef.current;
+    if (!ctx || !master) return;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.2);
   }, [volume]);
 
-  // For the player widget's toggle button: while blocked, a tap should retry
-  // playback (it's a real gesture) rather than flip the desired state to off.
-  const resumeBlockedPlayback = useCallback(() => {
-    if (audioRef.current?.paused) audioRef.current.play().catch(() => setIsAudioBlocked(true));
-  }, []);
+  useEffect(
+    () => () => {
+      voiceRef.current?.stop(0.05);
+      ctxRef.current?.close().catch(() => {});
+    },
+    []
+  );
 
   return {
-    audioRef, sfxRef,
+    sfxRef,
     isMusicPlaying, setIsMusicPlaying,
-    isAudioBlocked, resumeBlockedPlayback,
+    isAudioBlocked, resumeBlockedPlayback: tryStart,
     volume, setVolume,
     playSFX,
   };

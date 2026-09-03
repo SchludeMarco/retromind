@@ -40,7 +40,7 @@ const App: React.FC = () => {
 
   const currentAudioDecade = manualDecade || focusDecade;
   const {
-    audioRef, sfxRef,
+    sfxRef,
     isMusicPlaying, setIsMusicPlaying,
     isAudioBlocked, resumeBlockedPlayback,
     volume, setVolume,
@@ -305,7 +305,6 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
       <CrtOverlay />
-      <audio ref={audioRef} loop />
       <audio ref={sfxRef} />
 
       <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
