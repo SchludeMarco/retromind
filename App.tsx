@@ -6,7 +6,7 @@ import {
   BuzzwordCategory,
 } from './types';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, GoogleAuthControl, ChatBot, RetroPlayer, BootOverlay, CrtOverlay } from './components';
+import { ProgressBar, Header, SettingsModal, GoogleAuthControl, ChatBot, BootOverlay, CrtOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -384,10 +384,15 @@ const App: React.FC = () => {
         onSignIn={handleGoogleSignIn}
         onSignOut={handleGoogleSignOut}
       />
+      <Header />
+
+      {/* Settings live where the music button used to sit — the ambient
+          player is available from the very first screen via its controls
+          here, since music already starts playing at app boot. */}
       <button
         onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
         aria-label="App-Einstellungen öffnen"
-        className="rm-fixed fixed top-3 right-3 z-50 w-11 h-11 bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-xl"
+        className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
       >
         ⚙️
       </button>
@@ -395,27 +400,21 @@ const App: React.FC = () => {
         <SettingsModal
           fontScale={fontScale}
           onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
+          currentDecade={currentAudioDecade}
+          onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+          isPlaying={isMusicPlaying}
+          isBlocked={isAudioBlocked}
+          onToggleMusic={() => {
+            playSFX('click');
+            if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
+            else setIsMusicPlaying((v) => !v);
+          }}
+          volume={volume}
+          onVolumeChange={setVolume}
           onDismiss={() => setIsSettingsOpen(false)}
           onCloseClick={closeSettingsWithSfx}
         />
       )}
-      <Header />
-
-      {/* The ambient player stays available from the very first screen, since
-          music already starts playing at app boot. */}
-      <RetroPlayer
-        currentDecade={currentAudioDecade}
-        onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-        isPlaying={isMusicPlaying}
-        isBlocked={isAudioBlocked}
-        onToggle={() => {
-          playSFX('click');
-          if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
-          else setIsMusicPlaying((v) => !v);
-        }}
-        volume={volume}
-        onVolumeChange={setVolume}
-      />
 
       {phase !== 'intro' && (
         <>
