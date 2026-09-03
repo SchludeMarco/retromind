@@ -25,6 +25,22 @@ export const IntroPhase: React.FC<{
         </button>
       )}
 
+      {resumeTarget && (
+        <div className="mb-8 border-2 border-retro-amber bg-retro-highlight p-4">
+          <p className="font-bold mb-3">
+            Du hast eine begonnene Reise ({memoriesCount} Erinnerung{memoriesCount === 1 ? '' : 'en'}).
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <button onClick={onResume} className="retro-button bg-retro-ink text-white px-6 py-3 font-bold">
+              Weitermachen
+            </button>
+            <button onClick={onReset} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
+              Neu beginnen
+            </button>
+          </div>
+        </div>
+      )}
+
       <p className="text-lg mb-8 leading-relaxed">
         Öffne die Truhe deiner Kindheit. RetroMind führt dich Jahrzehnt für Jahrzehnt zurück, stellt dir
         persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
@@ -55,22 +71,6 @@ export const IntroPhase: React.FC<{
               </button>
             </>
           )}
-        </div>
-      )}
-
-      {resumeTarget && (
-        <div className="mb-8 border-2 border-retro-amber bg-retro-highlight p-4">
-          <p className="font-bold mb-3">
-            Du hast eine begonnene Reise ({memoriesCount} Erinnerung{memoriesCount === 1 ? '' : 'en'}).
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <button onClick={onResume} className="retro-button bg-retro-ink text-white px-6 py-3 font-bold">
-              Weitermachen
-            </button>
-            <button onClick={onReset} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
-              Neu beginnen
-            </button>
-          </div>
         </div>
       )}
 
