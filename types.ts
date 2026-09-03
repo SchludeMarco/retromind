@@ -63,7 +63,7 @@ export interface VideoStatus {
 /** A memory the user actually captured during the journey. */
 export interface CapturedMemory {
   id: string;
-  kind: 'buzzword' | 'photo' | 'note';
+  kind: 'buzzword' | 'photo' | 'note' | 'perspective';
   decade: string;
   term: string;
   prompt: string;

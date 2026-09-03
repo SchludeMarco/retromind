@@ -5,7 +5,14 @@ import {
   GalleryItem,
   BuzzwordCategory,
 } from './types';
-import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
+import {
+  generateDeepQuestion,
+  generatePerspectiveQuestion,
+  analyzeMemoryImage,
+  generateVeoVideo,
+  getAiAvailability,
+  AiAvailability,
+} from './services/geminiService';
 import { ProgressBar, Header, SettingsModal, GoogleAuthControl, ChatBot, BootOverlay, CrtOverlay } from './components';
 import {
   IntroPhase,
@@ -31,7 +38,7 @@ const App: React.FC = () => {
     phase, setPhase,
     resumeTarget, setResumeTarget,
     user, setUser,
-    memories, memoryFor, upsertMemory,
+    memories, memoryFor, perspectiveFor, upsertMemory,
     diaryEntry, setDiaryEntry,
     clickedBuzzwords, setClickedBuzzwords,
     manualDecade, setManualDecade,
@@ -57,6 +64,9 @@ const App: React.FC = () => {
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
   >(null);
   const [answerDraft, setAnswerDraft] = useState('');
+  const [perspective, setPerspective] = useState<{ question: string } | null>(null);
+  const [perspectiveDraft, setPerspectiveDraft] = useState('');
+  const [isGeneratingPerspective, setIsGeneratingPerspective] = useState(false);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -242,6 +252,9 @@ const App: React.FC = () => {
     const existing = memoryFor(wordId);
     setAnswerDraft(existing?.answer ?? '');
     setIsGenerating(!existing);
+    const existingPerspective = perspectiveFor(wordId);
+    setPerspective(existingPerspective ? { question: existingPerspective.prompt } : null);
+    setPerspectiveDraft(existingPerspective?.answer ?? '');
     // Reuse the stored question if we already have one for this word.
     const question =
       existing?.prompt ??
@@ -270,6 +283,39 @@ const App: React.FC = () => {
     });
     setSelectedWord(null);
     setToast('Erinnerung gespeichert');
+  };
+
+  const openPerspective = async () => {
+    if (!selectedWord) return;
+    playSFX('click');
+    setIsGeneratingPerspective(true);
+    const fallback =
+      `Stell dir vor, eine gute Freundin, ein Geschwister oder ein Elternteil von ` +
+      `damals hätte "${selectedWord.term}" erlebt – wie hätte diese Person den Moment wohl erzählt?`;
+    const question = await generatePerspectiveQuestion(
+      selectedWord.term,
+      user.name,
+      selectedWord.decade,
+      memoryFor(selectedWord.id)?.answer ?? '',
+      fallback
+    );
+    setPerspective({ question });
+    setIsGeneratingPerspective(false);
+  };
+
+  const savePerspectiveAnswer = () => {
+    if (!selectedWord || !perspective) return;
+    playSFX('success');
+    upsertMemory({
+      id: `pw-${selectedWord.id}`,
+      kind: 'perspective',
+      decade: selectedWord.decade,
+      term: `${selectedWord.term} · Perspektivwechsel`,
+      prompt: perspective.question,
+      answer: perspectiveDraft.trim(),
+      createdAt: Date.now(),
+    });
+    setToast('Perspektive gespeichert');
   };
 
   // --- photo lab ---
@@ -563,6 +609,13 @@ const App: React.FC = () => {
           onSave={saveBuzzwordAnswer}
           onDismiss={() => setSelectedWord(null)}
           onCloseClick={closeBuzzwordModalWithSfx}
+          perspective={perspective}
+          isGeneratingPerspective={isGeneratingPerspective}
+          perspectiveDraft={perspectiveDraft}
+          onPerspectiveAnswerChange={setPerspectiveDraft}
+          isPerspectiveSaved={!!perspectiveFor(selectedWord.id)}
+          onOpenPerspective={openPerspective}
+          onSavePerspective={savePerspectiveAnswer}
         />
       )}
 

@@ -72,6 +72,24 @@ export default async function handler(req, res) {
         return res.status(200).json({ text: (r.text || "").trim() });
       }
 
+      case "perspectiveQuestion": {
+        const { term, name, decade, originalAnswer } = payload;
+        const r = await ai.models.generateContent({
+          model: MODELS.question,
+          contents:
+            `Handle als einfühlsamer Biografie-Begleiter. ${name || "Die Person"} hat ` +
+            `gerade eine Kindheitserinnerung zum Begriff "${term}" (${decade}er Jahre) ` +
+            `festgehalten` +
+            (originalAnswer ? `:\n"${originalAnswer}"\n\n` : ".\n\n") +
+            `Erstelle EINE Frage, die dazu einlädt, denselben Moment aus der Sicht einer ` +
+            `anderen Person von damals neu zu erzählen (z. B. beste Freundin/bester Freund, ` +
+            `Geschwister oder Elternteil) – wie hätte diese Person die Szene wohl erlebt oder ` +
+            `beschrieben? Die Frage ist im Du formuliert, konkret und nostalgisch. ` +
+            `Antworte NUR mit der Frage.`,
+        });
+        return res.status(200).json({ text: (r.text || "").trim() });
+      }
+
       case "analyzeImage": {
         const { imageBase64, mimeType } = payload;
         if (!imageBase64) return res.status(400).json({ error: "no_image" });
