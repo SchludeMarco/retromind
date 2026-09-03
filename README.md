@@ -35,6 +35,12 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   `.json` lässt sich auf einem anderen Gerät wieder laden.
 - **Fortsetzen** – die komplette Sitzung liegt im `localStorage`; ein Reload bietet
   „Weitermachen“ an.
+- **Google-Login (optional)** – „Mit Google anmelden“ sichert die Reise zusätzlich
+  im **eigenen Google Drive** der Nutzer:in (privater `appDataFolder`, nur für
+  RetroMind, für niemand sonst sichtbar). Kein zentraler Server-Speicher: jede
+  Person hat ihre eigenen Erinnerungen in ihrem eigenen Konto (**dezentral**) und
+  kann so auf einem anderen Gerät weitermachen. Ohne konfigurierte Google-Client-ID
+  bleibt die App unverändert rein lokal nutzbar.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
@@ -45,11 +51,20 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 ```
 Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function)  ──▶  Google Gemini / Veo
                           ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
+                          ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
+                          ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
 ```
 
 Der **Gemini-Schlüssel liegt ausschließlich serverseitig** (Vercel-Env-Var
 `GEMINI_API_KEY`) und ist nie im Client-Bundle. `@google/genai` wird nur von den
 Functions genutzt.
+
+Der **Google-Login läuft komplett clientseitig** über Google Identity Services
+(kein eigener Auth-Server, keine Sessions/Cookies auf unserer Seite). Der dabei
+ausgestellte Access-Token wird nur im Speicher gehalten (nie persistiert) und
+ausschließlich genutzt, um die Sitzungsdatei im `appDataFolder` der Nutzer:in zu
+lesen/schreiben – ein versteckter, App-eigener Bereich ihres Google Drive, den
+weder andere Apps noch wir einsehen können.
 
 ## Tech-Stack
 
@@ -57,6 +72,8 @@ Functions genutzt.
 - **Tailwind CSS** (Play-CDN) + eigenes Retro-Theme in [`index.html`](index.html)
 - **Vercel Functions** (`api/*.js`) als KI-Proxy · **@google/genai** (Gemini + Veo)
 - Web Speech API (Diktat), `window.print()` (PDF), `localStorage` (Sitzung)
+- **Google Identity Services** (Login + OAuth-Token) · **Google Drive API**
+  (`appDataFolder`) für die optionale, dezentrale Sitzungs-Sicherung
 
 ## Lokal ausführen
 
@@ -89,9 +106,10 @@ npm i -g vercel && npm run dev:full   # = vercel dev
    Fallback-Modus (Fragen aus der Sammlung, keine Bild-/Video-/Chat-KI).
 3. Redeploy. Fertig.
 
-| Variable         | Ort            | Beschreibung                                  |
-| ---------------- | -------------- | -------------------------------------------- |
-| `GEMINI_API_KEY` | Vercel-Env     | Google-Gemini-API-Schlüssel (nur serverseitig) |
+| Variable                 | Ort         | Beschreibung                                              |
+| ------------------------ | ----------- | ---------------------------------------------------------- |
+| `GEMINI_API_KEY`         | Vercel-Env  | Google-Gemini-API-Schlüssel (nur serverseitig)              |
+| `VITE_GOOGLE_CLIENT_ID`  | Vercel-Env  | Optional: OAuth-Client-ID für „Mit Google anmelden“ (Login + Drive-Sicherung); ohne sie bleibt der Button ausgeblendet |
 
 ## Bekannte Einschränkungen
 
@@ -101,8 +119,16 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   ändern. Text/Vision/Chat nutzen GA-Modelle.
 - **Bilder & Musik** sind bewusst symbolisch (Lizenzgründe) und als solche
   gekennzeichnet – kein echtes Ära-Material außer dem einen NASA-Foto.
-- **Kein geräteübergreifender Sync** – Kontinuität über `localStorage` + manuellen
-  `.json`-Export/Import, nicht über ein Konto.
+- **Geräteübergreifender Sync ist optional** – ohne Google-Anmeldung weiterhin
+  nur über `localStorage` + manuellen `.json`-Export/Import. Mit Anmeldung wird
+  beim Login das lokal vorhandene Drive-Backup automatisch geladen, sofern
+  lokal noch keine Reise begonnen wurde; läuft bereits eine Reise, wird sie ab
+  dann zusätzlich gesichert – es gibt (noch) keine Zusammenführung zweier
+  gleichzeitig unterschiedlicher Stände auf zwei Geräten.
+- **Google-Zugriffstoken sind kurzlebig** (~1 Stunde) und werden nicht
+  gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
+  widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
+  gesichert wird.
 - **Tailwind Play-CDN** ist nicht für Hochlast-Produktion optimiert.
 
 ## Lizenz

@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- **Google-Login + dezentrale Sicherung:** „Mit Google anmelden“ (Google
+  Identity Services) sichert die Reise zusätzlich zu `localStorage` im
+  privaten `appDataFolder` des eigenen Google Drive der Nutzer:in – keine
+  zentrale Datenbank, jede Person behält ihre Erinnerungen in ihrem eigenen
+  Konto. Beim Login wird ein vorhandenes Drive-Backup automatisch geladen,
+  sofern lokal noch keine Reise begonnen wurde; Änderungen werden danach
+  debounced (1,5 s) automatisch nachgeführt. Neue optionale Env-Var
+  `VITE_GOOGLE_CLIENT_ID`; ohne sie bleibt die App unverändert rein lokal.
+  Neue Dateien: `lib/googleAuth.ts`, `services/googleDriveService.ts`,
+  `hooks/useGoogleAuth.ts`, `components/GoogleAuthControl.tsx`.
+
 ## 2.0.1
 
 - **Favicon ergänzt:** Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
