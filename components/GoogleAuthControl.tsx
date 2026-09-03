@@ -21,7 +21,7 @@ export const GoogleAuthControl: React.FC<{
   if (status === 'not_configured') return null;
 
   return (
-    <div className="rm-fixed fixed bottom-28 left-4 md:left-10 z-50 flex items-center gap-2 bg-retro-cream border-2 border-retro-ink px-2 py-1 text-xs max-w-[70vw]">
+    <div className="rm-fixed fixed bottom-10 left-4 md:left-10 z-50 flex items-center gap-2 bg-retro-cream border-2 border-retro-ink px-2 py-1 text-xs max-w-[70vw]">
       {status === 'signed_in' && user ? (
         <>
           {user.picture && (
