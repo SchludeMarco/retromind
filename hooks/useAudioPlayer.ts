@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DECADES_DB } from '../constants';
-import { SFX } from '../lib/sfx';
+import { playSfx, SfxType } from '../lib/sfx';
 
 // Owns the ambient-music <audio> element, the click/success sound effects,
 // and the volume/decade controls for the fixed RetroPlayer widget.
@@ -9,18 +9,13 @@ export function useAudioPlayer(currentAudioDecade: string) {
   const [volume, setVolume] = useState(0.05);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sfxRef = useRef<HTMLAudioElement | null>(null);
   const volumeRef = useRef(volume);
   volumeRef.current = volume;
 
   // Stable identity (reads volume from a ref) so effects that depend on it
   // don't re-fire when the volume slider moves.
-  const playSFX = useCallback((type: keyof typeof SFX) => {
-    if (!sfxRef.current) return;
-    sfxRef.current.src = SFX[type];
-    sfxRef.current.volume = Math.min(volumeRef.current * 5, 0.4);
-    sfxRef.current.currentTime = 0;
-    sfxRef.current.play().catch(() => {});
+  const playSFX = useCallback((type: SfxType) => {
+    playSfx(type, volumeRef.current);
   }, []);
 
   useEffect(() => {
@@ -43,5 +38,5 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  return { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX };
+  return { audioRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX };
 }
