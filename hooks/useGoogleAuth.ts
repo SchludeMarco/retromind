@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { GoogleUser } from '../types';
 import {
   getGoogleClientId,
   requestGoogleAccessToken,
   fetchGoogleProfile,
   revokeGoogleToken,
+  preloadGoogleIdentityServices,
   GoogleToken,
 } from '../lib/googleAuth';
 
@@ -17,6 +18,12 @@ export function useGoogleAuth() {
   const [status, setStatus] = useState<GoogleAuthStatus>(getGoogleClientId() ? 'signed_out' : 'not_configured');
   const [user, setUser] = useState<GoogleUser | null>(null);
   const tokenRef = useRef<GoogleToken | null>(null);
+
+  // Load the GIS script as soon as the app mounts, not on first tap — see
+  // preloadGoogleIdentityServices() for why.
+  useEffect(() => {
+    if (getGoogleClientId()) preloadGoogleIdentityServices().catch(() => {});
+  }, []);
 
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
     const cached = tokenRef.current;
