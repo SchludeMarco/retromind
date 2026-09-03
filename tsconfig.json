@@ -19,6 +19,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["*.ts", "*.tsx", "services", "types.ts"],
+  "include": ["*.ts", "*.tsx", "services", "lib", "hooks", "components", "types.ts"],
   "exclude": ["node_modules", "dist", "api"]
 }

@@ -1,22 +1,12 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   AppPhase,
-  UserProfile,
   VideoStatus,
   GalleryItem,
-  CapturedMemory,
-  SessionState,
   BuzzwordCategory,
 } from './types';
-import { DECADES_DB } from './constants';
-import {
-  generateDeepQuestion,
-  analyzeMemoryImage,
-  generateVeoVideo,
-  getAiAvailability,
-  AiAvailability,
-} from './services/geminiService';
-import { SFX, ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer } from './components';
+import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
+import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -28,115 +18,29 @@ import {
   GalleryDetailModal,
   BuzzwordModal,
 } from './phases';
-
-// --- Persistence & helpers ---
-const STORAGE_KEY = 'retromind.session.v2';
-const PHASES: AppPhase[] = ['intro', 'onboarding', 'induction', 'exploration', 'diary', 'book', 'finish'];
-const EMPTY_USER: UserProfile = { name: '', gender: 'divers', birthDate: '', interests: [] };
-const INTEREST_TO_CATEGORY: Record<string, BuzzwordCategory> = {
-  Musik: 'music', Technik: 'tech', Spielzeug: 'toy', Alltag: 'lifestyle', Mode: 'lifestyle', Essen: 'food',
-};
-
-function loadSession(): Partial<SessionState> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    const s = JSON.parse(raw);
-    return s && s.version === 2 ? s : {};
-  } catch {
-    return {};
-  }
-}
-function persistSession(s: SessionState) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-  } catch {
-    /* storage unavailable — non-fatal */
-  }
-}
-function clearSession() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-}
-
-function downloadBlob(filename: string, content: BlobPart, type: string) {
-  const url = URL.createObjectURL(new Blob([content], { type }));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-const todayStamp = () => new Date().toISOString().slice(0, 10);
-
-// Shrink an uploaded photo before it travels to the API (request-size + speed).
-function downscaleImage(dataUrl: string, max = 1280, quality = 0.82): Promise<string> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, max / Math.max(img.width, img.height));
-      const w = Math.round(img.width * scale);
-      const h = Math.round(img.height * scale);
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return resolve(dataUrl);
-      ctx.drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', quality));
-    };
-    img.onerror = () => resolve(dataUrl);
-    img.src = dataUrl;
-  });
-}
-
-function buildBookText(user: UserProfile, decade: string, memories: CapturedMemory[], note: string): string {
-  const out: string[] = [
-    'RETROMIND — ERINNERUNGS-BUCH',
-    '================================',
-    user.name ? `Für: ${user.name}` : '',
-    user.birthDate ? `Geboren: ${user.birthDate}` : '',
-    `Schwerpunkt: die ${decade}er Jahre`,
-    user.interests.length ? `Interessen: ${user.interests.join(', ')}` : '',
-    `Erstellt: ${new Date().toLocaleString('de-DE')}`,
-  ].filter(Boolean);
-
-  const groups: Record<string, CapturedMemory[]> = {};
-  for (const m of memories) (groups[m.decade] ||= []).push(m);
-  for (const d of Object.keys(groups).sort()) {
-    out.push('', `— ${d}er —`, '');
-    for (const m of groups[d]) {
-      out.push(`• ${m.term}`);
-      if (m.prompt) out.push(`  Frage: ${m.prompt}`);
-      out.push(`  ${m.answer.trim() || '(keine Notiz)'}`, '');
-    }
-  }
-  if (note.trim()) out.push('', '— FREIE NOTIZ —', '', note.trim());
-  return out.join('\n') + '\n';
-}
-
-// --- Main Application ---
+import { useRetroSession } from './hooks/useRetroSession';
+import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
+import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 
 const App: React.FC = () => {
-  const saved = useMemo(loadSession, []);
+  const session = useRetroSession();
+  const {
+    phase, setPhase,
+    resumeTarget, setResumeTarget,
+    user, setUser,
+    memories, memoryFor, upsertMemory,
+    diaryEntry, setDiaryEntry,
+    clickedBuzzwords, setClickedBuzzwords,
+    manualDecade, setManualDecade,
+    fontScale, setFontScale,
+    focusDecade,
+    resetJourney, importSession, exportSession,
+  } = session;
 
-  const [phase, setPhase] = useState<AppPhase>('intro');
-  const [resumeTarget, setResumeTarget] = useState<AppPhase | null>(
-    saved.phase && saved.phase !== 'intro' ? saved.phase : null
-  );
-  const [user, setUser] = useState<UserProfile>(saved.user ?? EMPTY_USER);
-  const [memories, setMemories] = useState<CapturedMemory[]>(saved.memories ?? []);
-  const [diaryEntry, setDiaryEntry] = useState<string>(saved.diaryEntry ?? '');
-  const [clickedBuzzwords, setClickedBuzzwords] = useState<string[]>(saved.clickedBuzzwords ?? []);
-  const [manualDecade, setManualDecade] = useState<string | null>(saved.manualDecade ?? null);
-  const [fontScale, setFontScale] = useState<number>(saved.fontScale ?? 1);
+  const currentAudioDecade = manualDecade || focusDecade;
+  const { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX } =
+    useAudioPlayer(currentAudioDecade);
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -145,8 +49,6 @@ const App: React.FC = () => {
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.05);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
@@ -157,41 +59,11 @@ const App: React.FC = () => {
   const [analysisSaved, setAnalysisSaved] = useState(false);
   const [videoStatus, setVideoStatus] = useState<VideoStatus>({ status: 'idle' });
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sfxRef = useRef<HTMLAudioElement | null>(null);
-  const volumeRef = useRef(volume);
-  volumeRef.current = volume;
-
-  // Stable identity (reads volume from a ref) so effects that depend on it
-  // don't re-fire when the volume slider moves.
-  const playSFX = useCallback((type: keyof typeof SFX) => {
-    if (!sfxRef.current) return;
-    sfxRef.current.src = SFX[type];
-    sfxRef.current.volume = Math.min(volumeRef.current * 5, 0.4);
-    sfxRef.current.currentTime = 0;
-    sfxRef.current.play().catch(() => {});
-  }, []);
-
-  // --- derived ---
-  const focusDecade = useMemo(() => {
-    if (!user.birthDate) return '1980';
-    const year = new Date(user.birthDate).getFullYear();
-    if (Number.isNaN(year)) return '1980';
-    const raw = Math.floor((year + 8) / 10) * 10;
-    return String(Math.min(2010, Math.max(1960, raw)));
-  }, [user.birthDate]);
-
-  const currentAudioDecade = manualDecade || focusDecade;
   const userCategories = useMemo(
-    () => new Set(user.interests.map((i) => INTEREST_TO_CATEGORY[i]).filter(Boolean)),
+    () => new Set(user.interests.map((i) => INTEREST_TO_CATEGORY[i]).filter(Boolean) as BuzzwordCategory[]),
     [user.interests]
   );
   const phaseIndex = PHASES.indexOf(phase) + 1;
-
-  const memoryFor = useCallback(
-    (id: string) => memories.find((m) => m.kind === 'buzzword' && m.id === `bw-${id}`),
-    [memories]
-  );
 
   // --- effects ---
   useEffect(() => {
@@ -201,44 +73,6 @@ const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
   }, [fontScale]);
-
-  // Persist the whole session whenever something meaningful changes. While the
-  // user is still on the intro with a resume offer pending, keep the stored
-  // phase pointing at where they left off (don't overwrite it with 'intro').
-  useEffect(() => {
-    const state: SessionState = {
-      version: 2,
-      phase: phase === 'intro' && resumeTarget ? resumeTarget : phase,
-      user,
-      diaryEntry,
-      memories,
-      clickedBuzzwords,
-      manualDecade,
-      fontScale,
-      updatedAt: Date.now(),
-    };
-    persistSession(state);
-  }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const track = DECADES_DB[currentAudioDecade]?.audioUrl;
-    if (track && audioRef.current.src !== track) {
-      audioRef.current.src = track;
-      audioRef.current.load();
-      if (isMusicPlaying) audioRef.current.play().catch(() => {});
-    }
-  }, [currentAudioDecade]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    if (isMusicPlaying) audioRef.current.play().catch(() => {});
-    else audioRef.current.pause();
-  }, [isMusicPlaying]);
-
-  useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
-  }, [volume]);
 
   useEffect(() => {
     if (phase !== 'intro') playSFX('transition');
@@ -270,20 +104,13 @@ const App: React.FC = () => {
     setIsMusicPlaying(true);
   };
 
-  const resetJourney = () => {
+  const handleResetJourney = () => {
     playSFX('click');
-    clearSession();
-    setResumeTarget(null);
-    setUser(EMPTY_USER);
-    setMemories([]);
-    setDiaryEntry('');
-    setClickedBuzzwords([]);
-    setManualDecade(null);
+    resetJourney();
     setUploadedImage(null);
     setAnalysis(null);
     setAnalysisSaved(false);
     setVideoStatus({ status: 'idle' });
-    setPhase('intro');
     window.scrollTo({ top: 0 });
   };
 
@@ -322,16 +149,6 @@ const App: React.FC = () => {
   };
 
   // --- memories ---
-  const upsertMemory = (mem: CapturedMemory) => {
-    setMemories((prev) => {
-      const idx = prev.findIndex((m) => m.id === mem.id);
-      if (idx === -1) return [...prev, mem];
-      const copy = [...prev];
-      copy[idx] = mem;
-      return copy;
-    });
-  };
-
   const openBuzzword = async (
     wordId: string,
     term: string,
@@ -451,52 +268,29 @@ const App: React.FC = () => {
   };
 
   // --- exports ---
-  const bookText = () => buildBookText(user, focusDecade, memories, diaryEntry);
   const exportText = () => {
     playSFX('click');
-    downloadBlob(`retromind-erinnerungsbuch-${todayStamp()}.txt`, bookText(), 'text/plain;charset=utf-8');
+    downloadBlob(
+      `retromind-erinnerungsbuch-${todayStamp()}.txt`,
+      buildBookText(user, focusDecade, memories, diaryEntry),
+      'text/plain;charset=utf-8'
+    );
   };
-  const exportSession = () => {
+  const exportSessionFile = () => {
     playSFX('click');
-    const state: SessionState = {
-      version: 2,
-      phase,
-      user,
-      diaryEntry,
-      memories,
-      clickedBuzzwords,
-      manualDecade,
-      fontScale,
-      updatedAt: Date.now(),
-    };
-    downloadBlob(`retromind-sitzung-${todayStamp()}.json`, JSON.stringify(state, null, 2), 'application/json');
+    downloadBlob(`retromind-sitzung-${todayStamp()}.json`, JSON.stringify(exportSession(), null, 2), 'application/json');
   };
-  const importSession = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const importSessionFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    try {
-      const s = JSON.parse(await file.text());
-      if (s.version !== 2) throw new Error('bad version');
-      setUser(s.user ?? EMPTY_USER);
-      setMemories(s.memories ?? []);
-      setDiaryEntry(s.diaryEntry ?? '');
-      setClickedBuzzwords(s.clickedBuzzwords ?? []);
-      setManualDecade(s.manualDecade ?? null);
-      setFontScale(s.fontScale ?? 1);
-      setResumeTarget(null);
-      setPhase(s.phase && PHASES.includes(s.phase) ? s.phase : 'book');
-      setToast('Sitzung geladen');
-    } catch {
-      setToast('Diese Datei konnte nicht gelesen werden');
-    }
+    const ok = await importSession(file);
+    setToast(ok ? 'Sitzung geladen' : 'Diese Datei konnte nicht gelesen werden');
   };
-
   const printBook = () => {
     playSFX('click');
     window.print();
   };
-
 
   // --- render helpers ---
   const aiOff = aiAvailability === 'not_configured';
@@ -543,7 +337,7 @@ const App: React.FC = () => {
           memoriesCount={memories.length}
           onStart={startJourney}
           onResume={resumeJourney}
-          onReset={resetJourney}
+          onReset={handleResetJourney}
         />
       )}
 
@@ -607,8 +401,8 @@ const App: React.FC = () => {
           diaryEntry={diaryEntry}
           onPrint={printBook}
           onExportText={exportText}
-          onExportSession={exportSession}
-          onImportSession={importSession}
+          onExportSession={exportSessionFile}
+          onImportSession={importSessionFile}
           onBack={() => goTo('diary')}
           onNext={() => goTo('finish')}
         />
@@ -619,7 +413,7 @@ const App: React.FC = () => {
           userName={user.name}
           memoriesCount={memories.length}
           onViewBook={() => goTo('book')}
-          onRestart={resetJourney}
+          onRestart={handleResetJourney}
         />
       )}
 
