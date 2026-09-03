@@ -3,7 +3,7 @@ import { startAmbientPad, AmbientVoice } from '../lib/ambientSynth';
 import { SFX } from '../lib/sfx';
 
 // Owns the generative ambient-music synth, the click/success sound effects,
-// and the volume/decade controls for the fixed RetroPlayer widget. Music
+// and the volume/decade controls surfaced in the settings modal. Music
 // starts right at app boot and loops forever (it's a sustained synthesized
 // pad, not a file); a time travel (decade change) just crossfades to a new
 // chord underneath it.
