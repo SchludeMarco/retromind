@@ -16,23 +16,23 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
+import { SFX, ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer } from './components';
 import {
-  SFX,
-  ProgressBar,
-  Header,
-  FontSizeControl,
-  Modal,
-  GalleryCard,
-  ChatBot,
-  MemoryAnswer,
-  RetroPlayer,
-} from './components';
+  IntroPhase,
+  OnboardingPhase,
+  InductionPhase,
+  ExplorationPhase,
+  DiaryPhase,
+  BookPhase,
+  FinishPhase,
+  GalleryDetailModal,
+  BuzzwordModal,
+} from './phases';
 
 // --- Persistence & helpers ---
 const STORAGE_KEY = 'retromind.session.v2';
 const PHASES: AppPhase[] = ['intro', 'onboarding', 'induction', 'exploration', 'diary', 'book', 'finish'];
 const EMPTY_USER: UserProfile = { name: '', gender: 'divers', birthDate: '', interests: [] };
-const INTEREST_LABELS = ['Musik', 'Technik', 'Spielzeug', 'Alltag', 'Mode', 'Essen'];
 const INTEREST_TO_CATEGORY: Record<string, BuzzwordCategory> = {
   Musik: 'music', Technik: 'tech', Spielzeug: 'toy', Alltag: 'lifestyle', Mode: 'lifestyle', Essen: 'food',
 };
@@ -159,7 +159,6 @@ const App: React.FC = () => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<HTMLAudioElement | null>(null);
-  const importInputRef = useRef<HTMLInputElement | null>(null);
   const volumeRef = useRef(volume);
   volumeRef.current = volume;
 
@@ -302,6 +301,24 @@ const App: React.FC = () => {
         ? prev.interests.filter((i) => i !== interest)
         : [...prev.interests, interest],
     }));
+  };
+
+  const selectGalleryItem = (item: GalleryItem) => {
+    playSFX('click');
+    setSelectedGalleryItem(item);
+  };
+  const closeGalleryItemWithSfx = () => {
+    playSFX('click');
+    setSelectedGalleryItem(null);
+  };
+  const closeBuzzwordModalWithSfx = () => {
+    playSFX('click');
+    setSelectedWord(null);
+  };
+  const clearUploadedImage = () => {
+    playSFX('click');
+    setUploadedImage(null);
+    setAnalysis(null);
   };
 
   // --- memories ---
@@ -480,20 +497,13 @@ const App: React.FC = () => {
     window.print();
   };
 
-  // --- render helpers ---
-  const decadeData = DECADES_DB[focusDecade];
-  const aiOff = aiAvailability === 'not_configured';
 
-  const AiNotice = () =>
-    aiOff ? (
-      <div className="mb-6 border-2 border-[#2c1810] bg-[#fef3c7] p-3 text-sm text-[#2c1810]">
-        <strong>Demo-Hinweis:</strong> Dieses Demo läuft ohne KI-Schlüssel. Erinnerungsfragen kommen aus der
-        Sammlung; Bildanalyse, Video und Chat-Begleiter sind deaktiviert.
-      </div>
-    ) : null;
+  // --- render helpers ---
+  const aiOff = aiAvailability === 'not_configured';
+  const isAnswered = (id: string) => !!memoryFor(id);
 
   return (
-    <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-[#2c1810]">
+    <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <audio ref={audioRef} loop />
       <audio ref={sfxRef} />
 
@@ -505,7 +515,7 @@ const App: React.FC = () => {
           <button
             onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
             aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-            className="rm-fixed fixed bottom-10 left-4 md:left-10 z-50 w-14 h-14 bg-[#2c1810] text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+            className="rm-fixed fixed bottom-10 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
           >
             {isChatOpen ? '✕' : '💬'}
           </button>
@@ -522,511 +532,119 @@ const App: React.FC = () => {
       )}
 
       {toast && (
-        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-[#2c1810] text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
+        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
         </div>
       )}
 
-      {/* INTRO */}
       {phase === 'intro' && (
-        <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
-          <div className="retro-card p-8 md:p-12 max-w-2xl bg-[#fff9eb]">
-            <h2 className="text-4xl mb-6">Willkommen, Zeitreisende:r</h2>
-            <p className="text-lg mb-8 leading-relaxed">
-              Öffne die Truhe deiner Kindheit. RetroMind führt dich Jahrzehnt für Jahrzehnt zurück, stellt dir
-              persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
-            </p>
-
-            {resumeTarget && (
-              <div className="mb-8 border-2 border-[#d97706] bg-[#fef3c7] p-4">
-                <p className="font-bold mb-3">
-                  Du hast eine begonnene Reise ({memories.length} Erinnerung{memories.length === 1 ? '' : 'en'}).
-                </p>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  <button onClick={resumeJourney} className="retro-button bg-[#2c1810] text-white px-6 py-3 font-bold">
-                    Weitermachen
-                  </button>
-                  <button onClick={resetJourney} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
-                    Neu beginnen
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {!resumeTarget && (
-              <button
-                onClick={startJourney}
-                className="retro-button bg-[#d97706] text-white px-12 py-5 text-2xl font-bold hover:bg-[#b45309] w-full md:w-auto"
-              >
-                Zeitreise starten
-              </button>
-            )}
-
-            <details className="mt-10 text-left text-sm text-[#5b4636]">
-              <summary className="cursor-pointer font-bold uppercase tracking-widest text-xs">
-                Wie RetroMind mit deinen Daten umgeht
-              </summary>
-              <ul className="list-disc pl-5 mt-3 space-y-1">
-                <li>Profil, Antworten und Tagebuch bleiben <strong>nur in diesem Browser</strong> (localStorage). Kein Konto, kein Server-Speicher.</li>
-                <li>Lädst du ein Foto hoch, wird es zur Beschreibung an die Google-Gemini-API gesendet (und für die optionale Video-Funktion an Veo). Sonst verlässt nichts dein Gerät.</li>
-                <li>Über „Sitzung sichern" kannst du alles als Datei exportieren, über „Neu beginnen" alles löschen.</li>
-              </ul>
-            </details>
-          </div>
-        </div>
+        <IntroPhase
+          resumeTarget={resumeTarget}
+          memoriesCount={memories.length}
+          onStart={startJourney}
+          onResume={resumeJourney}
+          onReset={resetJourney}
+        />
       )}
 
-      {/* ONBOARDING */}
       {phase === 'onboarding' && (
-        <div className="py-8 animate-fadeIn">
-          <div className="retro-card p-6 md:p-12 bg-[#fff9eb]">
-            <h2 className="text-3xl mb-8 border-b-2 border-[#2c1810] pb-2">Wer bist du?</h2>
-            <form onSubmit={handleOnboarding} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="rm-name" className="block text-sm font-bold uppercase mb-1">Name</label>
-                  <input
-                    id="rm-name"
-                    required
-                    type="text"
-                    value={user.name}
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
-                    className="w-full border-2 border-[#2c1810] p-3 bg-white"
-                    placeholder="Wie wirst du genannt?"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="rm-birth" className="block text-sm font-bold uppercase mb-1">Geburtsdatum</label>
-                  <input
-                    id="rm-birth"
-                    required
-                    type="date"
-                    min="1930-01-01"
-                    max={todayStamp()}
-                    value={user.birthDate}
-                    onChange={(e) => setUser({ ...user, birthDate: e.target.value })}
-                    className="w-full border-2 border-[#2c1810] p-3 bg-white"
-                  />
-                </div>
-              </div>
-              <div className="space-y-4">
-                <span className="block text-sm font-bold uppercase mb-1">Interessen (für persönlichere Fragen)</span>
-                <div className="flex flex-wrap gap-2">
-                  {INTEREST_LABELS.map((interest) => (
-                    <button
-                      key={interest}
-                      type="button"
-                      aria-pressed={user.interests.includes(interest)}
-                      onClick={() => toggleInterest(interest)}
-                      className={`px-4 py-2 border-2 border-[#2c1810] text-sm font-bold ${
-                        user.interests.includes(interest) ? 'bg-[#2c1810] text-white' : 'bg-white'
-                      }`}
-                    >
-                      {interest}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="md:col-span-2 text-right pt-2">
-                <button type="submit" className="retro-button bg-[#2c1810] text-white px-10 py-4 font-bold">
-                  Weiter
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <OnboardingPhase
+          user={user}
+          onUserChange={setUser}
+          onToggleInterest={toggleInterest}
+          onSubmit={handleOnboarding}
+          maxBirthDate={todayStamp()}
+        />
       )}
 
-      {/* INDUCTION */}
       {phase === 'induction' && (
-        <div className="py-8 animate-fadeIn">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl mb-3">Deine Zeit: {decadeData?.title}</h2>
-            <p className="text-[#5b4636]">
-              Du warst in den {focusDecade}ern ungefähr im Grundschulalter. Ein paar Impressionen zum Einstimmen –
-              tippe für die Beschreibung.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {decadeData?.galleryItems.map((item) => (
-              <GalleryCard key={item.keyword} item={item} onClick={() => { playSFX('click'); setSelectedGalleryItem(item); }} />
-            ))}
-          </div>
-          <p className="text-xs text-[#8a6a3f] mt-4 text-center italic">
-            Die Bilder sind – wo nicht anders angegeben – symbolische Zeit-Impressionen, keine echten Zeitdokumente.
-          </p>
-
-          <div className="mt-12 text-center">
-            <button onClick={() => goTo('exploration')} className="retro-button bg-[#d97706] text-white px-12 py-5 text-xl font-bold">
-              In die Details eintauchen
-            </button>
-          </div>
-        </div>
+        <InductionPhase
+          focusDecade={focusDecade}
+          onSelectGalleryItem={selectGalleryItem}
+          onContinue={() => goTo('exploration')}
+        />
       )}
 
-      {/* EXPLORATION */}
       {phase === 'exploration' && (
-        <div className="py-8 animate-fadeIn space-y-14">
-          <AiNotice />
-
-          {/* Memory lab */}
-          <div className="retro-card p-6 md:p-8 bg-[#fffcf5] border-4 border-double">
-            <h2 className="text-3xl mb-3 flex items-center gap-3">
-              <span aria-hidden="true">🧪</span> Das Memory-Labor
-            </h2>
-            <p className="mb-6 text-[#5b4636] italic">
-              Lade ein altes Foto hoch. Die KI beschreibt es dir – und du kannst die Beschreibung als Erinnerung behalten.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="border-4 border-dashed border-[#2c1810]/20 p-6 bg-white min-h-[280px] flex flex-col items-center justify-center text-center">
-                {uploadedImage ? (
-                  <>
-                    <img src={uploadedImage} alt="Dein hochgeladenes Foto" className="max-h-56 border-2 border-[#2c1810] shadow-md" />
-                    <button onClick={() => { playSFX('click'); setUploadedImage(null); setAnalysis(null); }} className="mt-3 text-xs underline font-bold text-[#5b4636]">
-                      Anderes Bild wählen
-                    </button>
-                  </>
-                ) : (
-                  <label className="retro-button bg-[#2c1810] text-white px-6 py-3 cursor-pointer font-bold">
-                    Bild hochladen
-                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                  </label>
-                )}
-                {uploadError && <p className="mt-3 text-xs font-bold text-red-700">{uploadError}</p>}
-              </div>
-
-              <div className="space-y-4">
-                <button
-                  disabled={!uploadedImage || aiOff}
-                  onClick={handleAnalyze}
-                  className={`retro-button py-3 font-bold w-full ${!uploadedImage || aiOff ? 'opacity-50 cursor-not-allowed bg-white' : 'bg-white hover:bg-gray-100'}`}
-                >
-                  Foto beschreiben lassen
-                </button>
-                <div>
-                  <button
-                    disabled={!uploadedImage || aiOff || videoStatus.status === 'generating'}
-                    onClick={handleGenerateVideo}
-                    className={`retro-button py-3 font-bold text-white w-full ${
-                      !uploadedImage || aiOff || videoStatus.status === 'generating' ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#d97706] hover:bg-[#b45309]'
-                    }`}
-                  >
-                    {videoStatus.status === 'generating' ? 'KI arbeitet…' : 'Foto zum Leben erwecken (Video)'}
-                  </button>
-                  <p className="text-xs mt-1 text-[#8a6a3f] text-center">
-                    Video-Funktion benötigt ein Google-Projekt mit Billing.
-                  </p>
-                </div>
-
-                {analysis && (
-                  <div className="p-4 bg-white border-2 border-[#2c1810] text-sm leading-relaxed">
-                    <p className="font-bold mb-2 uppercase text-[#b45309]">Nostalgische Beschreibung</p>
-                    <div className="whitespace-pre-wrap">{analysis}</div>
-                    {analysis !== 'Analysiere…' && (
-                      <button
-                        onClick={saveAnalysisAsMemory}
-                        disabled={analysisSaved}
-                        className="mt-3 text-xs font-bold uppercase border-2 border-[#2c1810] px-3 py-1.5 bg-[#fff9eb] disabled:opacity-50"
-                      >
-                        {analysisSaved ? '✓ Im Buch gespeichert' : 'Zur Erinnerung hinzufügen'}
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                {videoStatus.status !== 'idle' && (
-                  <div className="p-4 bg-[#2c1810] text-white border-2 border-white">
-                    <p className="text-xs font-bold uppercase mb-1">
-                      {videoStatus.status === 'generating' ? 'Filmrolle wird entwickelt…' : videoStatus.status === 'done' ? 'Fertig!' : 'Hinweis'}
-                    </p>
-                    <p className="text-xs opacity-90">{videoStatus.message}</p>
-                    {videoStatus.url && (
-                      <div className="mt-3">
-                        <video src={videoStatus.url} controls className="w-full border-2 border-white" />
-                        <a href={videoStatus.url} className="text-xs underline mt-2 block font-bold text-orange-200">
-                          Video herunterladen
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Wall of words */}
-          <div className="space-y-10">
-            <div>
-              <h2 className="text-3xl border-b-2 border-[#2c1810] pb-2">Die Erinnerungs-Wand</h2>
-              <p className="text-sm text-[#5b4636] mt-2">
-                Tippe auf ein Stichwort. Du bekommst eine persönliche Frage – und ein Feld, um deine Antwort
-                festzuhalten. {userCategories.size > 0 && 'Stichworte zu deinen Interessen stehen oben.'}
-              </p>
-            </div>
-
-            {Object.entries(DECADES_DB).map(([year, data]) => {
-              const sorted = [...data.buzzwords].sort((a, b) => {
-                const am = userCategories.has(a.category) ? 0 : 1;
-                const bm = userCategories.has(b.category) ? 0 : 1;
-                return am - bm;
-              });
-              return (
-                <div
-                  key={year}
-                  className={`p-5 rounded-lg ${year === focusDecade ? 'bg-[#fef3c7] border-2 border-dashed border-[#d97706]' : ''}`}
-                >
-                  <h3 className="text-2xl mb-5 flex items-center gap-3 flex-wrap">
-                    <span className="bg-[#2c1810] text-white px-3 py-1 text-sm font-bold">{year}er</span>
-                    {data.title}
-                    {year === focusDecade && <span className="text-xs uppercase font-bold text-[#b45309]">deine Zeit</span>}
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {sorted.map((bw) => {
-                      const answered = !!memoryFor(bw.id);
-                      const clicked = clickedBuzzwords.includes(bw.id);
-                      const highlight = userCategories.has(bw.category);
-                      return (
-                        <button
-                          key={bw.id}
-                          onClick={() => openBuzzword(bw.id, bw.term, bw.knowledge, year, bw.question)}
-                          className={`px-5 py-3 border-2 font-bold relative ${
-                            answered
-                              ? 'bg-[#3f7d4f] text-white border-transparent'
-                              : clicked
-                              ? 'bg-[#8b5cf6] text-white border-transparent'
-                              : 'bg-white border-[#2c1810] hover:bg-[#fff9eb]'
-                          }`}
-                        >
-                          {highlight && <span aria-hidden="true" className="mr-1">★</span>}
-                          {bw.term}
-                          {answered && <span aria-hidden="true" className="absolute -top-2 -right-2 text-sm">✓</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <button onClick={() => goTo('induction')} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
-              ← Zu den Impressionen
-            </button>
-            <button onClick={() => goTo('diary')} className="retro-button bg-[#2c1810] text-white px-10 py-4 font-bold">
-              Weiter zum Tagebuch ({memories.length})
-            </button>
-          </div>
-        </div>
+        <ExplorationPhase
+          aiOff={aiOff}
+          uploadedImage={uploadedImage}
+          uploadError={uploadError}
+          analysis={analysis}
+          analysisSaved={analysisSaved}
+          videoStatus={videoStatus}
+          onImageUpload={handleImageUpload}
+          onClearImage={clearUploadedImage}
+          onAnalyze={handleAnalyze}
+          onSaveAnalysis={saveAnalysisAsMemory}
+          onGenerateVideo={handleGenerateVideo}
+          focusDecade={focusDecade}
+          userCategories={userCategories}
+          clickedBuzzwords={clickedBuzzwords}
+          memoriesCount={memories.length}
+          isAnswered={isAnswered}
+          onOpenBuzzword={openBuzzword}
+          onBack={() => goTo('induction')}
+          onNext={() => goTo('diary')}
+        />
       )}
 
-      {/* DIARY */}
       {phase === 'diary' && (
-        <div className="py-8 animate-fadeIn max-w-3xl mx-auto">
-          <div className="retro-card p-6 md:p-8 bg-[#fff9eb]">
-            <h2 className="text-3xl mb-2">Freie Notiz</h2>
-            <p className="text-sm text-[#5b4636] mb-4">
-              Deine {memories.length} gesammelte{memories.length === 1 ? '' : 'n'} Erinnerung
-              {memories.length === 1 ? '' : 'en'} sind schon im Buch. Hier ist Platz für alles, was sonst noch hochkam.
-            </p>
-            <textarea
-              className="w-full h-56 p-4 border-2 border-[#2c1810] bg-white text-[#2c1810] focus:outline-none focus:ring-2 focus:ring-[#d97706]"
-              placeholder="Diese Musik hat mich sofort zurückversetzt in…"
-              value={diaryEntry}
-              onChange={(e) => setDiaryEntry(e.target.value)}
-            />
-            <p className="text-xs text-[#8a6a3f] mt-2">Wird automatisch in diesem Browser gespeichert.</p>
-            <div className="flex flex-wrap justify-between items-center gap-3 mt-6">
-              <button onClick={() => goTo('exploration')} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
-                ← Zurück zur Wand
-              </button>
-              <button onClick={() => goTo('book')} className="retro-button bg-[#2c1810] text-white px-10 py-4 font-bold">
-                Erinnerungs-Buch ansehen
-              </button>
-            </div>
-          </div>
-        </div>
+        <DiaryPhase
+          memoriesCount={memories.length}
+          diaryEntry={diaryEntry}
+          onDiaryChange={setDiaryEntry}
+          onBack={() => goTo('exploration')}
+          onNext={() => goTo('book')}
+        />
       )}
 
-      {/* MEMORY BOOK */}
       {phase === 'book' && (
-        <div className="py-8 animate-fadeIn max-w-3xl mx-auto">
-          <div id="memory-book" className="retro-card p-6 md:p-10 bg-white">
-            <div className="text-center border-b-4 border-double border-[#2c1810] pb-6 mb-6">
-              <p className="uppercase tracking-[0.3em] text-xs font-bold text-[#8a6a3f]">RetroMind</p>
-              <h2 className="text-4xl retro-serif font-bold my-2">Erinnerungs-Buch</h2>
-              {user.name && <p className="text-lg">für {user.name}</p>}
-              <p className="text-sm text-[#5b4636]">
-                Eine Zeitreise durch die {focusDecade}er · {new Date().toLocaleDateString('de-DE')}
-              </p>
-              {user.interests.length > 0 && (
-                <p className="text-xs text-[#8a6a3f] mt-1">Interessen: {user.interests.join(', ')}</p>
-              )}
-            </div>
-
-            {memories.length === 0 && !diaryEntry.trim() && (
-              <p className="text-center text-[#5b4636] italic py-8">
-                Noch keine Erinnerungen gesammelt. Geh zurück zur Wand und beantworte ein paar Fragen.
-              </p>
-            )}
-
-            {memories.map((m) => (
-              <div key={m.id} className="mb-6 pb-6 border-b border-[#2c1810]/15 last:border-0">
-                <p className="text-xs uppercase font-bold text-[#8a6a3f]">{m.decade}er · {m.term}</p>
-                {m.prompt && <p className="retro-serif italic text-lg mt-1 mb-2">{m.prompt}</p>}
-                {m.photo && (
-                  <img src={m.photo} alt="" className="my-3 max-h-64 border-2 border-[#2c1810]" />
-                )}
-                <p className="whitespace-pre-wrap leading-relaxed">{m.answer.trim() || '(keine Notiz)'}</p>
-              </div>
-            ))}
-
-            {diaryEntry.trim() && (
-              <div className="mt-4">
-                <p className="text-xs uppercase font-bold text-[#8a6a3f]">Freie Notiz</p>
-                <p className="whitespace-pre-wrap leading-relaxed mt-1">{diaryEntry.trim()}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="no-print flex flex-wrap gap-3 justify-center mt-8">
-            <button onClick={printBook} className="retro-button bg-[#d97706] text-white px-8 py-4 font-bold">
-              Als PDF speichern / drucken
-            </button>
-            <button onClick={exportText} className="px-6 py-4 border-2 border-[#2c1810] font-bold bg-white">
-              Als Textdatei
-            </button>
-            <button onClick={exportSession} className="px-6 py-4 border-2 border-[#2c1810] font-bold bg-white">
-              Sitzung sichern (.json)
-            </button>
-            <button onClick={() => importInputRef.current?.click()} className="px-6 py-4 border-2 border-[#2c1810] font-bold bg-white">
-              Sitzung laden
-            </button>
-            <input ref={importInputRef} type="file" accept="application/json" className="hidden" onChange={importSession} />
-          </div>
-          <div className="no-print flex flex-wrap gap-3 justify-center mt-3">
-            <button onClick={() => goTo('diary')} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white text-sm">
-              ← Zurück
-            </button>
-            <button onClick={() => goTo('finish')} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white text-sm">
-              Reise abschließen
-            </button>
-          </div>
-        </div>
+        <BookPhase
+          user={user}
+          focusDecade={focusDecade}
+          memories={memories}
+          diaryEntry={diaryEntry}
+          onPrint={printBook}
+          onExportText={exportText}
+          onExportSession={exportSession}
+          onImportSession={importSession}
+          onBack={() => goTo('diary')}
+          onNext={() => goTo('finish')}
+        />
       )}
 
-      {/* FINISH */}
       {phase === 'finish' && (
-        <div className="py-16 text-center animate-fadeIn">
-          <div className="inline-block p-8 md:p-12 bg-white border-8 border-double border-[#2c1810] shadow-2xl max-w-xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Alles Gute{user.name ? `, ${user.name}` : ''}!</h2>
-            <p className="text-lg text-[#5b4636] mb-8">
-              Deine Zeitreise ist für heute vorbei. {memories.length} Erinnerung
-              {memories.length === 1 ? '' : 'en'} liegen jetzt in deinem Buch – jederzeit wieder abrufbar.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button onClick={() => goTo('book')} className="retro-button bg-[#2c1810] text-white px-8 py-4 font-bold">
-                Buch ansehen
-              </button>
-              <button onClick={resetJourney} className="px-8 py-4 border-2 border-[#2c1810] font-bold bg-white">
-                Neue Reise beginnen
-              </button>
-            </div>
-          </div>
-        </div>
+        <FinishPhase
+          userName={user.name}
+          memoriesCount={memories.length}
+          onViewBook={() => goTo('book')}
+          onRestart={resetJourney}
+        />
       )}
 
-      {/* Gallery detail modal */}
       {selectedGalleryItem && (
-        <Modal onClose={() => setSelectedGalleryItem(null)} label={selectedGalleryItem.title}>
-          <button
-            onClick={() => { playSFX('click'); setSelectedGalleryItem(null); }}
-            aria-label="Schließen"
-            className="absolute top-3 right-3 text-2xl leading-none"
-          >
-            ✕
-          </button>
-          <span className="text-xs uppercase font-bold text-[#b45309] block">Zeit-Impression</span>
-          <h3 className="text-3xl font-bold mb-3">{selectedGalleryItem.title}</h3>
-          {selectedGalleryItem.image && (
-            <img src={selectedGalleryItem.image} alt={selectedGalleryItem.title} className="w-full border-2 border-[#2c1810] mb-3" />
-          )}
-          <p className="text-lg leading-relaxed italic border-t-2 border-[#2c1810] pt-3">
-            {selectedGalleryItem.description}
-          </p>
-          {selectedGalleryItem.credit && (
-            <p className="text-xs text-[#8a6a3f] mt-2">{selectedGalleryItem.credit}</p>
-          )}
-          <button
-            onClick={() => { playSFX('click'); setSelectedGalleryItem(null); }}
-            className="w-full mt-6 retro-button bg-[#2c1810] text-white py-3 font-bold uppercase"
-          >
-            Schließen
-          </button>
-        </Modal>
+        <GalleryDetailModal
+          item={selectedGalleryItem}
+          onDismiss={() => setSelectedGalleryItem(null)}
+          onCloseClick={closeGalleryItemWithSfx}
+        />
       )}
 
-      {/* Buzzword / memory-capture modal */}
       {selectedWord && (
-        <Modal onClose={() => setSelectedWord(null)} label={`Erinnerung: ${selectedWord.term}`}>
-          <button
-            onClick={() => { playSFX('click'); setSelectedWord(null); }}
-            aria-label="Schließen"
-            className="absolute top-3 right-3 text-2xl leading-none"
-          >
-            ✕
-          </button>
-          <span className="text-xs uppercase font-bold text-[#b45309] block">Wissen von damals</span>
-          <h3 className="text-3xl font-bold mb-2">{selectedWord.term}</h3>
-          <p className="text-base leading-relaxed mb-5 italic">"{selectedWord.knowledge}"</p>
-
-          <div className="bg-[#f3f4f6] p-4 border-l-4 border-[#d97706] mb-4">
-            <h4 className="text-xs uppercase font-bold text-[#5b4636] mb-2">Deine persönliche Frage</h4>
-            {isGenerating ? (
-              <p className="italic text-sm animate-pulse">Die KI überlegt sich eine Frage für dich…</p>
-            ) : (
-              <p className="text-lg retro-serif leading-snug">{selectedWord.question}</p>
-            )}
-          </div>
-
-          <MemoryAnswer
-            value={answerDraft}
-            onChange={setAnswerDraft}
-            placeholder="Was fällt dir dazu ein? Ein Detail, ein Geruch, ein Moment…"
-          />
-
-          <div className="flex flex-wrap gap-3 mt-5">
-            <button onClick={saveBuzzwordAnswer} className="retro-button bg-[#2c1810] text-white px-6 py-3 font-bold flex-grow">
-              {memoryFor(selectedWord.id) ? 'Erinnerung aktualisieren' : 'Erinnerung speichern'}
-            </button>
-            <button onClick={() => { playSFX('click'); setSelectedWord(null); }} className="px-6 py-3 border-2 border-[#2c1810] font-bold bg-white">
-              Später
-            </button>
-          </div>
-        </Modal>
+        <BuzzwordModal
+          word={selectedWord}
+          isGenerating={isGenerating}
+          answerDraft={answerDraft}
+          onAnswerChange={setAnswerDraft}
+          isExistingMemory={!!memoryFor(selectedWord.id)}
+          onSave={saveBuzzwordAnswer}
+          onDismiss={() => setSelectedWord(null)}
+          onCloseClick={closeBuzzwordModalWithSfx}
+        />
       )}
 
       <ProgressBar current={phaseIndex} total={PHASES.length} />
-
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
-        .animate-popIn { animation: popIn 0.25s ease-out forwards; }
-        .animate-spin { animation: spin 4s linear infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-fadeIn, .animate-popIn, .animate-spin, .animate-pulse { animation: none !important; }
-          * { scroll-behavior: auto !important; }
-        }
-        @media print {
-          body { background: #fff !important; }
-          .rm-fixed, .no-print { display: none !important; }
-          #memory-book { border: none !important; box-shadow: none !important; padding: 0 !important; }
-          .retro-card { box-shadow: none !important; }
-        }
-      `}</style>
     </div>
   );
 };
