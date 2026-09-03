@@ -1,3 +1,4 @@
+export { BootOverlay } from './BootOverlay';
 export { ProgressBar } from './ProgressBar';
 export { Header } from './Header';
 export { FontSizeControl } from './FontSizeControl';

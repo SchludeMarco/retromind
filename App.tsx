@@ -6,7 +6,7 @@ import {
   BuzzwordCategory,
 } from './types';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer } from './components';
+import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer, BootOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -298,6 +298,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
+      <BootOverlay />
       <audio ref={audioRef} loop />
       <audio ref={sfxRef} />
 
