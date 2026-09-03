@@ -14,7 +14,7 @@ export const RetroPlayer: React.FC<{
 
   if (!isExpanded) {
     return (
-      <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
+      <div className="rm-fixed fixed top-16 left-4 md:top-20 md:left-10 z-50">
         <button
           onClick={() => setIsExpanded(true)}
           aria-label="Radio-Player öffnen"
@@ -27,7 +27,7 @@ export const RetroPlayer: React.FC<{
   }
 
   return (
-    <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
+    <div className="rm-fixed fixed top-16 left-4 md:top-20 md:left-10 z-50">
       <div className="retro-card bg-retro-cream p-4 flex flex-col gap-3 border-2 border-retro-ink w-64 max-w-[80vw]">
         <div className="flex items-center gap-3">
           <div
