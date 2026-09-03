@@ -6,7 +6,7 @@ import {
   BuzzwordCategory,
 } from './types';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer, BootOverlay, CrtOverlay } from './components';
+import { ProgressBar, Header, SettingsModal, ChatBot, RetroPlayer, BootOverlay, CrtOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -55,6 +55,7 @@ const App: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -146,6 +147,10 @@ const App: React.FC = () => {
   const closeBuzzwordModalWithSfx = () => {
     playSFX('click');
     setSelectedWord(null);
+  };
+  const closeSettingsWithSfx = () => {
+    playSFX('click');
+    setIsSettingsOpen(false);
   };
   const clearUploadedImage = () => {
     playSFX('click');
@@ -307,7 +312,21 @@ const App: React.FC = () => {
       <CrtOverlay />
       <audio ref={sfxRef} />
 
-      <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
+      <button
+        onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
+        aria-label="App-Einstellungen öffnen"
+        className="rm-fixed fixed top-3 right-3 z-50 w-11 h-11 bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-xl"
+      >
+        ⚙️
+      </button>
+      {isSettingsOpen && (
+        <SettingsModal
+          fontScale={fontScale}
+          onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
+          onDismiss={() => setIsSettingsOpen(false)}
+          onCloseClick={closeSettingsWithSfx}
+        />
+      )}
       <Header />
 
       {/* The ambient player stays available from the very first screen, since
