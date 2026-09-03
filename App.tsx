@@ -62,6 +62,7 @@ const App: React.FC = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showBottomControls, setShowBottomControls] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -81,6 +82,23 @@ const App: React.FC = () => {
   useEffect(() => {
     getAiAvailability().then(setAiAvailability);
   }, []);
+
+  // Settings and Google-account controls stay out of the way while reading —
+  // they slide in only once the page is scrolled (near) to the bottom.
+  useEffect(() => {
+    const checkScrollPosition = () => {
+      const doc = document.documentElement;
+      const nearBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 24;
+      setShowBottomControls(nearBottom);
+    };
+    checkScrollPosition();
+    window.addEventListener('scroll', checkScrollPosition, { passive: true });
+    window.addEventListener('resize', checkScrollPosition);
+    return () => {
+      window.removeEventListener('scroll', checkScrollPosition);
+      window.removeEventListener('resize', checkScrollPosition);
+    };
+  }, [phase]);
 
   // On sign-in, check the user's Google Drive for a previously saved journey.
   // A fresh (empty) local session adopts it; an already-in-progress local
@@ -383,6 +401,7 @@ const App: React.FC = () => {
         syncState={driveSyncState}
         onSignIn={handleGoogleSignIn}
         onSignOut={handleGoogleSignOut}
+        visible={showBottomControls}
       />
       <Header />
 
@@ -392,7 +411,9 @@ const App: React.FC = () => {
       <button
         onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
         aria-label="App-Einstellungen öffnen"
-        className="rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
+        className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
+          showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
       >
         ⚙️
       </button>
