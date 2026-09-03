@@ -1,7 +1,8 @@
 import { ContentDatabase } from './types';
 
-// Audio: SoundHelix-Instrumentalstücke als stimmungsvolles Ambiente — bewusst
-// kein Ära-Sound (Lizenzgründe). Die Labels sagen das ehrlich.
+// Audio: ein ruhiges, generatives Ambient-Pad wird clientseitig synthetisiert
+// (siehe lib/ambientSynth.ts) — kein externer Musik-Host, keine Ära-Sounds
+// (Lizenzgründe). Jede Dekade bekommt nur einen eigenen, dezent anderen Klang.
 // Galerie: überwiegend typografische "Postkarten". Wo ein Bild hinterlegt ist,
 // ist es gemeinfrei (Quelle in `credit`); schlägt das Laden fehl, greift
 // automatisch die Postkarten-Darstellung.
@@ -9,7 +10,6 @@ import { ContentDatabase } from './types';
 export const DECADES_DB: ContentDatabase = {
   '1960': {
     title: 'Die 60er: Aufbruch & Flower Power',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     audioLabel: 'Ambiente-Klang · 60er',
     galleryItems: [
       { keyword: '1960s television', title: 'Der Fernseher im Wohnzimmer', description: 'Das Fernsehen wurde zum Mittelpunkt des Wohnzimmers. Ganze Familien versammelten sich vor den klobigen Kästen, um die wenigen Programme in Schwarz-Weiß zu sehen.' },
@@ -30,7 +30,6 @@ export const DECADES_DB: ContentDatabase = {
   },
   '1970': {
     title: 'Die 70er: Disco, Pril & Protest',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     audioLabel: 'Ambiente-Klang · 70er',
     galleryItems: [
       { keyword: '1970s disco interior', title: 'Wohnen in Orange und Braun', description: 'Bunte Farben, wilde Muster und viel Kunststoff. Das Interieur der 70er war mutig, laut und ein Statement gegen die Biederkeit.' },
@@ -51,7 +50,6 @@ export const DECADES_DB: ContentDatabase = {
   },
   '1980': {
     title: 'Die 80er: Neon, Synthies & Pixel',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     audioLabel: 'Ambiente-Klang · 80er',
     galleryItems: [
       { keyword: '1980s neon arcade', title: 'Die Spielhalle', description: 'Spielhallen waren die Kathedralen der Technik. Der Sound von Pac-Man und das Blinken der Monitore prägten eine ganze Gamer-Generation.' },
@@ -72,7 +70,6 @@ export const DECADES_DB: ContentDatabase = {
   },
   '1990': {
     title: 'Die 90er: Eurodance & Game Boys',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     audioLabel: 'Ambiente-Klang · 90er',
     galleryItems: [
       { keyword: '1990s tech room', title: 'Der beige PC', description: 'Das Jahrzehnt des digitalen Aufbruchs. PC-Gehäuse in Beige und Röhrenmonitore waren der Standard in jedem Arbeitszimmer.' },
@@ -93,7 +90,6 @@ export const DECADES_DB: ContentDatabase = {
   },
   '2000': {
     title: 'Die 2000er: Millennium & Web 2.0',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
     audioLabel: 'Ambiente-Klang · 2000er',
     galleryItems: [
       { keyword: '2000s tech gadget', title: 'Alles wird kleiner', description: 'Die Miniaturisierung schritt voran. Handys wurden kleiner, MP3-Player zum Standard und das Internet wurde mobil.' },
@@ -114,7 +110,6 @@ export const DECADES_DB: ContentDatabase = {
   },
   '2010': {
     title: 'Die 2010er: Smartphones & Streaming',
-    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
     audioLabel: 'Ambiente-Klang · 2010er',
     galleryItems: [
       { keyword: '2010s smartphone', title: 'Das Smartphone in jeder Hand', description: 'Der Touchscreen verdrängte die Tasten. Das Smartphone wurde Kamera, Musiksammlung, Stadtplan und Fernseher in einem – und wich kaum noch aus der Hand.' },
