@@ -28,7 +28,10 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   **Gemini** beschreiben lassen und die Beschreibung als Erinnerung übernehmen;
   optional per **Veo** zu einem kurzen Video animieren (benötigt Google-Billing).
 - **Nostalgie-Radio** – dekadenabhängiges Instrumental-Ambiente (ehrlich
-  gelabelt, kein Ära-Sound), Lautstärke- und Ära-Wahl, UI-Sounds.
+  gelabelt, kein Ära-Sound), Lautstärke- und Ära-Wahl, UI-Sounds. In den
+  Einstellungen optional dazu ladbar: die echte, offizielle Spotify-Playlist
+  „All Out …“ der gewählten Dekade als Embed – streamt direkt von Spotify,
+  wird nie von uns gehostet.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;

@@ -41,6 +41,8 @@ export interface DecadeData {
   audioLabel: string;
   galleryItems: GalleryItem[];
   buzzwords: Buzzword[];
+  /** Spotify playlist id for real chart hits of this decade (optional, opt-in embed). */
+  spotifyPlaylistId?: string;
 }
 
 export interface ContentDatabase {
