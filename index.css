@@ -84,9 +84,14 @@ button:not(:disabled):active {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
 .animate-popIn { animation: popIn 0.25s ease-out forwards; }
 .animate-spin { animation: spin 4s linear infinite; }
+.animate-fadeOut { animation: fadeOut 0.9s ease-out forwards; }
 
 @media (prefers-reduced-motion: reduce) {
   .retro-card, .retro-button, button { transition: none !important; }
