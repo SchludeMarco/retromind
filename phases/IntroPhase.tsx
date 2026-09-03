@@ -1,13 +1,17 @@
 import React from 'react';
-import { AppPhase } from '../types';
+import { AppPhase, GoogleUser } from '../types';
+import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 
 export const IntroPhase: React.FC<{
   resumeTarget: AppPhase | null;
   memoriesCount: number;
+  googleStatus: GoogleAuthStatus;
+  googleUser: GoogleUser | null;
+  onGoogleSignIn: () => void;
   onStart: () => void;
   onResume: () => void;
   onReset: () => void;
-}> = ({ resumeTarget, memoriesCount, onStart, onResume, onReset }) => (
+}> = ({ resumeTarget, memoriesCount, googleStatus, googleUser, onGoogleSignIn, onStart, onResume, onReset }) => (
   <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
       <h2 className="text-4xl mb-6">Willkommen, Zeitreisende:r</h2>
@@ -15,6 +19,34 @@ export const IntroPhase: React.FC<{
         Öffne die Truhe deiner Kindheit. RetroMind führt dich Jahrzehnt für Jahrzehnt zurück, stellt dir
         persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
       </p>
+
+      {googleStatus !== 'not_configured' && (
+        <div className="mb-8 border-2 border-retro-ink bg-white p-4">
+          {googleStatus === 'signed_in' && googleUser ? (
+            <p className="font-bold">
+              ☁️ Angemeldet als {googleUser.name} – deine Reise wird in deinem eigenen Google Drive gesichert.
+            </p>
+          ) : (
+            <>
+              <p className="mb-3">
+                Melde dich mit Google an, um deine Erinnerungen in deinem <strong>eigenen, privaten
+                Google Drive</strong> zu sichern und auf einem anderen Gerät weiterzumachen.
+              </p>
+              <button
+                onClick={onGoogleSignIn}
+                disabled={googleStatus === 'signing_in'}
+                className="retro-button border-2 border-retro-ink px-6 py-3 font-bold bg-white disabled:opacity-60"
+              >
+                {googleStatus === 'signing_in'
+                  ? 'Anmelden …'
+                  : googleStatus === 'error'
+                  ? 'Erneut mit Google anmelden'
+                  : 'Mit Google anmelden'}
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {resumeTarget && (
         <div className="mb-8 border-2 border-retro-amber bg-retro-highlight p-4">

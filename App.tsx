@@ -408,6 +408,9 @@ const App: React.FC = () => {
         <IntroPhase
           resumeTarget={resumeTarget}
           memoriesCount={memories.length}
+          googleStatus={googleAuth.status}
+          googleUser={googleAuth.user}
+          onGoogleSignIn={handleGoogleSignIn}
           onStart={startJourney}
           onResume={resumeJourney}
           onReset={handleResetJourney}
