@@ -14,7 +14,7 @@ export const RetroPlayer: React.FC<{
 
   if (!isExpanded) {
     return (
-      <div className="rm-fixed fixed top-16 left-4 md:top-20 md:left-10 z-50">
+      <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
         <button
           onClick={() => setIsExpanded(true)}
           aria-label="Radio-Player öffnen"
@@ -27,24 +27,22 @@ export const RetroPlayer: React.FC<{
   }
 
   return (
-    <div className="rm-fixed fixed top-16 left-4 md:top-20 md:left-10 z-50">
+    <div className="rm-fixed fixed bottom-10 right-4 md:right-10 z-50">
       <div className="retro-card bg-retro-cream p-4 flex flex-col gap-3 border-2 border-retro-ink w-64 max-w-[80vw]">
         <div className="flex items-center gap-3">
-          <div
-            aria-hidden="true"
-            className={`w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`}
+          <button
+            onClick={() => setIsExpanded(false)}
+            aria-label="Radio-Player minimieren"
+            className={`retro-button w-11 h-11 rounded-full border-2 border-retro-ink flex items-center justify-center bg-retro-amber flex-shrink-0 ${isPlaying ? 'animate-spin' : ''}`}
           >
             <div className="w-3.5 h-3.5 rounded-full bg-retro-cream border border-retro-ink" />
-          </div>
+          </button>
           <div className="overflow-hidden flex-grow">
             <p className="text-[10px] uppercase font-bold text-retro-tan tracking-widest">Nostalgie-Radio</p>
             <p className="text-xs font-bold truncate">{info?.audioLabel || '—'}</p>
           </div>
           <button onClick={onToggle} aria-label={isPlaying ? 'Musik pausieren' : 'Musik abspielen'} className="retro-button p-2 bg-white min-w-[40px]">
             {isPlaying ? '⏸' : '▶'}
-          </button>
-          <button onClick={() => setIsExpanded(false)} aria-label="Radio-Player minimieren" className="retro-button p-2 bg-white min-w-[32px]">
-            ✕
           </button>
         </div>
         <div className="flex flex-col gap-2 pt-2 border-t border-retro-ink/20">
