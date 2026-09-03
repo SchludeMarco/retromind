@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
+// --- Boot overlay ---
 // Shown once when the app mounts: a pixel grid that starts fully black and
 // dissolves cell by cell, at random, so the app seems to slowly wake up
 // rather than simply appear — like opening your eyes in a time capsule.
@@ -12,6 +13,7 @@ const BOOT_MAX_EXTRA_DURATION_MS = 700;
 const BOOT_TOTAL_MS = BOOT_HOLD_MS + BOOT_MAX_DELAY_MS + BOOT_MIN_DURATION_MS + BOOT_MAX_EXTRA_DURATION_MS;
 const BOOT_REDUCED_MOTION_MS = 900;
 const BOOT_CHIME_PEAK_GAIN = 0.16;
+const WELCOME_VOICE_NAME_HINTS = /male|david|daniel|mark|george|guy|fred|arthur|oliver/i;
 
 export const BootOverlay: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -78,6 +80,41 @@ export const BootOverlay: React.FC = () => {
     buildChime(ctx);
     ctx.resume().catch(() => {});
 
+    // Once the app is fully revealed, an old, dark voice greets the user —
+    // the moment the time capsule actually opens. Speech synthesis needs a
+    // user gesture just like audio does, so it waits for both: the boot
+    // sequence finishing and the first tap/click/key, whichever is later.
+    const synth = window.speechSynthesis;
+    let spoken = false;
+    let hasGesture = false;
+    let hasLoaded = false;
+    const trySpeak = () => {
+      if (spoken || !hasGesture || !hasLoaded || !synth) return;
+      spoken = true;
+      const speak = () => {
+        try {
+          const utter = new SpeechSynthesisUtterance('Welcome');
+          utter.lang = 'en-GB';
+          utter.pitch = 0.55;
+          utter.rate = 0.8;
+          const voices = synth.getVoices();
+          const voice =
+            voices.find((v) => /^en/i.test(v.lang) && WELCOME_VOICE_NAME_HINTS.test(v.name)) ||
+            voices.find((v) => /^en/i.test(v.lang));
+          if (voice) utter.voice = voice;
+          synth.speak(utter);
+        } catch {
+          /* speech synthesis unsupported or misbehaving — non-fatal */
+        }
+      };
+      if (synth.getVoices().length) speak();
+      else synth.addEventListener('voiceschanged', speak, { once: true });
+    };
+    const loadTimer = setTimeout(() => {
+      hasLoaded = true;
+      trySpeak();
+    }, prefersReducedMotion ? BOOT_REDUCED_MOTION_MS : BOOT_TOTAL_MS);
+
     // Browsers refuse to actually produce sound until the page has seen a
     // user gesture. If the boot chime was born suspended, the first tap,
     // click or key anywhere on the page unlocks it — better late than never.
@@ -86,6 +123,8 @@ export const BootOverlay: React.FC = () => {
     // synchronously inside the gesture handler.
     let unlocked = false;
     const unlock = () => {
+      hasGesture = true;
+      trySpeak();
       if (unlocked) return;
       unlocked = true;
       ctx.resume().catch(() => {
@@ -97,8 +136,10 @@ export const BootOverlay: React.FC = () => {
     gestureEvents.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
 
     return () => {
+      clearTimeout(loadTimer);
       gestureEvents.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
       ctx.close().catch(() => {});
+      synth?.cancel();
     };
   }, [prefersReducedMotion]);
 
