@@ -13,6 +13,8 @@ const BOOT_HOLD_MS = 600; // beat of pure black before anything stirs
 const BOOT_MAX_DELAY_MS = 2600;
 const BOOT_MIN_DURATION_MS = 1200;
 const BOOT_MAX_EXTRA_DURATION_MS = 700;
+const BOOT_TOTAL_MS = BOOT_HOLD_MS + BOOT_MAX_DELAY_MS + BOOT_MIN_DURATION_MS + BOOT_MAX_EXTRA_DURATION_MS;
+const BOOT_REDUCED_MOTION_MS = 900;
 
 export const BootOverlay: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -32,17 +34,52 @@ export const BootOverlay: React.FC = () => {
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      const end = setTimeout(() => setVisible(false), 900);
+      const end = setTimeout(() => setVisible(false), BOOT_REDUCED_MOTION_MS);
       return () => clearTimeout(end);
     }
     const start = setTimeout(() => setDissolve(true), BOOT_HOLD_MS);
-    const end = setTimeout(
-      () => setVisible(false),
-      BOOT_HOLD_MS + BOOT_MAX_DELAY_MS + BOOT_MIN_DURATION_MS + BOOT_MAX_EXTRA_DURATION_MS
-    );
+    const end = setTimeout(() => setVisible(false), BOOT_TOTAL_MS);
     return () => {
       clearTimeout(start);
       clearTimeout(end);
+    };
+  }, [prefersReducedMotion]);
+
+  // A soft, slowly swelling hum underscores the dissolve — synthesized so the
+  // boot chime always matches the visual timing exactly, with no asset to load.
+  useEffect(() => {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+
+    const totalSec = (prefersReducedMotion ? BOOT_REDUCED_MOTION_MS : BOOT_TOTAL_MS) / 1000;
+    const ctx: AudioContext = new AudioCtx();
+    const now = ctx.currentTime;
+
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(0.05, now + totalSec * 0.35);
+    master.gain.setValueAtTime(0.05, now + totalSec * 0.7);
+    master.gain.linearRampToValueAtTime(0, now + totalSec);
+    master.connect(ctx.destination);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 800;
+    filter.connect(master);
+
+    [110, 165].forEach((freq) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(filter);
+      osc.start(now);
+      osc.stop(now + totalSec);
+    });
+
+    ctx.resume().catch(() => {});
+
+    return () => {
+      ctx.close().catch(() => {});
     };
   }, [prefersReducedMotion]);
 
