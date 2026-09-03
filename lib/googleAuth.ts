@@ -18,6 +18,17 @@ export function getGoogleClientId(): string | undefined {
 
 let gisLoadPromise: Promise<void> | null = null;
 
+// Fetching the GIS script takes a moment on mobile connections. Loading it
+// lazily inside signIn() meant that first tap's requestAccessToken() call —
+// which opens a popup — landed after an `await`, outside the click's user-
+// gesture window; mobile Chrome then silently drops the popup with no
+// blocked-icon or error. Preloading on mount keeps the script ready before
+// the user ever taps the button, so the popup opens synchronously in the
+// gesture handler.
+export function preloadGoogleIdentityServices(): Promise<void> {
+  return loadGis();
+}
+
 function loadGis(): Promise<void> {
   if (gisLoadPromise) return gisLoadPromise;
   gisLoadPromise = new Promise((resolve, reject) => {
