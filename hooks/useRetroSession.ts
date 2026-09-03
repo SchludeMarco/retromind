@@ -65,23 +65,29 @@ export function useRetroSession() {
     setPhase('intro');
   }, []);
 
+  // Replaces the whole session with `s` — shared by file import and by
+  // loading a session that was previously saved to the user's Google Drive.
+  const loadRemoteState = useCallback((s: Partial<SessionState>) => {
+    setUser(s.user ?? EMPTY_USER);
+    setMemories(s.memories ?? []);
+    setDiaryEntry(s.diaryEntry ?? '');
+    setClickedBuzzwords(s.clickedBuzzwords ?? []);
+    setManualDecade(s.manualDecade ?? null);
+    setFontScale(s.fontScale ?? 1);
+    setResumeTarget(null);
+    setPhase(s.phase && PHASES.includes(s.phase) ? s.phase : 'book');
+  }, []);
+
   const importSession = useCallback(async (file: File): Promise<boolean> => {
     try {
       const s = JSON.parse(await file.text());
       if (s.version !== 2) throw new Error('bad version');
-      setUser(s.user ?? EMPTY_USER);
-      setMemories(s.memories ?? []);
-      setDiaryEntry(s.diaryEntry ?? '');
-      setClickedBuzzwords(s.clickedBuzzwords ?? []);
-      setManualDecade(s.manualDecade ?? null);
-      setFontScale(s.fontScale ?? 1);
-      setResumeTarget(null);
-      setPhase(s.phase && PHASES.includes(s.phase) ? s.phase : 'book');
+      loadRemoteState(s);
       return true;
     } catch {
       return false;
     }
-  }, []);
+  }, [loadRemoteState]);
 
   const exportSession = useCallback((): SessionState => ({
     version: 2,
@@ -105,7 +111,8 @@ export function useRetroSession() {
     manualDecade, setManualDecade,
     fontScale, setFontScale,
     focusDecade,
-    resetJourney, importSession, exportSession,
+    resetJourney, importSession, exportSession, loadRemoteState,
+    hasProgress: memories.length > 0 || phase !== 'intro' || !!resumeTarget,
   };
 }
 

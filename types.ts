@@ -74,6 +74,14 @@ export interface CapturedMemory {
   createdAt: number;
 }
 
+/** Minimal profile returned by Google after sign-in. */
+export interface GoogleUser {
+  id: string;
+  name: string;
+  email: string;
+  picture: string;
+}
+
 /** Everything that is persisted / exported for one journey. */
 export interface SessionState {
   version: 2;

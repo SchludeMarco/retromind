@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AppPhase,
   VideoStatus,
@@ -6,7 +6,7 @@ import {
   BuzzwordCategory,
 } from './types';
 import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer, BootOverlay } from './components';
+import { ProgressBar, Header, FontSizeControl, GoogleAuthControl, ChatBot, RetroPlayer, BootOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -20,6 +20,8 @@ import {
 } from './phases';
 import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { useGoogleAuth } from './hooks/useGoogleAuth';
+import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 
@@ -35,12 +37,16 @@ const App: React.FC = () => {
     manualDecade, setManualDecade,
     fontScale, setFontScale,
     focusDecade,
-    resetJourney, importSession, exportSession,
+    resetJourney, importSession, exportSession, loadRemoteState, hasProgress,
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
   const { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX } =
     useAudioPlayer(currentAudioDecade);
+
+  const googleAuth = useGoogleAuth();
+  const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const remoteLoadAttempted = useRef(false);
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -69,6 +75,53 @@ const App: React.FC = () => {
   useEffect(() => {
     getAiAvailability().then(setAiAvailability);
   }, []);
+
+  // On sign-in, check the user's Google Drive for a previously saved journey.
+  // A fresh (empty) local session adopts it; an already-in-progress local
+  // session is left alone and simply starts syncing to Drive going forward.
+  useEffect(() => {
+    if (googleAuth.status !== 'signed_in' || remoteLoadAttempted.current) return;
+    remoteLoadAttempted.current = true;
+    (async () => {
+      const token = await googleAuth.getFreshAccessToken();
+      if (!token) return;
+      try {
+        const remote = await loadSessionFromDrive(token);
+        if (!remote) return;
+        if (!hasProgress) {
+          loadRemoteState(remote);
+          setToast('Gespeicherte Reise aus Google Drive geladen');
+        } else {
+          setToast('Deine Reise wird jetzt zusätzlich in Google Drive gesichert');
+        }
+      } catch {
+        setDriveSyncState('error');
+      }
+    })();
+    // hasProgress / loadRemoteState are stable enough for this one-shot check.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleAuth.status]);
+
+  // Debounced push of the current session to Drive while signed in.
+  useEffect(() => {
+    if (googleAuth.status !== 'signed_in' || !remoteLoadAttempted.current) return;
+    const timer = setTimeout(async () => {
+      const token = await googleAuth.getFreshAccessToken();
+      if (!token) {
+        setDriveSyncState('error');
+        return;
+      }
+      setDriveSyncState('saving');
+      try {
+        await saveSessionToDrive(token, exportSession());
+        setDriveSyncState('saved');
+      } catch {
+        setDriveSyncState('error');
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleAuth.status, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
@@ -292,6 +345,18 @@ const App: React.FC = () => {
     window.print();
   };
 
+  // --- Google account ---
+  const handleGoogleSignIn = () => {
+    playSFX('click');
+    googleAuth.signIn();
+  };
+  const handleGoogleSignOut = () => {
+    playSFX('click');
+    googleAuth.signOut();
+    remoteLoadAttempted.current = false;
+    setDriveSyncState('idle');
+  };
+
   // --- render helpers ---
   const aiOff = aiAvailability === 'not_configured';
   const isAnswered = (id: string) => !!memoryFor(id);
@@ -303,6 +368,13 @@ const App: React.FC = () => {
       <audio ref={sfxRef} />
 
       <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
+      <GoogleAuthControl
+        status={googleAuth.status}
+        user={googleAuth.user}
+        syncState={driveSyncState}
+        onSignIn={handleGoogleSignIn}
+        onSignOut={handleGoogleSignOut}
+      />
       <Header />
 
       {phase !== 'intro' && (

@@ -46,9 +46,10 @@ export const IntroPhase: React.FC<{
           Wie RetroMind mit deinen Daten umgeht
         </summary>
         <ul className="list-disc pl-5 mt-3 space-y-1">
-          <li>Profil, Antworten und Tagebuch bleiben <strong>nur in diesem Browser</strong> (localStorage). Kein Konto, kein Server-Speicher.</li>
+          <li>Profil, Antworten und Tagebuch bleiben <strong>nur in diesem Browser</strong> (localStorage) – es sei denn, du meldest dich freiwillig mit Google an.</li>
+          <li>Mit Google-Anmeldung wird deine Reise zusätzlich in deinem <strong>eigenen, privaten Google-Drive</strong> gesichert (Ordner „appData", nur für RetroMind, für niemand anderen sichtbar) – so kannst du auf einem anderen Gerät weitermachen. Es gibt keine zentrale RetroMind-Datenbank; deine Daten bleiben in deinem Google-Konto.</li>
           <li>Lädst du ein Foto hoch, wird es zur Beschreibung an die Google-Gemini-API gesendet (und für die optionale Video-Funktion an Veo). Sonst verlässt nichts dein Gerät.</li>
-          <li>Über „Sitzung sichern" kannst du alles als Datei exportieren, über „Neu beginnen" alles löschen.</li>
+          <li>Über „Sitzung sichern" kannst du alles als Datei exportieren, über „Neu beginnen" alles löschen – bei bestehender Google-Anmeldung auch in deinem Drive.</li>
         </ul>
       </details>
     </div>
