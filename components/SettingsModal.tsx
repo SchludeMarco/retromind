@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal } from './Modal';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
@@ -13,16 +13,19 @@ export const SettingsModal: React.FC<{
   onToggleMusic: () => void;
   volume: number;
   onVolumeChange: (v: number) => void;
+  isSpotifyReady: boolean;
+  isSpotifyPlaying: boolean;
+  onToggleSpotify: () => void;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
   fontScale, onFontScaleChange,
   currentDecade, onDecadeChange, isPlaying, isBlocked, onToggleMusic, volume, onVolumeChange,
+  isSpotifyReady, isSpotifyPlaying, onToggleSpotify,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
   const needsTap = isPlaying && !!isBlocked;
-  const [showSpotify, setShowSpotify] = useState(false);
 
   return (
     <Modal onClose={onDismiss} label="App-Einstellungen">
@@ -91,32 +94,39 @@ export const SettingsModal: React.FC<{
       {info?.spotifyPlaylistId && (
         <div className="mt-6 pt-5 border-t border-retro-ink/20">
           <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Echte Hits dieser Dekade</span>
-          {!showSpotify ? (
+          <div className="flex items-center gap-3 mb-2">
             <button
-              onClick={() => setShowSpotify(true)}
-              className="text-sm font-bold underline text-retro-amber-dark"
+              onClick={onToggleSpotify}
+              disabled={!isSpotifyReady}
+              aria-label={isSpotifyPlaying ? 'Spotify pausieren' : 'Spotify abspielen'}
+              className="retro-button w-9 h-9 rounded-full border-2 border-retro-ink flex items-center justify-center bg-white flex-shrink-0 disabled:opacity-40"
             >
-              Spotify-Playlist „{info.title.split(':')[0].trim()}“ laden
+              {isSpotifyPlaying ? '⏸' : '▶'}
             </button>
-          ) : (
-            <>
-              <iframe
-                title={`Spotify-Playlist ${currentDecade}er`}
-                src={`https://open.spotify.com/embed/playlist/${info.spotifyPlaylistId}?utm_source=generator&theme=0`}
-                width="100%"
-                height="152"
-                style={{ borderRadius: 12, border: 0 }}
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
-              <p className="mt-2 text-[10px] text-retro-tan">
-                Streamt direkt von Spotify (Drittanbieter) – ersetzt nicht das Ambiente-Radio oben.
-                Nur eine 30-Sekunden-Vorschau? Rechts oben im Player bei Spotify einloggen – dein
-                Google-Konto zählt dafür nicht, das ist ein eigener Login. Mit Premium läuft der volle
-                Song.
-              </p>
-            </>
-          )}
+            <p className="text-xs font-bold">
+              {!isSpotifyReady
+                ? 'Playlist wird geladen …'
+                : isSpotifyPlaying
+                ? `Spielt: „${info.title.split(':')[0].trim()}“`
+                : 'Pausiert'}
+            </p>
+          </div>
+          <p className="text-[10px] text-retro-tan">
+            Läuft automatisch im Hintergrund, sobald du einmal irgendwo getippt/geklickt hast –
+            streamt direkt von Spotify (Drittanbieter), unabhängig von der Lautstärke oben. Spotify
+            hat dafür keine Lautstärke-Schnittstelle, die wir ansprechen könnten. Nur eine
+            30-Sekunden-Vorschau?{' '}
+            <a
+              href={`https://open.spotify.com/playlist/${info.spotifyPlaylistId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="underline font-bold text-retro-amber-dark"
+            >
+              Playlist bei Spotify öffnen
+            </a>{' '}
+            und dort einloggen – dein Google-Konto zählt dafür nicht, das ist ein eigener Login. Mit
+            Premium läuft dann der volle Song.
+          </p>
         </div>
       )}
 

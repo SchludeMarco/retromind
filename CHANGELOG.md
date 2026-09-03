@@ -2,10 +2,17 @@
 
 ## Unreleased
 
-- **Echte Hits pro Dekade (Spotify-Embed):** Im Einstellungen-Dialog kann
-  neben dem synthetischen Nostalgie-Radio jetzt optional Spotifys offizielle
-  „All Out …“-Playlist der gewählten Dekade geladen werden (nur auf Tap, kein
-  automatischer Drittanbieter-Request). Neues optionales Feld
+- **Echte Hits pro Dekade (Spotify-Embed), jetzt automatisch:** Sobald die
+  Nutzer:in einmal irgendwo klickt/tippt, startet automatisch im Hintergrund
+  Spotifys offizielle „All Out …“-Playlist der gewählten Dekade (neuer Hook
+  `hooks/useSpotifyBackground.ts`, Wrapper um Spotifys iFrame-API in
+  `lib/spotifyEmbed.ts`) – parallel zum Synth-Ambiente, das jetzt ebenfalls
+  bei diesem ersten Klick über 10s von 0% auf die eingestellte Lautstärke
+  einblendet (`hooks/useAudioPlayer.ts`), statt sofort auf voller Lautstärke
+  einzusetzen. Spotifys öffentliche Embed-API bietet keine
+  Lautstärke-Schnittstelle – der Spotify-Anteil läuft deshalb immer in
+  Spotifys eigener Lautstärke und lässt sich in den Einstellungen nur
+  pausieren/fortsetzen, nicht leiser stellen. Neues optionales Feld
   `spotifyPlaylistId` in `constants.ts`/`types.ts`.
 - **Perspektivwechsel bei Erinnerungs-Fragen:** Nach dem Speichern einer
   Erinnerung im Buzzword-Modal lässt sich zusätzlich eine Frage generieren,

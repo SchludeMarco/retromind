@@ -27,6 +27,7 @@ import {
 } from './phases';
 import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
@@ -55,6 +56,7 @@ const App: React.FC = () => {
     volume, setVolume,
     playSFX,
   } = useAudioPlayer(currentAudioDecade);
+  const spotify = useSpotifyBackground(currentAudioDecade);
 
   const googleAuth = useGoogleAuth();
   const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -440,6 +442,12 @@ const App: React.FC = () => {
       <BootOverlay />
       <CrtOverlay />
       <audio ref={sfxRef} />
+      {/* Off-screen, always mounted: autoplays the era's real Spotify
+          playlist in the background once the first tap/click unlocks audio
+          (see useSpotifyBackground) — invisible by design, controlled from
+          the Settings modal via play/pause only (Spotify exposes no volume
+          control we could put here). */}
+      <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
 
       <GoogleAuthControl
         status={googleAuth.status}
@@ -478,6 +486,9 @@ const App: React.FC = () => {
           }}
           volume={volume}
           onVolumeChange={setVolume}
+          isSpotifyReady={spotify.isReady}
+          isSpotifyPlaying={spotify.isPlaying}
+          onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
           onDismiss={() => setIsSettingsOpen(false)}
           onCloseClick={closeSettingsWithSfx}
         />

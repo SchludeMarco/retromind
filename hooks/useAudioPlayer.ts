@@ -9,7 +9,7 @@ import { SFX } from '../lib/sfx';
 // chord underneath it.
 export function useAudioPlayer(currentAudioDecade: string) {
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
-  const [volume, setVolume] = useState(0.35);
+  const [volume, setVolume] = useState(0.3);
   // True while music is *meant* to be playing but the browser is refusing to
   // let audio actually start (needs a user gesture first) — lets the UI tell
   // "silently blocked" apart from "actually playing".
@@ -24,6 +24,9 @@ export function useAudioPlayer(currentAudioDecade: string) {
   const voiceRef = useRef<AmbientVoice | null>(null);
   const decadeRef = useRef(currentAudioDecade);
   decadeRef.current = currentAudioDecade;
+  // Only the very first activation gets the slow 10s fade-in from silence;
+  // later re-activations (e.g. toggling the radio back on) ramp quickly.
+  const hasFadedInRef = useRef(false);
 
   // Stable identity (reads volume from a ref) so effects that depend on it
   // don't re-fire when the volume slider moves.
@@ -41,7 +44,7 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (!AudioCtx) return null;
     const ctx: AudioContext = new AudioCtx();
     const master = ctx.createGain();
-    master.gain.value = volumeRef.current;
+    master.gain.value = 0; // starts silent — first activation fades in, see applyGain
     const compressor = ctx.createDynamicsCompressor(); // gentle safety limiter
     master.connect(compressor);
     compressor.connect(ctx.destination);
@@ -58,6 +61,19 @@ export function useAudioPlayer(currentAudioDecade: string) {
     voiceRef.current = startAmbientPad(ctx, master, decadeRef.current);
   }, []);
 
+  // Ramps the master gain up to the current target volume — 10s from
+  // silence on the very first activation (app start), a quick 0.2s nudge on
+  // any later one (e.g. toggling the radio back on).
+  const fadeUpToVolume = useCallback(() => {
+    const ctx = ctxRef.current;
+    const master = masterGainRef.current;
+    if (!ctx || !master) return;
+    const duration = hasFadedInRef.current ? 0.2 : 10;
+    hasFadedInRef.current = true;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.linearRampToValueAtTime(volumeRef.current, ctx.currentTime + duration);
+  }, []);
+
   // Browsers refuse to actually run an AudioContext before the page has seen
   // a user gesture — attempt resume(), and note whether it actually worked.
   const tryStart = useCallback(() => {
@@ -65,7 +81,10 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (!ctx) return;
     if (ctx.state === 'running') {
       setIsAudioBlocked(false);
-      if (!voiceRef.current) startVoiceForCurrentDecade();
+      if (!voiceRef.current) {
+        startVoiceForCurrentDecade();
+        fadeUpToVolume();
+      }
       return;
     }
     ctx
@@ -73,10 +92,13 @@ export function useAudioPlayer(currentAudioDecade: string) {
       .then(() => {
         const running = ctx.state === 'running';
         setIsAudioBlocked(!running);
-        if (running) startVoiceForCurrentDecade();
+        if (running) {
+          startVoiceForCurrentDecade();
+          fadeUpToVolume();
+        }
       })
       .catch(() => setIsAudioBlocked(true));
-  }, [ensureContext, startVoiceForCurrentDecade]);
+  }, [ensureContext, startVoiceForCurrentDecade, fadeUpToVolume]);
 
   useEffect(() => {
     if (isMusicPlaying) {

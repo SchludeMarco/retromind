@@ -3,11 +3,15 @@ import { ContentDatabase } from './types';
 // Audio: ein ruhiges, generatives Ambient-Pad wird clientseitig synthetisiert
 // (siehe lib/ambientSynth.ts) — kein selbst gehosteter Musik-Host, keine
 // Ära-Sounds als Datei (Lizenzgründe). Jede Dekade bekommt nur einen eigenen,
-// dezent anderen Klang. Optional dazu: `spotifyPlaylistId` verweist auf
-// Spotifys eigene, offizielle "All Out <Dekade>"-Playlist; die echten Hits
-// werden nie von uns gehostet, sondern nur per offiziellem Spotify-Embed
-// (streamt direkt von Spotify) eingebunden, und zwar erst auf Wunsch der
-// Nutzer:in (siehe SettingsModal).
+// dezent anderen Klang; die App blendet ihn nach dem ersten Klick/Tap über
+// 10s von 0% auf die eingestellte Lautstärke ein (siehe useAudioPlayer).
+// Dazu: `spotifyPlaylistId` verweist auf Spotifys eigene, offizielle "All
+// Out <Dekade>"-Playlist; die echten Hits werden nie von uns gehostet,
+// sondern nur per offiziellem Spotify-Embed eingebunden (streamt direkt von
+// Spotify) und starten automatisch im Hintergrund nach demselben ersten
+// Klick — Spotify hat aber keine Lautstärke-Schnittstelle, läuft also immer
+// in Spotifys eigener, von uns nicht regelbarer Lautstärke (siehe
+// hooks/useSpotifyBackground.ts, components/SettingsModal.tsx).
 // Galerie: überwiegend typografische "Postkarten". Wo ein Bild hinterlegt ist,
 // ist es gemeinfrei (Quelle in `credit`); schlägt das Laden fehl, greift
 // automatisch die Postkarten-Darstellung.
