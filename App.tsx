@@ -39,8 +39,13 @@ const App: React.FC = () => {
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX } =
-    useAudioPlayer(currentAudioDecade);
+  const {
+    audioRef, sfxRef,
+    isMusicPlaying, setIsMusicPlaying,
+    isAudioBlocked, resumeBlockedPlayback,
+    volume, setVolume,
+    playSFX,
+  } = useAudioPlayer(currentAudioDecade);
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -312,7 +317,12 @@ const App: React.FC = () => {
         currentDecade={currentAudioDecade}
         onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
         isPlaying={isMusicPlaying}
-        onToggle={() => { playSFX('click'); setIsMusicPlaying((v) => !v); }}
+        isBlocked={isAudioBlocked}
+        onToggle={() => {
+          playSFX('click');
+          if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
+          else setIsMusicPlaying((v) => !v);
+        }}
         volume={volume}
         onVolumeChange={setVolume}
       />

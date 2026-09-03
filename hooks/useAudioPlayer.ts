@@ -8,7 +8,11 @@ export function useAudioPlayer(currentAudioDecade: string) {
   // Calm ambient music starts right at app boot and loops continuously; a
   // time travel (decade change) just swaps the track underneath it.
   const [isMusicPlaying, setIsMusicPlaying] = useState(true);
-  const [volume, setVolume] = useState(0.05);
+  const [volume, setVolume] = useState(0.2);
+  // True while music is *meant* to be playing but the browser is refusing
+  // (autoplay-with-sound needs a gesture first) — lets the UI tell "silently
+  // blocked" apart from "actually playing", instead of just spinning either way.
+  const [isAudioBlocked, setIsAudioBlocked] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<HTMLAudioElement | null>(null);
@@ -31,15 +35,28 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (track && audioRef.current.src !== track) {
       audioRef.current.src = track;
       audioRef.current.load();
-      if (isMusicPlaying) audioRef.current.play().catch(() => {});
+      if (isMusicPlaying) audioRef.current.play().catch(() => setIsAudioBlocked(true));
     }
   }, [currentAudioDecade]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!audioRef.current) return;
-    if (isMusicPlaying) audioRef.current.play().catch(() => {});
-    else audioRef.current.pause();
+    if (isMusicPlaying) audioRef.current.play().catch(() => setIsAudioBlocked(true));
+    else {
+      audioRef.current.pause();
+      setIsAudioBlocked(false);
+    }
   }, [isMusicPlaying]);
+
+  // The 'playing' event is the one reliable signal that sound is actually
+  // coming out — clears the "blocked" flag whenever it fires.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onPlaying = () => setIsAudioBlocked(false);
+    audio.addEventListener('playing', onPlaying);
+    return () => audio.removeEventListener('playing', onPlaying);
+  }, []);
 
   // Browsers refuse actual autoplay-with-sound before the page has seen a
   // user gesture, so the initial play() attempt above is silently swallowed.
@@ -48,7 +65,7 @@ export function useAudioPlayer(currentAudioDecade: string) {
   useEffect(() => {
     if (!isMusicPlaying) return;
     const resume = () => {
-      if (audioRef.current?.paused) audioRef.current.play().catch(() => {});
+      if (audioRef.current?.paused) audioRef.current.play().catch(() => setIsAudioBlocked(true));
     };
     const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     events.forEach((evt) => document.addEventListener(evt, resume, { once: true, capture: true }));
@@ -59,5 +76,17 @@ export function useAudioPlayer(currentAudioDecade: string) {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  return { audioRef, sfxRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX };
+  // For the player widget's toggle button: while blocked, a tap should retry
+  // playback (it's a real gesture) rather than flip the desired state to off.
+  const resumeBlockedPlayback = useCallback(() => {
+    if (audioRef.current?.paused) audioRef.current.play().catch(() => setIsAudioBlocked(true));
+  }, []);
+
+  return {
+    audioRef, sfxRef,
+    isMusicPlaying, setIsMusicPlaying,
+    isAudioBlocked, resumeBlockedPlayback,
+    volume, setVolume,
+    playSFX,
+  };
 }
