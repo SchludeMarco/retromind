@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Echte Hits pro Dekade (Spotify-Embed):** Im Einstellungen-Dialog kann
+  neben dem synthetischen Nostalgie-Radio jetzt optional Spotifys offizielle
+  „All Out …“-Playlist der gewählten Dekade geladen werden (nur auf Tap, kein
+  automatischer Drittanbieter-Request). Neues optionales Feld
+  `spotifyPlaylistId` in `constants.ts`/`types.ts`.
+- **Perspektivwechsel bei Erinnerungs-Fragen:** Nach dem Speichern einer
+  Erinnerung im Buzzword-Modal lässt sich zusätzlich eine Frage generieren,
+  die denselben Moment aus Sicht einer anderen Person von damals (Freund:in,
+  Geschwister, Elternteil) neu erzählen lässt – als eigene Erinnerung
+  gespeichert. Neue Server-Aktion `perspectiveQuestion` in `api/gemini.js`.
 - **Google-Login + dezentrale Sicherung:** „Mit Google anmelden“ (Google
   Identity Services) sichert die Reise zusätzlich zu `localStorage` im
   privaten `appDataFolder` des eigenen Google Drive der Nutzer:in – keine

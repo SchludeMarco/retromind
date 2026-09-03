@@ -1,8 +1,13 @@
 import { ContentDatabase } from './types';
 
 // Audio: ein ruhiges, generatives Ambient-Pad wird clientseitig synthetisiert
-// (siehe lib/ambientSynth.ts) — kein externer Musik-Host, keine Ära-Sounds
-// (Lizenzgründe). Jede Dekade bekommt nur einen eigenen, dezent anderen Klang.
+// (siehe lib/ambientSynth.ts) — kein selbst gehosteter Musik-Host, keine
+// Ära-Sounds als Datei (Lizenzgründe). Jede Dekade bekommt nur einen eigenen,
+// dezent anderen Klang. Optional dazu: `spotifyPlaylistId` verweist auf
+// Spotifys eigene, offizielle "All Out <Dekade>"-Playlist; die echten Hits
+// werden nie von uns gehostet, sondern nur per offiziellem Spotify-Embed
+// (streamt direkt von Spotify) eingebunden, und zwar erst auf Wunsch der
+// Nutzer:in (siehe SettingsModal).
 // Galerie: überwiegend typografische "Postkarten". Wo ein Bild hinterlegt ist,
 // ist es gemeinfrei (Quelle in `credit`); schlägt das Laden fehl, greift
 // automatisch die Postkarten-Darstellung.
@@ -11,6 +16,7 @@ export const DECADES_DB: ContentDatabase = {
   '1960': {
     title: 'Die 60er: Aufbruch & Flower Power',
     audioLabel: 'Ambiente-Klang · 60er',
+    spotifyPlaylistId: '37i9dQZF1DXaKIA8E7WcJj', // Spotify-Editorial „All Out 60s“
     galleryItems: [
       { keyword: '1960s television', title: 'Der Fernseher im Wohnzimmer', description: 'Das Fernsehen wurde zum Mittelpunkt des Wohnzimmers. Ganze Familien versammelten sich vor den klobigen Kästen, um die wenigen Programme in Schwarz-Weiß zu sehen.' },
       { keyword: 'vinyl record player 1960', title: 'Der Plattenspieler', description: 'Musik war ein haptisches Erlebnis. Das Auflegen der Nadel und das leichte Knistern vor dem ersten Takt gehörten zum Ritual jedes Musikliebhabers.' },
@@ -31,6 +37,7 @@ export const DECADES_DB: ContentDatabase = {
   '1970': {
     title: 'Die 70er: Disco, Pril & Protest',
     audioLabel: 'Ambiente-Klang · 70er',
+    spotifyPlaylistId: '37i9dQZF1DWTJ7xPn4vNaz', // Spotify-Editorial „All Out 70s“
     galleryItems: [
       { keyword: '1970s disco interior', title: 'Wohnen in Orange und Braun', description: 'Bunte Farben, wilde Muster und viel Kunststoff. Das Interieur der 70er war mutig, laut und ein Statement gegen die Biederkeit.' },
       { keyword: 'cassette deck 1970', title: 'Das Kassettendeck', description: 'Die Kompaktkassette demokratisierte die Musik. Endlich konnte man seine eigenen Mix-Tapes direkt aus dem Radio aufnehmen.' },
@@ -51,6 +58,7 @@ export const DECADES_DB: ContentDatabase = {
   '1980': {
     title: 'Die 80er: Neon, Synthies & Pixel',
     audioLabel: 'Ambiente-Klang · 80er',
+    spotifyPlaylistId: '37i9dQZF1DX4UtSsGT1Sbe', // Spotify-Editorial „All Out 80s“
     galleryItems: [
       { keyword: '1980s neon arcade', title: 'Die Spielhalle', description: 'Spielhallen waren die Kathedralen der Technik. Der Sound von Pac-Man und das Blinken der Monitore prägten eine ganze Gamer-Generation.' },
       { keyword: 'walkman sony vintage', title: 'Der Walkman', description: 'Der Sony Walkman machte Musik privat und mobil. Die Welt um einen herum wurde plötzlich zum eigenen Musikvideo.' },
@@ -71,6 +79,7 @@ export const DECADES_DB: ContentDatabase = {
   '1990': {
     title: 'Die 90er: Eurodance & Game Boys',
     audioLabel: 'Ambiente-Klang · 90er',
+    spotifyPlaylistId: '37i9dQZF1DXbTxeAdrVG2l', // Spotify-Editorial „All Out 90s“
     galleryItems: [
       { keyword: '1990s tech room', title: 'Der beige PC', description: 'Das Jahrzehnt des digitalen Aufbruchs. PC-Gehäuse in Beige und Röhrenmonitore waren der Standard in jedem Arbeitszimmer.' },
       { keyword: 'game boy classic', title: 'Der Game Boy', description: 'Nintendos Game Boy war das Gadget der 90er. Ob im Auto oder unter der Bettdecke – Tetris ging immer.' },
@@ -91,6 +100,7 @@ export const DECADES_DB: ContentDatabase = {
   '2000': {
     title: 'Die 2000er: Millennium & Web 2.0',
     audioLabel: 'Ambiente-Klang · 2000er',
+    spotifyPlaylistId: '37i9dQZF1DX4o1oenSJRJd', // Spotify-Editorial „All Out 2000s“
     galleryItems: [
       { keyword: '2000s tech gadget', title: 'Alles wird kleiner', description: 'Die Miniaturisierung schritt voran. Handys wurden kleiner, MP3-Player zum Standard und das Internet wurde mobil.' },
       { keyword: 'nokia 3310 phone', title: 'Das Nokia 3310', description: 'Der unzerstörbare Klassiker. Das Nokia 3310 war bekannt für seinen Akku, der Wochen hielt, und das süchtig machende Spiel Snake.' },
@@ -111,6 +121,7 @@ export const DECADES_DB: ContentDatabase = {
   '2010': {
     title: 'Die 2010er: Smartphones & Streaming',
     audioLabel: 'Ambiente-Klang · 2010er',
+    spotifyPlaylistId: '37i9dQZF1DX5Ejj0EkURtP', // Spotify-Editorial „All Out 2010s“
     galleryItems: [
       { keyword: '2010s smartphone', title: 'Das Smartphone in jeder Hand', description: 'Der Touchscreen verdrängte die Tasten. Das Smartphone wurde Kamera, Musiksammlung, Stadtplan und Fernseher in einem – und wich kaum noch aus der Hand.' },
       { keyword: '2010s messaging', title: 'WhatsApp & der blaue Haken', description: 'Die SMS starb leise. Stattdessen: Gruppenchats, Sprachnachrichten und die kleine Angst, wenn zwei blaue Haken erschienen, aber keine Antwort kam.' },

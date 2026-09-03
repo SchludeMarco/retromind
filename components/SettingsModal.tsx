@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
@@ -22,6 +22,7 @@ export const SettingsModal: React.FC<{
 }) => {
   const info = DECADES_DB[currentDecade];
   const needsTap = isPlaying && !!isBlocked;
+  const [showSpotify, setShowSpotify] = useState(false);
 
   return (
     <Modal onClose={onDismiss} label="App-Einstellungen">
@@ -86,6 +87,35 @@ export const SettingsModal: React.FC<{
           </div>
         </div>
       </div>
+
+      {info?.spotifyPlaylistId && (
+        <div className="mt-6 pt-5 border-t border-retro-ink/20">
+          <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Echte Hits dieser Dekade</span>
+          {!showSpotify ? (
+            <button
+              onClick={() => setShowSpotify(true)}
+              className="text-sm font-bold underline text-retro-amber-dark"
+            >
+              Spotify-Playlist „{info.title.split(':')[0].trim()}“ laden
+            </button>
+          ) : (
+            <>
+              <iframe
+                title={`Spotify-Playlist ${currentDecade}er`}
+                src={`https://open.spotify.com/embed/playlist/${info.spotifyPlaylistId}?utm_source=generator&theme=0`}
+                width="100%"
+                height="152"
+                style={{ borderRadius: 12, border: 0 }}
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+              />
+              <p className="mt-2 text-[10px] text-retro-tan">
+                Streamt direkt von Spotify (Drittanbieter) – ersetzt nicht das Ambiente-Radio oben.
+              </p>
+            </>
+          )}
+        </div>
+      )}
 
       <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}
