@@ -12,6 +12,8 @@ export interface UserProfile {
   gender: string;
   birthDate: string;
   interests: string[];
+  /** free-text artists/bands the user names as favourites (optional). */
+  favoriteArtists: string[];
 }
 
 export type BuzzwordCategory = 'music' | 'tech' | 'toy' | 'lifestyle' | 'food';
@@ -81,6 +83,16 @@ export interface GoogleUser {
   name: string;
   email: string;
   picture: string;
+}
+
+/** Minimal profile returned by Spotify after sign-in — `product` is what
+ * lets us tell a Premium account from a Free one. */
+export interface SpotifyUser {
+  id: string;
+  name: string;
+  email: string;
+  picture: string;
+  product: 'premium' | 'free' | 'open' | string;
 }
 
 /** Everything that is persisted / exported for one journey. */

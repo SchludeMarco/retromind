@@ -14,8 +14,11 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
-- **Personalisiertes Onboarding** – Name, Geburtsdatum, Interessen. Das Kindheits-
-  Jahrzehnt wird berechnet und auf 1960–2010 begrenzt.
+- **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
+  Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
+  Jahrzehnt wird berechnet und auf 1960–2010 begrenzt. Alles selbst
+  angegeben – RetroMind "verifiziert" kein Alter/Geschlecht über Dritte,
+  weil keiner der Logins (Google, Spotify) das überhaupt hergibt.
 - **Jahrzehnt-Impressionen** – kuratierte Zeit-„Postkarten“ je Dekade
   ([`constants.ts`](constants.ts)); wo ein echtes gemeinfreies Bild hinterlegt ist
   (z. B. NASA-Mondlandung), wird es gezeigt, sonst greift eine typografische Karte.
@@ -49,6 +52,11 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   Person hat ihre eigenen Erinnerungen in ihrem eigenen Konto (**dezentral**) und
   kann so auf einem anderen Gerät weitermachen. Ohne konfigurierte Google-Client-ID
   bleibt die App unverändert rein lokal nutzbar.
+- **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
+  PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
+  Premium-/Free-Status ab. Läuft unabhängig vom bestehenden
+  Playlist-Embed (siehe Nostalgie-Radio) und beeinflusst dessen Wiedergabe
+  nicht. Ohne konfigurierte Spotify-Client-ID bleibt der Button unsichtbar.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
@@ -61,6 +69,7 @@ Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function) 
                           ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
                           ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
+                          ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
 ```
 
 Der **Gemini-Schlüssel liegt ausschließlich serverseitig** (Vercel-Env-Var
@@ -73,6 +82,15 @@ ausgestellte Access-Token wird nur im Speicher gehalten (nie persistiert) und
 ausschließlich genutzt, um die Sitzungsdatei im `appDataFolder` der Nutzer:in zu
 lesen/schreiben – ein versteckter, App-eigener Bereich ihres Google Drive, den
 weder andere Apps noch wir einsehen können.
+
+Der **Spotify-Login läuft ebenfalls komplett clientseitig**, über Authorization
+Code + PKCE (kein Client-Secret nötig, dafür ein voller Seiten-Redirect zu
+`accounts.spotify.com` und zurück, da Spotify anders als Google keine
+Popup-/Silent-Renewal-API anbietet). Der Access-Token bleibt im Speicher; nur
+der Refresh-Token landet in `localStorage`, sonst könnte man nach einem Reload
+nicht ohne erneuten Consent-Screen angemeldet bleiben. Abgefragt werden nur
+Name, E-Mail und Premium-/Free-Status (`GET /v1/me`) – keine Höraktivität,
+keine Playlists.
 
 ## Tech-Stack
 

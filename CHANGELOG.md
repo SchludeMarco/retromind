@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **Spotify-Login (Authorization Code + PKCE):** „Mit Spotify anmelden“ neben
+  dem bestehenden Google-Login – komplett clientseitig, kein eigener
+  Auth-Server, kein Client-Secret. Holt nur Name und Premium-/Free-Status ab
+  (`GET /v1/me`, Scopes `user-read-private`/`user-read-email`); beeinflusst
+  das bestehende Playlist-Embed nicht. Der Access-Token bleibt im Speicher,
+  nur der Refresh-Token landet in `localStorage` (nötig, weil Spotify anders
+  als Google keine Popup-/Silent-Renewal-API hat, sondern einen vollen
+  Seiten-Redirect verlangt). Neue optionale Env-Var
+  `VITE_SPOTIFY_CLIENT_ID`; ohne sie bleibt der Button unsichtbar. Neue
+  Dateien: `lib/spotifyAuth.ts`, `hooks/useSpotifyAuth.ts`,
+  `components/SpotifyAuthControl.tsx`, `components/AccountControls.tsx`
+  (gemeinsamer Container für Google- und Spotify-Pille).
+- **Geschlecht + Lieblingsmusiker:innen im Onboarding:** Das bisher ungenutzte
+  `gender`-Feld im Profil hat jetzt ein echtes (optionales) Auswahlfeld;
+  dazu ein neues optionales Freitext-Feld `favoriteArtists` für
+  Lieblingsmusiker:innen/-bands. Beide rein selbst angegeben – weder Google
+  noch Spotify liefern Alter oder Geschlecht an Drittanbieter-Apps, deshalb
+  bleibt das ehrlich als Selbstauskunft gekennzeichnet statt als
+  „Verifizierung“ verkauft.
 - **Echte Hits pro Dekade (Spotify-Embed), jetzt automatisch:** Sobald die
   Nutzer:in einmal irgendwo klickt/tippt, startet automatisch im Hintergrund
   Spotifys offizielle „All Out …“-Playlist der gewählten Dekade (neuer Hook

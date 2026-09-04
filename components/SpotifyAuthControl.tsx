@@ -1,24 +1,20 @@
 import React from 'react';
-import { GoogleUser } from '../types';
-import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
+import { SpotifyUser } from '../types';
+import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 
-export type DriveSyncState = 'idle' | 'saving' | 'saved' | 'error';
-
-const SYNC_LABEL: Record<DriveSyncState, string> = {
-  idle: '',
-  saving: '☁️ speichert …',
-  saved: '☁️ in Google Drive gesichert',
-  error: '⚠️ Sicherung fehlgeschlagen',
+const PRODUCT_LABEL: Record<string, string> = {
+  premium: '★ Premium',
+  free: 'Free',
+  open: 'Free',
 };
 
-export const GoogleAuthControl: React.FC<{
-  status: GoogleAuthStatus;
-  user: GoogleUser | null;
-  syncState: DriveSyncState;
+export const SpotifyAuthControl: React.FC<{
+  status: SpotifyAuthStatus;
+  user: SpotifyUser | null;
   onSignIn: () => void;
   onSignOut: () => void;
   visible: boolean;
-}> = ({ status, user, syncState, onSignIn, onSignOut, visible }) => {
+}> = ({ status, user, onSignIn, onSignOut, visible }) => {
   if (status === 'not_configured') return null;
 
   return (
@@ -38,13 +34,13 @@ export const GoogleAuthControl: React.FC<{
             />
           )}
           <span className="font-bold truncate hidden sm:inline">{user.name}</span>
-          {syncState !== 'idle' && (
-            <span className="hidden md:inline text-retro-brown whitespace-nowrap">{SYNC_LABEL[syncState]}</span>
-          )}
+          <span className="hidden md:inline text-retro-brown whitespace-nowrap">
+            {PRODUCT_LABEL[user.product] || user.product}
+          </span>
           <button
             onClick={onSignOut}
             className="retro-button border border-retro-ink px-2 py-1 font-bold bg-white shrink-0"
-            aria-label="Von Google abmelden"
+            aria-label="Von Spotify abmelden"
           >
             Abmelden
           </button>
@@ -55,7 +51,7 @@ export const GoogleAuthControl: React.FC<{
           disabled={status === 'signing_in'}
           className="retro-button border border-retro-ink px-2 py-1 font-bold bg-white disabled:opacity-60"
         >
-          {status === 'signing_in' ? 'Anmelden …' : status === 'error' ? 'Erneut mit Google anmelden' : 'Mit Google anmelden'}
+          {status === 'signing_in' ? 'Weiterleitung …' : status === 'error' ? 'Erneut mit Spotify anmelden' : 'Mit Spotify anmelden'}
         </button>
       )}
     </div>
