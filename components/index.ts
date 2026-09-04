@@ -4,6 +4,8 @@ export { ProgressBar } from './ProgressBar';
 export { Header } from './Header';
 export { FontSizeControl } from './FontSizeControl';
 export { GoogleAuthControl } from './GoogleAuthControl';
+export { SpotifyAuthControl } from './SpotifyAuthControl';
+export { AccountControls } from './AccountControls';
 export { SettingsModal } from './SettingsModal';
 export { Modal } from './Modal';
 export { GalleryCard } from './GalleryCard';

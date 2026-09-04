@@ -12,7 +12,7 @@ export function useRetroSession() {
   const [resumeTarget, setResumeTarget] = useState<AppPhase | null>(
     saved.phase && saved.phase !== 'intro' ? saved.phase : null
   );
-  const [user, setUser] = useState<UserProfile>(saved.user ?? EMPTY_USER);
+  const [user, setUser] = useState<UserProfile>({ ...EMPTY_USER, ...saved.user });
   const [memories, setMemories] = useState<CapturedMemory[]>(saved.memories ?? []);
   const [diaryEntry, setDiaryEntry] = useState<string>(saved.diaryEntry ?? '');
   const [clickedBuzzwords, setClickedBuzzwords] = useState<string[]>(saved.clickedBuzzwords ?? []);
@@ -73,7 +73,7 @@ export function useRetroSession() {
   // Replaces the whole session with `s` — shared by file import and by
   // loading a session that was previously saved to the user's Google Drive.
   const loadRemoteState = useCallback((s: Partial<SessionState>) => {
-    setUser(s.user ?? EMPTY_USER);
+    setUser({ ...EMPTY_USER, ...s.user });
     setMemories(s.memories ?? []);
     setDiaryEntry(s.diaryEntry ?? '');
     setClickedBuzzwords(s.clickedBuzzwords ?? []);

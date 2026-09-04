@@ -41,8 +41,10 @@ export function buildBookText(user: UserProfile, decade: string, memories: Captu
     '================================',
     user.name ? `Für: ${user.name}` : '',
     user.birthDate ? `Geboren: ${user.birthDate}` : '',
+    user.gender ? `Geschlecht: ${user.gender}` : '',
     `Schwerpunkt: die ${decade}er Jahre`,
     user.interests.length ? `Interessen: ${user.interests.join(', ')}` : '',
+    user.favoriteArtists.length ? `Lieblingsmusiker:innen: ${user.favoriteArtists.join(', ')}` : '',
     `Erstellt: ${new Date().toLocaleString('de-DE')}`,
   ].filter(Boolean);
 

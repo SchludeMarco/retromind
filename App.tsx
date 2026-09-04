@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, GoogleAuthControl, ChatBot, BootOverlay, CrtOverlay } from './components';
+import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -29,6 +29,7 @@ import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
+import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
@@ -59,6 +60,7 @@ const App: React.FC = () => {
   const spotify = useSpotifyBackground(currentAudioDecade);
 
   const googleAuth = useGoogleAuth();
+  const spotifyAuth = useSpotifyAuth();
   const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const remoteLoadAttempted = useRef(false);
 
@@ -433,6 +435,16 @@ const App: React.FC = () => {
     setDriveSyncState('idle');
   };
 
+  // --- Spotify account ---
+  const handleSpotifySignIn = () => {
+    playSFX('click');
+    spotifyAuth.signIn();
+  };
+  const handleSpotifySignOut = () => {
+    playSFX('click');
+    spotifyAuth.signOut();
+  };
+
   // --- render helpers ---
   const aiOff = aiAvailability === 'not_configured';
   const isAnswered = (id: string) => !!memoryFor(id);
@@ -449,12 +461,16 @@ const App: React.FC = () => {
           control we could put here). */}
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
 
-      <GoogleAuthControl
-        status={googleAuth.status}
-        user={googleAuth.user}
-        syncState={driveSyncState}
-        onSignIn={handleGoogleSignIn}
-        onSignOut={handleGoogleSignOut}
+      <AccountControls
+        googleStatus={googleAuth.status}
+        googleUser={googleAuth.user}
+        driveSyncState={driveSyncState}
+        onGoogleSignIn={handleGoogleSignIn}
+        onGoogleSignOut={handleGoogleSignOut}
+        spotifyStatus={spotifyAuth.status}
+        spotifyUser={spotifyAuth.user}
+        onSpotifySignIn={handleSpotifySignIn}
+        onSpotifySignOut={handleSpotifySignOut}
         visible={showBottomControls}
       />
       <Header />
@@ -520,6 +536,9 @@ const App: React.FC = () => {
           googleStatus={googleAuth.status}
           googleUser={googleAuth.user}
           onGoogleSignIn={handleGoogleSignIn}
+          spotifyStatus={spotifyAuth.status}
+          spotifyUser={spotifyAuth.user}
+          onSpotifySignIn={handleSpotifySignIn}
           onStart={startJourney}
           onResume={resumeJourney}
           onReset={handleResetJourney}
