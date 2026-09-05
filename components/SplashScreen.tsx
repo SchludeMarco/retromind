@@ -25,8 +25,8 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
     >
       <div className="grainy-bg" />
       <div
-        className="absolute top-1/2 left-1/2 w-[90vmin] h-[65vmin] max-w-[720px] max-h-[520px] opacity-50 pointer-events-none"
-        style={{ transform: 'translate(-50%, -50%) perspective(900px) rotateY(-18deg) rotateX(5deg)' }}
+        className="absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-50 pointer-events-none"
+        style={{ transform: 'translate(-50%, -50%) perspective(1000px) rotateX(32deg) rotateY(-16deg)' }}
       >
         <MantelClock className="w-full h-full" />
       </div>
