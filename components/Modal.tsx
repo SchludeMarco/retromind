@@ -35,7 +35,7 @@ export const Modal: React.FC<{ onClose: () => void; label: string; children: Rea
   }, [onClose]);
 
   return (
-    <div className="rm-fixed fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+    <div className="rm-fixed fixed inset-0 bg-black/60 z-[650] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
       <div
         ref={ref}
         role="dialog"
