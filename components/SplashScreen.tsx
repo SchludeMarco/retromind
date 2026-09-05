@@ -7,15 +7,22 @@ import { MantelClock } from './MantelClock';
 const EXPLOSION_MS = 550;
 const FADE_MS = 2200;
 
-const PARTICLE_COUNT = 22;
-const particles = Array.from({ length: PARTICLE_COUNT }, () => {
-  const angle = Math.random() * Math.PI * 2;
-  const distance = 70 + Math.random() * 110;
+// Each spark is a thin streak anchored at the button's center and rotated
+// to point outward along its own flight angle — so animating it is just a
+// translate along its own local "up" axis, no per-particle trig needed at
+// animation time.
+const SPARK_COUNT = 36;
+const sparks = Array.from({ length: SPARK_COUNT }, () => {
+  const angleDeg = Math.random() * 360;
+  const distance = 90 + Math.random() * 150;
+  const length = 12 + Math.random() * 22;
   return {
-    tx: Math.cos(angle) * distance,
-    ty: Math.sin(angle) * distance,
-    size: 4 + Math.random() * 7,
-    delay: Math.random() * 60,
+    angleDeg,
+    distance,
+    length,
+    width: 1.5 + Math.random() * 1.5,
+    delay: Math.random() * 50,
+    duration: 420 + Math.random() * 260,
   };
 });
 
@@ -100,7 +107,7 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
       <div className="mantel-clock-wrapper absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-60 pointer-events-none">
         <MantelClock className="w-full h-full" />
       </div>
-      <h1 className="splash-title relative -rotate-2 font-display text-5xl md:text-7xl font-bold text-retro-paper tracking-wide mb-6">
+      <h1 className="splash-title relative font-display text-5xl md:text-7xl font-bold text-retro-paper tracking-wide mb-6">
         Welcome to <span className="text-red-600">R</span>etro<span className="text-red-600">M</span>ind
       </h1>
       <p className="relative font-elegant text-xl md:text-2xl italic tracking-wide text-[#c9ab78] mb-12">
@@ -114,21 +121,28 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
               className="explosion-ring absolute top-1/2 left-1/2 w-5 h-5 rounded-full"
               style={{ border: '6px solid rgba(255,196,102,0.85)' }}
             />
-            {particles.map((p, i) => (
+            {sparks.map((s, i) => (
               <span
                 key={i}
                 aria-hidden="true"
-                className="explosion-particle absolute top-1/2 left-1/2 rounded-full"
-                style={{
-                  width: p.size,
-                  height: p.size,
-                  background:
-                    'radial-gradient(circle, #fff6d8 0%, #ffb648 45%, #d97706 75%, transparent 100%)',
-                  animationDelay: `${p.delay}ms`,
-                  ['--tx' as any]: `${p.tx}px`,
-                  ['--ty' as any]: `${p.ty}px`,
-                }}
-              />
+                className="absolute top-1/2 left-1/2 w-0 h-0"
+                style={{ transform: `rotate(${s.angleDeg}deg)` }}
+              >
+                <span
+                  className="explosion-spark absolute block rounded-full"
+                  style={{
+                    left: -s.width / 2,
+                    top: -s.length,
+                    width: s.width,
+                    height: s.length,
+                    background: 'linear-gradient(to top, rgba(217,119,6,0) 0%, #ffb648 55%, #fff6d8 100%)',
+                    boxShadow: '0 0 5px 1px rgba(255, 214, 140, 0.75)',
+                    animationDelay: `${s.delay}ms`,
+                    animationDuration: `${s.duration}ms`,
+                    ['--dist' as any]: `${s.distance}px`,
+                  }}
+                />
+              </span>
             ))}
           </>
         )}
