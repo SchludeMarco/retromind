@@ -249,6 +249,21 @@ button:not(:disabled):active {
 .animate-spin { animation: spin 4s linear infinite; }
 .animate-fadeOut { animation: fadeOut 0.9s ease-out forwards; }
 
+/* The splash screen's background mantel clock drifts gently, as if resting
+   on an unsteady shelf — a slow sway rather than a mechanical loop. */
+@keyframes mantelClockSway {
+  0%, 100% {
+    transform: translate(-50%, -50%) perspective(1000px) rotateX(32deg) rotateY(-16deg) rotate(-1.2deg) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) perspective(1000px) rotateX(29deg) rotateY(-13deg) rotate(1.2deg) translateY(-8px);
+  }
+}
+.mantel-clock-wrapper {
+  transform: translate(-50%, -50%) perspective(1000px) rotateX(32deg) rotateY(-16deg);
+  animation: mantelClockSway 9s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .retro-card, .retro-button, button { transition: none !important; }
   .retro-card:hover { transform: none !important; }
@@ -256,6 +271,7 @@ button:not(:disabled):active {
   .animate-fadeIn, .animate-popIn, .animate-spin, .animate-pulse { animation: none !important; }
   .retro-photo-live, .retro-photo-frame::after { animation: none !important; }
   .crt-overlay { animation: none !important; }
+  .mantel-clock-wrapper { animation: none !important; }
   * { scroll-behavior: auto !important; }
 }
 @media print {
