@@ -280,6 +280,34 @@ button:not(:disabled):active {
   animation: splashTitleGlow 4s ease-in-out infinite;
 }
 
+/* The "Let's go!" button's quick send-off: sparks fly out from its center,
+   a ring shockwaves outward, and a warm flash washes the whole screen —
+   all fast, before the slow fade to the app takes over. */
+@keyframes explosionParticle {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2);
+    opacity: 0;
+  }
+}
+.explosion-particle {
+  animation: explosionParticle 0.55s ease-out forwards;
+}
+@keyframes explosionRing {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(9); opacity: 0; }
+}
+.explosion-ring {
+  animation: explosionRing 0.55s ease-out forwards;
+}
+@keyframes explosionFlash {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+.explosion-flash {
+  animation: explosionFlash 0.5s ease-out forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .retro-card, .retro-button, button { transition: none !important; }
   .retro-card:hover { transform: none !important; }
