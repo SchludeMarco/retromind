@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen } from './components';
+import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -75,6 +75,9 @@ const App: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [showSplash, setShowSplash] = useState(true);
+  // Gates every phase behind identity verification — reset on every fresh
+  // load (like showSplash) so the app re-verifies each time it's opened.
+  const [verified, setVerified] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showBottomControls, setShowBottomControls] = useState(false);
@@ -424,6 +427,13 @@ const App: React.FC = () => {
     window.print();
   };
 
+  // --- verification ---
+  const handleVerified = (name: string, birthDate: string) => {
+    playSFX('success');
+    setUser((prev) => ({ ...prev, name, birthDate }));
+    setVerified(true);
+  };
+
   // --- Google account ---
   const handleGoogleSignIn = () => {
     playSFX('click');
@@ -463,67 +473,7 @@ const App: React.FC = () => {
           control we could put here). */}
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
 
-      <AccountControls
-        googleStatus={googleAuth.status}
-        googleUser={googleAuth.user}
-        driveSyncState={driveSyncState}
-        onGoogleSignIn={handleGoogleSignIn}
-        onGoogleSignOut={handleGoogleSignOut}
-        spotifyStatus={spotifyAuth.status}
-        spotifyUser={spotifyAuth.user}
-        onSpotifySignIn={handleSpotifySignIn}
-        onSpotifySignOut={handleSpotifySignOut}
-        visible={showBottomControls}
-      />
       <Header />
-
-      {/* Settings live where the music button used to sit — the ambient
-          player is available from the very first screen via its controls
-          here, since music already starts playing at app boot. */}
-      <button
-        onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
-        aria-label="App-Einstellungen öffnen"
-        className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
-          showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        ⚙️
-      </button>
-      {isSettingsOpen && (
-        <SettingsModal
-          fontScale={fontScale}
-          onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
-          currentDecade={currentAudioDecade}
-          onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-          isPlaying={isMusicPlaying}
-          isBlocked={isAudioBlocked}
-          onToggleMusic={() => {
-            playSFX('click');
-            if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
-            else setIsMusicPlaying((v) => !v);
-          }}
-          volume={volume}
-          onVolumeChange={setVolume}
-          isSpotifyReady={spotify.isReady}
-          isSpotifyPlaying={spotify.isPlaying}
-          onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
-          onDismiss={() => setIsSettingsOpen(false)}
-          onCloseClick={closeSettingsWithSfx}
-        />
-      )}
-
-      {phase !== 'intro' && (
-        <>
-          <button
-            onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
-            aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-            className="rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
-          >
-            {isChatOpen ? '✕' : '💬'}
-          </button>
-          <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
-        </>
-      )}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
@@ -531,127 +481,200 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {phase === 'intro' && (
-        <IntroPhase
-          resumeTarget={resumeTarget}
-          memoriesCount={memories.length}
+      {!verified ? (
+        <VerifyGate
           googleStatus={googleAuth.status}
           googleUser={googleAuth.user}
-          onGoogleSignIn={handleGoogleSignIn}
-          spotifyStatus={spotifyAuth.status}
-          spotifyUser={spotifyAuth.user}
-          onSpotifySignIn={handleSpotifySignIn}
-          onStart={startJourney}
-          onResume={resumeJourney}
-          onReset={handleResetJourney}
-        />
-      )}
-
-      {phase === 'onboarding' && (
-        <OnboardingPhase
-          user={user}
-          onUserChange={setUser}
-          onToggleInterest={toggleInterest}
-          onSubmit={handleOnboarding}
+          birthdayHint={googleAuth.birthdayHint}
+          initialName={user.name}
+          initialBirthDate={user.birthDate}
           maxBirthDate={todayStamp()}
+          onGoogleSignIn={handleGoogleSignIn}
+          onVerified={handleVerified}
         />
-      )}
+      ) : (
+        <>
+          <AccountControls
+            googleStatus={googleAuth.status}
+            googleUser={googleAuth.user}
+            driveSyncState={driveSyncState}
+            onGoogleSignIn={handleGoogleSignIn}
+            onGoogleSignOut={handleGoogleSignOut}
+            spotifyStatus={spotifyAuth.status}
+            spotifyUser={spotifyAuth.user}
+            onSpotifySignIn={handleSpotifySignIn}
+            onSpotifySignOut={handleSpotifySignOut}
+            visible={showBottomControls}
+          />
 
-      {phase === 'induction' && (
-        <InductionPhase
-          focusDecade={focusDecade}
-          onSelectGalleryItem={selectGalleryItem}
-          onContinue={() => goTo('exploration')}
-        />
-      )}
+          {/* Settings live where the music button used to sit — the ambient
+              player is available from the very first screen via its controls
+              here, since music already starts playing at app boot. */}
+          <button
+            onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
+            aria-label="App-Einstellungen öffnen"
+            className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
+              showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            ⚙️
+          </button>
+          {isSettingsOpen && (
+            <SettingsModal
+              fontScale={fontScale}
+              onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
+              currentDecade={currentAudioDecade}
+              onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+              isPlaying={isMusicPlaying}
+              isBlocked={isAudioBlocked}
+              onToggleMusic={() => {
+                playSFX('click');
+                if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
+                else setIsMusicPlaying((v) => !v);
+              }}
+              volume={volume}
+              onVolumeChange={setVolume}
+              isSpotifyReady={spotify.isReady}
+              isSpotifyPlaying={spotify.isPlaying}
+              onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
+              onDismiss={() => setIsSettingsOpen(false)}
+              onCloseClick={closeSettingsWithSfx}
+            />
+          )}
 
-      {phase === 'exploration' && (
-        <ExplorationPhase
-          aiOff={aiOff}
-          uploadedImage={uploadedImage}
-          uploadError={uploadError}
-          analysis={analysis}
-          analysisSaved={analysisSaved}
-          videoStatus={videoStatus}
-          onImageUpload={handleImageUpload}
-          onClearImage={clearUploadedImage}
-          onAnalyze={handleAnalyze}
-          onSaveAnalysis={saveAnalysisAsMemory}
-          onGenerateVideo={handleGenerateVideo}
-          focusDecade={focusDecade}
-          userCategories={userCategories}
-          clickedBuzzwords={clickedBuzzwords}
-          memoriesCount={memories.length}
-          isAnswered={isAnswered}
-          onOpenBuzzword={openBuzzword}
-          onBack={() => goTo('induction')}
-          onNext={() => goTo('diary')}
-        />
-      )}
+          {phase !== 'intro' && (
+            <>
+              <button
+                onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
+                aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
+                className="rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+              >
+                {isChatOpen ? '✕' : '💬'}
+              </button>
+              <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
+            </>
+          )}
 
-      {phase === 'diary' && (
-        <DiaryPhase
-          memoriesCount={memories.length}
-          diaryEntry={diaryEntry}
-          onDiaryChange={setDiaryEntry}
-          onBack={() => goTo('exploration')}
-          onNext={() => goTo('book')}
-        />
-      )}
+          {phase === 'intro' && (
+            <IntroPhase
+              resumeTarget={resumeTarget}
+              memoriesCount={memories.length}
+              googleUser={googleAuth.user}
+              spotifyStatus={spotifyAuth.status}
+              spotifyUser={spotifyAuth.user}
+              onSpotifySignIn={handleSpotifySignIn}
+              onStart={startJourney}
+              onResume={resumeJourney}
+              onReset={handleResetJourney}
+            />
+          )}
 
-      {phase === 'book' && (
-        <BookPhase
-          user={user}
-          focusDecade={focusDecade}
-          memories={memories}
-          diaryEntry={diaryEntry}
-          onPrint={printBook}
-          onExportText={exportText}
-          onExportSession={exportSessionFile}
-          onImportSession={importSessionFile}
-          onBack={() => goTo('diary')}
-          onNext={() => goTo('finish')}
-        />
-      )}
+          {phase === 'onboarding' && (
+            <OnboardingPhase
+              user={user}
+              onUserChange={setUser}
+              onToggleInterest={toggleInterest}
+              onSubmit={handleOnboarding}
+            />
+          )}
 
-      {phase === 'finish' && (
-        <FinishPhase
-          userName={user.name}
-          memoriesCount={memories.length}
-          onViewBook={() => goTo('book')}
-          onRestart={handleResetJourney}
-        />
-      )}
+          {phase === 'induction' && (
+            <InductionPhase
+              focusDecade={focusDecade}
+              onSelectGalleryItem={selectGalleryItem}
+              onContinue={() => goTo('exploration')}
+            />
+          )}
 
-      {selectedGalleryItem && (
-        <GalleryDetailModal
-          item={selectedGalleryItem}
-          onDismiss={() => setSelectedGalleryItem(null)}
-          onCloseClick={closeGalleryItemWithSfx}
-        />
-      )}
+          {phase === 'exploration' && (
+            <ExplorationPhase
+              aiOff={aiOff}
+              uploadedImage={uploadedImage}
+              uploadError={uploadError}
+              analysis={analysis}
+              analysisSaved={analysisSaved}
+              videoStatus={videoStatus}
+              onImageUpload={handleImageUpload}
+              onClearImage={clearUploadedImage}
+              onAnalyze={handleAnalyze}
+              onSaveAnalysis={saveAnalysisAsMemory}
+              onGenerateVideo={handleGenerateVideo}
+              focusDecade={focusDecade}
+              userCategories={userCategories}
+              clickedBuzzwords={clickedBuzzwords}
+              memoriesCount={memories.length}
+              isAnswered={isAnswered}
+              onOpenBuzzword={openBuzzword}
+              onBack={() => goTo('induction')}
+              onNext={() => goTo('diary')}
+            />
+          )}
 
-      {selectedWord && (
-        <BuzzwordModal
-          word={selectedWord}
-          isGenerating={isGenerating}
-          answerDraft={answerDraft}
-          onAnswerChange={setAnswerDraft}
-          isExistingMemory={!!memoryFor(selectedWord.id)}
-          onSave={saveBuzzwordAnswer}
-          onDismiss={() => setSelectedWord(null)}
-          onCloseClick={closeBuzzwordModalWithSfx}
-          perspective={perspective}
-          isGeneratingPerspective={isGeneratingPerspective}
-          perspectiveDraft={perspectiveDraft}
-          onPerspectiveAnswerChange={setPerspectiveDraft}
-          isPerspectiveSaved={!!perspectiveFor(selectedWord.id)}
-          onOpenPerspective={openPerspective}
-          onSavePerspective={savePerspectiveAnswer}
-        />
-      )}
+          {phase === 'diary' && (
+            <DiaryPhase
+              memoriesCount={memories.length}
+              diaryEntry={diaryEntry}
+              onDiaryChange={setDiaryEntry}
+              onBack={() => goTo('exploration')}
+              onNext={() => goTo('book')}
+            />
+          )}
 
-      <ProgressBar current={phaseIndex} total={PHASES.length} />
+          {phase === 'book' && (
+            <BookPhase
+              user={user}
+              focusDecade={focusDecade}
+              memories={memories}
+              diaryEntry={diaryEntry}
+              onPrint={printBook}
+              onExportText={exportText}
+              onExportSession={exportSessionFile}
+              onImportSession={importSessionFile}
+              onBack={() => goTo('diary')}
+              onNext={() => goTo('finish')}
+            />
+          )}
+
+          {phase === 'finish' && (
+            <FinishPhase
+              userName={user.name}
+              memoriesCount={memories.length}
+              onViewBook={() => goTo('book')}
+              onRestart={handleResetJourney}
+            />
+          )}
+
+          {selectedGalleryItem && (
+            <GalleryDetailModal
+              item={selectedGalleryItem}
+              onDismiss={() => setSelectedGalleryItem(null)}
+              onCloseClick={closeGalleryItemWithSfx}
+            />
+          )}
+
+          {selectedWord && (
+            <BuzzwordModal
+              word={selectedWord}
+              isGenerating={isGenerating}
+              answerDraft={answerDraft}
+              onAnswerChange={setAnswerDraft}
+              isExistingMemory={!!memoryFor(selectedWord.id)}
+              onSave={saveBuzzwordAnswer}
+              onDismiss={() => setSelectedWord(null)}
+              onCloseClick={closeBuzzwordModalWithSfx}
+              perspective={perspective}
+              isGeneratingPerspective={isGeneratingPerspective}
+              perspectiveDraft={perspectiveDraft}
+              onPerspectiveAnswerChange={setPerspectiveDraft}
+              isPerspectiveSaved={!!perspectiveFor(selectedWord.id)}
+              onOpenPerspective={openPerspective}
+              onSavePerspective={savePerspectiveAnswer}
+            />
+          )}
+
+          <ProgressBar current={phaseIndex} total={PHASES.length} />
+        </>
+      )}
     </div>
   );
 };
