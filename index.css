@@ -276,22 +276,31 @@ button:not(:disabled):active {
     text-shadow: 0 0 32px rgba(217, 119, 6, 0.65), 0 0 5px rgba(244, 228, 188, 0.85);
   }
 }
+/* A slow bob and micro-tilt drift, like a hand-lettered sign hanging
+   slightly loose — the tilt itself lives in these keyframes (not a static
+   utility class) since the animation owns the transform property. */
+@keyframes splashTitleFloat {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(-1deg) translateY(-5px); }
+}
 .splash-title {
-  animation: splashTitleGlow 4s ease-in-out infinite;
+  animation: splashTitleGlow 4s ease-in-out infinite, splashTitleFloat 6s ease-in-out infinite;
 }
 
-/* The "Let's go!" button's quick send-off: sparks fly out from its center,
-   a ring shockwaves outward, and a warm flash washes the whole screen —
-   all fast, before the slow fade to the app takes over. */
-@keyframes explosionParticle {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  100% {
-    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2);
-    opacity: 0;
-  }
+/* The "Let's go!" button's quick send-off: thin bright sparks shoot out
+   from its center (each pre-rotated to its flight angle, so the animation
+   is just a translate along its own local "up" axis), a ring shockwaves
+   outward, and a warm flash washes the whole screen — all fast, before the
+   slow fade to the app takes over. */
+@keyframes explosionSpark {
+  0% { transform: translateY(0) scaleY(1); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(calc(-1 * var(--dist))) scaleY(0.4); opacity: 0; }
 }
-.explosion-particle {
-  animation: explosionParticle 0.55s ease-out forwards;
+.explosion-spark {
+  animation-name: explosionSpark;
+  animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1);
+  animation-fill-mode: forwards;
 }
 @keyframes explosionRing {
   0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.85; }
@@ -316,7 +325,7 @@ button:not(:disabled):active {
   .retro-photo-live, .retro-photo-frame::after { animation: none !important; }
   .crt-overlay { animation: none !important; }
   .mantel-clock-wrapper { animation: none !important; }
-  .splash-title { animation: none !important; }
+  .splash-title { animation: none !important; transform: rotate(-2deg); }
   * { scroll-behavior: auto !important; }
 }
 @media print {
