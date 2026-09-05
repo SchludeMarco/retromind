@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay } from './components';
+import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -74,6 +74,7 @@ const App: React.FC = () => {
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [showSplash, setShowSplash] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showBottomControls, setShowBottomControls] = useState(false);
@@ -453,6 +454,7 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
       <CrtOverlay />
+      {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
       <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
