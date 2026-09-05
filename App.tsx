@@ -192,6 +192,13 @@ const App: React.FC = () => {
     setResumeTarget(null);
   };
 
+  const goHome = () => {
+    playSFX('click');
+    setResumeTarget(phase);
+    setPhase('intro');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleResetJourney = () => {
     playSFX('click');
     resetJourney();
@@ -537,6 +544,13 @@ const App: React.FC = () => {
 
           {phase !== 'intro' && (
             <>
+              <button
+                onClick={goHome}
+                aria-label="Zum Startbildschirm zurückkehren"
+                className="rm-fixed fixed bottom-2 left-1/2 -translate-x-1/2 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+              >
+                🏠
+              </button>
               <button
                 onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
                 aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
