@@ -27,10 +27,10 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
       <div className="mantel-clock-wrapper absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-60 pointer-events-none">
         <MantelClock className="w-full h-full" />
       </div>
-      <h1 className="relative text-6xl md:text-8xl font-bold text-retro-paper tracking-tighter mb-4">
+      <h1 className="splash-title relative -rotate-2 font-display text-5xl md:text-7xl font-bold text-retro-paper tracking-wide mb-6">
         Welcome to <span className="text-red-600">R</span>etro<span className="text-red-600">M</span>ind
       </h1>
-      <p className="relative text-lg md:text-xl italic text-[#b89a68] mb-12">
+      <p className="relative font-elegant text-xl md:text-2xl italic tracking-wide text-[#c9ab78] mb-12">
         The ticket to your past🏳️
       </p>
       <button

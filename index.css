@@ -18,6 +18,8 @@
 
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: 'Space Mono', 'Courier New', monospace;
+  --font-display: 'Cinzel Decorative', 'Playfair Display', serif;
+  --font-elegant: 'Cormorant Garamond', 'Playfair Display', serif;
 }
 
 /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
@@ -264,6 +266,20 @@ button:not(:disabled):active {
   animation: mantelClockSway 9s ease-in-out infinite;
 }
 
+/* The splash title glows and settles like a hand-lettered sign catching
+   candlelight — a slow pulse in its warm halo, not a hard blink. */
+@keyframes splashTitleGlow {
+  0%, 100% {
+    text-shadow: 0 0 18px rgba(217, 119, 6, 0.35), 0 0 3px rgba(244, 228, 188, 0.55);
+  }
+  50% {
+    text-shadow: 0 0 32px rgba(217, 119, 6, 0.65), 0 0 5px rgba(244, 228, 188, 0.85);
+  }
+}
+.splash-title {
+  animation: splashTitleGlow 4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .retro-card, .retro-button, button { transition: none !important; }
   .retro-card:hover { transform: none !important; }
@@ -272,6 +288,7 @@ button:not(:disabled):active {
   .retro-photo-live, .retro-photo-frame::after { animation: none !important; }
   .crt-overlay { animation: none !important; }
   .mantel-clock-wrapper { animation: none !important; }
+  .splash-title { animation: none !important; }
   * { scroll-behavior: auto !important; }
 }
 @media print {
