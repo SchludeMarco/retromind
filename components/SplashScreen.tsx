@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MantelClock } from './MantelClock';
 
 // How long the button's burst of sparks plays before the full-screen fade
@@ -6,9 +6,6 @@ import { MantelClock } from './MantelClock';
 // slower than the burst itself ("quick explosion, then a slow fade").
 const EXPLOSION_MS = 550;
 const FADE_MS = 2200;
-
-const TICK_INTERVAL_MS = 1000;
-const TICK_GAIN = 0.06;
 
 // Each spark is a thin streak anchored at the button's center and rotated
 // to point outward along its own flight angle — so animating it is just a
@@ -28,29 +25,6 @@ const sparks = Array.from({ length: SPARK_COUNT }, () => {
     duration: 420 + Math.random() * 260,
   };
 });
-
-// A soft mechanical tick/tock (filtered noise click, alternating pitch like
-// a real escapement) — synthesized so there's no audio asset to load.
-function playTick(ctx: AudioContext, isTock: boolean) {
-  const now = ctx.currentTime;
-  const bufferSize = Math.floor(ctx.sampleRate * 0.04);
-  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
-  }
-  const noise = ctx.createBufferSource();
-  noise.buffer = buffer;
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.value = isTock ? 750 : 1400;
-  filter.Q.value = 3;
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(TICK_GAIN, now);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
-  noise.connect(filter).connect(gain).connect(ctx.destination);
-  noise.start(now);
-}
 
 // Synthesized so the bang always matches the visual burst exactly, with no
 // asset to load — a short sub-bass thump layered under a filtered noise
@@ -106,49 +80,6 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
   const [fading, setFading] = useState(false);
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Ticks for as long as the splash sits there, like an old clock in the
-  // room. Browsers refuse to start audio before a gesture — and in
-  // practice that first gesture is almost always the "Let's go!" tap
-  // itself, so don't cut the interval off the moment that tap fires: let
-  // it ride out through the explosion/fade and stop naturally when this
-  // component unmounts, so the unlock that tap just granted actually gets
-  // to produce a tick or two instead of being silenced before it can.
-  useEffect(() => {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    let tock = false;
-    let intervalId: number | undefined;
-
-    const startTicking = () => {
-      if (intervalId !== undefined) return;
-      intervalId = window.setInterval(() => {
-        playTick(ctx, tock);
-        tock = !tock;
-      }, TICK_INTERVAL_MS);
-    };
-
-    const tryStart = () => {
-      if (ctx.state === 'running') {
-        startTicking();
-        return;
-      }
-      ctx.resume().then(() => {
-        if (ctx.state === 'running') startTicking();
-      }).catch(() => {});
-    };
-    tryStart();
-
-    const gestureEvents: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
-    gestureEvents.forEach((evt) => document.addEventListener(evt, tryStart, { once: true, capture: true }));
-
-    return () => {
-      if (intervalId !== undefined) clearInterval(intervalId);
-      gestureEvents.forEach((evt) => document.removeEventListener(evt, tryStart, { capture: true }));
-      ctx.close().catch(() => {});
-    };
-  }, []);
 
   const handleStart = () => {
     if (exploding) return;
