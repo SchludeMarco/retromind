@@ -30,16 +30,13 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 - **Memory-Labor** – altes Foto hochladen (client-seitig verkleinert), von
   **Gemini** beschreiben lassen und die Beschreibung als Erinnerung übernehmen;
   optional per **Veo** zu einem kurzen Video animieren (benötigt Google-Billing).
-- **Nostalgie-Radio** – dekadenabhängiges Instrumental-Ambiente (ehrlich
-  gelabelt, kein Ära-Sound), Lautstärke- und Ära-Wahl, UI-Sounds. Sobald man
-  einmal irgendwo klickt/tippt (Browser verlangen diese Interaktion, bevor
-  Ton laufen darf), starten automatisch **zwei** Dinge gleichzeitig: unser
-  Synth blendet über 10s von 0% auf die eingestellte Lautstärke ein, und im
-  Hintergrund läuft zusätzlich Spotifys offizielle „All Out …“-Playlist der
-  gewählten Dekade als Embed – streamt direkt von Spotify (wird nie von uns
-  gehostet) und in Spotifys eigener, von uns nicht regelbarer Lautstärke, da
-  die Embed-API dafür keine Schnittstelle bietet. In den Einstellungen lässt
-  sich der Spotify-Anteil separat pausieren.
+- **Echte Hits dieser Dekade** – Ära-Wahl und Spotifys offizielle „All Out …“-
+  Playlist der gewählten Dekade als Embed, plus UI-Sounds. Sobald man einmal
+  irgendwo klickt/tippt (Browser verlangen diese Interaktion, bevor Ton laufen
+  darf), startet die Playlist automatisch im Hintergrund – streamt direkt von
+  Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
+  regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet. In
+  den Einstellungen lässt sich die Wiedergabe pausieren.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
@@ -55,8 +52,9 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Läuft unabhängig vom bestehenden
-  Playlist-Embed (siehe Nostalgie-Radio) und beeinflusst dessen Wiedergabe
-  nicht. Ohne konfigurierte Spotify-Client-ID bleibt der Button unsichtbar.
+  Playlist-Embed (siehe Echte Hits dieser Dekade) und beeinflusst dessen
+  Wiedergabe nicht. Ohne konfigurierte Spotify-Client-ID bleibt der Button
+  unsichtbar.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
@@ -143,7 +141,7 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   meldet das Labor einen Fehler statt eines Videos.
 - **Vorschau-Modell** für Video (`veo-3.1-fast-generate-preview`) – ID kann sich
   ändern. Text/Vision/Chat nutzen GA-Modelle.
-- **Bilder & Musik** sind bewusst symbolisch (Lizenzgründe) und als solche
+- **Bilder** sind bewusst symbolisch (Lizenzgründe) und als solche
   gekennzeichnet – kein echtes Ära-Material außer dem einen NASA-Foto.
 - **Geräteübergreifender Sync ist optional** – ohne Google-Anmeldung weiterhin
   nur über `localStorage` + manuellen `.json`-Export/Import. Mit Anmeldung wird

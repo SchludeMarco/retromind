@@ -4,11 +4,10 @@ import { DECADES_DB } from '../constants';
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
-// unlocks audio — the same gesture-unlock the ambient synth needs (browsers
-// block any audio before a user gesture, Spotify's embed included). Spotify
-// exposes no volume control for this API, so playback always runs at
-// whatever level the visitor's own Spotify session is set to; only the
-// synth's own volume is ours to fade in (see useAudioPlayer).
+// unlocks audio (browsers block any audio before a user gesture, Spotify's
+// embed included). Spotify exposes no volume control for this API, so
+// playback always runs at whatever level the visitor's own Spotify session
+// is set to.
 export function useSpotifyBackground(currentDecade: string) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);

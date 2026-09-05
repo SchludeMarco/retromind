@@ -50,13 +50,7 @@ const App: React.FC = () => {
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const {
-    sfxRef,
-    isMusicPlaying, setIsMusicPlaying,
-    isAudioBlocked, resumeBlockedPlayback,
-    volume, setVolume,
-    playSFX,
-  } = useAudioPlayer(currentAudioDecade);
+  const { sfxRef, playSFX } = useAudioPlayer();
   const spotify = useSpotifyBackground(currentAudioDecade);
 
   const googleAuth = useGoogleAuth();
@@ -189,14 +183,12 @@ const App: React.FC = () => {
   const startJourney = () => {
     playSFX('click');
     setPhase('onboarding');
-    setIsMusicPlaying(true);
   };
 
   const resumeJourney = () => {
     playSFX('success');
     setPhase(resumeTarget || 'exploration');
     setResumeTarget(null);
-    setIsMusicPlaying(true);
   };
 
   const handleResetJourney = () => {
@@ -507,9 +499,6 @@ const App: React.FC = () => {
             visible={showBottomControls}
           />
 
-          {/* Settings live where the music button used to sit — the ambient
-              player is available from the very first screen via its controls
-              here, since music already starts playing at app boot. */}
           <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
             aria-label="App-Einstellungen öffnen"
@@ -525,15 +514,6 @@ const App: React.FC = () => {
               onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
               currentDecade={currentAudioDecade}
               onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-              isPlaying={isMusicPlaying}
-              isBlocked={isAudioBlocked}
-              onToggleMusic={() => {
-                playSFX('click');
-                if (isMusicPlaying && isAudioBlocked) resumeBlockedPlayback();
-                else setIsMusicPlaying((v) => !v);
-              }}
-              volume={volume}
-              onVolumeChange={setVolume}
               isSpotifyReady={spotify.isReady}
               isSpotifyPlaying={spotify.isPlaying}
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
