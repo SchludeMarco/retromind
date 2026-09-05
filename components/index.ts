@@ -10,6 +10,7 @@ export { VerifyGate } from './VerifyGate';
 export { SpotifyAuthControl } from './SpotifyAuthControl';
 export { AccountControls } from './AccountControls';
 export { SettingsModal } from './SettingsModal';
+export { FeedbackModal } from './FeedbackModal';
 export { Modal } from './Modal';
 export { GalleryCard } from './GalleryCard';
 export { ChatBot } from './ChatBot';

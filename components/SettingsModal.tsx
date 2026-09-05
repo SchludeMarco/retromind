@@ -16,12 +16,14 @@ export const SettingsModal: React.FC<{
   isSpotifyReady: boolean;
   isSpotifyPlaying: boolean;
   onToggleSpotify: () => void;
+  onOpenFeedback: () => void;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
   fontScale, onFontScaleChange,
   currentDecade, onDecadeChange, isPlaying, isBlocked, onToggleMusic, volume, onVolumeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify,
+  onOpenFeedback,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -129,6 +131,19 @@ export const SettingsModal: React.FC<{
           </p>
         </div>
       )}
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Feedback</span>
+        <p className="text-[10px] text-retro-tan mb-2">
+          Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.
+        </p>
+        <button
+          onClick={onOpenFeedback}
+          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          💬 Feedback geben
+        </button>
+      </div>
 
       <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}

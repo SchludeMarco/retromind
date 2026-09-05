@@ -60,6 +60,11 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
+- **Feedback-Button** – in den Einstellungen kann jede Nutzer:in Lob, Tadel,
+  Vorschläge oder Wünsche zur App hinterlassen; die Nachricht kommt per E-Mail
+  an die Betreiber:in an (optional: eigene E-Mail-Adresse für eine Antwort).
+  Ohne konfigurierten Versand (siehe unten) meldet der Button, dass Feedback
+  hier nicht zugestellt werden kann.
 - **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
 
 ## Architektur
@@ -67,6 +72,7 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 ```
 Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function)  ──▶  Google Gemini / Veo
                           ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
+                          ──fetch──▶  /api/feedback (Vercel Function)  ──▶  Resend (E-Mail-Versand)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
                           ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
                           ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
@@ -135,7 +141,10 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | Variable                 | Ort         | Beschreibung                                              |
 | ------------------------ | ----------- | ---------------------------------------------------------- |
 | `GEMINI_API_KEY`         | Vercel-Env  | Google-Gemini-API-Schlüssel (nur serverseitig)              |
-| `VITE_GOOGLE_CLIENT_ID`  | Vercel-Env  | Optional: OAuth-Client-ID für „Mit Google anmelden“ (Login + Drive-Sicherung); ohne sie bleibt der Button ausgeblendet |
+| `VITE_GOOGLE_CLIENT_ID`  | Vercel-Env  | Optional: OAuth-Client-ID für „Mit Google anmelden” (Login + Drive-Sicherung); ohne sie bleibt der Button ausgeblendet |
+| `RESEND_API_KEY`         | Vercel-Env  | Optional: API-Schlüssel von [resend.com](https://resend.com) für den Feedback-Versand (nur serverseitig) |
+| `FEEDBACK_TO_EMAIL`      | Vercel-Env  | Optional: Ziel-E-Mail-Adresse für eingereichtes Feedback; ohne `RESEND_API_KEY` + diese Variable meldet der Feedback-Button „nicht verfügbar” |
+| `FEEDBACK_FROM_EMAIL`    | Vercel-Env  | Optional: Absenderadresse der Feedback-Mail (Standard: Resend-Sandbox-Adresse) |
 
 ## Bekannte Einschränkungen
 
