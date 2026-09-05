@@ -9,8 +9,7 @@ export const OnboardingPhase: React.FC<{
   onUserChange: (user: UserProfile) => void;
   onToggleInterest: (interest: string) => void;
   onSubmit: (e: React.FormEvent) => void;
-  maxBirthDate: string;
-}> = ({ user, onUserChange, onToggleInterest, onSubmit, maxBirthDate }) => {
+}> = ({ user, onUserChange, onToggleInterest, onSubmit }) => {
   const [artistDraft, setArtistDraft] = useState('');
 
   const addArtist = () => {
@@ -29,34 +28,9 @@ export const OnboardingPhase: React.FC<{
   return (
   <div className="py-8 animate-fadeIn">
     <div className="retro-card p-6 md:p-12 bg-retro-cream">
-      <h2 className="text-3xl mb-8 border-b-2 border-retro-ink pb-2">Wer bist du?</h2>
+      <h2 className="text-3xl mb-8 border-b-2 border-retro-ink pb-2">Erzähl uns mehr von dir, {user.name || 'Zeitreisende:r'}</h2>
       <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <div>
-            <label htmlFor="rm-name" className="block text-sm font-bold uppercase mb-1">Name</label>
-            <input
-              id="rm-name"
-              required
-              type="text"
-              value={user.name}
-              onChange={(e) => onUserChange({ ...user, name: e.target.value })}
-              className="w-full border-2 border-retro-ink p-3 bg-white"
-              placeholder="Wie wirst du genannt?"
-            />
-          </div>
-          <div>
-            <label htmlFor="rm-birth" className="block text-sm font-bold uppercase mb-1">Geburtsdatum</label>
-            <input
-              id="rm-birth"
-              required
-              type="date"
-              min="1930-01-01"
-              max={maxBirthDate}
-              value={user.birthDate}
-              onChange={(e) => onUserChange({ ...user, birthDate: e.target.value })}
-              className="w-full border-2 border-retro-ink p-3 bg-white"
-            />
-          </div>
           <div>
             <label htmlFor="rm-gender" className="block text-sm font-bold uppercase mb-1">Geschlecht (optional)</label>
             <select

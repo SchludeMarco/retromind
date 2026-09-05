@@ -5,7 +5,8 @@ import { GoogleUser } from '../types';
 // screen, so RetroMind stays a static SPA with no auth backend of its own.
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
-const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE}`;
+const BIRTHDAY_SCOPE = 'https://www.googleapis.com/auth/user.birthday.read';
+const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE} ${BIRTHDAY_SCOPE}`;
 
 export interface GoogleToken {
   accessToken: string;
@@ -88,4 +89,25 @@ export async function fetchGoogleProfile(accessToken: string): Promise<GoogleUse
 
 export function revokeGoogleToken(accessToken: string) {
   (window as any).google?.accounts?.oauth2?.revoke(accessToken, () => {});
+}
+
+// Best-effort lookup of the user's birthday via the People API — only
+// populated if the person has shared a birthday (with year) on their Google
+// account and granted the `user.birthday.read` scope. Used purely to prefill
+// the age-verification field; never required, since most accounts don't
+// expose one.
+export async function fetchGoogleBirthday(accessToken: string): Promise<string | null> {
+  try {
+    const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=birthdays', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const withYear = (data.birthdays || []).find((b: any) => b.date?.year);
+    if (!withYear) return null;
+    const { year, month, day } = withYear.date;
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  } catch {
+    return null;
+  }
 }

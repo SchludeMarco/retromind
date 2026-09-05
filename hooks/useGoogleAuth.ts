@@ -4,6 +4,7 @@ import {
   getGoogleClientId,
   requestGoogleAccessToken,
   fetchGoogleProfile,
+  fetchGoogleBirthday,
   revokeGoogleToken,
   preloadGoogleIdentityServices,
   GoogleToken,
@@ -17,12 +18,33 @@ export type GoogleAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 
 export function useGoogleAuth() {
   const [status, setStatus] = useState<GoogleAuthStatus>(getGoogleClientId() ? 'signed_out' : 'not_configured');
   const [user, setUser] = useState<GoogleUser | null>(null);
+  const [birthdayHint, setBirthdayHint] = useState<string | null>(null);
   const tokenRef = useRef<GoogleToken | null>(null);
 
   // Load the GIS script as soon as the app mounts, not on first tap — see
   // preloadGoogleIdentityServices() for why.
   useEffect(() => {
     if (getGoogleClientId()) preloadGoogleIdentityServices().catch(() => {});
+  }, []);
+
+  // The app requires a fresh sign-in on every open (see VerifyGate). Try a
+  // silent renewal first so a person who already granted consent isn't
+  // stopped by a popup every single time — falls through to the mandatory
+  // sign-in button when no prior consent is found.
+  useEffect(() => {
+    if (!getGoogleClientId()) return;
+    (async () => {
+      try {
+        const token = await requestGoogleAccessToken('');
+        tokenRef.current = token;
+        const profile = await fetchGoogleProfile(token.accessToken);
+        setUser(profile);
+        setStatus('signed_in');
+        setBirthdayHint(await fetchGoogleBirthday(token.accessToken));
+      } catch {
+        /* no prior consent — the person must tap the sign-in button */
+      }
+    })();
   }, []);
 
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
@@ -50,6 +72,7 @@ export function useGoogleAuth() {
       const profile = await fetchGoogleProfile(token.accessToken);
       setUser(profile);
       setStatus('signed_in');
+      setBirthdayHint(await fetchGoogleBirthday(token.accessToken));
     } catch {
       setStatus('error');
     }
@@ -59,10 +82,11 @@ export function useGoogleAuth() {
     if (tokenRef.current) revokeGoogleToken(tokenRef.current.accessToken);
     tokenRef.current = null;
     setUser(null);
+    setBirthdayHint(null);
     setStatus(getGoogleClientId() ? 'signed_out' : 'not_configured');
   }, []);
 
-  return { status, user, signIn, signOut, getFreshAccessToken };
+  return { status, user, birthdayHint, signIn, signOut, getFreshAccessToken };
 }
 
 export type GoogleAuth = ReturnType<typeof useGoogleAuth>;

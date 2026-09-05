@@ -12,9 +12,7 @@ const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
 export const IntroPhase: React.FC<{
   resumeTarget: AppPhase | null;
   memoriesCount: number;
-  googleStatus: GoogleAuthStatus;
   googleUser: GoogleUser | null;
-  onGoogleSignIn: () => void;
   spotifyStatus: SpotifyAuthStatus;
   spotifyUser: SpotifyUser | null;
   onSpotifySignIn: () => void;
@@ -23,7 +21,7 @@ export const IntroPhase: React.FC<{
   onReset: () => void;
 }> = ({
   resumeTarget, memoriesCount,
-  googleStatus, googleUser, onGoogleSignIn,
+  googleUser,
   spotifyStatus, spotifyUser, onSpotifySignIn,
   onStart, onResume, onReset,
 }) => (
@@ -61,31 +59,11 @@ export const IntroPhase: React.FC<{
         persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
       </p>
 
-      {googleStatus !== 'not_configured' && (
+      {googleUser && (
         <div className="mb-4 border-2 border-retro-ink bg-white p-4">
-          {googleStatus === 'signed_in' && googleUser ? (
-            <p className="font-bold">
-              ☁️ Angemeldet als {googleUser.name} – deine Reise wird in deinem eigenen Google Drive gesichert.
-            </p>
-          ) : (
-            <>
-              <p className="mb-3">
-                Melde dich mit Google an, um deine Erinnerungen in deinem <strong>eigenen, privaten
-                Google Drive</strong> zu sichern und auf einem anderen Gerät weiterzumachen.
-              </p>
-              <button
-                onClick={onGoogleSignIn}
-                disabled={googleStatus === 'signing_in'}
-                className="retro-button border-2 border-retro-ink px-6 py-3 font-bold bg-white disabled:opacity-60"
-              >
-                {googleStatus === 'signing_in'
-                  ? 'Anmelden …'
-                  : googleStatus === 'error'
-                  ? 'Erneut mit Google anmelden'
-                  : 'Mit Google anmelden'}
-              </button>
-            </>
-          )}
+          <p className="font-bold">
+            ☁️ Angemeldet als {googleUser.name} – deine Reise wird in deinem eigenen Google Drive gesichert.
+          </p>
         </div>
       )}
 
@@ -123,8 +101,8 @@ export const IntroPhase: React.FC<{
           Wie RetroMind mit deinen Daten umgeht
         </summary>
         <ul className="list-disc pl-5 mt-3 space-y-1">
-          <li>Profil, Antworten und Tagebuch bleiben <strong>nur in diesem Browser</strong> (localStorage) – es sei denn, du meldest dich freiwillig mit Google an.</li>
-          <li>Mit Google-Anmeldung wird deine Reise zusätzlich in deinem <strong>eigenen, privaten Google-Drive</strong> gesichert (Ordner „appData", nur für RetroMind, für niemand anderen sichtbar) – so kannst du auf einem anderen Gerät weitermachen. Es gibt keine zentrale RetroMind-Datenbank; deine Daten bleiben in deinem Google-Konto.</li>
+          <li>Profil, Antworten und Tagebuch bleiben <strong>nur in diesem Browser</strong> (localStorage).</li>
+          <li>Beim Öffnen der App verifizierst du dich mit Google, damit RetroMind deinen Namen und dein Alter kennt (für altersgerechte Inhalte). Deine Reise wird außerdem in deinem <strong>eigenen, privaten Google-Drive</strong> gesichert (Ordner „appData", nur für RetroMind, für niemand anderen sichtbar) – so kannst du auf einem anderen Gerät weitermachen. Es gibt keine zentrale RetroMind-Datenbank; deine Daten bleiben in deinem Google-Konto.</li>
           <li>Mit Spotify-Anmeldung holen wir nur deinen Namen und deinen Premium-/Free-Status ab (Scopes <code>user-read-private</code>, <code>user-read-email</code>) – wird nirgends gespeichert außer in diesem Browser, es gibt keinen eigenen RetroMind-Server dafür.</li>
           <li>Lädst du ein Foto hoch, wird es zur Beschreibung an die Google-Gemini-API gesendet (und für die optionale Video-Funktion an Veo). Sonst verlässt nichts dein Gerät.</li>
           <li>Über „Sitzung sichern" kannst du alles als Datei exportieren, über „Neu beginnen" alles löschen – bei bestehender Google-Anmeldung auch in deinem Drive.</li>
