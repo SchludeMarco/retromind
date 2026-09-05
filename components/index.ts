@@ -1,5 +1,6 @@
 export { BootOverlay } from './BootOverlay';
 export { SplashScreen } from './SplashScreen';
+export { AnalogClock } from './AnalogClock';
 export { CrtOverlay } from './CrtOverlay';
 export { ProgressBar } from './ProgressBar';
 export { Header } from './Header';

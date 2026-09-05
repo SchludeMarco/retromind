@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AnalogClock } from './AnalogClock';
 
 // Matches the .animate-fadeOut duration in index.css so the splash finishes
 // its fade before unmounting.
@@ -23,6 +24,9 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
       }`}
     >
       <div className="grainy-bg" />
+      <AnalogClock
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vmin] h-[85vmin] max-w-[640px] max-h-[640px] text-retro-ink opacity-50 pointer-events-none"
+      />
       <h1 className="relative text-6xl md:text-8xl font-bold text-retro-ink tracking-tighter mb-4">
         Welcome to <span className="text-red-600">R</span>etro<span className="text-red-600">M</span>ind
       </h1>
