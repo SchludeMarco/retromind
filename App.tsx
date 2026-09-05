@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -74,6 +74,7 @@ const App: React.FC = () => {
   const [verified, setVerified] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [showBottomControls, setShowBottomControls] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
@@ -232,6 +233,10 @@ const App: React.FC = () => {
   const closeSettingsWithSfx = () => {
     playSFX('click');
     setIsSettingsOpen(false);
+  };
+  const closeFeedbackWithSfx = () => {
+    playSFX('click');
+    setIsFeedbackOpen(false);
   };
   const clearUploadedImage = () => {
     playSFX('click');
@@ -517,8 +522,16 @@ const App: React.FC = () => {
               isSpotifyReady={spotify.isReady}
               isSpotifyPlaying={spotify.isPlaying}
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
+              onOpenFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
               onDismiss={() => setIsSettingsOpen(false)}
               onCloseClick={closeSettingsWithSfx}
+            />
+          )}
+
+          {isFeedbackOpen && (
+            <FeedbackModal
+              onDismiss={() => setIsFeedbackOpen(false)}
+              onCloseClick={closeFeedbackWithSfx}
             />
           )}
 
