@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MantelClock } from './MantelClock';
 
 // How long the button's burst of sparks plays before the full-screen fade
@@ -7,13 +7,13 @@ import { MantelClock } from './MantelClock';
 const EXPLOSION_MS = 550;
 const FADE_MS = 2200;
 
+const TICK_INTERVAL_MS = 1000;
+const TICK_GAIN = 0.06;
+
 // Each spark is a thin streak anchored at the button's center and rotated
 // to point outward along its own flight angle — so animating it is just a
 // translate along its own local "up" axis, no per-particle trig needed at
 // animation time.
-const TICK_INTERVAL_MS = 1000;
-const TICK_GAIN = 0.06;
-
 const SPARK_COUNT = 36;
 const sparks = Array.from({ length: SPARK_COUNT }, () => {
   const angleDeg = Math.random() * 360;
@@ -106,31 +106,23 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
   const [fading, setFading] = useState(false);
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const stopTickingRef = useRef<() => void>(() => {});
 
   // Ticks for as long as the splash sits there, like an old clock in the
-  // room — same "wait for the first tap/click/key" unlock every other
-  // synthesized sound in the app uses, since browsers won't allow audio to
-  // actually start before that.
+  // room. Browsers refuse to start audio before a gesture — and in
+  // practice that first gesture is almost always the "Let's go!" tap
+  // itself, so don't cut the interval off the moment that tap fires: let
+  // it ride out through the explosion/fade and stop naturally when this
+  // component unmounts, so the unlock that tap just granted actually gets
+  // to produce a tick or two instead of being silenced before it can.
   useEffect(() => {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
-    let stopped = false;
     let tock = false;
     let intervalId: number | undefined;
 
-    const stop = () => {
-      stopped = true;
-      if (intervalId !== undefined) {
-        clearInterval(intervalId);
-        intervalId = undefined;
-      }
-    };
-    stopTickingRef.current = stop;
-
     const startTicking = () => {
-      if (stopped || intervalId !== undefined) return;
+      if (intervalId !== undefined) return;
       intervalId = window.setInterval(() => {
         playTick(ctx, tock);
         tock = !tock;
@@ -152,7 +144,7 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
     gestureEvents.forEach((evt) => document.addEventListener(evt, tryStart, { once: true, capture: true }));
 
     return () => {
-      stop();
+      if (intervalId !== undefined) clearInterval(intervalId);
       gestureEvents.forEach((evt) => document.removeEventListener(evt, tryStart, { capture: true }));
       ctx.close().catch(() => {});
     };
@@ -160,7 +152,6 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
 
   const handleStart = () => {
     if (exploding) return;
-    stopTickingRef.current();
     if (reduceMotion) {
       setFading(true);
       setTimeout(onStart, FADE_MS);
