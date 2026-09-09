@@ -1,0 +1,126 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AppPhase, CapturedMemory, SessionState, UserProfile } from '../types';
+import { EMPTY_USER, PHASES, clearSession, loadSession, persistSession } from '../lib/session';
+import { computeFocusDecade } from '../lib/format';
+
+// Bundles the whole journey — profile, captured memories, diary, UI prefs —
+// together with its localStorage persistence so App.tsx doesn't have to.
+export function useRetroSession() {
+  const saved = useMemo(loadSession, []);
+
+  const [phase, setPhase] = useState<AppPhase>('intro');
+  const [resumeTarget, setResumeTarget] = useState<AppPhase | null>(
+    saved.phase && saved.phase !== 'intro' ? saved.phase : null
+  );
+  const [user, setUser] = useState<UserProfile>({ ...EMPTY_USER, ...saved.user });
+  const [memories, setMemories] = useState<CapturedMemory[]>(saved.memories ?? []);
+  const [diaryEntry, setDiaryEntry] = useState<string>(saved.diaryEntry ?? '');
+  const [clickedBuzzwords, setClickedBuzzwords] = useState<string[]>(saved.clickedBuzzwords ?? []);
+  const [manualDecade, setManualDecade] = useState<string | null>(saved.manualDecade ?? null);
+  const [fontScale, setFontScale] = useState<number>(saved.fontScale ?? 1);
+  const [storageFull, setStorageFull] = useState(false);
+
+  const focusDecade = useMemo(() => computeFocusDecade(user.birthDate), [user.birthDate]);
+
+  // Persist the whole session whenever something meaningful changes. While the
+  // user is still on the intro with a resume offer pending, keep the stored
+  // phase pointing at where they left off (don't overwrite it with 'intro').
+  useEffect(() => {
+    const state: SessionState = {
+      version: 2,
+      phase: phase === 'intro' && resumeTarget ? resumeTarget : phase,
+      user,
+      diaryEntry,
+      memories,
+      clickedBuzzwords,
+      manualDecade,
+      fontScale,
+      updatedAt: Date.now(),
+    };
+    setStorageFull(!persistSession(state));
+  }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
+
+  const memoryFor = useCallback(
+    (id: string) => memories.find((m) => m.kind === 'buzzword' && m.id === `bw-${id}`),
+    [memories]
+  );
+
+  const perspectiveFor = useCallback(
+    (id: string) => memories.find((m) => m.kind === 'perspective' && m.id === `pw-${id}`),
+    [memories]
+  );
+
+  const upsertMemory = useCallback((mem: CapturedMemory) => {
+    setMemories((prev) => {
+      const idx = prev.findIndex((m) => m.id === mem.id);
+      if (idx === -1) return [...prev, mem];
+      const copy = [...prev];
+      copy[idx] = mem;
+      return copy;
+    });
+  }, []);
+
+  const resetJourney = useCallback(() => {
+    clearSession();
+    setResumeTarget(null);
+    setUser(EMPTY_USER);
+    setMemories([]);
+    setDiaryEntry('');
+    setClickedBuzzwords([]);
+    setManualDecade(null);
+    setPhase('intro');
+  }, []);
+
+  // Replaces the whole session with `s` — shared by file import and by
+  // loading a session that was previously saved to the user's Google Drive.
+  const loadRemoteState = useCallback((s: Partial<SessionState>) => {
+    setUser({ ...EMPTY_USER, ...s.user });
+    setMemories(s.memories ?? []);
+    setDiaryEntry(s.diaryEntry ?? '');
+    setClickedBuzzwords(s.clickedBuzzwords ?? []);
+    setManualDecade(s.manualDecade ?? null);
+    setFontScale(s.fontScale ?? 1);
+    setResumeTarget(null);
+    setPhase(s.phase && PHASES.includes(s.phase) ? s.phase : 'book');
+  }, []);
+
+  const importSession = useCallback(async (file: File): Promise<boolean> => {
+    try {
+      const s = JSON.parse(await file.text());
+      if (s.version !== 2) throw new Error('bad version');
+      loadRemoteState(s);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [loadRemoteState]);
+
+  const exportSession = useCallback((): SessionState => ({
+    version: 2,
+    phase,
+    user,
+    diaryEntry,
+    memories,
+    clickedBuzzwords,
+    manualDecade,
+    fontScale,
+    updatedAt: Date.now(),
+  }), [phase, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
+
+  return {
+    phase, setPhase,
+    resumeTarget, setResumeTarget,
+    user, setUser,
+    memories, setMemories, memoryFor, perspectiveFor, upsertMemory,
+    diaryEntry, setDiaryEntry,
+    clickedBuzzwords, setClickedBuzzwords,
+    manualDecade, setManualDecade,
+    fontScale, setFontScale,
+    focusDecade,
+    resetJourney, importSession, exportSession, loadRemoteState,
+    hasProgress: memories.length > 0 || phase !== 'intro' || !!resumeTarget,
+    storageFull,
+  };
+}
+
+export type RetroSession = ReturnType<typeof useRetroSession>;
