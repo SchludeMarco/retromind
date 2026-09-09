@@ -1,12 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AppPhase,
   VideoStatus,
   GalleryItem,
   BuzzwordCategory,
 } from './types';
-import { generateDeepQuestion, analyzeMemoryImage, generateVeoVideo, getAiAvailability, AiAvailability } from './services/geminiService';
-import { ProgressBar, Header, FontSizeControl, ChatBot, RetroPlayer, BootOverlay, ScreenTransitionOverlay } from './components';
+import {
+  generateDeepQuestion,
+  generatePerspectiveQuestion,
+  analyzeMemoryImage,
+  generateVeoVideo,
+  getAiAvailability,
+  AiAvailability,
+} from './services/geminiService';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, ScreenTransitionOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -20,6 +27,10 @@ import {
 } from './phases';
 import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { useSpotifyBackground } from './hooks/useSpotifyBackground';
+import { useGoogleAuth } from './hooks/useGoogleAuth';
+import { useSpotifyAuth } from './hooks/useSpotifyAuth';
+import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 
@@ -29,27 +40,42 @@ const App: React.FC = () => {
     phase, setPhase,
     resumeTarget, setResumeTarget,
     user, setUser,
-    memories, memoryFor, upsertMemory,
+    memories, memoryFor, perspectiveFor, upsertMemory,
     diaryEntry, setDiaryEntry,
     clickedBuzzwords, setClickedBuzzwords,
     manualDecade, setManualDecade,
     fontScale, setFontScale,
     focusDecade,
-    resetJourney, importSession, exportSession,
+    resetJourney, importSession, exportSession, loadRemoteState, hasProgress,
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const { audioRef, isMusicPlaying, setIsMusicPlaying, volume, setVolume, playSFX } =
-    useAudioPlayer(currentAudioDecade);
+  const { playSFX } = useAudioPlayer();
+  const spotify = useSpotifyBackground(currentAudioDecade);
+
+  const googleAuth = useGoogleAuth();
+  const spotifyAuth = useSpotifyAuth();
+  const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const remoteLoadAttempted = useRef(false);
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
   >(null);
   const [answerDraft, setAnswerDraft] = useState('');
+  const [perspective, setPerspective] = useState<{ question: string } | null>(null);
+  const [perspectiveDraft, setPerspectiveDraft] = useState('');
+  const [isGeneratingPerspective, setIsGeneratingPerspective] = useState(false);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [showSplash, setShowSplash] = useState(true);
+  // Gates every phase behind identity verification — reset on every fresh
+  // load (like showSplash) so the app re-verifies each time it's opened.
+  const [verified, setVerified] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [showBottomControls, setShowBottomControls] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -69,6 +95,70 @@ const App: React.FC = () => {
   useEffect(() => {
     getAiAvailability().then(setAiAvailability);
   }, []);
+
+  // Settings and Google-account controls stay out of the way while reading —
+  // they slide in only once the page is scrolled (near) to the bottom.
+  useEffect(() => {
+    const checkScrollPosition = () => {
+      const doc = document.documentElement;
+      const nearBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 24;
+      setShowBottomControls(nearBottom);
+    };
+    checkScrollPosition();
+    window.addEventListener('scroll', checkScrollPosition, { passive: true });
+    window.addEventListener('resize', checkScrollPosition);
+    return () => {
+      window.removeEventListener('scroll', checkScrollPosition);
+      window.removeEventListener('resize', checkScrollPosition);
+    };
+  }, [phase]);
+
+  // On sign-in, check the user's Google Drive for a previously saved journey.
+  // A fresh (empty) local session adopts it; an already-in-progress local
+  // session is left alone and simply starts syncing to Drive going forward.
+  useEffect(() => {
+    if (googleAuth.status !== 'signed_in' || remoteLoadAttempted.current) return;
+    remoteLoadAttempted.current = true;
+    (async () => {
+      const token = await googleAuth.getFreshAccessToken();
+      if (!token) return;
+      try {
+        const remote = await loadSessionFromDrive(token);
+        if (!remote) return;
+        if (!hasProgress) {
+          loadRemoteState(remote);
+          setToast('Gespeicherte Reise aus Google Drive geladen');
+        } else {
+          setToast('Deine Reise wird jetzt zusätzlich in Google Drive gesichert');
+        }
+      } catch {
+        setDriveSyncState('error');
+      }
+    })();
+    // hasProgress / loadRemoteState are stable enough for this one-shot check.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleAuth.status]);
+
+  // Debounced push of the current session to Drive while signed in.
+  useEffect(() => {
+    if (googleAuth.status !== 'signed_in' || !remoteLoadAttempted.current) return;
+    const timer = setTimeout(async () => {
+      const token = await googleAuth.getFreshAccessToken();
+      if (!token) {
+        setDriveSyncState('error');
+        return;
+      }
+      setDriveSyncState('saving');
+      try {
+        await saveSessionToDrive(token, exportSession());
+        setDriveSyncState('saved');
+      } catch {
+        setDriveSyncState('error');
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleAuth.status, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
@@ -94,14 +184,19 @@ const App: React.FC = () => {
   const startJourney = () => {
     playSFX('click');
     setPhase('onboarding');
-    setIsMusicPlaying(true);
   };
 
   const resumeJourney = () => {
     playSFX('success');
     setPhase(resumeTarget || 'exploration');
     setResumeTarget(null);
-    setIsMusicPlaying(true);
+  };
+
+  const goHome = () => {
+    playSFX('click');
+    setResumeTarget(phase);
+    setPhase('intro');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleResetJourney = () => {
@@ -142,6 +237,14 @@ const App: React.FC = () => {
     playSFX('click');
     setSelectedWord(null);
   };
+  const closeSettingsWithSfx = () => {
+    playSFX('click');
+    setIsSettingsOpen(false);
+  };
+  const closeFeedbackWithSfx = () => {
+    playSFX('click');
+    setIsFeedbackOpen(false);
+  };
   const clearUploadedImage = () => {
     playSFX('click');
     setUploadedImage(null);
@@ -161,6 +264,9 @@ const App: React.FC = () => {
     const existing = memoryFor(wordId);
     setAnswerDraft(existing?.answer ?? '');
     setIsGenerating(!existing);
+    const existingPerspective = perspectiveFor(wordId);
+    setPerspective(existingPerspective ? { question: existingPerspective.prompt } : null);
+    setPerspectiveDraft(existingPerspective?.answer ?? '');
     // Reuse the stored question if we already have one for this word.
     const question =
       existing?.prompt ??
@@ -189,6 +295,39 @@ const App: React.FC = () => {
     });
     setSelectedWord(null);
     setToast('Erinnerung gespeichert');
+  };
+
+  const openPerspective = async () => {
+    if (!selectedWord) return;
+    playSFX('click');
+    setIsGeneratingPerspective(true);
+    const fallback =
+      `Stell dir vor, eine gute Freundin, ein Geschwister oder ein Elternteil von ` +
+      `damals hätte "${selectedWord.term}" erlebt – wie hätte diese Person den Moment wohl erzählt?`;
+    const question = await generatePerspectiveQuestion(
+      selectedWord.term,
+      user.name,
+      selectedWord.decade,
+      memoryFor(selectedWord.id)?.answer ?? '',
+      fallback
+    );
+    setPerspective({ question });
+    setIsGeneratingPerspective(false);
+  };
+
+  const savePerspectiveAnswer = () => {
+    if (!selectedWord || !perspective) return;
+    playSFX('success');
+    upsertMemory({
+      id: `pw-${selectedWord.id}`,
+      kind: 'perspective',
+      decade: selectedWord.decade,
+      term: `${selectedWord.term} · Perspektivwechsel`,
+      prompt: perspective.question,
+      answer: perspectiveDraft.trim(),
+      createdAt: Date.now(),
+    });
+    setToast('Perspektive gespeichert');
   };
 
   // --- photo lab ---
@@ -292,6 +431,35 @@ const App: React.FC = () => {
     window.print();
   };
 
+  // --- verification ---
+  const handleVerified = (name: string, birthDate: string) => {
+    playSFX('success');
+    setUser((prev) => ({ ...prev, name, birthDate }));
+    setVerified(true);
+  };
+
+  // --- Google account ---
+  const handleGoogleSignIn = () => {
+    playSFX('click');
+    googleAuth.signIn();
+  };
+  const handleGoogleSignOut = () => {
+    playSFX('click');
+    googleAuth.signOut();
+    remoteLoadAttempted.current = false;
+    setDriveSyncState('idle');
+  };
+
+  // --- Spotify account ---
+  const handleSpotifySignIn = () => {
+    playSFX('click');
+    spotifyAuth.signIn();
+  };
+  const handleSpotifySignOut = () => {
+    playSFX('click');
+    spotifyAuth.signOut();
+  };
+
   // --- render helpers ---
   const aiOff = aiAvailability === 'not_configured';
   const isAnswered = (id: string) => !!memoryFor(id);
@@ -300,31 +468,16 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
       <ScreenTransitionOverlay screenKey={phase} />
-      <audio ref={audioRef} loop />
+      <CrtOverlay />
+      {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
+      {/* Off-screen, always mounted: autoplays the era's real Spotify
+          playlist in the background once the first tap/click unlocks audio
+          (see useSpotifyBackground) — invisible by design, controlled from
+          the Settings modal via play/pause only (Spotify exposes no volume
+          control we could put here). */}
+      <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
 
-      <FontSizeControl scale={fontScale} onChange={(n) => { playSFX('click'); setFontScale(n); }} />
       <Header />
-
-      {phase !== 'intro' && (
-        <>
-          <button
-            onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
-            aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-            className="rm-fixed fixed bottom-10 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
-          >
-            {isChatOpen ? '✕' : '💬'}
-          </button>
-          <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
-          <RetroPlayer
-            currentDecade={currentAudioDecade}
-            onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-            isPlaying={isMusicPlaying}
-            onToggle={() => { playSFX('click'); setIsMusicPlaying((v) => !v); }}
-            volume={volume}
-            onVolumeChange={setVolume}
-          />
-        </>
-      )}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
@@ -332,114 +485,203 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {phase === 'intro' && (
-        <IntroPhase
-          resumeTarget={resumeTarget}
-          memoriesCount={memories.length}
-          onStart={startJourney}
-          onResume={resumeJourney}
-          onReset={handleResetJourney}
-        />
-      )}
-
-      {phase === 'onboarding' && (
-        <OnboardingPhase
-          user={user}
-          onUserChange={setUser}
-          onToggleInterest={toggleInterest}
-          onSubmit={handleOnboarding}
+      {!verified ? (
+        <VerifyGate
+          googleStatus={googleAuth.status}
+          googleUser={googleAuth.user}
+          birthdayHint={googleAuth.birthdayHint}
+          initialName={user.name}
+          initialBirthDate={user.birthDate}
           maxBirthDate={todayStamp()}
+          onGoogleSignIn={handleGoogleSignIn}
+          onVerified={handleVerified}
         />
-      )}
+      ) : (
+        <>
+          <AccountControls
+            googleStatus={googleAuth.status}
+            googleUser={googleAuth.user}
+            driveSyncState={driveSyncState}
+            onGoogleSignIn={handleGoogleSignIn}
+            onGoogleSignOut={handleGoogleSignOut}
+            spotifyStatus={spotifyAuth.status}
+            spotifyUser={spotifyAuth.user}
+            onSpotifySignIn={handleSpotifySignIn}
+            onSpotifySignOut={handleSpotifySignOut}
+            visible={showBottomControls}
+          />
 
-      {phase === 'induction' && (
-        <InductionPhase
-          focusDecade={focusDecade}
-          onSelectGalleryItem={selectGalleryItem}
-          onContinue={() => goTo('exploration')}
-        />
-      )}
+          <button
+            onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
+            aria-label="App-Einstellungen öffnen"
+            className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
+              showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            ⚙️
+          </button>
+          {isSettingsOpen && (
+            <SettingsModal
+              fontScale={fontScale}
+              onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
+              currentDecade={currentAudioDecade}
+              onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+              isSpotifyReady={spotify.isReady}
+              isSpotifyPlaying={spotify.isPlaying}
+              onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
+              onOpenFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
+              onDismiss={() => setIsSettingsOpen(false)}
+              onCloseClick={closeSettingsWithSfx}
+            />
+          )}
 
-      {phase === 'exploration' && (
-        <ExplorationPhase
-          aiOff={aiOff}
-          uploadedImage={uploadedImage}
-          uploadError={uploadError}
-          analysis={analysis}
-          analysisSaved={analysisSaved}
-          videoStatus={videoStatus}
-          onImageUpload={handleImageUpload}
-          onClearImage={clearUploadedImage}
-          onAnalyze={handleAnalyze}
-          onSaveAnalysis={saveAnalysisAsMemory}
-          onGenerateVideo={handleGenerateVideo}
-          focusDecade={focusDecade}
-          userCategories={userCategories}
-          clickedBuzzwords={clickedBuzzwords}
-          memoriesCount={memories.length}
-          isAnswered={isAnswered}
-          onOpenBuzzword={openBuzzword}
-          onBack={() => goTo('induction')}
-          onNext={() => goTo('diary')}
-        />
-      )}
+          {isFeedbackOpen && (
+            <FeedbackModal
+              onDismiss={() => setIsFeedbackOpen(false)}
+              onCloseClick={closeFeedbackWithSfx}
+            />
+          )}
 
-      {phase === 'diary' && (
-        <DiaryPhase
-          memoriesCount={memories.length}
-          diaryEntry={diaryEntry}
-          onDiaryChange={setDiaryEntry}
-          onBack={() => goTo('exploration')}
-          onNext={() => goTo('book')}
-        />
-      )}
+          {phase !== 'intro' && (
+            <>
+              <button
+                onClick={goHome}
+                aria-label="Zum Startbildschirm zurückkehren"
+                className="rm-fixed fixed bottom-2 left-1/2 -translate-x-1/2 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+              >
+                🏠
+              </button>
+              <button
+                onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
+                aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
+                className="rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+              >
+                {isChatOpen ? '✕' : '💬'}
+              </button>
+              <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
+            </>
+          )}
 
-      {phase === 'book' && (
-        <BookPhase
-          user={user}
-          focusDecade={focusDecade}
-          memories={memories}
-          diaryEntry={diaryEntry}
-          onPrint={printBook}
-          onExportText={exportText}
-          onExportSession={exportSessionFile}
-          onImportSession={importSessionFile}
-          onBack={() => goTo('diary')}
-          onNext={() => goTo('finish')}
-        />
-      )}
+          {phase === 'intro' && (
+            <IntroPhase
+              resumeTarget={resumeTarget}
+              memoriesCount={memories.length}
+              googleUser={googleAuth.user}
+              spotifyStatus={spotifyAuth.status}
+              spotifyUser={spotifyAuth.user}
+              onSpotifySignIn={handleSpotifySignIn}
+              onStart={startJourney}
+              onResume={resumeJourney}
+              onReset={handleResetJourney}
+            />
+          )}
 
-      {phase === 'finish' && (
-        <FinishPhase
-          userName={user.name}
-          memoriesCount={memories.length}
-          onViewBook={() => goTo('book')}
-          onRestart={handleResetJourney}
-        />
-      )}
+          {phase === 'onboarding' && (
+            <OnboardingPhase
+              user={user}
+              onUserChange={setUser}
+              onToggleInterest={toggleInterest}
+              onSubmit={handleOnboarding}
+            />
+          )}
 
-      {selectedGalleryItem && (
-        <GalleryDetailModal
-          item={selectedGalleryItem}
-          onDismiss={() => setSelectedGalleryItem(null)}
-          onCloseClick={closeGalleryItemWithSfx}
-        />
-      )}
+          {phase === 'induction' && (
+            <InductionPhase
+              focusDecade={focusDecade}
+              onSelectGalleryItem={selectGalleryItem}
+              onContinue={() => goTo('exploration')}
+            />
+          )}
 
-      {selectedWord && (
-        <BuzzwordModal
-          word={selectedWord}
-          isGenerating={isGenerating}
-          answerDraft={answerDraft}
-          onAnswerChange={setAnswerDraft}
-          isExistingMemory={!!memoryFor(selectedWord.id)}
-          onSave={saveBuzzwordAnswer}
-          onDismiss={() => setSelectedWord(null)}
-          onCloseClick={closeBuzzwordModalWithSfx}
-        />
-      )}
+          {phase === 'exploration' && (
+            <ExplorationPhase
+              aiOff={aiOff}
+              uploadedImage={uploadedImage}
+              uploadError={uploadError}
+              analysis={analysis}
+              analysisSaved={analysisSaved}
+              videoStatus={videoStatus}
+              onImageUpload={handleImageUpload}
+              onClearImage={clearUploadedImage}
+              onAnalyze={handleAnalyze}
+              onSaveAnalysis={saveAnalysisAsMemory}
+              onGenerateVideo={handleGenerateVideo}
+              focusDecade={focusDecade}
+              userCategories={userCategories}
+              clickedBuzzwords={clickedBuzzwords}
+              memoriesCount={memories.length}
+              isAnswered={isAnswered}
+              onOpenBuzzword={openBuzzword}
+              onBack={() => goTo('induction')}
+              onNext={() => goTo('diary')}
+            />
+          )}
 
-      <ProgressBar current={phaseIndex} total={PHASES.length} />
+          {phase === 'diary' && (
+            <DiaryPhase
+              memoriesCount={memories.length}
+              diaryEntry={diaryEntry}
+              onDiaryChange={setDiaryEntry}
+              onBack={() => goTo('exploration')}
+              onNext={() => goTo('book')}
+            />
+          )}
+
+          {phase === 'book' && (
+            <BookPhase
+              user={user}
+              focusDecade={focusDecade}
+              memories={memories}
+              diaryEntry={diaryEntry}
+              onPrint={printBook}
+              onExportText={exportText}
+              onExportSession={exportSessionFile}
+              onImportSession={importSessionFile}
+              onBack={() => goTo('diary')}
+              onNext={() => goTo('finish')}
+            />
+          )}
+
+          {phase === 'finish' && (
+            <FinishPhase
+              userName={user.name}
+              memoriesCount={memories.length}
+              onViewBook={() => goTo('book')}
+              onRestart={handleResetJourney}
+            />
+          )}
+
+          {selectedGalleryItem && (
+            <GalleryDetailModal
+              item={selectedGalleryItem}
+              onDismiss={() => setSelectedGalleryItem(null)}
+              onCloseClick={closeGalleryItemWithSfx}
+            />
+          )}
+
+          {selectedWord && (
+            <BuzzwordModal
+              word={selectedWord}
+              isGenerating={isGenerating}
+              answerDraft={answerDraft}
+              onAnswerChange={setAnswerDraft}
+              isExistingMemory={!!memoryFor(selectedWord.id)}
+              onSave={saveBuzzwordAnswer}
+              onDismiss={() => setSelectedWord(null)}
+              onCloseClick={closeBuzzwordModalWithSfx}
+              perspective={perspective}
+              isGeneratingPerspective={isGeneratingPerspective}
+              perspectiveDraft={perspectiveDraft}
+              onPerspectiveAnswerChange={setPerspectiveDraft}
+              isPerspectiveSaved={!!perspectiveFor(selectedWord.id)}
+              onOpenPerspective={openPerspective}
+              onSavePerspective={savePerspectiveAnswer}
+            />
+          )}
+
+          <ProgressBar current={phaseIndex} total={PHASES.length} />
+        </>
+      )}
     </div>
   );
 };

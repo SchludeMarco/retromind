@@ -55,6 +55,22 @@ export async function generateDeepQuestion(
   }
 }
 
+export async function generatePerspectiveQuestion(
+  term: string,
+  name: string,
+  decade: string,
+  originalAnswer: string,
+  fallback: string
+): Promise<string> {
+  try {
+    const { text } = await callApi("perspectiveQuestion", { term, name, decade, originalAnswer });
+    return (text as string)?.trim() || fallback;
+  } catch (e) {
+    console.warn("perspectiveQuestion failed:", e);
+    return fallback;
+  }
+}
+
 export async function analyzeMemoryImage(
   imageBase64: string,
   mimeType: string

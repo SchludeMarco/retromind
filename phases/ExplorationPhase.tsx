@@ -67,7 +67,13 @@ export const ExplorationPhase: React.FC<{
         <div className="border-4 border-dashed border-retro-ink/20 p-6 bg-white min-h-[280px] flex flex-col items-center justify-center text-center">
           {uploadedImage ? (
             <>
-              <img src={uploadedImage} alt="Dein hochgeladenes Foto" className="max-h-56 border-2 border-retro-ink shadow-md" />
+              <div className="retro-photo-frame inline-block">
+                <img
+                  src={uploadedImage}
+                  alt="Dein hochgeladenes Foto"
+                  className="max-h-56 border-2 border-retro-ink shadow-md retro-photo retro-photo-live"
+                />
+              </div>
               <button onClick={onClearImage} className="mt-3 text-xs underline font-bold text-retro-brown">
                 Anderes Bild wählen
               </button>

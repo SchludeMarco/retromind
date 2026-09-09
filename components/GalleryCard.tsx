@@ -5,14 +5,14 @@ export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> =
   const [imgFailed, setImgFailed] = useState(false);
   const showImage = item.image && !imgFailed;
   return (
-    <button onClick={onClick} className="retro-card overflow-hidden h-56 group relative text-left bg-retro-cream">
+    <button onClick={onClick} className="retro-card retro-photo-frame overflow-hidden h-56 group relative text-left bg-retro-cream">
       {showImage ? (
         <img
           src={item.image}
           alt={item.title}
           loading="lazy"
           onError={() => setImgFailed(true)}
-          className="w-full h-full object-cover sepia-[0.25] group-hover:sepia-0 transition-all duration-300"
+          className="w-full h-full object-cover retro-photo retro-photo-live transition-[filter] duration-300 group-hover:!filter-none group-hover:[animation-play-state:paused]"
         />
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-retro-paper">

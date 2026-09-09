@@ -2,7 +2,7 @@ import { AppPhase, SessionState, UserProfile, BuzzwordCategory } from '../types'
 
 export const STORAGE_KEY = 'retromind.session.v2';
 export const PHASES: AppPhase[] = ['intro', 'onboarding', 'induction', 'exploration', 'diary', 'book', 'finish'];
-export const EMPTY_USER: UserProfile = { name: '', gender: 'divers', birthDate: '', interests: [] };
+export const EMPTY_USER: UserProfile = { name: '', gender: '', birthDate: '', interests: [], favoriteArtists: [] };
 export const INTEREST_TO_CATEGORY: Record<string, BuzzwordCategory> = {
   Musik: 'music', Technik: 'tech', Spielzeug: 'toy', Alltag: 'lifestyle', Mode: 'lifestyle', Essen: 'food',
 };

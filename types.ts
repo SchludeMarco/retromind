@@ -12,6 +12,8 @@ export interface UserProfile {
   gender: string;
   birthDate: string;
   interests: string[];
+  /** free-text artists/bands the user names as favourites (optional). */
+  favoriteArtists: string[];
 }
 
 export type BuzzwordCategory = 'music' | 'tech' | 'toy' | 'lifestyle' | 'food';
@@ -38,10 +40,10 @@ export interface GalleryItem {
 
 export interface DecadeData {
   title: string;
-  audioUrl: string;
-  audioLabel: string;
   galleryItems: GalleryItem[];
   buzzwords: Buzzword[];
+  /** Spotify playlist id for real chart hits of this decade (optional, opt-in embed). */
+  spotifyPlaylistId?: string;
 }
 
 export interface ContentDatabase {
@@ -64,7 +66,7 @@ export interface VideoStatus {
 /** A memory the user actually captured during the journey. */
 export interface CapturedMemory {
   id: string;
-  kind: 'buzzword' | 'photo' | 'note';
+  kind: 'buzzword' | 'photo' | 'note' | 'perspective';
   decade: string;
   term: string;
   prompt: string;
@@ -72,6 +74,24 @@ export interface CapturedMemory {
   /** downscaled data URL, only for photo memories */
   photo?: string;
   createdAt: number;
+}
+
+/** Minimal profile returned by Google after sign-in. */
+export interface GoogleUser {
+  id: string;
+  name: string;
+  email: string;
+  picture: string;
+}
+
+/** Minimal profile returned by Spotify after sign-in — `product` is what
+ * lets us tell a Premium account from a Free one. */
+export interface SpotifyUser {
+  id: string;
+  name: string;
+  email: string;
+  picture: string;
+  product: 'premium' | 'free' | 'open' | string;
 }
 
 /** Everything that is persisted / exported for one journey. */

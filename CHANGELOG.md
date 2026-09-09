@@ -1,5 +1,54 @@
 # Changelog
 
+## Unreleased
+
+- **Spotify-Login (Authorization Code + PKCE):** „Mit Spotify anmelden“ neben
+  dem bestehenden Google-Login – komplett clientseitig, kein eigener
+  Auth-Server, kein Client-Secret. Holt nur Name und Premium-/Free-Status ab
+  (`GET /v1/me`, Scopes `user-read-private`/`user-read-email`); beeinflusst
+  das bestehende Playlist-Embed nicht. Der Access-Token bleibt im Speicher,
+  nur der Refresh-Token landet in `localStorage` (nötig, weil Spotify anders
+  als Google keine Popup-/Silent-Renewal-API hat, sondern einen vollen
+  Seiten-Redirect verlangt). Neue optionale Env-Var
+  `VITE_SPOTIFY_CLIENT_ID`; ohne sie bleibt der Button unsichtbar. Neue
+  Dateien: `lib/spotifyAuth.ts`, `hooks/useSpotifyAuth.ts`,
+  `components/SpotifyAuthControl.tsx`, `components/AccountControls.tsx`
+  (gemeinsamer Container für Google- und Spotify-Pille).
+- **Geschlecht + Lieblingsmusiker:innen im Onboarding:** Das bisher ungenutzte
+  `gender`-Feld im Profil hat jetzt ein echtes (optionales) Auswahlfeld;
+  dazu ein neues optionales Freitext-Feld `favoriteArtists` für
+  Lieblingsmusiker:innen/-bands. Beide rein selbst angegeben – weder Google
+  noch Spotify liefern Alter oder Geschlecht an Drittanbieter-Apps, deshalb
+  bleibt das ehrlich als Selbstauskunft gekennzeichnet statt als
+  „Verifizierung“ verkauft.
+- **Echte Hits pro Dekade (Spotify-Embed), jetzt automatisch:** Sobald die
+  Nutzer:in einmal irgendwo klickt/tippt, startet automatisch im Hintergrund
+  Spotifys offizielle „All Out …“-Playlist der gewählten Dekade (neuer Hook
+  `hooks/useSpotifyBackground.ts`, Wrapper um Spotifys iFrame-API in
+  `lib/spotifyEmbed.ts`) – parallel zum Synth-Ambiente, das jetzt ebenfalls
+  bei diesem ersten Klick über 10s von 0% auf die eingestellte Lautstärke
+  einblendet (`hooks/useAudioPlayer.ts`), statt sofort auf voller Lautstärke
+  einzusetzen. Spotifys öffentliche Embed-API bietet keine
+  Lautstärke-Schnittstelle – der Spotify-Anteil läuft deshalb immer in
+  Spotifys eigener Lautstärke und lässt sich in den Einstellungen nur
+  pausieren/fortsetzen, nicht leiser stellen. Neues optionales Feld
+  `spotifyPlaylistId` in `constants.ts`/`types.ts`.
+- **Perspektivwechsel bei Erinnerungs-Fragen:** Nach dem Speichern einer
+  Erinnerung im Buzzword-Modal lässt sich zusätzlich eine Frage generieren,
+  die denselben Moment aus Sicht einer anderen Person von damals (Freund:in,
+  Geschwister, Elternteil) neu erzählen lässt – als eigene Erinnerung
+  gespeichert. Neue Server-Aktion `perspectiveQuestion` in `api/gemini.js`.
+- **Google-Login + dezentrale Sicherung:** „Mit Google anmelden“ (Google
+  Identity Services) sichert die Reise zusätzlich zu `localStorage` im
+  privaten `appDataFolder` des eigenen Google Drive der Nutzer:in – keine
+  zentrale Datenbank, jede Person behält ihre Erinnerungen in ihrem eigenen
+  Konto. Beim Login wird ein vorhandenes Drive-Backup automatisch geladen,
+  sofern lokal noch keine Reise begonnen wurde; Änderungen werden danach
+  debounced (1,5 s) automatisch nachgeführt. Neue optionale Env-Var
+  `VITE_GOOGLE_CLIENT_ID`; ohne sie bleibt die App unverändert rein lokal.
+  Neue Dateien: `lib/googleAuth.ts`, `services/googleDriveService.ts`,
+  `hooks/useGoogleAuth.ts`, `components/GoogleAuthControl.tsx`.
+
 ## 2.0.1
 
 - **Favicon ergänzt:** Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
