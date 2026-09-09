@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, ScreenTransitionOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -50,7 +50,7 @@ const App: React.FC = () => {
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const { sfxRef, playSFX } = useAudioPlayer();
+  const { playSFX } = useAudioPlayer();
   const spotify = useSpotifyBackground(currentAudioDecade);
 
   const googleAuth = useGoogleAuth();
@@ -467,9 +467,9 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
+      <ScreenTransitionOverlay screenKey={phase} />
       <CrtOverlay />
       {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
-      <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from

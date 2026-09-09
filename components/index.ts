@@ -1,4 +1,5 @@
 export { BootOverlay } from './BootOverlay';
+export { ScreenTransitionOverlay } from './ScreenTransitionOverlay';
 export { SplashScreen } from './SplashScreen';
 export { MantelClock } from './MantelClock';
 export { CrtOverlay } from './CrtOverlay';

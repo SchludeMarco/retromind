@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { buildPixelCells } from '../lib/pixelGrid';
 
 // --- Boot overlay ---
 // Shown once when the app mounts: a pixel grid that starts fully black and
@@ -23,11 +24,7 @@ export const BootOverlay: React.FC = () => {
     []
   );
   const cells = useMemo(
-    () =>
-      Array.from({ length: BOOT_GRID_COLS * BOOT_GRID_ROWS }, () => ({
-        delay: Math.random() * BOOT_MAX_DELAY_MS,
-        duration: BOOT_MIN_DURATION_MS + Math.random() * BOOT_MAX_EXTRA_DURATION_MS,
-      })),
+    () => buildPixelCells(BOOT_GRID_COLS * BOOT_GRID_ROWS, BOOT_MAX_DELAY_MS, BOOT_MIN_DURATION_MS, BOOT_MAX_EXTRA_DURATION_MS),
     []
   );
 
