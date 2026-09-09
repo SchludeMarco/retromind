@@ -18,6 +18,7 @@ export function useRetroSession() {
   const [clickedBuzzwords, setClickedBuzzwords] = useState<string[]>(saved.clickedBuzzwords ?? []);
   const [manualDecade, setManualDecade] = useState<string | null>(saved.manualDecade ?? null);
   const [fontScale, setFontScale] = useState<number>(saved.fontScale ?? 1);
+  const [storageFull, setStorageFull] = useState(false);
 
   const focusDecade = useMemo(() => computeFocusDecade(user.birthDate), [user.birthDate]);
 
@@ -36,7 +37,7 @@ export function useRetroSession() {
       fontScale,
       updatedAt: Date.now(),
     };
-    persistSession(state);
+    setStorageFull(!persistSession(state));
   }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
 
   const memoryFor = useCallback(
@@ -118,6 +119,7 @@ export function useRetroSession() {
     focusDecade,
     resetJourney, importSession, exportSession, loadRemoteState,
     hasProgress: memories.length > 0 || phase !== 'intro' || !!resumeTarget,
+    storageFull,
   };
 }
 

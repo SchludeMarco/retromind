@@ -15,6 +15,7 @@ export const ExplorationPhase: React.FC<{
   uploadedImage: string | null;
   uploadError: string | null;
   analysis: string | null;
+  analysisOk: boolean;
   analysisSaved: boolean;
   videoStatus: VideoStatus;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -35,6 +36,7 @@ export const ExplorationPhase: React.FC<{
   uploadedImage,
   uploadError,
   analysis,
+  analysisOk,
   analysisSaved,
   videoStatus,
   onImageUpload,
@@ -114,7 +116,7 @@ export const ExplorationPhase: React.FC<{
             <div className="p-4 bg-white border-2 border-retro-ink text-sm leading-relaxed">
               <p className="font-bold mb-2 uppercase text-retro-amber-dark">Nostalgische Beschreibung</p>
               <div className="whitespace-pre-wrap">{analysis}</div>
-              {analysis !== 'Analysiere…' && (
+              {analysisOk && (
                 <button
                   onClick={onSaveAnalysis}
                   disabled={analysisSaved}

@@ -18,11 +18,15 @@ export function loadSession(): Partial<SessionState> {
   }
 }
 
-export function persistSession(s: SessionState) {
+/** @returns whether the session actually made it into localStorage. */
+export function persistSession(s: SessionState): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    return true;
   } catch {
-    /* storage unavailable — non-fatal */
+    // Storage unavailable or quota exceeded (photo memories can be large) —
+    // the caller surfaces this so a save doesn't silently vanish.
+    return false;
   }
 }
 

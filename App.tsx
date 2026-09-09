@@ -47,6 +47,7 @@ const App: React.FC = () => {
     fontScale, setFontScale,
     focusDecade,
     resetJourney, importSession, exportSession, loadRemoteState, hasProgress,
+    storageFull,
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
@@ -67,6 +68,10 @@ const App: React.FC = () => {
   const [isGeneratingPerspective, setIsGeneratingPerspective] = useState(false);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  // Tracks which buzzword's question is currently being awaited, so a slow
+  // request for a word the user has since left doesn't clobber the modal
+  // that's open (or reopen one they already closed) when it finally resolves.
+  const activeWordRequestRef = useRef<string | null>(null);
 
   const [showSplash, setShowSplash] = useState(true);
   // Gates every phase behind identity verification — reset on every fresh
@@ -82,6 +87,7 @@ const App: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<string | null>(null);
+  const [analysisOk, setAnalysisOk] = useState(false);
   const [analysisSaved, setAnalysisSaved] = useState(false);
   const [videoStatus, setVideoStatus] = useState<VideoStatus>({ status: 'idle' });
 
@@ -233,9 +239,13 @@ const App: React.FC = () => {
     playSFX('click');
     setSelectedGalleryItem(null);
   };
+  const closeBuzzwordModal = () => {
+    activeWordRequestRef.current = null;
+    setSelectedWord(null);
+  };
   const closeBuzzwordModalWithSfx = () => {
     playSFX('click');
-    setSelectedWord(null);
+    closeBuzzwordModal();
   };
   const closeSettingsWithSfx = () => {
     playSFX('click');
@@ -249,6 +259,7 @@ const App: React.FC = () => {
     playSFX('click');
     setUploadedImage(null);
     setAnalysis(null);
+    setAnalysisOk(false);
   };
 
   // --- memories ---
@@ -267,6 +278,7 @@ const App: React.FC = () => {
     const existingPerspective = perspectiveFor(wordId);
     setPerspective(existingPerspective ? { question: existingPerspective.prompt } : null);
     setPerspectiveDraft(existingPerspective?.answer ?? '');
+    activeWordRequestRef.current = wordId;
     // Reuse the stored question if we already have one for this word.
     const question =
       existing?.prompt ??
@@ -277,6 +289,7 @@ const App: React.FC = () => {
         decade,
         fallbackQuestion
       ));
+    if (activeWordRequestRef.current !== wordId) return; // user moved on or closed the modal
     setSelectedWord({ id: wordId, term, knowledge, question, decade });
     setIsGenerating(false);
   };
@@ -284,6 +297,7 @@ const App: React.FC = () => {
   const saveBuzzwordAnswer = () => {
     if (!selectedWord) return;
     playSFX('success');
+    activeWordRequestRef.current = null;
     upsertMemory({
       id: `bw-${selectedWord.id}`,
       kind: 'buzzword',
@@ -345,6 +359,7 @@ const App: React.FC = () => {
     }
     setUploadError(null);
     setAnalysis(null);
+    setAnalysisOk(false);
     setAnalysisSaved(false);
     setVideoStatus({ status: 'idle' });
     const dataUrl = await new Promise<string>((resolve) => {
@@ -359,14 +374,17 @@ const App: React.FC = () => {
     if (!uploadedImage) return;
     playSFX('click');
     setAnalysis('Analysiere…');
+    setAnalysisOk(false);
     setAnalysisSaved(false);
     const base64 = uploadedImage.split(',')[1];
     const mime = uploadedImage.split(';')[0].split(':')[1] || 'image/jpeg';
-    setAnalysis(await analyzeMemoryImage(base64, mime));
+    const result = await analyzeMemoryImage(base64, mime);
+    setAnalysis(result.text);
+    setAnalysisOk(result.ok);
   };
 
   const saveAnalysisAsMemory = () => {
-    if (!analysis || !uploadedImage) return;
+    if (!analysis || !analysisOk || !uploadedImage) return;
     playSFX('success');
     upsertMemory({
       id: `photo-${uid()}`,
@@ -461,7 +479,10 @@ const App: React.FC = () => {
   };
 
   // --- render helpers ---
-  const aiOff = aiAvailability === 'not_configured';
+  // Treat an inconclusive ping the same as "not configured": if we can't
+  // confirm the AI server is reachable, offering buttons that then fail with
+  // a confusing "try again" error is worse than showing the honest demo notice.
+  const aiOff = aiAvailability !== 'available';
   const isAnswered = (id: string) => !!memoryFor(id);
 
   return (
@@ -482,6 +503,21 @@ const App: React.FC = () => {
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
+        </div>
+      )}
+
+      {storageFull && phase !== 'intro' && (
+        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] w-[92vw] max-w-md bg-red-800 text-white px-4 py-3 text-sm shadow-lg animate-fadeIn">
+          <p className="font-bold">⚠️ Speicher voll — die letzte Änderung wurde nicht gespeichert.</p>
+          <p className="mt-1">
+            Sichere deine Reise jetzt als Datei, damit nichts verloren geht.
+          </p>
+          <button
+            onClick={exportSessionFile}
+            className="mt-2 border-2 border-white px-3 py-1.5 font-bold text-xs uppercase"
+          >
+            Sitzung sichern (.json)
+          </button>
         </div>
       )}
 
@@ -599,6 +635,7 @@ const App: React.FC = () => {
               uploadedImage={uploadedImage}
               uploadError={uploadError}
               analysis={analysis}
+              analysisOk={analysisOk}
               analysisSaved={analysisSaved}
               videoStatus={videoStatus}
               onImageUpload={handleImageUpload}
@@ -667,7 +704,7 @@ const App: React.FC = () => {
               onAnswerChange={setAnswerDraft}
               isExistingMemory={!!memoryFor(selectedWord.id)}
               onSave={saveBuzzwordAnswer}
-              onDismiss={() => setSelectedWord(null)}
+              onDismiss={closeBuzzwordModal}
               onCloseClick={closeBuzzwordModalWithSfx}
               perspective={perspective}
               isGeneratingPerspective={isGeneratingPerspective}
