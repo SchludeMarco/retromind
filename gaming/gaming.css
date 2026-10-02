@@ -162,9 +162,20 @@ a {
   border: 6px solid #333;
   background: radial-gradient(circle at 40% 35%, #444, #111);
   color: #e33;
-  font-size: 54px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 0 0 6px #1a1a1a, 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+.power-icon {
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: square;
+  vertical-align: middle;
 }
 .power-switch:focus-visible,
 .power-switch:hover {
