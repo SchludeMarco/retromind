@@ -364,6 +364,13 @@ a {
   font-size: 9px;
   padding: 7px 9px;
 }
+.filters + .filters.platforms {
+  margin-top: -10px;
+}
+.archive-count {
+  margin: 0;
+  font-size: 18px;
+}
 
 :focus-visible {
   outline: 3px solid var(--a3);
@@ -750,6 +757,17 @@ a {
   }
   .search input {
     width: 0;
+  }
+  /* Dozens of systems: one swipeable row instead of a wall of buttons. */
+  .filters.platforms {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+  .filters.platforms .px-btn {
+    flex: none;
+    white-space: nowrap;
   }
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

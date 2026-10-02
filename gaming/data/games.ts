@@ -1,3 +1,5 @@
+import { PLATFORMS } from './platforms';
+
 // Curated catalog of half-forgotten games, from the 1980s to today. Every entry is hand-written and
 // deliberately conservative: facts here are the well-documented ones. Live
 // details (summary, screenshots) are pulled from Wikipedia at runtime via
@@ -40,6 +42,7 @@ export interface Game {
 
 /** Cartridge label colours per platform, so the grid reads like a shelf. */
 export const PLATFORM_COLORS: Record<string, string> = {
+  ...Object.fromEntries(PLATFORMS.map((p) => [p.id, p.color])),
   NES: '#c0392b',
   SNES: '#7d5fff',
   'Game Boy': '#8bac0f',

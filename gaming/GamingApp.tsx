@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DECADES, Game, GAMES, PLATFORM_COLORS, TICKER_FACTS } from './data/games';
+import { PLATFORMS } from './data/platforms';
+import { archiveSupports, fetchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { useControls } from './lib/useControls';
@@ -159,7 +161,56 @@ export const GamingApp: React.FC = () => {
     return GAMES.filter((g) => (!d || (g.year >= d.from && g.year <= d.to)) && (!platform || g.platform === platform));
   }, [decade, platform]);
 
-  const platforms = useMemo(() => Array.from(new Set(GAMES.map((g) => g.platform))), []);
+  // Every system from the platform list, in release order, plus any the
+  // curated catalog uses on top (e.g. Multiplattform).
+  const platforms = useMemo(
+    () => [...PLATFORMS.map((p) => p.id), ...Array.from(new Set(GAMES.map((g) => g.platform))).filter((p) => !PLATFORMS.some((x) => x.id === p))],
+    []
+  );
+
+  // The live archive fills a filter with everything Wikipedia lists for it.
+  const [archive, setArchive] = useState<{ key: string; games: Game[]; total: number; next: number | null; loading: boolean }>({
+    key: '',
+    games: [],
+    total: 0,
+    next: null,
+    loading: false,
+  });
+  const archiveQuery = useMemo(() => {
+    const d = DECADES.find((x) => x.id === decade);
+    // With no filter at all, the archive spans the edition's whole era.
+    const range = d ? { from: d.from, to: d.to } : platform ? null : { from: 1980, to: new Date().getFullYear() };
+    return { platform, decade: range };
+  }, [decade, platform]);
+  const archiveKey = `${platform}|${decade}`;
+  useEffect(() => {
+    if (view !== 'catalog' || !archiveSupports(archiveQuery)) return;
+    let alive = true;
+    setArchive({ key: archiveKey, games: [], total: 0, next: null, loading: true });
+    fetchArchive(archiveQuery, 0).then((page) => {
+      if (alive) setArchive({ key: archiveKey, games: page.games, total: page.total, next: page.nextOffset, loading: false });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [archiveKey, archiveQuery, view]);
+  const loadMore = async () => {
+    if (archive.next === null || archive.loading) return;
+    chip.play('coin');
+    const key = archiveKey;
+    setArchive((a) => ({ ...a, loading: true }));
+    const page = await fetchArchive(archiveQuery, archive.next);
+    setArchive((a) =>
+      a.key !== key ? a : { ...a, games: [...a.games, ...page.games], next: page.nextOffset, loading: false }
+    );
+  };
+  const archiveShown = useMemo(() => {
+    if (archive.key !== archiveKey) return [];
+    const curated = new Set(catalog.map((g) => g.wiki));
+    const seen = new Set<string>();
+    return archive.games.filter((g) => !curated.has(g.wiki) && !seen.has(g.wiki) && seen.add(g.wiki));
+  }, [archive, archiveKey, catalog]);
+  const archiveActive = view === 'catalog' && archiveSupports(archiveQuery);
 
   // INSERT COIN: titles spin like a slot machine, then a random game opens —
   // preferring ones the player hasn't discovered yet.
@@ -232,7 +283,7 @@ export const GamingApp: React.FC = () => {
 
   const score = scoreOf(state);
   const shown: Game[] =
-    view === 'catalog' ? catalog : view === 'collection' ? collection : view === 'search' ? results ?? [] : [];
+    view === 'catalog' ? [...catalog, ...archiveShown] : view === 'collection' ? collection : view === 'search' ? results ?? [] : [];
 
   return (
     <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
@@ -328,7 +379,8 @@ export const GamingApp: React.FC = () => {
           </div>
 
           {view === 'catalog' && (
-            <div className="filters" aria-label="Filter">
+            <>
+            <div className="filters" aria-label="Jahrzehnt">
               <button className="px-btn" aria-pressed={!decade && !platform} onClick={() => { setDecade(null); setPlatform(null); chip.play('blip'); }} data-nav>
                 ALLE
               </button>
@@ -343,6 +395,8 @@ export const GamingApp: React.FC = () => {
                   {d.label.toUpperCase()}
                 </button>
               ))}
+            </div>
+            <div className="filters platforms" aria-label="Plattform">
               {platforms.map((p) => (
                 <button
                   key={p}
@@ -355,6 +409,7 @@ export const GamingApp: React.FC = () => {
                 </button>
               ))}
             </div>
+            </>
           )}
 
           {view === 'trophies' ? (
@@ -371,22 +426,41 @@ export const GamingApp: React.FC = () => {
                 );
               })}
             </div>
-          ) : searching ? (
+          ) : searching || (archiveActive && archive.loading && !shown.length) ? (
             <p className="loading pixel-font" style={{ fontSize: 11 }} role="status">
-              DURCHSUCHE DIE GRABBELKISTE … <span className="blink">▮</span>
+              {searching ? 'DURCHSUCHE DIE GRABBELKISTE …' : 'ÖFFNE DAS ARCHIV …'} <span className="blink">▮</span>
             </p>
           ) : shown.length ? (
-            <div className="grid" style={{ marginTop: 12 }}>
-              {shown.map((g) => (
-                <Cartridge
-                  key={g.id}
-                  game={g}
-                  fav={state.favorites.includes(g.id)}
-                  done={state.completed.includes(g.id)}
-                  onOpen={() => open(g)}
-                />
-              ))}
-            </div>
+            <>
+              {archiveActive && (
+                <p className="dim archive-count">
+                  {catalog.length > 0 && `${catalog.length} ${catalog.length === 1 ? 'handverlesener Schatz' : 'handverlesene Schätze'}, dazu `}
+                  {archive.total > 0
+                    ? `${archive.total.toLocaleString('de-DE')} Spiele aus dem Wikipedia-Archiv`
+                    : archive.loading
+                      ? 'das Archiv wird geladen …'
+                      : 'das Archiv ist gerade nicht erreichbar'}
+                </p>
+              )}
+              <div className="grid" style={{ marginTop: 12 }}>
+                {shown.map((g) => (
+                  <Cartridge
+                    key={g.id}
+                    game={g}
+                    fav={state.favorites.includes(g.id)}
+                    done={state.completed.includes(g.id)}
+                    onOpen={() => open(g)}
+                  />
+                ))}
+              </div>
+              {archiveActive && archive.key === archiveKey && (archive.next !== null || archive.loading) && (
+                <div style={{ textAlign: 'center', marginTop: 24 }}>
+                  <button className="px-btn big" onClick={loadMore} disabled={archive.loading} data-nav>
+                    {archive.loading ? 'LADE …' : '▼ MEHR SPIELE LADEN'}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <p className="empty pixel-font" style={{ fontSize: 11 }}>
               {view === 'collection'
