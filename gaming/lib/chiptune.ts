@@ -247,9 +247,13 @@ class ChipSound {
 
   /** The C64-style title-screen tune (see sid.ts); the hub has its own. */
   startTitleMusic() {
-    if (!this.musicEnabled || !this.ctx || !this.musicBus || !this.noise || this.title) return;
+    if (this.title) return;
+    if (!this.musicEnabled) return void this.note('title', 'aus (Musik ausgeschaltet)');
+    if (!this.ctx || !this.musicBus || !this.noise) return void this.note('title', 'Audio nicht gestartet');
+    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
     this.title = new SidPlayer(this.ctx, this.musicBus, this.noise);
     this.title.start();
+    this.note('title', `läuft (Audio ${this.ctx.state})`);
   }
 
   stopTitleMusic() {

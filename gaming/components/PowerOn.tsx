@@ -19,7 +19,7 @@ const SoundDebug: React.FC = () => {
   }, []);
   return (
     <pre className="sound-debug">
-      {`Audio: ${chip.debugState}\nDiesel: ${chip.debug.diesel ?? '–'}\nBling: ${chip.debug.chime ?? '–'}`}
+      {`Audio: ${chip.debugState}\nDiesel: ${chip.debug.diesel ?? '–'}\nBling: ${chip.debug.chime ?? '–'}\nTitelmusik: ${chip.debug.title ?? '–'}`}
     </pre>
   );
 };
