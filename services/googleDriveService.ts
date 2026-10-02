@@ -9,8 +9,8 @@ const FILE_NAME = 'retromind-session.json';
 const FILES_API = 'https://www.googleapis.com/drive/v3/files';
 const UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3/files';
 
-async function findSessionFileId(accessToken: string): Promise<string | null> {
-  const q = encodeURIComponent(`name='${FILE_NAME}' and trashed=false`);
+async function findFileId(accessToken: string, fileName: string): Promise<string | null> {
+  const q = encodeURIComponent(`name='${fileName}' and trashed=false`);
   const res = await fetch(`${FILES_API}?spaces=appDataFolder&q=${q}&fields=files(id)`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -19,20 +19,21 @@ async function findSessionFileId(accessToken: string): Promise<string | null> {
   return data.files?.[0]?.id ?? null;
 }
 
-export async function loadSessionFromDrive(accessToken: string): Promise<SessionState | null> {
-  const fileId = await findSessionFileId(accessToken);
+/** Reads one JSON file from the app's private Drive folder (null if absent). */
+export async function loadDriveJson<T = unknown>(accessToken: string, fileName: string): Promise<T | null> {
+  const fileId = await findFileId(accessToken, fileName);
   if (!fileId) return null;
   const res = await fetch(`${FILES_API}/${fileId}?alt=media`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   if (!res.ok) throw new Error('drive_download_failed');
-  const state = await res.json();
-  return state && state.version === 2 ? (state as SessionState) : null;
+  return (await res.json()) as T;
 }
 
-export async function saveSessionToDrive(accessToken: string, state: SessionState): Promise<void> {
-  const fileId = await findSessionFileId(accessToken);
-  const body = JSON.stringify(state);
+/** Writes one JSON file to the app's private Drive folder, creating it once. */
+export async function saveDriveJson(accessToken: string, fileName: string, data: unknown): Promise<void> {
+  const fileId = await findFileId(accessToken, fileName);
+  const body = JSON.stringify(data);
 
   if (fileId) {
     const res = await fetch(`${UPLOAD_API}/${fileId}?uploadType=media`, {
@@ -44,7 +45,7 @@ export async function saveSessionToDrive(accessToken: string, state: SessionStat
     return;
   }
 
-  const metadata = { name: FILE_NAME, parents: ['appDataFolder'] };
+  const metadata = { name: fileName, parents: ['appDataFolder'] };
   const boundary = 'retromind-drive-boundary';
   const multipartBody =
     `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
@@ -58,4 +59,13 @@ export async function saveSessionToDrive(accessToken: string, state: SessionStat
     body: multipartBody,
   });
   if (!res.ok) throw new Error('drive_create_failed');
+}
+
+export async function loadSessionFromDrive(accessToken: string): Promise<SessionState | null> {
+  const state = await loadDriveJson<SessionState>(accessToken, FILE_NAME);
+  return state && state.version === 2 ? state : null;
+}
+
+export function saveSessionToDrive(accessToken: string, state: SessionState): Promise<void> {
+  return saveDriveJson(accessToken, FILE_NAME, state);
 }

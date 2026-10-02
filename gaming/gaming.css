@@ -868,3 +868,15 @@ a {
     gap: 14px;
   }
 }
+
+/* --- Cloud backup dialog --- */
+.cloud-dialog {
+  width: min(560px, 100%);
+}
+.cloud-dialog p {
+  margin: 12px 0;
+}
+.cloud-user {
+  font-size: 10px;
+  color: var(--a1);
+}

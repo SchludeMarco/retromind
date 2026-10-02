@@ -15,7 +15,7 @@ export type GoogleAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 
 // Wraps Google sign-in + Drive-token renewal for the app. The access token
 // itself is kept only in memory (never persisted) — a fresh one is requested
 // (silently, when possible) whenever the Drive sync needs it.
-export function useGoogleAuth() {
+export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolean } = {}) {
   const [status, setStatus] = useState<GoogleAuthStatus>(getGoogleClientId() ? 'signed_out' : 'not_configured');
   const [user, setUser] = useState<GoogleUser | null>(null);
   const [birthdayHint, setBirthdayHint] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export function useGoogleAuth() {
   // stopped by a popup every single time — falls through to the mandatory
   // sign-in button when no prior consent is found.
   useEffect(() => {
-    if (!getGoogleClientId()) return;
+    if (!getGoogleClientId() || !silentRestore) return;
     (async () => {
       try {
         const token = await requestGoogleAccessToken('');
@@ -45,6 +45,8 @@ export function useGoogleAuth() {
         /* no prior consent — the person must tap the sign-in button */
       }
     })();
+    // Only on mount: a later opt-in goes through signIn().
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
