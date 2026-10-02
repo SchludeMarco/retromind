@@ -77,6 +77,9 @@ CRT-Effekte, synthetisierte Chiptune-Musik, Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Lässt sich als eigenständige App installieren
 (Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
 verlinkt auf der Startseite und in den Einstellungen dorthin.
+Eigene Adresse: das Vercel-Projekt `retromind-gaming` baut dasselbe Repo mit
+`RETROMIND_EDITION=gaming`, wodurch `scripts/edition.mjs` die Gaming-Seite
+unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`).
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ## Architektur

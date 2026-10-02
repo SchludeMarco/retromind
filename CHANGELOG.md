@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Eigene Adresse für die Gaming-Edition:** Neues Vercel-Projekt
+  `retromind-gaming` aus demselben Repo. Es setzt `RETROMIND_EDITION=gaming`,
+  und der neue Build-Schritt `scripts/edition.mjs` legt dann die
+  Gaming-Seite als Startseite ab. Das Haupt-Projekt bleibt unverändert.
+
 - **Gaming-Edition als eigenständige App + Link aus RetroMind:** Die
   Startseite der Zeitreise und die Einstellungen verlinken jetzt auf
   „RetroMind – Gaming“. Die Gaming-Edition ist als eigene App installierbar
