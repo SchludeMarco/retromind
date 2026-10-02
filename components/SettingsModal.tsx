@@ -86,6 +86,16 @@ export const SettingsModal: React.FC<{
       )}
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Weitere Editionen</span>
+        <a
+          href="/gaming/"
+          className="retro-button inline-block px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm no-underline"
+        >
+          🕹️ RetroMind – Gaming öffnen
+        </a>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Feedback</span>
         <p className="text-[10px] text-retro-tan mb-2">
           Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.

@@ -74,7 +74,10 @@ kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
 Longplays, GameFAQs, MobyGames und Internet Archive. Dazu Konsolen-Einschalten,
 CRT-Effekte, synthetisierte Chiptune-Musik, Erfolge, Sammlung, Konami-Code
-und Gamepad-Steuerung. Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
+und Gamepad-Steuerung. Lässt sich als eigenständige App installieren
+(Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
+verlinkt auf der Startseite und in den Einstellungen dorthin.
+Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ## Architektur
 

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Gaming-Edition als eigenständige App + Link aus RetroMind:** Die
+  Startseite der Zeitreise und die Einstellungen verlinken jetzt auf
+  „RetroMind – Gaming“. Die Gaming-Edition ist als eigene App installierbar
+  (Web-App-Manifest, Icons, Service Worker mit Scope `/gaming/`, Network-first
+  mit Offline-Fallback) und bietet im Hub einen „Als App“-Button, wo der
+  Browser das unterstützt.
+
 - **Neue Edition „RetroMind – Gaming“ (`/gaming/`):** Eigene Seite im selben
   Repo, die vergessene und unterschätzte Videospiele von den 1980ern bis heute wiederentdecken lässt.
   Kuratierter Katalog mit 38 Spielen von 1987 bis 2023 als Modul-Regal (Filter nach Jahrzehnt
