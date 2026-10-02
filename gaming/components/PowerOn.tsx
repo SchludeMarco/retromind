@@ -86,7 +86,7 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
         PRESS START
       </button>
       <p className="dim" style={{ marginTop: 36 }}>
-        Vergessene Spiele wiederentdecken: Screenshots, Guides, Tipps &amp; Geschichten.
+        Vergessene Spiele von den 80ern bis heute: Screenshots, Guides, Tipps &amp; Geschichten.
       </p>
       <p className="pixel-font dim" style={{ fontSize: 9, marginTop: 24 }}>
         © 1980–{new Date().getFullYear()} RETROMIND · 1 PLAYER

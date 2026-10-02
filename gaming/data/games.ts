@@ -1,4 +1,4 @@
-// Curated catalog of half-forgotten games. Every entry is hand-written and
+// Curated catalog of half-forgotten games, from the 1980s to today. Every entry is hand-written and
 // deliberately conservative: facts here are the well-documented ones. Live
 // details (summary, screenshots) are pulled from Wikipedia at runtime via
 // `wiki` (the English article title), and deeper guides come from the AI.
@@ -14,7 +14,12 @@ export type Platform =
   | 'MS-DOS'
   | 'PlayStation'
   | 'Nintendo 64'
-  | 'Dreamcast';
+  | 'Dreamcast'
+  | 'PlayStation 2'
+  | 'Game Boy Advance'
+  | 'PS Vita'
+  | 'Xbox One'
+  | 'Multiplattform';
 
 export interface Game {
   id: string;
@@ -46,6 +51,11 @@ export const PLATFORM_COLORS: Record<string, string> = {
   PlayStation: '#00a8a8',
   'Nintendo 64': '#27ae60',
   Dreamcast: '#f39c12',
+  'PlayStation 2': '#2c3e8f',
+  'Game Boy Advance': '#5b4bd1',
+  'PS Vita': '#1f6fb2',
+  'Xbox One': '#107c10',
+  Multiplattform: '#b03a6f',
 };
 
 export const GAMES: Game[] = [
@@ -382,12 +392,185 @@ export const GAMES: Game[] = [
     tips: ['Sehr schwer und mit wenig Leben: Lerne die Gegnermuster auswendig.'],
     funFact: 'Bis zu zwölf Parallax-Ebenen sorgten für eine damals unglaubliche Tiefe.',
   },
+  {
+    id: 'ico',
+    title: 'Ico',
+    year: 2001,
+    platform: 'PlayStation 2',
+    developer: 'Team Ico',
+    genre: 'Action-Adventure',
+    wiki: 'Ico',
+    blurb: 'Ein gehörnter Junge führt das Mädchen Yorda an der Hand aus einer riesigen, verlassenen Burg.',
+    tips: ['Lass Yorda nie zu lange allein – sonst holen die Schatten sie.'],
+    funFact: 'Fast ohne Bildschirmanzeigen erzählt – ein Vorbild für viele spätere Indie-Spiele.',
+  },
+  {
+    id: 'advance-wars',
+    title: 'Advance Wars',
+    year: 2001,
+    platform: 'Game Boy Advance',
+    developer: 'Intelligent Systems',
+    genre: 'Rundenstrategie',
+    wiki: 'Advance Wars (video game)',
+    blurb: 'Taktik im Taschenformat: Panzer, Infanterie und Flugzeuge auf karierten Schlachtfeldern.',
+    tips: [
+      'Infanterie erobert Städte – mehr Städte heißt mehr Geld für neue Einheiten.',
+      'Im Nebel des Krieges verstecken Wälder deine Einheiten.',
+    ],
+    funFact: 'Der Japan-Start wurde nach den Anschlägen vom 11. September 2001 um Jahre verschoben.',
+  },
+  {
+    id: 'beyond-good-evil',
+    title: 'Beyond Good & Evil',
+    year: 2003,
+    platform: 'Multiplattform',
+    developer: 'Ubisoft Montpellier',
+    genre: 'Action-Adventure',
+    wiki: 'Beyond Good & Evil (video game)',
+    blurb: 'Fotojournalistin Jade deckt auf dem Planeten Hillys eine Verschwörung auf – mit Kamera und Kampfstab.',
+    tips: ['Fotografiere jede Tierart für das Archiv – das bringt Geld und Perlen.'],
+    funFact: 'Erdacht von Michel Ancel, dem Schöpfer von Rayman.',
+  },
+  {
+    id: 'psychonauts',
+    title: 'Psychonauts',
+    year: 2005,
+    platform: 'Multiplattform',
+    developer: 'Double Fine Productions',
+    genre: "Jump 'n' Run",
+    wiki: 'Psychonauts',
+    blurb: 'Raz schleicht sich in ein Sommercamp für Psi-Begabte und springt buchstäblich in die Köpfe anderer.',
+    tips: ['Sammle Figmente in den Gedankenwelten – so steigst du im Rang auf und lernst neue Psi-Kräfte.'],
+    funFact: 'Floppte zunächst, wurde Kult und bekam 2021 endlich Psychonauts 2.',
+  },
+  {
+    id: 'okami',
+    title: 'Ōkami',
+    year: 2006,
+    platform: 'PlayStation 2',
+    developer: 'Clover Studio',
+    genre: 'Action-Adventure',
+    wiki: 'Ōkami',
+    blurb: 'Als Sonnengöttin in Wolfsgestalt malst du mit einem Himmelspinsel Wunder in eine Welt aus Tuschebildern.',
+    tips: ['Mit dem Himmelspinsel malst du Zeichen: Ein Kreis lässt die Sonne aufgehen, ein Strich zerschneidet Hindernisse.'],
+    funFact: 'Clover Studio wurde kurz nach dem Erscheinen aufgelöst.',
+  },
+  {
+    id: 'mirrors-edge',
+    title: "Mirror's Edge",
+    year: 2008,
+    platform: 'Multiplattform',
+    developer: 'DICE',
+    genre: 'Parkour / Action',
+    wiki: "Mirror's Edge",
+    blurb: 'Als Läuferin Faith rennst und springst du über die Dächer einer sterilen, überwachten Stadt.',
+    tips: ['Rot eingefärbte Objekte zeigen dir den Weg – folge der „Runner Vision“.'],
+    funFact: 'Einer der ersten großen Ego-Titel, der fast ganz auf Bewegung statt Schießen setzte.',
+  },
+  {
+    id: 'alpha-protocol',
+    title: 'Alpha Protocol',
+    year: 2010,
+    platform: 'Multiplattform',
+    developer: 'Obsidian Entertainment',
+    genre: 'Agenten-Rollenspiel',
+    wiki: 'Alpha Protocol',
+    blurb: 'Ein Spionage-Rollenspiel, in dem fast jede Gesprächsentscheidung die Geschichte verändert.',
+    tips: ['Dialoge laufen gegen die Zeit – entscheide aus dem Bauch, jede Wahl hat Folgen.'],
+    funFact: 'Verschwand 2019 aus den digitalen Stores, weil Musiklizenzen ausliefen.',
+  },
+  {
+    id: 'gravity-rush',
+    title: 'Gravity Rush',
+    year: 2012,
+    platform: 'PS Vita',
+    developer: 'Japan Studio',
+    genre: 'Action-Adventure',
+    wiki: 'Gravity Rush',
+    blurb: 'Kat kann die Schwerkraft verschieben und „fällt“ an Hauswänden hoch und quer durch eine schwebende Stadt.',
+    tips: ['Der Gravitationstritt aus der Luft ist dein stärkster Angriff.'],
+    funFact: 'Erschien später als Remaster für die PS4, samt Fortsetzung.',
+  },
+  {
+    id: 'sunset-overdrive',
+    title: 'Sunset Overdrive',
+    year: 2014,
+    platform: 'Xbox One',
+    developer: 'Insomniac Games',
+    genre: 'Action',
+    wiki: 'Sunset Overdrive',
+    blurb: 'Eine knallbunte Apokalypse, in der du auf Stromleitungen grindest und Mutanten mit Schallplatten beschießt.',
+    tips: ['Bleib in Bewegung: Grinden und Springen hält dich am Leben, am Boden bist du leichte Beute.'],
+    funFact: 'Lange Xbox-exklusiv, 2018 kam eine PC-Fassung.',
+  },
+  {
+    id: 'titanfall-2',
+    title: 'Titanfall 2',
+    year: 2016,
+    platform: 'Multiplattform',
+    developer: 'Respawn Entertainment',
+    genre: 'Ego-Shooter',
+    wiki: 'Titanfall 2',
+    blurb: 'Pilot Jack Cooper und sein Kampfroboter BT-7274: eine Kampagne, die viele für eine der besten ihres Genres halten.',
+    tips: ['Im Level „Effect and Cause“ springst du per Knopfdruck zwischen zwei Zeitebenen – nutze das auch im Kampf.'],
+    funFact: 'Erschien zwischen zwei großen Shooter-Konkurrenten und ging im Herbst 2016 kommerziell unter.',
+  },
+  {
+    id: 'sable',
+    title: 'Sable',
+    year: 2021,
+    platform: 'Multiplattform',
+    developer: 'Shedworks',
+    genre: 'Erkundung',
+    wiki: 'Sable (video game)',
+    blurb: 'Ein Mädchen bricht auf ihrem Hover-Bike durch eine Wüste auf, um herauszufinden, wer sie sein will.',
+    tips: ['Kein Kampf, kein Zeitdruck: Klettern und Gleiten führen dich fast überall hin.'],
+    funFact: 'Der Zeichenstil erinnert an den französischen Comickünstler Moebius.',
+  },
+  {
+    id: 'chicory',
+    title: 'Chicory: A Colorful Tale',
+    year: 2021,
+    platform: 'Multiplattform',
+    developer: 'Greg Lobanov',
+    genre: 'Abenteuer',
+    wiki: 'Chicory: A Colorful Tale',
+    blurb: 'Die Welt hat ihre Farben verloren – mit einem magischen Pinsel malst du sie neu.',
+    tips: ['Farbe ist Werkzeug: Bemalte Pflanzen und Objekte öffnen neue Wege.'],
+    funFact: 'Die Musik stammt von Lena Raine, die auch an Celeste mitgearbeitet hat.',
+  },
+  {
+    id: 'tunic',
+    title: 'Tunic',
+    year: 2022,
+    platform: 'Multiplattform',
+    developer: 'Andrew Shouldice',
+    genre: 'Action-Adventure',
+    wiki: 'Tunic (video game)',
+    blurb: 'Ein kleiner Fuchs in einer Welt voller Geheimnisse – erklärt nur durch Seiten eines alten Spielhandbuchs.',
+    tips: ['Sammle die Handbuchseiten: Sie verraten nach und nach alle Geheimnisse.'],
+    funFact: 'Eine Liebeserklärung an die bebilderten Spielanleitungen der 80er und 90er.',
+  },
+  {
+    id: 'hi-fi-rush',
+    title: 'Hi-Fi Rush',
+    year: 2023,
+    platform: 'Multiplattform',
+    developer: 'Tango Gameworks',
+    genre: 'Rhythmus-Action',
+    wiki: 'Hi-Fi Rush',
+    blurb: 'Ein Möchtegern-Rockstar kämpft im Takt der Musik gegen einen Robotik-Konzern.',
+    tips: ['Alles bewegt sich im Takt: Angriffe im Rhythmus richten mehr Schaden an.'],
+    funFact: 'Das Studio wurde 2024 geschlossen und noch im selben Jahr von Krafton gerettet.',
+  },
 ];
 
 export const DECADES = [
   { id: '80s', label: "80er", from: 1980, to: 1989 },
   { id: '90s', label: "90er", from: 1990, to: 1999 },
   { id: '00s', label: "2000er", from: 2000, to: 2009 },
+  { id: '10s', label: "2010er", from: 2010, to: 2019 },
+  { id: '20s', label: "2020er", from: 2020, to: 2099 },
 ];
 
 /** Loading lines shown while content streams in — pure nostalgia filler. */
@@ -408,4 +591,6 @@ export const TICKER_FACTS = [
   'Ins Modul pusten half nicht wirklich – aber jeder hat es gemacht.',
   'Shareware: Die erste Episode gratis, den Rest gab es per Post.',
   'Spielezeitschriften druckten Cheats, Karten und Listings zum Abtippen.',
+  'Auch digitale Spiele können verschwinden: Laufen Lizenzen aus, fliegen sie aus den Stores.',
+  'Viele heutige Indie-Hits zitieren bewusst die Spiele der 80er und 90er.',
 ];

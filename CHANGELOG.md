@@ -3,8 +3,8 @@
 ## Unreleased
 
 - **Neue Edition „RetroMind – Gaming“ (`/gaming/`):** Eigene Seite im selben
-  Repo, die vergessene Videospiele (ca. 1987–2000) wiederentdecken lässt.
-  Kuratierter Katalog mit 24 Spielen als Modul-Regal (Filter nach Jahrzehnt
+  Repo, die vergessene und unterschätzte Videospiele von den 1980ern bis heute wiederentdecken lässt.
+  Kuratierter Katalog mit 38 Spielen von 1987 bis 2023 als Modul-Regal (Filter nach Jahrzehnt
   und Plattform), „Insert Coin“-Zufallsfund, Suche nach beliebigen Spielen
   über Wikipedia, Detailansicht mit Wikipedia-Text (bevorzugt deutsch),
   Screenshots aus Wikimedia, kuratierten Tipps, einem KI-Guide mit

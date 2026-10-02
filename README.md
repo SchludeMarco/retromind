@@ -67,7 +67,7 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 
 ## Edition „RetroMind – Gaming“ (`/gaming/`)
 
-Eigene Seite im selben Projekt: vergessene Videospiele wiederentdecken.
+Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)), Suche
 nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
