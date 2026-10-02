@@ -887,11 +887,58 @@ a {
 }
 
 /* --- Cloud backup dialog --- */
-.cloud-dialog {
+.settings-dialog {
   width: min(560px, 100%);
 }
-.cloud-dialog p {
+.settings-dialog p {
   margin: 12px 0;
+}
+.settings-dialog section {
+  margin-top: 20px;
+}
+.settings-dialog h3 {
+  font-size: 11px;
+  color: var(--a1);
+  margin: 0 0 8px;
+}
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Small settings button pinned to the top right of the HUD. */
+.hud {
+  position: relative;
+  padding-right: 52px;
+}
+.settings-btn {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.settings-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+.settings-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 7px;
+  height: 7px;
+  background: #3f6;
+}
+.settings-dot.warn {
+  background: #fc3;
 }
 .cloud-user {
   font-size: 10px;

@@ -45,8 +45,9 @@ function load(): ArcadeState {
 const union = (a: string[] = [], b: string[] = []) => Array.from(new Set([...a, ...b]));
 
 /**
- * Combines this device's profile with one from the cloud: nothing collected
- * on either side is lost. Look and sound settings stay this device's own.
+ * Combines this device's profile with one from the cloud on sign-in: nothing
+ * collected on either side is lost, and the account's look and sound
+ * settings come along to the new device.
  */
 export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): ArcadeState {
   return {
@@ -57,6 +58,9 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     achievements: union(local.achievements, remote.achievements),
     customGames: { ...(remote.customGames ?? {}), ...local.customGames },
     hiScore: Math.max(local.hiScore, remote.hiScore ?? 0),
+    palette: remote.palette ?? local.palette,
+    music: remote.music ?? local.music,
+    sfx: remote.sfx ?? local.sfx,
   };
 }
 

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Einstellungen oben rechts mit Anmeldung:** Ein kleines
+  Zahnrad oben rechts öffnet die Einstellungen mit Google-Anmeldung, Ton und
+  Bildschirmfarbe (ersetzt den „☁ CLOUD“-Knopf). Nach der Anmeldung werden
+  Highscore, Sammlung, Erfolge und jetzt auch die Vorlieben (Musik, SFX,
+  Bildschirmfarbe) aus dem Konto geladen; oben steht dann der Spielername.
+
 - **Gaming-Edition: echter Dieselmotor beim Einschalten:** Statt des
   synthetischen Motors läuft jetzt eine echte, lizenzfreie Aufnahme
   (Anlasser, Anspringen, Hochdrehen; von Marco ausgesucht), auf die
