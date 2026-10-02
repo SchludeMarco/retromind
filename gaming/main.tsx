@@ -11,3 +11,10 @@ ReactDOM.createRoot(root).render(
     <GamingApp />
   </React.StrictMode>
 );
+
+// Installable as its own app (see public/gaming/manifest.webmanifest).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/gaming/sw.js', { scope: '/gaming/' }).catch(() => {});
+  });
+}

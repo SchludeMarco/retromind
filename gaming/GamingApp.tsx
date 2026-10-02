@@ -76,6 +76,30 @@ export const GamingApp: React.FC = () => {
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
   const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
+  // Browsers that support installing web apps hand us a prompt to trigger later.
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    const onInstalled = () => setInstallPrompt(null);
+    window.addEventListener('beforeinstallprompt', onPrompt);
+    window.addEventListener('appinstalled', onInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
+  }, []);
+
+  const install = async () => {
+    if (!installPrompt) return;
+    chip.play('powerup');
+    installPrompt.prompt();
+    await installPrompt.userChoice.catch(() => null);
+    setInstallPrompt(null);
+  };
 
   // Sound settings follow the saved state.
   useEffect(() => {
@@ -293,6 +317,11 @@ export const GamingApp: React.FC = () => {
             >
               SFX {state.sfx ? 'AN' : 'AUS'}
             </button>
+            {installPrompt && (
+              <button className="px-btn" onClick={install} data-nav>
+                ⬇ ALS APP
+              </button>
+            )}
             <button className="px-btn" onClick={cyclePalette} data-nav aria-label="Bildschirmfarbe wechseln">
               ▣ {PALETTES.find((p) => p.id === state.palette)?.label}
             </button>

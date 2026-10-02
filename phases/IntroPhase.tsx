@@ -59,6 +59,16 @@ export const IntroPhase: React.FC<{
         persönliche Fragen und sammelt deine Antworten zu einem Erinnerungs-Buch.
       </p>
 
+      <a
+        href="/gaming/"
+        className="retro-button block mb-8 px-6 py-4 bg-retro-ink text-retro-paper font-bold no-underline hover:bg-retro-brown"
+      >
+        🕹️ Neu: RetroMind – Gaming
+        <span className="block text-sm font-normal mt-1">
+          Vergessene Videospiele von den 80ern bis heute wiederentdecken.
+        </span>
+      </a>
+
       {googleUser && (
         <div className="mb-4 border-2 border-retro-ink bg-white p-4">
           <p className="font-bold">

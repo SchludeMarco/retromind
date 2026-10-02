@@ -1,0 +1,19 @@
+{
+  "name": "RetroMind – Gaming",
+  "short_name": "RM Gaming",
+  "description": "Vergessene Videospiele von den 80ern bis heute wiederentdecken.",
+  "id": "/gaming/",
+  "start_url": "/gaming/",
+  "scope": "/gaming/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07071a",
+  "theme_color": "#07071a",
+  "lang": "de",
+  "icons": [
+    { "src": "/gaming/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/gaming/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/gaming/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/gaming/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
