@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Zeitreise: RetroMind-Logo auf der Startseite:** Marcos 8-Bit-Logo steht
+  jetzt über der Begrüßung.
+
 - **Gaming-Edition: neues 8-Bit-Logo:** Marcos Logo („RETROMIND /GAMING“ mit
   Glühbirne, Gehirn und Joystick) steht auf dem Titelbildschirm; das Motiv
   ohne Schrift erscheint beim Einschalten, oben in der Kopfzeile sowie als
