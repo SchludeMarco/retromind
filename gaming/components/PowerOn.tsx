@@ -50,7 +50,11 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
     return (
       <div className="screen-full power-off">
         <button className="power-switch" onClick={powerOn} aria-label="Konsole einschalten" autoFocus>
-          ⏻
+          {/* Drawn, not the ⏻ character: many phone fonts lack it. */}
+          <svg className="power-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7.05 6.5a8 8 0 1 0 9.9 0" />
+            <path d="M12 2.5v9" />
+          </svg>
         </button>
         <p className="pixel-font dim" style={{ fontSize: 11, marginTop: 28 }}>
           <span className="power-led" aria-hidden="true" />

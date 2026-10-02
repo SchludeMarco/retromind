@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Power-Knopf zeigt das Symbol überall:** Statt des
+  Zeichens ⏻, das viele Handy-Schriften nicht kennen (Kasten mit X), ist das
+  Power-Symbol jetzt gezeichnet.
+
 - **Gaming-Edition: optionale Cloud-Sicherung:** Der neue Knopf „☁ Cloud“
   sichert das Profil (Sammlung, Erfolge, Highscore) nach einem Google-Login
   zusätzlich im eigenen Google Drive, nach demselben Prinzip wie die
