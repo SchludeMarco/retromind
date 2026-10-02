@@ -46,6 +46,13 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
     };
   }, [stage, reducedMotion]);
 
+  // The title screen plays its C64-style tune until START is pressed.
+  useEffect(() => {
+    if (stage !== 'title') return;
+    chip.startTitleMusic();
+    return () => chip.stopTitleMusic();
+  }, [stage]);
+
   useEffect(() => {
     if (stage !== 'title') return;
     const onKey = (e: KeyboardEvent) => {
