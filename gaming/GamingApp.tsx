@@ -346,6 +346,7 @@ export const GamingApp: React.FC = () => {
         <main className="hub">
           <header className="hud pixel-font">
             <h1 className="brand rgb-split">
+              <img className="brand-motif" src="/gaming/motif.webp" alt="" />
               RETROMIND
               <small>GAMING</small>
             </h1>

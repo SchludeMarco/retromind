@@ -269,6 +269,12 @@ a {
   color: var(--a3);
   margin: 0;
 }
+.brand-motif {
+  float: left;
+  width: 2.6em;
+  height: 2.6em;
+  margin-right: 10px;
+}
 .brand small {
   color: var(--a1);
   font-size: 0.6em;
@@ -890,4 +896,22 @@ a {
 .cloud-user {
   font-size: 10px;
   color: var(--a1);
+}
+
+/* --- Logo art (Marco's 8-bit logo) --- */
+.title-art {
+  margin: 0 0 28px;
+  line-height: 0;
+}
+.title-art img {
+  width: min(78vw, 420px);
+  height: auto;
+  image-rendering: pixelated;
+}
+.boot-motif {
+  display: block;
+  width: min(36vw, 160px);
+  height: auto;
+  margin: 0 auto 12px;
+  image-rendering: pixelated;
 }
