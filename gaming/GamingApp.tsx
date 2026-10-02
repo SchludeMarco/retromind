@@ -119,6 +119,9 @@ export const GamingApp: React.FC = () => {
     chip.sfxEnabled = state.sfx;
   }, [state.sfx]);
   useEffect(() => {
+    chip.musicEnabled = state.music;
+  }, [state.music]);
+  useEffect(() => {
     if (screen === 'hub') chip.setMusic(state.music);
     return () => chip.stopMusic();
   }, [screen, state.music]);

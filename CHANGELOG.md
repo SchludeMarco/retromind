@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: C64-Musik auf dem Titelbildschirm:** Bei „PRESS START“
+  läuft jetzt eine eigene Melodie im Stil des Commodore-64-SID-Chips
+  (Pulswellen-Lead mit Pulsbreiten-Sweep und Vibrato, quietschender
+  Filter-Bass, schnelle Akkord-Arpeggios, Rausch-Drums; `gaming/lib/sid.ts`).
+  Sie folgt der Musik-Einstellung und endet mit START.
+
 - **Gaming-Edition: Einstellungen oben rechts mit Anmeldung:** Ein kleines
   Zahnrad oben rechts öffnet die Einstellungen mit Google-Anmeldung, Ton und
   Bildschirmfarbe (ersetzt den „☁ CLOUD“-Knopf). Nach der Anmeldung werden

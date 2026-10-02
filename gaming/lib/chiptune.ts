@@ -1,6 +1,8 @@
 // A tiny 8-bit sound chip on top of Web Audio: square/triangle/noise voices
-// for UI blips and a looping original chiptune. Everything is synthesized, so
-// there are no assets to load and nothing copyrighted is played.
+// for UI blips, a looping original chiptune and a C64-style title tune (sid.ts).
+// Music and blips are synthesized; only the boot engine is a recorded sample.
+
+import { SidPlayer } from './sid';
 
 export type SfxName = 'blip' | 'select' | 'back' | 'coin' | 'powerup' | 'error' | 'start' | 'achievement';
 
@@ -239,6 +241,20 @@ class ChipSound {
   }
   get debugState() {
     return this.ctx ? `${this.ctx.state}, ${this.ctx.sampleRate} Hz, t=${this.ctx.currentTime.toFixed(1)}` : 'nicht gestartet';
+  }
+
+  private title: SidPlayer | null = null;
+
+  /** The C64-style title-screen tune (see sid.ts); the hub has its own. */
+  startTitleMusic() {
+    if (!this.musicEnabled || !this.ctx || !this.musicBus || !this.noise || this.title) return;
+    this.title = new SidPlayer(this.ctx, this.musicBus, this.noise);
+    this.title.start();
+  }
+
+  stopTitleMusic() {
+    this.title?.stop();
+    this.title = null;
   }
 
   startMusic() {
