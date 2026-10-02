@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Konsolen-Regal statt Wischleiste:** Ein Knopf „Konsole
+  wählen“ öffnet ein Regal mit Fotos aller 36 Systeme (Wikimedia Commons),
+  nach Hersteller sortiert: Nintendo, Sega, Sony, Microsoft, Heimcomputer &
+  PC sowie Atari, Arcade & Exoten. Antippen filtert, ✕ hebt den Filter auf.
+
 - **Gaming-Edition: Suche zeigt zuerst Spiele mit dem Begriff im Titel:**
   „Metroid“ liefert jetzt die 19 Metroid-Spiele statt Spielen, die Metroid
   nur im Artikel erwähnen. Diese lassen sich danach mit „Verwandte Spiele

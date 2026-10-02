@@ -71,7 +71,8 @@ Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
 Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
-Hunderten Spielen füllt; die Plattformen stehen in
+Hunderten Spielen füllt; die Plattformen (mit Hersteller-Regal und Foto für
+die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
 [`gaming/data/platforms.ts`](gaming/data/platforms.ts). Dazu Suche
 nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben

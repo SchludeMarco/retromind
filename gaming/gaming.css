@@ -364,8 +364,88 @@ a {
   font-size: 9px;
   padding: 7px 9px;
 }
-.filters + .filters.platforms {
+.filters + .filters {
   margin-top: -10px;
+}
+.filters .px-btn.console-button {
+  font-size: 11px;
+  padding: 10px 14px;
+}
+
+/* --- Console picker: shelves by maker --- */
+.console-picker h3 {
+  font-size: 10px;
+  color: var(--a1);
+  margin: 18px 0 8px;
+}
+.console-all {
+  margin-top: 8px;
+}
+.console-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.console-tile {
+  font: inherit;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  background: var(--tile, var(--a1));
+  border: 3px solid rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.3);
+  padding: 10px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.1s;
+}
+.console-tile:hover,
+.console-tile:focus-visible {
+  transform: translateY(-3px);
+  outline: 3px solid var(--a3);
+  outline-offset: 0;
+}
+.console-tile[aria-pressed='true'] {
+  outline: 4px solid var(--a3);
+  outline-offset: 0;
+}
+.console-pic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 84px;
+  background: #f4f1ea;
+  border: 3px solid rgba(0, 0, 0, 0.35);
+  margin-bottom: 4px;
+}
+.console-photo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.console-icon {
+  font-size: 34px;
+  line-height: 1;
+}
+.console-credit {
+  font-size: 15px;
+  margin: 6px 0 0;
+}
+.console-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+.console-sub {
+  font-size: 15px;
+  opacity: 0.85;
+}
+.arcade[data-palette='gameboy'] .console-tile,
+.arcade[data-palette='amber'] .console-tile {
+  background: var(--bg2);
+  color: var(--fg);
 }
 .archive-count {
   margin: 0;
@@ -748,6 +828,9 @@ a {
 }
 
 @media (max-width: 640px) {
+  .console-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .arcade {
     font-size: 20px;
   }
@@ -757,17 +840,6 @@ a {
   }
   .search input {
     width: 0;
-  }
-  /* Dozens of systems: one swipeable row instead of a wall of buttons. */
-  .filters.platforms {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: thin;
-  }
-  .filters.platforms .px-btn {
-    flex: none;
-    white-space: nowrap;
   }
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
