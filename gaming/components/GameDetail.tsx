@@ -138,7 +138,7 @@ export const GameDetail: React.FC<{
         </button>
         <h2 className="pixel-font rgb-split">{game.title}</h2>
         <p className="dim" style={{ margin: 0 }}>
-          {game.platform} · {game.year || '—'} · {game.developer} · {game.genre}
+          {[game.platform, game.year || '—', game.developer, game.genre].filter(Boolean).join(' · ')}
         </p>
 
         <div className="toolbar" style={{ margin: '12px 0 0' }}>

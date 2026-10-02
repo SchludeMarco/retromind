@@ -68,7 +68,11 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
 ## Edition „RetroMind – Gaming“ (`/gaming/`)
 
 Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
-Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)), Suche
+Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
+Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
+über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
+Hunderten Spielen füllt; die Plattformen stehen in
+[`gaming/data/platforms.ts`](gaming/data/platforms.ts). Dazu Suche
 nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu

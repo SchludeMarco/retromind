@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Gaming-Edition: volle Regale statt weniger Spiele pro Filter:** Jeder
+  Filter (Jahrzehnt, Plattform oder beides) lädt jetzt zusätzlich zu den
+  handverlesenen Spielen alle passenden Spiele aus den Wikipedia-Kategorien,
+  48 pro Seite mit „Mehr Spiele laden“ (z. B. Game Boy: über 500, 90er: über
+  7.000). Die Plattform-Liste wächst von 16 auf 36 Systeme, von Atari 2600 bis
+  Switch; auf dem Handy ist sie eine wischbare Zeile.
+
 - **Eigene Adresse für die Gaming-Edition:** Neues Vercel-Projekt
   `retromind-gaming` aus demselben Repo. Es setzt `RETROMIND_EDITION=gaming`,
   und der neue Build-Schritt `scripts/edition.mjs` legt dann die
