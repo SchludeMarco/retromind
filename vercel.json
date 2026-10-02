@@ -3,6 +3,7 @@
   "framework": "vite",
   "buildCommand": "vite build",
   "outputDirectory": "dist",
+  "rewrites": [{ "source": "/gaming", "destination": "/gaming/index.html" }],
   "functions": {
     "api/gemini.js": { "maxDuration": 60 },
     "api/video.js": { "maxDuration": 60 },

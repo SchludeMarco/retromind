@@ -18,6 +18,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, '.'),
     },
   },
+  build: {
+    // Two pages: the RetroMind journey at / and the Gaming edition at /gaming/.
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        gaming: path.resolve(__dirname, 'gaming/index.html'),
+      },
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },
