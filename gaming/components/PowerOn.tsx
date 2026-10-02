@@ -7,6 +7,23 @@ import { chip } from '../lib/chiptune';
 
 type Stage = 'off' | 'boot' | 'title';
 
+// Open the app with ?ton to see what the boot sounds actually did on this
+// device (for tracking down a silent phone without a debugger).
+const SOUND_DEBUG = new URLSearchParams(window.location.search).has('ton');
+
+const SoundDebug: React.FC = () => {
+  const [, tick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => tick((n) => n + 1), 250);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <pre className="sound-debug">
+      {`Audio: ${chip.debugState}\nDiesel: ${chip.debug.diesel ?? '–'}\nBling: ${chip.debug.chime ?? '–'}`}
+    </pre>
+  );
+};
+
 export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> = ({ onStart, reducedMotion }) => {
   const [stage, setStage] = useState<Stage>('off');
   const started = useRef(false);
@@ -15,6 +32,7 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
     if (stage !== 'boot') return;
     // A diesel engine cranks and idles while the logo drops; the chime lands
     // as the logo settles (crt-on 0.9s + logo-drop 2.4s).
+    if (reducedMotion) chip.debug.diesel = 'aus (Bewegung reduziert)';
     const stopEngine = reducedMotion ? () => {} : chip.diesel(3.2);
     const chime = setTimeout(() => chip.chime(), reducedMotion ? 100 : 3300);
     const next = setTimeout(() => setStage('title'), reducedMotion ? 900 : 5200);
@@ -82,6 +100,7 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
         <p className="pixel-font dim fade-in-late" style={{ fontSize: 10, marginTop: 24 }}>
           LIZENZIERT FÜR ERINNERUNGEN
         </p>
+        {SOUND_DEBUG && <SoundDebug />}
       </div>
     );
   }
@@ -104,6 +123,7 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
         <span className="power-led on" aria-hidden="true" />
         Tastatur, Maus oder Gamepad · Pfeiltasten bewegen den Cursor
       </p>
+      {SOUND_DEBUG && <SoundDebug />}
     </div>
   );
 };

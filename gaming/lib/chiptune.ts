@@ -153,7 +153,8 @@ class ChipSound {
 
   /** The console "power on" chime: two clean triangle notes. */
   chime() {
-    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return void this.note('chime', 'aus');
+    this.note('chime', `gespielt (Audio: ${this.ctx.state})`);
     const t = this.ctx.currentTime + 0.02;
     this.tone(this.sfxBus, noteFreq('B5'), t, 0.12, 'square', 0.12);
     this.tone(this.sfxBus, noteFreq('E6'), t + 0.12, 0.9, 'triangle', 0.3);
@@ -165,8 +166,44 @@ class ChipSound {
    * fades out after `duration` seconds. Returns a function that cuts it off.
    */
   diesel(duration: number): () => void {
-    if (!this.sfxEnabled || !this.ctx || !this.sfxBus || !this.noise) return () => {};
+    if (!this.sfxEnabled) return this.note('diesel', 'aus (Effekte abgeschaltet)');
+    if (!this.ctx) return this.note('diesel', 'aus (kein Web Audio)');
+    // The power tap creates the AudioContext; on phones it may still be
+    // starting up here. Schedule only once it really runs, so nothing gets
+    // queued against a clock that is not moving yet.
     const ctx = this.ctx;
+    const began = performance.now();
+    let cancelled = false;
+    let stop: (() => void) | null = null;
+    const go = () => {
+      if (cancelled) return;
+      const left = duration - (performance.now() - began) / 1000;
+      if (left < 0.8) return this.note('diesel', `zu spät (Audio erst nach ${(duration - left).toFixed(1)} s bereit)`);
+      stop = this.engine(left);
+      this.note('diesel', `läuft ${left.toFixed(1)} s`);
+    };
+    this.note('diesel', `wartet (Audio: ${ctx.state})`);
+    if (ctx.state === 'running') go();
+    else ctx.resume().then(go, (e) => this.note('diesel', `Audio-Start fehlgeschlagen: ${e}`));
+    return () => {
+      cancelled = true;
+      stop?.();
+    };
+  }
+
+  /** What the boot sounds did last time, for the ?ton diagnostics line. */
+  readonly debug: Record<string, string> = {};
+  private note(key: string, value: string) {
+    this.debug[key] = value;
+    return () => {};
+  }
+  get debugState() {
+    return this.ctx ? `${this.ctx.state}, ${this.ctx.sampleRate} Hz, t=${this.ctx.currentTime.toFixed(1)}` : 'nicht gestartet';
+  }
+
+  private engine(duration: number): () => void {
+    const ctx = this.ctx!;
+    if (!this.sfxBus || !this.noise) return () => {};
     const t0 = ctx.currentTime + 0.05;
     const end = t0 + duration;
     // Sub-bass is wasted on phone speakers; cut it and lift the rest so the
