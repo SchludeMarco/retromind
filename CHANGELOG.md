@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Suchfeld im Konsolen-Regal:** Oben im Regal filtert ein
+  Suchfeld die Konsolen schon beim Tippen, auch mit Spitznamen wie „PS2“,
+  „N64“, „GBA“ oder „Genesis“. Es bleibt beim Scrollen sichtbar; Enter wählt
+  die Konsole, wenn nur noch eine übrig ist.
+
 - **Gaming-Edition: Konsolen-Regal statt Wischleiste:** Ein Knopf „Konsole
   wählen“ öffnet ein Regal mit Fotos aller 36 Systeme (Wikimedia Commons),
   nach Hersteller sortiert: Nintendo, Sega, Sony, Microsoft, Heimcomputer &
