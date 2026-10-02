@@ -71,6 +71,7 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
     return (
       <div className="screen-full crt-on" onClick={() => setStage('title')}>
         <div className="logo-drop">
+          <img className="boot-motif" src="/gaming/motif.webp" alt="" />
           <p className="pixel-font rgb-split title-logo" style={{ fontSize: 'clamp(22px, 5vw, 48px)' }}>
             RETROMIND
           </p>
@@ -84,8 +85,9 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
 
   return (
     <div className="screen-full" style={{ background: 'transparent' }} onClick={start}>
-      <h1 className="pixel-font rgb-split title-logo">RETROMIND</h1>
-      <p className="pixel-font title-sub glow">– GAMING –</p>
+      <h1 className="title-logo title-art">
+        <img src="/gaming/logo.webp" alt="RetroMind – Gaming" />
+      </h1>
       <button className="pixel-font title-press blink" autoFocus>
         PRESS START
       </button>

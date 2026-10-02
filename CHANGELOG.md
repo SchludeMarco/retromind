@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Gaming-Edition: neues 8-Bit-Logo:** Marcos Logo („RETROMIND /GAMING“ mit
+  Glühbirne, Gehirn und Joystick) steht auf dem Titelbildschirm; das Motiv
+  ohne Schrift erscheint beim Einschalten, oben in der Kopfzeile sowie als
+  App-Icon und Favicon.
+
 - **Gaming-Edition: Power-Knopf zeigt das Symbol überall:** Statt des
   Zeichens ⏻, das viele Handy-Schriften nicht kennen (Kasten mit X), ist das
   Power-Symbol jetzt gezeichnet.
