@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **Neue Edition „RetroMind – Gaming“ (`/gaming/`):** Eigene Seite im selben
+  Repo, die vergessene und unterschätzte Videospiele von den 1980ern bis heute wiederentdecken lässt.
+  Kuratierter Katalog mit 38 Spielen von 1987 bis 2023 als Modul-Regal (Filter nach Jahrzehnt
+  und Plattform), „Insert Coin“-Zufallsfund, Suche nach beliebigen Spielen
+  über Wikipedia, Detailansicht mit Wikipedia-Text (bevorzugt deutsch),
+  Screenshots aus Wikimedia, kuratierten Tipps, einem KI-Guide mit
+  Google-Websuche samt Quellen (neue Action `gameGuide` in `api/gemini.js`)
+  und Links zu Longplays, GameFAQs, MobyGames, Internet Archive. Dazu ein
+  „Retro-Guru“-Chat (Persona `gaming` in der bestehenden `chat`-Action).
+  Atmosphäre: Einschaltknopf, CRT-Aufwärmen, Logo-Scroll mit Chime, „Press
+  Start“, selbst synthetisierte Chiptune-Musik und 8-Bit-Soundeffekte (Web
+  Audio, keine Assets), Scanlines, Sternenhimmel, drei Bildschirm-Paletten
+  (Arcade, Handheld-Grün, Bernstein), Score/Hi-Score, Erfolge, Sammlung,
+  Konami-Code, Steuerung per Pfeiltasten und Gamepad. Alles lokal im
+  Browser gespeichert (`retromind.gaming.v1`).
+
 - **Spotify-Login (Authorization Code + PKCE):** „Mit Spotify anmelden“ neben
   dem bestehenden Google-Login – komplett clientseitig, kein eigener
   Auth-Server, kein Client-Secret. Holt nur Name und Premium-/Free-Status ab

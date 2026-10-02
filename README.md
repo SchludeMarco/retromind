@@ -65,6 +65,17 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   hier nicht zugestellt werden kann.
 - **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
 
+## Edition „RetroMind – Gaming“ (`/gaming/`)
+
+Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
+Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)), Suche
+nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
+kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
+(`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
+Longplays, GameFAQs, MobyGames und Internet Archive. Dazu Konsolen-Einschalten,
+CRT-Effekte, synthetisierte Chiptune-Musik, Erfolge, Sammlung, Konami-Code
+und Gamepad-Steuerung. Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
+
 ## Architektur
 
 ```

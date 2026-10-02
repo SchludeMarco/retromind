@@ -14,6 +14,18 @@ const CHAT_SYSTEM =
   "Du bist ein warmherziger, nostalgischer Begleiter auf einer Erinnerungsreise. " +
   "Antworte kurz (2-4 Sätze), einfühlsam und im Du. Stelle gern eine sanfte Rückfrage.";
 
+// Persona for "RetroMind – Gaming": a game-shop clerk who has seen it all, from
+// 80s cartridges to today's overlooked gems.
+const GAMING_CHAT_SYSTEM =
+  "Du bist der Retro-Guru, ein begeisterter Videospiel-Experte aus der Zeit von " +
+  "Modulen, Disketten und Spielezeitschriften, der aber auch die Gegenwart kennt. Du hilfst, " +
+  "vergessene und unterschätzte Spiele von den 1980ern bis heute wiederzuentdecken: Empfehlungen, Tipps, Cheats, Geschichte und wie man sie heute legal " +
+  "spielen kann (Neuauflagen, Sammlungen, offizielle Stores). Antworte im Du, kurz (2-5 Sätze), " +
+  "mit nostalgischem Augenzwinkern. Erfinde keine Fakten; sag ehrlich, wenn du dir unsicher bist. " +
+  "Verlinke oder empfiehl keine illegalen ROM-Downloads.";
+
+const clip = (v, n) => String(v ?? "").slice(0, n);
+
 function getAI() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
@@ -122,9 +134,44 @@ export default async function handler(req, res) {
         const r = await ai.models.generateContent({
           model: MODELS.chat,
           contents,
-          config: { systemInstruction: CHAT_SYSTEM },
+          config: {
+            systemInstruction: payload.persona === "gaming" ? GAMING_CHAT_SYSTEM : CHAT_SYSTEM,
+          },
         });
         return res.status(200).json({ text: r.text || "" });
+      }
+
+      case "gameGuide": {
+        const title = clip(payload.title, 120);
+        if (!title) return res.status(400).json({ error: "no_title" });
+        const platform = clip(payload.platform, 40);
+        const year = clip(payload.year, 4);
+        // Grounded in Google Search so tips come from real guides and fan pages
+        // rather than the model's memory; sources are passed back for display.
+        const r = await ai.models.generateContent({
+          model: MODELS.chat,
+          contents:
+            `Erstelle einen kompakten deutschsprachigen Spieleguide zu "${title}" ` +
+            `(${platform || "Plattform unbekannt"}, ${year || "Jahr unbekannt"}). ` +
+            `Gliedere exakt in diese Abschnitte mit Markdown-Überschriften (##):\n` +
+            `## Worum geht's\n## Einstiegstipps\n## Geheimnisse & Cheats\n## Heute spielen\n` +
+            `Nutze kurze Stichpunkte (- ). Unter "Heute spielen" nur legale Wege nennen ` +
+            `(Neuauflagen, Sammlungen, offizielle Stores, Originalhardware). ` +
+            `Erfinde nichts; wenn du etwas nicht sicher weißt, lass es weg.`,
+          config: { tools: [{ googleSearch: {} }] },
+        });
+        const meta = r.candidates?.[0]?.groundingMetadata;
+        const seen = new Set();
+        const sources = (meta?.groundingChunks || [])
+          .map((c) => c.web)
+          .filter((w) => w?.uri && !seen.has(w.uri) && seen.add(w.uri))
+          .slice(0, 8)
+          .map((w) => ({ uri: w.uri, title: w.title || w.uri }));
+        return res.status(200).json({
+          text: r.text || "",
+          sources,
+          searchWidget: meta?.searchEntryPoint?.renderedContent,
+        });
       }
 
       case "veoStart": {
