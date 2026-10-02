@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Suche zeigt zuerst Spiele mit dem Begriff im Titel:**
+  „Metroid“ liefert jetzt die 19 Metroid-Spiele statt Spielen, die Metroid
+  nur im Artikel erwähnen. Diese lassen sich danach mit „Verwandte Spiele
+  zeigen“ nachladen und sind als solche gekennzeichnet.
+
 - **Gaming-Edition: Suche findet alle Spiele einer Reihe:** Die Suche liefert
   statt 8 gemischter Artikel jetzt alle Wikipedia-Artikel mit Spiele-Infobox
   (z. B. 287 Treffer zu „Metroid“, die Hauptspiele zuerst), 48 pro Seite mit

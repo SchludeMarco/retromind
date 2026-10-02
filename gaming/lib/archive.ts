@@ -64,13 +64,24 @@ export function fetchArchive(q: ArchiveQuery, offset = 0): Promise<ArchivePage> 
   return cached(`${q.platform}|${q.decade?.from}|${offset}`, () => load(searchFor(q), offset, q));
 }
 
-/** Every game whose article matches the words, e.g. all of "Metroid". */
-export function searchArchive(query: string, offset = 0): Promise<ArchivePage> {
-  const words = query.replace(/["\\]/g, ' ').trim();
-  if (!words) return Promise.resolve(EMPTY);
-  return cached(`search|${words.toLowerCase()}|${offset}`, () =>
-    load(`${words} hastemplate:"Infobox video game"`, offset, { platform: null, decade: null }, 'Fundstück')
-  );
+/**
+ * Games with the words in their title, e.g. every "Metroid" game. With
+ * `related`, the games whose article only mentions the words instead
+ * (Metroid-likes, spin-offs, games citing it as an influence).
+ */
+export function searchArchive(query: string, offset = 0, related = false): Promise<ArchivePage> {
+  const words = query.replace(/["\\:]/g, ' ').trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return Promise.resolve(EMPTY);
+  const infobox = 'hastemplate:"Infobox video game"';
+  const search = related
+    ? `${words.join(' ')} ${infobox} -intitle:"${words.join(' ')}"`
+    : `${words.map((w) => `intitle:${w}`).join(' ')} ${infobox}`;
+  return cached(`search|${related}|${words.join(' ').toLowerCase()}|${offset}`, async () => {
+    const page = await load(search, offset, { platform: null, decade: null }, 'Fundstück');
+    if (!related) return page;
+    const note = `Erwähnt „${words.join(' ')}“, etwa als Vorbild oder Ableger.`;
+    return { ...page, games: page.games.map((g) => ({ ...g, blurb: `${note} ${g.blurb?.startsWith('Auch für') ? g.blurb.split('.')[0] + '.' : ''}`.trim() })) };
+  });
 }
 
 const EMPTY: ArchivePage = { games: [], total: 0, nextOffset: null };
