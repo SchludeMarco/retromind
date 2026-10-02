@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: echter Dieselmotor beim Einschalten:** Statt des
+  synthetischen Motors läuft jetzt eine echte, lizenzfreie Aufnahme
+  (Anlasser, Anspringen, Hochdrehen; von Marco ausgesucht), auf die
+  Logo-Fahrt zugeschnitten und vor dem „Bling“ ausgeblendet
+  (`public/gaming/diesel-start.mp3`, 34 KB).
+
 - **Gaming-Edition: Diesel startet erst, wenn der Ton wirklich läuft, plus
   Ton-Diagnose:** Der Motor wird erst eingeplant, wenn das Audio des Geräts
   bereit ist. Mit `?ton` an der Adresse zeigt der Startbildschirm unten an,

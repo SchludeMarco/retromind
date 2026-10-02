@@ -28,6 +28,9 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
   const [stage, setStage] = useState<Stage>('off');
   const started = useRef(false);
 
+  // Fetch the engine sample while the power switch waits for a tap.
+  useEffect(() => chip.prefetchDiesel(), []);
+
   useEffect(() => {
     if (stage !== 'boot') return;
     // A diesel engine cranks and idles while the logo drops; the chime lands
