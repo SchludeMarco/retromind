@@ -47,8 +47,9 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   im **eigenen Google Drive** der Nutzer:in (privater `appDataFolder`, nur für
   RetroMind, für niemand sonst sichtbar). Kein zentraler Server-Speicher: jede
   Person hat ihre eigenen Erinnerungen in ihrem eigenen Konto (**dezentral**) und
-  kann so auf einem anderen Gerät weitermachen. Ohne konfigurierte Google-Client-ID
-  bleibt die App unverändert rein lokal nutzbar.
+  kann so auf einem anderen Gerät weitermachen. Die Start-Abfrage von Name und
+  Geburtsdatum geht immer auch ohne Google; die Angaben bleiben dann nur auf
+  dem Gerät.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Läuft unabhängig vom bestehenden

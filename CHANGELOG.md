@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Zeitreise: Google-Login nicht mehr Pflicht:** Name und Geburtsdatum lassen
+  sich zum Start direkt eingeben und bleiben auf dem Gerät. „Mit Google
+  anmelden“ ist darunter ein optionales Angebot, um die Reise zusätzlich im
+  eigenen Google Drive zu sichern und auf anderen Geräten weiterzumachen.
+
 - **Gaming-Edition: Suchfeld im Konsolen-Regal:** Oben im Regal filtert ein
   Suchfeld die Konsolen schon beim Tippen, auch mit Spitznamen wie „PS2“,
   „N64“, „GBA“ oder „Genesis“. Es bleibt beim Scrollen sichtbar; Enter wählt
