@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Diesel startet erst, wenn der Ton wirklich läuft, plus
+  Ton-Diagnose:** Der Motor wird erst eingeplant, wenn das Audio des Geräts
+  bereit ist. Mit `?ton` an der Adresse zeigt der Startbildschirm unten an,
+  was Audio, Diesel und Bling auf dem Gerät tatsächlich gemacht haben.
+
 - **Gaming-Edition: Diesel auch am Handy hörbar:** Der Motor lag fast nur im
   Tiefbass, den Handylautsprecher nicht wiedergeben. Jetzt klackert und
   brummt er im hörbaren Bereich und ist deutlich lauter.
