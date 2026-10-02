@@ -373,6 +373,28 @@ a {
 }
 
 /* --- Console picker: shelves by maker --- */
+/* Title and search stay on top while the shelves scroll underneath. */
+.console-head {
+  position: sticky;
+  top: -20px;
+  z-index: 2;
+  background: var(--bg);
+  margin: -20px -20px 0;
+  padding: 20px 20px 10px;
+  border-bottom: 3px solid var(--bg2);
+}
+.console-head .close-x {
+  top: 10px;
+}
+.search.console-search {
+  margin-top: 10px;
+}
+.console-search input {
+  font-size: 20px;
+}
+.console-none {
+  margin-top: 18px;
+}
 .console-picker h3 {
   font-size: 10px;
   color: var(--a1);
