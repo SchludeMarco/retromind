@@ -5,21 +5,16 @@ import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { useControls } from './lib/useControls';
-import { Achievement, ACHIEVEMENTS, Palette, scoreOf, useArcadeState } from './lib/useArcadeState';
+import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { PowerOn } from './components/PowerOn';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
-import { CloudSave } from './components/CloudSave';
+import { Settings, PALETTES } from './components/Settings';
 import { useCloudSync } from './lib/useCloudSync';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
-const PALETTES: { id: Palette; label: string }[] = [
-  { id: 'arcade', label: 'ARCADE' },
-  { id: 'gameboy', label: 'HANDHELD' },
-  { id: 'amber', label: 'BERNSTEIN' },
-];
 
 const pad = (n: number, len = 6) => String(n).padStart(len, '0');
 
@@ -70,7 +65,7 @@ export const GamingApp: React.FC = () => {
   );
   const { state, discover, toggleIn, unlock, set, mergeIn } = useArcadeState(onAchievement);
   const cloud = useCloudSync(state, mergeIn);
-  const [cloudOpen, setCloudOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const [view, setView] = useState<View>('catalog');
   const [decade, setDecade] = useState<string | null>(null);
@@ -350,6 +345,26 @@ export const GamingApp: React.FC = () => {
               RETROMIND
               <small>GAMING</small>
             </h1>
+            <button
+              className="px-btn settings-btn"
+              onClick={() => {
+                chip.play('select');
+                setSettingsOpen(true);
+              }}
+              data-nav
+              aria-label={cloud.status === 'signed_in' ? `Einstellungen, angemeldet als ${cloud.user?.name ?? ''}` : 'Einstellungen und Anmeldung'}
+              title="Einstellungen"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M7 1h2v2h1V2h2v2h-1v1h2v2h1v2h-1v2h-2v1h1v2h-2v-1H9v2H7v-2H6v1H4v-2h1v-1H3V9H2V7h1V5h2V4H4V2h2v1h1zM6 6v4h4V6z" />
+              </svg>
+              {cloud.status === 'signed_in' && <span className={`settings-dot${cloud.sync === 'error' ? ' warn' : ''}`} />}
+            </button>
+            {cloud.status === 'signed_in' && cloud.user?.name && (
+              <div>
+                <span className="label">SPIELER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
+              </div>
+            )}
             <div>
               <span className="label">1UP</span> <span className="value">{pad(score)}</span>
             </div>
@@ -420,20 +435,6 @@ export const GamingApp: React.FC = () => {
             >
               SFX {state.sfx ? 'AN' : 'AUS'}
             </button>
-            {cloud.status !== 'not_configured' && (
-              <button
-                className="px-btn"
-                aria-pressed={cloud.status === 'signed_in'}
-                onClick={() => {
-                  chip.play('select');
-                  setCloudOpen(true);
-                }}
-                data-nav
-                aria-label="Cloud-Sicherung"
-              >
-                ☁ {cloud.status === 'signed_in' ? (cloud.sync === 'error' ? '⚠' : '✓') : 'CLOUD'}
-              </button>
-            )}
             {installPrompt && (
               <button className="px-btn" onClick={install} data-nav>
                 ⬇ ALS APP
@@ -571,7 +572,7 @@ export const GamingApp: React.FC = () => {
         </main>
       )}
 
-      {cloudOpen && <CloudSave cloud={cloud} onClose={() => setCloudOpen(false)} />}
+      {settingsOpen && <Settings cloud={cloud} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
 
       {screen === 'hub' && (
         <>

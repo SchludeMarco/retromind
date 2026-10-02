@@ -83,10 +83,11 @@ CRT-Effekte, synthetisierte Chiptune-Musik, Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Lässt sich als eigenständige App installieren
 (Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
 verlinkt auf der Startseite und in den Einstellungen dorthin.
-Das Profil (Sammlung, Erfolge, Highscore) liegt im `localStorage`; „☁ Cloud“
-sichert es optional nach Google-Login zusätzlich als `retromind-gaming.json`
-im privaten Drive-`appDataFolder` und führt die Stände mehrerer Geräte
-zusammen ([`gaming/lib/useCloudSync.ts`](gaming/lib/useCloudSync.ts)).
+Das Profil (Sammlung, Erfolge, Highscore, Vorlieben) liegt im `localStorage`;
+über das Zahnrad oben rechts (Einstellungen) sichert es ein optionaler
+Google-Login zusätzlich als `retromind-gaming.json` im privaten
+Drive-`appDataFolder`, führt die Stände mehrerer Geräte zusammen und übernimmt
+beim Anmelden die Vorlieben des Kontos ([`gaming/lib/useCloudSync.ts`](gaming/lib/useCloudSync.ts)).
 Eigene Adresse: das Vercel-Projekt `retromind-gaming` baut dasselbe Repo mit
 `RETROMIND_EDITION=gaming`, wodurch `scripts/edition.mjs` die Gaming-Seite
 unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`, für die
