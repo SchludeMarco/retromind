@@ -3,7 +3,7 @@ import { chip } from '../lib/chiptune';
 
 // Stage 1: the console is off; the user flips the power switch (this gesture
 // is also what lets the browser play sound). Stage 2: the CRT warms up, the
-// logo scrolls down and chimes. Stage 3: the title screen waits for START.
+// logo scrolls down to a starting diesel engine and chimes. Stage 3: the title screen waits for START.
 
 type Stage = 'off' | 'boot' | 'title';
 
@@ -13,12 +13,15 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
 
   useEffect(() => {
     if (stage !== 'boot') return;
-    // The chime lands as the logo settles (crt-on 0.9s + logo-drop 2.4s).
+    // A diesel engine cranks and idles while the logo drops; the chime lands
+    // as the logo settles (crt-on 0.9s + logo-drop 2.4s).
+    const stopEngine = reducedMotion ? () => {} : chip.diesel(3.2);
     const chime = setTimeout(() => chip.chime(), reducedMotion ? 100 : 3300);
     const next = setTimeout(() => setStage('title'), reducedMotion ? 900 : 5200);
     return () => {
       clearTimeout(chime);
       clearTimeout(next);
+      stopEngine();
     };
   }, [stage, reducedMotion]);
 

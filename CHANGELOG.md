@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Dieselmotor beim Einschalten:** Während das Logo nach
+  unten fährt, orgelt ein Anlasser, der Diesel springt an und tuckert im
+  Leerlauf, bis das „Bling“ ertönt (per Web Audio synthetisiert).
+
 - **Zeitreise: RetroMind-Logo auf der Startseite:** Marcos 8-Bit-Logo steht
   jetzt über der Begrüßung.
 
