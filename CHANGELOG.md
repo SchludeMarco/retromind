@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: optionale Cloud-Sicherung:** Der neue Knopf „☁ Cloud“
+  sichert das Profil (Sammlung, Erfolge, Highscore) nach einem Google-Login
+  zusätzlich im eigenen Google Drive, nach demselben Prinzip wie die
+  Zeitreise. Ohne Login bleibt alles lokal. Auf einem zweiten Gerät werden
+  beide Stände zusammengeführt.
+
 - **Zeitreise: Google-Login nicht mehr Pflicht:** Name und Geburtsdatum lassen
   sich zum Start direkt eingeben und bleiben auf dem Gerät. „Mit Google
   anmelden“ ist darunter ein optionales Angebot, um die Reise zusätzlich im

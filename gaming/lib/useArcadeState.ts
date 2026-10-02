@@ -42,6 +42,24 @@ function load(): ArcadeState {
   }
 }
 
+const union = (a: string[] = [], b: string[] = []) => Array.from(new Set([...a, ...b]));
+
+/**
+ * Combines this device's profile with one from the cloud: nothing collected
+ * on either side is lost. Look and sound settings stay this device's own.
+ */
+export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): ArcadeState {
+  return {
+    ...local,
+    favorites: union(local.favorites, remote.favorites),
+    completed: union(local.completed, remote.completed),
+    discovered: union(local.discovered, remote.discovered),
+    achievements: union(local.achievements, remote.achievements),
+    customGames: { ...(remote.customGames ?? {}), ...local.customGames },
+    hiScore: Math.max(local.hiScore, remote.hiScore ?? 0),
+  };
+}
+
 export interface Achievement {
   id: string;
   title: string;
@@ -118,5 +136,9 @@ export function useArcadeState(onAchievement: (a: Achievement) => void) {
     setState((s) => ({ ...s, [key]: value }));
   }, []);
 
-  return { state, discover, toggleIn, unlock, set };
+  const mergeIn = useCallback((remote: Partial<ArcadeState>) => {
+    setState((s) => mergeStates(s, remote));
+  }, []);
+
+  return { state, discover, toggleIn, unlock, set, mergeIn };
 }

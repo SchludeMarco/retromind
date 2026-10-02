@@ -10,6 +10,8 @@ import { PowerOn } from './components/PowerOn';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
+import { CloudSave } from './components/CloudSave';
+import { useCloudSync } from './lib/useCloudSync';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
@@ -66,7 +68,9 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set } = useArcadeState(onAchievement);
+  const { state, discover, toggleIn, unlock, set, mergeIn } = useArcadeState(onAchievement);
+  const cloud = useCloudSync(state, mergeIn);
+  const [cloudOpen, setCloudOpen] = useState(false);
 
   const [view, setView] = useState<View>('catalog');
   const [decade, setDecade] = useState<string | null>(null);
@@ -415,6 +419,20 @@ export const GamingApp: React.FC = () => {
             >
               SFX {state.sfx ? 'AN' : 'AUS'}
             </button>
+            {cloud.status !== 'not_configured' && (
+              <button
+                className="px-btn"
+                aria-pressed={cloud.status === 'signed_in'}
+                onClick={() => {
+                  chip.play('select');
+                  setCloudOpen(true);
+                }}
+                data-nav
+                aria-label="Cloud-Sicherung"
+              >
+                ☁ {cloud.status === 'signed_in' ? (cloud.sync === 'error' ? '⚠' : '✓') : 'CLOUD'}
+              </button>
+            )}
             {installPrompt && (
               <button className="px-btn" onClick={install} data-nav>
                 ⬇ ALS APP
@@ -551,6 +569,8 @@ export const GamingApp: React.FC = () => {
           </footer>
         </main>
       )}
+
+      {cloudOpen && <CloudSave cloud={cloud} onClose={() => setCloudOpen(false)} />}
 
       {screen === 'hub' && (
         <>
