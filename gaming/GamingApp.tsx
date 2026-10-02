@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DECADES, Game, GAMES, PLATFORM_COLORS, TICKER_FACTS } from './data/games';
-import { PLATFORMS } from './data/platforms';
+import { KIND_ICON, PLATFORMS, platformInfo } from './data/platforms';
 import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
@@ -9,6 +9,7 @@ import { Achievement, ACHIEVEMENTS, Palette, scoreOf, useArcadeState } from './l
 import { PowerOn } from './components/PowerOn';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
+import { ConsolePicker } from './components/ConsolePicker';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
@@ -85,6 +86,7 @@ export const GamingApp: React.FC = () => {
   }>({ term: '', total: 0, next: null, loading: false, related: false, label: '' });
   const [selected, setSelected] = useState<Game | null>(null);
   const [guruOpen, setGuruOpen] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
   const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
@@ -150,6 +152,7 @@ export const GamingApp: React.FC = () => {
     onMove: () => chip.play('blip'),
     onBack: () => {
       if (selected) closeDetail();
+      else if (pickerOpen) setPickerOpen(false);
       else if (guruOpen) setGuruOpen(false);
     },
     onKonami: () => {
@@ -440,18 +443,28 @@ export const GamingApp: React.FC = () => {
                 </button>
               ))}
             </div>
-            <div className="filters platforms" aria-label="Plattform">
-              {platforms.map((p) => (
+            <div className="filters" aria-label="Konsole">
+              <button
+                className="px-btn big console-button"
+                aria-pressed={platform !== null}
+                aria-haspopup="dialog"
+                onClick={() => { setPickerOpen(true); chip.play('select'); }}
+                data-nav
+              >
+                {platform
+                  ? `${KIND_ICON[platformInfo(platform)?.kind ?? 'console']} KONSOLE: ${platform.toUpperCase()} ▾`
+                  : '🎮 KONSOLE WÄHLEN ▾'}
+              </button>
+              {platform && (
                 <button
-                  key={p}
                   className="px-btn"
-                  aria-pressed={platform === p}
-                  onClick={() => { setPlatform(platform === p ? null : p); chip.play('blip'); }}
+                  onClick={() => { setPlatform(null); chip.play('back'); }}
+                  aria-label="Konsolen-Filter entfernen"
                   data-nav
                 >
-                  {p.toUpperCase()}
+                  ✕
                 </button>
-              ))}
+              )}
             </div>
             </>
           )}
@@ -553,6 +566,22 @@ export const GamingApp: React.FC = () => {
           </button>
           {guruOpen && <GuruChat onClose={() => setGuruOpen(false)} />}
         </>
+      )}
+
+      {pickerOpen && (
+        <ConsolePicker
+          current={platform}
+          extras={platforms.filter((p) => !platformInfo(p))}
+          onPick={(p) => {
+            setPlatform(p);
+            setPickerOpen(false);
+            chip.play(p ? 'coin' : 'blip');
+          }}
+          onClose={() => {
+            setPickerOpen(false);
+            chip.play('back');
+          }}
+        />
       )}
 
       {selected && (
