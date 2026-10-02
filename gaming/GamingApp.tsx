@@ -73,12 +73,16 @@ export const GamingApp: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Game[] | null>(null);
   const [searching, setSearching] = useState(false);
-  const [searchMore, setSearchMore] = useState<{ term: string; total: number; next: number | null; loading: boolean }>({
-    term: '',
-    total: 0,
-    next: null,
-    loading: false,
-  });
+  const [searchMore, setSearchMore] = useState<{
+    term: string;
+    total: number;
+    next: number | null;
+    loading: boolean;
+    /** true once the list has moved on to games that only mention the term. */
+    related: boolean;
+    /** The headline over the results, fixed when the search runs. */
+    label: string;
+  }>({ term: '', total: 0, next: null, loading: false, related: false, label: '' });
   const [selected, setSelected] = useState<Game | null>(null);
   const [guruOpen, setGuruOpen] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
@@ -256,9 +260,15 @@ export const GamingApp: React.FC = () => {
     unlock('digger');
     setView('search');
     setSearching(true);
-    // Every game article matching the words; the plain article search is
-    // only the fallback for names Wikipedia files without a game infobox.
-    const page = await searchArchive(q);
+    // Games with the words in their title first; games that merely mention
+    // them come on request, and the plain article search is only the
+    // fallback for names Wikipedia files without a game infobox.
+    let related = false;
+    let page = await searchArchive(q);
+    if (!page.games.length) {
+      related = true;
+      page = await searchArchive(q, 0, true);
+    }
     let hits = page.games.map(withCurated);
     if (!hits.length) {
       hits = (await searchGames(q)).map((h) =>
@@ -277,21 +287,31 @@ export const GamingApp: React.FC = () => {
     }
     setSearching(false);
     setResults(hits);
-    setSearchMore({ term: q, total: page.total || hits.length, next: page.nextOffset, loading: false });
+    const total = page.total || hits.length;
+    const n = total.toLocaleString('de-DE');
+    const label = !page.games.length
+      ? `${n} Treffer zu „${q}“`
+      : related
+        ? `Kein Spiel heißt so, aber ${n} erwähnen „${q}“`
+        : `${n} ${total === 1 ? 'Spiel' : 'Spiele'} mit „${q}“ im Titel`;
+    setSearchMore({ term: q, total, next: page.nextOffset, loading: false, related, label });
     chip.play(hits.length ? 'powerup' : 'error');
   };
 
   const loadMoreResults = async () => {
-    if (searchMore.next === null || searchMore.loading) return;
+    if ((searchMore.next === null && searchMore.related) || searchMore.loading) return;
     chip.play('coin');
-    const { term, next } = searchMore;
+    const { term } = searchMore;
+    // Past the last title match, continue with the games that mention it.
+    const related = searchMore.related || searchMore.next === null;
+    const next = searchMore.next ?? 0;
     setSearchMore((m) => ({ ...m, loading: true }));
-    const page = await searchArchive(term, next);
+    const page = await searchArchive(term, next, related);
     setResults((r) => {
       const seen = new Set((r ?? []).map((g) => g.wiki));
       return [...(r ?? []), ...page.games.map(withCurated).filter((g) => !seen.has(g.wiki))];
     });
-    setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false }));
+    setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false, related }));
   };
 
   const switchView = (v: View) => {
@@ -468,7 +488,7 @@ export const GamingApp: React.FC = () => {
               )}
               {view === 'search' && searchMore.term && (
                 <p className="dim archive-count">
-                  {searchMore.total.toLocaleString('de-DE')} Spiele zu „{searchMore.term}“
+                  {searchMore.label}
                 </p>
               )}
               <div className="grid" style={{ marginTop: 12 }}>
@@ -482,10 +502,14 @@ export const GamingApp: React.FC = () => {
                   />
                 ))}
               </div>
-              {view === 'search' && searchMore.next !== null && (
+              {view === 'search' && searchMore.term && (searchMore.next !== null || !searchMore.related) && (
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
                   <button className="px-btn big" onClick={loadMoreResults} disabled={searchMore.loading} data-nav>
-                    {searchMore.loading ? 'LADE …' : '▼ MEHR TREFFER LADEN'}
+                    {searchMore.loading
+                      ? 'LADE …'
+                      : searchMore.next !== null
+                        ? '▼ MEHR TREFFER LADEN'
+                        : '▼ VERWANDTE SPIELE ZEIGEN'}
                   </button>
                 </div>
               )}
