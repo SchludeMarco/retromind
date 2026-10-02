@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Diesel auch am Handy hörbar:** Der Motor lag fast nur im
+  Tiefbass, den Handylautsprecher nicht wiedergeben. Jetzt klackert und
+  brummt er im hörbaren Bereich und ist deutlich lauter.
+
 - **Gaming-Edition: Dieselmotor beim Einschalten:** Während das Logo nach
   unten fährt, orgelt ein Anlasser, der Diesel springt an und tuckert im
   Leerlauf, bis das „Bling“ ertönt (per Web Audio synthetisiert).

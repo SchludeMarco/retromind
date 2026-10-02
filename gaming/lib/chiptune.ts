@@ -169,38 +169,50 @@ class ChipSound {
     const ctx = this.ctx;
     const t0 = ctx.currentTime + 0.05;
     const end = t0 + duration;
+    // Sub-bass is wasted on phone speakers; cut it and lift the rest so the
+    // engine is clearly audible under the chime.
     const out = ctx.createGain();
-    out.gain.setValueAtTime(1, t0);
-    out.gain.setValueAtTime(1, end - 0.5);
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 120;
+    out.gain.setValueAtTime(2.6, t0);
+    out.gain.setValueAtTime(2.6, end - 0.5);
     out.gain.linearRampToValueAtTime(0, end);
-    out.connect(this.sfxBus);
+    out.connect(hp).connect(this.sfxBus);
 
-    // One combustion stroke: a low thump plus a dark burst of noise.
+    // One combustion stroke. Phone speakers barely reproduce anything under
+    // ~200 Hz, so the knock lives in the mids: a buzzy square body plus the
+    // metallic injector clatter that makes a diesel sound like a diesel.
     const stroke = (t: number, gain: number, pitch: number) => {
       const osc = ctx.createOscillator();
       const env = ctx.createGain();
+      const lp = ctx.createBiquadFilter();
       osc.type = 'square';
       osc.frequency.setValueAtTime(pitch, t);
-      osc.frequency.exponentialRampToValueAtTime(pitch * 0.6, t + 0.08);
-      env.gain.setValueAtTime(gain, t);
-      env.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-      const lp = ctx.createBiquadFilter();
+      osc.frequency.exponentialRampToValueAtTime(pitch * 0.7, t + 0.07);
       lp.type = 'lowpass';
-      lp.frequency.value = 420;
+      lp.frequency.value = 1800;
+      env.gain.setValueAtTime(gain * 0.5, t);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
       osc.connect(lp).connect(env).connect(out);
       osc.start(t);
-      osc.stop(t + 0.1);
-      const src = ctx.createBufferSource();
-      src.buffer = this.noise;
-      const nf = ctx.createBiquadFilter();
-      nf.type = 'lowpass';
-      nf.frequency.value = 700;
-      const nenv = ctx.createGain();
-      nenv.gain.setValueAtTime(gain * 0.9, t);
-      nenv.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
-      src.connect(nf).connect(nenv).connect(out);
-      src.start(t, Math.random() * 0.2);
-      src.stop(t + 0.07);
+      osc.stop(t + 0.09);
+      const burst = (freq: number, q: number, level: number, len: number) => {
+        const src = ctx.createBufferSource();
+        src.buffer = this.noise;
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = freq;
+        bp.Q.value = q;
+        const nenv = ctx.createGain();
+        nenv.gain.setValueAtTime(level, t);
+        nenv.gain.exponentialRampToValueAtTime(0.001, t + len);
+        src.connect(bp).connect(nenv).connect(out);
+        src.start(t, Math.random() * 0.2);
+        src.stop(t + len + 0.01);
+      };
+      burst(1700 + Math.random() * 400, 1.4, gain * 2.2, 0.035); // clatter
+      burst(450, 0.8, gain * 1.4, 0.06); // thud
     };
 
     // Starter motor: a whining, wobbling saw under the first strokes.
@@ -211,16 +223,16 @@ class ChipSound {
     const starterEnv = ctx.createGain();
     const starterLp = ctx.createBiquadFilter();
     starter.type = 'sawtooth';
-    starter.frequency.setValueAtTime(70, t0);
-    starter.frequency.linearRampToValueAtTime(110, crankEnd);
+    starter.frequency.setValueAtTime(150, t0);
+    starter.frequency.linearRampToValueAtTime(230, crankEnd);
     wobble.frequency.value = 5;
-    wobbleDepth.gain.value = 18;
+    wobbleDepth.gain.value = 35;
     wobble.connect(wobbleDepth).connect(starter.frequency);
     starterLp.type = 'lowpass';
-    starterLp.frequency.value = 900;
+    starterLp.frequency.value = 2200;
     starterEnv.gain.setValueAtTime(0, t0);
-    starterEnv.gain.linearRampToValueAtTime(0.08, t0 + 0.05);
-    starterEnv.gain.setValueAtTime(0.08, crankEnd - 0.1);
+    starterEnv.gain.linearRampToValueAtTime(0.14, t0 + 0.05);
+    starterEnv.gain.setValueAtTime(0.14, crankEnd - 0.1);
     starterEnv.gain.linearRampToValueAtTime(0, crankEnd + 0.05);
     starter.connect(starterLp).connect(starterEnv).connect(out);
     starter.start(t0);
@@ -231,17 +243,17 @@ class ChipSound {
     // Cranking: slow, uneven, weak strokes.
     let t = t0 + 0.05;
     while (t < crankEnd) {
-      stroke(t, 0.18, 60);
+      stroke(t, 0.22, 110);
       t += 0.19 + Math.random() * 0.03;
     }
     // It catches: one big bang, then the revs flare and settle to idle.
-    stroke(crankEnd, 0.6, 75);
+    stroke(crankEnd, 0.6, 140);
     t = crankEnd + 0.07;
     while (t < end) {
       const since = t - crankEnd;
       const rate = since < 0.5 ? 9 + since * 18 : 12 - Math.min(1, (since - 0.5) / 0.6) * 2.5;
       const odd = Math.random() < 0.5 ? 1 : 0.75; // diesel knock is never quite even
-      stroke(t, (since < 0.5 ? 0.45 : 0.32) * odd, 50 + Math.random() * 8);
+      stroke(t, (since < 0.5 ? 0.45 : 0.34) * odd, 95 + Math.random() * 15);
       t += (1 / rate) * (0.93 + Math.random() * 0.14);
     }
 
@@ -250,7 +262,7 @@ class ChipSound {
       out.gain.cancelScheduledValues(now);
       out.gain.setValueAtTime(out.gain.value, now);
       out.gain.linearRampToValueAtTime(0, now + 0.05);
-      setTimeout(() => out.disconnect(), 100);
+      setTimeout(() => hp.disconnect(), 100);
     };
   }
 
