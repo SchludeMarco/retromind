@@ -2,10 +2,12 @@
 // straight from Wikipedia's category tree ("Game Boy games", "1991 video
 // games", …). CirrusSearch's `incategory:` combines a platform with a whole
 // decade in one query (`A|B` means either category), and the year comes back
-// from the article's own "<year> video games" category.
+// from the article's own "<year> video games" category. Free-text search uses
+// the same machinery, limited to articles with a video game infobox so
+// franchise and character pages stay out.
 
 import { Game } from '../data/games';
-import { platformInfo } from '../data/platforms';
+import { PLATFORMS, platformInfo } from '../data/platforms';
 
 const API = 'https://en.wikipedia.org/w/api.php';
 export const ARCHIVE_PAGE = 48;
@@ -47,10 +49,9 @@ function searchFor(q: ArchiveQuery): string {
 
 const cache = new Map<string, Promise<ArchivePage>>();
 
-export function fetchArchive(q: ArchiveQuery, offset = 0): Promise<ArchivePage> {
-  const key = `${q.platform}|${q.decade?.from}|${offset}`;
+function cached(key: string, run: () => Promise<ArchivePage>): Promise<ArchivePage> {
   if (!cache.has(key)) {
-    const p = load(q, offset);
+    const p = run();
     cache.set(key, p);
     // A failed page should be retried next time, not remembered.
     p.then((r) => r.total === 0 && cache.delete(key));
@@ -58,61 +59,103 @@ export function fetchArchive(q: ArchiveQuery, offset = 0): Promise<ArchivePage> 
   return cache.get(key)!;
 }
 
-async function load(q: ArchiveQuery, offset: number): Promise<ArchivePage> {
-  const empty = { games: [], total: 0, nextOffset: null };
-  if (!archiveSupports(q)) return empty;
+export function fetchArchive(q: ArchiveQuery, offset = 0): Promise<ArchivePage> {
+  if (!archiveSupports(q)) return Promise.resolve(EMPTY);
+  return cached(`${q.platform}|${q.decade?.from}|${offset}`, () => load(searchFor(q), offset, q));
+}
+
+/** Every game whose article matches the words, e.g. all of "Metroid". */
+export function searchArchive(query: string, offset = 0): Promise<ArchivePage> {
+  const words = query.replace(/["\\]/g, ' ').trim();
+  if (!words) return Promise.resolve(EMPTY);
+  return cached(`search|${words.toLowerCase()}|${offset}`, () =>
+    load(`${words} hastemplate:"Infobox video game"`, offset, { platform: null, decade: null }, 'Fundstück')
+  );
+}
+
+const EMPTY: ArchivePage = { games: [], total: 0, nextOffset: null };
+
+async function getJson(params: Record<string, string>): Promise<any | null> {
+  const qs = new URLSearchParams({ action: 'query', format: 'json', formatversion: '2', origin: '*', ...params });
+  try {
+    const res = await fetch(`${API}?${qs}`);
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Which systems each page belongs to, earliest system first. */
+async function platformsOf(pageids: number[]): Promise<Map<number, string[]>> {
+  const out = new Map<number, string[]>();
+  if (!pageids.length) return out;
+  const byCategory = new Map(PLATFORMS.map((p) => [`Category:${p.category}`, p]));
+  const data = await getJson({
+    pageids: pageids.join('|'),
+    prop: 'categories',
+    cllimit: 'max',
+    clcategories: Array.from(byCategory.keys()).join('|'),
+  });
+  for (const page of data?.query?.pages ?? []) {
+    const found = (page.categories ?? [])
+      .map((c: any) => byCategory.get(c.title))
+      .filter(Boolean)
+      .sort((a: any, b: any) => a.from - b.from)
+      .map((p: any) => p.id);
+    out.set(page.pageid, found);
+  }
+  return out;
+}
+
+async function load(search: string, offset: number, q: ArchiveQuery, fallbackLabel = 'Archiv'): Promise<ArchivePage> {
   // The year categories we ask about: just the decade, or every year.
-  const years = q.decade ? yearCats(q.decade.from, q.decade.to) : yearCats(1970, LAST_YEAR);
-  const params = new URLSearchParams({
-    action: 'query',
-    format: 'json',
-    formatversion: '2',
-    origin: '*',
+  const years = q.decade ? yearCats(q.decade.from, q.decade.to) : yearCats(FIRST_YEAR, LAST_YEAR);
+  const data = await getJson({
     generator: 'search',
-    gsrsearch: searchFor(q),
+    gsrsearch: search,
     gsrnamespace: '0',
     gsrlimit: String(ARCHIVE_PAGE),
     gsroffset: String(offset),
     gsrinfo: 'totalhits',
     prop: 'categories',
     cllimit: 'max',
-    // clcategories takes at most 50 titles; the newest years matter least
-    // when no decade is chosen, since the year is only shown on the label.
+    // clcategories takes at most 50 titles; without a decade the oldest
+    // years are dropped, since the year is only shown on the label.
     clcategories: years
       .slice(-50)
       .map((c) => `Category:${c}`)
       .join('|'),
   });
-  try {
-    const res = await fetch(`${API}?${params}`);
-    if (!res.ok) return empty;
-    const data = await res.json();
-    const pages: any[] = data?.query?.pages ?? [];
-    const total: number = data?.query?.searchinfo?.totalhits ?? pages.length;
-    const next: number | undefined = data?.continue?.gsroffset;
-    const games = pages
-      .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
-      .filter((p) => !/^(List of|Lists of|Index of)\b/.test(p.title))
-      .map((p): Game => {
-        const years = (p.categories ?? [])
-          .map((c: any) => Number(/(\d{4}) video games$/.exec(c.title)?.[1]))
-          .filter((y: number) => y > 0);
-        const inDecade = q.decade ? years.filter((y: number) => y >= q.decade!.from && y <= q.decade!.to) : years;
-        const year = inDecade.length ? Math.min(...inDecade) : years.length ? Math.min(...years) : 0;
-        return {
-          id: `wiki:${p.title}`,
-          title: String(p.title).replace(/ \((\d{4} )?video game\)$/i, ''),
-          year,
-          platform: q.platform ?? 'Archiv',
-          developer: '',
-          genre: 'aus dem Archiv',
-          wiki: p.title,
-          blurb: 'Aus dem Archiv: öffnen für Infos, Screenshots und Guide.',
-          custom: true,
-        };
-      });
-    return { games, total, nextOffset: typeof next === 'number' ? next : null };
-  } catch {
-    return empty;
-  }
+  if (!data) return EMPTY;
+  const pages: any[] = (data.query?.pages ?? [])
+    .sort((a: any, b: any) => (a.index ?? 0) - (b.index ?? 0))
+    .filter((p: any) => !/^(List of|Lists of|Index of)\b/.test(p.title));
+  const total: number = data.query?.searchinfo?.totalhits ?? pages.length;
+  const next: number | undefined = data.continue?.gsroffset;
+  // Without a platform filter, look up each game's systems for its label.
+  const systems = q.platform ? null : await platformsOf(pages.map((p) => p.pageid));
+  const games = pages.map((p): Game => {
+    const years = (p.categories ?? [])
+      .map((c: any) => Number(/(\d{4}) video games$/.exec(c.title)?.[1]))
+      .filter((y: number) => y > 0);
+    const inDecade = q.decade ? years.filter((y: number) => y >= q.decade!.from && y <= q.decade!.to) : years;
+    const year = inDecade.length ? Math.min(...inDecade) : years.length ? Math.min(...years) : 0;
+    const found = systems?.get(p.pageid) ?? [];
+    const platform = q.platform ?? found[0] ?? fallbackLabel;
+    return {
+      id: `wiki:${p.title}`,
+      title: String(p.title).replace(/ \((\d{4} )?video game\)$/i, ''),
+      year,
+      platform,
+      developer: '',
+      genre: found.length > 1 ? `auch für ${found.slice(1).join(', ')}` : 'aus dem Archiv',
+      wiki: p.title,
+      blurb:
+        found.length > 1
+          ? `Auch für ${found.slice(1).join(', ')}. Öffnen für Infos, Screenshots und Guide.`
+          : 'Aus dem Archiv: öffnen für Infos, Screenshots und Guide.',
+      custom: true,
+    };
+  });
+  return { games, total, nextOffset: typeof next === 'number' ? next : null };
 }

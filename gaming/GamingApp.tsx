@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DECADES, Game, GAMES, PLATFORM_COLORS, TICKER_FACTS } from './data/games';
 import { PLATFORMS } from './data/platforms';
-import { archiveSupports, fetchArchive } from './lib/archive';
+import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { useControls } from './lib/useControls';
@@ -73,6 +73,12 @@ export const GamingApp: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Game[] | null>(null);
   const [searching, setSearching] = useState(false);
+  const [searchMore, setSearchMore] = useState<{ term: string; total: number; next: number | null; loading: boolean }>({
+    term: '',
+    total: 0,
+    next: null,
+    loading: false,
+  });
   const [selected, setSelected] = useState<Game | null>(null);
   const [guruOpen, setGuruOpen] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
@@ -239,6 +245,9 @@ export const GamingApp: React.FC = () => {
     if (rollingTimer.current) clearTimeout(rollingTimer.current);
   }, []);
 
+  // A hit we already curated opens with its tips and German teaser.
+  const withCurated = (g: Game) => GAMES.find((c) => c.wiki === g.wiki) ?? g;
+
   const runSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const q = query.trim();
@@ -247,27 +256,42 @@ export const GamingApp: React.FC = () => {
     unlock('digger');
     setView('search');
     setSearching(true);
-    const hits = await searchGames(q);
+    // Every game article matching the words; the plain article search is
+    // only the fallback for names Wikipedia files without a game infobox.
+    const page = await searchArchive(q);
+    let hits = page.games.map(withCurated);
+    if (!hits.length) {
+      hits = (await searchGames(q)).map((h) =>
+        withCurated({
+          id: `wiki:${h.title}`,
+          title: h.title.replace(/ \((\d{4} )?video game\)$/i, ''),
+          year: 0,
+          platform: 'Fundstück',
+          developer: '',
+          genre: 'aus der Grabbelkiste',
+          wiki: h.title,
+          blurb: h.snippet,
+          custom: true,
+        })
+      );
+    }
     setSearching(false);
-    setResults(
-      hits.map((h) => {
-        const curated = GAMES.find((g) => g.wiki === h.title);
-        return (
-          curated ?? {
-            id: `wiki:${h.title}`,
-            title: h.title.replace(/ \((\d{4} )?video game\)$/i, ''),
-            year: 0,
-            platform: 'Fundstück',
-            developer: 'unbekannt',
-            genre: 'aus der Grabbelkiste',
-            wiki: h.title,
-            blurb: h.snippet,
-            custom: true,
-          }
-        );
-      })
-    );
+    setResults(hits);
+    setSearchMore({ term: q, total: page.total || hits.length, next: page.nextOffset, loading: false });
     chip.play(hits.length ? 'powerup' : 'error');
+  };
+
+  const loadMoreResults = async () => {
+    if (searchMore.next === null || searchMore.loading) return;
+    chip.play('coin');
+    const { term, next } = searchMore;
+    setSearchMore((m) => ({ ...m, loading: true }));
+    const page = await searchArchive(term, next);
+    setResults((r) => {
+      const seen = new Set((r ?? []).map((g) => g.wiki));
+      return [...(r ?? []), ...page.games.map(withCurated).filter((g) => !seen.has(g.wiki))];
+    });
+    setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false }));
   };
 
   const switchView = (v: View) => {
@@ -442,6 +466,11 @@ export const GamingApp: React.FC = () => {
                       : 'das Archiv ist gerade nicht erreichbar'}
                 </p>
               )}
+              {view === 'search' && searchMore.term && (
+                <p className="dim archive-count">
+                  {searchMore.total.toLocaleString('de-DE')} Spiele zu „{searchMore.term}“
+                </p>
+              )}
               <div className="grid" style={{ marginTop: 12 }}>
                 {shown.map((g) => (
                   <Cartridge
@@ -453,6 +482,13 @@ export const GamingApp: React.FC = () => {
                   />
                 ))}
               </div>
+              {view === 'search' && searchMore.next !== null && (
+                <div style={{ textAlign: 'center', marginTop: 24 }}>
+                  <button className="px-btn big" onClick={loadMoreResults} disabled={searchMore.loading} data-nav>
+                    {searchMore.loading ? 'LADE …' : '▼ MEHR TREFFER LADEN'}
+                  </button>
+                </div>
+              )}
               {archiveActive && archive.key === archiveKey && (archive.next !== null || archive.loading) && (
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
                   <button className="px-btn big" onClick={loadMore} disabled={archive.loading} data-nav>

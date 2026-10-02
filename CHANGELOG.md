@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Suche findet alle Spiele einer Reihe:** Die Suche liefert
+  statt 8 gemischter Artikel jetzt alle Wikipedia-Artikel mit Spiele-Infobox
+  (z. B. 287 Treffer zu „Metroid“, die Hauptspiele zuerst), 48 pro Seite mit
+  „Mehr Treffer laden“, und zeigt Plattform und Jahr auf jedem Modul. Serien-
+  und Figurenartikel fallen dadurch heraus.
+
 - **Gaming-Edition: volle Regale statt weniger Spiele pro Filter:** Jeder
   Filter (Jahrzehnt, Plattform oder beides) lädt jetzt zusätzlich zu den
   handverlesenen Spielen alle passenden Spiele aus den Wikipedia-Kategorien,
