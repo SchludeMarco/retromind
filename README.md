@@ -37,7 +37,6 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Zeitreise
 
-
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
