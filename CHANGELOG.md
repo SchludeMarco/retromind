@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Gaming-Edition: Musik lauter, Stummschalter:** Die Musik (Titel und Hub)
+  ist etwa dreimal so laut, ein Limiter verhindert Übersteuern. Ein
+  Lautsprecher-Knopf schaltet die ganze App stumm: schon auf dem
+  Einschalt-Bildschirm, oben rechts neben dem Zahnrad und in den
+  Einstellungen. Die Wahl bleibt auf dem Gerät gespeichert.
+
 - **Gaming-Edition: C64-Musik auf dem Titelbildschirm:** Bei „PRESS START“
   läuft jetzt eine eigene Melodie im Stil des Commodore-64-SID-Chips
   (Pulswellen-Lead mit Pulsbreiten-Sweep und Vibrato, quietschender

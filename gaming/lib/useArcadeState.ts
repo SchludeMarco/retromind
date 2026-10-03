@@ -16,6 +16,8 @@ export interface ArcadeState {
   palette: Palette;
   music: boolean;
   sfx: boolean;
+  /** Speaker button: everything silent on this device (not synced). */
+  muted: boolean;
   hiScore: number;
 }
 
@@ -30,6 +32,7 @@ const DEFAULTS: ArcadeState = {
   palette: 'arcade',
   music: true,
   sfx: true,
+  muted: false,
   hiScore: 0,
 };
 

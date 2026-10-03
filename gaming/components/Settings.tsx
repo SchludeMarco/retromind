@@ -98,6 +98,9 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
             <button className="px-btn" aria-pressed={state.sfx} onClick={() => set('sfx', !state.sfx)} data-nav>
               SFX {state.sfx ? 'AN' : 'AUS'}
             </button>
+            <button className="px-btn" aria-pressed={state.muted} onClick={() => set('muted', !state.muted)} data-nav>
+              {state.muted ? 'TON AUS' : 'TON AN'}
+            </button>
           </div>
         </section>
 
