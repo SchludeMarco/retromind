@@ -25,16 +25,8 @@ export const IntroPhase: React.FC<{
   spotifyStatus, spotifyUser, onSpotifySignIn,
   onStart, onResume, onReset,
 }) => (
-  <div className="flex flex-col items-center pt-16 pb-10 text-center animate-fadeIn">
+  <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
-      <img
-        src="/retromind-logo-clear.webp"
-        alt="RetroMind-Logo"
-        width={240}
-        height={240}
-        className="mx-auto mb-6 w-56 md:w-72 h-auto"
-        style={{ imageRendering: 'pixelated' }}
-      />
       <h2 className="text-4xl mb-6">Willkommen, Zeitreisende:r</h2>
 
       {!resumeTarget && (
