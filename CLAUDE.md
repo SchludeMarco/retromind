@@ -22,6 +22,14 @@ and PR number). In the same PR, update `README.md`: new features go under
 bottom (sorted into Muss / Sollte / Könnte), and ideas that got built are
 removed from that list.
 
+## Feedback
+
+Feedback from the app is stored in `feedback.md` (status "offen"). It only
+goes into the README's "### To Do" list after Marco approves it, through the
+link in the feedback mail (or when he says so in chat). Never copy open
+feedback into the README on your own. When a To Do gets built, remove it from
+the README and mention it in the CHANGELOG.
+
 ## Removed content
 
 UI parts or assets that are removed from the app are moved into

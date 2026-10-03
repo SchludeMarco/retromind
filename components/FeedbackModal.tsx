@@ -108,6 +108,9 @@ export const FeedbackModal: React.FC<{
             placeholder="name@beispiel.de"
             className="w-full text-sm p-2 border-2 border-retro-ink bg-white focus:outline-none focus:ring-2 focus:ring-retro-amber"
           />
+          <p className="text-[10px] text-retro-tan mt-2">
+            Deine Nachricht wird ohne E-Mail-Adresse in unserer öffentlichen Feedback-Liste gespeichert.
+          </p>
 
           {status === 'error' && (
             <p role="alert" className="text-xs text-red-700 font-bold mt-3">
