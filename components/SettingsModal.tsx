@@ -13,6 +13,8 @@ export const SettingsModal: React.FC<{
   isSpotifyPlaying: boolean;
   onToggleSpotify: () => void;
   onOpenFeedback: () => void;
+  onOpenWhatsNew: () => void;
+  hasUnseenNews: boolean;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
@@ -20,6 +22,7 @@ export const SettingsModal: React.FC<{
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify,
   onOpenFeedback,
+  onOpenWhatsNew, hasUnseenNews,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -109,6 +112,19 @@ export const SettingsModal: React.FC<{
         >
           🕹️ RetroMind – Gaming öffnen
         </a>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Neuigkeiten</span>
+        <button
+          onClick={onOpenWhatsNew}
+          className="retro-button relative px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          ✨ Was ist neu?
+          {hasUnseenNews && (
+            <span aria-label="neue Einträge" className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
+          )}
+        </button>
       </div>
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">

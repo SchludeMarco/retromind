@@ -91,6 +91,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   hier nicht zugestellt werden kann.
 - **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
 
+- **„Was ist neu?“** – in den Einstellungen; zeigt die Einträge der
+  [CHANGELOG.md](CHANGELOG.md) direkt in der App ([`lib/whatsNew.ts`](lib/whatsNew.ts)),
+  ein roter Punkt am Zahnrad meldet Neues seit dem letzten Blick.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
   und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
   Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
@@ -262,8 +265,6 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 - **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
-- **„Was ist neu?“ in der App:** Die Einträge aus der CHANGELOG.md als kleine
-  Ansicht in den Einstellungen, damit Nutzer:innen Neuerungen sehen.
 - **Mehr Spiele im kuratierten Gaming-Katalog** mit eigenen Tipps.
 - **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
   Rücksprache).

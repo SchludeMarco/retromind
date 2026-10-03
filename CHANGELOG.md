@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise: „Was ist neu?“** (2026-10-03): In den Einstellungen zeigt
+  „✨ Was ist neu?“ alle Änderungen an RetroMind, die neuesten zuerst, mit
+  Datum und Modul. Ein roter Punkt am Zahnrad unten rechts verrät, dass es
+  seit dem letzten Blick etwas Neues gibt. Die Liste kommt direkt aus dieser
+  CHANGELOG.
+
 - **Dokumentation** (2026-10-03): Die README erklärt jetzt, wofür es
   RetroMind gibt, warum die App entwickelt wurde und was sie kann, und
   sammelt unten Ideen (Muss / Sollte / Könnte). Diese CHANGELOG führt alle
