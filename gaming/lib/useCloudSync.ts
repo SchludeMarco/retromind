@@ -10,8 +10,6 @@ import { ArcadeState } from './useArcadeState';
 // adds to the collection instead of replacing it.
 
 const FILE_NAME = 'retromind-gaming.json';
-/** Remembers the opt-in, so only people who chose the cloud get a silent re-login. */
-const OPT_IN_KEY = 'retromind.gaming.cloud';
 
 export type CloudSync = 'idle' | 'loading' | 'saving' | 'saved' | 'error';
 
@@ -20,26 +18,10 @@ interface CloudFile {
   state: Partial<ArcadeState>;
 }
 
-function readOptIn(): boolean {
-  try {
-    return localStorage.getItem(OPT_IN_KEY) === '1';
-  } catch {
-    return false;
-  }
-}
-
-function writeOptIn(on: boolean) {
-  try {
-    if (on) localStorage.setItem(OPT_IN_KEY, '1');
-    else localStorage.removeItem(OPT_IN_KEY);
-  } catch {
-    /* storage unavailable — non-fatal */
-  }
-}
-
 export function useCloudSync(state: ArcadeState, mergeIn: (remote: Partial<ArcadeState>) => void) {
-  const [optedIn] = useState(readOptIn);
-  const auth = useGoogleAuth({ silentRestore: optedIn });
+  // Signs in silently only if the visitor chose Google before, here or in
+  // another module (lib/googleLogin.ts).
+  const auth = useGoogleAuth();
   const [sync, setSync] = useState<CloudSync>('idle');
   // Bumped once the cloud copy is merged in, so the first save always runs.
   const [ready, setReady] = useState(0);
@@ -48,7 +30,6 @@ export function useCloudSync(state: ArcadeState, mergeIn: (remote: Partial<Arcad
   useEffect(() => {
     if (auth.status !== 'signed_in' || loaded.current) return;
     loaded.current = true;
-    writeOptIn(true);
     (async () => {
       setSync('loading');
       const token = await auth.getFreshAccessToken();
@@ -83,7 +64,6 @@ export function useCloudSync(state: ArcadeState, mergeIn: (remote: Partial<Arcad
 
   const signOut = useCallback(() => {
     auth.signOut();
-    writeOptIn(false);
     loaded.current = false;
     setReady(0);
     setSync('idle');
