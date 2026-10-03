@@ -282,8 +282,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Muss
 
-- **Impressum vervollständigen:** In `public/impressum.html` fehlen noch Name,
-  Anschrift und Kontakt-E-Mail des Betreibers (gelb markierte Platzhalter).
+- **Ladungsfähige Anschrift im Impressum:** Name und E-Mail stehen drin, die
+  Postanschrift fehlt noch (Marco möchte seine Privatadresse nicht
+  veröffentlichen). Lösung z. B. eine c/o- bzw. Impressum-Service-Adresse
+  (kostet ein paar Euro im Monat) und dann in `public/impressum.html`
+  eintragen.
 - **Gemini-Tarif prüfen:** Im kostenlosen Tarif der Gemini-API darf Google
   Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
   Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
