@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
+import { TRACKS, trackById } from '../lib/tracks';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'arcade', label: 'ARCADE' },
@@ -104,6 +105,25 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
               {muted ? 'TON AUS' : 'TON AN'}
             </button>
           </div>
+          <h4 className="pixel-font">MUSIKSTÜCK</h4>
+          <div className="settings-row" role="group" aria-label="Musikstück">
+            {TRACKS.map((t) => (
+              <button
+                key={t.id}
+                className="px-btn"
+                aria-pressed={state.track === t.id}
+                onClick={() => {
+                  set('track', t.id);
+                  // Picking a tune means wanting to hear it.
+                  if (!state.music) set('music', true);
+                }}
+                data-nav
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <p className="dim">{trackById(state.track).text}</p>
         </section>
 
         <section>
