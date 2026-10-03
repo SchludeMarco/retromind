@@ -8,6 +8,7 @@
 
 import { Game } from '../data/games';
 import { PLATFORMS, platformInfo } from '../data/platforms';
+import { viaProxy } from '../../lib/privacy';
 
 const API = 'https://en.wikipedia.org/w/api.php';
 export const ARCHIVE_PAGE = 48;
@@ -89,7 +90,7 @@ const EMPTY: ArchivePage = { games: [], total: 0, nextOffset: null };
 async function getJson(params: Record<string, string>): Promise<any | null> {
   const qs = new URLSearchParams({ action: 'query', format: 'json', formatversion: '2', origin: '*', ...params });
   try {
-    const res = await fetch(`${API}?${qs}`);
+    const res = await fetch(viaProxy(`${API}?${qs}`));
     return res.ok ? await res.json() : null;
   } catch {
     return null;

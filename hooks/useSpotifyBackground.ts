@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createSpotifyEmbedController, playlistUri, SpotifyEmbedController } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
+import { useConsent } from '../lib/privacy';
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
@@ -9,6 +10,7 @@ import { isMuted, setMuted, useMuted } from '../lib/mute';
 // embed included). Spotify exposes no volume control for this API, so
 // playback always runs at whatever level the visitor's own Spotify session
 // is set to. The app-wide speaker switch (lib/mute) pauses it instead.
+// Nothing from Spotify loads until the visitor allowed it (lib/privacy).
 export function useSpotifyBackground(currentDecade: string) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
@@ -17,6 +19,7 @@ export function useSpotifyBackground(currentDecade: string) {
   const [isPlaying, setIsPlaying] = useState(false);
   const muted = useMuted();
   const startedRef = useRef(false);
+  const allowed = useConsent('spotify') === true;
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
@@ -25,9 +28,10 @@ export function useSpotifyBackground(currentDecade: string) {
     controller.play();
   }, []);
 
-  // Created once; later decade changes reuse it via loadUri below.
+  // Created once consent is there; later decade changes reuse it via
+  // loadUri below. Withdrawing consent removes the player again.
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!allowed || !containerRef.current) return;
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
     if (!playlistId) return;
     let cancelled = false;
@@ -45,11 +49,13 @@ export function useSpotifyBackground(currentDecade: string) {
       cancelled = true;
       controllerRef.current?.destroy();
       controllerRef.current = null;
+      setIsReady(false);
+      setIsPlaying(false);
     };
-    // Deliberately created once (empty deps) — decade switches are handled
-    // by the effect below via loadUri, not by recreating the controller.
+    // Only consent recreates the controller — decade switches are handled
+    // by the effect below via loadUri.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [allowed]);
 
   useEffect(() => {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
@@ -90,5 +96,5 @@ export function useSpotifyBackground(currentDecade: string) {
     else start();
   }, [isPlaying, start]);
 
-  return { containerRef, isReady, isPlaying, togglePlay };
+  return { containerRef, isReady, isPlaying, togglePlay, allowed };
 }

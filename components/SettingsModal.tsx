@@ -3,6 +3,7 @@ import { Modal } from './Modal';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
+import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
 
 export const SettingsModal: React.FC<{
   fontScale: number;
@@ -12,6 +13,7 @@ export const SettingsModal: React.FC<{
   isSpotifyReady: boolean;
   isSpotifyPlaying: boolean;
   onToggleSpotify: () => void;
+  spotifyAllowed: boolean;
   onOpenFeedback: () => void;
   onOpenWhatsNew: () => void;
   hasUnseenNews: boolean;
@@ -20,7 +22,7 @@ export const SettingsModal: React.FC<{
 }> = ({
   fontScale, onFontScaleChange,
   currentDecade, onDecadeChange,
-  isSpotifyReady, isSpotifyPlaying, onToggleSpotify,
+  isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenFeedback,
   onOpenWhatsNew, hasUnseenNews,
   onDismiss, onCloseClick,
@@ -68,6 +70,21 @@ export const SettingsModal: React.FC<{
               ))}
             </select>
           </div>
+          {!spotifyAllowed ? (
+            <div className="mb-2">
+              <button
+                onClick={() => setConsent('spotify', true)}
+                className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+              >
+                🎵 Musik von Spotify erlauben
+              </button>
+              <p className="text-[10px] text-retro-tan mt-2">
+                Der Spotify-Player lädt erst nach deinem OK. Dabei gehen Daten wie deine IP-Adresse an Spotify, und
+                Spotify kann Cookies setzen.
+              </p>
+            </div>
+          ) : (
+          <>
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={onToggleSpotify}
@@ -101,6 +118,14 @@ export const SettingsModal: React.FC<{
             und dort einloggen – dein Google-Konto zählt dafür nicht, das ist ein eigener Login. Mit
             Premium läuft dann der volle Song.
           </p>
+          <button
+            onClick={() => setConsent('spotify', false)}
+            className="text-[10px] underline font-bold text-retro-brown mt-2"
+          >
+            Spotify nicht mehr laden
+          </button>
+          </>
+          )}
         </div>
       )}
 
@@ -143,6 +168,22 @@ export const SettingsModal: React.FC<{
       <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}
       </p>
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Datenschutz</span>
+        <p className="text-xs leading-relaxed">
+          Deine Reise bleibt in diesem Browser. Bilder und Klänge von anderen Seiten holt RetroMind über den eigenen
+          Server, Spotify lädt nur mit deinem OK.
+        </p>
+        <p className="text-xs mt-2">
+          <a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="underline font-bold text-retro-amber-dark">
+            Datenschutzerklärung
+          </a>
+          {' · '}
+          <a href={IMPRINT_URL} target="_blank" rel="noreferrer" className="underline font-bold text-retro-amber-dark">
+            Impressum
+          </a>
+        </p>
+      </div>
     </Modal>
   );
 };

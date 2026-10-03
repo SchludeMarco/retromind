@@ -2,6 +2,8 @@
 // category listing that system's games; it feeds the live archive, so a
 // filter shows hundreds of games instead of only the curated picks.
 
+import { viaProxy } from '../../lib/privacy';
+
 export interface PlatformInfo {
   id: string;
   /** English Wikipedia category, without the "Category:" prefix. */
@@ -15,9 +17,9 @@ export interface PlatformInfo {
   from: number;
 }
 
-/** A small thumbnail of a Commons file, resolved by Commons itself. */
+/** A small thumbnail of a Commons file, resolved by Commons and fetched through our server. */
 export const photoUrl = (file: string, width = 240) =>
-  `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
+  viaProxy(`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`);
 
 export type Maker = 'Nintendo' | 'Sega' | 'Sony' | 'Microsoft' | 'Computer' | 'Spielhalle';
 

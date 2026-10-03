@@ -110,7 +110,7 @@ Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 Hunderten Spielen füllt; die Plattformen (mit Hersteller-Regal und Foto für
 die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
 [`gaming/data/platforms.ts`](gaming/data/platforms.ts). Dazu Suche
-nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
+nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live (über `api/proxy.js`),
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
 Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
@@ -144,6 +144,17 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   freiwillig, gilt für alle Module, öffnet nie ungefragt ein Fenster.
 - **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud-Sicherung im
   eigenen Google Drive ist ein Angebot, keine Pflicht.
+- **Datenschutz (DSGVO)** ([`lib/privacy.ts`](lib/privacy.ts)) – kein Tracking.
+  Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
+  Bilder, Vorschaubilder und Klänge von fremden Servern holt
+  [`api/proxy.js`](api/proxy.js) (nur erlaubte Adressen, Vercel-CDN-Cache), der
+  Browser spricht nie direkt mit ihnen. Spotify (Zeitreise) und YouTube (Gaming)
+  laden erst nach Zustimmung, widerrufbar in den Einstellungen; Googles
+  Anmelde-Skript lädt erst, wenn jemand zum Anmelde-Knopf greift.
+  [Datenschutzerklärung](public/datenschutz.html) und
+  [Impressum](public/impressum.html) liegen als statische Seiten unter
+  `/datenschutz.html` und `/impressum.html` auf beiden Domains und sind in der
+  Fußzeile und in den Einstellungen verlinkt.
 
 ## Architektur
 
@@ -271,6 +282,15 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Muss
 
+- **Impressum vervollständigen:** In `public/impressum.html` fehlen noch Name,
+  Anschrift und Kontakt-E-Mail des Betreibers (gelb markierte Platzhalter).
+- **Gemini-Tarif prüfen:** Im kostenlosen Tarif der Gemini-API darf Google
+  Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
+  Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
+  datenschutzfreundlicher; danach die Datenschutzerklärung prüfen.
+- **Auftragsverarbeitung abschließen:** Die Data Processing Addenda von Vercel,
+  Google (Gemini) und Resend gelten über deren Nutzungsbedingungen; einmal
+  prüfen, ob sie für die genutzten Konten akzeptiert sind.
 - **Automatisches Deployment absichern:** Mehrfach kamen gemergte Änderungen
   erst nach einem manuellen „Redeploy“ in Vercel live. Ursache klären, damit
   jeder Merge zuverlässig ausgeliefert wird.

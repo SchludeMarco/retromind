@@ -1,6 +1,7 @@
 import React from 'react';
 import { GalleryItem } from '../types';
 import { Modal } from '../components';
+import { viaProxy } from '../lib/privacy';
 
 export const GalleryDetailModal: React.FC<{
   item: GalleryItem;
@@ -15,7 +16,7 @@ export const GalleryDetailModal: React.FC<{
     <h3 className="text-3xl font-bold mb-3">{item.title}</h3>
     {item.image && (
       <div className="retro-photo-frame mb-3">
-        <img src={item.image} alt={item.title} className="w-full border-2 border-retro-ink retro-photo retro-photo-live" />
+        <img src={viaProxy(item.image)} alt={item.title} className="w-full border-2 border-retro-ink retro-photo retro-photo-live" />
       </div>
     )}
     <p className="text-lg leading-relaxed italic border-t-2 border-retro-ink pt-3">

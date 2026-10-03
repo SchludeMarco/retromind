@@ -13,7 +13,8 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner } from './components';
+import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import {
   IntroPhase,
@@ -456,6 +457,8 @@ const App: React.FC = () => {
   // --- Spotify account ---
   const handleSpotifySignIn = () => {
     playSFX('click');
+    // Signing in to Spotify means wanting its music too.
+    setConsent('spotify', true);
     spotifyAuth.signIn();
   };
   const handleSpotifySignOut = () => {
@@ -480,6 +483,7 @@ const App: React.FC = () => {
           the Settings modal via play/pause only (Spotify exposes no volume
           control we could put here). */}
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
+      {!showSplash && <MusicConsentBanner />}
 
       <Header />
 
@@ -536,6 +540,7 @@ const App: React.FC = () => {
               isSpotifyReady={spotify.isReady}
               isSpotifyPlaying={spotify.isPlaying}
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
+              spotifyAllowed={spotify.allowed}
               onOpenFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
               onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
               hasUnseenNews={unseenNews}
@@ -698,6 +703,11 @@ const App: React.FC = () => {
           <ProgressBar current={phaseIndex} total={PHASES.length} />
         </>
       )}
+      <footer className="no-print relative z-10 mt-12 text-center text-xs text-retro-tan">
+        <a href={PRIVACY_URL} className="underline">Datenschutz</a>
+        {' · '}
+        <a href={IMPRINT_URL} className="underline">Impressum</a>
+      </footer>
     </div>
   );
 };

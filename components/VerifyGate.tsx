@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
+import { warmUpGoogle } from '../lib/googleAuth';
 
 // The very first thing anyone does once past the splash: tell RetroMind their
 // name and birthday, so the right decades and questions show up. Everything
@@ -115,6 +116,9 @@ export const VerifyGate: React.FC<{
             <button
               type="button"
               onClick={onGoogleSignIn}
+              onPointerEnter={warmUpGoogle}
+              onPointerDown={warmUpGoogle}
+              onFocus={warmUpGoogle}
               disabled={googleStatus === 'signing_in'}
               className="retro-button bg-retro-amber text-white px-6 py-3 font-bold hover:bg-retro-amber-dark disabled:opacity-60"
             >

@@ -1,6 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+// Fonts are bundled with the app (no request to Google Fonts, DSGVO).
+import '@fontsource/playfair-display/latin-400.css';
+import '@fontsource/playfair-display/latin-700.css';
+import '@fontsource/playfair-display/latin-400-italic.css';
+import '@fontsource/space-mono/latin-400.css';
+import '@fontsource/space-mono/latin-700.css';
+import '@fontsource/cinzel-decorative/latin-400.css';
+import '@fontsource/cinzel-decorative/latin-700.css';
+import '@fontsource/cinzel-decorative/latin-900.css';
+import '@fontsource/cormorant-garamond/latin-500-italic.css';
+import '@fontsource/cormorant-garamond/latin-600-italic.css';
 import './index.css';
 
 class ErrorBoundary extends React.Component<

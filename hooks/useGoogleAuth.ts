@@ -28,10 +28,12 @@ export function useGoogleAuth() {
   const [birthdayHint, setBirthdayHint] = useState<string | null>(null);
   const tokenRef = useRef<GoogleToken | null>(restored?.token ?? null);
 
-  // Load the GIS script as soon as the app mounts, not on first tap — see
-  // preloadGoogleIdentityServices() for why.
+  // Google's script is only fetched for people who chose Google before
+  // (DSGVO: no contact with Google just for opening the page). Everyone else
+  // gets it the moment they reach for a sign-in button (warmUpGoogle), still
+  // before the tap itself — see preloadGoogleIdentityServices() for why.
   useEffect(() => {
-    if (getGoogleClientId()) preloadGoogleIdentityServices().catch(() => {});
+    if (getGoogleClientId() && hasGoogleOptIn()) preloadGoogleIdentityServices().catch(() => {});
   }, []);
 
   // Never renews in the background (that would pop up a Google window): an

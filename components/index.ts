@@ -17,3 +17,4 @@ export { ChatBot } from './ChatBot';
 export { MemoryAnswer } from './MemoryAnswer';
 export { MuteToggle } from './MuteToggle';
 export { WhatsNewModal } from './WhatsNewModal';
+export { MusicConsentBanner } from './MusicConsentBanner';

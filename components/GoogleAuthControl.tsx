@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoogleUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
+import { warmUpGoogle } from '../lib/googleAuth';
 
 export type DriveSyncState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -52,6 +53,10 @@ export const GoogleAuthControl: React.FC<{
       ) : (
         <button
           onClick={onSignIn}
+          // Google's script only loads once someone reaches for this button.
+          onPointerEnter={warmUpGoogle}
+          onPointerDown={warmUpGoogle}
+          onFocus={warmUpGoogle}
           disabled={status === 'signing_in'}
           className="retro-button border border-retro-ink px-2 py-1 font-bold bg-white disabled:opacity-60"
         >
