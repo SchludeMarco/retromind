@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: YouTube-Videos zu jedem Spiel** (2026-10-03, PR #86): Auf
+  der Seite eines Spiels startet automatisch das beliebteste YouTube-Video
+  dazu, im neuen Reiter „Videos“ stehen weitere zur Auswahl. Ist der Ton in
+  RetroMind aus, läuft das Video stumm, und der Lautsprecher-Knopf schaltet
+  den Ton des Videos mit. Solange ein Video läuft, pausiert die Chiptune-Musik.
+
 - **Gaming-Edition: Gamer-Slang von den 80ern bis heute** (2026-10-03, PR #85):
   Knöpfe, Meldungen und Erfolge sprechen jetzt die Sprache der Zocker aus
   allen Jahrzehnten, von „Kiste an, Alter!“ über „Epic Fail“ bis „no cap“.

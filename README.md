@@ -113,7 +113,10 @@ die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
 nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
-Longplays, GameFAQs, MobyGames und Internet Archive. Dazu Konsolen-Einschalten,
+Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
+startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
+Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
+mit `YOUTUBE_API_KEY`). Dazu Konsolen-Einschalten,
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
@@ -220,6 +223,7 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | `RESEND_API_KEY`         | Vercel-Env  | Optional: API-Schlüssel von [resend.com](https://resend.com) für den Feedback-Versand (nur serverseitig) |
 | `FEEDBACK_TO_EMAIL`      | Vercel-Env  | Optional: Ziel-E-Mail-Adresse für eingereichtes Feedback; ohne `RESEND_API_KEY` + diese Variable meldet der Feedback-Button „nicht verfügbar” |
 | `FEEDBACK_FROM_EMAIL`    | Vercel-Env  | Optional: Absenderadresse der Feedback-Mail (Standard: Resend-Sandbox-Adresse) |
+| `YOUTUBE_API_KEY`        | Vercel-Env  | Optional (Gaming): Schlüssel für die YouTube Data API v3. Damit sortiert die Videosuche nach Likes; ohne ihn liest `api/youtube.js` die öffentliche YouTube-Suche (nur Aufrufe) |
 | `FEEDBACK_GITHUB_TOKEN`  | Vercel-Env  | Optional: GitHub-Token (fein granuliert, nur dieses Repo, „Contents: Read and write“). Speichert Feedback in `feedback.md` und ermöglicht den „Als To Do übernehmen“-Link in der Mail |
 
 ## Bekannte Einschränkungen
