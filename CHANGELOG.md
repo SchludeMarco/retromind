@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Impressum mit Namen und Kontakt** (2026-10-03, PR #PRNUM): Im Impressum
+  stehen jetzt der Name des Betreibers und eine Kontakt-E-Mail statt
+  Platzhaltern.
+
 - **Datenschutz (DSGVO) für beide Editionen** (2026-10-03, PR #87): Neue
   Seiten „Datenschutz“ und „Impressum“, verlinkt unten auf jeder Seite und in
   den Einstellungen. Musik von Spotify (Zeitreise) und Videos von YouTube
