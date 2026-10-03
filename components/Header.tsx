@@ -1,13 +1,13 @@
 import React from 'react';
 
-// The header sits above the app-wide CrtOverlay (z-index 500) so its
-// permanent backdrop blur/wash — intentional everywhere else — never
-// touches it, keeping the logo crisp while the rest of the app stays as
-// softened as before. The logo's dark background is keyed out, so it
-// sits directly on the paper background. (The former text headline is
-// kept in _removed_content/Header.tsx.)
+// The header sits under the app-wide CrtOverlay like everything else, so
+// the logo and tagline get the same scanlines, blur and wash as the rest
+// of the app. The logo's dark background is keyed out and its neon colours
+// are warmed slightly towards the paper palette, so it sits on the paper
+// background like a printed part of the page. (The former text headline
+// is kept in _removed_content/Header.tsx.)
 export const Header: React.FC = () => (
-  <header className="relative z-[600] pt-8 pb-6 text-center">
+  <header className="pt-8 pb-6 text-center">
     <h1 className="m-0">
       <img
         src="/retromind-logo-header.webp"
@@ -15,6 +15,7 @@ export const Header: React.FC = () => (
         width={640}
         height={756}
         className="mx-auto w-44 md:w-56 h-auto"
+        style={{ filter: 'sepia(0.25) saturate(0.85)' }}
       />
     </h1>
     <p className="text-lg italic text-retro-brown mt-3">… willkommen zurück in der Vergangenheit</p>
