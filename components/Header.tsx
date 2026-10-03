@@ -17,7 +17,7 @@ export const Header: React.FC = () => (
         className="mx-auto w-44 md:w-56 h-auto"
       />
     </h1>
-    <p className="text-lg italic text-retro-brown mt-3">Deine Reise zurück in die Zeit</p>
+    <p className="text-lg italic text-retro-brown mt-3">… willkommen zurück in der Vergangenheit</p>
     <div className="w-32 h-1 bg-retro-ink mx-auto mt-4" />
   </header>
 );
