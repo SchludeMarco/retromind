@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Game } from '../data/games';
+import { hasMuteChoice, setMuted } from '../../lib/mute';
 
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
@@ -16,8 +17,6 @@ export interface ArcadeState {
   palette: Palette;
   music: boolean;
   sfx: boolean;
-  /** Speaker button: everything silent on this device (not synced). */
-  muted: boolean;
   hiScore: number;
 }
 
@@ -32,14 +31,17 @@ const DEFAULTS: ArcadeState = {
   palette: 'arcade',
   music: true,
   sfx: true,
-  muted: false,
   hiScore: 0,
 };
 
 function load(): ArcadeState {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? { ...DEFAULTS, ...JSON.parse(raw) } : DEFAULTS;
+    if (!raw) return DEFAULTS;
+    const { muted, ...saved } = JSON.parse(raw);
+    // The speaker button used to be stored here; it is app-wide now (lib/mute).
+    if (muted === true && !hasMuteChoice()) setMuted(true);
+    return { ...DEFAULTS, ...saved };
   } catch {
     return DEFAULTS;
   }

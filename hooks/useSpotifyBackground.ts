@@ -1,19 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createSpotifyEmbedController, playlistUri, SpotifyEmbedController } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
+import { isMuted, setMuted, useMuted } from '../lib/mute';
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
 // unlocks audio (browsers block any audio before a user gesture, Spotify's
 // embed included). Spotify exposes no volume control for this API, so
 // playback always runs at whatever level the visitor's own Spotify session
-// is set to.
+// is set to. The app-wide speaker switch (lib/mute) pauses it instead.
 export function useSpotifyBackground(currentDecade: string) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const unlockedRef = useRef(false);
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const muted = useMuted();
+  const startedRef = useRef(false);
+  // First playback uses play(); afterwards resume() continues the track.
+  const start = useCallback(() => {
+    const controller = controllerRef.current;
+    if (!controller || !unlockedRef.current || isMuted()) return;
+    startedRef.current = true;
+    controller.play();
+  }, []);
 
   // Created once; later decade changes reuse it via loadUri below.
   useEffect(() => {
@@ -29,7 +39,7 @@ export function useSpotifyBackground(currentDecade: string) {
       controllerRef.current = controller;
       controller.addListener('ready', () => setIsReady(true));
       controller.addListener('playback_update', (e: any) => setIsPlaying(!e?.data?.isPaused));
-      if (unlockedRef.current) controller.play();
+      start();
     });
     return () => {
       cancelled = true;
@@ -46,26 +56,39 @@ export function useSpotifyBackground(currentDecade: string) {
     const controller = controllerRef.current;
     if (!controller || !playlistId) return;
     controller.loadUri(playlistUri(playlistId));
-    if (unlockedRef.current) controller.play();
-  }, [currentDecade]);
+    startedRef.current = false;
+    start();
+  }, [currentDecade, start]);
 
   useEffect(() => {
     const unlock = () => {
       if (unlockedRef.current) return;
       unlockedRef.current = true;
-      controllerRef.current?.play();
+      start();
     };
     const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     events.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
     return () => events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
-  }, []);
+  }, [start]);
+
+  useEffect(() => {
+    const controller = controllerRef.current;
+    if (!controller) return;
+    if (muted) controller.pause();
+    else if (startedRef.current) controller.resume();
+    else start();
+  }, [muted, start]);
 
   const togglePlay = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller) return;
     if (isPlaying) controller.pause();
-    else controller.resume();
-  }, [isPlaying]);
+    // Pressing play while everything is muted switches the sound back on
+    // (the effect above then resumes the playlist).
+    else if (isMuted()) setMuted(false);
+    else if (startedRef.current) controller.resume();
+    else start();
+  }, [isPlaying, start]);
 
   return { containerRef, isReady, isPlaying, togglePlay };
 }

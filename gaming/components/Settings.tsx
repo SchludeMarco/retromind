@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
+import { toggleMuted, useMuted } from '../../lib/mute';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'arcade', label: 'ARCADE' },
@@ -26,6 +27,7 @@ interface Props {
 // Settings: the optional Google account (which brings score, collection and
 // preferences to every device) plus sound and screen colour.
 export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
+  const muted = useMuted();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -98,8 +100,8 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
             <button className="px-btn" aria-pressed={state.sfx} onClick={() => set('sfx', !state.sfx)} data-nav>
               SFX {state.sfx ? 'AN' : 'AUS'}
             </button>
-            <button className="px-btn" aria-pressed={state.muted} onClick={() => set('muted', !state.muted)} data-nav>
-              {state.muted ? 'TON AUS' : 'TON AN'}
+            <button className="px-btn" aria-pressed={muted} onClick={toggleMuted} data-nav>
+              {muted ? 'TON AUS' : 'TON AN'}
             </button>
           </div>
         </section>

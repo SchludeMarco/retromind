@@ -13,6 +13,7 @@ import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings, PALETTES } from './components/Settings';
 import { useCloudSync } from './lib/useCloudSync';
+import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
@@ -122,10 +123,12 @@ export const GamingApp: React.FC = () => {
   useEffect(() => {
     chip.musicEnabled = state.music;
   }, [state.music]);
+  // The speaker switch is shared by all RetroMind modules (lib/mute).
+  const muted = useMuted();
   useEffect(() => {
-    chip.muted = state.muted;
-  }, [state.muted]);
-  const toggleMute = () => set('muted', !state.muted);
+    chip.muted = muted;
+  }, [muted]);
+  const toggleMute = toggleMuted;
   useEffect(() => {
     if (screen === 'hub') chip.setMusic(state.music);
     return () => chip.stopMusic();
@@ -344,7 +347,7 @@ export const GamingApp: React.FC = () => {
       <div className="stars" aria-hidden="true" />
 
       {screen === 'power' ? (
-        <PowerOn reducedMotion={reducedMotion} muted={state.muted} onToggleMute={toggleMute} onStart={() => setScreen('hub')} />
+        <PowerOn reducedMotion={reducedMotion} muted={muted} onToggleMute={toggleMute} onStart={() => setScreen('hub')} />
       ) : (
         <main className="hub">
           <header className="hud pixel-font">
@@ -353,7 +356,7 @@ export const GamingApp: React.FC = () => {
               RETROMIND
               <small>GAMING</small>
             </h1>
-            <MuteButton className="hud-mute" muted={state.muted} onToggle={toggleMute} />
+            <MuteButton className="hud-mute" muted={muted} onToggle={toggleMute} />
             <button
               className="px-btn settings-btn"
               onClick={() => {
@@ -576,7 +579,7 @@ export const GamingApp: React.FC = () => {
           <footer className="dim" style={{ marginTop: 48, fontSize: 18 }}>
             Inhalte live aus Wikipedia (CC BY-SA). Spieletitel und Bilder gehören ihren Rechteinhabern. RetroMind
             verlinkt nur auf legale Wege, alte Spiele heute zu spielen.{' '}
-            <a href="https://retromind.vercel.app/">Zurück zu RetroMind</a>
+            <a href={withMuteParam('https://retromind.vercel.app/')}>Zurück zu RetroMind</a>
           </footer>
         </main>
       )}

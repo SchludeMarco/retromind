@@ -15,3 +15,4 @@ export { Modal } from './Modal';
 export { GalleryCard } from './GalleryCard';
 export { ChatBot } from './ChatBot';
 export { MemoryAnswer } from './MemoryAnswer';
+export { MuteToggle } from './MuteToggle';
