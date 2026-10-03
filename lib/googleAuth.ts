@@ -49,7 +49,7 @@ let tokenClient: any = null;
 
 // Opens Google's consent popup (or renews silently when `prompt` is empty
 // and the user already granted access) and resolves with a short-lived
-// Drive-scoped access token. Never persisted — re-requested each session.
+// Drive-scoped access token (kept for its hour in lib/googleLogin.ts).
 export async function requestGoogleAccessToken(prompt: '' | 'consent'): Promise<GoogleToken> {
   const clientId = getGoogleClientId();
   if (!clientId) throw new Error('not_configured');

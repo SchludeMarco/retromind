@@ -1,12 +1,17 @@
+import { GoogleUser } from '../types';
+import type { GoogleToken } from './googleAuth';
+
 // Whether the visitor chose to sign in with Google, shared by every RetroMind
 // module (the journey, the Gaming edition and whatever comes next). Google is
-// optional: only once someone signed in on purpose does a module try a silent
-// re-login on the next open; nobody else ever sees a Google popup unasked.
+// optional and never pops up unasked: a module opens signed in only while the
+// last sign-in's short-lived token is still valid (stored below), otherwise it
+// waits for a tap on its sign-in button.
 // Like the mute switch (lib/mute.ts) it is a single localStorage key, and
 // links to a module on another origin carry it along as ?google=1 / ?google=0
 // (see withGoogleParam).
 
 const KEY = 'retromind.google';
+const SESSION_KEY = 'retromind.google.session';
 const PARAM = 'google';
 /** The Gaming edition's own opt-in from before this switch existed. */
 const LEGACY_GAMING_KEY = 'retromind.gaming.cloud';
@@ -52,6 +57,39 @@ function persist(on: boolean) {
 /** True once the visitor signed in with Google in any module (until they sign out). */
 export function hasGoogleOptIn(): boolean {
   return optedIn;
+}
+
+export interface GoogleSession {
+  token: GoogleToken;
+  user: GoogleUser;
+}
+
+/**
+ * The current sign-in, so a reload or another module on this origin starts
+ * signed in without asking Google again. Google tokens expire after an hour
+ * and only reach RetroMind's private Drive folder; an expired one is dropped.
+ */
+export function loadGoogleSession(): GoogleSession | null {
+  if (!optedIn) return null;
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const session = JSON.parse(raw) as GoogleSession;
+    if (session?.token?.accessToken && session.user && session.token.expiresAt - Date.now() > 60_000) return session;
+    localStorage.removeItem(SESSION_KEY);
+  } catch {
+    /* storage unavailable or garbled — start signed out */
+  }
+  return null;
+}
+
+export function saveGoogleSession(session: GoogleSession | null) {
+  try {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    else localStorage.removeItem(SESSION_KEY);
+  } catch {
+    /* storage unavailable — this visit stays signed in, the next starts out */
+  }
 }
 
 export function setGoogleOptIn(on: boolean) {
