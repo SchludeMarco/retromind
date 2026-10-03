@@ -7,6 +7,7 @@ import { searchGames } from './lib/wiki';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { PowerOn } from './components/PowerOn';
+import { MuteButton } from './components/MuteButton';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
@@ -121,6 +122,10 @@ export const GamingApp: React.FC = () => {
   useEffect(() => {
     chip.musicEnabled = state.music;
   }, [state.music]);
+  useEffect(() => {
+    chip.muted = state.muted;
+  }, [state.muted]);
+  const toggleMute = () => set('muted', !state.muted);
   useEffect(() => {
     if (screen === 'hub') chip.setMusic(state.music);
     return () => chip.stopMusic();
@@ -339,7 +344,7 @@ export const GamingApp: React.FC = () => {
       <div className="stars" aria-hidden="true" />
 
       {screen === 'power' ? (
-        <PowerOn reducedMotion={reducedMotion} onStart={() => setScreen('hub')} />
+        <PowerOn reducedMotion={reducedMotion} muted={state.muted} onToggleMute={toggleMute} onStart={() => setScreen('hub')} />
       ) : (
         <main className="hub">
           <header className="hud pixel-font">
@@ -348,6 +353,7 @@ export const GamingApp: React.FC = () => {
               RETROMIND
               <small>GAMING</small>
             </h1>
+            <MuteButton className="hud-mute" muted={state.muted} onToggle={toggleMute} />
             <button
               className="px-btn settings-btn"
               onClick={() => {

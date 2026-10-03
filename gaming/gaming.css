@@ -910,7 +910,7 @@ a {
 /* Small settings button pinned to the top right of the HUD. */
 .hud {
   position: relative;
-  padding-right: 52px;
+  padding-right: 100px;
 }
 .settings-btn {
   position: absolute;
@@ -928,6 +928,34 @@ a {
   height: 20px;
   fill: currentColor;
   shape-rendering: crispEdges;
+}
+.mute-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.mute-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+.px-btn.mute-btn[aria-pressed='true'] {
+  background: var(--panel);
+  color: #f55;
+}
+.hud-mute {
+  position: absolute;
+  top: 8px;
+  right: 48px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+.power-mute {
+  margin-top: 20px;
+  font-size: 11px;
 }
 .settings-dot {
   position: absolute;

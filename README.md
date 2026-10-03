@@ -79,7 +79,8 @@ nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live im Browser,
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
 Longplays, GameFAQs, MobyGames und Internet Archive. Dazu Konsolen-Einschalten,
-CRT-Effekte, synthetisierte Chiptune-Musik, Erfolge, Sammlung, Konami-Code
+CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
+Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Lässt sich als eigenständige App installieren
 (Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
 verlinkt auf der Startseite und in den Einstellungen dorthin.

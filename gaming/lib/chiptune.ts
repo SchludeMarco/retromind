@@ -45,6 +45,9 @@ const ARP_CHORDS = [
 
 // Boot sound: the first seconds of a royalty-free diesel start recording
 // (starter, catch, revs), trimmed and faded in public/gaming/.
+// Music bus level; at 0.32 phones barely played the tunes audibly.
+const MUSIC_LEVEL = 1.4;
+
 const DIESEL_URL = '/gaming/diesel-start.mp3';
 
 class ChipSound {
@@ -60,6 +63,19 @@ class ChipSound {
   private step = 0;
   musicEnabled = true;
   sfxEnabled = true;
+  private isMuted = false;
+
+  /** Silences everything at once (the speaker button), without losing the music/SFX choices. */
+  get muted() {
+    return this.isMuted;
+  }
+  set muted(on: boolean) {
+    this.isMuted = on;
+    if (!this.ctx || !this.master) return;
+    const now = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(now);
+    this.master.gain.setTargetAtTime(on ? 0 : 0.9, now, 0.03);
+  }
 
   /** Must be called from a user gesture at least once (browser autoplay rules). */
   unlock() {
@@ -68,10 +84,18 @@ class ChipSound {
       if (!Ctx) return;
       this.ctx = new Ctx();
       this.master = this.ctx.createGain();
-      this.master.gain.value = 0.9;
-      this.master.connect(this.ctx.destination);
+      this.master.gain.value = this.muted ? 0 : 0.9;
+      // A limiter at the end lets the music sit loud on phone speakers
+      // without the peaks clipping.
+      const limiter = this.ctx.createDynamicsCompressor();
+      limiter.threshold.value = -8;
+      limiter.knee.value = 4;
+      limiter.ratio.value = 12;
+      limiter.attack.value = 0.003;
+      limiter.release.value = 0.15;
+      this.master.connect(limiter).connect(this.ctx.destination);
       this.musicBus = this.ctx.createGain();
-      this.musicBus.gain.value = 0.32;
+      this.musicBus.gain.value = MUSIC_LEVEL;
       this.musicBus.connect(this.master);
       this.sfxBus = this.ctx.createGain();
       this.sfxBus.gain.value = 0.55;

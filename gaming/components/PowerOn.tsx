@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { chip } from '../lib/chiptune';
+import { MuteButton } from './MuteButton';
 
 // Stage 1: the console is off; the user flips the power switch (this gesture
 // is also what lets the browser play sound). Stage 2: the CRT warms up, the
@@ -24,7 +25,12 @@ const SoundDebug: React.FC = () => {
   );
 };
 
-export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> = ({ onStart, reducedMotion }) => {
+export const PowerOn: React.FC<{
+  onStart: () => void;
+  reducedMotion: boolean;
+  muted: boolean;
+  onToggleMute: () => void;
+}> = ({ onStart, reducedMotion, muted, onToggleMute }) => {
   const [stage, setStage] = useState<Stage>('off');
   const started = useRef(false);
 
@@ -92,8 +98,9 @@ export const PowerOn: React.FC<{ onStart: () => void; reducedMotion: boolean }> 
           POWER
         </p>
         <p className="dim" style={{ maxWidth: 420 }}>
-          Schalte die Konsole ein. Mit Ton – Lautsprecher an!
+          {muted ? 'Schalte die Konsole ein. Der Ton ist aus.' : 'Schalte die Konsole ein. Mit Ton – Lautsprecher an!'}
         </p>
+        <MuteButton className="power-mute" muted={muted} onToggle={onToggleMute} label />
       </div>
     );
   }
