@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Impressum mit Namen und Kontakt** (2026-10-03, PR #PRNUM): Im Impressum
+- **Impressum mit Namen und Kontakt** (2026-10-03, PR #88): Im Impressum
   stehen jetzt der Name des Betreibers und eine Kontakt-E-Mail statt
   Platzhaltern.
 
