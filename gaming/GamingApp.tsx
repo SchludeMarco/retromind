@@ -14,6 +14,7 @@ import { ConsolePicker } from './components/ConsolePicker';
 import { Settings, PALETTES } from './components/Settings';
 import { useCloudSync } from './lib/useCloudSync';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
+import { withGoogleParam } from '../lib/googleLogin';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
@@ -579,7 +580,7 @@ export const GamingApp: React.FC = () => {
           <footer className="dim" style={{ marginTop: 48, fontSize: 18 }}>
             Inhalte live aus Wikipedia (CC BY-SA). Spieletitel und Bilder gehören ihren Rechteinhabern. RetroMind
             verlinkt nur auf legale Wege, alte Spiele heute zu spielen.{' '}
-            <a href={withMuteParam('https://retromind.vercel.app/')}>Zurück zu RetroMind</a>
+            <a href={withGoogleParam(withMuteParam('https://retromind.vercel.app/'))}>Zurück zu RetroMind</a>
           </footer>
         </main>
       )}

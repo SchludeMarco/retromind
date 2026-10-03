@@ -9,13 +9,15 @@ import {
   preloadGoogleIdentityServices,
   GoogleToken,
 } from '../lib/googleAuth';
+import { hasGoogleOptIn, setGoogleOptIn } from '../lib/googleLogin';
 
 export type GoogleAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 'signed_in' | 'error';
 
 // Wraps Google sign-in + Drive-token renewal for the app. The access token
 // itself is kept only in memory (never persisted) — a fresh one is requested
-// (silently, when possible) whenever the Drive sync needs it.
-export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolean } = {}) {
+// (silently, when possible) whenever the Drive sync needs it. Signing in is
+// optional; the choice is shared by all modules (lib/googleLogin.ts).
+export function useGoogleAuth() {
   const [status, setStatus] = useState<GoogleAuthStatus>(getGoogleClientId() ? 'signed_out' : 'not_configured');
   const [user, setUser] = useState<GoogleUser | null>(null);
   const [birthdayHint, setBirthdayHint] = useState<string | null>(null);
@@ -27,12 +29,11 @@ export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolea
     if (getGoogleClientId()) preloadGoogleIdentityServices().catch(() => {});
   }, []);
 
-  // The app requires a fresh sign-in on every open (see VerifyGate). Try a
-  // silent renewal first so a person who already granted consent isn't
-  // stopped by a popup every single time — falls through to the mandatory
-  // sign-in button when no prior consent is found.
+  // Only someone who signed in with Google before — in this or any other
+  // RetroMind module — gets a silent re-login on open. Everyone else stays
+  // signed out until they tap a sign-in button themselves.
   useEffect(() => {
-    if (!getGoogleClientId() || !silentRestore) return;
+    if (!getGoogleClientId() || !hasGoogleOptIn()) return;
     (async () => {
       try {
         const token = await requestGoogleAccessToken('');
@@ -42,7 +43,7 @@ export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolea
         setStatus('signed_in');
         setBirthdayHint(await fetchGoogleBirthday(token.accessToken));
       } catch {
-        /* no prior consent — the person must tap the sign-in button */
+        /* consent gone — stays signed out until the person signs in again */
       }
     })();
     // Only on mount: a later opt-in goes through signIn().
@@ -74,6 +75,7 @@ export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolea
       const profile = await fetchGoogleProfile(token.accessToken);
       setUser(profile);
       setStatus('signed_in');
+      setGoogleOptIn(true);
       setBirthdayHint(await fetchGoogleBirthday(token.accessToken));
     } catch {
       setStatus('error');
@@ -83,6 +85,7 @@ export function useGoogleAuth({ silentRestore = true }: { silentRestore?: boolea
   const signOut = useCallback(() => {
     if (tokenRef.current) revokeGoogleToken(tokenRef.current.accessToken);
     tokenRef.current = null;
+    setGoogleOptIn(false);
     setUser(null);
     setBirthdayHint(null);
     setStatus(getGoogleClientId() ? 'signed_out' : 'not_configured');
