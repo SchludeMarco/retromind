@@ -4,11 +4,14 @@ import { fetchImages, fetchSummary, WikiImage, WikiSummary } from '../lib/wiki';
 import { AiUnavailableError, fetchGameGuide, GameGuide } from '../lib/ai';
 import { chip } from '../lib/chiptune';
 import { MiniMarkdown } from './MiniMarkdown';
+import { YouTubePlayer } from './YouTubePlayer';
+import { fetchVideos, formatViews, YouTubeVideo } from '../lib/youtube';
 
-type Tab = 'info' | 'shots' | 'guide' | 'web';
+type Tab = 'info' | 'videos' | 'shots' | 'guide' | 'web';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'info', label: 'INFO' },
+  { id: 'videos', label: 'VIDEOS' },
   { id: 'shots', label: 'SCREENSHOTS' },
   { id: 'guide', label: 'GUIDE & CHEATS' },
   { id: 'web', label: 'IM WEB' },
@@ -45,7 +48,9 @@ export const GameDetail: React.FC<{
   onToggleCompleted: () => void;
   onClose: () => void;
   aiAvailable: boolean;
-}> = ({ game, isFavorite, isCompleted, onToggleFavorite, onToggleCompleted, onClose, aiAvailable }) => {
+  /** Tells the hub whether a video is playing, so the chiptune music pauses. */
+  onVideoChange?: (playing: boolean) => void;
+}> = ({ game, isFavorite, isCompleted, onToggleFavorite, onToggleCompleted, onClose, aiAvailable, onVideoChange }) => {
   const [tab, setTab] = useState<Tab>('info');
   const [summary, setSummary] = useState<WikiSummary | null | undefined>(undefined);
   const [images, setImages] = useState<WikiImage[] | undefined>(undefined);
@@ -53,6 +58,29 @@ export const GameDetail: React.FC<{
   const [guide, setGuide] = useState<GameGuide | null>(null);
   const [guideState, setGuideState] = useState<'idle' | 'loading' | 'error' | 'unavailable'>('idle');
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [videos, setVideos] = useState<YouTubeVideo[] | undefined>(undefined);
+  const [playing, setPlaying] = useState<YouTubeVideo | null>(null);
+
+  // The best rated video starts on its own as soon as the list is there.
+  useEffect(() => {
+    let alive = true;
+    setVideos(undefined);
+    setPlaying(null);
+    fetchVideos({ title: game.title, platform: String(game.platform) }).then((v) => {
+      if (!alive) return;
+      setVideos(v);
+      setPlaying(v[0] ?? null);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [game.title, game.platform]);
+
+  const videoOn = !!playing;
+  useEffect(() => {
+    onVideoChange?.(videoOn);
+  }, [videoOn, onVideoChange]);
+  useEffect(() => () => onVideoChange?.(false), [onVideoChange]);
 
   useEffect(() => {
     let alive = true;
@@ -150,6 +178,19 @@ export const GameDetail: React.FC<{
           </button>
         </div>
 
+        {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} />}
+        {playing && (
+          <p className="dim yt-caption">
+            ▶ {playing.title}
+            {playing.channel && ` · ${playing.channel}`}
+            {playing.views > 0 && ` · ${formatViews(playing.views)}`}
+            {' '}
+            <button className="px-btn" onClick={() => { chip.play('back'); setPlaying(null); }} data-nav>
+              ■ STOPP
+            </button>
+          </p>
+        )}
+
         <div className="tabs" role="tablist">
           {TABS.map((t) => (
             <button
@@ -196,6 +237,45 @@ export const GameDetail: React.FC<{
             <div>
               {summary?.thumbnail && <img className="boxart" src={summary.thumbnail} alt={`Titelbild: ${game.title}`} />}
             </div>
+          </div>
+        )}
+
+        {tab === 'videos' && (
+          <div>
+            {videos === undefined ? (
+              <Loading />
+            ) : videos.length ? (
+              <>
+                <div className="yt-list">
+                  {videos.map((v) => (
+                    <button
+                      key={v.id}
+                      className="yt-item"
+                      aria-pressed={playing?.id === v.id}
+                      onClick={() => {
+                        chip.play('select');
+                        setPlaying(v);
+                        dialogRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      data-nav
+                    >
+                      <img src={v.thumb} alt="" loading="lazy" />
+                      <span className="yt-title">{v.title}</span>
+                      <span className="dim yt-meta">
+                        {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString('de-DE')} 👍` : '']
+                          .filter(Boolean)
+                          .join(' · ')}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <p className="dim" style={{ fontSize: 16 }}>Videos von YouTube, das beliebteste läuft zuerst.</p>
+              </>
+            ) : (
+              <p className="dim">
+                Keine Videos am Start. Unter „IM WEB“ geht’s direkt zur YouTube-Suche.
+              </p>
+            )}
           </div>
         )}
 

@@ -1009,3 +1009,63 @@ a {
   text-align: left;
   white-space: pre-wrap;
 }
+
+/* YouTube player on the game page */
+.yt-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-top: 12px;
+  background: #000;
+  border: 4px solid var(--panel);
+}
+.yt-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.yt-caption {
+  margin: 6px 0 0;
+  font-size: 16px;
+}
+.yt-caption .px-btn {
+  font-size: 8px;
+  margin-left: 6px;
+}
+.yt-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.yt-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: var(--panel);
+  border: 3px solid transparent;
+  padding: 6px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.yt-item[aria-pressed='true'],
+.yt-item:focus-visible,
+.yt-item:hover {
+  border-color: var(--a1);
+}
+.yt-item img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+}
+.yt-title {
+  font-size: 17px;
+  line-height: 1.1;
+}
+.yt-meta {
+  font-size: 14px;
+}

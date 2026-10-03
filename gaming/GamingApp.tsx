@@ -131,11 +131,13 @@ export const GamingApp: React.FC = () => {
   }, [muted]);
   const toggleMute = toggleMuted;
   // A new pick in the settings restarts the hub music with that tune.
+  // A YouTube video on a game page pauses the music until it stops.
+  const [videoPlaying, setVideoPlaying] = useState(false);
   useEffect(() => {
     chip.track = state.track;
-    if (screen === 'hub') chip.setMusic(state.music);
+    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying);
     return () => chip.stopMusic();
-  }, [screen, state.music, state.track]);
+  }, [screen, state.music, state.track, videoPlaying]);
 
   // Ask the server once whether the AI key is configured.
   useEffect(() => {
@@ -636,6 +638,7 @@ export const GamingApp: React.FC = () => {
           }}
           onClose={closeDetail}
           aiAvailable={aiAvailable}
+          onVideoChange={setVideoPlaying}
         />
       )}
 
