@@ -116,7 +116,8 @@ kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 Longplays, GameFAQs, MobyGames und Internet Archive. Dazu Konsolen-Einschalten,
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
-und Gamepad-Steuerung. Lässt sich als eigenständige App installieren
+und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
+den 80ern bis heute („Kiste an, Alter!“, „Epic Fail“, „GG“, „no cap“). Lässt sich als eigenständige App installieren
 (Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
 verlinkt auf der Startseite und in den Einstellungen dorthin.
 Das Profil (Sammlung, Erfolge, Highscore, Vorlieben) liegt im `localStorage`;

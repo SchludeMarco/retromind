@@ -57,8 +57,8 @@ export const GuruChat: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           role: 'model',
           text:
             err instanceof AiUnavailableError
-              ? 'Der Guru ist hier gerade nicht angeschlossen (kein KI-Server eingerichtet).'
-              : 'Verbindung verloren – wie ein Wackelkontakt am Modul. Versuch es nochmal.',
+              ? 'Der Guru ist gerade AFK (kein KI-Server eingerichtet).'
+              : 'Lag! Verbindung weg, wie ein Wackelkontakt am Modul. Einmal pusten und nochmal.',
         },
       ]);
     } finally {
@@ -77,8 +77,8 @@ export const GuruChat: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="guru-log" ref={logRef} aria-live="polite">
         {messages.length === 0 && (
           <p className="dim">
-            Na, Player 1? Frag mich nach einem Spiel, an das du dich nur halb erinnerst („das mit dem Opossum und
-            dem Raketenrucksack …“), nach Cheats oder wie du es heute noch spielen kannst.
+            Yo, Player 1! Frag mich nach einem Game, an das du dich nur halb erinnerst („das mit dem Opossum und
+            dem Raketenrucksack …“), nach Cheats oder wie du es heute noch zocken kannst.
           </p>
         )}
         {messages.map((m, i) => (
@@ -92,7 +92,7 @@ export const GuruChat: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Frag den Guru …"
+          placeholder="Frag den Guru, Digga …"
           aria-label="Nachricht an den Retro-Guru"
           autoFocus
         />

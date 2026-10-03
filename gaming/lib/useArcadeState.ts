@@ -82,13 +82,13 @@ export interface Achievement {
 }
 
 export const ACHIEVEMENTS: Achievement[] = [
-  { id: 'first-coin', title: 'Erste Münze', text: 'Den ersten Zufallsfund gezogen.' },
-  { id: 'explorer-5', title: 'Schatzsucher', text: '5 Spiele wiederentdeckt.' },
-  { id: 'explorer-15', title: 'Videothek-Profi', text: '15 Spiele wiederentdeckt.' },
-  { id: 'collector', title: 'Sammler', text: 'Das erste Spiel in die Sammlung gelegt.' },
-  { id: 'finisher', title: 'Abspann gesehen', text: 'Ein Spiel als durchgespielt markiert.' },
-  { id: 'digger', title: 'Grabbelkiste', text: 'Ein Spiel abseits des Katalogs gesucht.' },
-  { id: 'konami', title: '↑↑↓↓←→←→BA', text: 'Den berühmtesten Cheat der Welt eingegeben.' },
+  { id: 'first-coin', title: 'Erste Münze', text: 'Erste Münze eingeworfen. Läuft bei dir!' },
+  { id: 'explorer-5', title: 'Schatzsucher', text: '5 Games wiederentdeckt. Nice!' },
+  { id: 'explorer-15', title: 'Videothek-Profi', text: '15 Games wiederentdeckt. Absolut goated.' },
+  { id: 'collector', title: 'Sammler', text: 'Erstes Game im Stash. Ehrensache.' },
+  { id: 'finisher', title: 'Abspann gesehen', text: 'Ein Game durchgezockt. GG!' },
+  { id: 'digger', title: 'Grabbelkiste', text: 'Abseits des Katalogs gewühlt. Echter Digger.' },
+  { id: 'konami', title: '↑↑↓↓←→←→BA', text: 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!' },
 ];
 
 /** Score = what a player would see on the HUD; a playful progress number. */

@@ -12,10 +12,10 @@ export const PALETTES: { id: Palette; label: string }[] = [
 
 const SYNC_TEXT: Record<Cloud['sync'], string> = {
   idle: '',
-  loading: 'Lade deinen Spielstand …',
-  saving: 'Speichert …',
-  saved: '✓ Spielstand, Sammlung und Vorlieben sind in deinem Google Drive gesichert.',
-  error: '⚠ Sicherung gerade nicht möglich. Dein Profil bleibt auf diesem Gerät.',
+  loading: 'Lade dein Savegame …',
+  saving: 'Saving …',
+  saved: '✓ Savegame, Stash und Vorlieben liegen safe in deinem Google Drive.',
+  error: '⚠ Backup gerade nicht drin. Dein Profil bleibt auf diesem Gerät.',
 };
 
 interface Props {
@@ -51,7 +51,7 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
         </button>
 
         <section>
-          <h3 className="pixel-font">KONTO</h3>
+          <h3 className="pixel-font">DEIN ACCOUNT</h3>
           {cloud.status === 'not_configured' ? (
             <p className="dim">Die Anmeldung ist auf dieser Seite noch nicht eingerichtet. Dein Profil bleibt auf diesem Gerät.</p>
           ) : signedIn ? (
@@ -85,8 +85,8 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
                     : 'MIT GOOGLE ANMELDEN'}
               </button>
               <p className="dim">
-                Ohne Anmeldung funktioniert alles wie bisher. Hast du schon auf einem anderen Gerät gespielt, werden
-                beide Spielstände zusammengeführt, es geht nichts verloren.
+                Ohne Login läuft alles wie gehabt. Hast du schon auf einem anderen Gerät gezockt, werden beide
+                Savegames zusammengeführt, nix geht verloren.
               </p>
             </>
           )}

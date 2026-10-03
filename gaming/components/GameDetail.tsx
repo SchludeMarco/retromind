@@ -10,7 +10,7 @@ type Tab = 'info' | 'shots' | 'guide' | 'web';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'info', label: 'INFO' },
   { id: 'shots', label: 'SCREENSHOTS' },
-  { id: 'guide', label: 'GUIDE & TIPPS' },
+  { id: 'guide', label: 'GUIDE & CHEATS' },
   { id: 'web', label: 'IM WEB' },
 ];
 
@@ -221,7 +221,7 @@ export const GameDetail: React.FC<{
               </>
             ) : (
               <p className="dim">
-                Keine Bilder gefunden. Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.
+                Keine Bilder am Start. Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.
               </p>
             )}
           </div>
@@ -271,16 +271,16 @@ export const GameDetail: React.FC<{
             ) : (
               <div className="panel">
                 <p style={{ marginTop: 0 }}>
-                  Der Retro-Guru durchsucht das Web nach Tipps, Geheimnissen und legalen Wegen, das Spiel heute zu
-                  spielen.
+                  Der Retro-Guru checkt das Web nach Tipps, Secrets und legalen Wegen, das Game heute noch zu
+                  zocken.
                 </p>
                 <button className="px-btn big" onClick={loadGuide} disabled={!aiAvailable} data-nav>
                   ▶ GUIDE LADEN
                 </button>
                 {(!aiAvailable || guideState === 'unavailable') && (
-                  <p className="dim">Die KI ist in dieser Umgebung nicht eingerichtet.</p>
+                  <p className="dim">Die KI ist hier gerade AFK (nicht eingerichtet).</p>
                 )}
-                {guideState === 'error' && <p style={{ color: 'var(--a1)' }}>GAME OVER – der Guide konnte nicht geladen werden. Nochmal?</p>}
+                {guideState === 'error' && <p style={{ color: 'var(--a1)' }}>GAME OVER – der Guide hat nicht geladen. Continue?</p>}
               </div>
             )}
           </div>

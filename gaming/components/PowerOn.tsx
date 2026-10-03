@@ -98,7 +98,7 @@ export const PowerOn: React.FC<{
           POWER
         </p>
         <p className="dim" style={{ maxWidth: 420 }}>
-          {muted ? 'Schalte die Konsole ein. Der Ton ist aus.' : 'Schalte die Konsole ein. Mit Ton – Lautsprecher an!'}
+          {muted ? 'Kiste an, Alter! Der Ton ist aus.' : 'Kiste an, Alter! Mit Sound, also Boxen aufdrehen!'}
         </p>
         <MuteButton className="power-mute" muted={muted} onToggle={onToggleMute} label />
       </div>
@@ -131,7 +131,7 @@ export const PowerOn: React.FC<{
         PRESS START
       </button>
       <p className="dim" style={{ marginTop: 36 }}>
-        Vergessene Spiele von den 80ern bis heute: Screenshots, Guides, Tipps &amp; Geschichten.
+        Vergessene Games von den 80ern bis heute: Screenshots, Guides, Cheats &amp; Storys. Voll retro, no cap.
       </p>
       <p className="pixel-font dim" style={{ fontSize: 9, marginTop: 24 }}>
         © 1980–{new Date().getFullYear()} RETROMIND · 1 PLAYER
