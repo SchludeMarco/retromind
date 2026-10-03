@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from './Modal';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
+import { toggleMuted, useMuted } from '../lib/mute';
 
 export const SettingsModal: React.FC<{
   fontScale: number;
@@ -22,6 +23,7 @@ export const SettingsModal: React.FC<{
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
+  const muted = useMuted();
 
   return (
     <Modal onClose={onDismiss} label="App-Einstellungen">
@@ -32,6 +34,20 @@ export const SettingsModal: React.FC<{
       <h3 className="text-3xl font-bold mb-5">Einstellungen</h3>
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Ton</span>
+        <button
+          onClick={toggleMuted}
+          aria-pressed={muted}
+          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          {muted ? '🔇 Ton ist aus – einschalten' : '🔊 Ton ist an – stummschalten'}
+        </button>
+        <p className="text-[10px] text-retro-tan mt-2">
+          Gilt für ganz RetroMind, auch für RetroMind – Gaming. Der Lautsprecher-Knopf oben rechts schaltet ebenfalls um.
+        </p>
+      </div>
 
       {info?.spotifyPlaylistId && (
         <div className="mt-6 pt-5 border-t border-retro-ink/20">

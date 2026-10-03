@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MantelClock } from './MantelClock';
+import { isMuted } from '../lib/mute';
 
 // How long the button's burst of sparks plays before the full-screen fade
 // begins, and how long that final fade to the app takes — deliberately much
@@ -30,6 +31,7 @@ const sparks = Array.from({ length: SPARK_COUNT }, () => {
 // asset to load — a short sub-bass thump layered under a filtered noise
 // crack (same approach as BootOverlay's boot chime).
 function playExplosionSound() {
+  if (isMuted()) return;
   try {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioCtx) return;

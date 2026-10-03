@@ -1,6 +1,7 @@
 import React from 'react';
 import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
+import { useMuted } from '../lib/mute';
 
 const AiNotice: React.FC<{ aiOff: boolean }> = ({ aiOff }) =>
   aiOff ? (
@@ -50,7 +51,9 @@ export const ExplorationPhase: React.FC<{
   onOpenBuzzword,
   onBack,
   onNext,
-}) => (
+}) => {
+  const muted = useMuted();
+  return (
   <div className="py-8 animate-fadeIn space-y-14">
     <AiNotice aiOff={aiOff} />
 
@@ -134,7 +137,7 @@ export const ExplorationPhase: React.FC<{
               <p className="text-xs opacity-90">{videoStatus.message}</p>
               {videoStatus.url && (
                 <div className="mt-3">
-                  <video src={videoStatus.url} controls className="w-full border-2 border-white" />
+                  <video src={videoStatus.url} controls muted={muted} className="w-full border-2 border-white" />
                   <a href={videoStatus.url} className="text-xs underline mt-2 block font-bold text-orange-200">
                     Video herunterladen
                   </a>
@@ -211,3 +214,4 @@ export const ExplorationPhase: React.FC<{
     </div>
   </div>
 );
+};

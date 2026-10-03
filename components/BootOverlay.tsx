@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { isMuted, subscribeMuted } from '../lib/mute';
 
 // --- Boot overlay ---
 // Shown once when the app mounts: a pixel grid that starts fully black and
@@ -78,7 +79,8 @@ export const BootOverlay: React.FC = () => {
 
     let ctx = new AudioCtx();
     buildChime(ctx);
-    ctx.resume().catch(() => {});
+    if (isMuted()) ctx.suspend().catch(() => {});
+    else ctx.resume().catch(() => {});
 
     // Once the app is fully revealed, an old, dark voice greets the user —
     // the moment the time capsule actually opens. Speech synthesis needs a
@@ -91,6 +93,7 @@ export const BootOverlay: React.FC = () => {
     const trySpeak = () => {
       if (spoken || !hasGesture || !hasLoaded || !synth) return;
       spoken = true;
+      if (isMuted()) return;
       const speak = () => {
         try {
           const utter = new SpeechSynthesisUtterance('Welcome');
@@ -127,15 +130,30 @@ export const BootOverlay: React.FC = () => {
       trySpeak();
       if (unlocked) return;
       unlocked = true;
-      ctx.resume().catch(() => {
-        ctx = new AudioCtx();
-        buildChime(ctx);
-      });
+      ctx.resume()
+        .then(() => {
+          if (isMuted()) ctx.suspend().catch(() => {});
+        })
+        .catch(() => {
+          ctx = new AudioCtx();
+          buildChime(ctx);
+          if (isMuted()) ctx.suspend().catch(() => {});
+        });
     };
+    // The speaker button silences the chime and voice mid-boot, too.
+    const unsubscribeMute = subscribeMuted(() => {
+      if (isMuted()) {
+        ctx.suspend().catch(() => {});
+        synth?.cancel();
+      } else if (unlocked) {
+        ctx.resume().catch(() => {});
+      }
+    });
     const gestureEvents: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     gestureEvents.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
 
     return () => {
+      unsubscribeMute();
       clearTimeout(loadTimer);
       gestureEvents.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
       ctx.close().catch(() => {});

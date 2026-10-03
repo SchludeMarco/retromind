@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle } from './components';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -468,6 +468,7 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
       <BootOverlay />
       <CrtOverlay />
+      <MuteToggle />
       {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
       <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
