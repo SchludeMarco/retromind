@@ -13,7 +13,8 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal } from './components';
+import { hasUnseenNews } from './lib/whatsNew';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -75,6 +76,8 @@ const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
+  const [unseenNews, setUnseenNews] = useState(hasUnseenNews);
   const [showBottomControls, setShowBottomControls] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
@@ -520,6 +523,9 @@ const App: React.FC = () => {
             }`}
           >
             ⚙️
+            {unseenNews && (
+              <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
+            )}
           </button>
           {isSettingsOpen && (
             <SettingsModal
@@ -531,8 +537,17 @@ const App: React.FC = () => {
               isSpotifyPlaying={spotify.isPlaying}
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
               onOpenFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
+              onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
+              hasUnseenNews={unseenNews}
               onDismiss={() => setIsSettingsOpen(false)}
               onCloseClick={closeSettingsWithSfx}
+            />
+          )}
+
+          {isWhatsNewOpen && (
+            <WhatsNewModal
+              onDismiss={() => setIsWhatsNewOpen(false)}
+              onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
             />
           )}
 
