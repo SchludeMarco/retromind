@@ -1069,3 +1069,29 @@ a {
 .yt-meta {
   font-size: 14px;
 }
+.yt-ask {
+  aspect-ratio: auto;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+.yt-ask-box {
+  max-width: 92%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 12px 16px;
+  background: rgba(7, 7, 26, 0.88);
+  border: 2px solid var(--panel);
+  text-align: center;
+  font-size: 18px;
+}
+.yt-ask-box p {
+  margin: 0 0 8px;
+}
+.yt-ask-box .dim {
+  margin: 8px 0 0;
+  font-size: 15px;
+}

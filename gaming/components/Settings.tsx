@@ -3,6 +3,8 @@ import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
 import { TRACKS, trackById } from '../lib/tracks';
+import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
+import { warmUpGoogle } from '../../lib/googleAuth';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'arcade', label: 'ARCADE' },
@@ -29,6 +31,7 @@ interface Props {
 // preferences to every device) plus sound and screen colour.
 export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
   const muted = useMuted();
+  const youtube = useConsent('youtube') === true;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -75,6 +78,10 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
               <button
                 className="px-btn big"
                 onClick={cloud.signIn}
+                // Google's script only loads once someone reaches for this button.
+                onPointerEnter={warmUpGoogle}
+                onPointerDown={warmUpGoogle}
+                onFocus={warmUpGoogle}
                 disabled={cloud.status === 'signing_in'}
                 data-nav
               >
@@ -141,6 +148,28 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
               </button>
             ))}
           </div>
+        </section>
+
+        <section>
+          <h3 className="pixel-font">DATENSCHUTZ</h3>
+          <div className="settings-row">
+            <button className="px-btn" aria-pressed={youtube} onClick={() => setConsent('youtube', !youtube)} data-nav>
+              ▶ YOUTUBE {youtube ? 'ERLAUBT' : 'AUS'}
+            </button>
+          </div>
+          <p className="dim">
+            Videos laden erst, wenn du YouTube erlaubst. Bilder und Texte von Wikipedia holt RetroMind über den eigenen
+            Server, dein Browser spricht nicht direkt mit Wikipedia.
+          </p>
+          <p>
+            <a href={PRIVACY_URL} target="_blank" rel="noreferrer">
+              Datenschutzerklärung
+            </a>
+            {' · '}
+            <a href={IMPRINT_URL} target="_blank" rel="noreferrer">
+              Impressum
+            </a>
+          </p>
         </section>
       </div>
     </div>

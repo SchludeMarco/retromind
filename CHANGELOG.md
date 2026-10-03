@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Datenschutz (DSGVO) für beide Editionen** (2026-10-03, PR #87): Neue
+  Seiten „Datenschutz“ und „Impressum“, verlinkt unten auf jeder Seite und in
+  den Einstellungen. Musik von Spotify (Zeitreise) und Videos von YouTube
+  (Gaming) laden erst, wenn du zustimmst; ändern kannst du das jederzeit in
+  den Einstellungen. Schriften, Bilder, Klänge und Wikipedia-Texte kommen jetzt
+  über RetroMind selbst, dein Browser verbindet sich nicht mehr mit Google
+  Fonts, Wikipedia oder anderen fremden Servern. Googles Anmelde-Skript lädt
+  erst, wenn du zum Anmelde-Knopf greifst.
+
 - **Gaming-Edition: YouTube-Videos zu jedem Spiel** (2026-10-03, PR #86): Auf
   der Seite eines Spiels startet automatisch das beliebteste YouTube-Video
   dazu, im neuen Reiter „Videos“ stehen weitere zur Auswahl. Ist der Ton in

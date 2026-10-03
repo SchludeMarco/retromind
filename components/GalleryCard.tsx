@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GalleryItem } from '../types';
+import { viaProxy } from '../lib/privacy';
 
 export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> = ({ item, onClick }) => {
   const [imgFailed, setImgFailed] = useState(false);
@@ -8,7 +9,7 @@ export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> =
     <button onClick={onClick} className="retro-card retro-photo-frame overflow-hidden h-56 group relative text-left bg-retro-cream">
       {showImage ? (
         <img
-          src={item.image}
+          src={viaProxy(item.image)}
           alt={item.title}
           loading="lazy"
           onError={() => setImgFailed(true)}

@@ -15,6 +15,7 @@ import { Settings, PALETTES } from './components/Settings';
 import { useCloudSync } from './lib/useCloudSync';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
+import { IMPRINT_URL, PRIVACY_URL } from '../lib/privacy';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies';
 
@@ -585,6 +586,10 @@ export const GamingApp: React.FC = () => {
             Inhalte live aus Wikipedia (CC BY-SA). Spieletitel und Bilder gehören ihren Rechteinhabern. RetroMind
             verlinkt nur auf legale Wege, alte Games heute zu zocken.{' '}
             <a href={withGoogleParam(withMuteParam('https://retromind.vercel.app/'))}>Zurück zu RetroMind</a>
+            {' · '}
+            <a href={PRIVACY_URL}>Datenschutz</a>
+            {' · '}
+            <a href={IMPRINT_URL}>Impressum</a>
           </footer>
         </main>
       )}

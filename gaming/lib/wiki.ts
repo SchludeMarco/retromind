@@ -1,12 +1,16 @@
-// Live web content from Wikipedia/Wikimedia. Both the REST and the action API
-// allow anonymous cross-origin reads (`origin=*`), so this runs in the browser
-// with no server or key. German text is preferred, English is the fallback.
+import { viaProxy } from '../../lib/privacy';
+
+// Live web content from Wikipedia/Wikimedia, fetched through our own server
+// (/api/proxy) so the visitor's browser never contacts Wikipedia directly.
+// German text is preferred, English is the fallback.
 
 export interface WikiSummary {
   title: string;
   extract: string;
   url: string;
   thumbnail?: string;
+  /** Smaller copy, used when the original is too big for the proxy. */
+  thumbnailSmall?: string;
   lang: 'de' | 'en';
 }
 
@@ -27,7 +31,7 @@ const enc = (t: string) => encodeURIComponent(t.replace(/ /g, '_'));
 
 async function getJson(url: string): Promise<any | null> {
   try {
-    const res = await fetch(url, { headers: { Accept: 'application/json' } });
+    const res = await fetch(viaProxy(url), { headers: { Accept: 'application/json' } });
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -60,7 +64,8 @@ async function summaryIn(lang: 'de' | 'en', title: string): Promise<WikiSummary 
     title: s.title,
     extract: s.extract,
     url: s.content_urls?.desktop?.page ?? `https://${lang}.wikipedia.org/wiki/${enc(title)}`,
-    thumbnail: s.originalimage?.source ?? s.thumbnail?.source,
+    thumbnail: viaProxy(s.originalimage?.source ?? s.thumbnail?.source ?? '') || undefined,
+    thumbnailSmall: viaProxy(s.thumbnail?.source ?? '') || undefined,
     lang,
   };
 }
@@ -92,7 +97,7 @@ export async function fetchImages(enTitle: string, max = 8): Promise<WikiImage[]
     .map((it) => {
       const best = (it.srcset ?? []).slice(-1)[0]?.src ?? '';
       return {
-        src: best.startsWith('//') ? `https:${best}` : best,
+        src: viaProxy(best.startsWith('//') ? `https:${best}` : best),
         caption: (it.caption?.text ?? '').trim(),
         filePage: `https://en.wikipedia.org/wiki/${enc(it.title ?? '')}`,
       };

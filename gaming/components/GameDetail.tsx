@@ -6,6 +6,7 @@ import { chip } from '../lib/chiptune';
 import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
 import { fetchVideos, formatViews, YouTubeVideo } from '../lib/youtube';
+import { useConsent, viaProxy } from '../../lib/privacy';
 
 type Tab = 'info' | 'videos' | 'shots' | 'guide' | 'web';
 
@@ -60,6 +61,7 @@ export const GameDetail: React.FC<{
   const dialogRef = useRef<HTMLDivElement>(null);
   const [videos, setVideos] = useState<YouTubeVideo[] | undefined>(undefined);
   const [playing, setPlaying] = useState<YouTubeVideo | null>(null);
+  const youtubeOk = useConsent('youtube') === true;
 
   // The best rated video starts on its own as soon as the list is there.
   useEffect(() => {
@@ -76,7 +78,8 @@ export const GameDetail: React.FC<{
     };
   }, [game.title, game.platform]);
 
-  const videoOn = !!playing;
+  // Only counts as playing once YouTube is allowed and the player is there.
+  const videoOn = !!playing && youtubeOk;
   useEffect(() => {
     onVideoChange?.(videoOn);
   }, [videoOn, onVideoChange]);
@@ -178,7 +181,7 @@ export const GameDetail: React.FC<{
           </button>
         </div>
 
-        {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} />}
+        {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} thumb={playing.thumb} />}
         {playing && (
           <p className="dim yt-caption">
             ▶ {playing.title}
@@ -235,7 +238,17 @@ export const GameDetail: React.FC<{
               )}
             </div>
             <div>
-              {summary?.thumbnail && <img className="boxart" src={summary.thumbnail} alt={`Titelbild: ${game.title}`} />}
+              {summary?.thumbnail && (
+                <img
+                  className="boxart"
+                  src={summary.thumbnail}
+                  alt={`Titelbild: ${game.title}`}
+                  onError={(e) => {
+                    const small = summary.thumbnailSmall;
+                    if (small && e.currentTarget.src !== new URL(small, window.location.href).href) e.currentTarget.src = small;
+                  }}
+                />
+              )}
             </div>
           </div>
         )}
@@ -259,7 +272,7 @@ export const GameDetail: React.FC<{
                       }}
                       data-nav
                     >
-                      <img src={v.thumb} alt="" loading="lazy" />
+                      <img src={viaProxy(v.thumb)} alt="" loading="lazy" />
                       <span className="yt-title">{v.title}</span>
                       <span className="dim yt-meta">
                         {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString('de-DE')} 👍` : '']

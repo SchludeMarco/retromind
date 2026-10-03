@@ -30,6 +30,11 @@ export function preloadGoogleIdentityServices(): Promise<void> {
   return loadGis();
 }
 
+/** For sign-in buttons (hover/focus/press): fetch the script just before the tap. */
+export function warmUpGoogle() {
+  if (getGoogleClientId()) loadGis().catch(() => {});
+}
+
 function loadGis(): Promise<void> {
   if (gisLoadPromise) return gisLoadPromise;
   gisLoadPromise = new Promise((resolve, reject) => {
