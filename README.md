@@ -1,16 +1,41 @@
-# RetroMind: Deine Zeitreise (V2.0.0)
+# RetroMind
 
-**Live: https://retromind.vercel.app**
+**Zeitreise: https://retromind.vercel.app** · **Gaming-Edition: https://retromind-gaming.vercel.app**
 
-Eine interaktive, KI-gestützte Reise durch die eigene Biografie. RetroMind führt
-Jahrzehnt für Jahrzehnt (1960–2010) zurück, stellt persönliche Erinnerungsfragen,
-**sammelt die Antworten** und fasst sie zu einem exportierbaren **Erinnerungs-Buch**
-zusammen.
+RetroMind ist eine interaktive, KI-gestützte Reise durch die eigene
+Vergangenheit. Die App führt Jahrzehnt für Jahrzehnt (1960–2010) zurück,
+stellt persönliche Erinnerungsfragen, **sammelt die Antworten** und fasst sie
+zu einem exportierbaren **Erinnerungs-Buch** zusammen. Die Gaming-Edition
+macht dasselbe für Videospiele von den 1980ern bis heute.
 
-Entstanden als eigenständiges Portfolio-Projekt (ursprünglich in Google AI Studio
-prototypisiert) im Umfeld der Sm@rt-App-Familie.
+Alle Änderungen an der App stehen in der [CHANGELOG.md](CHANGELOG.md).
 
-## Features
+## Wofür es RetroMind gibt
+
+- **Erinnerungen wecken:** Bilder, Stichworte, Musik und Fragen aus der
+  eigenen Kindheit und Jugend holen Dinge zurück, an die man lange nicht
+  gedacht hat.
+- **Erinnerungen festhalten:** Was dabei hochkommt, wird nicht nur erzählt,
+  sondern aufgeschrieben und landet in einem Buch, das man ausdrucken,
+  verschenken oder weitergeben kann.
+- **Wiederentdecken:** Die Gaming-Edition hilft, vergessene Spiele von
+  damals wiederzufinden, mit Bildern, Hintergründen, Tipps und Links zum
+  Weiterspielen oder Anschauen.
+
+## Warum RetroMind entwickelt wurde
+
+RetroMind ist ein eigenständiges Projekt von Marco Schlude, ursprünglich in
+Google AI Studio als Prototyp entstanden und im Umfeld der Sm@rt-App-Familie
+zu einer vollständigen App ausgebaut. Die Idee: Erinnerungen gehen verloren,
+wenn niemand nachfragt. Eine App, die gezielt und persönlich nachfragt, den
+Ton und die Musik der jeweiligen Zeit trifft und das Ergebnis als Buch
+festhält, macht aus Nostalgie etwas Bleibendes. Dabei gilt: Die Daten gehören
+den Nutzer:innen. Alles bleibt zuerst auf dem eigenen Gerät, eine Sicherung im
+eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
+
+## Was RetroMind kann
+
+### Zeitreise
 
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
@@ -66,7 +91,11 @@ prototypisiert) im Umfeld der Sm@rt-App-Familie.
   hier nicht zugestellt werden kann.
 - **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
 
-## Edition „RetroMind – Gaming“ (`/gaming/`)
+- **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
+  und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
+  Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
+
+### Edition „RetroMind – Gaming“ (`/gaming/`)
 
 Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
@@ -95,6 +124,16 @@ unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`, für die
 Cloud-Sicherung außerdem `VITE_GOOGLE_CLIENT_ID` und die Domain als erlaubten
 JavaScript-Ursprung im Google-OAuth-Client).
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
+
+### Für alle Module
+
+- **Ein Stummschalter** ([`lib/mute.ts`](lib/mute.ts)) – ein Lautsprecher-Knopf
+  schaltet jedes Modul stumm, auch über verschiedene Adressen hinweg
+  (`?mute=1/0`). Neue Module nutzen denselben Schalter.
+- **Eine Google-Anmeldung** ([`lib/googleLogin.ts`](lib/googleLogin.ts)) –
+  freiwillig, gilt für alle Module, öffnet nie ungefragt ein Fenster.
+- **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud-Sicherung im
+  eigenen Google Drive ist ein Angebot, keine Pflicht.
 
 ## Architektur
 
@@ -130,7 +169,7 @@ keine Playlists.
 ## Tech-Stack
 
 - **React 19** + **TypeScript** (strict), Build über **Vite 6**
-- **Tailwind CSS** (Play-CDN) + eigenes Retro-Theme in [`index.html`](index.html)
+- **Tailwind CSS 4** (über `@tailwindcss/vite` im Build) + eigenes Retro-Theme in [`index.css`](index.css)
 - **Vercel Functions** (`api/*.js`) als KI-Proxy · **@google/genai** (Gemini + Veo)
 - Web Speech API (Diktat), `window.print()` (PDF), `localStorage` (Sitzung)
 - **Google Identity Services** (Login + OAuth-Token) · **Google Drive API**
@@ -193,8 +232,51 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
   widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
   gesichert wird.
-- **Tailwind Play-CDN** ist nicht für Hochlast-Produktion optimiert.
+
+## Pflege dieses Repos
+
+- **[CHANGELOG.md](CHANGELOG.md):** Jede Änderung an der App bekommt dort einen
+  Eintrag (neueste oben, unter „Unreleased“).
+- **README.md:** Neue Funktionen kommen unter „Was RetroMind kann“, neue Ideen
+  unten unter „Ideen und offene Punkte“; Umgesetztes wird dort gestrichen.
+- **[`_removed_content/`](_removed_content/):** Entfernte Teile der App werden
+  hier aufbewahrt statt gelöscht (wird nicht gebaut oder ausgeliefert).
 
 ## Lizenz
 
 [MIT](LICENSE) © 2026 Marco Schlude
+
+## Ideen und offene Punkte
+
+### Muss
+
+- **Automatisches Deployment absichern:** Mehrfach kamen gemergte Änderungen
+  erst nach einem manuellen „Redeploy“ in Vercel live. Ursache klären, damit
+  jeder Merge zuverlässig ausgeliefert wird.
+- **Automatische Prüfung bei jedem Pull Request:** Bisher prüft nur der
+  Vercel-Build. Ein GitHub-Workflow mit `npm run typecheck` und
+  `npm run build` würde Fehler vor dem Merge finden.
+
+### Sollte
+
+- **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
+  Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
+  Gaming-Edition kann das schon).
+- **„Was ist neu?“ in der App:** Die Einträge aus der CHANGELOG.md als kleine
+  Ansicht in den Einstellungen, damit Nutzer:innen Neuerungen sehen.
+- **Mehr Spiele im kuratierten Gaming-Katalog** mit eigenen Tipps.
+- **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
+  Rücksprache).
+
+### Könnte
+
+- **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
+  Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
+  gemeinsamer Anmeldung.
+- **Erinnerungs-Buch als gestaltetes PDF** mit Fotos aus dem Memory-Labor,
+  statt über den Druckdialog.
+- **Erinnerungen teilen:** Ein Buch oder einzelne Erinnerungen mit Familie
+  und Freund:innen teilen, die eigene Erinnerungen ergänzen.
+- **Englische Sprachversion.**
+- **Video im Memory-Labor ohne Google-Billing**, z. B. durch eine animierte
+  Diashow statt Veo.

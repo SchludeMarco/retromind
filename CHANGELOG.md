@@ -1,6 +1,58 @@
 # Changelog
 
+Hier steht jede Änderung an RetroMind (Zeitreise und Gaming-Edition), die
+neueste oben. Neue Einträge kommen unter „Unreleased“, bis eine Version
+vergeben wird. Jede Änderung, die in die App gelangt, bekommt hier einen
+Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
+
 ## Unreleased
+
+- **Dokumentation** (2026-10-03): Die README erklärt jetzt, wofür es
+  RetroMind gibt, warum die App entwickelt wurde und was sie kann, und
+  sammelt unten Ideen (Muss / Sollte / Könnte). Diese CHANGELOG führt alle
+  Änderungen; beides wird bei jeder Änderung mitgepflegt.
+
+- **Zeitreise: Logo und Untertitel im Röhrenbildschirm-Look** (2026-10-03,
+  PR #81): Der Kopfbereich liegt jetzt wie der Rest der App unter dem
+  CRT-Filter (Scanlines, leichte Unschärfe, Schleier). Die Neonfarben des
+  Logos sind etwas wärmer, passend zum Papier-Hintergrund.
+
+- **Zeitreise: neuer Untertitel** (2026-10-03, PR #80): Unter dem Logo steht
+  „… willkommen zurück in der Vergangenheit“ statt „Deine Reise zurück in die
+  Zeit“.
+
+- **Zeitreise: Logo statt Text-Überschrift** (2026-10-03, PR #79): Die große
+  Text-Überschrift „RetroMind“ ist auf allen Bildschirmen durch Marcos
+  8-Bit-Logo ersetzt, mit durchsichtigem Hintergrund
+  (`public/retromind-logo-header.webp`). Die Willkommens-Karte zeigt das Logo
+  nicht mehr doppelt. Die alte Überschrift liegt im neuen Ordner
+  `_removed_content/`, der entfernte Teile der App aufbewahrt.
+
+- **Zeitreise: Startseite ohne doppelten Namen** (2026-10-03, PR #78): Erster
+  Schritt zum Logo im Kopf: Überschrift auf der Startseite ausgeblendet, Logo
+  in der Karte ohne dunklen Kasten (in PR #79 durch das Logo im Kopfbereich
+  abgelöst).
+
+- **Gaming-Edition: Musikstück wählbar** (2026-10-03, PR #77): In den
+  Einstellungen lässt sich zwischen fünf eigenen Chiptune-Stücken wählen
+  (Abenteuer, C64, Turbo, Verlies, Strand). Die Wahl wird mit dem
+  Google-Konto abgeglichen wie Farbe und Ton.
+
+- **Google-Anmeldung ohne ungefragte Fenster** (2026-10-03, PR #76): Beim
+  Öffnen erscheint kein Google-Fenster mehr von selbst. Eine Anmeldung bleibt
+  eine Stunde gültig und wird beim nächsten Öffnen wiederhergestellt; danach
+  zeigt das Modul wieder den Anmelde-Knopf.
+
+- **Eine Google-Anmeldung für alle Module** (2026-10-03, PR #75): Wer sich
+  bewusst anmeldet, bleibt in Zeitreise und Gaming-Edition angemeldet; wer
+  sich in einem Modul abmeldet, ist überall abgemeldet. Ohne Anmeldung
+  versucht die App keine stille Anmeldung mehr.
+
+- **Ein Stummschalter für alle Module** (2026-10-03, PR #74): Ein
+  Lautsprecher-Knopf oben rechts (und ein Schalter in den Einstellungen)
+  schaltet in der Zeitreise alle Töne stumm: Start-Gong, Begrüßung,
+  Klick-Geräusche, Spotify und Videos. Die Gaming-Edition und jedes spätere
+  Modul nutzen denselben Schalter.
 
 - **Gaming-Edition: Musik lauter, Stummschalter:** Die Musik (Titel und Hub)
   ist etwa dreimal so laut, ein Limiter verhindert Übersteuern. Ein
