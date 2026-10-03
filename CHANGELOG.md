@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise: Feedback-Versand eingerichtet** (2026-10-03, PR #89): Die
+  Feedback-Mail findet ihren Empfänger jetzt auch über den in Vercel gesetzten
+  Namen `FEEDBACK_TO_MAIL`.
+
 - **Impressum mit Namen und Kontakt** (2026-10-03, PR #88): Im Impressum
   stehen jetzt der Name des Betreibers und eine Kontakt-E-Mail statt
   Platzhaltern.

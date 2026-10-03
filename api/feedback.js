@@ -75,7 +75,8 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const toEmail = process.env.FEEDBACK_TO_EMAIL;
+  // FEEDBACK_TO_MAIL is accepted too (that is how it was first set in Vercel).
+  const toEmail = process.env.FEEDBACK_TO_EMAIL || process.env.FEEDBACK_TO_MAIL;
   const mailConfigured = !!(apiKey && toEmail);
   const store = storeConfigured();
   if (!mailConfigured && !store) {
