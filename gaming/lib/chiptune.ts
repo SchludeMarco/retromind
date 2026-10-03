@@ -1,8 +1,10 @@
 // A tiny 8-bit sound chip on top of Web Audio: square/triangle/noise voices
-// for UI blips, a looping original chiptune and a C64-style title tune (sid.ts).
+// for UI blips, the hub's selectable original tunes (tracks.ts) and a C64-style
+// title tune (sid.ts).
 // Music and blips are synthesized; only the boot engine is a recorded sample.
 
 import { SidPlayer } from './sid';
+import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
 
 export type SfxName = 'blip' | 'select' | 'back' | 'coin' | 'powerup' | 'error' | 'start' | 'achievement';
 
@@ -18,30 +20,6 @@ export function noteFreq(note: string): number {
   const semitone = NOTE_INDEX[m[1]] + (Number(m[2]) + 1) * 12;
   return 440 * Math.pow(2, (semitone - 69) / 12);
 }
-
-// --- The background tune: 8th-note steps, four voices, two 4-bar patterns. ---
-const BPM = 132;
-const STEP = 60 / BPM / 2;
-// prettier-ignore
-const LEAD = [
-  'A4','-','C5','E5','-','D5','C5','-',  'B4','-','G4','-','B4','C5','D5','-',
-  'C5','-','E5','A5','-','G5','E5','-',  'F5','E5','D5','-','E5','-','-','-',
-  'A4','-','C5','E5','-','D5','C5','-',  'B4','-','G4','-','B4','D5','G5','-',
-  'F5','-','E5','D5','-','C5','B4','-',  'C5','B4','A4','-','A4','-','-','-',
-];
-// prettier-ignore
-const BASS = [
-  'A2','A2','A3','A2','A2','A2','A3','A2',  'G2','G2','G3','G2','G2','G2','G3','G2',
-  'F2','F2','F3','F2','F2','F2','F3','F2',  'E2','E2','E3','E2','E2','E2','E3','E2',
-  'A2','A2','A3','A2','A2','A2','A3','A2',  'G2','G2','G3','G2','G2','G2','G3','G2',
-  'D2','D2','D3','D2','F2','F2','F3','F2',  'E2','E2','E3','E2','A2','A2','A3','A2',
-];
-// Arpeggio chord roots per bar (A minor, G, F, E …).
-// prettier-ignore
-const ARP_CHORDS = [
-  ['A4','C5','E5'], ['G4','B4','D5'], ['F4','A4','C5'], ['E4','G#4','B4'],
-  ['A4','C5','E5'], ['G4','B4','D5'], ['D4','F4','A4'], ['E4','G#4','B4'],
-];
 
 // Boot sound: the first seconds of a royalty-free diesel start recording
 // (starter, catch, revs), trimmed and faded in public/gaming/.
@@ -61,7 +39,10 @@ class ChipSound {
   private musicTimer: number | null = null;
   private nextStepTime = 0;
   private step = 0;
+  private hubSid: SidPlayer | null = null;
   musicEnabled = true;
+  /** Which hub tune plays (settings); applies from the next startMusic. */
+  track: TrackId = DEFAULT_TRACK;
   sfxEnabled = true;
   private isMuted = false;
 
@@ -286,7 +267,13 @@ class ChipSound {
   }
 
   startMusic() {
-    if (!this.musicEnabled || !this.ctx || this.musicTimer !== null) return;
+    if (!this.musicEnabled || !this.ctx || !this.musicBus || this.musicTimer !== null || this.hubSid) return;
+    if (!trackById(this.track).steps) {
+      if (!this.noise) return;
+      this.hubSid = new SidPlayer(this.ctx, this.musicBus, this.noise);
+      this.hubSid.start();
+      return;
+    }
     this.nextStepTime = this.ctx.currentTime + 0.1;
     this.step = 0;
     // Look-ahead scheduler: every 50 ms queue all steps due in the next 200 ms.
@@ -296,6 +283,8 @@ class ChipSound {
   stopMusic() {
     if (this.musicTimer !== null) window.clearInterval(this.musicTimer);
     this.musicTimer = null;
+    this.hubSid?.stop();
+    this.hubSid = null;
   }
 
   setMusic(on: boolean) {
@@ -305,22 +294,39 @@ class ChipSound {
   }
 
   private schedule() {
-    if (!this.ctx || !this.musicBus) return;
+    const tune = trackById(this.track).steps;
+    if (!this.ctx || !this.musicBus || !tune) return;
+    const step = 60 / tune.bpm / 2;
     while (this.nextStepTime < this.ctx.currentTime + 0.2) {
-      const i = this.step % LEAD.length;
+      const i = this.step % tune.lead.length;
       const t = this.nextStepTime;
-      this.tone(this.musicBus, noteFreq(LEAD[i]), t, STEP * 0.9, 'square', 0.07);
-      this.tone(this.musicBus, noteFreq(BASS[i]), t, STEP * 0.85, 'triangle', 0.2);
-      const chord = ARP_CHORDS[Math.floor(i / 8)];
+      this.voice(tune.lead, i, t, step, tune.leadWave, tune.leadGain);
+      this.voice(tune.bass, i, t, step, tune.bassWave, tune.bassGain);
+      const chord = tune.chords[Math.floor(i / 8)];
       // 32nd-note arpeggio, the classic way to fake chords on one channel.
       for (let k = 0; k < 2; k++) {
-        this.tone(this.musicBus, noteFreq(chord[(i * 2 + k) % 3]) * 2, t + (k * STEP) / 2, STEP / 2, 'square', 0.025);
+        this.tone(this.musicBus, noteFreq(chord[(i * 2 + k) % 3]) * 2, t + (k * step) / 2, step / 2, 'square', 0.025);
       }
-      if (i % 2 === 1) this.hat(t, 0.08);
-      this.nextStepTime += STEP;
+      if (hatOn(tune.hats, i)) this.hat(t, 0.08);
+      this.nextStepTime += step;
       this.step++;
     }
   }
+
+  /** Plays the note starting at step i, held for as many steps as '=' follow it. */
+  private voice(pattern: string[], i: number, t: number, step: number, wave: Wave, gain: number) {
+    const note = pattern[i];
+    if (note === '-' || note === '=') return;
+    let len = 1;
+    while (pattern[i + len] === '=') len++;
+    this.tone(this.musicBus!, noteFreq(note), t, step * (len - 0.1), wave, gain);
+  }
+}
+
+function hatOn(hats: StepTrack['hats'], i: number) {
+  if (hats === 'all') return true;
+  if (hats === 'offbeat') return i % 2 === 1;
+  return i % 8 === 7;
 }
 
 export const chip = new ChipSound();

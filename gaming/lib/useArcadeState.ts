@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Game } from '../data/games';
 import { hasMuteChoice, setMuted } from '../../lib/mute';
+import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
@@ -16,6 +17,8 @@ export interface ArcadeState {
   customGames: Record<string, Game>;
   palette: Palette;
   music: boolean;
+  /** The hub tune picked in the settings. */
+  track: TrackId;
   sfx: boolean;
   hiScore: number;
 }
@@ -30,6 +33,7 @@ const DEFAULTS: ArcadeState = {
   customGames: {},
   palette: 'arcade',
   music: true,
+  track: DEFAULT_TRACK,
   sfx: true,
   hiScore: 0,
 };
@@ -41,7 +45,8 @@ function load(): ArcadeState {
     const { muted, ...saved } = JSON.parse(raw);
     // The speaker button used to be stored here; it is app-wide now (lib/mute).
     if (muted === true && !hasMuteChoice()) setMuted(true);
-    return { ...DEFAULTS, ...saved };
+    const state = { ...DEFAULTS, ...saved };
+    return isTrackId(state.track) ? state : { ...state, track: DEFAULT_TRACK };
   } catch {
     return DEFAULTS;
   }
@@ -65,6 +70,7 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     hiScore: Math.max(local.hiScore, remote.hiScore ?? 0),
     palette: remote.palette ?? local.palette,
     music: remote.music ?? local.music,
+    track: isTrackId(remote.track) ? remote.track : local.track,
     sfx: remote.sfx ?? local.sfx,
   };
 }

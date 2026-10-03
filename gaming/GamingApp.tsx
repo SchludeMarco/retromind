@@ -130,10 +130,12 @@ export const GamingApp: React.FC = () => {
     chip.muted = muted;
   }, [muted]);
   const toggleMute = toggleMuted;
+  // A new pick in the settings restarts the hub music with that tune.
   useEffect(() => {
+    chip.track = state.track;
     if (screen === 'hub') chip.setMusic(state.music);
     return () => chip.stopMusic();
-  }, [screen, state.music]);
+  }, [screen, state.music, state.track]);
 
   // Ask the server once whether the AI key is configured.
   useEffect(() => {
