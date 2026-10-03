@@ -1,14 +1,19 @@
-// Server-side proxy for user feedback. Sends the submitted text as an email
-// via Resend. The API key and recipient live only here (Vercel env vars) and
-// never reach the browser.
+// Server-side endpoint for user feedback. Two channels, each optional:
+// - mail to Marco via Resend (RESEND_API_KEY + FEEDBACK_TO_EMAIL)
+// - an entry in feedback.md in the repository (FEEDBACK_GITHUB_TOKEN)
+// When both are set, the mail carries a signed link that copies the
+// feedback into the README as a To Do once Marco agrees.
+// Secrets live only here (Vercel env vars) and never reach the browser.
 
-const CATEGORY_LABELS = {
-  lob: "Lob",
-  tadel: "Tadel",
-  vorschlag: "Vorschlag",
-  wunsch: "Wunsch",
-  sonstiges: "Sonstiges",
-};
+import {
+  CATEGORY_LABELS,
+  FEEDBACK_PATH,
+  addEntry,
+  newFeedbackId,
+  signId,
+  storeConfigured,
+  updateFile,
+} from "./_feedbackStore.js";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,6 +30,44 @@ async function readJsonBody(req) {
   }
 }
 
+const FAILED = { error: "upstream", message: "Der Feedback-Versand ist fehlgeschlagen." };
+
+async function sendMail({ apiKey, toEmail, categoryLabel, text, contact, approveUrl }) {
+  const bodyLines = [
+    `Kategorie: ${categoryLabel}`,
+    contact ? `Kontakt: ${contact}` : "Kontakt: (keine Angabe)",
+    "",
+    text,
+  ];
+  if (approveUrl) {
+    bodyLines.push(
+      "",
+      "—",
+      "Gespeichert in feedback.md (Status: offen).",
+      "Als To Do in die README übernehmen:",
+      approveUrl,
+    );
+  }
+  const upstream = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: process.env.FEEDBACK_FROM_EMAIL || "RetroMind Feedback <onboarding@resend.dev>",
+      to: [toEmail],
+      subject: `RetroMind Feedback: ${categoryLabel}`,
+      text: bodyLines.join("\n"),
+      ...(contact ? { reply_to: contact } : {}),
+    }),
+  });
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    throw new Error(`resend ${upstream.status} ${detail}`);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "method_not_allowed" });
@@ -33,11 +76,13 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.FEEDBACK_TO_EMAIL;
-  if (!apiKey || !toEmail) {
+  const mailConfigured = !!(apiKey && toEmail);
+  const store = storeConfigured();
+  if (!mailConfigured && !store) {
     res.status(503).json({
       error: "not_configured",
       message:
-        "Dieses Demo läuft ohne konfigurierten Feedback-Versand – dein Feedback kann hier nicht als E-Mail zugestellt werden.",
+        "Dieses Demo läuft ohne konfigurierten Feedback-Versand – dein Feedback kann hier nicht zugestellt werden.",
     });
     return;
   }
@@ -56,41 +101,49 @@ export default async function handler(req, res) {
 
   const categoryLabel = CATEGORY_LABELS[category] || "Feedback";
   const trimmedContact = typeof contactEmail === "string" ? contactEmail.trim() : "";
-  const hasContact = trimmedContact.length > 0 && EMAIL_RE.test(trimmedContact);
+  const contact = trimmedContact && EMAIL_RE.test(trimmedContact) ? trimmedContact : "";
 
-  const bodyLines = [
-    `Kategorie: ${categoryLabel}`,
-    hasContact ? `Kontakt: ${trimmedContact}` : "Kontakt: (keine Angabe)",
-    "",
-    text,
-  ];
+  const now = new Date();
+  const id = newFeedbackId(now);
+  // Berlin time, readable in feedback.md: "2026-10-03 14:05"
+  const date = now
+    .toLocaleString("sv-SE", { timeZone: "Europe/Berlin", hour12: false })
+    .slice(0, 16);
 
-  try {
-    const upstream = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: process.env.FEEDBACK_FROM_EMAIL || "RetroMind Feedback <onboarding@resend.dev>",
-        to: [toEmail],
-        subject: `RetroMind Feedback: ${categoryLabel}`,
-        text: bodyLines.join("\n"),
-        ...(hasContact ? { reply_to: trimmedContact } : {}),
-      }),
-    });
-
-    if (!upstream.ok) {
-      const detail = await upstream.text().catch(() => "");
-      console.error("feedback api error:", upstream.status, detail);
-      res.status(502).json({ error: "upstream", message: "Der Feedback-Versand ist fehlgeschlagen." });
-      return;
+  // 1) feedback.md (never with the contact address: the repository is public)
+  let stored = false;
+  if (store) {
+    try {
+      await updateFile(
+        FEEDBACK_PATH,
+        (content) => addEntry(content, { id, date, categoryLabel, text }),
+        `Feedback: ${categoryLabel} (${id})`,
+      );
+      stored = true;
+    } catch (e) {
+      console.error("feedback store error:", e?.message || e);
     }
-
-    res.status(200).json({ ok: true });
-  } catch (e) {
-    console.error("feedback api error:", e?.message || e);
-    res.status(502).json({ error: "upstream", message: "Der Feedback-Versand ist fehlgeschlagen." });
   }
+
+  // 2) mail, with the approve link when the entry was stored
+  let mailed = false;
+  if (mailConfigured) {
+    const host = req.headers["x-forwarded-host"] || req.headers.host;
+    const approveUrl =
+      stored && host
+        ? `https://${host}/api/feedback-approve?id=${encodeURIComponent(id)}&sig=${signId(id)}`
+        : "";
+    try {
+      await sendMail({ apiKey, toEmail, categoryLabel, text, contact, approveUrl });
+      mailed = true;
+    } catch (e) {
+      console.error("feedback mail error:", e?.message || e);
+    }
+  }
+
+  if (!stored && !mailed) {
+    res.status(502).json(FAILED);
+    return;
+  }
+  res.status(200).json({ ok: true, stored, mailed });
 }

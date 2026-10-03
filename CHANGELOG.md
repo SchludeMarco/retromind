@@ -7,7 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Zeitreise: „Was ist neu?“** (2026-10-03): In den Einstellungen zeigt
+- **Zeitreise: Feedback landet in feedback.md** (2026-10-03, PR #84): Feedback
+  aus den Einstellungen kommt weiter per Mail und wird zusätzlich in
+  feedback.md gespeichert, ohne E-Mail-Adresse. In der Mail steckt ein Link,
+  mit dem Marco das Feedback als To Do in die README übernehmen kann.
+
+- **Zeitreise: „Was ist neu?“** (2026-10-03, PR #83): In den Einstellungen zeigt
   „✨ Was ist neu?“ alle Änderungen an RetroMind, die neuesten zuerst, mit
   Datum und Modul. Ein roter Punkt am Zahnrad unten rechts verrät, dass es
   seit dem letzten Blick etwas Neues gibt. Die Liste kommt direkt aus dieser

@@ -87,6 +87,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Feedback-Button** – in den Einstellungen kann jede Nutzer:in Lob, Tadel,
   Vorschläge oder Wünsche zur App hinterlassen; die Nachricht kommt per E-Mail
   an die Betreiber:in an (optional: eigene E-Mail-Adresse für eine Antwort).
+  Zusätzlich wird jedes Feedback (ohne E-Mail-Adresse) in
+  [feedback.md](feedback.md) gespeichert. Ein Link in der Mail übernimmt es
+  nach Zustimmung als To Do unten in diese README.
   Ohne konfigurierten Versand (siehe unten) meldet der Button, dass Feedback
   hier nicht zugestellt werden kann.
 - **Datenschutz-Hinweis** im Intro; **Error Boundary** gegen weiße Seiten.
@@ -143,7 +146,7 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 ```
 Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function)  ──▶  Google Gemini / Veo
                           ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
-                          ──fetch──▶  /api/feedback (Vercel Function)  ──▶  Resend (E-Mail-Versand)
+                          ──fetch──▶  /api/feedback (Vercel Function)  ──▶  Resend (E-Mail) + GitHub (feedback.md)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
                           ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
                           ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
@@ -216,6 +219,7 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | `RESEND_API_KEY`         | Vercel-Env  | Optional: API-Schlüssel von [resend.com](https://resend.com) für den Feedback-Versand (nur serverseitig) |
 | `FEEDBACK_TO_EMAIL`      | Vercel-Env  | Optional: Ziel-E-Mail-Adresse für eingereichtes Feedback; ohne `RESEND_API_KEY` + diese Variable meldet der Feedback-Button „nicht verfügbar” |
 | `FEEDBACK_FROM_EMAIL`    | Vercel-Env  | Optional: Absenderadresse der Feedback-Mail (Standard: Resend-Sandbox-Adresse) |
+| `FEEDBACK_GITHUB_TOKEN`  | Vercel-Env  | Optional: GitHub-Token (fein granuliert, nur dieses Repo, „Contents: Read and write“). Speichert Feedback in `feedback.md` und ermöglicht den „Als To Do übernehmen“-Link in der Mail |
 
 ## Bekannte Einschränkungen
 
@@ -242,6 +246,10 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   Eintrag (neueste oben, unter „Unreleased“).
 - **README.md:** Neue Funktionen kommen unter „Was RetroMind kann“, neue Ideen
   unten unter „Ideen und offene Punkte“; Umgesetztes wird dort gestrichen.
+- **[feedback.md](feedback.md):** Feedback aus der App landet hier
+  automatisch. Unter „To Do“ in dieser README erscheint es erst, wenn Marco
+  über den Link in der Feedback-Mail zustimmt. Erledigte To Dos werden
+  gestrichen und im CHANGELOG vermerkt.
 - **[`_removed_content/`](_removed_content/):** Entfernte Teile der App werden
   hier aufbewahrt statt gelöscht (wird nicht gebaut oder ausgeliefert).
 
@@ -250,6 +258,11 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 [MIT](LICENSE) © 2026 Marco Schlude
 
 ## Ideen und offene Punkte
+
+### To Do
+
+Feedback aus der App, dem Marco zugestimmt hat (über den Link in der
+Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Muss
 
