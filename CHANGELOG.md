@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Gamer-Slang von den 80ern bis heute** (2026-10-03, PR #85):
+  Knöpfe, Meldungen und Erfolge sprechen jetzt die Sprache der Zocker aus
+  allen Jahrzehnten, von „Kiste an, Alter!“ über „Epic Fail“ bis „no cap“.
+  Aus „Meine Sammlung“ wird „Mein Stash“, aus „Erfolge“ werden
+  „Achievements“. Auch der Retro-Guru im Chat streut jetzt Slang ein.
+
 - **Zeitreise: Feedback landet in feedback.md** (2026-10-03, PR #84): Feedback
   aus den Einstellungen kommt weiter per Mail und wird zusätzlich in
   feedback.md gespeichert, ohne E-Mail-Adresse. In der Mail steckt ein Link,

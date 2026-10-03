@@ -62,7 +62,7 @@ export const GamingApp: React.FC = () => {
   const onAchievement = useCallback(
     (a: Achievement) => {
       chip.play('achievement');
-      showToast(`ERFOLG: ${a.title}`, a.text);
+      showToast(`ACHIEVEMENT UNLOCKED: ${a.title}`, a.text);
     },
     [showToast]
   );
@@ -171,7 +171,7 @@ export const GamingApp: React.FC = () => {
     onKonami: () => {
       unlock('konami');
       chip.play('powerup');
-      showToast('+30 LEBEN', 'Cheat aktiviert. Respekt, Player 1.');
+      showToast('+30 LEBEN', 'Cheat aktiviert. Voll krass, Player 1. Ehrenmann!');
       setRainbow(true);
       setTimeout(() => setRainbow(false), 6000);
     },
@@ -306,10 +306,10 @@ export const GamingApp: React.FC = () => {
     const total = page.total || hits.length;
     const n = total.toLocaleString('de-DE');
     const label = !page.games.length
-      ? `${n} Treffer zu „${q}“`
+      ? `${n} Treffer zu „${q}“. Nice!`
       : related
-        ? `Kein Spiel heißt so, aber ${n} erwähnen „${q}“`
-        : `${n} ${total === 1 ? 'Spiel' : 'Spiele'} mit „${q}“ im Titel`;
+        ? `Kein Game heißt so, aber ${n} erwähnen „${q}“. Lowkey auch spannend.`
+        : `${n} ${total === 1 ? 'Game' : 'Games'} mit „${q}“ im Titel. Läuft!`;
     setSearchMore({ term: q, total, next: page.nextOffset, loading: false, related, label });
     chip.play(hits.length ? 'powerup' : 'error');
   };
@@ -377,7 +377,7 @@ export const GamingApp: React.FC = () => {
             </button>
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>
-                <span className="label">SPIELER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
+                <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
               </div>
             )}
             <div>
@@ -395,36 +395,36 @@ export const GamingApp: React.FC = () => {
           </header>
 
           <div className="ticker" aria-hidden="true">
-            <span>WUSSTEST DU? ★ {tickerFact}</span>
+            <span>FUN FACT, DIGGA ★ {tickerFact}</span>
           </div>
 
           <div className="toolbar">
             <button className="px-btn big" onClick={insertCoin} data-nav aria-live="polite">
-              {rolling ? `▶ ${rolling}` : '● INSERT COIN · ZUFALLSFUND'}
+              {rolling ? `▶ ${rolling}` : '● INSERT COIN · ÜBERRASCH MICH!'}
             </button>
             <form className="search" onSubmit={runSearch} role="search">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Welches Spiel suchst du? z. B. Rayman, Golden Axe …"
+                placeholder="Welches Game, Digga? z. B. Rayman, Golden Axe …"
                 aria-label="Spiel suchen"
                 data-nav
               />
               <button className="px-btn" type="submit" data-nav>
-                SUCHEN
+                GO!
               </button>
             </form>
           </div>
 
           <div className="toolbar" style={{ marginTop: 4 }}>
             <button className="px-btn" aria-pressed={view === 'catalog'} onClick={() => switchView('catalog')} data-nav>
-              VERGESSENE SCHÄTZE
+              OLDSCHOOL-PERLEN
             </button>
             <button className="px-btn" aria-pressed={view === 'collection'} onClick={() => switchView('collection')} data-nav>
-              MEINE SAMMLUNG ({collection.length})
+              MEIN STASH ({collection.length})
             </button>
             <button className="px-btn" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
-              ERFOLGE {state.achievements.length}/{ACHIEVEMENTS.length}
+              ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
             </button>
             {results && (
               <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
@@ -487,8 +487,8 @@ export const GamingApp: React.FC = () => {
                 data-nav
               >
                 {platform
-                  ? `${KIND_ICON[platformInfo(platform)?.kind ?? 'console']} KONSOLE: ${platform.toUpperCase()} ▾`
-                  : '🎮 KONSOLE WÄHLEN ▾'}
+                  ? `${KIND_ICON[platformInfo(platform)?.kind ?? 'console']} KISTE: ${platform.toUpperCase()} ▾`
+                  : '🎮 WELCHE KISTE? ▾'}
               </button>
               {platform && (
                 <button
@@ -513,25 +513,25 @@ export const GamingApp: React.FC = () => {
                     <h3 className="pixel-font">
                       {got ? '🏆' : '🔒'} {got || a.id !== 'konami' ? a.title : '???'}
                     </h3>
-                    {got || a.id !== 'konami' ? a.text : 'Ein Geheimnis. Vielleicht kennst du es aus alten Zeiten …'}
+                    {got || a.id !== 'konami' ? a.text : 'Top secret. Wer damals cool war, kennt’s …'}
                   </div>
                 );
               })}
             </div>
           ) : searching || (archiveActive && archive.loading && !shown.length) ? (
             <p className="loading pixel-font" style={{ fontSize: 11 }} role="status">
-              {searching ? 'DURCHSUCHE DIE GRABBELKISTE …' : 'ÖFFNE DAS ARCHIV …'} <span className="blink">▮</span>
+              {searching ? 'WÜHLE IN DER GRABBELKISTE … SEKUNDE, BRO' : 'LOADING … BITTE NICHT AUSSCHALTEN'} <span className="blink">▮</span>
             </p>
           ) : shown.length ? (
             <>
               {archiveActive && (
                 <p className="dim archive-count">
-                  {catalog.length > 0 && `${catalog.length} ${catalog.length === 1 ? 'handverlesener Schatz' : 'handverlesene Schätze'}, dazu `}
+                  {catalog.length > 0 && `${catalog.length} ${catalog.length === 1 ? 'handverlesene Perle' : 'handverlesene Perlen'}, dazu `}
                   {archive.total > 0
-                    ? `${archive.total.toLocaleString('de-DE')} Spiele aus dem Wikipedia-Archiv`
+                    ? `${archive.total.toLocaleString('de-DE')} Games aus dem Wikipedia-Archiv. Fett!`
                     : archive.loading
                       ? 'das Archiv wird geladen …'
-                      : 'das Archiv ist gerade nicht erreichbar'}
+                      : 'das Archiv ist gerade offline. Tote Hose.'}
                 </p>
               )}
               {view === 'search' && searchMore.term && (
@@ -556,15 +556,15 @@ export const GamingApp: React.FC = () => {
                     {searchMore.loading
                       ? 'LADE …'
                       : searchMore.next !== null
-                        ? '▼ MEHR TREFFER LADEN'
-                        : '▼ VERWANDTE SPIELE ZEIGEN'}
+                        ? '▼ MEHR DAVON, BITTE'
+                        : '▼ ÄHNLICHE GAMES ZEIGEN'}
                   </button>
                 </div>
               )}
               {archiveActive && archive.key === archiveKey && (archive.next !== null || archive.loading) && (
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
                   <button className="px-btn big" onClick={loadMore} disabled={archive.loading} data-nav>
-                    {archive.loading ? 'LADE …' : '▼ MEHR SPIELE LADEN'}
+                    {archive.loading ? 'LADE …' : '▼ GIB MIR MEHR'}
                   </button>
                 </div>
               )}
@@ -572,16 +572,16 @@ export const GamingApp: React.FC = () => {
           ) : (
             <p className="empty pixel-font" style={{ fontSize: 11 }}>
               {view === 'collection'
-                ? 'NOCH LEER. ★ SAMMLE SPIELE, AN DIE DU DICH ERINNERST.'
+                ? 'TOTE HOSE HIER. ★ SAMMLE GAMES, DIE DICH GEPRÄGT HABEN.'
                 : view === 'search'
-                  ? 'NICHTS GEFUNDEN. VERSUCH EINEN ANDEREN NAMEN.'
-                  : 'KEINE SPIELE FÜR DIESEN FILTER.'}
+                  ? 'NIX GEFUNDEN. EPIC FAIL. PROBIER NEN ANDEREN NAMEN.'
+                  : 'HIER IST NIX. ANDERER FILTER, NEUES GLÜCK.'}
             </p>
           )}
 
           <footer className="dim" style={{ marginTop: 48, fontSize: 18 }}>
             Inhalte live aus Wikipedia (CC BY-SA). Spieletitel und Bilder gehören ihren Rechteinhabern. RetroMind
-            verlinkt nur auf legale Wege, alte Spiele heute zu spielen.{' '}
+            verlinkt nur auf legale Wege, alte Games heute zu zocken.{' '}
             <a href={withGoogleParam(withMuteParam('https://retromind.vercel.app/'))}>Zurück zu RetroMind</a>
           </footer>
         </main>

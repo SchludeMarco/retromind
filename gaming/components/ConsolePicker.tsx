@@ -109,7 +109,7 @@ export const ConsolePicker: React.FC<{
         onClick={(e) => e.stopPropagation()}
       >
         <div className="console-head">
-          <h2 className="pixel-font">KONSOLE WÄHLEN</h2>
+          <h2 className="pixel-font">WELCHE KISTE?</h2>
           <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
             ✕
           </button>
@@ -124,7 +124,7 @@ export const ConsolePicker: React.FC<{
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && hits.length === 1) onPick(hits[0]);
               }}
-              placeholder="Konsole suchen, z. B. PS2, Sega, Game Boy …"
+              placeholder="Kiste suchen, z. B. PS2, Sega, Game Boy …"
               aria-label="Konsole suchen"
               enterKeyHint="go"
               data-nav
@@ -152,7 +152,7 @@ export const ConsolePicker: React.FC<{
         ))}
         {query && hits.length === 0 && (
           <p className="dim console-none">
-            Keine Konsole passt zu „{query}“.{' '}
+            Keine Kiste passt zu „{query}“. Ätzend.{' '}
             <button className="px-btn" onClick={() => setQuery('')} data-nav>
               ALLE ZEIGEN
             </button>
