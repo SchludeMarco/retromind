@@ -478,7 +478,9 @@ const App: React.FC = () => {
           control we could put here). */}
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
 
-      <Header />
+      {/* The start page shows the logo, which already spells "RetroMind";
+          the headline on top of it would just repeat the name. */}
+      {!(verified && phase === 'intro') && <Header />}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
