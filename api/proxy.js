@@ -7,8 +7,8 @@
 
 const ALLOWED_HOSTS = [
   /^[a-z-]+\.wikipedia\.org$/,
-  /^commons\.wikimedia\.org$/,
-  /^upload\.wikimedia\.org$/,
+  // commons, upload and thumb (Wikimedia's image servers)
+  /^(commons|upload|thumb)\.wikimedia\.org$/,
   /^i\.ytimg\.com$/,
   /^assets\.mixkit\.co$/,
   /^www\.transparenttextures\.com$/,
