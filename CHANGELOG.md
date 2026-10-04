@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Neues Design „Retro Warm“ von Google Stitch** (2026-10-04, PR #PRNUM):
+- **Neues Design „Retro Warm“ von Google Stitch** (2026-10-04, PR #92):
   RetroMind sieht jetzt standardmäßig so aus, wie Stitch es entworfen hat:
   helles Pergament, Terrakotta, große klare Schrift, runde Karten und kein
   Flimmern mehr. Oben gibt es eine Kopfleiste mit Ton-Schalter, Einstellungen
