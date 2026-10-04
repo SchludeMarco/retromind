@@ -6,12 +6,26 @@ import { useSyncExternalStore } from 'react';
 // before making noise. Modules served from another origin (e.g.
 // retromind-gaming.vercel.app) don't share localStorage, so links between
 // them carry the setting along as ?mute=1 / ?mute=0 (see withMuteParam).
+//
+// The switch also counts as "on" while the app sits in the background
+// (another app or tab in front, screen off): isMuted() / useMuted() report
+// true and every subscriber is told, so all sound stops there and comes back
+// when the visitor returns — without touching their saved choice.
 
 const KEY = 'retromind.muted';
 const PARAM = 'mute';
 
 const listeners = new Set<() => void>();
 let muted = readInitial();
+let hidden = readHidden();
+
+function readHidden(): boolean {
+  try {
+    return document.visibilityState === 'hidden';
+  } catch {
+    return false;
+  }
+}
 
 function readInitial(): boolean {
   let stored = false;
@@ -53,14 +67,26 @@ if (typeof window !== 'undefined') {
     if (e.key !== KEY) return;
     const next = e.newValue === '1';
     if (next === muted) return;
+    const before = isMuted();
     muted = next;
-    emit();
+    if (isMuted() !== before) emit();
   });
+
+  // App switched to the background or brought back.
+  const syncHidden = (next: boolean) => {
+    if (next === hidden) return;
+    const before = isMuted();
+    hidden = next;
+    if (isMuted() !== before) emit();
+  };
+  document.addEventListener('visibilitychange', () => syncHidden(readHidden()));
+  window.addEventListener('pagehide', () => syncHidden(true));
+  window.addEventListener('pageshow', () => syncHidden(readHidden()));
 }
 
-/** Whether the visitor switched all sound off. */
+/** Whether sound must stay off right now: switched off by the visitor, or the app is in the background. */
 export function isMuted(): boolean {
-  return muted;
+  return muted || hidden;
 }
 
 /** True only before this visitor ever chose; lets a module adopt its own older mute setting once. */
@@ -74,9 +100,10 @@ export function hasMuteChoice(): boolean {
 
 export function setMuted(on: boolean) {
   if (on === muted) return;
+  const before = isMuted();
   muted = on;
   persist(on);
-  emit();
+  if (isMuted() !== before) emit();
 }
 
 export function toggleMuted() {

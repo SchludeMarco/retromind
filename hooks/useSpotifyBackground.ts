@@ -19,12 +19,16 @@ export function useSpotifyBackground(currentDecade: string) {
   const [isPlaying, setIsPlaying] = useState(false);
   const muted = useMuted();
   const startedRef = useRef(false);
+  // Paused with the player's own button: coming back from the background
+  // (or switching sound back on) must not restart it.
+  const userPausedRef = useRef(false);
   const allowed = useConsent('spotify') === true;
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller || !unlockedRef.current || isMuted()) return;
     startedRef.current = true;
+    userPausedRef.current = false;
     controller.play();
   }, []);
 
@@ -81,6 +85,7 @@ export function useSpotifyBackground(currentDecade: string) {
     const controller = controllerRef.current;
     if (!controller) return;
     if (muted) controller.pause();
+    else if (userPausedRef.current) return;
     else if (startedRef.current) controller.resume();
     else start();
   }, [muted, start]);
@@ -88,10 +93,15 @@ export function useSpotifyBackground(currentDecade: string) {
   const togglePlay = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller) return;
-    if (isPlaying) controller.pause();
+    if (isPlaying) {
+      userPausedRef.current = true;
+      controller.pause();
+      return;
+    }
+    userPausedRef.current = false;
     // Pressing play while everything is muted switches the sound back on
     // (the effect above then resumes the playlist).
-    else if (isMuted()) setMuted(false);
+    if (isMuted()) setMuted(false);
     else if (startedRef.current) controller.resume();
     else start();
   }, [isPlaying, start]);
