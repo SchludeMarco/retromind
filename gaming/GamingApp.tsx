@@ -131,6 +131,10 @@ export const GamingApp: React.FC = () => {
     chip.muted = muted;
   }, [muted]);
   const toggleMute = toggleMuted;
+  // Browser bar matches the light "Modul" design or the dark screens.
+  useEffect(() => {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', state.palette === 'modul' ? '#e5e7eb' : '#07071a');
+  }, [state.palette]);
   // A new pick in the settings restarts the hub music with that tune.
   // A YouTube video on a game page pauses the music until it stops.
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -420,13 +424,13 @@ export const GamingApp: React.FC = () => {
           </div>
 
           <div className="toolbar" style={{ marginTop: 4 }}>
-            <button className="px-btn" aria-pressed={view === 'catalog'} onClick={() => switchView('catalog')} data-nav>
+            <button className="px-btn view-tab" aria-pressed={view === 'catalog'} onClick={() => switchView('catalog')} data-nav>
               OLDSCHOOL-PERLEN
             </button>
-            <button className="px-btn" aria-pressed={view === 'collection'} onClick={() => switchView('collection')} data-nav>
+            <button className="px-btn view-tab" aria-pressed={view === 'collection'} onClick={() => switchView('collection')} data-nav>
               MEIN STASH ({collection.length})
             </button>
-            <button className="px-btn" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
+            <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
               ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
             </button>
             {results && (
@@ -592,6 +596,36 @@ export const GamingApp: React.FC = () => {
             <a href={IMPRINT_URL}>Impressum</a>
           </footer>
         </main>
+      )}
+
+      {screen === 'hub' && state.palette === 'modul' && (
+        <nav className="dock" aria-label="Bereiche">
+          <button className="dock-btn" aria-current={view === 'catalog' ? 'page' : undefined} onClick={() => switchView('catalog')} data-nav>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v13l-2 2H8l-2-2zM9 7h6v5H9zM8 21h8" /></svg>
+            KATALOG
+          </button>
+          <button
+            className="dock-btn"
+            aria-haspopup="dialog"
+            onClick={() => {
+              if (view !== 'catalog') switchView('catalog');
+              setPickerOpen(true);
+              chip.play('select');
+            }}
+            data-nav
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v8H3zM7 11v4M5 13h4M15 12h.01M18 14h.01" /></svg>
+            KISTEN
+          </button>
+          <button className="dock-btn" aria-current={view === 'collection' ? 'page' : undefined} onClick={() => switchView('collection')} data-nav>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 3v5h7V3M8 21v-7h8v7" /></svg>
+            STASH
+          </button>
+          <button className="dock-btn" aria-current={view === 'trophies' ? 'page' : undefined} onClick={() => switchView('trophies')} data-nav>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6" /></svg>
+            TROPHÄEN
+          </button>
+        </nav>
       )}
 
       {settingsOpen && <Settings cloud={cloud} state={state} set={set} onClose={() => setSettingsOpen(false)} />}

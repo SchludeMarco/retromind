@@ -148,6 +148,15 @@ Eigene Adresse: das Vercel-Projekt `retromind-gaming` baut dasselbe Repo mit
 unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`, für die
 Cloud-Sicherung außerdem `VITE_GOOGLE_CLIENT_ID` und die Domain als erlaubten
 JavaScript-Ursprung im Google-OAuth-Client).
+
+**Design wählbar** – in den Gaming-Einstellungen unter „Bildschirm“ (oder per
+Knopf in der Werkzeugleiste): „Modul“ (Standard, mit Google Stitch entworfen:
+helles Konsolen-Plastik, weiße Modul-Karten mit Griffrillen in der
+Konsolenfarbe, rote Tasten, gut lesbare Schrift und eine Navigation unten mit
+Katalog, Kisten, Stash und Trophäen), dazu die Pixel-Looks „Arcade“,
+„Handheld“ und „Bernstein“. Das Design-System liegt in
+[`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
+`gaming/gaming.css` (Abschnitt „Design Modul“).
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
@@ -323,6 +332,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
+- **Weitere Gaming-Stitch-Screens umsetzen:** Spiele-Karten mit Cover-Bild,
+  Trophäen-Schrank mit Fortschrittsbalken und Seltenheit, Spieleseite mit
+  großem Screenshot oben und „Frag den Game-Guru“-Leiste (Entwurf in
+  `docs/stitch/gaming/`).
 - **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
@@ -332,8 +345,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
-- **Design-Auswahl auch in der Gaming-Edition** (dort gibt es bisher nur
-  den Pixel-Look).
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
   gemeinsamer Anmeldung.
