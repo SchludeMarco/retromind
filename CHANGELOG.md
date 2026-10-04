@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ton stoppt im Hintergrund** (2026-10-04, PR #NN): Wechselst du zu einer
+  anderen App oder einem anderen Tab (oder geht der Bildschirm aus), verstummt
+  RetroMind sofort: Spotify-Musik, Chiptune-Musik, Videos und Klänge, in der
+  Zeitreise wie in der Gaming-Edition. Kommst du zurück, läuft der Ton weiter,
+  außer du hattest ihn stummgeschaltet oder die Musik selbst pausiert.
+
 - **Zeitreise: Feedback-Versand eingerichtet** (2026-10-03, PR #89): Die
   Feedback-Mail findet ihren Empfänger jetzt auch über den in Vercel gesetzten
   Namen `FEEDBACK_TO_MAIL`.
