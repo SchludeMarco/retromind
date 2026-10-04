@@ -1095,3 +1095,557 @@ a {
   margin: 8px 0 0;
   font-size: 15px;
 }
+
+/* ==========================================================================
+   Design "Modul" (Google Stitch: "Retro Hardware Modernist", see
+   docs/stitch/gaming/DESIGN.md). Light console plastic, white cartridge
+   cards with a pressed-in bottom ridge, red power buttons, clear fonts.
+   Everything is scoped to data-palette='modul'; the other palettes keep the
+   arcade look above.
+   ========================================================================== */
+.arcade[data-palette='modul'] {
+  --bg: #e5e7eb;
+  --bg2: #f3f4f6;
+  --panel: #ffffff;
+  --fg: #111827;
+  --dim: #4b5563;
+  --a1: #dc2626;
+  --a2: #7c3aed;
+  --a3: #f59e0b;
+  --ok: #10b981;
+  --ridge: #d1d5db;
+  --a1-deep: #991b1b;
+  --sheet: #f7f9fd;
+  background: var(--bg);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.arcade[data-palette='modul'] .crt-glass,
+.arcade[data-palette='modul'] .stars {
+  display: none;
+}
+.arcade[data-palette='modul'] .pixel-font,
+.arcade[data-palette='modul'] .md h2,
+.arcade[data-palette='modul'] .console-name,
+.arcade[data-palette='modul'] .cart-title {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+.arcade[data-palette='modul'] p.pixel-font {
+  font-size: 15px !important;
+}
+.arcade[data-palette='modul'] .glow,
+.arcade[data-palette='modul'] .rgb-split {
+  text-shadow: none;
+}
+.arcade[data-palette='modul'] :focus-visible {
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+
+/* Tactile buttons: white keys with a ridge, red when active. */
+.arcade[data-palette='modul'] .px-btn {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  word-spacing: 0.2em;
+  color: var(--fg);
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 8px;
+  box-shadow: none;
+  margin: 0;
+  padding: 10px 16px;
+  min-height: 44px;
+  transition: transform 0.06s, border-bottom-width 0.06s;
+}
+.arcade[data-palette='modul'] .px-btn:hover,
+.arcade[data-palette='modul'] .px-btn:focus-visible {
+  background: var(--bg2);
+  color: var(--fg);
+}
+.arcade[data-palette='modul'] .px-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.arcade[data-palette='modul'] .px-btn[aria-pressed='true'],
+.arcade[data-palette='modul'] .px-btn.big {
+  background: var(--a1);
+  color: #fff;
+  border-color: var(--a1-deep);
+}
+.arcade[data-palette='modul'] .px-btn[aria-pressed='true']:hover,
+.arcade[data-palette='modul'] .px-btn.big:hover,
+.arcade[data-palette='modul'] .px-btn.big:focus-visible {
+  background: #b91c1c;
+  color: #fff;
+}
+.arcade[data-palette='modul'] .px-btn.big {
+  font-size: 15px;
+  padding: 14px 20px;
+}
+.arcade[data-palette='modul'] .px-btn.mute-btn[aria-pressed='true'] {
+  background: #fff;
+  color: var(--a1);
+  border-color: var(--ridge);
+}
+.arcade[data-palette='modul'] .filters {
+  gap: 8px;
+}
+.arcade[data-palette='modul'] .filters + .filters {
+  margin-top: -6px;
+}
+.arcade[data-palette='modul'] .filters .px-btn {
+  font-size: 13px;
+  padding: 8px 14px;
+}
+.arcade[data-palette='modul'] .filters .px-btn.console-button {
+  font-size: 14px;
+  padding: 10px 16px;
+}
+.arcade[data-palette='modul'] .toolbar {
+  gap: 10px;
+}
+.arcade[data-palette='modul'] .view-tab {
+  display: none;
+}
+
+/* Score card on top. */
+.arcade[data-palette='modul'] .hub {
+  padding-bottom: 140px;
+}
+.arcade[data-palette='modul'] .hud {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  padding: 14px 116px 14px 16px;
+  gap: 8px 24px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.arcade[data-palette='modul'] .hud .label {
+  color: var(--dim);
+}
+.arcade[data-palette='modul'] .hud .value {
+  color: var(--a1);
+  font-size: 18px;
+  margin-left: 4px;
+}
+.arcade[data-palette='modul'] .brand {
+  flex-basis: 100%;
+  color: var(--fg);
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.arcade[data-palette='modul'] .brand-motif {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #111827;
+  padding: 4px;
+}
+.arcade[data-palette='modul'] .brand small {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--a1);
+}
+.arcade[data-palette='modul'] .settings-btn,
+.arcade[data-palette='modul'] .hud-mute {
+  top: 12px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+.arcade[data-palette='modul'] .settings-btn {
+  right: 12px;
+}
+.arcade[data-palette='modul'] .hud-mute {
+  right: 64px;
+}
+.arcade[data-palette='modul'] .settings-dot {
+  background: var(--ok);
+  border-radius: 50%;
+}
+.arcade[data-palette='modul'] .ticker {
+  margin-top: 12px;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #78350f;
+  font-weight: 600;
+  font-size: 15px;
+}
+.arcade[data-palette='modul'] .search input {
+  font-size: 16px;
+  color: var(--fg);
+  background: var(--bg2);
+  border: 1px solid var(--ridge);
+  border-radius: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  padding: 11px 14px;
+  caret-color: var(--a1);
+}
+.arcade[data-palette='modul'] .search input:focus {
+  background: #fff;
+  border-color: var(--a1);
+  box-shadow: 0 0 0 1px var(--a1);
+}
+
+/* Cartridge cards: white, platform colour in the ribbed grip on top. */
+.arcade[data-palette='modul'] .grid {
+  gap: 16px;
+}
+.arcade[data-palette='modul'] .cart {
+  color: var(--fg);
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 10px;
+  clip-path: none;
+  padding: 0;
+  min-height: 190px;
+  overflow: hidden;
+}
+.arcade[data-palette='modul'] .cart::before {
+  top: 0;
+  bottom: auto;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background:
+    repeating-linear-gradient(to right, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 7px),
+    var(--label, var(--a1));
+}
+.arcade[data-palette='modul'] .cart:hover,
+.arcade[data-palette='modul'] .cart:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: none;
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+.arcade[data-palette='modul'] .cart:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.arcade[data-palette='modul'] .cart-label {
+  background: transparent;
+  color: var(--fg);
+  border: none;
+  margin: 0;
+  padding: 24px 14px 14px;
+  gap: 8px;
+}
+.arcade[data-palette='modul'] .cart-meta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: #111827;
+  border-left: 6px solid var(--label, var(--a1));
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.arcade[data-palette='modul'] .cart-title {
+  font-size: 18px;
+  text-shadow: none;
+}
+.arcade[data-palette='modul'] .cart-blurb {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--dim);
+}
+.arcade[data-palette='modul'] .cart-badges {
+  top: 22px;
+  right: 12px;
+  color: #b45309;
+}
+.arcade[data-palette='modul'] .empty,
+.arcade[data-palette='modul'] .archive-count {
+  font-size: 15px;
+}
+.arcade[data-palette='modul'] .loading {
+  color: var(--a1);
+}
+
+/* Sheets: game page, console picker, settings. */
+.arcade[data-palette='modul'] .overlay {
+  background: rgba(17, 24, 39, 0.55);
+}
+.arcade[data-palette='modul'] .dialog {
+  background: var(--sheet);
+  border: 1px solid var(--ridge);
+  border-bottom-width: 6px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+.arcade[data-palette='modul'] .dialog h2 {
+  color: var(--fg);
+  font-size: clamp(20px, 4vw, 28px);
+}
+.arcade[data-palette='modul'] .tabs {
+  gap: 8px;
+}
+.arcade[data-palette='modul'] .tabs .px-btn {
+  font-size: 13px;
+}
+.arcade[data-palette='modul'] .panel {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.arcade[data-palette='modul'] .panel h3,
+.arcade[data-palette='modul'] .settings-dialog h3,
+.arcade[data-palette='modul'] .console-picker h3 {
+  color: var(--a1);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.arcade[data-palette='modul'] .settings-dialog h4 {
+  font-size: 13px;
+}
+.arcade[data-palette='modul'] .cloud-user {
+  font-size: 13px;
+}
+.arcade[data-palette='modul'] .boxart,
+.arcade[data-palette='modul'] .shot,
+.arcade[data-palette='modul'] .yt-frame {
+  border: 1px solid var(--ridge);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.arcade[data-palette='modul'] .shot {
+  background: #fff;
+}
+.arcade[data-palette='modul'] .shot img {
+  background: #111827;
+}
+.arcade[data-palette='modul'] .shot figcaption,
+.arcade[data-palette='modul'] .yt-caption,
+.arcade[data-palette='modul'] .sources,
+.arcade[data-palette='modul'] .console-credit {
+  font-size: 13px;
+}
+.arcade[data-palette='modul'] .links a {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-left: 6px solid var(--a2);
+  border-radius: 10px;
+}
+.arcade[data-palette='modul'] .links a:hover,
+.arcade[data-palette='modul'] .links a:focus-visible {
+  background: var(--bg2);
+  border-left-color: var(--a1);
+}
+.arcade[data-palette='modul'] .md h2 {
+  font-size: 17px;
+  color: var(--a1);
+}
+.arcade[data-palette='modul'] .yt-item {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 10px;
+}
+.arcade[data-palette='modul'] .yt-item[aria-pressed='true'],
+.arcade[data-palette='modul'] .yt-item:hover,
+.arcade[data-palette='modul'] .yt-item:focus-visible {
+  border-color: var(--a1);
+}
+.arcade[data-palette='modul'] .yt-item img {
+  border-radius: 6px;
+}
+.arcade[data-palette='modul'] .yt-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.arcade[data-palette='modul'] .yt-meta {
+  font-size: 12px;
+}
+.arcade[data-palette='modul'] .yt-ask-box {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--fg);
+  border: 1px solid var(--ridge);
+  border-radius: 10px;
+  font-size: 15px;
+}
+.arcade[data-palette='modul'] .yt-ask-box .dim {
+  font-size: 13px;
+}
+.arcade[data-palette='modul'] .console-head {
+  background: var(--sheet);
+  border-bottom: 1px solid var(--ridge);
+}
+.arcade[data-palette='modul'] .console-search input {
+  font-size: 16px;
+}
+.arcade[data-palette='modul'] .console-grid {
+  gap: 12px;
+}
+.arcade[data-palette='modul'] .console-tile {
+  color: var(--fg);
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-top: 6px solid var(--tile, var(--a1));
+  border-bottom-width: 4px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+.arcade[data-palette='modul'] .console-tile:hover,
+.arcade[data-palette='modul'] .console-tile:focus-visible,
+.arcade[data-palette='modul'] .console-tile[aria-pressed='true'] {
+  transform: translateY(-2px);
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+.arcade[data-palette='modul'] .console-pic {
+  background: var(--bg2);
+  border: none;
+  border-radius: 6px;
+}
+.arcade[data-palette='modul'] .console-name {
+  font-size: 15px;
+  text-shadow: none;
+}
+.arcade[data-palette='modul'] .console-sub {
+  font-size: 13px;
+  color: var(--dim);
+  opacity: 1;
+}
+
+/* Game-Guru chat and trophy toast. */
+.arcade[data-palette='modul'] .guru-fab {
+  bottom: calc(84px + env(safe-area-inset-bottom));
+}
+.arcade[data-palette='modul'] .guru {
+  bottom: calc(150px + env(safe-area-inset-bottom));
+  height: min(480px, calc(100vh - 190px));
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+.arcade[data-palette='modul'] .guru-head {
+  background: var(--a1);
+  color: #fff;
+  font-size: 14px;
+}
+.arcade[data-palette='modul'] .guru-msg.user {
+  color: var(--a2);
+}
+.arcade[data-palette='modul'] .guru form {
+  border-top: 1px solid var(--ridge);
+}
+.arcade[data-palette='modul'] .guru input {
+  background: var(--bg2);
+  border: 1px solid var(--ridge);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.arcade[data-palette='modul'] .toast {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom: 4px solid var(--a3);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.arcade[data-palette='modul'] .toast .pixel-font {
+  font-size: 13px;
+  color: #b45309;
+}
+
+/* Power-on: a red console power key on grey plastic. */
+.arcade[data-palette='modul'] .power-off,
+.arcade[data-palette='modul'] .crt-on {
+  background: var(--bg);
+}
+.arcade[data-palette='modul'] .power-switch {
+  color: #fff;
+  background: radial-gradient(circle at 40% 35%, #ef4444, #b91c1c);
+  border: 6px solid #fff;
+  box-shadow: 0 0 0 1px var(--ridge), 0 8px 0 var(--a1-deep), 0 14px 24px rgba(0, 0, 0, 0.18);
+}
+.arcade[data-palette='modul'] .power-switch:hover,
+.arcade[data-palette='modul'] .power-switch:focus-visible {
+  color: #fff;
+  box-shadow: 0 0 0 1px var(--ridge), 0 8px 0 var(--a1-deep), 0 0 30px rgba(220, 38, 38, 0.45);
+}
+.arcade[data-palette='modul'] .power-switch:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 1px var(--ridge), 0 4px 0 var(--a1-deep);
+}
+.arcade[data-palette='modul'] .power-led {
+  background: #fca5a5;
+}
+.arcade[data-palette='modul'] .power-led.on {
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+}
+.arcade[data-palette='modul'] .title-logo {
+  color: var(--fg);
+}
+.arcade[data-palette='modul'] .title-press {
+  color: var(--a1);
+  font-size: 18px;
+}
+
+/* Bottom dock, like the chin of a handheld. */
+.dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 390;
+  display: flex;
+  justify-content: space-around;
+  gap: 4px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  background: var(--bg);
+  border-top: 2px solid var(--ridge);
+}
+.dock-btn {
+  flex: 1;
+  max-width: 140px;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font: 700 12px/1.2 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.dock-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dock-btn:hover {
+  color: var(--fg);
+}
+.dock-btn[aria-current='page'] {
+  color: var(--a1);
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--ridge), inset 0 -3px 0 var(--ridge);
+}

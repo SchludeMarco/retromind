@@ -7,6 +7,7 @@ import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/priv
 import { warmUpGoogle } from '../../lib/googleAuth';
 
 export const PALETTES: { id: Palette; label: string }[] = [
+  { id: 'modul', label: 'MODUL' },
   { id: 'arcade', label: 'ARCADE' },
   { id: 'gameboy', label: 'HANDHELD' },
   { id: 'amber', label: 'BERNSTEIN' },

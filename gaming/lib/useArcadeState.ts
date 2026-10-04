@@ -6,7 +6,7 @@ import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
 
-export type Palette = 'arcade' | 'gameboy' | 'amber';
+export type Palette = 'modul' | 'arcade' | 'gameboy' | 'amber';
 
 export interface ArcadeState {
   favorites: string[];
@@ -31,7 +31,7 @@ const DEFAULTS: ArcadeState = {
   discovered: [],
   achievements: [],
   customGames: {},
-  palette: 'arcade',
+  palette: 'modul',
   music: true,
   track: DEFAULT_TRACK,
   sfx: true,
