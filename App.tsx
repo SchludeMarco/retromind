@@ -16,6 +16,8 @@ import {
 import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner } from './components';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
+import { useWarmChrome } from './lib/theme';
+import { WarmTopBar, WarmBottomNav, WarmJourneyStepper, Icon } from './components/WarmChrome';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -80,6 +82,8 @@ const App: React.FC = () => {
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
   const [unseenNews, setUnseenNews] = useState(hasUnseenNews);
   const [showBottomControls, setShowBottomControls] = useState(false);
+  const warm = useWarmChrome();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -471,10 +475,20 @@ const App: React.FC = () => {
   const isAnswered = (id: string) => !!memoryFor(id);
 
   return (
-    <div className="min-h-screen pb-24 px-4 md:px-8 max-w-6xl mx-auto text-retro-ink">
+    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
-      <MuteToggle />
+      {(!warm || showSplash) && <MuteToggle />}
+      {warm && !showSplash && (
+        <WarmTopBar
+          phase={phase}
+          showActions={verified}
+          hasUnseenNews={unseenNews}
+          accountOpen={isAccountOpen}
+          onOpenSettings={() => { playSFX('click'); setIsSettingsOpen(true); }}
+          onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
+        />
+      )}
       {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
       <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
@@ -485,7 +499,7 @@ const App: React.FC = () => {
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
       {!showSplash && <MusicConsentBanner />}
 
-      <Header />
+      {(!warm || phase === 'intro' || !verified) && <Header />}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
@@ -516,9 +530,10 @@ const App: React.FC = () => {
             spotifyUser={spotifyAuth.user}
             onSpotifySignIn={handleSpotifySignIn}
             onSpotifySignOut={handleSpotifySignOut}
-            visible={showBottomControls}
+            visible={warm ? isAccountOpen : showBottomControls}
           />
 
+          {!warm && (
           <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
             aria-label="App-Einstellungen öffnen"
@@ -531,6 +546,7 @@ const App: React.FC = () => {
               <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
             )}
           </button>
+          )}
           {isSettingsOpen && (
             <SettingsModal
               fontScale={fontScale}
@@ -563,8 +579,24 @@ const App: React.FC = () => {
             />
           )}
 
+          {warm && (
+            <WarmBottomNav
+              phase={phase}
+              onNavigate={(target) => {
+                if (target === 'intro') {
+                  if (phase !== 'intro') goHome();
+                } else if (target !== phase) {
+                  setResumeTarget(null);
+                  goTo(target);
+                }
+              }}
+            />
+          )}
+          {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} />}
+
           {phase !== 'intro' && (
             <>
+              {!warm && (
               <button
                 onClick={goHome}
                 aria-label="Zum Startbildschirm zurückkehren"
@@ -572,12 +604,13 @@ const App: React.FC = () => {
               >
                 🏠
               </button>
+              )}
               <button
                 onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
                 aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
-                className="rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
+                className="rm-chat-button rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
               >
-                {isChatOpen ? '✕' : '💬'}
+                {warm ? <Icon name={isChatOpen ? 'close' : 'chat'} /> : isChatOpen ? '✕' : '💬'}
               </button>
               <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
             </>
@@ -594,6 +627,8 @@ const App: React.FC = () => {
               onStart={startJourney}
               onResume={resumeJourney}
               onReset={handleResetJourney}
+              focusDecade={focusDecade}
+              onSelectGalleryItem={selectGalleryItem}
             />
           )}
 
@@ -700,7 +735,7 @@ const App: React.FC = () => {
             />
           )}
 
-          <ProgressBar current={phaseIndex} total={PHASES.length} />
+          {!warm && <ProgressBar current={phaseIndex} total={PHASES.length} />}
         </>
       )}
       <footer className="no-print relative z-10 mt-12 text-center text-xs text-retro-tan">

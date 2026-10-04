@@ -1,15 +1,25 @@
 import { useSyncExternalStore } from 'react';
 
-// The app's selectable designs ("Design" in the settings). A design is just a
-// set of colour tokens: index.css redefines the --color-retro-* variables
-// under html[data-theme="…"], so every component re-tints without changes.
-// "klassisch" (the vintage-paper look) is the default and has no overrides.
+// The app's selectable designs ("Design" in the settings). A design is
+// mostly a set of colour tokens: index.css redefines the --color-retro-*
+// variables under html[data-theme="…"], so every component re-tints without
+// changes. "klassisch" (the original vintage-paper look) is the base the CSS
+// is written for and needs no overrides. "retro-warm" (designed with Google
+// Stitch) goes further: own fonts, rounded cards and its own app frame (top
+// bar, bottom navigation, journey stepper, see components/WarmChrome.tsx).
 // Like the mute switch (lib/mute.ts) the choice is one localStorage key.
 //
 // To add a design: add it to THEMES and give it a [data-theme] block in
 // index.css.
 
 export const THEMES = [
+  {
+    id: 'retro-warm',
+    name: 'Retro Warm',
+    description: 'Karamell und Terrakotta, große Schrift, ruhig und hell. Entworfen mit Google Stitch.',
+    swatches: ['#f7f3e9', '#d95d39', '#e8a838'],
+    browserColor: '#f7f3e9',
+  },
   {
     id: 'klassisch',
     name: 'Klassisch',
@@ -29,7 +39,9 @@ export const THEMES = [
 export type ThemeId = (typeof THEMES)[number]['id'];
 
 const KEY = 'retromind.theme';
-const DEFAULT: ThemeId = 'klassisch';
+const DEFAULT: ThemeId = 'retro-warm';
+/** The design the CSS is written for; it needs no data-theme attribute. */
+const BASE: ThemeId = 'klassisch';
 
 const listeners = new Set<() => void>();
 let current: ThemeId = readInitial();
@@ -52,7 +64,7 @@ function readInitial(): ThemeId {
 function apply(id: ThemeId) {
   try {
     const root = document.documentElement;
-    if (id === DEFAULT) delete root.dataset.theme;
+    if (id === BASE) delete root.dataset.theme;
     else root.dataset.theme = id;
     const color = THEMES.find((t) => t.id === id)?.browserColor;
     const meta = document.querySelector('meta[name="theme-color"]');
@@ -80,6 +92,11 @@ if (typeof window !== 'undefined') {
 
 export function getTheme(): ThemeId {
   return current;
+}
+
+/** React binding for the Stitch design's own app frame. */
+export function useWarmChrome(): boolean {
+  return useTheme() === 'retro-warm';
 }
 
 export function setTheme(id: ThemeId) {

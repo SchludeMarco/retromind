@@ -43,7 +43,7 @@ export const Modal: React.FC<{ onClose: () => void; label: string; children: Rea
         aria-label={label}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="retro-card max-w-lg w-full p-6 md:p-8 bg-white relative animate-popIn max-h-[90vh] overflow-y-auto outline-none"
+        className="rm-modal retro-card max-w-lg w-full p-6 md:p-8 bg-white relative animate-popIn max-h-[90vh] overflow-y-auto outline-none"
       >
         {children}
       </div>

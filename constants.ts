@@ -57,9 +57,9 @@ export const DECADES_DB: ContentDatabase = {
     spotifyPlaylistId: '37i9dQZF1DX4UtSsGT1Sbe', // Spotify-Editorial „All Out 80s“
     galleryItems: [
       { keyword: '1980s neon arcade', title: 'Die Spielhalle', description: 'Spielhallen waren die Kathedralen der Technik. Der Sound von Pac-Man und das Blinken der Monitore prägten eine ganze Gamer-Generation.' },
-      { keyword: 'walkman sony vintage', title: 'Der Walkman', description: 'Der Sony Walkman machte Musik privat und mobil. Die Welt um einen herum wurde plötzlich zum eigenen Musikvideo.' },
+      { keyword: 'walkman sony vintage', title: 'Der Walkman', description: 'Der Sony Walkman machte Musik privat und mobil. Die Welt um einen herum wurde plötzlich zum eigenen Musikvideo.', image: '/stitch-walkman.webp', credit: 'Bild: KI-generierte Zeit-Impression (Google Stitch)' },
       { keyword: 'commodore 64 computer', title: 'Der Commodore 64', description: 'Der C64 war für viele der erste Schritt in die digitale Welt. "Load ,8 ,1" war das magische Passwort zum Spielglück.' },
-      { keyword: 'rubiks cube', title: 'Der Zauberwürfel', description: 'Ein einfacher Würfel wurde zum globalen Phänomen. Der Zauberwürfel forderte die Logik und Geduld von Millionen heraus.' }
+      { keyword: 'rubiks cube', title: 'Der Zauberwürfel', description: 'Ein einfacher Würfel wurde zum globalen Phänomen. Der Zauberwürfel forderte die Logik und Geduld von Millionen heraus.', image: '/stitch-zauberwuerfel.webp', credit: 'Bild: KI-generierte Zeit-Impression (Google Stitch)' }
     ],
     buzzwords: [
       { id: '80-1', category: 'tech', term: 'Walkman', knowledge: 'Plötzlich war Musik mobil. Kopfhörer mit orangem Schaumstoff waren Pflicht.', question: 'Welches Album lief in deiner "Dauerschleife" auf dem Weg zur Schule?' },

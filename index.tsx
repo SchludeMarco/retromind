@@ -12,6 +12,13 @@ import '@fontsource/cinzel-decorative/latin-700.css';
 import '@fontsource/cinzel-decorative/latin-900.css';
 import '@fontsource/cormorant-garamond/latin-500-italic.css';
 import '@fontsource/cormorant-garamond/latin-600-italic.css';
+// Fonts of the "Retro Warm" design (only downloaded while it is active).
+import '@fontsource/epilogue/latin-600.css';
+import '@fontsource/epilogue/latin-700.css';
+import '@fontsource/plus-jakarta-sans/latin-400.css';
+import '@fontsource/plus-jakarta-sans/latin-500.css';
+import '@fontsource/plus-jakarta-sans/latin-600.css';
+import '@fontsource/plus-jakarta-sans/latin-700.css';
 import './index.css';
 // Applies the saved design before the first render, so it doesn't flash.
 import './lib/theme';

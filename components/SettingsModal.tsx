@@ -43,7 +43,7 @@ export const SettingsModal: React.FC<{
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
-        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Design</span>
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Design &amp; Atmosphäre</span>
         <div role="radiogroup" aria-label="Design der App" className="grid gap-2">
           {THEMES.map((t) => (
             <button
