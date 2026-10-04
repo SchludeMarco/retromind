@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: flackernde Spielhallen-Glühbirne beim Start** (2026-10-04,
+  PR #95): Gleich beim Öffnen der Gaming-Edition hängt über dem
+  Einschaltknopf eine nackte Glühbirne an ihrem Kabel. Sie pendelt leicht,
+  flackert wie mit Wackelkontakt und leuchtet eine Betonwand an, der Rest
+  liegt im Dunkeln. Wer im System weniger Bewegung eingestellt hat, sieht
+  ein ruhiges Licht.
+
 - **Gaming: „Modul“ jetzt auch für alle, die schon da waren** (2026-10-04,
   PR #94): Bisher blieb bei wiederkehrenden Besucher:innen das alte
   Arcade-Design gespeichert. Jetzt wechselt die App einmalig auf „Modul“,
