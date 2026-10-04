@@ -25,6 +25,23 @@ const SoundDebug: React.FC = () => {
   );
 };
 
+// A bare arcade bulb hanging from its cord, flickering on a concrete wall.
+// Decorative only; the light holds still with reduced motion.
+const ArcadeLamp: React.FC = () => (
+  <div className="lamp-scene" aria-hidden="true">
+    <div className="lamp-light" />
+    <div className="lamp">
+      <span className="lamp-cord" />
+      <svg className="lamp-bulb" viewBox="0 0 60 96">
+        <rect x="20" y="0" width="20" height="22" rx="3" fill="#2b2b2b" />
+        <rect x="18" y="20" width="24" height="8" rx="2" fill="#bdb7a8" />
+        <path d="M18 30 h24 v6 c10 6 14 16 14 26 a26 26 0 0 1 -52 0 c0 -10 4 -20 14 -26z" className="lamp-glass" />
+        <path d="M24 40 l3 18 l3 -10 l3 10 l3 -18" className="lamp-filament" />
+      </svg>
+    </div>
+  </div>
+);
+
 export const PowerOn: React.FC<{
   onStart: () => void;
   reducedMotion: boolean;
@@ -86,6 +103,7 @@ export const PowerOn: React.FC<{
   if (stage === 'off') {
     return (
       <div className="screen-full power-off">
+        <ArcadeLamp />
         <button className="power-switch" onClick={powerOn} aria-label="Konsole einschalten" autoFocus>
           {/* Drawn, not the ⏻ character: many phone fonts lack it. */}
           <svg className="power-icon" viewBox="0 0 24 24" aria-hidden="true">

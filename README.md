@@ -131,7 +131,8 @@ kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
-mit `YOUTUBE_API_KEY`). Dazu Konsolen-Einschalten,
+mit `YOUTUBE_API_KEY`). Dazu Konsolen-Einschalten (vor einer Betonwand, die eine
+flackernde Spielhallen-Glühbirne anleuchtet),
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von

@@ -1649,3 +1649,112 @@ a {
   background: #fff;
   box-shadow: 0 0 0 1px var(--ridge), inset 0 -3px 0 var(--ridge);
 }
+
+/* --- Start screen: flickering arcade bulb on a concrete wall --- */
+.power-off,
+.arcade[data-palette='modul'] .power-off {
+  overflow: hidden;
+  background-color: #6f6e6a;
+  /* poured concrete: grain, formwork seams and tie holes */
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.45) 0 3px, rgba(255, 255, 255, 0.12) 4px, transparent 5px),
+    linear-gradient(to bottom, transparent calc(100% - 2px), rgba(0, 0, 0, 0.28) calc(100% - 2px)),
+    linear-gradient(to right, transparent calc(100% - 2px), rgba(0, 0, 0, 0.22) calc(100% - 2px)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .48 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .28 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  background-size: 180px 120px, 360px 240px, 360px 240px, 220px 220px, 600px 600px;
+  background-position: 90px 60px, 0 0, 0 0, 0 0, 0 0;
+}
+.power-off > *:not(.lamp-scene) {
+  position: relative;
+  z-index: 2;
+}
+.power-off .dim,
+.power-off .pixel-font {
+  color: #e9e4d8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+.lamp-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+/* Darkness everywhere except the warm pool of light under the bulb. */
+.lamp-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 75vmax 70vmax at 50% 14vh, transparent 0, rgba(8, 6, 4, 0.55) 45%, rgba(4, 3, 2, 0.94) 80%);
+}
+.lamp-light {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 34vmax 30vmax at 50% 15vh, rgba(255, 196, 110, 0.55), rgba(255, 160, 70, 0.18) 55%, transparent 75%),
+    radial-gradient(circle 70px at 50% 15vh, rgba(255, 230, 170, 0.75), transparent 70%);
+  mix-blend-mode: screen;
+  animation: lamp-flicker 5.5s steps(1) infinite;
+}
+.lamp {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 60px;
+  margin-left: -30px;
+  transform-origin: 50% 0;
+  animation: lamp-sway 6s ease-in-out infinite;
+}
+.lamp-cord {
+  display: block;
+  width: 3px;
+  height: calc(15vh - 52px);
+  min-height: 20px;
+  margin: 0 auto;
+  background: #1b1b1b;
+}
+.lamp-bulb {
+  display: block;
+  overflow: visible;
+  width: 60px;
+  height: 96px;
+}
+.lamp-glass {
+  fill: #ffe6a8;
+  filter: drop-shadow(0 0 14px rgba(255, 200, 110, 0.95));
+  animation: lamp-flicker 5.5s steps(1) infinite;
+}
+.lamp-filament {
+  fill: none;
+  stroke: #fff6d8;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+/* An old bulb with a loose contact: mostly on, with nervous drop-outs. */
+@keyframes lamp-flicker {
+  0% { opacity: 1; }
+  7% { opacity: 0.35; }
+  8% { opacity: 1; }
+  9% { opacity: 0.2; }
+  10% { opacity: 0.95; }
+  31% { opacity: 0.85; }
+  32% { opacity: 1; }
+  54% { opacity: 0.1; }
+  55% { opacity: 0.6; }
+  56% { opacity: 0.05; }
+  59% { opacity: 1; }
+  78% { opacity: 0.9; }
+  79% { opacity: 0.4; }
+  80% { opacity: 1; }
+}
+@keyframes lamp-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lamp,
+  .lamp-light,
+  .lamp-glass {
+    animation: none;
+  }
+}
