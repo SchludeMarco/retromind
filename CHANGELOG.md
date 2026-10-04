@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Design wählbar, neu: „Nachtschicht“** (2026-10-04, PR #PRNUM): In den
+- **Design wählbar, neu: „Nachtschicht“** (2026-10-04, PR #91): In den
   Einstellungen gibt es jetzt den Bereich „Design“. Neben dem gewohnten
   Papier-Look („Klassisch“, bleibt Standard) kannst du „Nachtschicht“ wählen:
   dunkler Hintergrund, helle Schrift und warmes Röhrenglühen, angenehm am
