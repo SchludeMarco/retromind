@@ -100,6 +100,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
   und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
   Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
+- **Design wählbar** – in den Einstellungen unter „Design“: „Klassisch“
+  (vergilbtes Papier, Standard) oder „Nachtschicht“ (dunkel, warmes
+  Röhrenglühen). Die Wahl gilt sofort und bleibt im Browser gespeichert
+  ([`lib/theme.ts`](lib/theme.ts)); ein Design ist ein Satz Farbwerte in
+  [`index.css`](index.css), neue Designs lassen sich dort ergänzen. Das
+  gedruckte Erinnerungs-Buch bleibt immer im klassischen Papier-Look.
 
 ### Edition „RetroMind – Gaming“ (`/gaming/`)
 
@@ -305,6 +311,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Sollte
 
+- **Design von Google Stitch:** Marco lässt Stitch ein neues Design
+  vorschlagen; das Ergebnis kommt als weiteres Design in die Auswahl der
+  Einstellungen.
 - **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
@@ -314,6 +323,8 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
+- **Design-Auswahl auch in der Gaming-Edition** (dort gibt es bisher nur
+  den Pixel-Look).
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
   gemeinsamer Anmeldung.

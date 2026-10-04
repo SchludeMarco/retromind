@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Design wählbar, neu: „Nachtschicht“** (2026-10-04, PR #91): In den
+  Einstellungen gibt es jetzt den Bereich „Design“. Neben dem gewohnten
+  Papier-Look („Klassisch“, bleibt Standard) kannst du „Nachtschicht“ wählen:
+  dunkler Hintergrund, helle Schrift und warmes Röhrenglühen, angenehm am
+  Abend. Die Wahl gilt sofort und bleibt gespeichert. Das gedruckte
+  Erinnerungs-Buch bleibt immer hell.
+
 - **Ton stoppt im Hintergrund** (2026-10-04, PR #90): Wechselst du zu einer
   anderen App oder einem anderen Tab (oder geht der Bildschirm aus), verstummt
   RetroMind sofort: Spotify-Musik, Chiptune-Musik, Videos und Klänge, in der

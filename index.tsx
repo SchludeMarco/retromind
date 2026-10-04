@@ -13,6 +13,8 @@ import '@fontsource/cinzel-decorative/latin-900.css';
 import '@fontsource/cormorant-garamond/latin-500-italic.css';
 import '@fontsource/cormorant-garamond/latin-600-italic.css';
 import './index.css';
+// Applies the saved design before the first render, so it doesn't flash.
+import './lib/theme';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
