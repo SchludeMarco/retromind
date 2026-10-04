@@ -21,7 +21,12 @@ export interface ArcadeState {
   track: TrackId;
   sfx: boolean;
   hiScore: number;
+  /** Bumped when a new default design ships, so saved profiles switch once. */
+  designRev: number;
 }
+
+/** 2 = the "Modul" design from Google Stitch (PR #93). */
+const DESIGN_REV = 2;
 
 const KEY = 'retromind.gaming.v1';
 
@@ -36,6 +41,7 @@ const DEFAULTS: ArcadeState = {
   track: DEFAULT_TRACK,
   sfx: true,
   hiScore: 0,
+  designRev: DESIGN_REV,
 };
 
 function load(): ArcadeState {
@@ -45,7 +51,10 @@ function load(): ArcadeState {
     const { muted, ...saved } = JSON.parse(raw);
     // The speaker button used to be stored here; it is app-wide now (lib/mute).
     if (muted === true && !hasMuteChoice()) setMuted(true);
-    const state = { ...DEFAULTS, ...saved };
+    let state: ArcadeState = { ...DEFAULTS, ...saved };
+    // Profiles from before the new default design get it once; picking
+    // another design afterwards sticks.
+    if (!(saved.designRev >= DESIGN_REV)) state = { ...state, palette: 'modul', designRev: DESIGN_REV };
     return isTrackId(state.track) ? state : { ...state, track: DEFAULT_TRACK };
   } catch {
     return DEFAULTS;
@@ -68,7 +77,9 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     achievements: union(local.achievements, remote.achievements),
     customGames: { ...(remote.customGames ?? {}), ...local.customGames },
     hiScore: Math.max(local.hiScore, remote.hiScore ?? 0),
-    palette: remote.palette ?? local.palette,
+    // An old cloud backup must not switch the new default design back.
+    palette: (remote.designRev ?? 0) >= DESIGN_REV ? remote.palette ?? local.palette : local.palette,
+    designRev: Math.max(local.designRev, remote.designRev ?? 0),
     music: remote.music ?? local.music,
     track: isTrackId(remote.track) ? remote.track : local.track,
     sfx: remote.sfx ?? local.sfx,

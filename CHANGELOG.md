@@ -7,14 +7,20 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: „Modul“ jetzt auch für alle, die schon da waren** (2026-10-04,
+  PR #94): Bisher blieb bei wiederkehrenden Besucher:innen das alte
+  Arcade-Design gespeichert. Jetzt wechselt die App einmalig auf „Modul“,
+  auch wenn eine ältere Google-Sicherung etwas anderes sagt. Wer danach ein
+  anderes Design wählt, behält es.
+
 - **Gaming-Edition: neues Design „Modul“ von Google Stitch** (2026-10-04,
   PR #93): RetroMind – Gaming sieht jetzt standardmäßig aus wie eine helle
   Retro-Konsole: graues Plastik, weiße Spiele-Module mit Griffrillen in der
   Farbe der Konsole, rote Tasten zum Drücken und eine klare, große Schrift
   statt Pixel-Text. Unten gibt es eine Leiste mit Katalog, Kisten, Stash und
-  Trophäen, der Einschaltknopf ist ein roter Power-Knopf. Wer schon einmal
-  da war, behält sein bisheriges Design; „Arcade“, „Handheld“ und
-  „Bernstein“ gibt es weiter in den Einstellungen unter „Bildschirm“.
+  Trophäen, der Einschaltknopf ist ein roter Power-Knopf. „Arcade“,
+  „Handheld“ und „Bernstein“ gibt es weiter in den Einstellungen unter
+  „Bildschirm“.
 
 - **Neues Design „Retro Warm“ von Google Stitch** (2026-10-04, PR #92):
   RetroMind sieht jetzt standardmäßig so aus, wie Stitch es entworfen hat:
