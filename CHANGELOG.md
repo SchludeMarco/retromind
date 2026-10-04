@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Ton stoppt im Hintergrund** (2026-10-04, PR #NN): Wechselst du zu einer
+- **Ton stoppt im Hintergrund** (2026-10-04, PR #90): Wechselst du zu einer
   anderen App oder einem anderen Tab (oder geht der Bildschirm aus), verstummt
   RetroMind sofort: Spotify-Musik, Chiptune-Musik, Videos und Klänge, in der
   Zeitreise wie in der Gaming-Edition. Kommst du zurück, läuft der Ton weiter,
