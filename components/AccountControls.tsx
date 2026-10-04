@@ -23,7 +23,7 @@ export const AccountControls: React.FC<{
   spotifyStatus, spotifyUser, onSpotifySignIn, onSpotifySignOut,
   visible,
 }) => (
-  <div className="rm-fixed fixed bottom-2 left-4 md:left-10 z-50 flex flex-col items-start gap-2">
+  <div className="rm-account rm-fixed fixed bottom-2 left-4 md:left-10 z-50 flex flex-col items-start gap-2">
     <GoogleAuthControl
       status={googleStatus}
       user={googleUser}

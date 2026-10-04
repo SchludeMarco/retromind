@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
+import { useWarmChrome } from '../lib/theme';
+
+const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
+  music: { icon: '🎵', label: 'Musik' },
+  tech: { icon: '📺', label: 'Technik' },
+  toy: { icon: '🧸', label: 'Spielzeug' },
+  lifestyle: { icon: '👗', label: 'Alltag & Mode' },
+  food: { icon: '🍬', label: 'Naschen & Essen' },
+};
 
 const AiNotice: React.FC<{ aiOff: boolean }> = ({ aiOff }) =>
   aiOff ? (
@@ -53,10 +62,88 @@ export const ExplorationPhase: React.FC<{
   onNext,
 }) => {
   const muted = useMuted();
-  return (
-  <div className="py-8 animate-fadeIn space-y-14">
-    <AiNotice aiOff={aiOff} />
+  const warm = useWarmChrome();
+  const [warmDecade, setWarmDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : Object.keys(DECADES_DB)[0]);
 
+  const sortedBuzzwords = (year: string) =>
+    [...DECADES_DB[year].buzzwords].sort((a, b) => {
+      const am = userCategories.has(a.category) ? 0 : 1;
+      const bm = userCategories.has(b.category) ? 0 : 1;
+      return am - bm;
+    });
+
+  // "Retro Warm": one decade at a time, as cards (after the Stitch mock-up).
+  const warmWall = () => {
+    const words = sortedBuzzwords(warmDecade);
+    const answeredCount = words.filter((bw) => isAnswered(bw.id)).length;
+    return (
+      <div>
+        <h2 className="text-3xl mb-2">Popkultur &amp; Zeitgeist</h2>
+        <p className="text-retro-brown mb-5">
+          Tippe auf ein Phänomen. Du bekommst eine persönliche Frage, und deine Antwort kommt in dein
+          Erinnerungsbuch. {userCategories.size > 0 && 'Was zu deinen Interessen passt, steht vorne.'}
+        </p>
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 -mx-4 px-4">
+          {Object.keys(DECADES_DB).map((year) => (
+            <button
+              key={year}
+              onClick={() => setWarmDecade(year)}
+              aria-pressed={year === warmDecade}
+              className={`px-5 h-11 rounded-full font-semibold whitespace-nowrap flex-shrink-0 ${
+                year === warmDecade ? 'bg-retro-amber-dark text-white' : 'bg-[#eee0d6] text-retro-ink'
+              }`}
+            >
+              {year === warmDecade && '✓ '}
+              {year}er
+            </button>
+          ))}
+        </div>
+        <p className="text-sm text-retro-brown mb-4">
+          {DECADES_DB[warmDecade].title}
+          {warmDecade === focusDecade && <span className="ml-2 font-semibold text-retro-amber-dark">· deine Zeit</span>}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {words.map((bw) => {
+            const answered = isAnswered(bw.id);
+            const clicked = clickedBuzzwords.includes(bw.id);
+            const cat = CATEGORY[bw.category];
+            return (
+              <article key={bw.id} className="retro-card bg-retro-paper-white p-5 flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-retro-cream px-3 py-1 text-xs font-semibold text-retro-amber-dark">
+                    <span aria-hidden="true">{cat.icon}</span> {cat.label}
+                  </span>
+                  {userCategories.has(bw.category) && <span className="text-xs font-semibold text-[#34645c]">★ dein Interesse</span>}
+                </div>
+                <h3 className="text-xl mb-1">{bw.term}</h3>
+                <p className="text-sm text-retro-brown mb-4 flex-grow">{bw.knowledge}</p>
+                <button
+                  onClick={() => onOpenBuzzword(bw.id, bw.term, bw.knowledge, warmDecade, bw.question)}
+                  className={`h-11 rounded-full font-semibold text-sm ${
+                    answered ? 'bg-[#4b7b72]/15 text-[#34645c]' : 'bg-retro-cream text-retro-amber-dark'
+                  }`}
+                >
+                  {answered ? '✓ Im Erinnerungsbuch' : clicked ? 'Weiter erzählen' : '+ Erinnern'}
+                </button>
+              </article>
+            );
+          })}
+        </div>
+        <div className="mt-6 rounded-2xl bg-retro-highlight p-4 flex items-center justify-between gap-3 flex-wrap">
+          <p className="font-semibold">
+            {answeredCount} von {words.length} Schätzen erinnert
+            <span className="block text-sm font-normal text-retro-brown">{warmDecade}er · insgesamt {memoriesCount} Erinnerungen</span>
+          </p>
+          <button onClick={onNext} className="retro-button bg-retro-amber text-white px-6 font-bold">
+            Tagebuch →
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const lab = (
+    <>
     {/* Memory lab */}
     <div className="retro-card p-6 md:p-8 bg-retro-cream-light border-4 border-double">
       <h2 className="text-3xl mb-3 flex items-center gap-3">
@@ -149,7 +236,10 @@ export const ExplorationPhase: React.FC<{
       </div>
     </div>
 
-    {/* Wall of words */}
+    </>
+  );
+
+  const classicWall = (
     <div className="space-y-10">
       <div>
         <h2 className="text-3xl border-b-2 border-retro-ink pb-2">Die Erinnerungs-Wand</h2>
@@ -160,11 +250,7 @@ export const ExplorationPhase: React.FC<{
       </div>
 
       {Object.entries(DECADES_DB).map(([year, data]) => {
-        const sorted = [...data.buzzwords].sort((a, b) => {
-          const am = userCategories.has(a.category) ? 0 : 1;
-          const bm = userCategories.has(b.category) ? 0 : 1;
-          return am - bm;
-        });
+        const sorted = sortedBuzzwords(year);
         return (
           <div
             key={year}
@@ -203,6 +289,22 @@ export const ExplorationPhase: React.FC<{
         );
       })}
     </div>
+  );
+
+  return (
+  <div className="py-8 animate-fadeIn space-y-14">
+    <AiNotice aiOff={aiOff} />
+    {warm ? (
+      <>
+        {warmWall()}
+        {lab}
+      </>
+    ) : (
+      <>
+        {lab}
+        {classicWall}
+      </>
+    )}
 
     <div className="flex flex-wrap justify-center gap-4 pt-4">
       <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">

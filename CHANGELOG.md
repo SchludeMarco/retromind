@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Neues Design „Retro Warm“ von Google Stitch** (2026-10-04, PR #PRNUM):
+  RetroMind sieht jetzt standardmäßig so aus, wie Stitch es entworfen hat:
+  helles Pergament, Terrakotta, große klare Schrift, runde Karten und kein
+  Flimmern mehr. Oben gibt es eine Kopfleiste mit Ton-Schalter, Einstellungen
+  und Konten, unten eine Navigation zu Start, Zeitreise, Erkunden und
+  Erinnerung. Ein Fortschritt zeigt, an welcher Station der Reise du bist. Die
+  Startseite hat einen Jahrzehnt-Überblick und Archiv-Fundstücke, „Erkunden“
+  zeigt die Stichworte als Karten pro Jahrzehnt. Walkman und Zauberwürfel
+  haben neue Bilder. „Klassisch“ und „Nachtschicht“ kannst du weiter in den
+  Einstellungen wählen.
+
 - **Design wählbar, neu: „Nachtschicht“** (2026-10-04, PR #91): In den
   Einstellungen gibt es jetzt den Bereich „Design“. Neben dem gewohnten
   Papier-Look („Klassisch“, bleibt Standard) kannst du „Nachtschicht“ wählen:

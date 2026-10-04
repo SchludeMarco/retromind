@@ -73,6 +73,149 @@
   }
 }
 
+/* "Retro Warm" – designed with Google Stitch (see lib/theme.ts): parchment
+   canvas, terracotta accent, Epilogue headlines and Plus Jakarta Sans body
+   text, soft rounded cards and pill buttons instead of hard ink shadows, and
+   no CRT flicker. Its app frame (top bar, bottom navigation, journey stepper)
+   lives in components/WarmChrome.tsx. Screen only, like the other designs. */
+@media screen {
+  html[data-theme="retro-warm"] {
+    --color-retro-ink: #231c16;
+    --color-retro-brown: #67584e;
+    --color-retro-tan: #7a655a;
+    --color-retro-amber: #d95d39;
+    --color-retro-amber-dark: #a43716;
+    --color-retro-paper: #f7f3e9;
+    --color-retro-paper-white: #fffdf8;
+    --color-retro-cream: #fff1e8;
+    --color-retro-cream-light: #fffdf8;
+    --color-retro-highlight: #faebe1;
+    --color-retro-purple: #4b7b72;
+    --color-retro-green: #34645c;
+    --color-gray-100: #faebe1;
+    --color-gray-400: #b8a89c;
+    --rm-line: #e6dac8;
+    --rm-gold: #e8a838;
+    --font-serif: 'Epilogue', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-display: 'Epilogue', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-elegant: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+  html[data-theme="retro-warm"] body {
+    line-height: 1.6;
+  }
+  html[data-theme="retro-warm"] h1,
+  html[data-theme="retro-warm"] h2,
+  html[data-theme="retro-warm"] h3 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  html[data-theme="retro-warm"] .grainy-bg,
+  html[data-theme="retro-warm"] .crt-overlay {
+    display: none;
+  }
+  /* Crisp, warm photos instead of the flickering CRT look. */
+  html[data-theme="retro-warm"] .retro-photo,
+  html[data-theme="retro-warm"] .retro-photo-live {
+    filter: saturate(0.95) sepia(0.06);
+    animation: none;
+  }
+  html[data-theme="retro-warm"] .retro-photo-frame::after {
+    display: none;
+  }
+  /* Cards: card stock with a quiet sepia edge and a soft warm shadow. */
+  html[data-theme="retro-warm"] .retro-card {
+    border: 1px solid var(--rm-line);
+    border-radius: 1rem;
+    box-shadow: 0 2px 6px rgba(35, 28, 22, 0.05), 0 1px 2px rgba(35, 28, 22, 0.03);
+  }
+  html[data-theme="retro-warm"] .retro-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(35, 28, 22, 0.08), 0 2px 6px rgba(35, 28, 22, 0.04);
+  }
+  /* Buttons: pills with a minimum 48px touch target. */
+  html[data-theme="retro-warm"] .retro-button,
+  html[data-theme="retro-warm"] button.border-2,
+  html[data-theme="retro-warm"] a.border-2 {
+    border-radius: 9999px;
+    box-shadow: 0 1px 2px rgba(35, 28, 22, 0.06);
+  }
+  html[data-theme="retro-warm"] .retro-button {
+    min-height: 48px;
+    border-width: 1.5px;
+    border-color: var(--rm-line);
+  }
+  html[data-theme="retro-warm"] .retro-button:active {
+    transform: scale(0.97);
+    box-shadow: none;
+  }
+  html[data-theme="retro-warm"] .retro-button.bg-retro-amber,
+  html[data-theme="retro-warm"] .retro-button.bg-retro-ink,
+  html[data-theme="retro-warm"] .retro-button.bg-retro-purple {
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(164, 55, 22, 0.18);
+  }
+  /* Ink-black buttons become terracotta, the design's one call-to-action colour. */
+  html[data-theme="retro-warm"] .retro-button.bg-retro-ink {
+    background-color: var(--color-retro-amber);
+  }
+  html[data-theme="retro-warm"] .retro-button.bg-retro-ink:hover,
+  html[data-theme="retro-warm"] .retro-button.bg-retro-amber:hover {
+    background-color: #bf4b28;
+  }
+  /* Hard ink outlines soften into the sepia line colour. */
+  html[data-theme="retro-warm"] .border-retro-ink {
+    border-color: var(--rm-line);
+  }
+  html[data-theme="retro-warm"] .border-2 {
+    border-width: 1.5px;
+  }
+  html[data-theme="retro-warm"] .border-4 {
+    border-width: 1.5px;
+    border-style: solid;
+    border-radius: 1rem;
+  }
+  html[data-theme="retro-warm"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  html[data-theme="retro-warm"] select,
+  html[data-theme="retro-warm"] textarea {
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+  }
+  html[data-theme="retro-warm"] input:focus,
+  html[data-theme="retro-warm"] textarea:focus,
+  html[data-theme="retro-warm"] select:focus {
+    border-color: var(--color-retro-amber);
+    box-shadow: 0 0 0 3px rgba(217, 93, 57, 0.2);
+    outline: none;
+  }
+  html[data-theme="retro-warm"] :focus-visible {
+    outline-color: var(--color-retro-amber);
+  }
+  /* No text below 12px for older eyes. */
+  html[data-theme="retro-warm"] .text-\[10px\] {
+    font-size: 0.75rem;
+  }
+  /* Multi-line buttons (design picker, Gaming teaser) stay cards, not pills. */
+  html[data-theme="retro-warm"] [role="radio"].retro-button,
+  html[data-theme="retro-warm"] a.retro-button.block {
+    border-radius: 1rem;
+  }
+  html[data-theme="retro-warm"] .rm-chat-panel {
+    left: auto;
+    right: 1rem;
+  }
+  html[data-theme="retro-warm"] .rm-chat-button {
+    left: auto;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+  }
+  html[data-theme="retro-warm"] .rm-modal {
+    border-radius: 1.5rem;
+  }
+}
+
 /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
 html {
   font-size: 18px;
