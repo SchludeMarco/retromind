@@ -22,6 +22,57 @@
   --font-elegant: 'Cormorant Garamond', 'Playfair Display', serif;
 }
 
+/* Selectable designs (Einstellungen → Design, see lib/theme.ts). Each one
+   redefines the colour tokens above; "Klassisch" is the default and needs no
+   block. Tailwind's white/gray/red are re-pointed too, so the many bg-white
+   panels and text-white-on-ink buttons flip along with the palette. Screen
+   only: the printed memory book always uses the classic paper look. */
+@media screen {
+  html[data-theme="nachtschicht"] {
+    color-scheme: dark;
+    --color-retro-ink: #f3e3c3;
+    --color-retro-brown: #d4bc96;
+    --color-retro-tan: #b89a6c;
+    --color-retro-amber: #f59e0b;
+    --color-retro-amber-dark: #fbbf24;
+    --color-retro-paper: #17100b;
+    --color-retro-paper-white: #241911;
+    --color-retro-cream: #2b1e14;
+    --color-retro-cream-light: #281c13;
+    --color-retro-highlight: #3d2a12;
+    --color-retro-purple: #b69cff;
+    --color-retro-green: #7cc68c;
+    --color-white: #241911;
+    --color-gray-100: #33241a;
+    --color-gray-400: #5b4a3c;
+    --color-red-600: #ef4444;
+    --color-red-700: #f87171;
+    --rm-shadow: #000000;
+  }
+  html[data-theme="nachtschicht"] h1,
+  html[data-theme="nachtschicht"] h2 {
+    text-shadow: 0 0 14px rgba(245, 158, 11, 0.28);
+  }
+  html[data-theme="nachtschicht"] .retro-card {
+    box-shadow: 8px 8px 0 var(--rm-shadow), 0 0 22px rgba(245, 158, 11, 0.08);
+  }
+  html[data-theme="nachtschicht"] .retro-card:hover {
+    box-shadow: 10px 10px 0 var(--rm-shadow), 0 0 26px rgba(245, 158, 11, 0.12);
+  }
+  html[data-theme="nachtschicht"] .crt-overlay {
+    mix-blend-mode: normal;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.18) 0px,
+        rgba(0, 0, 0, 0.18) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
+  }
+}
+
 /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
 html {
   font-size: 18px;
@@ -125,16 +176,16 @@ h1, h2, h3, .retro-serif {
 .retro-card {
   background: var(--color-retro-paper-white);
   border: 2px solid var(--color-retro-ink);
-  box-shadow: 8px 8px 0 var(--color-retro-ink);
+  box-shadow: 8px 8px 0 var(--rm-shadow, var(--color-retro-ink));
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .retro-card:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 10px 10px 0 var(--color-retro-ink);
+  box-shadow: 10px 10px 0 var(--rm-shadow, var(--color-retro-ink));
 }
 .retro-button {
   border: 2px solid var(--color-retro-ink);
-  box-shadow: 4px 4px 0 var(--color-retro-ink);
+  box-shadow: 4px 4px 0 var(--rm-shadow, var(--color-retro-ink));
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 .retro-button:active {
