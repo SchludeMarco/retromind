@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Glühbirne pendelt richtig, Power-Knopf saugt dich ein**
+  (2026-10-04, PR #96): Die Glühbirne am Start schwingt jetzt deutlich
+  weiter hin und her, und ihr Lichtkegel wandert auf der Betonwand mit.
+  Nach dem Druck auf den Power-Knopf dreht sich die ganze Wand immer
+  schneller und stürzt in den Knopf hinein, bevor die Konsole hochfährt.
+  Mit „Bewegung reduzieren“ geht es ohne Wirbel direkt weiter.
+
 - **Gaming: flackernde Spielhallen-Glühbirne beim Start** (2026-10-04,
   PR #95): Gleich beim Öffnen der Gaming-Edition hängt über dem
   Einschaltknopf eine nackte Glühbirne an ihrem Kabel. Sie pendelt leicht,

@@ -6,7 +6,7 @@ import { MuteButton } from './MuteButton';
 // is also what lets the browser play sound). Stage 2: the CRT warms up, the
 // logo scrolls down to a starting diesel engine and chimes. Stage 3: the title screen waits for START.
 
-type Stage = 'off' | 'boot' | 'title';
+type Stage = 'off' | 'suck' | 'boot' | 'title';
 
 // Open the app with ?ton to see what the boot sounds actually did on this
 // device (for tracking down a silent phone without a debugger).
@@ -88,10 +88,25 @@ export const PowerOn: React.FC<{
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  const powerOn = () => {
+  // After the tap the whole wall is pulled into the power button, spinning
+  // faster and faster, before the console boots.
+  const [suckOrigin, setSuckOrigin] = useState('50% 50%');
+  const powerOn = (e: React.MouseEvent<HTMLButtonElement>) => {
     chip.unlock();
-    setStage('boot');
+    if (reducedMotion) {
+      setStage('boot');
+      return;
+    }
+    const r = e.currentTarget.getBoundingClientRect();
+    setSuckOrigin(`${r.left + r.width / 2}px ${r.top + r.height / 2}px`);
+    chip.play('powerup');
+    setStage('suck');
   };
+  useEffect(() => {
+    if (stage !== 'suck') return;
+    const id = setTimeout(() => setStage('boot'), 1100);
+    return () => clearTimeout(id);
+  }, [stage]);
 
   const start = () => {
     if (started.current) return;
@@ -100,11 +115,14 @@ export const PowerOn: React.FC<{
     onStart();
   };
 
-  if (stage === 'off') {
+  if (stage === 'off' || stage === 'suck') {
     return (
-      <div className="screen-full power-off">
+      <div
+        className={`screen-full power-off${stage === 'suck' ? ' sucked-in' : ''}`}
+        style={stage === 'suck' ? { transformOrigin: suckOrigin } : undefined}
+      >
         <ArcadeLamp />
-        <button className="power-switch" onClick={powerOn} aria-label="Konsole einschalten" autoFocus>
+        <button className="power-switch" onClick={powerOn} disabled={stage === 'suck'} aria-label="Konsole einschalten" autoFocus>
           {/* Drawn, not the ⏻ character: many phone fonts lack it. */}
           <svg className="power-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M7.05 6.5a8 8 0 1 0 9.9 0" />

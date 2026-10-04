@@ -1703,7 +1703,7 @@ a {
   width: 60px;
   margin-left: -30px;
   transform-origin: 50% 0;
-  animation: lamp-sway 6s ease-in-out infinite;
+  animation: lamp-sway 3.2s infinite;
 }
 .lamp-cord {
   display: block;
@@ -1747,13 +1747,30 @@ a {
   79% { opacity: 0.4; }
   80% { opacity: 1; }
 }
+/* A real pendulum: wide swings, slowing at each end. The pool of light
+   swings with the bulb around the same point on the ceiling. */
 @keyframes lamp-sway {
-  0%, 100% { transform: rotate(-1.2deg); }
-  50% { transform: rotate(1.2deg); }
+  0%, 100% { transform: rotate(-11deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  50% { transform: rotate(11deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+}
+.lamp-scene .lamp-light {
+  transform-origin: 50% 0;
+  animation: lamp-flicker 5.5s steps(1) infinite, lamp-sway 3.2s infinite;
+}
+/* Power on: the wall spins and plunges into the button. */
+.sucked-in {
+  animation: sucked-in 1.1s cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+  pointer-events: none;
+}
+@keyframes sucked-in {
+  0% { transform: scale(1) rotate(0); filter: blur(0) brightness(1); }
+  15% { transform: scale(0.94) rotate(-6deg); filter: blur(0) brightness(1.1); }
+  100% { transform: scale(18) rotate(320deg); filter: blur(8px) brightness(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .lamp,
   .lamp-light,
+  .lamp-scene .lamp-light,
   .lamp-glass {
     animation: none;
   }
