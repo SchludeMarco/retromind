@@ -344,6 +344,13 @@ export const GamingApp: React.FC = () => {
     setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false, related }));
   };
 
+  // Opening the Chill-Ecke (also from the dock) brings its games into view.
+  useEffect(() => {
+    if (view !== 'chill') return;
+    const btn = document.querySelector('.chill-btn');
+    if (btn) btn.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+  }, [view, reducedMotion]);
+
   const switchView = (v: View) => {
     chip.play('blip');
     setView(v);
@@ -456,6 +463,17 @@ export const GamingApp: React.FC = () => {
             >
               {view === 'chill' ? '◄ ZURÜCK ZUM KATALOG' : '♥ CHILL-ECKE · MINISPIELE'}
             </button>
+            {/* The games open right under their button, not further down the page. */}
+            {view === 'chill' && (
+              <div className="chill-panel">
+                <MiniGameCorner
+                  onPick={(id) => {
+                    chip.play('select');
+                    setMiniGame(id);
+                  }}
+                />
+              </div>
+            )}
             <form className="search" onSubmit={runSearch} role="search">
               <input
                 value={query}
@@ -558,14 +576,7 @@ export const GamingApp: React.FC = () => {
             </>
           )}
 
-          {view === 'chill' ? (
-            <MiniGameCorner
-              onPick={(id) => {
-                chip.play('select');
-                setMiniGame(id);
-              }}
-            />
-          ) : view === 'trophies' ? (
+          {view === 'chill' ? null : view === 'trophies' ? (
             <div className="links" style={{ marginTop: 16 }}>
               {ACHIEVEMENTS.map((a) => {
                 const got = state.achievements.includes(a.id);
