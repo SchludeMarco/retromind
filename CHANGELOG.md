@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Mit Google angemeldet: keine Abfrage von Name und Geburtstag mehr**
-  (2026-10-05, PR #PRNUM): Wer in der Zeitreise mit Google angemeldet ist,
+  (2026-10-05, PR #122): Wer in der Zeitreise mit Google angemeldet ist,
   landet direkt in der App, sobald Name und Geburtsdatum bekannt sind, aus
   dem Google-Konto, der Drive-Sicherung oder von einem früheren Besuch. Statt
   des Formulars gibt es ein kurzes „Willkommen“. Der Geburtstag kommt jetzt
