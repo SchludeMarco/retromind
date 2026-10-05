@@ -55,9 +55,11 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
       <p className="relative font-elegant text-xl md:text-2xl italic tracking-wide text-[#c9ab78] mb-12">
         The ticket to your past🏳️
       </p>
-      <button onClick={handleStart} disabled={struck} className="splash-start relative">
-        Let's go!
-      </button>
+      <span className="splash-start-tilt relative inline-block">
+        <button onClick={handleStart} disabled={struck} className="splash-start relative">
+          Go back...
+        </button>
+      </span>
       <p
         aria-live="polite"
         className={`relative mt-6 text-sm text-[#c9ab78]/80 transition-opacity duration-500 ${

@@ -540,6 +540,42 @@ html[data-theme="nachtschicht"] .splash-start:active {
   transform: scale(0.97);
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 0 10px rgba(245, 158, 11, 0.25);
 }
+/* Slightly askew, like a ticket stuck on in a hurry, and every few seconds
+   a glint of light sweeps across it (all designs). */
+.splash-start-tilt {
+  transform: rotate(-4deg);
+}
+.splash-start {
+  overflow: hidden;
+}
+.splash-start::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
+  transform: skewX(-20deg) translateX(0);
+  pointer-events: none;
+  animation: splashGlint 3.6s ease-in-out infinite;
+}
+@keyframes splashGlint {
+  0%, 62% { transform: skewX(-20deg) translateX(0); opacity: 0; }
+  64% { opacity: 1; }
+  82% { transform: skewX(-20deg) translateX(420%); opacity: 1; }
+  84%, 100% { transform: skewX(-20deg) translateX(420%); opacity: 0; }
+}
+.splash-start-tilt {
+  animation: splashFlash 3.6s ease-in-out infinite;
+}
+@keyframes splashFlash {
+  0%, 66%, 86%, 100% { filter: brightness(1); }
+  74% { filter: brightness(1.35) drop-shadow(0 0 14px rgba(255, 230, 170, 0.9)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-start::after, .splash-start-tilt { animation: none !important; }
+}
 .splash-start:disabled {
   cursor: default;
 }

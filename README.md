@@ -101,8 +101,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [CHANGELOG.md](CHANGELOG.md) direkt in der App ([`lib/whatsNew.ts`](lib/whatsNew.ts)),
   ein roter Punkt am Zahnrad meldet Neues seit dem letzten Blick.
 - **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
-  Kaminuhr, die hörbar tickt. Der „Let's go!“-Knopf trägt den Look des
-  gewählten Designs; ein Druck darauf schlägt einen großen Gong, der
+  Kaminuhr, die hörbar tickt. Der „Go back...“-Knopf trägt den Look des
+  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf schlägt einen großen Gong, der
   Bildschirm wird weiß und geht langsam in die App über. Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab der ersten
