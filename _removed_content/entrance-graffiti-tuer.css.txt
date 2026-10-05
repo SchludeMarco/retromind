@@ -1,0 +1,259 @@
+/* CSS des Gaming-Eingangs mit gezeichneter Graffiti-Holztür (PR #99/#100). */
+
+/* --- Entrance: a wobbly bulb in front of a battered graffiti door --- */
+.entrance,
+.arcade[data-palette='modul'] .entrance {
+  overflow: hidden;
+  justify-content: flex-end;
+  padding-bottom: max(20px, 4vh);
+  background-color: #6f6e6a;
+  /* poured concrete: grain, formwork seams and tie holes */
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.45) 0 3px, rgba(255, 255, 255, 0.12) 4px, transparent 5px),
+    linear-gradient(to bottom, transparent calc(100% - 2px), rgba(0, 0, 0, 0.28) calc(100% - 2px)),
+    linear-gradient(to right, transparent calc(100% - 2px), rgba(0, 0, 0, 0.22) calc(100% - 2px)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .48 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .28 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  background-size: 180px 120px, 360px 240px, 360px 240px, 220px 220px, 600px 600px;
+  background-position: 90px 60px, 0 0, 0 0, 0 0, 0 0;
+}
+.entrance-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 44vh;
+}
+/* The door opening in a concrete frame, with the bulb hanging in front. */
+.doorway {
+  --door-h: min(50vh, 500px);
+  position: absolute;
+  left: 50%;
+  top: 17vh;
+  height: var(--door-h);
+  aspect-ratio: 1 / 2;
+  transform: translateX(-50%);
+  perspective: 700px;
+  box-shadow: 0 0 0 10px #57534c, 0 0 0 13px #2b2925, 0 18px 0 13px #3d3a35;
+}
+.door-inside {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, #1c140c, #040302);
+}
+.door-inside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 55%, #fff 0, #fff7de 35%, #ffd98a 75%, #e8a84f 100%);
+  opacity: 0;
+}
+.door-leaf {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6);
+}
+.door-leaf-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Darkness everywhere except the warm pool of light around the bulb. */
+.entrance-dark {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60vmax 62vmax at 50% 20vh, transparent 0, rgba(8, 6, 4, 0.5) 34%, rgba(4, 3, 2, 0.95) 72%);
+}
+.door-logo {
+  position: absolute;
+  left: 50%;
+  top: calc(17vh + min(25vh, 250px));
+  width: min(66vw, 300px);
+  height: auto;
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%) scale(0.15);
+  opacity: 0;
+}
+.entrance-controls {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.entrance-controls .dim {
+  max-width: 420px;
+  margin: 14px 0 0;
+  color: #e9e4d8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+.enter-btn {
+  min-width: 220px;
+  letter-spacing: 0.12em;
+}
+.white-out {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-height: 560px) {
+  .doorway {
+    --door-h: 46vh;
+    top: 13vh;
+  }
+  .door-logo {
+    top: calc(13vh + 23vh);
+  }
+  .entrance-scene {
+    transform-origin: 50% 36vh;
+  }
+  .entrance-controls .dim {
+    display: none;
+  }
+}
+.lamp-light {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 34vmax 30vmax at 50% 15vh, rgba(255, 196, 110, 0.55), rgba(255, 160, 70, 0.18) 55%, transparent 75%),
+    radial-gradient(circle 70px at 50% 15vh, rgba(255, 230, 170, 0.75), transparent 70%);
+  mix-blend-mode: screen;
+  animation: lamp-flicker 5.5s steps(1) infinite;
+}
+.lamp {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 60px;
+  margin-left: -30px;
+  transform-origin: 50% 0;
+  animation: lamp-sway 3.2s infinite;
+}
+.lamp-cord {
+  display: block;
+  width: 3px;
+  height: calc(15vh - 52px);
+  min-height: 20px;
+  margin: 0 auto;
+  background: #1b1b1b;
+}
+.lamp-bulb {
+  display: block;
+  overflow: visible;
+  width: 60px;
+  height: 96px;
+}
+.lamp-glass {
+  fill: #ffe6a8;
+  filter: drop-shadow(0 0 14px rgba(255, 200, 110, 0.95));
+  animation: lamp-flicker 5.5s steps(1) infinite;
+}
+.lamp-filament {
+  fill: none;
+  stroke: #fff6d8;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+/* An old bulb with a loose contact: mostly on, with nervous drop-outs. */
+@keyframes lamp-flicker {
+  0% { opacity: 1; }
+  7% { opacity: 0.35; }
+  8% { opacity: 1; }
+  9% { opacity: 0.2; }
+  10% { opacity: 0.95; }
+  31% { opacity: 0.85; }
+  32% { opacity: 1; }
+  54% { opacity: 0.1; }
+  55% { opacity: 0.6; }
+  56% { opacity: 0.05; }
+  59% { opacity: 1; }
+  78% { opacity: 0.9; }
+  79% { opacity: 0.4; }
+  80% { opacity: 1; }
+}
+/* A real pendulum: wide swings, slowing at each end. The pool of light
+   swings with the bulb around the same point on the ceiling. */
+@keyframes lamp-sway {
+  0%, 100% { transform: rotate(-11deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  50% { transform: rotate(11deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+}
+/* Oversized so its edges never show while it swings around the ceiling point. */
+.entrance-scene .lamp-light {
+  inset: -40vh -60vw 0;
+  background:
+    radial-gradient(ellipse 34vmax 30vmax at 50% 55vh, rgba(255, 196, 110, 0.55), rgba(255, 160, 70, 0.18) 55%, transparent 75%),
+    radial-gradient(circle 70px at 50% 55vh, rgba(255, 230, 170, 0.75), transparent 70%);
+  transform-origin: 50% 40vh;
+  animation: lamp-flicker 5.5s steps(1) infinite, lamp-sway 3.2s infinite;
+}
+
+/* "Eintreten": the door flies open, light floods out, the logo comes
+   through the doorway and everything goes white. */
+.entering .entrance-scene {
+  animation: walk-in 2.2s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;
+}
+@keyframes walk-in {
+  to { transform: scale(1.35); }
+}
+.entering .door-leaf {
+  animation: door-open 0.5s cubic-bezier(0.55, 0, 0.3, 1.15) forwards;
+}
+@keyframes door-open {
+  to { transform: rotateY(100deg); }
+}
+.entering .door-inside::after {
+  animation: fade-up 0.4s ease-out 0.1s forwards;
+}
+.entering .doorway {
+  animation: door-glow 0.6s ease-out 0.15s forwards;
+}
+@keyframes door-glow {
+  to { box-shadow: 0 0 0 10px #8a8274, 0 0 0 13px #4a453d, 0 18px 0 13px #6b6458, 0 0 120px 50px rgba(255, 228, 160, 0.75); }
+}
+.entering .entrance-dark,
+.entering .entrance-controls {
+  animation: fade-down 0.4s ease-out forwards;
+}
+.entering .door-logo {
+  animation: logo-out 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.45s forwards;
+}
+@keyframes logo-out {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(255, 240, 200, 0.9));
+  }
+}
+.entering .white-out {
+  animation: fade-up 0.6s ease-in 1.6s forwards;
+}
+/* The hub comes up out of the white picture. */
+.white-in {
+  position: fixed;
+  inset: 0;
+  z-index: 850;
+  background: #fff;
+  pointer-events: none;
+  animation: fade-down 0.7s ease-out forwards;
+}
+@keyframes fade-up {
+  to { opacity: 1; }
+}
+@keyframes fade-down {
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lamp,
+  .lamp-light,
+  .entrance-scene .lamp-light,
+  .lamp-glass {
+    animation: none;
+  }
+  .entering * {
+    animation: none !important;
+  }
+}
+

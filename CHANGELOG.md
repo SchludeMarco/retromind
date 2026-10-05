@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Eingang ist jetzt die verranzte „Arcade Hallen“** (2026-10-05,
+  PR #102): Statt der gezeichneten Holztür siehst du zum Start Marcos Bild
+  einer heruntergekommenen Spielhalle an einer verregneten Straße, mit
+  Graffiti, Plakaten und flackernder „ARCADE“-Leuchtschrift. Unter dem Vordach
+  wackelt und flackert die Glühbirne. „Eintreten“ reißt die EINGANG-Tür auf,
+  dahinter strahlt Licht, das Logo kommt heraus, das Bild wird weiß und die
+  Halle erscheint. Auf dem Handy bleibt die Tür immer in der Bildmitte.
+
 - **Gaming: Chill-Ecke mit drei Minispielen** (2026-10-05, PR #101): Zum
   Entspannen zwischendurch gibt es in der Gaming-Halle einen neuen Bereich
   „Chill-Ecke“ (unten in der Leiste „Chillen“). Darin: **Pixel-Memory**

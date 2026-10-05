@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { GamingApp } from './GamingApp';
 // Fonts are bundled with the app (no request to Google Fonts, DSGVO).
 import '@fontsource/press-start-2p/latin-400.css';
-import '@fontsource/permanent-marker/latin-400.css';
 import '@fontsource/vt323/latin-400.css';
 // Design "Modul" (Google Stitch): Space Grotesk headings, Plus Jakarta Sans text.
 import '@fontsource/space-grotesk/latin-500.css';
