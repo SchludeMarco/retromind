@@ -1938,25 +1938,25 @@ a {
   pointer-events: none;
 }
 
-/* "ENTER": the door flies open, light floods out, the logo comes
+/* "ENTER": the door creaks open (1.2 s, DOOR_SWING in chiptune.ts), light floods out, the logo comes
    through the doorway and everything goes white. */
 .entering .hall {
-  animation: walk-in 2.2s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;
+  animation: walk-in 3s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;
 }
 @keyframes walk-in {
   to { transform: scale(1.6); }
 }
 .entering .door-leaf {
-  animation: door-open 0.5s cubic-bezier(0.55, 0, 0.3, 1.15) forwards;
+  animation: door-open 1.2s cubic-bezier(0.7, 0, 0.6, 1.08) forwards;
 }
 @keyframes door-open {
   to { transform: rotateY(100deg); }
 }
 .entering .door-inside::after {
-  animation: fade-up 0.4s ease-out 0.1s forwards;
+  animation: fade-up 0.6s ease-out 0.5s forwards;
 }
 .entering .hall-door {
-  animation: door-glow 0.6s ease-out 0.15s forwards;
+  animation: door-glow 0.8s ease-out 0.6s forwards;
 }
 @keyframes door-glow {
   to { box-shadow: 0 0 8cqw 3cqw rgba(255, 228, 160, 0.75); }
@@ -1965,7 +1965,7 @@ a {
   animation: fade-down 0.4s ease-out forwards;
 }
 .entering .door-logo {
-  animation: logo-out 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.45s forwards;
+  animation: logo-out 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.15s forwards;
 }
 @keyframes logo-out {
   to {
@@ -1975,7 +1975,7 @@ a {
   }
 }
 .entering .white-out {
-  animation: fade-up 0.6s ease-in 1.6s forwards;
+  animation: fade-up 0.6s ease-in 2.4s forwards;
 }
 /* The hub comes up out of the white picture. */
 .white-in {
