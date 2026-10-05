@@ -53,14 +53,19 @@ export function playlistUri(playlistId: string): string {
   return `spotify:playlist:${playlistId}`;
 }
 
+export function trackUri(trackId: string): string {
+  return `spotify:track:${trackId}`;
+}
+
+/** `uri` is a full Spotify URI (see playlistUri / trackUri). */
 export function createSpotifyEmbedController(
   element: HTMLElement,
-  playlistId: string
+  uri: string
 ): Promise<SpotifyEmbedController> {
   return loadSpotifyIframeApi().then(
     (IFrameAPI) =>
       new Promise((resolve) => {
-        IFrameAPI.createController(element, { uri: playlistUri(playlistId) }, resolve);
+        IFrameAPI.createController(element, { uri }, resolve);
       })
   );
 }

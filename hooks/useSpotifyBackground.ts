@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createSpotifyEmbedController, playlistUri, SpotifyEmbedController } from '../lib/spotifyEmbed';
+import { createSpotifyEmbedController, playlistUri, trackUri, SpotifyEmbedController } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
 import { useConsent } from '../lib/privacy';
@@ -13,6 +13,13 @@ import { useConsent } from '../lib/privacy';
 // Nothing from Spotify loads until the visitor allowed it (lib/privacy).
 // Nor does anything play before `enabled` (the welcome screen with its
 // ticking clock and gong has to finish first, see App.tsx).
+//
+// Each visit opens with a piece of "Back to Back" by Pretty Maids (Marco's
+// pick, it fits the app), streamed through the same Spotify player, then
+// the decade's playlist takes over.
+const INTRO_TRACK_ID = '5t70MlkURJ4JXbkfFtEqKr';
+const INTRO_MS = 45_000;
+
 export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
@@ -27,14 +34,33 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const allowed = useConsent('spotify') === true;
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
+  const decadeRef = useRef(currentDecade);
+  decadeRef.current = currentDecade;
+  // The opening song: 'pending' until it starts, 'playing', then 'done'.
+  const introRef = useRef<'pending' | 'playing' | 'done'>('pending');
+  const introHeardRef = useRef(false);
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller || !enabledRef.current || !unlockedRef.current || isMuted()) return;
     startedRef.current = true;
     userPausedRef.current = false;
+    if (introRef.current === 'pending') introRef.current = 'playing';
     controller.play();
   }, []);
+
+  // Opening song over (time is up, or it ended, e.g. Spotify's 30-second
+  // preview without a login): switch to the decade's playlist.
+  const finishIntro = useCallback(() => {
+    if (introRef.current === 'done') return;
+    introRef.current = 'done';
+    const controller = controllerRef.current;
+    const playlistId = DECADES_DB[decadeRef.current]?.spotifyPlaylistId;
+    if (!controller || !playlistId) return;
+    controller.loadUri(playlistUri(playlistId));
+    startedRef.current = false;
+    start();
+  }, [start]);
 
   // Created once consent is there; later decade changes reuse it via
   // loadUri below. Withdrawing consent removes the player again.
@@ -43,14 +69,26 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
     if (!playlistId) return;
     let cancelled = false;
-    createSpotifyEmbedController(containerRef.current, playlistId).then((controller) => {
+    const firstUri = introRef.current === 'done' ? playlistUri(playlistId) : trackUri(INTRO_TRACK_ID);
+    createSpotifyEmbedController(containerRef.current, firstUri).then((controller) => {
       if (cancelled) {
         controller.destroy();
         return;
       }
       controllerRef.current = controller;
       controller.addListener('ready', () => setIsReady(true));
-      controller.addListener('playback_update', (e: any) => setIsPlaying(!e?.data?.isPaused));
+      controller.addListener('playback_update', (e: any) => {
+        const data = e?.data ?? {};
+        setIsPlaying(!data.isPaused);
+        if (introRef.current !== 'playing') return;
+        const position = Number(data.position) || 0;
+        const duration = Number(data.duration) || 0;
+        if (position > 1000) introHeardRef.current = true;
+        const ended =
+          introHeardRef.current &&
+          ((duration > 0 && position >= duration - 500) || (data.isPaused && position === 0));
+        if (position >= INTRO_MS || ended) finishIntro();
+      });
       start();
     });
     return () => {
@@ -69,6 +107,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
     const controller = controllerRef.current;
     if (!controller || !playlistId) return;
+    introRef.current = 'done';
     controller.loadUri(playlistUri(playlistId));
     startedRef.current = false;
     start();
