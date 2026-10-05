@@ -362,6 +362,18 @@ export const GamingApp: React.FC = () => {
   return (
     <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
       <div className="stars" aria-hidden="true" />
+      {screen === 'hub' && (
+        // Inside the hall: an aisle between rows of arcade cabinets, neon
+        // tubes overhead and loud carpet underfoot, toned down behind the UI.
+        <div className="hall-bg" aria-hidden="true">
+          <div className="hb-ceiling" />
+          <div className="hb-floor" />
+          <div className="hb-wall left" />
+          <div className="hb-wall right" />
+          <div className="hb-fog" />
+          <div className="hb-tint" />
+        </div>
+      )}
 
       {screen === 'power' ? (
         <Entrance

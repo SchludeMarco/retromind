@@ -140,6 +140,70 @@ a {
   to { transform: translateY(50%); }
 }
 
+/* --- Inside the hall: 3D aisle behind the hub --- */
+.hall-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #07080c;
+  perspective: 420px;
+  perspective-origin: 50% 42%;
+}
+.hb-floor,
+.hb-ceiling {
+  position: absolute;
+  left: -150%;
+  width: 400%;
+  height: 400vh;
+}
+.hb-floor {
+  bottom: 0;
+  transform-origin: 50% 100%;
+  transform: rotateX(84deg);
+  background: url('/gaming/hall/carpet.svg') 0 0 / 160px 160px;
+}
+.hb-ceiling {
+  top: 0;
+  transform-origin: 50% 0;
+  transform: rotateX(-84deg);
+  background: url('/gaming/hall/ceiling.svg') 0 0 / 160px 320px;
+}
+.hb-wall {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 600vh;
+  background: url('/gaming/hall/cabinets.svg') 0 100% / auto 100% repeat-x;
+}
+.hb-wall.left {
+  left: 0;
+  transform-origin: 0 50%;
+  transform: rotateY(84deg);
+}
+.hb-wall.right {
+  right: 0;
+  transform-origin: 100% 50%;
+  transform: rotateY(-84deg);
+}
+/* The far end of the aisle disappears into the dark. */
+.hb-fog {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 22% 18% at 50% 42%, #07080c 20%, rgba(7, 8, 12, 0.6) 55%, transparent 100%);
+}
+/* Calms the hall down so cards and text stay easy to read. */
+.hb-tint {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0.4;
+}
+.arcade[data-palette='modul'] .hb-tint {
+  opacity: 0.6;
+}
+
 /* --- Entrance --- */
 .screen-full {
   position: fixed;
