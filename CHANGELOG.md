@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Nach oben“-Knopf unten links** (2026-10-05, PR #110): Wer weit nach
+  unten gescrollt hat, sieht unten links einen runden Pfeil-Knopf. Ein Tipp
+  darauf bringt dich sanft zurück an den Anfang der Seite. Ganz oben ist der
+  Knopf ausgeblendet. Gibt es in der Zeitreise (alle Designs) und in der
+  Gaming-Halle; er sitzt knapp über der unteren Leiste und verdeckt keine
+  anderen Knöpfe.
+
 - **Gaming: Spielmarken immer oben im Blick** (2026-10-05, PR #109): In der
   Kopfleiste steht jetzt neben dem Punktestand, wie viele Spielmarken du hast.
   Kommen neue dazu, hüpft die Zahl kurz. Ein Tipp darauf führt direkt zu den

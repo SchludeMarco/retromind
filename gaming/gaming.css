@@ -727,6 +727,30 @@ a {
   bottom: 16px;
   z-index: 400;
 }
+/* "Nach oben", bottom left, mirroring the Guru button; shows after scrolling. */
+.to-top {
+  position: fixed;
+  left: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 395;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.to-top.shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+.to-top svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
 .guru {
   position: fixed;
   right: 16px;
@@ -1532,6 +1556,10 @@ a {
 /* Game-Guru chat and trophy toast. */
 .arcade[data-palette='modul'] .guru-fab {
   bottom: calc(84px + env(safe-area-inset-bottom));
+}
+.arcade[data-palette='modul'] .to-top {
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  border-radius: 999px;
 }
 .arcade[data-palette='modul'] .guru {
   bottom: calc(150px + env(safe-area-inset-bottom));
