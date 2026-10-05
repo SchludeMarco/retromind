@@ -69,3 +69,54 @@ export function createSpotifyEmbedController(
       })
   );
 }
+
+// --- Random order ---------------------------------------------------------
+// The embed has no shuffle: a playlist always starts with its first song and
+// then runs in order. So the app asks its own server for the playlist's
+// track ids (api/spotify-tracks.js) and plays one random song after the
+// other. An empty list (server unreachable, Spotify changed its page) means:
+// play the playlist itself, as before.
+
+const trackLists = new Map<string, Promise<string[]>>();
+
+/** Track ids of a playlist, loaded once per visit. Never rejects. */
+export function playlistTracks(playlistId: string): Promise<string[]> {
+  let list = trackLists.get(playlistId);
+  if (!list) {
+    list = fetch(`/api/spotify-tracks?playlist=${encodeURIComponent(playlistId)}`)
+      .then((r) => (r.ok ? r.json() : { tracks: [] }))
+      .then((d) => (Array.isArray(d?.tracks) ? d.tracks.filter((t: unknown) => typeof t === 'string') : []))
+      .catch(() => []);
+    trackLists.set(playlistId, list);
+  }
+  return list;
+}
+
+/** Waits at most `ms` for the track list, so the music never hangs on it. */
+export function playlistTracksWithin(playlistId: string, ms: number): Promise<string[]> {
+  return Promise.race([playlistTracks(playlistId), new Promise<string[]>((r) => setTimeout(() => r([]), ms))]);
+}
+
+const recent: string[] = [];
+
+/** A random track id, avoiding the songs heard most recently. */
+export function randomTrack(ids: string[]): string | null {
+  if (!ids.length) return null;
+  const fresh = ids.filter((id) => !recent.includes(id));
+  const pool = fresh.length ? fresh : ids;
+  const id = pool[Math.floor(Math.random() * pool.length)];
+  recent.push(id);
+  if (recent.length > 40) recent.shift();
+  return id;
+}
+
+/**
+ * Whether a playback_update says the current single song is over: it either
+ * reached its end or Spotify stopped it and jumped back to 0 (that is how a
+ * 30-second preview without login ends). `heard` = it played > 1 s already.
+ */
+export function songEnded(data: { isPaused?: boolean; position?: number; duration?: number }, heard: boolean): boolean {
+  const position = Number(data.position) || 0;
+  const duration = Number(data.duration) || 0;
+  return heard && ((duration > 0 && position >= duration - 500) || (!!data.isPaused && position === 0));
+}

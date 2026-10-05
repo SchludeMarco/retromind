@@ -59,8 +59,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Playlist der gewählten Dekade als Embed, plus UI-Sounds. Sobald man einmal
   irgendwo klickt/tippt (Browser verlangen diese Interaktion, bevor Ton laufen
   darf) und die Startseite nach dem Gong erscheint, läuft sofort zum Auftakt ein
-  Stück von „Back to Back“ (Pretty Maids), danach startet die Playlist
-  automatisch im Hintergrund – streamt direkt von
+  Stück von „Back to Back“ (Pretty Maids), danach spielt die Playlist
+  automatisch im Hintergrund, Lied für Lied in zufälliger Reihenfolge (der
+  Spotify-Player kann kein Shuffle, deshalb liest
+  [`api/spotify-tracks.js`](api/spotify-tracks.js) die Titelliste der
+  Playlist, ohne sie fängt sie wie früher oben an) – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet. In
   den Einstellungen lässt sich die Wiedergabe pausieren.
@@ -154,7 +157,7 @@ das Bild wird weiß und der Katalog erscheint, begleitet von einem
 synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
-Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)).
+Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
