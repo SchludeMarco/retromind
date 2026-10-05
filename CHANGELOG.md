@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik setzt sofort mit der Startseite ein** (2026-10-05, PR #118): Bisher
+  kam „Back to Back“ erst einige Sekunden nach dem Gong, manchmal noch später.
+  Jetzt startet die Musik genau in dem Moment, in dem die Startseite durch das
+  Weiß hindurchscheint. War Spotifys Player da noch nicht ganz geladen,
+  startet er, sobald er bereit ist, statt still zu bleiben.
+
 - **„Back to Back“ von Pretty Maids zum Auftakt** (2026-10-05, PR #117):
   Wenn du nach dem Willkommens-Bildschirm auf der Startseite ankommst und die
   Spotify-Musik erlaubt hast, laufen zuerst gut 45 Sekunden von „Back to

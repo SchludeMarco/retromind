@@ -57,7 +57,11 @@ const App: React.FC = () => {
   const { sfxRef, playSFX } = useAudioPlayer();
   // The welcome screen sits on top of everything on each fresh load; music waits until it is gone.
   const [showSplash, setShowSplash] = useState(true);
-  const spotify = useSpotifyBackground(currentAudioDecade, !showSplash);
+  // Music starts the moment the main menu shows through the white-out, not
+  // after the splash is fully gone (the browser only allows audio shortly
+  // after the start button press).
+  const [menuRevealed, setMenuRevealed] = useState(false);
+  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash);
 
   const googleAuth = useGoogleAuth();
   const spotifyAuth = useSpotifyAuth();
@@ -501,7 +505,7 @@ const App: React.FC = () => {
           onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
         />
       )}
-      {showSplash && <SplashScreen onStart={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
       <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio

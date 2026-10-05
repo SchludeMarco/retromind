@@ -15,7 +15,9 @@ const FADE_MS = 3200;
 // so it appears again on every fresh page load. The mantel clock ticks the
 // whole time (lib/clockSounds.ts); the start button takes the look of the
 // chosen design (.splash-start in index.css).
-export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => {
+// onReveal fires as the white starts giving way to the main menu (music
+// begins there), onStart once the splash is gone.
+export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void }> = ({ onStart, onReveal }) => {
   const [struck, setStruck] = useState(false);
   const [fading, setFading] = useState(false);
   const [waitingForTouch, setWaitingForTouch] = useState(false);
@@ -34,6 +36,7 @@ export const SplashScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => 
     playGong();
     setTimeout(() => {
       setFading(true);
+      onReveal?.();
       setTimeout(onStart, FADE_MS);
     }, WHITE_IN_MS + WHITE_HOLD_MS);
   };
