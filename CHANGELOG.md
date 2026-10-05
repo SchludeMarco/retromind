@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Willkommens-Bildschirm: Uhr tickt, Gong zum Start** (2026-10-05, PR #PRNR):
+- **Willkommens-Bildschirm: Uhr tickt, Gong zum Start** (2026-10-05, PR #113):
   Auf dem ersten Bildschirm mit der alten Kaminuhr tickt jetzt die ganze Zeit
   leise „tick … tack“. Der „Let's go!“-Knopf sieht aus wie das gewählte
   Design: in Retro Warm ein runder Terrakotta-Knopf, in Klassisch ein
