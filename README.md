@@ -187,7 +187,8 @@ pro Woche. Jede geschaffte Quest bringt Spielmarken, die man am Preis-Tresen
 gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
 (Weltraum, Bosskampf) eintauscht ([`gaming/lib/quests.ts`](gaming/lib/quests.ts),
 [`gaming/components/QuestBoard.tsx`](gaming/components/QuestBoard.tsx)).
-Marken und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
+Der Marken-Stand steht immer oben in der Kopfleiste (ein Tipp darauf öffnet die
+Quests). Marken und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module

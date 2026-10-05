@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Spielmarken immer oben im Blick** (2026-10-05, PR #109): In der
+  Kopfleiste steht jetzt neben dem Punktestand, wie viele Spielmarken du hast.
+  Kommen neue dazu, hüpft die Zahl kurz. Ein Tipp darauf führt direkt zu den
+  Quests und zum Preis-Tresen.
+
 - **Gaming: Sudoku, Blockstapler und Flipper in der Chill-Ecke** (2026-10-05,
   PR #108): Drei neue Minispiele. **Sudoku** mit immer neuen Rätseln (Feld
   antippen, Zahl wählen, doppelte Zahlen werden rot, die Bestzeit wird

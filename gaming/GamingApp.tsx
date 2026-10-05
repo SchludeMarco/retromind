@@ -446,6 +446,19 @@ export const GamingApp: React.FC = () => {
                 <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
               </div>
             )}
+            {/* Spielmarken from the quests; a tap opens the quests and the prize counter. */}
+            <button
+              className="hud-tokens"
+              onClick={() => switchView('quests')}
+              aria-label={`${state.tokens} Spielmarken, zu den Quests und zum Preis-Tresen`}
+              title="Spielmarken: zum Preis-Tresen"
+              data-nav
+            >
+              <span className="label">MARKEN</span>{' '}
+              <span key={state.tokens} className="value bump">
+                {state.tokens}
+              </span>
+            </button>
             <div>
               <span className="label">1UP</span> <span className="value">{pad(score)}</span>
             </div>

@@ -2268,3 +2268,35 @@ a {
   font-size: 12px;
   padding: 16px 8px;
 }
+
+/* Token count in the HUD: a button to the quests, pops when it grows. */
+.hud-tokens {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 2px solid var(--a3);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.hud-tokens:hover,
+.hud-tokens:focus-visible {
+  background: var(--panel);
+}
+.arcade[data-palette='modul'] .hud-tokens {
+  border-radius: 8px;
+  border-color: var(--ridge);
+}
+.hud-tokens .bump {
+  display: inline-block;
+  animation: token-bump 0.5s ease-out;
+}
+@keyframes token-bump {
+  0% { transform: scale(1.6); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-tokens .bump {
+    animation: none;
+  }
+}
