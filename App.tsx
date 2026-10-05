@@ -500,7 +500,7 @@ const App: React.FC = () => {
           onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
         />
       )}
-      {showSplash && <SplashScreen onStart={() => { playSFX('click'); setShowSplash(false); }} />}
+      {showSplash && <SplashScreen onStart={() => setShowSplash(false)} />}
       <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio

@@ -1,0 +1,29 @@
+/* The "Let's go!" button's quick send-off: thin bright sparks shoot out
+   from its center (each pre-rotated to its flight angle, so the animation
+   is just a translate along its own local "up" axis), a ring shockwaves
+   outward, and a warm flash washes the whole screen — all fast, before the
+   slow fade to the app takes over. */
+@keyframes explosionSpark {
+  0% { transform: translateY(0) scaleY(1); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(calc(-1 * var(--dist))) scaleY(0.4); opacity: 0; }
+}
+.explosion-spark {
+  animation-name: explosionSpark;
+  animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1);
+  animation-fill-mode: forwards;
+}
+@keyframes explosionRing {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(9); opacity: 0; }
+}
+.explosion-ring {
+  animation: explosionRing 0.55s ease-out forwards;
+}
+@keyframes explosionFlash {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+.explosion-flash {
+  animation: explosionFlash 0.5s ease-out forwards;
+}

@@ -27,3 +27,7 @@ gebaut oder ausgeliefert.
 - `ambient-pad.ts.txt`: die leise Akkord-Musik mit Spieluhr-Tönen vor dem
   Gaming-Eingang (entfernt am 2026-10-05, ersetzt durch die Straßengeräusche
   mit Menschenmenge, Sirenen und Rauferei).
+- `SplashScreen-funken-explosion.tsx.txt`, `splash-explosion.css.txt`: der
+  frühere „Let's go!“-Knopf des Willkommens-Bildschirms mit Funken-Explosion,
+  Druckwelle und Knall (entfernt am 2026-10-05, ersetzt durch Gong und weiße
+  Überblendung).

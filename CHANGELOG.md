@@ -7,6 +7,19 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Willkommens-Bildschirm: Uhr tickt, Gong zum Start** (2026-10-05, PR #PRNR):
+  Auf dem ersten Bildschirm mit der alten Kaminuhr tickt jetzt die ganze Zeit
+  leise „tick … tack“. Der „Let's go!“-Knopf sieht aus wie das gewählte
+  Design: in Retro Warm ein runder Terrakotta-Knopf, in Klassisch ein
+  Papier-Ticket mit Tintenrand, in Nachtschicht ein glühender Bernstein-Rahmen.
+  Ein Druck darauf schlägt einen großen Gong, der Bildschirm wird weiß und
+  geht dann langsam in die Startseite über. Die Funken-Explosion von vorher
+  ist entfallen. Hinweis: Chrome und andere Browser lassen Ton erst nach einer
+  Berührung zu. Ist das so, steht unter dem Knopf „Tippe irgendwo auf den
+  Bildschirm, um die Uhr ticken zu hören“, und ab der ersten Berührung tickt
+  sie. Ist der Ton ausgeschaltet oder die App im Hintergrund, bleibt alles
+  still.
+
 - **Gaming: Tür knarzt länger, dazu ein Fiepen** (2026-10-05, PR #112): Nach
   „ENTER“ geht die Tür jetzt langsamer auf und knarzt dabei gut eine Sekunde
   lang, erst stockend, dann immer schneller, bis sie gegen die Wand knallt.
