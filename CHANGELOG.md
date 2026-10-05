@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Back to Back“ von Pretty Maids zum Auftakt** (2026-10-05, PR #117):
+  Wenn du nach dem Willkommens-Bildschirm auf der Startseite ankommst und die
+  Spotify-Musik erlaubt hast, laufen zuerst gut 45 Sekunden von „Back to
+  Back“ (Pretty Maids, 1984). Danach übernimmt die Playlist deiner Dekade.
+  Ohne Spotify-Anmeldung spielt Spotify nur eine 30-Sekunden-Vorschau, dann
+  geht es dort schon nach 30 Sekunden weiter.
+
 - **Start-Knopf heißt „Go back...“, steht schräg und blitzt** (2026-10-05,
   PR #116): Auf dem Willkommens-Bildschirm steht jetzt „Go back...“ statt
   „Let's go!“. Der Knopf ist leicht schräg gestellt, und alle paar Sekunden
