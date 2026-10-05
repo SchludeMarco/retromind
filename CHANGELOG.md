@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Feedback-Button leichter zu finden, jetzt auch in Gaming** (2026-10-05,
+  PR #97): Feedback gibst du jetzt über das Briefsymbol oben in der
+  Kopfleiste, ohne erst die Einstellungen öffnen zu müssen (im Design
+  „Retro Warm“ sogar schon vor der Anmeldung, in den anderen Designs als
+  Brief-Knopf unten rechts neben dem Zahnrad). In den Einstellungen steht
+  Feedback jetzt ganz oben statt ganz unten. Die Gaming-Edition hat neu ein
+  eigenes Feedback-Formular, ebenfalls über ein Briefsymbol in der
+  Kopfleiste und in den Einstellungen.
+
 - **Gaming: Glühbirne pendelt richtig, Power-Knopf saugt dich ein**
   (2026-10-04, PR #96): Die Glühbirne am Start schwingt jetzt deutlich
   weiter hin und her, und ihr Lichtkegel wandert auf der Betonwand mit.

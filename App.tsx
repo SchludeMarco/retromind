@@ -486,6 +486,7 @@ const App: React.FC = () => {
           hasUnseenNews={unseenNews}
           accountOpen={isAccountOpen}
           onOpenSettings={() => { playSFX('click'); setIsSettingsOpen(true); }}
+          onOpenFeedback={() => { playSFX('click'); setIsFeedbackOpen(true); }}
           onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
         />
       )}
@@ -505,6 +506,13 @@ const App: React.FC = () => {
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
         </div>
+      )}
+
+      {isFeedbackOpen && (
+        <FeedbackModal
+          onDismiss={() => setIsFeedbackOpen(false)}
+          onCloseClick={closeFeedbackWithSfx}
+        />
       )}
 
       {!verified ? (
@@ -533,6 +541,18 @@ const App: React.FC = () => {
             visible={warm ? isAccountOpen : showBottomControls}
           />
 
+          {!warm && (
+          <button
+            onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
+            aria-label="Feedback geben"
+            title="Feedback geben"
+            className={`rm-fixed fixed bottom-2 right-16 md:right-[5.5rem] z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
+              showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            ✉️
+          </button>
+          )}
           {!warm && (
           <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
@@ -569,13 +589,6 @@ const App: React.FC = () => {
             <WhatsNewModal
               onDismiss={() => setIsWhatsNewOpen(false)}
               onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
-            />
-          )}
-
-          {isFeedbackOpen && (
-            <FeedbackModal
-              onDismiss={() => setIsFeedbackOpen(false)}
-              onCloseClick={closeFeedbackWithSfx}
             />
           )}
 

@@ -9,7 +9,7 @@ import { toggleMuted, useMuted } from '../lib/mute';
 // showing which station of the journey you are at. The other designs keep
 // their floating buttons and the thin progress line instead.
 
-type IconName = 'start' | 'journey' | 'explore' | 'book' | 'settings' | 'person' | 'wave' | 'check' | 'chat' | 'close';
+type IconName = 'start' | 'journey' | 'explore' | 'book' | 'settings' | 'person' | 'wave' | 'check' | 'chat' | 'close' | 'mail';
 
 export const Icon: React.FC<{ name: IconName; className?: string }> = ({ name, className = 'w-6 h-6' }) => {
   const common = {
@@ -82,6 +82,13 @@ export const Icon: React.FC<{ name: IconName; className?: string }> = ({ name, c
           <path d="M4 5h16v11H9l-5 4z" />
         </svg>
       );
+    case 'mail':
+      return (
+        <svg {...common}>
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M3.5 6.5L12 13l8.5-6.5" />
+        </svg>
+      );
     case 'close':
       return (
         <svg {...common} strokeWidth={2.2}>
@@ -117,8 +124,9 @@ export const WarmTopBar: React.FC<{
   hasUnseenNews: boolean;
   accountOpen: boolean;
   onOpenSettings: () => void;
+  onOpenFeedback: () => void;
   onToggleAccount: () => void;
-}> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onToggleAccount }) => {
+}> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
   const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
@@ -139,6 +147,14 @@ export const WarmTopBar: React.FC<{
           <Icon name="wave" className="w-5 h-5" />
           <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
           {muted && <span className="sm:hidden">aus</span>}
+        </button>
+        <button
+          onClick={onOpenFeedback}
+          aria-label="Feedback geben"
+          title="Feedback geben"
+          className="w-10 h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
+        >
+          <Icon name="mail" />
         </button>
         {showActions && (
           <>
