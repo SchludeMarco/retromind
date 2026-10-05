@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming: ENTER-Knopf im Look der Tür, mit Knarzen** (2026-10-05, PR #NNN):
+- **Gaming: ENTER-Knopf im Look der Tür, mit Knarzen** (2026-10-05, PR #111):
   Am Eingang steht jetzt „ENTER“ statt „Eintreten“. Der Knopf sieht aus wie
   die EINGANG-Tür selbst: graues Metall mit Rollladen, Nieten, weißer
   Schrift und etwas Graffiti. Der Ton-Knopf daneben passt dazu. Beim Öffnen
