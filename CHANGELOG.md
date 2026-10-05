@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Musik erst nach dem Willkommens-Bildschirm** (2026-10-05, PR #114):
+  Die Musik der Dekade startet nicht mehr schon beim ersten Tippen auf dem
+  Willkommens-Bildschirm, sondern erst, wenn Gong und weiße Überblendung
+  vorbei sind und du auf der Startseite bist.
+
 - **Willkommens-Bildschirm: Uhr tickt, Gong zum Start** (2026-10-05, PR #113):
   Auf dem ersten Bildschirm mit der alten Kaminuhr tickt jetzt die ganze Zeit
   leise „tick … tack“. Der „Let's go!“-Knopf sieht aus wie das gewählte

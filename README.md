@@ -58,7 +58,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Echte Hits dieser Dekade** – Ära-Wahl und Spotifys offizielle „All Out …“-
   Playlist der gewählten Dekade als Embed, plus UI-Sounds. Sobald man einmal
   irgendwo klickt/tippt (Browser verlangen diese Interaktion, bevor Ton laufen
-  darf), startet die Playlist automatisch im Hintergrund – streamt direkt von
+  darf) und der Willkommens-Bildschirm vorbei ist, startet die Playlist
+  automatisch im Hintergrund – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet. In
   den Einstellungen lässt sich die Wiedergabe pausieren.

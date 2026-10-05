@@ -11,7 +11,9 @@ import { useConsent } from '../lib/privacy';
 // playback always runs at whatever level the visitor's own Spotify session
 // is set to. The app-wide speaker switch (lib/mute) pauses it instead.
 // Nothing from Spotify loads until the visitor allowed it (lib/privacy).
-export function useSpotifyBackground(currentDecade: string) {
+// Nor does anything play before `enabled` (the welcome screen with its
+// ticking clock and gong has to finish first, see App.tsx).
+export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const unlockedRef = useRef(false);
@@ -23,10 +25,12 @@ export function useSpotifyBackground(currentDecade: string) {
   // (or switching sound back on) must not restart it.
   const userPausedRef = useRef(false);
   const allowed = useConsent('spotify') === true;
+  const enabledRef = useRef(enabled);
+  enabledRef.current = enabled;
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
-    if (!controller || !unlockedRef.current || isMuted()) return;
+    if (!controller || !enabledRef.current || !unlockedRef.current || isMuted()) return;
     startedRef.current = true;
     userPausedRef.current = false;
     controller.play();
@@ -89,6 +93,12 @@ export function useSpotifyBackground(currentDecade: string) {
     else if (startedRef.current) controller.resume();
     else start();
   }, [muted, start]);
+
+  // The welcome screen just finished: start now (its button press already
+  // unlocked audio).
+  useEffect(() => {
+    if (enabled && !startedRef.current && !userPausedRef.current) start();
+  }, [enabled, start]);
 
   const togglePlay = useCallback(() => {
     const controller = controllerRef.current;
