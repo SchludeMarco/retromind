@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createSpotifyEmbedController, playlistUri, SpotifyEmbedController } from '../../lib/spotifyEmbed';
+import {
+  createSpotifyEmbedController,
+  playlistTracksWithin,
+  playlistUri,
+  randomTrack,
+  songEnded,
+  SpotifyEmbedController,
+  trackUri,
+} from '../../lib/spotifyEmbed';
 import { isMuted, useMuted } from '../../lib/mute';
 import { useConsent } from '../../lib/privacy';
 
@@ -11,6 +19,8 @@ import { useConsent } from '../../lib/privacy';
 // door opens; it plays while `enabled` (in the hall, music on, no video
 // running) and follows the app-wide speaker switch (lib/mute), which also
 // counts as off while the page is in the background.
+// The songs come in random order, one after the other (randomTrack); only
+// if the track list can't be loaded does the playlist run from the top.
 // "The 100 Best Metal Songs of 80s" (The Eighties Guy).
 export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
 
@@ -25,6 +35,9 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
   const unlockedRef = useRef(false);
   const shouldPlay = useRef(false);
   shouldPlay.current = enabled && !muted;
+  const tracksRef = useRef<string[]>([]);
+  // The current song played > 1 s (so a stop at 0 means it is over).
+  const heardRef = useRef(false);
 
   // First playback uses play(); afterwards resume() continues the song.
   const sync = useCallback(() => {
@@ -40,23 +53,47 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
     startedRef.current = true;
   }, []);
 
+  const nextSong = useCallback(() => {
+    const controller = controllerRef.current;
+    const id = randomTrack(tracksRef.current);
+    if (!controller || !id) return;
+    heardRef.current = false;
+    controller.loadUri(trackUri(id));
+    startedRef.current = false;
+    sync();
+  }, [sync]);
+
   useEffect(() => {
     if (!allowed || !wanted || !containerRef.current) return;
     let cancelled = false;
-    createSpotifyEmbedController(containerRef.current, playlistUri(HALL_PLAYLIST_ID)).then((controller) => {
-      if (cancelled) {
-        controller.destroy();
-        return;
-      }
-      controllerRef.current = controller;
-      // play() before the player was ready gets lost: try again now.
-      controller.addListener('ready', () => {
-        setReady(true);
-        startedRef.current = false;
+    const host = containerRef.current;
+    playlistTracksWithin(HALL_PLAYLIST_ID, 4000)
+      .then((tracks) => {
+        tracksRef.current = tracks;
+        const first = randomTrack(tracks);
+        return createSpotifyEmbedController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID));
+      })
+      .then((controller) => {
+        if (cancelled) {
+          controller.destroy();
+          return;
+        }
+        controllerRef.current = controller;
+        heardRef.current = false;
+        // play() before the player was ready gets lost: try again now.
+        controller.addListener('ready', () => {
+          setReady(true);
+          startedRef.current = false;
+          sync();
+        });
+        controller.addListener('playback_update', (e: any) => {
+          if (!tracksRef.current.length) return;
+          const data = e?.data ?? {};
+          if ((Number(data.position) || 0) > 1000) heardRef.current = true;
+          if (songEnded(data, heardRef.current)) nextSong();
+        });
         sync();
       });
-      sync();
-    });
     return () => {
       cancelled = true;
       controllerRef.current?.destroy();
@@ -64,7 +101,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
       startedRef.current = false;
       setReady(false);
     };
-  }, [allowed, wanted, sync]);
+  }, [allowed, wanted, sync, nextSong]);
 
   useEffect(() => {
     const unlock = () => {

@@ -27,6 +27,9 @@
     },
     "api/proxy.js": {
       "maxDuration": 15
+    },
+    "api/spotify-tracks.js": {
+      "maxDuration": 15
     }
   },
   "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)feedback.md'"

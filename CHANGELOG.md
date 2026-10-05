@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Musik in zufälliger Reihenfolge** (2026-10-05, PR #PRNUM): Bisher
+  fing die Musik immer mit demselben Lied an und lief dann der Reihe nach,
+  in der Zeitreise wie in der Gaming-Halle. Jetzt kommt jedes Mal ein
+  zufälliges Lied aus der Playlist und danach wieder ein zufälliges, ohne dass
+  sich ein Lied gleich wiederholt. In der Zeitreise läuft zum Auftakt weiter
+  „Back to Back“ von Pretty Maids, danach geht es zufällig weiter.
+
 - **80er-Heavy-Metal von Spotify in der Gaming-Halle** (2026-10-05, PR #119):
   Sobald du die Spielhalle betrittst, läuft echter Heavy Metal der 80er von
   Spotify (Playlist „The 100 Best Metal Songs of 80s“) statt der
