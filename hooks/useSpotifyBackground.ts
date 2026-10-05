@@ -76,7 +76,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         return;
       }
       controllerRef.current = controller;
-      controller.addListener('ready', () => setIsReady(true));
+      controller.addListener('ready', () => {
+        setIsReady(true);
+        // play() before the player was ready gets lost: try again now.
+        if (startedRef.current && !userPausedRef.current) start();
+      });
       controller.addListener('playback_update', (e: any) => {
         const data = e?.data ?? {};
         setIsPlaying(!data.isPaused);
