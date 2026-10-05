@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Kein festes „Back to Back“ mehr zum Auftakt** (2026-10-05, PR #PRNUM):
+  Nach dem Gong startet in der Zeitreise jetzt sofort die Musik deiner
+  Dekade, schon das erste Lied ist zufällig gewählt. Das Pretty-Maids-Stück
+  läuft nicht mehr bei jedem Besuch vorweg.
+
 - **Spotify-Musik in zufälliger Reihenfolge** (2026-10-05, PR #120): Bisher
   fing die Musik immer mit demselben Lied an und lief dann der Reihe nach,
   in der Zeitreise wie in der Gaming-Halle. Jetzt kommt jedes Mal ein

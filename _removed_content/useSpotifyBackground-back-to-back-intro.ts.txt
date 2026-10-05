@@ -22,13 +22,15 @@ import { useConsent } from '../lib/privacy';
 // Nor does anything play before `enabled` (the welcome screen with its
 // ticking clock and gong has to finish first, see App.tsx).
 //
-// The songs come in random order (Marco, 2026-10-05: always hearing the
-// same first song got boring), right from the first one. The embed has no
-// shuffle, so the hook plays one random song of the playlist after the
+// Each visit opens with a piece of "Back to Back" by Pretty Maids (Marco's
+// pick, it fits the app), streamed through the same Spotify player, then
+// the decade's playlist takes over, its songs in random order (Marco,
+// 2026-10-05: always hearing the same first song got boring). The embed has
+// no shuffle, so the hook plays one random song of the playlist after the
 // other (lib/spotifyEmbed: playlistTracks, randomTrack); if the track list
 // can't be loaded, the playlist runs from the top as before.
-// (The fixed opening song "Back to Back" by Pretty Maids was taken out the
-// same day at Marco's request, see _removed_content/.)
+const INTRO_TRACK_ID = '5t70MlkURJ4JXbkfFtEqKr';
+const INTRO_MS = 45_000;
 
 export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -46,10 +48,12 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   enabledRef.current = enabled;
   const decadeRef = useRef(currentDecade);
   decadeRef.current = currentDecade;
+  // The opening song: 'pending' until it starts, 'playing', then 'done'.
+  const introRef = useRef<'pending' | 'playing' | 'done'>('pending');
   // The current single song played > 1 s (so a stop at 0 means it is over).
   const heardRef = useRef(false);
-  // true while a single random song of the decade plays (not the whole
-  // playlist): its end starts the next random one.
+  // true while a single random song of the decade plays (not the intro,
+  // not the whole playlist): its end starts the next random one.
   const shuffleRef = useRef(false);
   // Track ids per decade playlist, filled as they arrive.
   const tracksRef = useRef<Record<string, string[]>>({});
@@ -59,6 +63,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     if (!controller || !enabledRef.current || !unlockedRef.current || isMuted()) return;
     startedRef.current = true;
     userPausedRef.current = false;
+    if (introRef.current === 'pending') introRef.current = 'playing';
     controller.play();
   }, []);
 
@@ -76,6 +81,14 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     start();
   }, [start]);
 
+  // Opening song over (time is up, or it ended, e.g. Spotify's 30-second
+  // preview without a login): switch to the decade's music.
+  const finishIntro = useCallback(() => {
+    if (introRef.current === 'done') return;
+    introRef.current = 'done';
+    playDecade();
+  }, [playDecade]);
+
   // Created once consent is there; later decade changes reuse it via
   // loadUri below. Withdrawing consent removes the player again.
   useEffect(() => {
@@ -83,37 +96,34 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
     if (!playlistId) return;
     let cancelled = false;
-    const host = containerRef.current;
-    // The first song is already a random one: wait (briefly) for the list.
-    playlistTracksWithin(playlistId, 3000)
-      .then((tracks) => {
-        if (tracks.length) tracksRef.current[playlistId] = tracks;
-        // The visitor may have switched decades in the meantime.
-        const id = DECADES_DB[decadeRef.current]?.spotifyPlaylistId === playlistId ? randomTrack(tracks) : null;
-        shuffleRef.current = !!id;
-        heardRef.current = false;
-        return createSpotifyEmbedController(host, id ? trackUri(id) : playlistUri(playlistId));
-      })
-      .then((controller) => {
-        if (cancelled) {
-          controller.destroy();
-          return;
-        }
-        controllerRef.current = controller;
-        controller.addListener('ready', () => {
-          setIsReady(true);
-          // play() before the player was ready gets lost: try again now.
-          if (startedRef.current && !userPausedRef.current) start();
-        });
-        controller.addListener('playback_update', (e: any) => {
-          const data = e?.data ?? {};
-          setIsPlaying(!data.isPaused);
-          const position = Number(data.position) || 0;
-          if (position > 1000) heardRef.current = true;
-          if (shuffleRef.current && songEnded(data, heardRef.current)) playDecade();
-        });
-        start();
+    const randomId = introRef.current === 'done' ? randomTrack(tracksRef.current[playlistId] ?? []) : null;
+    shuffleRef.current = !!randomId;
+    heardRef.current = false;
+    const firstUri =
+      introRef.current !== 'done' ? trackUri(INTRO_TRACK_ID) : randomId ? trackUri(randomId) : playlistUri(playlistId);
+    createSpotifyEmbedController(containerRef.current, firstUri).then((controller) => {
+      if (cancelled) {
+        controller.destroy();
+        return;
+      }
+      controllerRef.current = controller;
+      controller.addListener('ready', () => {
+        setIsReady(true);
+        // play() before the player was ready gets lost: try again now.
+        if (startedRef.current && !userPausedRef.current) start();
       });
+      controller.addListener('playback_update', (e: any) => {
+        const data = e?.data ?? {};
+        setIsPlaying(!data.isPaused);
+        const position = Number(data.position) || 0;
+        if (position > 1000) heardRef.current = true;
+        const ended = songEnded(data, heardRef.current);
+        if (introRef.current === 'playing') {
+          if (position >= INTRO_MS || ended) finishIntro();
+        } else if (shuffleRef.current && ended) playDecade();
+      });
+      start();
+    });
     return () => {
       cancelled = true;
       controllerRef.current?.destroy();
@@ -129,7 +139,9 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   useEffect(() => {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
     if (!allowed || !playlistId) return;
+    // Also loads the list ahead of time, for when the opening song ends.
     const switching = !!controllerRef.current;
+    if (switching) introRef.current = 'done';
     playlistTracksWithin(playlistId, 3000).then((tracks) => {
       if (tracks.length) tracksRef.current[playlistId] = tracks;
       if (switching && decadeRef.current === currentDecade) playDecade();
