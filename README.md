@@ -84,9 +84,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
-- **Feedback-Button** – über das Briefsymbol oben in der Kopfleiste (im
-  Design „Retro Warm“ schon vor der Anmeldung, in den anderen Designs als
-  ✉️-Knopf unten rechts neben dem Zahnrad) und ganz oben in den Einstellungen
+- **Feedback-Button** – über das Briefsymbol direkt auf der Startseite oben
+  rechts (im Design „Retro Warm“ in der Kopfleiste, in den anderen Designs als
+  ✉️-Knopf neben dem Lautsprecher, jeweils schon vor der Anmeldung)
   kann jede Nutzer:in Lob, Tadel, Vorschläge oder Wünsche zur App hinterlassen; die Nachricht kommt per E-Mail
   an die Betreiber:in an (optional: eigene E-Mail-Adresse für eine Antwort).
   Zusätzlich wird jedes Feedback (ohne E-Mail-Adresse) in
@@ -160,8 +160,7 @@ Katalog, Kisten, Stash und Trophäen), dazu die Pixel-Looks „Arcade“,
 „Handheld“ und „Bernstein“. Das Design-System liegt in
 [`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
 `gaming/gaming.css` (Abschnitt „Design Modul“).
-**Feedback** – Briefsymbol in der Kopfleiste neben Ton und Zahnrad (und ganz
-oben in den Einstellungen). Läuft über dieselbe `/api/feedback` der
+**Feedback** – Briefsymbol in der Kopfleiste neben Ton und Zahnrad. Läuft über dieselbe `/api/feedback` der
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.

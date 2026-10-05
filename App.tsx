@@ -479,6 +479,16 @@ const App: React.FC = () => {
       <BootOverlay />
       <CrtOverlay />
       {(!warm || showSplash) && <MuteToggle />}
+      {!warm && !showSplash && (
+        <button
+          onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
+          aria-label="Feedback geben"
+          title="Feedback geben"
+          className="rm-fixed fixed top-3 right-16 md:right-[5.5rem] z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
+        >
+          ✉️
+        </button>
+      )}
       {warm && !showSplash && (
         <WarmTopBar
           phase={phase}
@@ -543,18 +553,6 @@ const App: React.FC = () => {
 
           {!warm && (
           <button
-            onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
-            aria-label="Feedback geben"
-            title="Feedback geben"
-            className={`rm-fixed fixed bottom-2 right-16 md:right-[5.5rem] z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
-              showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            ✉️
-          </button>
-          )}
-          {!warm && (
-          <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
             aria-label="App-Einstellungen öffnen"
             className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
@@ -577,7 +575,6 @@ const App: React.FC = () => {
               isSpotifyPlaying={spotify.isPlaying}
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
               spotifyAllowed={spotify.allowed}
-              onOpenFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
               onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
               hasUnseenNews={unseenNews}
               onDismiss={() => setIsSettingsOpen(false)}

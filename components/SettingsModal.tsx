@@ -15,7 +15,6 @@ export const SettingsModal: React.FC<{
   isSpotifyPlaying: boolean;
   onToggleSpotify: () => void;
   spotifyAllowed: boolean;
-  onOpenFeedback: () => void;
   onOpenWhatsNew: () => void;
   hasUnseenNews: boolean;
   onDismiss: () => void;
@@ -24,7 +23,6 @@ export const SettingsModal: React.FC<{
   fontScale, onFontScaleChange,
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
-  onOpenFeedback,
   onOpenWhatsNew, hasUnseenNews,
   onDismiss, onCloseClick,
 }) => {
@@ -39,19 +37,6 @@ export const SettingsModal: React.FC<{
       </button>
       <span className="text-xs uppercase font-bold text-retro-amber-dark block">Allgemein</span>
       <h3 className="text-3xl font-bold mb-5">Einstellungen</h3>
-
-      <div className="mb-6 p-3 border-2 border-retro-ink bg-retro-highlight/60 flex items-center gap-3">
-        <p className="text-xs flex-grow">
-          <span className="block font-bold">Feedback</span>
-          Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.
-        </p>
-        <button
-          onClick={onOpenFeedback}
-          className="retro-button flex-shrink-0 px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
-        >
-          ✉️ Feedback geben
-        </button>
-      </div>
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
 
