@@ -24,3 +24,6 @@ gebaut oder ausgeliefert.
   Gaming-Eingang mit gezeichneter, kaputter Graffiti-Holztür vor der
   Betonwand (entfernt am 2026-10-05, ersetzt durch Marcos Bild der
   „Arcade Hallen“).
+- `ambient-pad.ts.txt`: die leise Akkord-Musik mit Spieluhr-Tönen vor dem
+  Gaming-Eingang (entfernt am 2026-10-05, ersetzt durch die Straßengeräusche
+  mit Menschenmenge, Sirenen und Rauferei).

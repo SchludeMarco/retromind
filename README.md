@@ -135,9 +135,11 @@ startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
 mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: die verranzte „Arcade Hallen“
 (Marcos Bild, `public/gaming/arcade-hallen.webp`) mit flackernder
-Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach, dazu leise
-Musik (`gaming/components/Entrance.tsx`; der Browser spielt sie ab der ersten
-Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
+Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach. Dazu hörst
+du leise die Straße: eine murmelnde, ab und zu rufende Menschenmenge,
+Polizeisirenen in der Ferne und manchmal eine Rauferei um die Ecke
+(`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
+den Ton ab der ersten Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
 synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
@@ -365,9 +367,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
-- **Echtes Musikstück am Eingang:** Statt der synthetisierten ruhigen Musik
-  vor der Tür ein lizenzfreies, aufgenommenes Stück (z. B. leiser Regen mit
-  Synth-Flächen).
+- **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
+  Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte
+  Aufnahme (z. B. von freesound.org).
 
 - **Mehr Minispiele in der Chill-Ecke** (z. B. ein gemütliches Snake oder
   Solitär) und die Bestwerte mit in die Cloud-Sicherung nehmen.

@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Vor der Halle hörst du jetzt die Straße** (2026-10-05, PR #105):
+  Statt der ruhigen Musik am Eingang murmelt leise eine Menschenmenge, ab und
+  zu ruft jemand. Alle halbe Minute fährt in der Ferne ein Polizeiwagen mit
+  Tatütata vorbei, und manchmal hört man um die Ecke eine Rauferei mit
+  Gerangel, Geschrei und einer umfallenden Mülltonne. Drinnen startet wie
+  bisher das Heavy-Metal-Intro; der Ton-Schalter schaltet alles stumm.
+
 - **Gaming: Chill-Ecke oben als eigener Knopf** (2026-10-05, PR #104): Die
   Minispiele waren schwer zu finden. Jetzt steht direkt unter „Insert Coin“
   ein lila Knopf „Chill-Ecke · Minispiele“, in jedem Design. Ein zweiter Druck
