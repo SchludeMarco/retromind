@@ -914,7 +914,7 @@ a {
 /* Small settings button pinned to the top right of the HUD. */
 .hud {
   position: relative;
-  padding-right: 100px;
+  padding-right: 148px;
 }
 .settings-btn {
   position: absolute;
@@ -956,6 +956,48 @@ a {
   width: 40px;
   height: 40px;
   padding: 0;
+}
+.feedback-btn {
+  position: absolute;
+  top: 8px;
+  right: 96px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feedback-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  fill-rule: evenodd;
+  shape-rendering: crispEdges;
+}
+.feedback-form label {
+  display: block;
+  font-size: 9px;
+  color: var(--a1);
+  margin: 16px 0 6px;
+}
+.feedback-form textarea,
+.feedback-form input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg2);
+  border: 3px solid var(--dim);
+  padding: 6px 8px;
+  resize: vertical;
+}
+.feedback-form .settings-row {
+  margin: 12px 0;
+}
+.feedback-form .big {
+  margin-top: 8px;
 }
 .power-mute {
   margin-top: 20px;
@@ -1224,7 +1266,7 @@ a {
   border: 1px solid var(--ridge);
   border-bottom-width: 4px;
   border-radius: 12px;
-  padding: 14px 116px 14px 16px;
+  padding: 14px 168px 14px 16px;
   gap: 8px 24px;
   font-size: 12px;
   letter-spacing: 0.04em;
@@ -1258,6 +1300,7 @@ a {
   color: var(--a1);
 }
 .arcade[data-palette='modul'] .settings-btn,
+.arcade[data-palette='modul'] .feedback-btn,
 .arcade[data-palette='modul'] .hud-mute {
   top: 12px;
   width: 44px;
@@ -1269,6 +1312,15 @@ a {
 }
 .arcade[data-palette='modul'] .hud-mute {
   right: 64px;
+}
+.arcade[data-palette='modul'] .feedback-btn {
+  right: 116px;
+}
+.arcade[data-palette='modul'] .feedback-form textarea,
+.arcade[data-palette='modul'] .feedback-form input {
+  border: 1px solid var(--ridge);
+  border-radius: 8px;
+  padding: 8px 10px;
 }
 .arcade[data-palette='modul'] .settings-dot {
   background: var(--ok);

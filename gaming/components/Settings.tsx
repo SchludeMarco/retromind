@@ -26,11 +26,12 @@ interface Props {
   state: ArcadeState;
   set: <K extends keyof ArcadeState>(key: K, value: ArcadeState[K]) => void;
   onClose: () => void;
+  onOpenFeedback: () => void;
 }
 
 // Settings: the optional Google account (which brings score, collection and
 // preferences to every device) plus sound and screen colour.
-export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
+export const Settings: React.FC<Props> = ({ cloud, state, set, onClose, onOpenFeedback }) => {
   const muted = useMuted();
   const youtube = useConsent('youtube') === true;
   useEffect(() => {
@@ -53,6 +54,14 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
         <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
           ✕
         </button>
+
+        <section>
+          <h3 className="pixel-font">FEEDBACK</h3>
+          <p>Lob, Tadel, Vorschläge oder Wünsche zur App? Raus damit.</p>
+          <button className="px-btn" onClick={onOpenFeedback} data-nav>
+            ✉ FEEDBACK GEBEN
+          </button>
+        </section>
 
         <section>
           <h3 className="pixel-font">DEIN ACCOUNT</h3>

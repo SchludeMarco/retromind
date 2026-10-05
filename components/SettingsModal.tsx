@@ -40,6 +40,19 @@ export const SettingsModal: React.FC<{
       <span className="text-xs uppercase font-bold text-retro-amber-dark block">Allgemein</span>
       <h3 className="text-3xl font-bold mb-5">Einstellungen</h3>
 
+      <div className="mb-6 p-3 border-2 border-retro-ink bg-retro-highlight/60 flex items-center gap-3">
+        <p className="text-xs flex-grow">
+          <span className="block font-bold">Feedback</span>
+          Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.
+        </p>
+        <button
+          onClick={onOpenFeedback}
+          className="retro-button flex-shrink-0 px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          ✉️ Feedback geben
+        </button>
+      </div>
+
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
@@ -179,19 +192,6 @@ export const SettingsModal: React.FC<{
           {hasUnseenNews && (
             <span aria-label="neue Einträge" className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
           )}
-        </button>
-      </div>
-
-      <div className="mt-6 pt-5 border-t border-retro-ink/20">
-        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Feedback</span>
-        <p className="text-[10px] text-retro-tan mb-2">
-          Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.
-        </p>
-        <button
-          onClick={onOpenFeedback}
-          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
-        >
-          💬 Feedback geben
         </button>
       </div>
 

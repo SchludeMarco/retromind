@@ -9,12 +9,18 @@ interface FeedbackApiError extends Error {
 export async function submitFeedback(
   category: FeedbackCategory,
   message: string,
-  contactEmail?: string
+  contactEmail?: string,
+  edition?: "gaming"
 ): Promise<void> {
-  const res = await fetch("/api/feedback", {
+  // The Gaming edition's own domain has no feedback secrets, so it sends to
+  // the main app (api/feedback.js allows that origin).
+  const url = location.hostname.startsWith("retromind-gaming")
+    ? "https://retromind.vercel.app/api/feedback"
+    : "/api/feedback";
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ category, message, contactEmail }),
+    body: JSON.stringify({ category, message, contactEmail, edition }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

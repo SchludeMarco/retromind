@@ -68,7 +68,22 @@ async function sendMail({ apiKey, toEmail, categoryLabel, text, contact, approve
   }
 }
 
+// The Gaming edition runs as its own Vercel project without the feedback
+// secrets, so it posts here cross-origin.
+const CORS_ORIGIN_RE = /^https:\/\/retromind-gaming(-[a-z0-9-]+)?\.vercel\.app$/;
+
 export default async function handler(req, res) {
+  const origin = req.headers.origin;
+  if (origin && CORS_ORIGIN_RE.test(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Vary", "Origin");
+  }
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
   if (req.method !== "POST") {
     res.status(405).json({ error: "method_not_allowed" });
     return;
@@ -88,7 +103,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { category, message, contactEmail } = await readJsonBody(req);
+  const { category, message, contactEmail, edition } = await readJsonBody(req);
 
   const text = typeof message === "string" ? message.trim() : "";
   if (!text) {
@@ -100,7 +115,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  const categoryLabel = CATEGORY_LABELS[category] || "Feedback";
+  const categoryLabel =
+    (CATEGORY_LABELS[category] || "Feedback") + (edition === "gaming" ? " (Gaming)" : "");
   const trimmedContact = typeof contactEmail === "string" ? contactEmail.trim() : "";
   const contact = trimmedContact && EMAIL_RE.test(trimmedContact) ? trimmedContact : "";
 

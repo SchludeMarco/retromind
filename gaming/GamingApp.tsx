@@ -12,6 +12,7 @@ import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings, PALETTES } from './components/Settings';
+import { Feedback } from './components/Feedback';
 import { useCloudSync } from './lib/useCloudSync';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
@@ -70,6 +71,7 @@ export const GamingApp: React.FC = () => {
   const { state, discover, toggleIn, unlock, set, mergeIn } = useArcadeState(onAchievement);
   const cloud = useCloudSync(state, mergeIn);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const [view, setView] = useState<View>('catalog');
   const [decade, setDecade] = useState<string | null>(null);
@@ -366,6 +368,21 @@ export const GamingApp: React.FC = () => {
               RETROMIND
               <small>GAMING</small>
             </h1>
+            <button
+              className="px-btn feedback-btn"
+              onClick={() => {
+                chip.play('select');
+                setFeedbackOpen(true);
+              }}
+              data-nav
+              aria-label="Feedback geben"
+              title="Feedback geben"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M1 3h14v10H1zM2 4v8h12V4z" />
+                <path d="M3 5h1v1h1v1h1v1h1v1h2V8h1V7h1V6h1V5h1v1h-1v1h-1v1h-1v1h-1v1H7V9H6V8H5V7H4V6H3z" />
+              </svg>
+            </button>
             <MuteButton className="hud-mute" muted={muted} onToggle={toggleMute} />
             <button
               className="px-btn settings-btn"
@@ -628,7 +645,19 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
-      {settingsOpen && <Settings cloud={cloud} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && (
+        <Settings
+          cloud={cloud}
+          state={state}
+          set={set}
+          onClose={() => setSettingsOpen(false)}
+          onOpenFeedback={() => {
+            setSettingsOpen(false);
+            setFeedbackOpen(true);
+          }}
+        />
+      )}
+      {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
       {screen === 'hub' && (
         <>
