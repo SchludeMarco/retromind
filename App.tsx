@@ -78,8 +78,8 @@ const App: React.FC = () => {
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Gates every phase behind identity verification — reset on every fresh
-  // load (like showSplash) so the app re-verifies each time it's opened.
+  // Gates every phase behind name + birthday. Not stored itself: it is set
+  // again on each load as soon as both are known (see the effect below).
   const [verified, setVerified] = useState(false);
   // Set once the person asks to change name/birthday, so the Google shortcut
   // below doesn't skip the form they just opened.
@@ -454,12 +454,14 @@ const App: React.FC = () => {
     setVerified(true);
   };
 
-  // Signed in with Google and both name and birthday are known (from this
-  // device, a Drive backup or the Google account): no need to ask again.
+  // Once name and birthday are known (saved on this device, from a Drive
+  // backup or from the signed-in Google account), there's no need to ask
+  // again on every visit; they can be changed in the settings.
   useEffect(() => {
-    if (verified || profileEditRequested || googleAuth.status !== 'signed_in') return;
-    const name = (user.name || googleAuth.user?.name || '').trim();
-    const birthDate = user.birthDate || googleAuth.birthdayHint || '';
+    if (verified || profileEditRequested) return;
+    const google = googleAuth.status === 'signed_in';
+    const name = (user.name || (google ? googleAuth.user?.name : '') || '').trim();
+    const birthDate = user.birthDate || (google ? googleAuth.birthdayHint : '') || '';
     if (!name || !birthDate) return;
     setUser((prev) => ({ ...prev, name, birthDate }));
     setVerified(true);

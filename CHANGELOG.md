@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Name und Geburtstag nur noch einmal eingeben** (2026-10-05, PR #123):
+  Auch ohne Google-Login fragt die Zeitreise nicht mehr bei jedem Öffnen
+  nach Name und Geburtsdatum. Sind beide einmal auf dem Gerät gespeichert,
+  geht es direkt los. Ändern lassen sie sich in den Einstellungen unter
+  „Deine Angaben“.
+
 - **Mit Google angemeldet: keine Abfrage von Name und Geburtstag mehr**
   (2026-10-05, PR #122): Wer in der Zeitreise mit Google angemeldet ist,
   landet direkt in der App, sobald Name und Geburtsdatum bekannt sind, aus
