@@ -99,6 +99,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'collector', title: 'Sammler', text: 'Erstes Game im Stash. Ehrensache.' },
   { id: 'finisher', title: 'Abspann gesehen', text: 'Ein Game durchgezockt. GG!' },
   { id: 'digger', title: 'Grabbelkiste', text: 'Abseits des Katalogs gewühlt. Echter Digger.' },
+  { id: 'chill', title: 'Chillmodus', text: 'Ein Minispiel in der Chill-Ecke geschafft. Entspannt!' },
   { id: 'konami', title: '↑↑↓↓←→←→BA', text: 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!' },
 ];
 
