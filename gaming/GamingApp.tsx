@@ -15,11 +15,13 @@ import { Settings, PALETTES } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { useCloudSync } from './lib/useCloudSync';
+import { QuestBoard } from './components/QuestBoard';
+import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
 import { IMPRINT_URL, PRIVACY_URL } from '../lib/privacy';
 
-type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill';
+type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests';
 
 
 const pad = (n: number, len = 6) => String(n).padStart(len, '0');
@@ -52,11 +54,11 @@ export const GamingApp: React.FC = () => {
   const [screen, setScreen] = useState<'power' | 'hub'>('power');
   // After the door the hub comes up out of the white picture.
   const [fromDoor, setFromDoor] = useState(false);
-  const [toast, setToast] = useState<{ title: string; text: string } | null>(null);
+  const [toast, setToast] = useState<{ title: string; text: string; icon?: string } | null>(null);
   const [rainbow, setRainbow] = useState(false);
 
-  const showToast = useCallback((title: string, text: string) => {
-    setToast({ title, text });
+  const showToast = useCallback((title: string, text: string, icon?: string) => {
+    setToast({ title, text, icon });
   }, []);
   useEffect(() => {
     if (!toast) return;
@@ -71,7 +73,14 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set, mergeIn } = useArcadeState(onAchievement);
+  const onQuest = useCallback(
+    (q: ActiveQuest) => {
+      chip.play('coin');
+      showToast(`QUEST GESCHAFFT: +${q.reward} SPIELMARKEN`, q.text, '🪙');
+    },
+    [showToast]
+  );
+  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy } = useArcadeState(onAchievement, onQuest);
   const cloud = useCloudSync(state, mergeIn);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -165,9 +174,10 @@ export const GamingApp: React.FC = () => {
     (game: Game) => {
       chip.play('select');
       discover(game);
+      track('open');
       setSelected(game);
     },
-    [discover]
+    [discover, track]
   );
   const closeDetail = useCallback(() => {
     chip.play('back');
@@ -259,6 +269,7 @@ export const GamingApp: React.FC = () => {
     if (rolling) return;
     chip.play('coin');
     unlock('first-coin');
+    track('coin');
     const fresh = GAMES.filter((g) => !state.discovered.includes(g.id));
     const pool = fresh.length ? fresh : GAMES;
     const winner = pool[Math.floor(Math.random() * pool.length)];
@@ -288,6 +299,7 @@ export const GamingApp: React.FC = () => {
     if (!q) return;
     chip.play('select');
     unlock('digger');
+    track('search');
     setView('search');
     setSearching(true);
     // Games with the words in their title first; games that merely mention
@@ -358,8 +370,9 @@ export const GamingApp: React.FC = () => {
 
   const cyclePalette = () => {
     chip.play('select');
-    const i = PALETTES.findIndex((p) => p.id === state.palette);
-    set('palette', PALETTES[(i + 1) % PALETTES.length].id);
+    const mine = PALETTES.filter((p) => isOwned(p.id, state.owned));
+    const i = mine.findIndex((p) => p.id === state.palette);
+    set('palette', mine[(i + 1) % mine.length].id);
   };
 
   const score = scoreOf(state);
@@ -498,6 +511,9 @@ export const GamingApp: React.FC = () => {
             <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
               ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
             </button>
+            <button className="px-btn view-tab" aria-pressed={view === 'quests'} onClick={() => switchView('quests')} data-nav>
+              QUESTS · {state.tokens} MARKEN
+            </button>
             {results && (
               <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
                 SUCHE
@@ -576,7 +592,23 @@ export const GamingApp: React.FC = () => {
             </>
           )}
 
-          {view === 'chill' ? null : view === 'trophies' ? (
+          {view === 'chill' ? null : view === 'quests' ? (
+            <QuestBoard
+              state={state}
+              onBuy={(id) => {
+                if (!buy(id)) return chip.play('error');
+                const prize = PRIZES.find((p) => p.id === id)!;
+                chip.play('powerup');
+                set(prize.kind, id as never);
+                showToast(`FREIGESCHALTET: ${prize.label}`, 'Läuft ab sofort. In den Einstellungen kannst du jederzeit zurückwechseln.', '🪙');
+              }}
+              onUse={(id) => {
+                const prize = PRIZES.find((p) => p.id === id)!;
+                chip.play('select');
+                set(prize.kind, id as never);
+              }}
+            />
+          ) : view === 'trophies' ? (
             <div className="links" style={{ marginTop: 16 }}>
               {ACHIEVEMENTS.map((a) => {
                 const got = state.achievements.includes(a.id);
@@ -694,6 +726,10 @@ export const GamingApp: React.FC = () => {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v3M12 3v3" /></svg>
             CHILLEN
           </button>
+          <button className="dock-btn" aria-current={view === 'quests' ? 'page' : undefined} onClick={() => switchView('quests')} data-nav>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 8v8M9 10h6M9 14h6" /></svg>
+            QUESTS
+          </button>
         </nav>
       )}
 
@@ -712,7 +748,7 @@ export const GamingApp: React.FC = () => {
           >
             {guruOpen ? '✕' : '☻ GURU'}
           </button>
-          {guruOpen && <GuruChat onClose={() => setGuruOpen(false)} />}
+          {guruOpen && <GuruChat onClose={() => setGuruOpen(false)} onAsk={() => track('guru')} />}
         </>
       )}
 
@@ -721,6 +757,7 @@ export const GamingApp: React.FC = () => {
           current={platform}
           extras={platforms.filter((p) => !platformInfo(p))}
           onPick={(p) => {
+            if (p && p !== platform) track('console');
             setPlatform(p);
             setPickerOpen(false);
             chip.play(p ? 'coin' : 'blip');
@@ -735,7 +772,10 @@ export const GamingApp: React.FC = () => {
       {miniGame && (
         <MiniGameDialog
           id={miniGame}
-          onWin={() => unlock('chill')}
+          onWin={() => {
+            unlock('chill');
+            track('minigame');
+          }}
           onClose={() => {
             chip.play('back');
             setMiniGame(null);
@@ -765,7 +805,7 @@ export const GamingApp: React.FC = () => {
       {toast && (
         <div className="toast" role="status">
           <span style={{ fontSize: 28 }} aria-hidden="true">
-            🏆
+            {toast.icon ?? '🏆'}
           </span>
           <div>
             <div className="pixel-font">{toast.title}</div>

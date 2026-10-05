@@ -3,6 +3,7 @@ import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
 import { TRACKS, trackById } from '../lib/tracks';
+import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
 import { warmUpGoogle } from '../../lib/googleAuth';
 
@@ -11,6 +12,9 @@ export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'arcade', label: 'ARCADE' },
   { id: 'gameboy', label: 'HANDHELD' },
   { id: 'amber', label: 'BERNSTEIN' },
+  // From the prize counter (quests.ts); only shown once bought.
+  { id: 'vapor', label: 'VAPORWAVE' },
+  { id: 'virtualboy', label: 'VIRTUAL BOY' },
 ];
 
 const SYNC_TEXT: Record<Cloud['sync'], string> = {
@@ -115,7 +119,7 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
           </div>
           <h4 className="pixel-font">MUSIKSTÜCK</h4>
           <div className="settings-row" role="group" aria-label="Musikstück">
-            {TRACKS.map((t) => (
+            {TRACKS.filter((t) => isOwned(t.id, state.owned)).map((t) => (
               <button
                 key={t.id}
                 className="px-btn"
@@ -137,7 +141,7 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
         <section>
           <h3 className="pixel-font">BILDSCHIRM</h3>
           <div className="settings-row">
-            {PALETTES.map((p) => (
+            {PALETTES.filter((p) => isOwned(p.id, state.owned)).map((p) => (
               <button
                 key={p.id}
                 className="px-btn"
@@ -149,6 +153,7 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
               </button>
             ))}
           </div>
+          <p className="dim">Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.</p>
         </section>
 
         <section>

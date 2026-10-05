@@ -35,6 +35,29 @@
   --a3: #fff0c2;
   --ok: #ffe08a;
 }
+/* Prize-counter designs (quests.ts). */
+.arcade[data-palette='vapor'] {
+  --bg: #1a0b2e;
+  --bg2: #2a1048;
+  --panel: #33155a;
+  --fg: #fbe8ff;
+  --dim: #c89be0;
+  --a1: #ff71ce;
+  --a2: #01cdfe;
+  --a3: #fffb96;
+  --ok: #05ffa1;
+}
+.arcade[data-palette='virtualboy'] {
+  --bg: #000000;
+  --bg2: #1a0000;
+  --panel: #2b0000;
+  --fg: #ff2a2a;
+  --dim: #a30f0f;
+  --a1: #ff0000;
+  --a2: #d10000;
+  --a3: #ff6a6a;
+  --ok: #ff4a4a;
+}
 
 html,
 body {
@@ -434,7 +457,8 @@ a {
   opacity: 0.85;
 }
 .arcade[data-palette='gameboy'] .console-tile,
-.arcade[data-palette='amber'] .console-tile {
+.arcade[data-palette='amber'] .console-tile,
+.arcade[data-palette='virtualboy'] .console-tile {
   background: var(--bg2);
   color: var(--fg);
 }
@@ -521,11 +545,13 @@ a {
   font-size: 18px;
 }
 .arcade[data-palette='gameboy'] .cart,
-.arcade[data-palette='amber'] .cart {
+.arcade[data-palette='amber'] .cart,
+.arcade[data-palette='virtualboy'] .cart {
   background: var(--panel);
 }
 .arcade[data-palette='gameboy'] .cart-label,
-.arcade[data-palette='amber'] .cart-label {
+.arcade[data-palette='amber'] .cart-label,
+.arcade[data-palette='virtualboy'] .cart-label {
   background: var(--bg2);
   color: var(--fg);
 }
@@ -1562,6 +1588,7 @@ a {
 }
 .dock-btn {
   flex: 1;
+  min-width: 0;
   max-width: 140px;
   min-height: 56px;
   display: flex;
@@ -1593,6 +1620,19 @@ a {
   color: var(--a1);
   background: #fff;
   box-shadow: 0 0 0 1px var(--ridge), inset 0 -3px 0 var(--ridge);
+}
+
+/* Six areas fit side by side on small phones too. */
+@media (max-width: 440px) {
+  .dock {
+    gap: 0;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .dock-btn {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
 }
 
 /* --- Entrance: the run-down "Arcade Hallen" with a wobbly bulb --- */
@@ -2023,5 +2063,101 @@ a {
   background: #fff;
 }
 .arcade[data-palette='modul'] .puzzle-tile {
+  color: #fff;
+}
+
+/* --- Quests and the prize counter --- */
+.quest-board {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  align-items: start;
+}
+.quest-panel h3 {
+  margin: 0 0 6px;
+}
+.quest-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.quest {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+}
+.quest-tag {
+  font-size: 9px;
+  padding: 4px 6px;
+  background: var(--a2);
+  color: var(--bg);
+  text-shadow: none;
+}
+.quest-meter {
+  grid-column: 1 / -1;
+  height: 10px;
+  background: var(--bg2);
+  border: 2px solid var(--dim);
+}
+.quest-meter > span {
+  display: block;
+  height: 100%;
+  background: var(--a3);
+}
+.quest.done .quest-meter > span {
+  background: var(--ok);
+}
+.quest.done .quest-text {
+  opacity: 0.7;
+}
+.quest-reward {
+  grid-column: 1 / -1;
+  font-size: 9px;
+  color: var(--dim);
+  text-align: right;
+}
+.tokens {
+  color: var(--a3);
+  font-size: 12px;
+}
+.prize-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.prize {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 10px;
+  border: 2px dashed var(--dim);
+}
+.prize.owned {
+  border-style: solid;
+  border-color: var(--ok);
+}
+.prize-kind {
+  font-size: 8px;
+  color: var(--dim);
+  grid-column: 1;
+}
+.prize-name {
+  font-size: 11px;
+  grid-column: 1;
+}
+.prize-text {
+  grid-column: 1;
+}
+.prize .px-btn {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  white-space: nowrap;
+}
+.arcade[data-palette='modul'] .quest-tag {
   color: #fff;
 }

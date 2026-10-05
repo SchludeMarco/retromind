@@ -179,6 +179,14 @@ Minispiele klappen direkt darunter auf, zum Entspannen, ohne Zeitdruck und per T
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
 Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den
 Erfolg „Chillmodus“.
+**Quests und Preis-Tresen** – Reiter „Quests“ (im Modul-Design unten in der
+Leiste): jeden Tag drei kleine Aufgaben in der Halle (z. B. Games entdecken,
+Münze einwerfen, ein Minispiel schaffen, den Guru fragen) und eine größere
+pro Woche. Jede geschaffte Quest bringt Spielmarken, die man am Preis-Tresen
+gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
+(Weltraum, Bosskampf) eintauscht ([`gaming/lib/quests.ts`](gaming/lib/quests.ts),
+[`gaming/components/QuestBoard.tsx`](gaming/components/QuestBoard.tsx)).
+Marken und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
@@ -370,6 +378,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 - **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
   Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte
   Aufnahme (z. B. von freesound.org).
+
+- **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle
+  (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
+  vergessenes Spiel als Geheimtipp aufdeckt.
 
 - **Mehr Minispiele in der Chill-Ecke** (z. B. ein gemütliches Snake oder
   Solitär) und die Bestwerte mit in die Cloud-Sicherung nehmen.
