@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Sudoku, Blockstapler und Flipper in der Chill-Ecke** (2026-10-05,
+  PR #108): Drei neue Minispiele. **Sudoku** mit immer neuen Rätseln (Feld
+  antippen, Zahl wählen, doppelte Zahlen werden rot, die Bestzeit wird
+  gespeichert). Der **Blockstapler** im Stil des Game-Boy-Klassikers startet
+  gemütlich langsam: Tippen dreht, Wischen schiebt, nach unten Wischen lässt
+  fallen, dazu Knöpfe und eine Pause. Am **Flipper** steuern die linke und
+  rechte Tischhälfte (oder die Knöpfe darunter) die Flipper, es gibt drei
+  Kugeln und Rekordpunkte.
+
 - **Gaming: Quests und Preis-Tresen** (2026-10-05, PR #107): Unter dem neuen
   Reiter „Quests“ warten jeden Tag drei kleine Aufgaben in der Halle, z. B.
   drei neue Games entdecken, zweimal eine Münze einwerfen oder ein Minispiel
