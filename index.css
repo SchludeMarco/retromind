@@ -481,34 +481,73 @@ button:not(:disabled):active {
   animation: splashTitleGlow 4s ease-in-out infinite, splashTitleFloat 6s ease-in-out infinite;
 }
 
-/* The "Let's go!" button's quick send-off: thin bright sparks shoot out
-   from its center (each pre-rotated to its flight angle, so the animation
-   is just a translate along its own local "up" axis), a ring shockwaves
-   outward, and a warm flash washes the whole screen — all fast, before the
-   slow fade to the app takes over. */
-@keyframes explosionSpark {
-  0% { transform: translateY(0) scaleY(1); opacity: 1; }
-  70% { opacity: 1; }
-  100% { transform: translateY(calc(-1 * var(--dist))) scaleY(0.4); opacity: 0; }
+/* The welcome screen's start button wears the chosen design (lib/theme.ts):
+   "Klassisch" is a paper ticket with an ink outline and a hard shadow,
+   "Retro Warm" a terracotta pill in Epilogue, "Nachtschicht" a glowing
+   amber tube. The screen behind it stays the dark mantel-clock room. */
+.splash-start {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding: 1.1rem 3.5rem;
+  color: #2c1810;
+  background: #f4e4bc;
+  border: 3px solid #2c1810;
+  box-shadow: 6px 6px 0 #000, 0 0 28px rgba(217, 119, 6, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
-.explosion-spark {
-  animation-name: explosionSpark;
-  animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1);
-  animation-fill-mode: forwards;
+.splash-start:hover {
+  background: #fef3c7;
+  transform: translate(-1px, -1px);
+  box-shadow: 7px 7px 0 #000, 0 0 34px rgba(217, 119, 6, 0.6);
 }
-@keyframes explosionRing {
-  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.85; }
-  100% { transform: translate(-50%, -50%) scale(9); opacity: 0; }
+.splash-start:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 #000, 0 0 20px rgba(217, 119, 6, 0.45);
 }
-.explosion-ring {
-  animation: explosionRing 0.55s ease-out forwards;
+html[data-theme="retro-warm"] .splash-start {
+  color: #fffdf8;
+  background: #d95d39;
+  border: none;
+  border-radius: 9999px;
+  min-height: 56px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 6px 20px rgba(217, 93, 57, 0.45), 0 0 34px rgba(232, 168, 56, 0.25);
 }
-@keyframes explosionFlash {
-  0% { opacity: 0.95; }
-  100% { opacity: 0; }
+html[data-theme="retro-warm"] .splash-start:hover {
+  background: #bf4b28;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(217, 93, 57, 0.5), 0 0 40px rgba(232, 168, 56, 0.3);
 }
-.explosion-flash {
-  animation: explosionFlash 0.5s ease-out forwards;
+html[data-theme="retro-warm"] .splash-start:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(217, 93, 57, 0.4);
+}
+html[data-theme="nachtschicht"] .splash-start {
+  color: #fbbf24;
+  background: rgba(23, 16, 11, 0.85);
+  border: 2px solid #f59e0b;
+  border-radius: 0.375rem;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.45), inset 0 0 14px rgba(245, 158, 11, 0.2);
+}
+html[data-theme="nachtschicht"] .splash-start:hover {
+  background: rgba(61, 42, 18, 0.9);
+  transform: none;
+  box-shadow: 0 0 28px rgba(245, 158, 11, 0.65), inset 0 0 18px rgba(245, 158, 11, 0.3);
+}
+html[data-theme="nachtschicht"] .splash-start:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 0 10px rgba(245, 158, 11, 0.25);
+}
+.splash-start:disabled {
+  cursor: default;
+}
+
+/* The gong's white-out over the welcome screen. */
+@keyframes splashWhiteIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
