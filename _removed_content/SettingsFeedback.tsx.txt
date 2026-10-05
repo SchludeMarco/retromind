@@ -1,0 +1,27 @@
+// Removed 2026-10-05: the "Feedback" entries from the settings dialogs.
+// Feedback now opens from the mail icon in the top bar / start page.
+
+// components/SettingsModal.tsx (Zeitreise), prop onOpenFeedback: () => void
+      <div className="mb-6 p-3 border-2 border-retro-ink bg-retro-highlight/60 flex items-center gap-3">
+        <p className="text-xs flex-grow">
+          <span className="block font-bold">Feedback</span>
+          Lob, Tadel, Vorschläge oder Wünsche zur App? Wir freuen uns über deine Nachricht.
+        </p>
+        <button
+          onClick={onOpenFeedback}
+          className="retro-button flex-shrink-0 px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          ✉️ Feedback geben
+        </button>
+      </div>
+
+
+// gaming/components/Settings.tsx (Gaming), prop onOpenFeedback: () => void
+        <section>
+          <h3 className="pixel-font">FEEDBACK</h3>
+          <p>Lob, Tadel, Vorschläge oder Wünsche zur App? Raus damit.</p>
+          <button className="px-btn" onClick={onOpenFeedback} data-nav>
+            ✉ FEEDBACK GEBEN
+          </button>
+        </section>
+

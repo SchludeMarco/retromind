@@ -645,18 +645,7 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
-      {settingsOpen && (
-        <Settings
-          cloud={cloud}
-          state={state}
-          set={set}
-          onClose={() => setSettingsOpen(false)}
-          onOpenFeedback={() => {
-            setSettingsOpen(false);
-            setFeedbackOpen(true);
-          }}
-        />
-      )}
+      {settingsOpen && <Settings cloud={cloud} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
       {screen === 'hub' && (

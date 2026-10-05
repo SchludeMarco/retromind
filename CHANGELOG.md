@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Feedback nur noch direkt auf der Startseite** (2026-10-05, PR #98): Das
+  Briefsymbol für Feedback sitzt jetzt in allen Designs oben rechts auf der
+  Startseite, auch schon vor der Anmeldung. Der doppelte Eintrag in den
+  Einstellungen ist weg, in der Zeitreise wie in der Gaming-Edition.
+
 - **Feedback-Button leichter zu finden, jetzt auch in Gaming** (2026-10-05,
   PR #97): Feedback gibst du jetzt über das Briefsymbol oben in der
   Kopfleiste, ohne erst die Einstellungen öffnen zu müssen (im Design

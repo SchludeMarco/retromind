@@ -10,3 +10,6 @@ gebaut oder ausgeliefert.
 - `retromind-logo-clear.webp`: das kleine freigestellte Logo, das kurz in
   der Willkommens-Karte stand (entfernt am 2026-10-03, das Logo steht jetzt
   im Kopfbereich).
+- `SettingsFeedback.tsx.txt`: der Feedback-Abschnitt aus den Einstellungen der
+  Zeitreise und der Gaming-Edition (entfernt am 2026-10-05, Feedback öffnet
+  jetzt über das Briefsymbol direkt auf der Startseite bzw. in der Kopfleiste).
