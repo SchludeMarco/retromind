@@ -13,12 +13,13 @@ import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings, PALETTES } from './components/Settings';
 import { Feedback } from './components/Feedback';
+import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { useCloudSync } from './lib/useCloudSync';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
 import { IMPRINT_URL, PRIVACY_URL } from '../lib/privacy';
 
-type View = 'catalog' | 'collection' | 'search' | 'trophies';
+type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill';
 
 
 const pad = (n: number, len = 6) => String(n).padStart(len, '0');
@@ -94,6 +95,7 @@ export const GamingApp: React.FC = () => {
   const [selected, setSelected] = useState<Game | null>(null);
   const [guruOpen, setGuruOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
   const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
@@ -176,6 +178,7 @@ export const GamingApp: React.FC = () => {
     onMove: () => chip.play('blip'),
     onBack: () => {
       if (selected) closeDetail();
+      else if (miniGame) setMiniGame(null);
       else if (pickerOpen) setPickerOpen(false);
       else if (guruOpen) setGuruOpen(false);
     },
@@ -461,6 +464,9 @@ export const GamingApp: React.FC = () => {
             <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
               ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
             </button>
+            <button className="px-btn view-tab" aria-pressed={view === 'chill'} onClick={() => switchView('chill')} data-nav>
+              CHILL-ECKE
+            </button>
             {results && (
               <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
                 SUCHE
@@ -539,7 +545,14 @@ export const GamingApp: React.FC = () => {
             </>
           )}
 
-          {view === 'trophies' ? (
+          {view === 'chill' ? (
+            <MiniGameCorner
+              onPick={(id) => {
+                chip.play('select');
+                setMiniGame(id);
+              }}
+            />
+          ) : view === 'trophies' ? (
             <div className="links" style={{ marginTop: 16 }}>
               {ACHIEVEMENTS.map((a) => {
                 const got = state.achievements.includes(a.id);
@@ -653,6 +666,10 @@ export const GamingApp: React.FC = () => {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6" /></svg>
             TROPHÄEN
           </button>
+          <button className="dock-btn" aria-current={view === 'chill' ? 'page' : undefined} onClick={() => switchView('chill')} data-nav>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v3M12 3v3" /></svg>
+            CHILLEN
+          </button>
         </nav>
       )}
 
@@ -687,6 +704,17 @@ export const GamingApp: React.FC = () => {
           onClose={() => {
             setPickerOpen(false);
             chip.play('back');
+          }}
+        />
+      )}
+
+      {miniGame && (
+        <MiniGameDialog
+          id={miniGame}
+          onWin={() => unlock('chill')}
+          onClose={() => {
+            chip.play('back');
+            setMiniGame(null);
           }}
         />
       )}

@@ -160,7 +160,7 @@ JavaScript-Ursprung im Google-OAuth-Client).
 Knopf in der Werkzeugleiste): „Modul“ (Standard, mit Google Stitch entworfen:
 helles Konsolen-Plastik, weiße Modul-Karten mit Griffrillen in der
 Konsolenfarbe, rote Tasten, gut lesbare Schrift und eine Navigation unten mit
-Katalog, Kisten, Stash und Trophäen), dazu die Pixel-Looks „Arcade“,
+Katalog, Kisten, Stash, Trophäen und Chillen), dazu die Pixel-Looks „Arcade“,
 „Handheld“ und „Bernstein“. Das Design-System liegt in
 [`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
 `gaming/gaming.css` (Abschnitt „Design Modul“).
@@ -168,6 +168,12 @@ Katalog, Kisten, Stash und Trophäen), dazu die Pixel-Looks „Arcade“,
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
+**Chill-Ecke** – drei ruhige Minispiele zum Entspannen, ohne Zeitdruck und
+per Touch spielbar: Pixel-Memory, Schiebepuzzle und Senso
+([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx)). Töne
+kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
+Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den
+Erfolg „Chillmodus“.
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
@@ -360,6 +366,8 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   vor der Tür ein lizenzfreies, aufgenommenes Stück (z. B. leiser Regen mit
   Synth-Flächen).
 
+- **Mehr Minispiele in der Chill-Ecke** (z. B. ein gemütliches Snake oder
+  Solitär) und die Bestwerte mit in die Cloud-Sicherung nehmen.
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
   gemeinsamer Anmeldung.

@@ -172,6 +172,13 @@ class ChipSound {
     }
   }
 
+  /** One soft, round note for the mini games (Senso pads, memory flips). */
+  softNote(note: string, dur = 0.35) {
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
+    const t = this.ctx.currentTime + 0.01;
+    this.tone(this.sfxBus, noteFreq(note), t, dur, 'triangle', 0.28);
+  }
+
   /** The chime as the logo appears in the doorway: two clean triangle notes. */
   chime() {
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return void this.note('chime', 'aus');

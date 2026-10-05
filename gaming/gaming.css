@@ -1818,3 +1818,153 @@ a {
     animation: none !important;
   }
 }
+
+/* --- Chill-Ecke: calm mini games --- */
+.arcade .mini-list {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+.mini-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  border: none;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.mini-card:hover,
+.mini-card:focus-visible {
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+.mini-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+.mini-title {
+  font-size: 12px;
+  color: var(--a1);
+}
+.mini-best {
+  font-size: 0.85em;
+}
+.mini-dialog {
+  width: min(520px, 100%);
+}
+.mini-score {
+  margin: 4px 0 14px;
+  color: var(--dim);
+}
+.mini-done {
+  margin-top: 18px;
+  text-align: center;
+}
+.mini-done .pixel-font {
+  color: var(--a3);
+  font-size: 13px;
+}
+.memory-grid,
+.puzzle-grid,
+.senso-board {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 420px);
+  margin: 0 auto;
+}
+.memory-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+.memory-card {
+  aspect-ratio: 1;
+  font-size: clamp(26px, 8vw, 40px);
+  font-family: 'Press Start 2P', monospace;
+  color: var(--dim);
+  background: var(--panel);
+  border: 3px solid var(--dim);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.memory-card.shown {
+  background: var(--bg2);
+  border-color: var(--a2);
+}
+.memory-card.found {
+  border-color: var(--ok);
+  opacity: 0.75;
+}
+.memory-card:focus-visible,
+.puzzle-tile:focus-visible,
+.senso-pad:focus-visible {
+  outline: 3px solid var(--a3);
+  outline-offset: 2px;
+}
+.puzzle-grid {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+.puzzle-tile,
+.puzzle-blank {
+  aspect-ratio: 1;
+}
+.puzzle-tile {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(20px, 7vw, 32px);
+  color: var(--bg);
+  background: var(--a2);
+  border: none;
+  border-radius: 6px;
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.puzzle-tile.right {
+  background: var(--ok);
+}
+.puzzle-blank {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+.senso-board {
+  grid-template-columns: 1fr 1fr;
+  width: min(100%, 340px);
+  gap: 12px;
+}
+.senso-pad {
+  aspect-ratio: 1;
+  border: none;
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 0.12s, filter 0.12s;
+}
+.senso-pad:disabled {
+  cursor: default;
+}
+.senso-board.ready .senso-pad {
+  opacity: 0.6;
+}
+.senso-pad.lit {
+  opacity: 1;
+  filter: brightness(1.35) drop-shadow(0 0 14px currentColor);
+}
+.pad-0 { background: #22c55e; color: #22c55e; border-radius: 100% 8px 8px 8px; }
+.pad-1 { background: #ef4444; color: #ef4444; border-radius: 8px 100% 8px 8px; }
+.pad-2 { background: #eab308; color: #eab308; border-radius: 8px 8px 8px 100%; }
+.pad-3 { background: #3b82f6; color: #3b82f6; border-radius: 8px 8px 100% 8px; }
+.arcade[data-palette='modul'] .mini-card {
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+}
+.arcade[data-palette='modul'] .mini-title {
+  font-size: 14px;
+}
+.arcade[data-palette='modul'] .memory-card {
+  border-color: var(--ridge);
+  background: #fff;
+}
+.arcade[data-palette='modul'] .puzzle-tile {
+  color: #fff;
+}

@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Chill-Ecke mit drei Minispielen** (2026-10-05, PR #101): Zum
+  Entspannen zwischendurch gibt es in der Gaming-Halle einen neuen Bereich
+  „Chill-Ecke“ (unten in der Leiste „Chillen“). Darin: **Pixel-Memory**
+  (Pärchen mit Retro-Symbolen finden), ein **Schiebepuzzle** (Plättchen 1 bis
+  8 sortieren) und **Senso** (Melodie anhören und die Farben nachtippen).
+  Alles ohne Zeitdruck, per Fingertipp auf dem Handy spielbar und mit sanften
+  Tönen, die dem Stummschalter folgen. Deine besten Ergebnisse merkt sich das
+  Gerät, und für das erste geschaffte Spiel gibt es den Erfolg „Chillmodus“.
+
 - **Gaming: Heavy-Metal-Riff beim Betreten der Halle** (2026-10-05, PR #100):
   Sobald du durch die Tür bist, kracht ein 80er-Metal-Intro los: verzerrte
   Gitarre mit galoppierendem Riff, Schlagzeug und ein Solo obendrauf, rund
