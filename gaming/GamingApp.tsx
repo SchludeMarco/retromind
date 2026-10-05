@@ -15,6 +15,8 @@ import { Settings, PALETTES } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { useCloudSync } from './lib/useCloudSync';
+import { useHallSpotify } from './lib/useHallSpotify';
+import { SpotifyAsk } from './components/SpotifyAsk';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
@@ -155,11 +157,14 @@ export const GamingApp: React.FC = () => {
   // A new pick in the settings restarts the hub music with that tune.
   // A YouTube video on a game page pauses the music until it stops.
   const [videoPlaying, setVideoPlaying] = useState(false);
+  // In the hall the 80s metal playlist from Spotify plays instead of the
+  // chiptune tunes, once Spotify is allowed (useHallSpotify).
+  const spotify = useHallSpotify(state.musicSource === 'spotify', screen === 'hub' && state.music && !videoPlaying);
   useEffect(() => {
     chip.track = state.track;
-    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying);
+    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying && !spotify.active);
     return () => chip.stopMusic();
-  }, [screen, state.music, state.track, videoPlaying]);
+  }, [screen, state.music, state.track, videoPlaying, spotify.active]);
 
   // Ask the server once whether the AI key is configured.
   useEffect(() => {
@@ -384,6 +389,8 @@ export const GamingApp: React.FC = () => {
   return (
     <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
       <div className="stars" aria-hidden="true" />
+      {/* Off-screen, always mounted: Spotify's player for the hall music. */}
+      <div ref={spotify.containerRef} aria-hidden="true" className="spotify-host" />
       {screen === 'hub' && (
         // Inside the hall: Marco's picture of the arcade (Nano Banana), toned
         // down behind the UI. On wide screens a blurred copy fills the sides.
@@ -843,6 +850,8 @@ export const GamingApp: React.FC = () => {
           </div>
         </div>
       )}
+
+      {screen === 'hub' && state.music && state.musicSource === 'spotify' && <SpotifyAsk />}
 
       {fromDoor && <div className="white-in" aria-hidden="true" onAnimationEnd={() => setFromDoor(false)} />}
       <div className="crt-glass" aria-hidden="true" />

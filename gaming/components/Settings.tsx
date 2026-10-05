@@ -37,6 +37,7 @@ interface Props {
 export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
   const muted = useMuted();
   const youtube = useConsent('youtube') === true;
+  const spotify = useConsent('spotify') === true;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -117,7 +118,41 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
               {muted ? 'TON AUS' : 'TON AN'}
             </button>
           </div>
-          <h4 className="pixel-font">MUSIKSTÜCK</h4>
+          <h4 className="pixel-font">HALLENMUSIK</h4>
+          <div className="settings-row" role="group" aria-label="Hallenmusik">
+            <button
+              className="px-btn"
+              aria-pressed={state.musicSource === 'spotify'}
+              onClick={() => {
+                set('musicSource', 'spotify');
+                if (!state.music) set('music', true);
+                // Picking Spotify here is the yes to loading its player.
+                setConsent('spotify', true);
+              }}
+              data-nav
+            >
+              🤘 80ER METAL (SPOTIFY)
+            </button>
+            <button
+              className="px-btn"
+              aria-pressed={state.musicSource === 'chip'}
+              onClick={() => {
+                set('musicSource', 'chip');
+                if (!state.music) set('music', true);
+              }}
+              data-nav
+            >
+              CHIPTUNE
+            </button>
+          </div>
+          <p className="dim">
+            {state.musicSource === 'spotify'
+              ? spotify
+                ? 'Heavy Metal aus den 80ern von Spotify. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.'
+                : 'Spotify ist noch nicht erlaubt, bis dahin laufen die Chiptune-Stücke.'
+              : 'Selbst komponierte Chiptune-Stücke vom Soundchip, dein Stück wählst du unten.'}
+          </p>
+          <h4 className="pixel-font">MUSIKSTÜCK (CHIPTUNE)</h4>
           <div className="settings-row" role="group" aria-label="Musikstück">
             {TRACKS.filter((t) => isOwned(t.id, state.owned)).map((t) => (
               <button
@@ -128,6 +163,7 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
                   set('track', t.id);
                   // Picking a tune means wanting to hear it.
                   if (!state.music) set('music', true);
+                  set('musicSource', 'chip');
                 }}
                 data-nav
               >
@@ -162,9 +198,12 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
             <button className="px-btn" aria-pressed={youtube} onClick={() => setConsent('youtube', !youtube)} data-nav>
               ▶ YOUTUBE {youtube ? 'ERLAUBT' : 'AUS'}
             </button>
+            <button className="px-btn" aria-pressed={spotify} onClick={() => setConsent('spotify', !spotify)} data-nav>
+              ♫ SPOTIFY {spotify ? 'ERLAUBT' : 'AUS'}
+            </button>
           </div>
           <p className="dim">
-            Videos laden erst, wenn du YouTube erlaubst. Bilder und Texte von Wikipedia holt RetroMind über den eigenen
+            Videos laden erst, wenn du YouTube erlaubst, die Metal-Musik erst, wenn du Spotify erlaubst. Bilder und Texte von Wikipedia holt RetroMind über den eigenen
             Server, dein Browser spricht nicht direkt mit Wikipedia.
           </p>
           <p>

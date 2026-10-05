@@ -9,6 +9,9 @@ import { ActiveQuest, activeQuests, freshLog, mergeLogs, PRIZES, QuestEvent, Que
 
 export type Palette = 'modul' | 'arcade' | 'gameboy' | 'amber' | 'vapor' | 'virtualboy';
 
+export type MusicSource = 'spotify' | 'chip';
+const isMusicSource = (v: unknown): v is MusicSource => v === 'spotify' || v === 'chip';
+
 export interface ArcadeState {
   favorites: string[];
   completed: string[];
@@ -18,6 +21,8 @@ export interface ArcadeState {
   customGames: Record<string, Game>;
   palette: Palette;
   music: boolean;
+  /** Hall music: the 80s metal playlist from Spotify, or the chiptune tunes. */
+  musicSource: MusicSource;
   /** The hub tune picked in the settings. */
   track: TrackId;
   sfx: boolean;
@@ -44,6 +49,7 @@ const DEFAULTS: ArcadeState = {
   customGames: {},
   palette: 'modul',
   music: true,
+  musicSource: 'spotify',
   track: DEFAULT_TRACK,
   sfx: true,
   hiScore: 0,
@@ -65,6 +71,7 @@ function load(): ArcadeState {
     // another design afterwards sticks.
     if (!(saved.designRev >= DESIGN_REV)) state = { ...state, palette: 'modul', designRev: DESIGN_REV };
     state = { ...state, quests: freshLog(state.quests) };
+    if (!isMusicSource(state.musicSource)) state = { ...state, musicSource: DEFAULTS.musicSource };
     return isTrackId(state.track) ? state : { ...state, track: DEFAULT_TRACK };
   } catch {
     return DEFAULTS;
@@ -91,6 +98,7 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     palette: (remote.designRev ?? 0) >= DESIGN_REV ? remote.palette ?? local.palette : local.palette,
     designRev: Math.max(local.designRev, remote.designRev ?? 0),
     music: remote.music ?? local.music,
+    musicSource: isMusicSource(remote.musicSource) ? remote.musicSource : local.musicSource,
     track: isTrackId(remote.track) ? remote.track : local.track,
     sfx: remote.sfx ?? local.sfx,
     // Tokens can't be told apart per device, so the larger balance wins.
