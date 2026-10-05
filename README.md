@@ -80,7 +80,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   die Start-Abfrage von Name und Geburtsdatum, sobald beides bekannt ist (Name
   aus dem Google-Profil, Geburtstag über die People API, falls freigegeben);
   ändern lässt es sich in den Einstellungen unter „Deine Angaben“. Ohne Google
-  geht die Start-Abfrage wie bisher, die Angaben bleiben dann nur auf dem Gerät.
+  fragt die App beim ersten Mal; danach bleiben die Angaben auf dem Gerät und
+  die Abfrage entfällt bei jedem weiteren Besuch.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Läuft unabhängig vom bestehenden
