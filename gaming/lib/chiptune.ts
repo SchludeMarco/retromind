@@ -3,6 +3,7 @@
 // one in sid.ts).
 // Everything is synthesized, including the quiet piece at the entrance door.
 
+import { MetalPlayer } from './metal';
 import { SidPlayer } from './sid';
 import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
 
@@ -45,6 +46,8 @@ class ChipSound {
   private nextStepTime = 0;
   private step = 0;
   private hubSid: SidPlayer | null = null;
+  private metal: MetalPlayer | null = null;
+  private metalPending = false;
   musicEnabled = true;
   /** Which hub tune plays (settings); applies from the next startMusic. */
   track: TrackId = DEFAULT_TRACK;
@@ -288,8 +291,22 @@ class ChipSound {
     return this.ctx ? `${this.ctx.state}, ${this.ctx.sampleRate} Hz, t=${this.ctx.currentTime.toFixed(1)}` : 'nicht gestartet';
   }
 
+  /** The next startMusic opens with the heavy metal intro (metal.ts), then the hub tune. */
+  queueMetalIntro() {
+    this.metalPending = true;
+  }
+
   startMusic() {
-    if (!this.musicEnabled || !this.ctx || !this.musicBus || this.musicTimer !== null || this.hubSid) return;
+    if (!this.musicEnabled || !this.ctx || !this.musicBus || this.musicTimer !== null || this.hubSid || this.metal) return;
+    if (this.metalPending && this.noise) {
+      this.metalPending = false;
+      this.metal = new MetalPlayer(this.ctx, this.musicBus, this.noise, () => {
+        this.metal = null;
+        this.startMusic();
+      });
+      this.metal.start();
+      return;
+    }
     if (!trackById(this.track).steps) {
       if (!this.noise) return;
       this.hubSid = new SidPlayer(this.ctx, this.musicBus, this.noise);
@@ -307,6 +324,8 @@ class ChipSound {
     this.musicTimer = null;
     this.hubSid?.stop();
     this.hubSid = null;
+    this.metal?.stop();
+    this.metal = null;
   }
 
   setMusic(on: boolean) {

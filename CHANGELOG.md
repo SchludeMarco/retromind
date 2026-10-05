@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Heavy-Metal-Riff beim Betreten der Halle** (2026-10-05, PR #100):
+  Sobald du durch die Tür bist, kracht ein 80er-Metal-Intro los: verzerrte
+  Gitarre mit galoppierendem Riff, Schlagzeug und ein Solo obendrauf, rund
+  25 Sekunden mit großem Schlussakkord. Danach übernimmt die gewählte
+  Hintergrundmusik. Musik aus, Stummschalter und Stille im Hintergrund
+  gelten auch hier.
+
 - **Gaming: neuer Eingang mit Graffiti-Tür statt Power-Knopf** (2026-10-05,
   PR #99): Zum Start hängt eine wackelnde, flackernde Glühbirne vor einer
   ziemlich kaputten Holztür voller billiger Graffiti, und es läuft leise,
