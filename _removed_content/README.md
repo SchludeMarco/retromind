@@ -13,3 +13,10 @@ gebaut oder ausgeliefert.
 - `SettingsFeedback.tsx.txt`: der Feedback-Abschnitt aus den Einstellungen der
   Zeitreise und der Gaming-Edition (entfernt am 2026-10-05, Feedback öffnet
   jetzt über das Briefsymbol direkt auf der Startseite bzw. in der Kopfleiste).
+- `PowerOn.tsx.txt`, `power-on-intro.css.txt`, `diesel-start.mp3`: das frühere
+  Einschalt-Intro der Gaming-Edition mit Power-Knopf vor der Betonwand,
+  Einsaug-Wirbel, Boot-Logo mit Diesel-Startgeräusch und „PRESS START“-
+  Titelbild mit C64-Melodie (entfernt am 2026-10-05, ersetzt durch den
+  Eingang mit Graffiti-Tür in `gaming/components/Entrance.tsx`). Der
+  Abspiel-Code für Diesel und Titelmelodie steht in `gaming/lib/chiptune.ts`
+  vor PR #99 in der Git-Historie.

@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: neuer Eingang mit Graffiti-Tür statt Power-Knopf** (2026-10-05,
+  PR #99): Zum Start hängt eine wackelnde, flackernde Glühbirne vor einer
+  ziemlich kaputten Holztür voller billiger Graffiti, und es läuft leise,
+  ruhige Musik. Weil Browser wie Chrome Ton erst nach einer Berührung
+  erlauben, startet die Musik mit dem ersten Tippen irgendwo auf den
+  Bildschirm (ein Hinweis sagt das). Ein Druck auf „Eintreten“ reißt die Tür
+  quietschend auf, das RetroMind-Logo leuchtet aus dem Eingang, das Bild wird
+  weiß und dann erscheint direkt der Katalog. Power-Knopf, Diesel-Startgeräusch
+  und das „PRESS START“-Titelbild sind dafür weggefallen. Der Stummschalter
+  gilt auch hier, und im Hintergrund bleibt alles still.
+
 - **Feedback nur noch direkt auf der Startseite** (2026-10-05, PR #98): Das
   Briefsymbol für Feedback sitzt jetzt in allen Designs oben rechts auf der
   Startseite, auch schon vor der Anmeldung. Der doppelte Eintrag in den

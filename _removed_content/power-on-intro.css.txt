@@ -1,0 +1,217 @@
+/* CSS des früheren Einschalt-Intros der Gaming-Edition (Power-Knopf, Boot-Logo, Titelbild). */
+
+.power-off {
+  background: #050505;
+}
+
+.power-switch {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 6px solid #333;
+  background: radial-gradient(circle at 40% 35%, #444, #111);
+  color: #e33;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 6px #1a1a1a, 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.power-icon {
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: square;
+  vertical-align: middle;
+}
+
+.power-switch:focus-visible,
+.power-switch:hover {
+  color: #f55;
+  box-shadow: 0 0 0 6px #1a1a1a, 0 0 30px rgba(255, 50, 50, 0.6);
+}
+
+.power-led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #400;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.power-led.on {
+  background: #f22;
+  box-shadow: 0 0 10px #f22;
+}
+
+.crt-on {
+  animation: crt-on 0.9s ease-out both;
+  background: var(--bg);
+}
+
+@keyframes crt-on {
+  0% { transform: scale(1, 0.004); filter: brightness(8); }
+  40% { transform: scale(1, 0.004); filter: brightness(8); }
+  70% { transform: scale(1, 1); filter: brightness(2); }
+  100% { transform: scale(1, 1); filter: brightness(1); }
+}
+
+.logo-drop {
+  animation: logo-drop 2.4s ease-out 0.9s both;
+}
+
+@keyframes logo-drop {
+  from { transform: translateY(-45vh); }
+  to { transform: translateY(0); }
+}
+
+.fade-in-late {
+  animation: fade-in 0.6s ease 3.4s both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.title-logo {
+  font-size: clamp(28px, 7vw, 72px);
+  color: var(--a3);
+  margin: 0;
+}
+
+.title-sub {
+  font-size: clamp(14px, 3vw, 26px);
+  color: var(--a1);
+  margin: 18px 0 48px;
+  letter-spacing: 0.3em;
+}
+
+.title-press {
+  font-size: clamp(12px, 2.4vw, 18px);
+  color: var(--fg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 18px;
+}
+
+.title-art {
+  margin: 0 0 28px;
+  line-height: 0;
+}
+
+.title-art img {
+  width: min(78vw, 420px);
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.boot-motif {
+  display: block;
+  width: min(36vw, 160px);
+  height: auto;
+  margin: 0 auto 12px;
+  image-rendering: pixelated;
+}
+
+.arcade[data-palette='modul'] .power-off,
+.arcade[data-palette='modul'] .crt-on {
+  background: var(--bg);
+}
+
+.arcade[data-palette='modul'] .power-switch {
+  color: #fff;
+  background: radial-gradient(circle at 40% 35%, #ef4444, #b91c1c);
+  border: 6px solid #fff;
+  box-shadow: 0 0 0 1px var(--ridge), 0 8px 0 var(--a1-deep), 0 14px 24px rgba(0, 0, 0, 0.18);
+}
+
+.arcade[data-palette='modul'] .power-switch:hover,
+.arcade[data-palette='modul'] .power-switch:focus-visible {
+  color: #fff;
+  box-shadow: 0 0 0 1px var(--ridge), 0 8px 0 var(--a1-deep), 0 0 30px rgba(220, 38, 38, 0.45);
+}
+
+.arcade[data-palette='modul'] .power-switch:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 1px var(--ridge), 0 4px 0 var(--a1-deep);
+}
+
+.arcade[data-palette='modul'] .power-led {
+  background: #fca5a5;
+}
+
+.arcade[data-palette='modul'] .power-led.on {
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+}
+
+.arcade[data-palette='modul'] .title-logo {
+  color: var(--fg);
+}
+
+.arcade[data-palette='modul'] .title-press {
+  color: var(--a1);
+  font-size: 18px;
+}
+
+.power-off,
+.arcade[data-palette='modul'] .power-off {
+  overflow: hidden;
+  background-color: #6f6e6a;
+  /* poured concrete: grain, formwork seams and tie holes */
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.45) 0 3px, rgba(255, 255, 255, 0.12) 4px, transparent 5px),
+    linear-gradient(to bottom, transparent calc(100% - 2px), rgba(0, 0, 0, 0.28) calc(100% - 2px)),
+    linear-gradient(to right, transparent calc(100% - 2px), rgba(0, 0, 0, 0.22) calc(100% - 2px)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .48 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='4'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 .28 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  background-size: 180px 120px, 360px 240px, 360px 240px, 220px 220px, 600px 600px;
+  background-position: 90px 60px, 0 0, 0 0, 0 0, 0 0;
+}
+
+.power-off > *:not(.lamp-scene) {
+  position: relative;
+  z-index: 2;
+}
+
+.power-off .dim,
+.power-off .pixel-font {
+  color: #e9e4d8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.lamp-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.lamp-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 75vmax 70vmax at 50% 14vh, transparent 0, rgba(8, 6, 4, 0.55) 45%, rgba(4, 3, 2, 0.94) 80%);
+}
+
+.lamp-scene .lamp-light {
+  transform-origin: 50% 0;
+  animation: lamp-flicker 5.5s steps(1) infinite, lamp-sway 3.2s infinite;
+}
+
+.sucked-in {
+  animation: sucked-in 1.1s cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+  pointer-events: none;
+}
+
+@keyframes sucked-in {
+  0% { transform: scale(1) rotate(0); filter: blur(0) brightness(1); }
+  15% { transform: scale(0.94) rotate(-6deg); filter: blur(0) brightness(1.1); }
+  100% { transform: scale(18) rotate(320deg); filter: blur(8px) brightness(0); }
+}

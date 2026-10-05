@@ -133,12 +133,15 @@ kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
-mit `YOUTUBE_API_KEY`). Dazu Konsolen-Einschalten (vor einer Betonwand, die eine
-flackernde Spielhallen-Glühbirne anleuchtet),
+mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: eine wackelnde, flackernde
+Glühbirne vor einer kaputten, mit Graffiti beschmierten Holztür, dazu leise
+Musik (`gaming/components/Entrance.tsx`; der Browser spielt sie ab der ersten
+Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
+das Bild wird weiß und der Katalog erscheint. Dazu
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
-den 80ern bis heute („Kiste an, Alter!“, „Epic Fail“, „GG“, „no cap“). Lässt sich als eigenständige App installieren
+den 80ern bis heute („Welches Game, Digga?“, „Epic Fail“, „GG“, „no cap“). Lässt sich als eigenständige App installieren
 (Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
 verlinkt auf der Startseite und in den Einstellungen dorthin.
 Das Profil (Sammlung, Erfolge, Highscore, Vorlieben) liegt im `localStorage`;
@@ -351,6 +354,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Echtes Musikstück am Eingang:** Statt der synthetisierten ruhigen Musik
+  vor der Tür ein lizenzfreies, aufgenommenes Stück (z. B. leiser Regen mit
+  Synth-Flächen).
 
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und

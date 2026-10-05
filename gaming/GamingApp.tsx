@@ -6,7 +6,7 @@ import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
-import { PowerOn } from './components/PowerOn';
+import { Entrance } from './components/Entrance';
 import { MuteButton } from './components/MuteButton';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
@@ -49,6 +49,8 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
 export const GamingApp: React.FC = () => {
   const reducedMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
   const [screen, setScreen] = useState<'power' | 'hub'>('power');
+  // After the door the hub comes up out of the white picture.
+  const [fromDoor, setFromDoor] = useState(false);
   const [toast, setToast] = useState<{ title: string; text: string } | null>(null);
   const [rainbow, setRainbow] = useState(false);
 
@@ -359,7 +361,16 @@ export const GamingApp: React.FC = () => {
       <div className="stars" aria-hidden="true" />
 
       {screen === 'power' ? (
-        <PowerOn reducedMotion={reducedMotion} muted={muted} onToggleMute={toggleMute} onStart={() => setScreen('hub')} />
+        <Entrance
+          reducedMotion={reducedMotion}
+          muted={muted}
+          music={state.music}
+          onToggleMute={toggleMute}
+          onEnter={() => {
+            setScreen('hub');
+            setFromDoor(!reducedMotion);
+          }}
+        />
       ) : (
         <main className="hub">
           <header className="hud pixel-font">
@@ -711,6 +722,7 @@ export const GamingApp: React.FC = () => {
         </div>
       )}
 
+      {fromDoor && <div className="white-in" aria-hidden="true" onAnimationEnd={() => setFromDoor(false)} />}
       <div className="crt-glass" aria-hidden="true" />
     </div>
   );
