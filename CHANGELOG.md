@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ticken und Gong deutlich lauter** (2026-10-05, PR #PRNR): Das Ticken
+  der Kaminuhr auf dem Willkommens-Bildschirm ist jetzt etwa zehnmal so
+  laut und klingt mehr nach Holzgehäuse. Der Gong war so tief gestimmt, dass
+  Handy- und Laptop-Lautsprecher ihn kaum abspielen konnten. Jetzt klingt er
+  heller, mit metallischem Nachhall, und ist auch auf dem Handy gut zu hören.
+
 - **Spotify-Musik erst nach dem Willkommens-Bildschirm** (2026-10-05, PR #114):
   Die Musik der Dekade startet nicht mehr schon beim ersten Tippen auf dem
   Willkommens-Bildschirm, sondern erst, wenn Gong und weiße Überblendung
