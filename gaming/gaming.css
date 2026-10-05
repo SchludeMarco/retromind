@@ -1841,8 +1841,93 @@ a {
   gap: 10px;
 }
 .enter-btn {
-  min-width: 200px;
-  letter-spacing: 0.12em;
+  position: relative;
+  min-width: 210px;
+  min-height: 60px;
+  padding: 10px 34px;
+  cursor: pointer;
+  color: #f4f4f2;
+  font: 900 26px/1 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* The door's own roll shutter and graffiti, darkened so the sign reads. */
+  background:
+    radial-gradient(circle at 9px 9px, #9a9a96 0 2px, transparent 3px),
+    radial-gradient(circle at calc(100% - 9px) 9px, #9a9a96 0 2px, transparent 3px),
+    radial-gradient(circle at 9px calc(100% - 9px), #9a9a96 0 2px, transparent 3px),
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #9a9a96 0 2px, transparent 3px),
+    linear-gradient(rgba(20, 20, 22, 0.55), rgba(20, 20, 22, 0.7)),
+    url('/gaming/arcade-door.webp') center 78% / 170% auto,
+    #3b3c3e;
+  border: 4px solid #55575a;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 2px #1d1e20,
+    inset 0 2px 0 3px rgba(255, 255, 255, 0.12),
+    0 4px 0 #1d1e20,
+    0 8px 18px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 0 #000, 0 0 10px rgba(0, 0, 0, 0.8);
+  transition: transform 0.08s, filter 0.15s;
+}
+.enter-btn:hover,
+.enter-btn:focus-visible {
+  filter: brightness(1.18);
+}
+.arcade .entrance .enter-btn:focus-visible {
+  outline: 3px solid #ffd27a;
+  outline-offset: 3px;
+}
+/* The speaker button next to it gets the same metal plate. */
+.arcade .entrance-row .mute-btn.px-btn {
+  min-height: 60px;
+  color: #f4f4f2;
+  background: linear-gradient(#4a4b4e, #2e2f31);
+  border: 4px solid #55575a;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 2px #1d1e20, 0 4px 0 #1d1e20, 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+.enter-btn:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 0 0 2px #1d1e20,
+    inset 0 2px 0 3px rgba(255, 255, 255, 0.12),
+    0 1px 0 #1d1e20,
+    0 4px 10px rgba(0, 0, 0, 0.6);
+}
+.enter-btn:disabled {
+  cursor: default;
+}
+.enter-btn::before,
+.enter-btn::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+/* A quick spray tag and a sticker, like on the real door. */
+.enter-btn::before {
+  right: 7px;
+  bottom: 3px;
+  width: 46px;
+  height: 17px;
+  opacity: 0.85;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 22'%3E%3Cpath d='M3 15c4-9 7-9 6 0s5-10 9-6-2 9 2 7 6-11 10-8-3 9 1 8 7-9 11-6-1 6 4 5 6-4 9-5' fill='none' stroke='%23ff4fb4' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M20 14v6M41 13v5' stroke='%23ff4fb4' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.enter-btn::after {
+  left: 12px;
+  top: 7px;
+  width: 16px;
+  height: 11px;
+  border-radius: 2px;
+  background: #2fb5c9;
+  transform: rotate(-9deg);
+  opacity: 0.8;
+}
+.enter-label {
+  position: relative;
+  display: inline-block;
+  transform: rotate(-2deg);
 }
 .white-out {
   position: absolute;
@@ -1853,7 +1938,7 @@ a {
   pointer-events: none;
 }
 
-/* "Eintreten": the door flies open, light floods out, the logo comes
+/* "ENTER": the door flies open, light floods out, the logo comes
    through the doorway and everything goes white. */
 .entering .hall {
   animation: walk-in 2.2s cubic-bezier(0.5, 0, 0.8, 0.6) forwards;

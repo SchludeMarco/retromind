@@ -3,7 +3,7 @@ import { chip } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
-// the entrance and the street murmuring. "Eintreten" throws the door open,
+// the entrance and the street murmuring. "ENTER" throws the door open,
 // the logo shines out of the doorway, the picture goes white and the hub
 // follows.
 //
@@ -115,8 +115,10 @@ export const Entrance: React.FC<{
               : 'Da drin warten die alten Games. Trau dich, Player 1.'}
         </p>
         <div className="entrance-row">
-          <button className="px-btn big enter-btn pixel-font" onClick={enter} disabled={entering} autoFocus>
-            EINTRETEN
+          {/* Looks like the EINGANG door itself: grey metal frame, roll shutter
+              and graffiti, with the white sign lettering. */}
+          <button className="enter-btn" onClick={enter} disabled={entering} autoFocus>
+            <span className="enter-label">ENTER</span>
           </button>
           <MuteButton muted={muted} onToggle={onToggleMute} />
         </div>

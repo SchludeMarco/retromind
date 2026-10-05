@@ -196,29 +196,66 @@ class ChipSound {
 
   /** An old wooden door thrown open: a short creak, then it bangs against the wall. */
   door() {
-    if (!this.sfxEnabled || !this.ctx || !this.sfxBus || !this.noise) return;
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
     const ctx = this.ctx;
     const t = ctx.currentTime + 0.01;
+    // The rusty hinge creaks while the door swings (0.5 s), it bangs against
+    // the wall, and creaks a little more as it swings back.
+    this.playCreak(this.creakBuffer(0.55, 1), t, 0.85);
+    this.tone(this.sfxBus, 140, t + 0.5, 0.22, 'sine', 0.6, 45);
+    this.playCreak(this.creakBuffer(0.35, 0.6), t + 0.62, 0.45);
+  }
+
+  private playCreak(buffer: AudioBuffer, t: number, gain: number) {
+    const ctx = this.ctx!;
     const src = ctx.createBufferSource();
-    src.buffer = this.noise;
-    src.loop = true;
-    const band = ctx.createBiquadFilter();
-    band.type = 'bandpass';
-    band.Q.value = 9;
-    band.frequency.setValueAtTime(700, t);
-    band.frequency.exponentialRampToValueAtTime(1800, t + 0.38);
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, t);
-    env.gain.linearRampToValueAtTime(0.9, t + 0.05);
-    env.gain.setValueAtTime(0.9, t + 0.3);
-    env.gain.linearRampToValueAtTime(0, t + 0.42);
-    src.connect(band).connect(env).connect(this.sfxBus);
+    src.buffer = buffer;
+    // Drop the rumble so small phone speakers carry the squeak.
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 280;
+    const g = ctx.createGain();
+    g.gain.value = gain;
+    src.connect(hp).connect(g).connect(this.sfxBus!);
     src.start(t);
-    src.stop(t + 0.45);
-    // The creak itself: a hinge squeak that bends upward.
-    this.tone(this.sfxBus, 260, t + 0.02, 0.36, 'sawtooth', 0.05, 520);
-    // Bang against the wall.
-    this.tone(this.sfxBus, 140, t + 0.44, 0.22, 'sine', 0.6, 45);
+  }
+
+  /**
+   * A creak the way a real hinge makes it: stick-slip friction, i.e. a train
+   * of tiny knocks whose rate speeds up and slows down, each one ringing the
+   * metal at a few resonances that rise a little as the door opens.
+   */
+  private creakBuffer(dur: number, pitch: number): AudioBuffer {
+    const ctx = this.ctx!;
+    const sr = ctx.sampleRate;
+    const n = Math.floor(dur * sr);
+    const buf = ctx.createBuffer(1, n, sr);
+    const d = buf.getChannelData(0);
+    const modes: [number, number][] = [
+      [640, 0.006],
+      [1150, 0.0045],
+      [1900, 0.003],
+      [2700, 0.002],
+    ];
+    for (let time = 0; time < dur; ) {
+      const p = time / dur;
+      const amp = Math.sin(Math.PI * Math.min(1, p * 1.25 + 0.05)) * (0.55 + Math.random() * 0.45);
+      const i0 = Math.floor(time * sr);
+      for (const [f, decay] of modes) {
+        const freq = f * pitch * (0.92 + 0.22 * p);
+        const len = Math.min(n - i0, Math.floor(decay * 6 * sr));
+        for (let k = 0; k < len; k++) {
+          d[i0 + k] += amp * Math.exp(-k / (decay * sr)) * Math.sin((2 * Math.PI * freq * k) / sr);
+        }
+      }
+      // Knocks per second: slow at first, fast mid-swing, slowing again.
+      const rate = 28 + 75 * Math.sin(Math.PI * p) + (Math.random() - 0.5) * 18;
+      time += 1 / Math.max(15, rate);
+    }
+    let peak = 0;
+    for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(d[i]));
+    if (peak > 0) for (let i = 0; i < n; i++) d[i] /= peak;
+    return buf;
   }
 
   /** What the intro sounds did last time, for the ?ton diagnostics line. */
