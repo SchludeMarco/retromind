@@ -31,3 +31,8 @@ gebaut oder ausgeliefert.
   frühere „Let's go!“-Knopf des Willkommens-Bildschirms mit Funken-Explosion,
   Druckwelle und Knall (entfernt am 2026-10-05, ersetzt durch Gong und weiße
   Überblendung).
+- `useSpotifyBackground-back-to-back-intro.ts.txt`: der Spotify-Hook der
+  Zeitreise mit dem festen Auftakt „Back to Back“ von Pretty Maids (gut 45
+  Sekunden, Track `5t70MlkURJ4JXbkfFtEqKr`) vor der Dekaden-Musik (entfernt
+  am 2026-10-05 auf Marcos Wunsch, jetzt startet gleich ein zufälliges Lied
+  der Dekade).

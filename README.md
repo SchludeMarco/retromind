@@ -58,8 +58,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Echte Hits dieser Dekade** – Ära-Wahl und Spotifys offizielle „All Out …“-
   Playlist der gewählten Dekade als Embed, plus UI-Sounds. Sobald man einmal
   irgendwo klickt/tippt (Browser verlangen diese Interaktion, bevor Ton laufen
-  darf) und die Startseite nach dem Gong erscheint, läuft sofort zum Auftakt ein
-  Stück von „Back to Back“ (Pretty Maids), danach spielt die Playlist
+  darf) und die Startseite nach dem Gong erscheint, spielt sofort die Playlist
   automatisch im Hintergrund, Lied für Lied in zufälliger Reihenfolge (der
   Spotify-Player kann kein Shuffle, deshalb liest
   [`api/spotify-tracks.js`](api/spotify-tracks.js) die Titelliste der
