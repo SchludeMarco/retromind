@@ -139,7 +139,9 @@ Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach, dazu leise
 Musik (`gaming/components/Entrance.tsx`; der Browser spielt sie ab der ersten
 Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
-synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Dazu
+synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Drinnen liegt
+hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
+(`public/gaming/arcade-innen.webp`). Dazu
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von

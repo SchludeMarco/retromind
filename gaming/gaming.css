@@ -140,6 +140,43 @@ a {
   to { transform: translateY(50%); }
 }
 
+/* --- Inside the hall: Marco's arcade picture behind the hub --- */
+.hall-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0b0d14 url('/gaming/arcade-innen.webp') center / cover;
+}
+.hall-bg::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background: inherit;
+  filter: blur(24px) brightness(0.6);
+}
+.hb-photo {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  min-width: 100%;
+  width: auto;
+  object-fit: cover;
+  transform: translateX(-50%);
+}
+/* Calms the hall down so cards and text stay easy to read. */
+.hb-tint {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0.45;
+}
+.arcade[data-palette='modul'] .hb-tint {
+  opacity: 0.62;
+}
+
 /* --- Entrance --- */
 .screen-full {
   position: fixed;

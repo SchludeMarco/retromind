@@ -362,6 +362,14 @@ export const GamingApp: React.FC = () => {
   return (
     <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
       <div className="stars" aria-hidden="true" />
+      {screen === 'hub' && (
+        // Inside the hall: Marco's picture of the arcade (Nano Banana), toned
+        // down behind the UI. On wide screens a blurred copy fills the sides.
+        <div className="hall-bg" aria-hidden="true">
+          <img className="hb-photo" src="/gaming/arcade-innen.webp" alt="" />
+          <div className="hb-tint" />
+        </div>
+      )}
 
       {screen === 'power' ? (
         <Entrance

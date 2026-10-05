@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Du stehst jetzt wirklich in der Spielhalle** (2026-10-05,
+  PR #103): Hinter dem Katalog siehst du Marcos Bild vom Innenraum, einen Gang
+  zwischen alten Spielautomaten mit Neonröhren und buntem 90er-Teppich. Etwas
+  abgedunkelt, damit alles gut lesbar bleibt, in allen Designs.
+
 - **Gaming: Eingang ist jetzt die verranzte „Arcade Hallen“** (2026-10-05,
   PR #102): Statt der gezeichneten Holztür siehst du zum Start Marcos Bild
   einer heruntergekommenen Spielhalle an einer verregneten Straße, mit
