@@ -1,7 +1,7 @@
 // A tiny 8-bit sound chip on top of Web Audio: square/triangle/noise voices
-// for UI blips, the hub's selectable original tunes (tracks.ts) and a C64-style
-// title tune (sid.ts).
-// Music and blips are synthesized; only the boot engine is a recorded sample.
+// for UI blips and the hub's selectable tunes (tracks.ts, plus the C64-style
+// one in sid.ts).
+// Everything is synthesized, including the quiet piece at the entrance door.
 
 import { SidPlayer } from './sid';
 import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
@@ -21,12 +21,19 @@ export function noteFreq(note: string): number {
   return 440 * Math.pow(2, (semitone - 69) / 12);
 }
 
-// Boot sound: the first seconds of a royalty-free diesel start recording
-// (starter, catch, revs), trimmed and faded in public/gaming/.
 // Music bus level; at 0.32 phones barely played the tunes audibly.
 const MUSIC_LEVEL = 1.4;
 
-const DIESEL_URL = '/gaming/diesel-start.mp3';
+// The quiet piece at the door: Am9, Fmaj7, Cmaj7, G6, eight seconds each.
+const AMBIENT_LEVEL = 0.5;
+const AMBIENT_BAR = 8;
+const AMBIENT_CHORDS = [
+  ['A3', 'C4', 'E4', 'B4'],
+  ['F3', 'A3', 'C4', 'E4'],
+  ['C4', 'E4', 'G4', 'B4'],
+  ['G3', 'B3', 'D4', 'E4'],
+];
+const AMBIENT_BELLS = ['E5', 'G5', 'A5', 'C6', 'D6', 'E6'];
 
 class ChipSound {
   private ctx: AudioContext | null = null;
@@ -34,8 +41,6 @@ class ChipSound {
   private musicBus: GainNode | null = null;
   private sfxBus: GainNode | null = null;
   private noise: AudioBuffer | null = null;
-  private dieselBytes: Promise<ArrayBuffer | null> | null = null;
-  private dieselBuf: Promise<AudioBuffer | null> | null = null;
   private musicTimer: number | null = null;
   private nextStepTime = 0;
   private step = 0;
@@ -164,7 +169,7 @@ class ChipSound {
     }
   }
 
-  /** The console "power on" chime: two clean triangle notes. */
+  /** The chime as the logo appears in the doorway: two clean triangle notes. */
   chime() {
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return void this.note('chime', 'aus');
     this.note('chime', `gespielt (Audio: ${this.ctx.state})`);
@@ -173,72 +178,107 @@ class ChipSound {
     this.tone(this.sfxBus, noteFreq('E6'), t + 0.12, 0.9, 'triangle', 0.3);
   }
 
-  /** Starts downloading the boot engine sample before the power tap. */
-  prefetchDiesel() {
-    this.dieselBytes ??= fetch(DIESEL_URL)
-      .then((r) => (r.ok ? r.arrayBuffer() : null))
-      .catch(() => null);
-  }
-
-  private dieselBuffer(ctx: AudioContext): Promise<AudioBuffer | null> {
-    if (!this.dieselBuf) {
-      this.prefetchDiesel();
-      this.dieselBuf = this.dieselBytes!.then((b) => (b ? ctx.decodeAudioData(b) : null)).catch(() => null);
-    }
-    return this.dieselBuf;
-  }
-
   /**
-   * A real diesel engine starting (starter, catch, revs), cut to `duration`
-   * seconds and faded out so it hands over to the chime. Returns a function
-   * that cuts it off.
+   * The quiet piece in front of the door: slow, soft chords with a few
+   * music-box notes on top, kept in the mids so phone speakers carry it.
+   * It may be scheduled while the browser still holds audio back (no tap
+   * yet); it then simply starts with the first touch. Returns a stop function.
    */
-  diesel(duration: number): () => void {
-    if (!this.sfxEnabled) return this.note('diesel', 'aus (Effekte abgeschaltet)');
-    if (!this.ctx || !this.sfxBus) return this.note('diesel', 'aus (kein Web Audio)');
-    // The power tap creates the AudioContext; on phones it may still be
-    // starting up here. Play only once it really runs and the sample is
-    // decoded, so nothing gets queued against a clock that is not moving yet.
+  ambient(): () => void {
+    if (!this.ctx || !this.master) return this.note('ambient', 'aus (kein Web Audio)');
     const ctx = this.ctx;
-    const bus = this.sfxBus;
-    const began = performance.now();
-    let cancelled = false;
-    let stop: (() => void) | null = null;
-    this.note('diesel', `wartet (Audio: ${ctx.state})`);
-    Promise.all([ctx.state === 'running' ? null : ctx.resume(), this.dieselBuffer(ctx)]).then(
-      ([, buf]) => {
-        if (cancelled) return;
-        if (!buf) return this.note('diesel', 'Sample nicht geladen');
-        const left = Math.min(duration - (performance.now() - began) / 1000, buf.duration);
-        if (left < 0.8) return this.note('diesel', `zu spät (erst nach ${(duration - left).toFixed(1)} s bereit)`);
-        const src = ctx.createBufferSource();
+    const out = ctx.createGain();
+    const warm = ctx.createBiquadFilter();
+    warm.type = 'lowpass';
+    warm.frequency.value = 1500;
+    warm.connect(out).connect(this.master);
+    out.gain.setValueAtTime(0, ctx.currentTime);
+    out.gain.linearRampToValueAtTime(AMBIENT_LEVEL, ctx.currentTime + 3);
+
+    const pad = (note: string, t: number, len: number) => {
+      const f = noteFreq(note);
+      for (const [wave, detune, g] of [['triangle', 1, 0.05], ['sine', 1.004, 0.04]] as const) {
+        const osc = ctx.createOscillator();
         const env = ctx.createGain();
-        const t0 = ctx.currentTime + 0.02;
-        src.buffer = buf;
-        env.gain.setValueAtTime(1, t0);
-        env.gain.setValueAtTime(1, t0 + Math.max(0, left - 0.4));
-        env.gain.linearRampToValueAtTime(0, t0 + left);
-        src.connect(env).connect(bus);
-        src.start(t0);
-        src.stop(t0 + left + 0.05);
-        stop = () => {
-          const now = ctx.currentTime;
-          env.gain.cancelScheduledValues(now);
-          env.gain.setValueAtTime(env.gain.value, now);
-          env.gain.linearRampToValueAtTime(0, now + 0.05);
-          setTimeout(() => env.disconnect(), 100);
-        };
-        this.note('diesel', `läuft ${left.toFixed(1)} s`);
-      },
-      (e) => this.note('diesel', `Audio-Start fehlgeschlagen: ${e}`)
-    );
+        osc.type = wave;
+        osc.frequency.value = f * detune;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(g, t + 2.5);
+        env.gain.setValueAtTime(g, t + len);
+        env.gain.linearRampToValueAtTime(0, t + len + 2.5);
+        osc.connect(env).connect(warm);
+        osc.start(t);
+        osc.stop(t + len + 2.6);
+      }
+    };
+    const bell = (note: string, t: number) => {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = noteFreq(note);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.05, t + 0.01);
+      env.gain.exponentialRampToValueAtTime(0.0005, t + 2.4);
+      osc.connect(env).connect(out);
+      osc.start(t);
+      osc.stop(t + 2.5);
+    };
+
+    let next = ctx.currentTime + 0.1;
+    let bar = 0;
+    const queue = () => {
+      // Only ever a bar ahead; while audio is held back the clock stands still.
+      while (next < ctx.currentTime + 1) {
+        const chord = AMBIENT_CHORDS[bar % AMBIENT_CHORDS.length];
+        chord.forEach((n) => pad(n, next, AMBIENT_BAR));
+        for (let k = 0; k < 3; k++) {
+          if (Math.random() < 0.6) bell(AMBIENT_BELLS[Math.floor(Math.random() * AMBIENT_BELLS.length)], next + 1 + k * 2.2);
+        }
+        next += AMBIENT_BAR;
+        bar++;
+      }
+    };
+    queue();
+    const timer = window.setInterval(queue, 400);
+    this.note('ambient', `läuft (Audio: ${ctx.state})`);
     return () => {
-      cancelled = true;
-      stop?.();
+      window.clearInterval(timer);
+      const now = ctx.currentTime;
+      out.gain.cancelScheduledValues(now);
+      out.gain.setValueAtTime(out.gain.value, now);
+      out.gain.linearRampToValueAtTime(0, now + 0.3);
+      setTimeout(() => out.disconnect(), 400);
     };
   }
 
-  /** What the boot sounds did last time, for the ?ton diagnostics line. */
+  /** An old wooden door thrown open: a short creak, then it bangs against the wall. */
+  door() {
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus || !this.noise) return;
+    const ctx = this.ctx;
+    const t = ctx.currentTime + 0.01;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const band = ctx.createBiquadFilter();
+    band.type = 'bandpass';
+    band.Q.value = 9;
+    band.frequency.setValueAtTime(700, t);
+    band.frequency.exponentialRampToValueAtTime(1800, t + 0.38);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.9, t + 0.05);
+    env.gain.setValueAtTime(0.9, t + 0.3);
+    env.gain.linearRampToValueAtTime(0, t + 0.42);
+    src.connect(band).connect(env).connect(this.sfxBus);
+    src.start(t);
+    src.stop(t + 0.45);
+    // The creak itself: a hinge squeak that bends upward.
+    this.tone(this.sfxBus, 260, t + 0.02, 0.36, 'sawtooth', 0.05, 520);
+    // Bang against the wall.
+    this.tone(this.sfxBus, 140, t + 0.44, 0.22, 'sine', 0.6, 45);
+  }
+
+  /** What the intro sounds did last time, for the ?ton diagnostics line. */
   readonly debug: Record<string, string> = {};
   private note(key: string, value: string) {
     this.debug[key] = value;
@@ -246,24 +286,6 @@ class ChipSound {
   }
   get debugState() {
     return this.ctx ? `${this.ctx.state}, ${this.ctx.sampleRate} Hz, t=${this.ctx.currentTime.toFixed(1)}` : 'nicht gestartet';
-  }
-
-  private title: SidPlayer | null = null;
-
-  /** The C64-style title-screen tune (see sid.ts); the hub has its own. */
-  startTitleMusic() {
-    if (this.title) return;
-    if (!this.musicEnabled) return void this.note('title', 'aus (Musik ausgeschaltet)');
-    if (!this.ctx || !this.musicBus || !this.noise) return void this.note('title', 'Audio nicht gestartet');
-    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
-    this.title = new SidPlayer(this.ctx, this.musicBus, this.noise);
-    this.title.start();
-    this.note('title', `läuft (Audio ${this.ctx.state})`);
-  }
-
-  stopTitleMusic() {
-    this.title?.stop();
-    this.title = null;
   }
 
   startMusic() {
