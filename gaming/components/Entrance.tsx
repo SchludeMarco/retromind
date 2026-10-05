@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { chip } from '../lib/chiptune';
+import { chip, DOOR_SWING } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
@@ -84,11 +84,16 @@ export const Entrance: React.FC<{
       setTimeout(onEnter, 300);
       return;
     }
-    // Door flies open (0.5 s), the logo shines out of the doorway, the
-    // picture fades to white, then the hub.
+    // The door creaks open (1.2 s), the logo shines out of the doorway, the
+    // picture fades to white, then the hub. While you walk up to the door a
+    // whine grows louder until everything is white.
     chip.door();
-    setTimeout(() => chip.chime(), 650);
-    setTimeout(onEnter, 2300);
+    const stopWhine = chip.whine(3);
+    setTimeout(() => chip.chime(), DOOR_SWING * 1000 + 150);
+    setTimeout(() => {
+      stopWhine();
+      onEnter();
+    }, 3100);
   };
 
   return (

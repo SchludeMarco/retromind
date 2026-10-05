@@ -139,7 +139,8 @@ Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach. Dazu hörst
 du leise die Straße: eine murmelnde, ab und zu rufende Menschenmenge,
 Polizeisirenen in der Ferne und manchmal eine Rauferei um die Ecke
 (`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
-den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) reißt die Tür knarzend auf, das Logo leuchtet aus dem Eingang,
+den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
+Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
 synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle

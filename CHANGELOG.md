@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Tür knarzt länger, dazu ein Fiepen** (2026-10-05, PR #NNN): Nach
+  „ENTER“ geht die Tür jetzt langsamer auf und knarzt dabei gut eine Sekunde
+  lang, erst stockend, dann immer schneller, bis sie gegen die Wand knallt.
+  Während du auf den Eingang zugehst, wird ein hohes elektrisches Fiepen der
+  alten Automaten immer lauter, bis das Bild weiß wird.
+
 - **Gaming: ENTER-Knopf im Look der Tür, mit Knarzen** (2026-10-05, PR #111):
   Am Eingang steht jetzt „ENTER“ statt „Eintreten“. Der Knopf sieht aus wie
   die EINGANG-Tür selbst: graues Metall mit Rollladen, Nieten, weißer

@@ -23,6 +23,9 @@ export function noteFreq(note: string): number {
   return 440 * Math.pow(2, (semitone - 69) / 12);
 }
 
+/** How long the door takes to swing open; Entrance.tsx and the CSS follow it. */
+export const DOOR_SWING = 1.2;
+
 // Music bus level; at 0.32 phones barely played the tunes audibly.
 const MUSIC_LEVEL = 1.4;
 
@@ -199,11 +202,45 @@ class ChipSound {
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
     const ctx = this.ctx;
     const t = ctx.currentTime + 0.01;
-    // The rusty hinge creaks while the door swings (0.5 s), it bangs against
-    // the wall, and creaks a little more as it swings back.
-    this.playCreak(this.creakBuffer(0.55, 1), t, 0.85);
-    this.tone(this.sfxBus, 140, t + 0.5, 0.22, 'sine', 0.6, 45);
-    this.playCreak(this.creakBuffer(0.35, 0.6), t + 0.62, 0.45);
+    // The rusty hinge creaks the whole time the door swings open (1.2 s, it
+    // starts slow and gets faster), the door bangs against the wall and
+    // creaks once more as it swings back.
+    this.playCreak(this.creakBuffer(DOOR_SWING, 1), t, 0.85);
+    this.tone(this.sfxBus, 140, t + DOOR_SWING, 0.22, 'sine', 0.6, 45);
+    this.playCreak(this.creakBuffer(0.5, 0.6), t + DOOR_SWING + 0.1, 0.45);
+  }
+
+  /**
+   * A high electric whine (old arcade cabinets and neon) that gets louder
+   * and a little higher while you walk up to the door. Returns a stop
+   * function for when the picture has gone white.
+   */
+  whine(dur: number): () => void {
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return () => {};
+    const ctx = this.ctx;
+    const t = ctx.currentTime + 0.01;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0.0008, t);
+    env.gain.exponentialRampToValueAtTime(0.11, t + dur);
+    env.connect(this.sfxBus);
+    // Two slightly detuned tones beat against each other like a buzzing transformer.
+    const oscs = [3150, 3163].map((f) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, t);
+      osc.frequency.linearRampToValueAtTime(f * 1.12, t + dur);
+      osc.connect(env);
+      osc.start(t);
+      osc.stop(t + dur + 1);
+      return osc;
+    });
+    return () => {
+      const now = ctx.currentTime;
+      env.gain.cancelScheduledValues(now);
+      env.gain.setValueAtTime(env.gain.value, now);
+      env.gain.linearRampToValueAtTime(0, now + 0.08);
+      oscs.forEach((o) => o.stop(now + 0.1));
+    };
   }
 
   private playCreak(buffer: AudioBuffer, t: number, gain: number) {
@@ -239,7 +276,7 @@ class ChipSound {
     ];
     for (let time = 0; time < dur; ) {
       const p = time / dur;
-      const amp = Math.sin(Math.PI * Math.min(1, p * 1.25 + 0.05)) * (0.55 + Math.random() * 0.45);
+      const amp = Math.min(1, 0.45 + p) * Math.min(1, (1 - p) * 12) * (0.55 + Math.random() * 0.45);
       const i0 = Math.floor(time * sr);
       for (const [f, decay] of modes) {
         const freq = f * pitch * (0.92 + 0.22 * p);
@@ -248,8 +285,9 @@ class ChipSound {
           d[i0 + k] += amp * Math.exp(-k / (decay * sr)) * Math.sin((2 * Math.PI * freq * k) / sr);
         }
       }
-      // Knocks per second: slow at first, fast mid-swing, slowing again.
-      const rate = 28 + 75 * Math.sin(Math.PI * p) + (Math.random() - 0.5) * 18;
+      // Knocks per second: single slow knocks at first, then faster and
+      // faster as the door picks up speed.
+      const rate = 14 + 85 * Math.pow(p, 1.4) + (Math.random() - 0.5) * 12;
       time += 1 / Math.max(15, rate);
     }
     let peak = 0;
