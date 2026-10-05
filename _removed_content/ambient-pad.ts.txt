@@ -1,0 +1,88 @@
+// Removed 2026-10-05: the quiet pad with music-box bells that played in front
+// of the Gaming entrance (gaming/lib/chiptune.ts), replaced by the street
+// ambience in gaming/lib/street.ts.
+
+// The quiet piece at the door: Am9, Fmaj7, Cmaj7, G6, eight seconds each.
+const AMBIENT_LEVEL = 0.5;
+const AMBIENT_BAR = 8;
+const AMBIENT_CHORDS = [
+  ['A3', 'C4', 'E4', 'B4'],
+  ['F3', 'A3', 'C4', 'E4'],
+  ['C4', 'E4', 'G4', 'B4'],
+  ['G3', 'B3', 'D4', 'E4'],
+];
+const AMBIENT_BELLS = ['E5', 'G5', 'A5', 'C6', 'D6', 'E6'];
+
+  /**
+   * The quiet piece in front of the door: slow, soft chords with a few
+   * music-box notes on top, kept in the mids so phone speakers carry it.
+   * It may be scheduled while the browser still holds audio back (no tap
+   * yet); it then simply starts with the first touch. Returns a stop function.
+   */
+  ambient(): () => void {
+    if (!this.ctx || !this.master) return this.note('ambient', 'aus (kein Web Audio)');
+    const ctx = this.ctx;
+    const out = ctx.createGain();
+    const warm = ctx.createBiquadFilter();
+    warm.type = 'lowpass';
+    warm.frequency.value = 1500;
+    warm.connect(out).connect(this.master);
+    out.gain.setValueAtTime(0, ctx.currentTime);
+    out.gain.linearRampToValueAtTime(AMBIENT_LEVEL, ctx.currentTime + 3);
+
+    const pad = (note: string, t: number, len: number) => {
+      const f = noteFreq(note);
+      for (const [wave, detune, g] of [['triangle', 1, 0.05], ['sine', 1.004, 0.04]] as const) {
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = wave;
+        osc.frequency.value = f * detune;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(g, t + 2.5);
+        env.gain.setValueAtTime(g, t + len);
+        env.gain.linearRampToValueAtTime(0, t + len + 2.5);
+        osc.connect(env).connect(warm);
+        osc.start(t);
+        osc.stop(t + len + 2.6);
+      }
+    };
+    const bell = (note: string, t: number) => {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = noteFreq(note);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.05, t + 0.01);
+      env.gain.exponentialRampToValueAtTime(0.0005, t + 2.4);
+      osc.connect(env).connect(out);
+      osc.start(t);
+      osc.stop(t + 2.5);
+    };
+
+    let next = ctx.currentTime + 0.1;
+    let bar = 0;
+    const queue = () => {
+      // Only ever a bar ahead; while audio is held back the clock stands still.
+      while (next < ctx.currentTime + 1) {
+        const chord = AMBIENT_CHORDS[bar % AMBIENT_CHORDS.length];
+        chord.forEach((n) => pad(n, next, AMBIENT_BAR));
+        for (let k = 0; k < 3; k++) {
+          if (Math.random() < 0.6) bell(AMBIENT_BELLS[Math.floor(Math.random() * AMBIENT_BELLS.length)], next + 1 + k * 2.2);
+        }
+        next += AMBIENT_BAR;
+        bar++;
+      }
+    };
+    queue();
+    const timer = window.setInterval(queue, 400);
+    this.note('ambient', `läuft (Audio: ${ctx.state})`);
+    return () => {
+      window.clearInterval(timer);
+      const now = ctx.currentTime;
+      out.gain.cancelScheduledValues(now);
+      out.gain.setValueAtTime(out.gain.value, now);
+      out.gain.linearRampToValueAtTime(0, now + 0.3);
+      setTimeout(() => out.disconnect(), 400);
+    };
+  }
+

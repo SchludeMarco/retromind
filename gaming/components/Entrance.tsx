@@ -3,12 +3,12 @@ import { chip } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
-// the entrance and a quiet piece playing. "Eintreten" throws the door open,
+// the entrance and the street murmuring. "Eintreten" throws the door open,
 // the logo shines out of the doorway, the picture goes white and the hub
 // follows.
 //
 // Browsers only allow sound after the visitor has touched the page, so the
-// quiet piece is queued right away and starts with the first tap or key
+// street sound is queued right away and starts with the first tap or key
 // anywhere (installed apps and often-visited sites may play it at once).
 
 // Open the app with ?ton to see what the intro sounds did on this device.
@@ -52,7 +52,7 @@ export const Entrance: React.FC<{
   const [soundWaiting, setSoundWaiting] = useState(false);
   const stopAmbient = useRef<() => void>(() => {});
 
-  // Queue the quiet piece now; the first touch or key anywhere lets it play.
+  // Queue the street sound now; the first touch or key anywhere lets it play.
   useEffect(() => {
     chip.unlock();
     if (!music) {
@@ -111,7 +111,7 @@ export const Entrance: React.FC<{
           {muted
             ? 'Da drin warten die alten Games. Der Ton ist aus.'
             : soundWaiting
-              ? 'Psst … einmal irgendwo hintippen, dann läuft leise Musik.'
+              ? 'Psst … einmal irgendwo hintippen, dann hörst du die Straße.'
               : 'Da drin warten die alten Games. Trau dich, Player 1.'}
         </p>
         <div className="entrance-row">
