@@ -173,8 +173,8 @@ Katalog, Kisten, Stash, Trophäen und Chillen), dazu die Pixel-Looks „Arcade�
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
-**Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: drei ruhige
-Minispiele zum Entspannen, ohne Zeitdruck und per Touch spielbar: Pixel-Memory, Schiebepuzzle und Senso
+**Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: die drei ruhigen
+Minispiele klappen direkt darunter auf, zum Entspannen, ohne Zeitdruck und per Touch spielbar: Pixel-Memory, Schiebepuzzle und Senso
 ([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
 Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den

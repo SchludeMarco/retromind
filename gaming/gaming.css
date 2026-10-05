@@ -1852,6 +1852,13 @@ a {
 }
 
 /* --- Chill-Ecke: calm mini games --- */
+.chill-panel {
+  flex: 1 1 100%;
+  margin-bottom: 8px;
+}
+.chill-panel .archive-count {
+  margin-top: 0;
+}
 .px-btn.big.chill-btn,
 .px-btn.big.chill-btn[aria-pressed='true'] {
   background: var(--a2);

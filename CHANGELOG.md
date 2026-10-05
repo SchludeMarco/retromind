@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Minispiele erscheinen direkt unter dem Chill-Ecke-Knopf**
+  (2026-10-05, PR #106): Nach einem Druck auf „Chill-Ecke · Minispiele“
+  klappen die drei Spiele gleich darunter auf, statt weiter unten auf der
+  Seite. Auch über „Chillen“ unten in der Leiste springt die Seite direkt
+  dorthin.
+
 - **Gaming: Vor der Halle hörst du jetzt die Straße** (2026-10-05, PR #105):
   Statt der ruhigen Musik am Eingang murmelt leise eine Menschenmenge, ab und
   zu ruft jemand. Alle halbe Minute fährt in der Ferne ein Polizeiwagen mit
