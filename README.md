@@ -133,8 +133,9 @@ kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
-mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: eine wackelnde, flackernde
-Glühbirne vor einer kaputten, mit Graffiti beschmierten Holztür, dazu leise
+mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: die verranzte „Arcade Hallen“
+(Marcos Bild, `public/gaming/arcade-hallen.webp`) mit flackernder
+Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach, dazu leise
 Musik (`gaming/components/Entrance.tsx`; der Browser spielt sie ab der ersten
 Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem

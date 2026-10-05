@@ -20,3 +20,7 @@ gebaut oder ausgeliefert.
   Eingang mit Graffiti-Tür in `gaming/components/Entrance.tsx`). Der
   Abspiel-Code für Diesel und Titelmelodie steht in `gaming/lib/chiptune.ts`
   vor PR #99 in der Git-Historie.
+- `Entrance-graffiti-tuer.tsx.txt`, `entrance-graffiti-tuer.css.txt`: der
+  Gaming-Eingang mit gezeichneter, kaputter Graffiti-Holztür vor der
+  Betonwand (entfernt am 2026-10-05, ersetzt durch Marcos Bild der
+  „Arcade Hallen“).
