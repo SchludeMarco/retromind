@@ -6,6 +6,11 @@ import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
 
+function formatBirthDate(iso: string): string {
+  const [y, m, d] = iso.split('-');
+  return d && m && y ? `${d}.${m}.${y}` : iso;
+}
+
 export const SettingsModal: React.FC<{
   fontScale: number;
   onFontScaleChange: (n: number) => void;
@@ -17,6 +22,9 @@ export const SettingsModal: React.FC<{
   spotifyAllowed: boolean;
   onOpenWhatsNew: () => void;
   hasUnseenNews: boolean;
+  userName: string;
+  userBirthDate: string;
+  onEditProfile: () => void;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
@@ -24,6 +32,7 @@ export const SettingsModal: React.FC<{
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, hasUnseenNews,
+  userName, userBirthDate, onEditProfile,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -39,6 +48,20 @@ export const SettingsModal: React.FC<{
       <h3 className="text-3xl font-bold mb-5">Einstellungen</h3>
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Deine Angaben</span>
+        <p className="text-sm mb-3">
+          {userName || 'Ohne Namen'}
+          {userBirthDate && <>, geboren am {formatBirthDate(userBirthDate)}</>}
+        </p>
+        <button
+          onClick={onEditProfile}
+          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          ✏️ Name und Geburtsdatum ändern
+        </button>
+      </div>
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Design &amp; Atmosphäre</span>

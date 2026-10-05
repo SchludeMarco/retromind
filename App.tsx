@@ -81,6 +81,9 @@ const App: React.FC = () => {
   // Gates every phase behind identity verification — reset on every fresh
   // load (like showSplash) so the app re-verifies each time it's opened.
   const [verified, setVerified] = useState(false);
+  // Set once the person asks to change name/birthday, so the Google shortcut
+  // below doesn't skip the form they just opened.
+  const [profileEditRequested, setProfileEditRequested] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
@@ -451,6 +454,25 @@ const App: React.FC = () => {
     setVerified(true);
   };
 
+  // Signed in with Google and both name and birthday are known (from this
+  // device, a Drive backup or the Google account): no need to ask again.
+  useEffect(() => {
+    if (verified || profileEditRequested || googleAuth.status !== 'signed_in') return;
+    const name = (user.name || googleAuth.user?.name || '').trim();
+    const birthDate = user.birthDate || googleAuth.birthdayHint || '';
+    if (!name || !birthDate) return;
+    setUser((prev) => ({ ...prev, name, birthDate }));
+    setVerified(true);
+    setToast(`Willkommen, ${name.split(' ')[0]}!`);
+  }, [verified, profileEditRequested, googleAuth.status, googleAuth.user, googleAuth.birthdayHint, user.name, user.birthDate]);
+
+  const handleEditProfile = () => {
+    playSFX('click');
+    setIsSettingsOpen(false);
+    setProfileEditRequested(true);
+    setVerified(false);
+  };
+
   // --- Google account ---
   const handleGoogleSignIn = () => {
     playSFX('click');
@@ -582,6 +604,9 @@ const App: React.FC = () => {
               spotifyAllowed={spotify.allowed}
               onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
               hasUnseenNews={unseenNews}
+              userName={user.name}
+              userBirthDate={user.birthDate}
+              onEditProfile={handleEditProfile}
               onDismiss={() => setIsSettingsOpen(false)}
               onCloseClick={closeSettingsWithSfx}
             />

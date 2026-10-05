@@ -36,6 +36,18 @@ export function useGoogleAuth() {
     if (getGoogleClientId() && hasGoogleOptIn()) preloadGoogleIdentityServices().catch(() => {});
   }, []);
 
+  // A login restored from the stored token knows the name already; the
+  // birthday is fetched again with that token (a plain API call, no popup)
+  // instead of being kept in the session store.
+  useEffect(() => {
+    const token = restored?.token;
+    if (token && token.expiresAt - Date.now() > 60_000) {
+      fetchGoogleBirthday(token.accessToken).then((b) => {
+        if (tokenRef.current === token) setBirthdayHint(b);
+      });
+    }
+  }, [restored]);
+
   // Never renews in the background (that would pop up a Google window): an
   // expired token means signed out until the next tap, the opt-in remains.
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
