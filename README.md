@@ -198,6 +198,10 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   (`?mute=1/0`). Neue Module nutzen denselben Schalter. Liegt die App im
   Hintergrund (andere App oder anderer Tab vorne), gilt sie automatisch als
   stumm und spielt beim Zurückkehren weiter.
+- **„Nach oben“-Knopf** ([`hooks/useScrolledDown.ts`](hooks/useScrolledDown.ts)) –
+  unten links, erscheint erst nach etwas Scrollen und bringt sanft zurück an den
+  Seitenanfang. In der Zeitreise (alle Designs) und in der Gaming-Halle; er
+  sitzt knapp über der unteren Leiste und verdeckt keine anderen Knöpfe.
 - **Eine Google-Anmeldung** ([`lib/googleLogin.ts`](lib/googleLogin.ts)) –
   freiwillig, gilt für alle Module, öffnet nie ungefragt ein Fenster.
 - **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud-Sicherung im

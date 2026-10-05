@@ -20,6 +20,7 @@ import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
 import { IMPRINT_URL, PRIVACY_URL } from '../lib/privacy';
+import { scrollToTop, useScrolledDown } from '../hooks/useScrolledDown';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests';
 
@@ -50,6 +51,7 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
 );
 
 export const GamingApp: React.FC = () => {
+  const scrolledDown = useScrolledDown();
   const reducedMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
   const [screen, setScreen] = useState<'power' | 'hub'>('power');
   // After the door the hub comes up out of the white picture.
@@ -751,6 +753,21 @@ export const GamingApp: React.FC = () => {
 
       {screen === 'hub' && (
         <>
+          <button
+            className={`px-btn to-top${scrolledDown ? ' shown' : ''}`}
+            onClick={() => {
+              chip.play('blip');
+              scrollToTop();
+            }}
+            aria-label="Nach oben"
+            title="Nach oben"
+            aria-hidden={!scrolledDown}
+            tabIndex={scrolledDown ? 0 : -1}
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 1l7 7h-4v7H5V8H1z" />
+            </svg>
+          </button>
           <button
             className="px-btn big guru-fab"
             onClick={() => {
