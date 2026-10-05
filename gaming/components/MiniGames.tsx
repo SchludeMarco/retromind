@@ -1,12 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { chip } from '../lib/chiptune';
+import { Done, loadBests, MiniGameId, saveBest, shuffle } from './minigames/shared';
+import { Sudoku, sudokuBest } from './minigames/Sudoku';
+import { Blocks, blocksBest } from './minigames/Blocks';
+import { Pinball, pinballBest } from './minigames/Pinball';
 
-// The "Chill-Ecke": three small, calm games to unwind between the history
-// lessons. No timers, no game over screens that punish; just tap and relax.
-// Everything is drawn with buttons, so touch, mouse, keyboard and gamepad all
-// work, and sounds go through the chip (which follows lib/mute).
+// The "Chill-Ecke": small, calm games to unwind between the history
+// lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
+// blocks and pinball have their own files in ./minigames. Everything works by
+// touch, mouse and keyboard, and sounds go through the chip (which follows
+// lib/mute).
 
-export type MiniGameId = 'memory' | 'puzzle' | 'senso';
+export type { MiniGameId };
 
 export const MINI_GAMES: { id: MiniGameId; title: string; icon: string; text: string; best: (n: number) => string }[] = [
   {
@@ -30,53 +35,28 @@ export const MINI_GAMES: { id: MiniGameId; title: string; icon: string; text: st
     text: 'Melodie anhören und nachtippen. Jede Runde kommt ein Ton dazu.',
     best: (n) => `Rekord: Runde ${n}`,
   },
+  {
+    id: 'sudoku',
+    title: 'SUDOKU',
+    icon: '🔢',
+    text: 'Die Zahlen 1 bis 9 in jede Zeile, Spalte und jedes Kästchen. Jedes Rätsel ist neu.',
+    best: sudokuBest,
+  },
+  {
+    id: 'blocks',
+    title: 'BLOCKSTAPLER',
+    icon: '🧱',
+    text: 'Fallende Blöcke zu vollen Reihen stapeln, wie beim Game-Boy-Klassiker. Startet gemütlich.',
+    best: blocksBest,
+  },
+  {
+    id: 'pinball',
+    title: 'FLIPPER',
+    icon: '🎱',
+    text: 'Kleiner Flippertisch mit drei Kugeln. Linke und rechte Bildschirmhälfte bewegen die Flipper.',
+    best: pinballBest,
+  },
 ];
-
-const KEY = 'retromind.gaming.mini.v1';
-
-type Bests = Partial<Record<MiniGameId, number>>;
-
-function loadBests(): Bests {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) || '{}') ?? {};
-  } catch {
-    return {};
-  }
-}
-
-/** Saves a result if it beats the old one; returns true for a new record. */
-function saveBest(id: MiniGameId, value: number, higherIsBetter: boolean): boolean {
-  const bests = loadBests();
-  const old = bests[id];
-  const better = old === undefined || (higherIsBetter ? value > old : value < old);
-  if (!better) return false;
-  bests[id] = value;
-  try {
-    localStorage.setItem(KEY, JSON.stringify(bests));
-  } catch {
-    /* storage unavailable — the record only lives for this visit */
-  }
-  return true;
-}
-
-function shuffle<T>(list: T[]): T[] {
-  const a = [...list];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-const Done: React.FC<{ text: string; record: boolean; onAgain: () => void }> = ({ text, record, onAgain }) => (
-  <div className="mini-done" role="status">
-    <p className="pixel-font">{record ? '★ NEUER REKORD! ★' : 'GESCHAFFT!'}</p>
-    <p>{text}</p>
-    <button className="px-btn big" onClick={onAgain} data-nav autoFocus>
-      NOCHMAL
-    </button>
-  </div>
-);
 
 /* ---------------------------------------------------------------- Memory */
 
@@ -359,7 +339,7 @@ export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void }> = ({
   const bests = loadBests();
   return (
     <>
-      <p className="dim archive-count">Kurz mal abschalten: drei ruhige Minispiele, ohne Zeitdruck und ohne Werbung.</p>
+      <p className="dim archive-count">Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.</p>
       <div className="grid mini-list" style={{ marginTop: 12 }}>
         {MINI_GAMES.map((g) => (
           <button key={g.id} className="panel mini-card" onClick={() => onPick(g.id)} data-nav>
@@ -394,7 +374,19 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
         <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
           ✕
         </button>
-        {id === 'memory' ? <Memory onWin={onWin} /> : id === 'puzzle' ? <Puzzle onWin={onWin} /> : <Senso onWin={onWin} />}
+        {id === 'memory' ? (
+          <Memory onWin={onWin} />
+        ) : id === 'puzzle' ? (
+          <Puzzle onWin={onWin} />
+        ) : id === 'senso' ? (
+          <Senso onWin={onWin} />
+        ) : id === 'sudoku' ? (
+          <Sudoku onWin={onWin} />
+        ) : id === 'blocks' ? (
+          <Blocks onWin={onWin} />
+        ) : (
+          <Pinball onWin={onWin} />
+        )}
       </div>
     </div>
   );

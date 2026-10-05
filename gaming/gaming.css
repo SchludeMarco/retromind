@@ -2161,3 +2161,110 @@ a {
 .arcade[data-palette='modul'] .quest-tag {
   color: #fff;
 }
+
+/* Sudoku, falling blocks and pinball in the Chill-Ecke. */
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: min(100%, 420px);
+  margin: 0 auto;
+  border: 3px solid var(--fg);
+  background: var(--panel);
+}
+.sudoku-cell {
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+  font: 700 clamp(16px, 5vw, 22px) / 1 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--a2);
+  background: var(--panel);
+  border: none;
+  border-right: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+  cursor: pointer;
+}
+.sudoku-cell.given {
+  color: var(--fg);
+}
+.sudoku-cell.edge-r {
+  border-right: 3px solid var(--fg);
+}
+.sudoku-cell.edge-b {
+  border-bottom: 3px solid var(--fg);
+}
+.sudoku-cell.peer {
+  background: var(--bg2);
+}
+.sudoku-cell.same {
+  background: color-mix(in srgb, var(--a3) 35%, var(--panel));
+}
+.sudoku-cell.sel {
+  background: color-mix(in srgb, var(--a2) 35%, var(--panel));
+  outline: none;
+}
+.sudoku-cell.clash {
+  color: #ef4444;
+}
+.sudoku-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: min(100%, 420px);
+  margin: 14px auto 0;
+}
+.sudoku-pad .px-btn,
+.game-pad .px-btn {
+  font-size: 16px;
+  padding: 12px 0;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.blocks-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(100%, 300px);
+  margin: 0 auto;
+}
+.blocks-next {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+}
+.blocks-next canvas {
+  border: 1px solid var(--dim);
+}
+.blocks-board,
+.pinball-table {
+  display: block;
+  margin: 0 auto;
+  touch-action: none;
+  border: 3px solid var(--dim);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.blocks-board {
+  width: min(100%, 220px, 46vh);
+  height: auto;
+}
+.pinball-table {
+  width: min(100%, 320px, 56vh * 320 / 520);
+  height: auto;
+}
+.game-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: min(100%, 320px);
+  margin: 12px auto 0;
+}
+.pinball-pad {
+  grid-template-columns: 1fr auto 1fr;
+}
+.pinball-pad .px-btn {
+  font-size: 12px;
+  padding: 16px 8px;
+}
