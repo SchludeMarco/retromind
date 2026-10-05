@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Start-Knopf heißt „Go back...“, steht schräg und blitzt** (2026-10-05,
-  PR #PRNR): Auf dem Willkommens-Bildschirm steht jetzt „Go back...“ statt
+  PR #116): Auf dem Willkommens-Bildschirm steht jetzt „Go back...“ statt
   „Let's go!“. Der Knopf ist leicht schräg gestellt, und alle paar Sekunden
   huscht ein Lichtblitz über ihn. Das gilt in allen drei Designs.
 
