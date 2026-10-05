@@ -186,6 +186,8 @@ export const Entrance: React.FC<{
     setEntering(true);
     chip.unlock();
     stopAmbient.current();
+    // Inside the hall a heavy metal riff kicks in before the hub tune.
+    chip.queueMetalIntro();
     if (reducedMotion) {
       chip.chime();
       setTimeout(onEnter, 300);
