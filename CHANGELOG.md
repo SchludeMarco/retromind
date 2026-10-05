@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Quests und Preis-Tresen** (2026-10-05, PR #106): Unter dem neuen
+  Reiter „Quests“ warten jeden Tag drei kleine Aufgaben in der Halle, z. B.
+  drei neue Games entdecken, zweimal eine Münze einwerfen oder ein Minispiel
+  schaffen, dazu eine größere Quest pro Woche. Jede geschaffte Quest bringt
+  Spielmarken. Die tauschst du am Preis-Tresen gegen neue Designs
+  (Vaporwave, Virtual Boy) und neue Hallen-Musik (Weltraum, Bosskampf) ein.
+
 - **Gaming: Minispiele erscheinen direkt unter dem Chill-Ecke-Knopf**
   (2026-10-05, PR #106): Nach einem Druck auf „Chill-Ecke · Minispiele“
   klappen die drei Spiele gleich darunter auf, statt weiter unten auf der

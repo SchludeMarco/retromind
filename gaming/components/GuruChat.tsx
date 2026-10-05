@@ -27,7 +27,7 @@ const Typewriter: React.FC<{ text: string }> = ({ text }) => {
   );
 };
 
-export const GuruChat: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+export const GuruChat: React.FC<{ onClose: () => void; onAsk?: () => void }> = ({ onClose, onAsk }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -42,6 +42,7 @@ export const GuruChat: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const text = input.trim();
     if (!text || busy) return;
     chip.play('select');
+    onAsk?.();
     const next: ChatMessage[] = [...messages, { role: 'user', text }];
     setMessages(next);
     setInput('');
