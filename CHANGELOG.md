@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Kein festes „Back to Back“ mehr zum Auftakt** (2026-10-05, PR #PRNUM):
+- **Kein festes „Back to Back“ mehr zum Auftakt** (2026-10-05, PR #121):
   Nach dem Gong startet in der Zeitreise jetzt sofort die Musik deiner
   Dekade, schon das erste Lied ist zufällig gewählt. Das Pretty-Maids-Stück
   läuft nicht mehr bei jedem Besuch vorweg.
