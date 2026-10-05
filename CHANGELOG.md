@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Mit Google angemeldet: keine Abfrage von Name und Geburtstag mehr**
+  (2026-10-05, PR #122): Wer in der Zeitreise mit Google angemeldet ist,
+  landet direkt in der App, sobald Name und Geburtsdatum bekannt sind, aus
+  dem Google-Konto, der Drive-Sicherung oder von einem früheren Besuch. Statt
+  des Formulars gibt es ein kurzes „Willkommen“. Der Geburtstag kommt jetzt
+  auch nach einer wiederhergestellten Anmeldung aus dem Google-Konto. Ändern
+  lassen sich beide Angaben in den Einstellungen unter „Deine Angaben“.
+
 - **Kein festes „Back to Back“ mehr zum Auftakt** (2026-10-05, PR #121):
   Nach dem Gong startet in der Zeitreise jetzt sofort die Musik deiner
   Dekade, schon das erste Lied ist zufällig gewählt. Das Pretty-Maids-Stück
