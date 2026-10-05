@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Chill-Ecke oben als eigener Knopf** (2026-10-05, PR #104): Die
+  Minispiele waren schwer zu finden. Jetzt steht direkt unter „Insert Coin“
+  ein lila Knopf „Chill-Ecke · Minispiele“, in jedem Design. Ein zweiter Druck
+  führt zurück zum Katalog.
+
 - **Gaming: Du stehst jetzt wirklich in der Spielhalle** (2026-10-05,
   PR #103): Hinter dem Katalog siehst du Marcos Bild vom Innenraum, einen Gang
   zwischen alten Spielautomaten mit Neonröhren und buntem 90er-Teppich. Etwas
