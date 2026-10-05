@@ -807,6 +807,38 @@ a {
   padding: 4px 8px;
 }
 
+/* --- Spotify: off-screen player and the one-time question in the hall --- */
+.spotify-host {
+  position: absolute;
+  left: -100vw;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.spotify-ask {
+  position: fixed;
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 700;
+  width: min(440px, calc(100vw - 32px));
+  background: var(--bg);
+  border: 4px solid var(--a3);
+  padding: 12px 16px;
+  font-size: 16px;
+}
+.spotify-ask p {
+  margin: 0 0 8px;
+}
+.spotify-ask .pixel-font {
+  font-size: 11px;
+  color: var(--a3);
+}
+.spotify-ask .dim {
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
 /* --- Achievement toast --- */
 .toast {
   position: fixed;
@@ -1594,6 +1626,17 @@ a {
   border-bottom: 4px solid var(--a3);
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.arcade[data-palette='modul'] .spotify-ask {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom: 4px solid var(--a3);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.arcade[data-palette='modul'] .spotify-ask .pixel-font {
+  font-size: 13px;
+  color: #b45309;
 }
 .arcade[data-palette='modul'] .toast .pixel-font {
   font-size: 13px;

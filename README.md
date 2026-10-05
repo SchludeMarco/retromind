@@ -151,7 +151,14 @@ Polizeisirenen in der Ferne und manchmal eine Rauferei um die Ecke
 den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
-synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Drinnen liegt
+synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Hast du
+Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
+80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
+Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)).
+Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
+Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
+zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
+gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
 (`public/gaming/arcade-innen.webp`). Dazu
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
@@ -220,7 +227,7 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
   Bilder, Vorschaubilder und Klänge von fremden Servern holt
   [`api/proxy.js`](api/proxy.js) (nur erlaubte Adressen, Vercel-CDN-Cache), der
-  Browser spricht nie direkt mit ihnen. Spotify (Zeitreise) und YouTube (Gaming)
+  Browser spricht nie direkt mit ihnen. Spotify (Zeitreise und Gaming-Halle) und YouTube (Gaming)
   laden erst nach Zustimmung, widerrufbar in den Einstellungen; Googles
   Anmelde-Skript lädt erst, wenn jemand zum Anmelde-Knopf greift.
   [Datenschutzerklärung](public/datenschutz.html) und

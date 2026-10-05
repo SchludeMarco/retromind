@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **80er-Heavy-Metal von Spotify in der Gaming-Halle** (2026-10-05, PR #PRNUM):
+  Sobald du die Spielhalle betrittst, läuft echter Heavy Metal der 80er von
+  Spotify (Playlist „The 100 Best Metal Songs of 80s“) statt der
+  Chiptune-Musik. Beim ersten Besuch fragt die Halle einmal, ob Spotify laden
+  darf, denn die Gaming-Adresse merkt sich das getrennt von der Zeitreise.
+  In den Einstellungen gibt es dafür „Hallenmusik“: Spotify-Metal oder wie
+  bisher die Chiptune-Stücke. Ohne Spotify-Login spielt Spotify nur kurze
+  Vorschauen. Der Lautsprecher-Knopf, YouTube-Videos und das Wechseln in
+  eine andere App pausieren die Musik.
+
 - **Musik setzt sofort mit der Startseite ein** (2026-10-05, PR #118): Bisher
   kam „Back to Back“ erst einige Sekunden nach dem Gong, manchmal noch später.
   Jetzt startet die Musik genau in dem Moment, in dem die Startseite durch das
