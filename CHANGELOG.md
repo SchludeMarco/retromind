@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming: Tür knarzt länger, dazu ein Fiepen** (2026-10-05, PR #NNN): Nach
+- **Gaming: Tür knarzt länger, dazu ein Fiepen** (2026-10-05, PR #112): Nach
   „ENTER“ geht die Tür jetzt langsamer auf und knarzt dabei gut eine Sekunde
   lang, erst stockend, dann immer schneller, bis sie gegen die Wand knallt.
   Während du auf den Eingang zugehst, wird ein hohes elektrisches Fiepen der
