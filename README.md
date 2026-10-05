@@ -173,9 +173,10 @@ Katalog, Kisten, Stash, Trophäen und Chillen), dazu die Pixel-Looks „Arcade�
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
-**Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: die drei ruhigen
-Minispiele klappen direkt darunter auf, zum Entspannen, ohne Zeitdruck und per Touch spielbar: Pixel-Memory, Schiebepuzzle und Senso
-([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx)). Töne
+**Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: die
+Minispiele klappen direkt darunter auf, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil und Flipper
+([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
+[`gaming/components/minigames/`](gaming/components/minigames/)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
 Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den
 Erfolg „Chillmodus“.
@@ -384,7 +385,8 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   vergessenes Spiel als Geheimtipp aufdeckt.
 
 - **Mehr Minispiele in der Chill-Ecke** (z. B. ein gemütliches Snake oder
-  Solitär) und die Bestwerte mit in die Cloud-Sicherung nehmen.
+  Solitär), Sudoku in mehreren Schwierigkeitsstufen und die Bestwerte mit in
+  die Cloud-Sicherung nehmen.
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
   gemeinsamer Anmeldung.
