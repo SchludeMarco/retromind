@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Spotify-Musik in zufälliger Reihenfolge** (2026-10-05, PR #PRNUM): Bisher
+- **Spotify-Musik in zufälliger Reihenfolge** (2026-10-05, PR #120): Bisher
   fing die Musik immer mit demselben Lied an und lief dann der Reihe nach,
   in der Zeitreise wie in der Gaming-Halle. Jetzt kommt jedes Mal ein
   zufälliges Lied aus der Playlist und danach wieder ein zufälliges, ohne dass
