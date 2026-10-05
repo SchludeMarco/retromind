@@ -140,8 +140,8 @@ Musik (`gaming/components/Entrance.tsx`; der Browser spielt sie ab der ersten
 Berührung). „Eintreten“ reißt die Tür auf, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
 synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Drinnen liegt
-hinter dem Katalog ein 3D-Gang zwischen Spielautomaten mit Neonröhren und
-buntem Teppich (`public/gaming/hall/`). Dazu
+hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
+(`public/gaming/arcade-innen.webp`). Dazu
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
@@ -365,9 +365,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
-- **Innenraum als echtes Bild:** Marcos Bild vom Innenraum ist zu klein
-  (168 × 300) und hat ein Wasserzeichen. Mit einer großen Version ohne
-  Wasserzeichen könnte die Halle so aussehen wie das Bild.
 - **Echtes Musikstück am Eingang:** Statt der synthetisierten ruhigen Musik
   vor der Tür ein lizenzfreies, aufgenommenes Stück (z. B. leiser Regen mit
   Synth-Flächen).
