@@ -448,6 +448,14 @@ export const GamingApp: React.FC = () => {
             <button className="px-btn big" onClick={insertCoin} data-nav aria-live="polite">
               {rolling ? `▶ ${rolling}` : '● INSERT COIN · ÜBERRASCH MICH!'}
             </button>
+            <button
+              className="px-btn big chill-btn"
+              aria-pressed={view === 'chill'}
+              onClick={() => switchView(view === 'chill' ? 'catalog' : 'chill')}
+              data-nav
+            >
+              {view === 'chill' ? '◄ ZURÜCK ZUM KATALOG' : '♥ CHILL-ECKE · MINISPIELE'}
+            </button>
             <form className="search" onSubmit={runSearch} role="search">
               <input
                 value={query}
@@ -471,9 +479,6 @@ export const GamingApp: React.FC = () => {
             </button>
             <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
               ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
-            </button>
-            <button className="px-btn view-tab" aria-pressed={view === 'chill'} onClick={() => switchView('chill')} data-nav>
-              CHILL-ECKE
             </button>
             {results && (
               <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>

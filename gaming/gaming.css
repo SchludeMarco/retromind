@@ -1852,6 +1852,24 @@ a {
 }
 
 /* --- Chill-Ecke: calm mini games --- */
+.px-btn.big.chill-btn,
+.px-btn.big.chill-btn[aria-pressed='true'] {
+  background: var(--a2);
+  color: var(--bg);
+}
+.px-btn.big.chill-btn:hover,
+.px-btn.big.chill-btn:focus-visible {
+  background: var(--a3);
+}
+.arcade[data-palette='modul'] .px-btn.big.chill-btn {
+  background: var(--a2);
+  color: #fff;
+  border-color: #5b21b6;
+}
+.arcade[data-palette='modul'] .px-btn.big.chill-btn:hover,
+.arcade[data-palette='modul'] .px-btn.big.chill-btn:focus-visible {
+  background: #6d28d9;
+}
 .arcade .mini-list {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
 }
