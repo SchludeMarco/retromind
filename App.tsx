@@ -55,7 +55,9 @@ const App: React.FC = () => {
 
   const currentAudioDecade = manualDecade || focusDecade;
   const { sfxRef, playSFX } = useAudioPlayer();
-  const spotify = useSpotifyBackground(currentAudioDecade);
+  // The welcome screen sits on top of everything on each fresh load; music waits until it is gone.
+  const [showSplash, setShowSplash] = useState(true);
+  const spotify = useSpotifyBackground(currentAudioDecade, !showSplash);
 
   const googleAuth = useGoogleAuth();
   const spotifyAuth = useSpotifyAuth();
@@ -72,7 +74,6 @@ const App: React.FC = () => {
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<GalleryItem | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [showSplash, setShowSplash] = useState(true);
   // Gates every phase behind identity verification — reset on every fresh
   // load (like showSplash) so the app re-verifies each time it's opened.
   const [verified, setVerified] = useState(false);
