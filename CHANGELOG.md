@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Ticken und Gong deutlich lauter** (2026-10-05, PR #PRNR): Das Ticken
+- **Ticken und Gong deutlich lauter** (2026-10-05, PR #115): Das Ticken
   der Kaminuhr auf dem Willkommens-Bildschirm ist jetzt etwa zehnmal so
   laut und klingt mehr nach Holzgehäuse. Der Gong war so tief gestimmt, dass
   Handy- und Laptop-Lautsprecher ihn kaum abspielen konnten. Jetzt klingt er
