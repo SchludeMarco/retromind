@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming: Spielmarken immer oben im Blick** (2026-10-05, PR #NNN): In der
+- **Gaming: Spielmarken immer oben im Blick** (2026-10-05, PR #109): In der
   Kopfleiste steht jetzt neben dem Punktestand, wie viele Spielmarken du hast.
   Kommen neue dazu, hüpft die Zahl kurz. Ein Tipp darauf führt direkt zu den
   Quests und zum Preis-Tresen.
