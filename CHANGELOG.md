@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Uhr tickt zuverlässig, lauter und schneller** (2026-10-06, PR #130): Auf
+  dem Handy blieb das Ticken oft stumm, weil das Antippen des Bildschirms den
+  Ton nicht freigeschaltet hat. Jetzt startet die Uhr beim ersten Antippen
+  und tickt sofort hörbar. Auf dem iPhone spielt sie auch mit eingeschaltetem
+  Stumm-Schalter. Außerdem tickt sie jetzt zweimal pro Sekunde und deutlich
+  lauter.
+
 - **Blitz statt Note in der Gaming-Halle** (2026-10-06, PR #129): Die
   Musiksteuerung der Gaming-Edition ist dieselbe wie in der Zeitreise, ihr
   Metall-Symbol zeigt aber einen Blitz statt einer Musiknote, auch im
