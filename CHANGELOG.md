@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Erinnerungsreise in Sparten** (2026-10-06, PR #135): „Erkunden“ zeigt
+  jetzt zuerst nur Kacheln: Musik, Technik, Spielzeug, Alltag & Mode,
+  Naschen & Essen und das Foto-Labor. Du tippst die Sparte an, auf die du
+  gerade Lust hast. Darin stehen ihre Dinge Jahrzehnt für Jahrzehnt, deine
+  Zeit zuerst, und „← Alle Sparten“ bringt dich zurück. Jede Kachel zeigt, wie
+  viel du daraus schon erinnert hast.
+
 - **Mehr Luft auf der Erinnerungsreise** (2026-10-06, PR #134): Die Station
   „Erkunden“ ist ruhiger. Es steht immer nur ein Jahrzehnt da, zuerst deins,
   und über Knöpfe wechselst du zu den anderen. In „Retro Warm“ sind die Karten
