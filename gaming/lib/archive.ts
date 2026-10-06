@@ -62,7 +62,7 @@ function cached(key: string, run: () => Promise<ArchivePage>): Promise<ArchivePa
 
 export function fetchArchive(q: ArchiveQuery, offset = 0): Promise<ArchivePage> {
   if (!archiveSupports(q)) return Promise.resolve(EMPTY);
-  return cached(`${q.platform}|${q.decade?.from}|${offset}`, () => load(searchFor(q), offset, q));
+  return cached(`${q.platform}|${q.decade?.from}-${q.decade?.to}|${offset}`, () => load(searchFor(q), offset, q));
 }
 
 /**

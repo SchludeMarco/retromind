@@ -158,6 +158,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 ### Edition „RetroMind – Gaming“ (`/gaming/`)
 
 Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
+Im Katalog filterst du nach Jahrzehnt (80er bis 2020er) und darin nach einem
+einzelnen Jahr, dazu nach Konsole.
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
 Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
