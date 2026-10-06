@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Reise in Etappen** (2026-10-06, PR #136): Hast du eine Reise begonnen,
+  zeigt die Startseite jetzt „Deine Etappen“. Profil, Eindrücke, Erkunden,
+  Tagebuch, Erinnerungsbuch und Abschluss stehen als Kacheln da, und du tippst
+  einfach die Station an, auf die du gerade Lust hast. Die Kachel, bei der du
+  zuletzt warst, ist markiert. Im Design Retro Warm kannst du außerdem oben in
+  „Station x von 7“ direkt auf jede Station tippen.
+
 - **Erinnerungsreise in Sparten** (2026-10-06, PR #135): „Erkunden“ zeigt
   jetzt zuerst nur Kacheln: Musik, Technik, Spielzeug, Alltag & Mode,
   Naschen & Essen und das Foto-Labor. Du tippst die Sparte an, auf die du

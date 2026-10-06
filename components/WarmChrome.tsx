@@ -224,7 +224,8 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
   </nav>
 );
 
-export const WarmJourneyStepper: React.FC<{ phase: AppPhase }> = ({ phase }) => {
+// Every station is a button, so the journey can be walked in any order.
+export const WarmJourneyStepper: React.FC<{ phase: AppPhase; onSelect: (p: AppPhase) => void }> = ({ phase, onSelect }) => {
   const index = PHASES.indexOf(phase);
   const percent = Math.round((index / (PHASES.length - 1)) * 100);
   return (
@@ -243,7 +244,13 @@ export const WarmJourneyStepper: React.FC<{ phase: AppPhase }> = ({ phase }) => 
           const done = i < index;
           const current = i === index;
           return (
-            <li key={p} className="flex flex-col items-center gap-1 text-center">
+            <li key={p}>
+              <button
+                onClick={() => onSelect(p)}
+                aria-current={current ? 'step' : undefined}
+                aria-label={`Station ${i + 1}: ${PHASE_LABEL[p]}`}
+                className="w-full flex flex-col items-center gap-1 text-center"
+              >
               <span
                 className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                   done
@@ -258,6 +265,7 @@ export const WarmJourneyStepper: React.FC<{ phase: AppPhase }> = ({ phase }) => 
               <span className={`hidden sm:block text-[11px] leading-tight ${current ? 'font-bold text-retro-amber-dark' : 'text-retro-brown'}`}>
                 {STEP_LABEL[p]}
               </span>
+              </button>
             </li>
           );
         })}

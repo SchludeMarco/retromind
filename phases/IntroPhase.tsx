@@ -5,6 +5,7 @@ import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
+import { JourneyStages } from '../components/JourneyStages';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -24,13 +25,15 @@ export const IntroPhase: React.FC<{
   onReset: () => void;
   focusDecade: string;
   onSelectGalleryItem: (item: GalleryItem) => void;
+  diaryWritten: boolean;
+  onOpenStage: (phase: AppPhase) => void;
 }> = (props) => (useWarmChrome() ? <WarmIntro {...props} /> : <ClassicIntro {...props} />);
 
 type IntroProps = React.ComponentProps<typeof IntroPhase>;
 
 const ClassicIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount,
-  onStart, onResume, onReset, ...rest
+  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, ...rest
 }) => (
   <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
@@ -59,6 +62,16 @@ const ClassicIntro: React.FC<IntroProps> = ({
             </button>
           </div>
         </div>
+      )}
+
+      {resumeTarget && (
+        <JourneyStages
+          warm={false}
+          lastStage={resumeTarget}
+          memoriesCount={memoriesCount}
+          diaryWritten={diaryWritten}
+          onOpen={onOpenStage}
+        />
       )}
 
       <p className="text-lg mb-8 leading-relaxed">
@@ -147,7 +160,7 @@ const FEATURES = [
 
 const WarmIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount, onStart, onResume, onReset,
-  focusDecade, onSelectGalleryItem, ...rest
+  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, ...rest
 }) => {
   const decades = Object.keys(DECADES_DB);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
@@ -202,6 +215,16 @@ const WarmIntro: React.FC<IntroProps> = ({
           </>
         )}
       </section>
+
+      {resumeTarget && (
+        <JourneyStages
+          warm
+          lastStage={resumeTarget}
+          memoriesCount={memoriesCount}
+          diaryWritten={diaryWritten}
+          onOpen={onOpenStage}
+        />
+      )}
 
       <section className="rounded-2xl bg-retro-cream p-6 md:p-8">
         <h2 className="text-xl md:text-2xl mb-2">Deine Zeitreise im Überblick</h2>
