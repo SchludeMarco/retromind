@@ -73,7 +73,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
   Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
   Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
-  Einstellungen.
+  Einstellungen. Lange Songtitel werden kleiner geschrieben und laufen, wenn
+  das nicht reicht, als Laufschrift durch. Solange Musik läuft, steht oben
+  links in kleiner Schrift, welcher Song gerade spielt (auch in der
+  Gaming-Halle).
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
