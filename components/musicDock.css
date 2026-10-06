@@ -205,7 +205,19 @@
   font: 600 10px/1.2 'Plus Jakarta Sans', system-ui, sans-serif;
   color: #ffe9a3;
   background: rgb(7 11 22 / 0.72);
-  pointer-events: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+/* The line is tiny; give the finger a bigger area to hit. */
+.music-ticker::after {
+  content: '';
+  position: absolute;
+  inset: -8px -6px;
+}
+.music-ticker:focus-visible {
+  outline: 2px solid #ffd60a;
+  outline-offset: 1px;
 }
 .music-ticker svg {
   flex-shrink: 0;

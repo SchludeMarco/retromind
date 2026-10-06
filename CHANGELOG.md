@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Song oben links öffnet die Musiksteuerung** (2026-10-06, PR #132): Wer
+  oben links auf den laufenden Song tippt, bekommt dieselbe Musiksteuerung
+  wie über das Musik-Symbol unten. Das gilt in der Zeitreise und in der
+  Gaming-Halle.
+
 - **Songtitel passen in den Player, „Läuft gerade“ oben links** (2026-10-06,
   PR #131): Lange Songtitel in der Musiksteuerung werden jetzt kleiner
   geschrieben, damit sie in eine Zeile passen. Reicht das nicht, laufen sie

@@ -90,10 +90,17 @@ export const MusicDock: React.FC<MusicDockProps> = ({
         title &&
         !open &&
         createPortal(
-          <div className="music-ticker" aria-hidden="true">
+          // Tapping it opens the controls, just like the button below
+          // (Marco, 2026-10-06).
+          <button
+            type="button"
+            className="music-ticker"
+            onClick={() => toggle(true)}
+            aria-label={`Läuft gerade: ${title}. Musiksteuerung öffnen`}
+          >
             <Svg d={symbol} size={10} />
             <FitMarquee text={title} maxSize={10} />
-          </div>,
+          </button>,
           document.body
         )}
       <button
