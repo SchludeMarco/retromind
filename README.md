@@ -98,7 +98,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Person hat ihre eigenen Erinnerungen in ihrem eigenen Konto (**dezentral**) und
   kann so auf einem anderen Gerät weitermachen. Mit Google angemeldet entfällt
   die Start-Abfrage von Name und Geburtsdatum, sobald beides bekannt ist (Name
-  aus dem Google-Profil, Geburtstag über die People API, falls freigegeben);
+  aus dem Google-Profil, Geburtstag und Geschlecht über die People API, falls
+  freigegeben, sonst aus der Drive-Sicherung);
   ändern lässt es sich in den Einstellungen unter „Deine Angaben“. Ohne Google
   fragt die App beim ersten Mal; danach bleiben die Angaben auf dem Gerät und
   die Abfrage entfällt bei jedem weiteren Besuch.

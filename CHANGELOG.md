@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Profil aus Google und Drive vollständiger übernommen** (2026-10-06,
+  PR #137): Nach der Google-Anmeldung füllt die Zeitreise leere Angaben wie
+  Geburtsdatum, Geschlecht, Interessen und Lieblingsmusik aus deiner
+  Drive-Sicherung auf, auch wenn auf dem Gerät schon eine Reise läuft. Das
+  Geschlecht kommt, falls freigegeben, auch direkt aus dem Google-Konto. Und
+  ein neues Gerät überschreibt die Drive-Sicherung nicht mehr, bevor es sie
+  gelesen hat.
+
 - **Reise in Etappen** (2026-10-06, PR #136): Hast du eine Reise begonnen,
   zeigt die Startseite jetzt „Deine Etappen“. Profil, Eindrücke, Erkunden,
   Tagebuch, Erinnerungsbuch und Abschluss stehen als Kacheln da, und du tippst
