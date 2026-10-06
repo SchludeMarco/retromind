@@ -65,12 +65,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Playlist, ohne sie fängt sie wie früher oben an) – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
-  Ganz unten in der Mitte sitzt ein kleiner **Spotify-Player**
-  ([`components/SpotifyBar.tsx`](components/SpotifyBar.tsx)) mit Zurück,
-  Play/Pause und Weiter und dem Namen des Songs: in „Retro Warm“ mitten in der
-  unteren Leiste, in den anderen Designs schwebend über dem Haus-Knopf. Weiter
-  spielt den nächsten Zufallssong, Zurück den Song davor. Pausieren geht auch in
-  den Einstellungen.
+  Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
+  ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
+  mitten in der unteren Leiste, in den anderen Designs schwebend über dem
+  Haus-Knopf. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
+  Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
+  Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
+  Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
+  Einstellungen.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
@@ -126,8 +128,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     [`docs/stitch/DESIGN.md`](docs/stitch/DESIGN.md)): Pergament und
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
-    Tonband-Schalter, Einstellungen und Konten, untere Navigation (Start,
-    Zeitreise, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
+    Feedback, Einstellungen und Konten, untere Navigation (Start,
+    Zeitreise, Musik-Symbol, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
     Startseite mit Jahrzehnt-Überblick und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).
   - **Klassisch**: vergilbtes Papier mit Röhrenbildschirm-Look.
@@ -165,9 +167,9 @@ synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
-Unten in der Mitte, zwischen „Nach oben“ und dem Guru, steuert derselbe kleine
-Spotify-Player wie in der Zeitreise die Musik (Zurück, Play/Pause, Weiter, mit
-Songtitel); auf schmalen Handys zeigt der Guru-Knopf dann nur sein Gesicht ☻.
+Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
+schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
+Zurück, Play/Pause, Weiter, Ton an/aus).
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem

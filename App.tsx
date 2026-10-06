@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, SpotifyBar } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
@@ -37,6 +37,7 @@ import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
+import { toggleMuted, useMuted } from './lib/mute';
 
 const App: React.FC = () => {
   const session = useRetroSession();
@@ -62,6 +63,7 @@ const App: React.FC = () => {
   // after the start button press).
   const [menuRevealed, setMenuRevealed] = useState(false);
   const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash);
+  const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
   const spotifyAuth = useSpotifyAuth();
@@ -504,23 +506,28 @@ const App: React.FC = () => {
   const isAnswered = (id: string) => !!memoryFor(id);
 
 
-  // The Spotify player bar, always at the bottom centre between the buttons
-  // (Marco, 2026-10-06): in Retro Warm inside the bottom navigation, in the
-  // other designs floating above the home button (index.css .rm-spotify-bar).
-  const spotifyBar = spotify.allowed ? (
-    <SpotifyBar
-      className={warm ? 'rm-spotify-bar-nav' : 'rm-spotify-bar rm-fixed'}
+  // The music controls (Marco, 2026-10-06): a small black-blue metal button
+  // at the bottom centre that opens them as a panel over the lower half of
+  // the screen. Retro Warm: in the middle of the bottom navigation; the other
+  // designs: floating above the home button (index.css .rm-music-knob).
+  const musicDock = spotify.allowed ? (
+    <MusicDock
+      className={warm ? '' : 'rm-music-knob rm-fixed'}
       title={spotify.songTitle}
+      source={`Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`}
       playing={spotify.isPlaying}
       ready={spotify.isReady}
       canSkip={spotify.canSkip}
       onPrev={() => { playSFX('click'); spotify.playPrevious(); }}
       onToggle={() => { playSFX('click'); spotify.togglePlay(); }}
       onNext={() => { playSFX('click'); spotify.playNext(); }}
+      muted={muted}
+      onToggleMute={() => { playSFX('click'); toggleMuted(); }}
+      onOpenChange={() => playSFX('click')}
     />
   ) : null;
   return (
-    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : spotifyBar ? 'pb-40' : 'pb-24'}`}>
+    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : musicDock ? 'pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
       {(!warm || showSplash) && <MuteToggle />}
@@ -641,7 +648,7 @@ const App: React.FC = () => {
           {warm && (
             <WarmBottomNav
               phase={phase}
-              center={spotifyBar}
+              center={musicDock}
               onNavigate={(target) => {
                 if (target === 'intro') {
                   if (phase !== 'intro') goHome();
@@ -653,7 +660,7 @@ const App: React.FC = () => {
             />
           )}
           {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} />}
-          {!warm && spotifyBar}
+          {!warm && musicDock}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 
           {phase !== 'intro' && (

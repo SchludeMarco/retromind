@@ -1,0 +1,18 @@
+// Der grüne „Tonband“-Knopf (Stummschalter mit Wellen-Symbol) aus der
+// oberen Leiste von Retro Warm (components/WarmChrome.tsx, WarmTopBar).
+// Entfernt am 2026-10-06: der Ton lässt sich jetzt im Musik-Panel
+// (components/MusicDock) und in den Einstellungen ein- und ausschalten.
+// Er brauchte: const muted = useMuted(); und toggleMuted aus lib/mute.
+
+        <button
+          onClick={toggleMuted}
+          aria-pressed={muted}
+          aria-label={muted ? 'Ton einschalten' : 'Stummschalten'}
+          className={`h-10 px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
+            muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
+          }`}
+        >
+          <Icon name="wave" className="w-5 h-5" />
+          <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
+          {muted && <span className="sm:hidden">aus</span>}
+        </button>

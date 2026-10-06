@@ -36,3 +36,12 @@ gebaut oder ausgeliefert.
   Sekunden, Track `5t70MlkURJ4JXbkfFtEqKr`) vor der Dekaden-Musik (entfernt
   am 2026-10-05 auf Marcos Wunsch, jetzt startet gleich ein zufälliges Lied
   der Dekade).
+- `SpotifyBar-leiste.tsx.txt`, `spotify-leiste.css.txt`: die offene
+  Spotify-Leiste ganz unten in der Mitte mit Zurück, Play/Pause, Weiter und
+  Songtitel (PR #124, entfernt am 2026-10-06 auf Marcos Wunsch, ersetzt durch
+  das kleine schwarz-blaue Metall-Symbol, das die Musiksteuerung als Panel
+  über die halbe Seite öffnet).
+- `WarmTopBar-tonband-knopf.tsx.txt`: der grüne „Tonband“-Knopf mit
+  Wellen-Symbol oben in der Leiste von Retro Warm (Stummschalter; entfernt am
+  2026-10-06 auf Marcos Wunsch „Das obere Spotify Element kann weg“; Ton an/aus
+  gibt es jetzt im Musik-Panel unten und in den Einstellungen).

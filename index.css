@@ -608,75 +608,17 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .crt-overlay { display: none !important; }
 }
 
-/* --- Spotify player bar (components/SpotifyBar), bottom centre ---
-   Retro Warm: a slot in the middle of the bottom navigation.
-   Other designs: floating pill above the home button, at the height of the
-   chat button (bottom left) — clear of every other button. */
-.spotify-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  color: var(--color-retro-ink);
-}
-.spotify-bar-title {
-  max-width: 100%;
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 11px;
-  line-height: 1.2;
-  font-weight: 600;
-  color: var(--color-retro-brown);
-}
-.spotify-bar-buttons {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-.spotify-bar-buttons button {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  color: var(--color-retro-ink);
-  background: transparent;
-}
-.spotify-bar-buttons button:hover:not(:disabled) {
-  background: var(--color-retro-highlight);
-}
-.spotify-bar-buttons button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-.spotify-bar-buttons .spotify-bar-play {
-  color: var(--color-retro-paper-white);
-  background: var(--color-retro-amber-dark);
-}
-.spotify-bar-buttons .spotify-bar-play:hover:not(:disabled) {
-  background: var(--color-retro-amber);
-}
-.rm-spotify-bar-nav {
-  height: 4rem;
-  width: clamp(6rem, 26vw, 13rem);
-  padding: 0 4px;
-  gap: 1px;
-}
-.rm-spotify-bar {
+
+/* Music button (components/MusicDock) in Klassisch and Nachtschicht: bottom
+   centre, above the home button and level with the chat button. In Retro
+   Warm it sits inside the bottom navigation instead. */
+.rm-music-knob {
   position: fixed;
   left: 50%;
-  bottom: calc(5rem + env(safe-area-inset-bottom));
+  bottom: calc(5.25rem + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 50;
-  width: min(15rem, calc(100vw - 11rem));
-  padding: 4px 10px 6px;
-  gap: 2px;
-  background: var(--color-retro-cream);
-  border: 2px solid var(--color-retro-ink);
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 10px rgb(0 0 0 / 0.2);
+}
+.rm-music-knob:active {
+  transform: translateX(-50%) scale(0.94);
 }

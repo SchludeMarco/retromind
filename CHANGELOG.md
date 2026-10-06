@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musiksteuerung hinter einem Metall-Symbol** (2026-10-06, PR #125): Die
+  offene Spotify-Leiste von heute Morgen ist wieder weg. Stattdessen sitzt
+  ganz unten in der Mitte nur noch ein kleines schwarz-blaues Metall-Symbol
+  mit Note, in der Zeitreise (alle Designs) und in der Gaming-Halle. Ein Druck
+  darauf öffnet die Musiksteuerung über die halbe Seite: Was gerade läuft,
+  Zurück, Play/Pause und Weiter als Symbole, dazu Ton an/aus. Der grüne
+  „Tonband“-Knopf oben in „Retro Warm“ ist entfernt, der Guru-Knopf heißt auf
+  dem Handy wieder „☻ GURU“.
+
 - **Spotify-Player unten in der Mitte** (2026-10-06, PR #124): In der
   Zeitreise (alle Designs) und in der Gaming-Halle sitzt jetzt ganz unten in
   der Mitte ein kleiner Spotify-Player mit Zurück, Play/Pause und Weiter. Er
