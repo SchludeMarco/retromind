@@ -13,6 +13,7 @@ export interface SpotifyEmbedController {
   pause: () => void;
   resume: () => void;
   loadUri: (uri: string) => void;
+  seek: (seconds: number) => void;
   addListener: (event: string, cb: (e: any) => void) => void;
   removeListener: (event: string, cb?: (e: any) => void) => void;
   destroy: () => void;
@@ -78,6 +79,8 @@ export function createSpotifyEmbedController(
 // play the playlist itself, as before.
 
 const trackLists = new Map<string, Promise<string[]>>();
+// "Title · Artist" per track id, for the small player bar (SpotifyBar).
+const trackNames = new Map<string, string>();
 
 /** Track ids of a playlist, loaded once per visit. Never rejects. */
 export function playlistTracks(playlistId: string): Promise<string[]> {
@@ -85,11 +88,20 @@ export function playlistTracks(playlistId: string): Promise<string[]> {
   if (!list) {
     list = fetch(`/api/spotify-tracks?playlist=${encodeURIComponent(playlistId)}`)
       .then((r) => (r.ok ? r.json() : { tracks: [] }))
-      .then((d) => (Array.isArray(d?.tracks) ? d.tracks.filter((t: unknown) => typeof t === 'string') : []))
+      .then((d) => {
+        const names = d?.names && typeof d.names === 'object' ? d.names : {};
+        for (const [id, name] of Object.entries(names)) if (typeof name === 'string') trackNames.set(id, name);
+        return Array.isArray(d?.tracks) ? d.tracks.filter((t: unknown) => typeof t === 'string') : [];
+      })
       .catch(() => []);
     trackLists.set(playlistId, list);
   }
   return list;
+}
+
+/** "Title · Artist" of a track, if the server could read it. */
+export function trackName(id: string | null): string | null {
+  return (id && trackNames.get(id)) || null;
 }
 
 /** Waits at most `ms` for the track list, so the music never hangs on it. */
@@ -119,4 +131,25 @@ export function songEnded(data: { isPaused?: boolean; position?: number; duratio
   const position = Number(data.position) || 0;
   const duration = Number(data.duration) || 0;
   return heard && ((duration > 0 && position >= duration - 500) || (!!data.isPaused && position === 0));
+}
+
+// --- Back and forth (player bar) ---------------------------------------------
+// "Weiter" plays the next random song, "Zurück" goes back through the songs
+// heard before (one history per player). A player keeps one of these.
+
+export interface SongHistory {
+  /** Ids of the songs played, oldest first; the last one is playing. */
+  ids: string[];
+}
+
+export function rememberSong(history: SongHistory, id: string) {
+  history.ids.push(id);
+  if (history.ids.length > 50) history.ids.shift();
+}
+
+/** The song before the current one (and forgets the current one), or null. */
+export function previousSong(history: SongHistory): string | null {
+  if (history.ids.length < 2) return null;
+  history.ids.pop();
+  return history.ids[history.ids.length - 1];
 }

@@ -3,8 +3,12 @@ import {
   createSpotifyEmbedController,
   playlistTracksWithin,
   playlistUri,
+  previousSong,
   randomTrack,
+  rememberSong,
   songEnded,
+  SongHistory,
+  trackName,
   trackUri,
   SpotifyEmbedController,
 } from '../lib/spotifyEmbed';
@@ -29,6 +33,9 @@ import { useConsent } from '../lib/privacy';
 // can't be loaded, the playlist runs from the top as before.
 // (The fixed opening song "Back to Back" by Pretty Maids was taken out the
 // same day at Marco's request, see _removed_content/.)
+// Back / play / next live in the small player bar at the bottom centre
+// (components/SpotifyBar, 2026-10-06): next = another random song, back =
+// the song heard before.
 
 export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -53,6 +60,10 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const shuffleRef = useRef(false);
   // Track ids per decade playlist, filled as they arrive.
   const tracksRef = useRef<Record<string, string[]>>({});
+  // The single song playing right now (null: whole playlist) and the ones
+  // before it, for the player bar.
+  const [song, setSong] = useState<string | null>(null);
+  const historyRef = useRef<SongHistory>({ ids: [] });
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
@@ -69,12 +80,42 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const playlistId = DECADES_DB[decadeRef.current]?.spotifyPlaylistId;
     if (!controller || !playlistId) return;
     const id = randomTrack(tracksRef.current[playlistId] ?? []);
+    if (id) rememberSong(historyRef.current, id);
+    setSong(id);
     shuffleRef.current = !!id;
     heardRef.current = false;
     controller.loadUri(id ? trackUri(id) : playlistUri(playlistId));
     startedRef.current = false;
     start();
   }, [start]);
+
+  // "Zurück" in the player bar: the song before, or this one from the start.
+  const playPrevious = useCallback(() => {
+    const controller = controllerRef.current;
+    if (!controller) return;
+    const id = previousSong(historyRef.current);
+    userPausedRef.current = false;
+    if (!id) {
+      controller.seek(0);
+      if (isMuted()) setMuted(false);
+      else start();
+      return;
+    }
+    setSong(id);
+    shuffleRef.current = true;
+    heardRef.current = false;
+    controller.loadUri(trackUri(id));
+    startedRef.current = false;
+    if (isMuted()) setMuted(false);
+    else start();
+  }, [start]);
+
+  // "Weiter" in the player bar: another random song of the decade.
+  const playNext = useCallback(() => {
+    userPausedRef.current = false;
+    if (isMuted()) setMuted(false);
+    playDecade();
+  }, [playDecade]);
 
   // Created once consent is there; later decade changes reuse it via
   // loadUri below. Withdrawing consent removes the player again.
@@ -90,6 +131,8 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         if (tracks.length) tracksRef.current[playlistId] = tracks;
         // The visitor may have switched decades in the meantime.
         const id = DECADES_DB[decadeRef.current]?.spotifyPlaylistId === playlistId ? randomTrack(tracks) : null;
+        if (id) rememberSong(historyRef.current, id);
+        setSong(id);
         shuffleRef.current = !!id;
         heardRef.current = false;
         return createSpotifyEmbedController(host, id ? trackUri(id) : playlistUri(playlistId));
@@ -178,5 +221,17 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     else start();
   }, [isPlaying, start]);
 
-  return { containerRef, isReady, isPlaying, togglePlay, allowed };
+  return {
+    containerRef,
+    isReady,
+    isPlaying,
+    togglePlay,
+    allowed,
+    playNext,
+    playPrevious,
+    /** "Title · Artist" of the song playing, when known. */
+    songTitle: trackName(song),
+    /** A single random song plays, so next/back can switch songs. */
+    canSkip: !!song,
+  };
 }

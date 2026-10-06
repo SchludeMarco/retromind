@@ -34,9 +34,37 @@ export default async function handler(req, res) {
   if (!ids.size) for (const m of html.matchAll(/\/track\/([A-Za-z0-9]{22})/g)) ids.add(m[1]);
 
   const tracks = [...ids];
+  const names = trackNames(html);
   res.setHeader(
     "Cache-Control",
     tracks.length ? "public, s-maxage=86400, stale-while-revalidate=604800" : "public, s-maxage=300"
   );
-  return res.status(200).json({ tracks });
+  return res.status(200).json({ tracks, names });
+}
+
+// The page's data block (__NEXT_DATA__) lists every track as an object with
+// its uri, a title and the artists as subtitle. Anything unexpected: no names.
+function trackNames(html) {
+  const names = {};
+  const m = html.match(/<script[^>]*id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) return names;
+  let data;
+  try {
+    data = JSON.parse(m[1]);
+  } catch {
+    return names;
+  }
+  const walk = (node, depth) => {
+    if (!node || typeof node !== "object" || depth > 30) return;
+    if (Array.isArray(node)) return node.forEach((n) => walk(n, depth + 1));
+    const uri = typeof node.uri === "string" ? node.uri.match(/^spotify:track:([A-Za-z0-9]{22})$/) : null;
+    if (uri && typeof node.title === "string" && node.title.trim()) {
+      const artist = typeof node.subtitle === "string" ? node.subtitle.trim() : "";
+      names[uri[1]] = (artist ? `${node.title.trim()} · ${artist}` : node.title.trim()).slice(0, 120);
+      return;
+    }
+    for (const v of Object.values(node)) walk(v, depth + 1);
+  };
+  walk(data, 0);
+  return names;
 }

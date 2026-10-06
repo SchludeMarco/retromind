@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Player unten in der Mitte** (2026-10-06, PR #124): In der
+  Zeitreise (alle Designs) und in der Gaming-Halle sitzt jetzt ganz unten in
+  der Mitte ein kleiner Spotify-Player mit Zurück, Play/Pause und Weiter. Er
+  zeigt, welcher Song gerade läuft. Weiter spielt einen neuen Zufallssong,
+  Zurück den Song davor. In „Retro Warm“ steckt er mitten in der unteren
+  Leiste, in den anderen Designs schwebt er über dem Haus-Knopf, in der
+  Gaming-Halle steht er zwischen „Nach oben“ und dem Guru. Auf schmalen
+  Handys zeigt der Guru-Knopf dafür nur noch sein Gesicht ☻.
+
 - **Name und Geburtstag nur noch einmal eingeben** (2026-10-05, PR #123):
   Auch ohne Google-Login fragt die Zeitreise nicht mehr bei jedem Öffnen
   nach Name und Geburtsdatum. Sind beide einmal auf dem Gerät gespeichert,

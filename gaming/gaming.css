@@ -2456,3 +2456,86 @@ a {
     animation: none;
   }
 }
+
+/* --- Spotify player bar (components/SpotifyBar), bottom centre between
+   "Nach oben" (left) and the Guru (right), at their height. --- */
+.hall-spotify-bar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 396;
+  width: min(260px, calc(100vw - 168px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px 6px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 3px solid var(--dim);
+}
+.hall-spotify-bar .spotify-bar-title {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--dim);
+}
+.hall-spotify-bar .spotify-bar-buttons {
+  display: flex;
+  gap: 4px;
+}
+.hall-spotify-bar button {
+  width: 36px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg);
+  background: var(--panel);
+  border: none;
+  cursor: pointer;
+}
+.hall-spotify-bar button.spotify-bar-play {
+  color: var(--bg);
+  background: var(--a1);
+}
+.hall-spotify-bar button:hover:not(:disabled),
+.hall-spotify-bar button:focus-visible {
+  color: var(--bg);
+  background: var(--a2);
+  outline: none;
+}
+.hall-spotify-bar button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.arcade[data-palette='modul'] .hall-spotify-bar {
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.12);
+}
+.arcade[data-palette='modul'] .hall-spotify-bar button {
+  border-radius: 999px;
+  background: var(--bg2);
+}
+.arcade[data-palette='modul'] .hall-spotify-bar button.spotify-bar-play {
+  color: #fff;
+  background: var(--a1);
+}
+@media (max-width: 560px) {
+  .guru-fab.compact .guru-label {
+    display: none;
+  }
+  .arcade .px-btn.big.guru-fab.compact {
+    padding: 10px 14px;
+    font-size: 24px;
+    line-height: 1;
+  }
+}
