@@ -194,15 +194,23 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const controller = controllerRef.current;
     if (!controller) return;
     if (muted) controller.pause();
-    else if (userPausedRef.current) return;
+    else if (userPausedRef.current || !enabledRef.current) return;
     else if (startedRef.current) controller.resume();
     else start();
   }, [muted, start]);
 
   // The welcome screen just finished: start now (its button press already
-  // unlocked audio).
+  // unlocked audio). Going back to the welcome screen (settings) pauses the
+  // music; leaving it again carries on with the same song.
   useEffect(() => {
-    if (enabled && !startedRef.current && !userPausedRef.current) start();
+    const controller = controllerRef.current;
+    if (!enabled) {
+      if (startedRef.current) controller?.pause();
+      return;
+    }
+    if (userPausedRef.current) return;
+    if (!startedRef.current) start();
+    else if (!isMuted()) controller?.resume();
   }, [enabled, start]);
 
   const togglePlay = useCallback(() => {

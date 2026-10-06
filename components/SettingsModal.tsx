@@ -21,6 +21,8 @@ export const SettingsModal: React.FC<{
   onToggleSpotify: () => void;
   spotifyAllowed: boolean;
   onOpenWhatsNew: () => void;
+  /** Shows the welcome screen (ticking clock, "Go back...") again. */
+  onBackToWelcome: () => void;
   hasUnseenNews: boolean;
   userName: string;
   userBirthDate: string;
@@ -31,7 +33,7 @@ export const SettingsModal: React.FC<{
   fontScale, onFontScaleChange,
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
-  onOpenWhatsNew, hasUnseenNews,
+  onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
   userName, userBirthDate, onEditProfile,
   onDismiss, onCloseClick,
 }) => {
@@ -200,6 +202,16 @@ export const SettingsModal: React.FC<{
           {hasUnseenNews && (
             <span aria-label="neue Einträge" className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
           )}
+        </button>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Willkommensbildschirm</span>
+        <button
+          onClick={onBackToWelcome}
+          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+        >
+          🕰️ Zurück zum Willkommensbildschirm
         </button>
       </div>
 

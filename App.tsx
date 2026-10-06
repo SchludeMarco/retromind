@@ -638,6 +638,7 @@ const App: React.FC = () => {
               onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
               spotifyAllowed={spotify.allowed}
               onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
+              onBackToWelcome={() => { playSFX('click'); setIsSettingsOpen(false); setMenuRevealed(false); setShowSplash(true); }}
               hasUnseenNews={unseenNews}
               userName={user.name}
               userBirthDate={user.birthDate}

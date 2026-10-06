@@ -123,7 +123,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Bildschirm wird weiß und geht langsam in die App über. Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab dem ersten
-  Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones).
+  Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones). In
+  den Einstellungen führt „Zurück zum Willkommensbildschirm“ jederzeit wieder
+  dorthin; die Musik pausiert so lange und spielt danach weiter.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
   und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
   Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
