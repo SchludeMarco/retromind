@@ -29,6 +29,9 @@ export interface MusicDockProps {
   onOpenChange?: (open: boolean) => void;
   /** Placement of the round button. */
   className?: string;
+  /** Symbol on the button and the disc: a note (Zeitreise) or a lightning
+   *  bolt (gaming hall, Marco 2026-10-06). */
+  icon?: 'note' | 'bolt';
 }
 
 const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 28 }) => (
@@ -38,6 +41,7 @@ const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 28 }) => (
 );
 
 const NOTE = 'M9 3v10.6A3.5 3.5 0 1 0 11 17V8h6V3z';
+const BOLT = 'M13 2L4 14h6l-1 8 9-12h-6z';
 const PREV = 'M6 5h2v14H6zM20 5v14L9 12z';
 const NEXT = 'M16 5h2v14h-2zM4 5v14l11-7z';
 const PLAY = 'M7 4v16l13-8z';
@@ -57,7 +61,9 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   onToggleMute,
   onOpenChange,
   className = '',
+  icon = 'note',
 }) => {
+  const symbol = icon === 'bolt' ? BOLT : NOTE;
   const [open, setOpen] = useState(false);
   const toggle = (next: boolean) => {
     setOpen(next);
@@ -83,7 +89,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
         aria-label={open ? 'Musiksteuerung schließen' : 'Musiksteuerung öffnen'}
         title="Musik"
       >
-        <Svg d={NOTE} size={22} />
+        <Svg d={symbol} size={22} />
       </button>
       {open &&
         createPortal(
@@ -100,7 +106,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             </button>
             <p className="music-dock-source">{source}</p>
             <div className={`music-dock-disc${playing ? ' spinning' : ''}`} aria-hidden="true">
-              <Svg d={NOTE} size={34} />
+              <Svg d={symbol} size={34} />
             </div>
             <p className="music-dock-label">{playing ? 'Läuft gerade' : 'Pausiert'}</p>
             <p className="music-dock-title" aria-live="polite">

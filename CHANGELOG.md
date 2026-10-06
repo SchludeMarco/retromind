@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Blitz statt Note in der Gaming-Halle** (2026-10-06, PR #129): Die
+  Musiksteuerung der Gaming-Edition ist dieselbe wie in der Zeitreise, ihr
+  Metall-Symbol zeigt aber einen Blitz statt einer Musiknote, auch im
+  geöffneten Feld.
+
 - **Musik-Symbol leuchtet gelb, solange Musik läuft** (2026-10-06, PR #128):
   Das schwarz-blaue Musik-Symbol glüht sanft gelb, sobald Musik spielt, in der
   Zeitreise wie in der Gaming-Halle. Ist die Musik pausiert oder der Ton aus,
