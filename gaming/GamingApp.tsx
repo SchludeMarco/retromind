@@ -92,6 +92,8 @@ export const GamingApp: React.FC = () => {
 
   const [view, setView] = useState<View>('catalog');
   const [decade, setDecade] = useState<string | null>(null);
+  // A single year inside the chosen decade narrows the filter further.
+  const [year, setYear] = useState<number | null>(null);
   const [platform, setPlatform] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Game[] | null>(null);
@@ -214,10 +216,23 @@ export const GamingApp: React.FC = () => {
     return ids.map((id) => GAMES.find((g) => g.id === id) ?? state.customGames[id]).filter(Boolean) as Game[];
   }, [state.favorites, state.completed, state.customGames]);
 
-  const catalog = useMemo(() => {
+  // The years the filter covers: one year, a decade, or none (all of them).
+  const yearRange = useMemo(() => {
+    if (year) return { from: year, to: year };
     const d = DECADES.find((x) => x.id === decade);
-    return GAMES.filter((g) => (!d || (g.year >= d.from && g.year <= d.to)) && (!platform || g.platform === platform));
-  }, [decade, platform]);
+    return d ? { from: d.from, to: d.to } : null;
+  }, [decade, year]);
+  const decadeYears = useMemo(() => {
+    const d = DECADES.find((x) => x.id === decade);
+    if (!d) return [];
+    const last = Math.min(d.to, new Date().getFullYear());
+    return Array.from({ length: last - d.from + 1 }, (_, i) => d.from + i);
+  }, [decade]);
+
+  const catalog = useMemo(
+    () => GAMES.filter((g) => (!yearRange || (g.year >= yearRange.from && g.year <= yearRange.to)) && (!platform || g.platform === platform)),
+    [yearRange, platform]
+  );
 
   // Every system from the platform list, in release order, plus any the
   // curated catalog uses on top (e.g. Multiplattform).
@@ -235,12 +250,11 @@ export const GamingApp: React.FC = () => {
     loading: false,
   });
   const archiveQuery = useMemo(() => {
-    const d = DECADES.find((x) => x.id === decade);
     // With no filter at all, the archive spans the edition's whole era.
-    const range = d ? { from: d.from, to: d.to } : platform ? null : { from: 1980, to: new Date().getFullYear() };
+    const range = yearRange ?? (platform ? null : { from: 1980, to: new Date().getFullYear() });
     return { platform, decade: range };
-  }, [decade, platform]);
-  const archiveKey = `${platform}|${decade}`;
+  }, [yearRange, platform]);
+  const archiveKey = `${platform}|${decade}|${year}`;
   useEffect(() => {
     if (view !== 'catalog' || !archiveSupports(archiveQuery)) return;
     let alive = true;
@@ -578,7 +592,7 @@ export const GamingApp: React.FC = () => {
           {view === 'catalog' && (
             <>
             <div className="filters" aria-label="Jahrzehnt">
-              <button className="px-btn" aria-pressed={!decade && !platform} onClick={() => { setDecade(null); setPlatform(null); chip.play('blip'); }} data-nav>
+              <button className="px-btn" aria-pressed={!decade && !platform} onClick={() => { setDecade(null); setYear(null); setPlatform(null); chip.play('blip'); }} data-nav>
                 ALLE
               </button>
               {DECADES.map((d) => (
@@ -586,13 +600,31 @@ export const GamingApp: React.FC = () => {
                   key={d.id}
                   className="px-btn"
                   aria-pressed={decade === d.id}
-                  onClick={() => { setDecade(decade === d.id ? null : d.id); chip.play('blip'); }}
+                  onClick={() => { setDecade(decade === d.id ? null : d.id); setYear(null); chip.play('blip'); }}
                   data-nav
                 >
                   {d.label.toUpperCase()}
                 </button>
               ))}
             </div>
+            {decadeYears.length > 0 && (
+              <div className="filters years" aria-label="Jahr">
+                <button className="px-btn" aria-pressed={!year} onClick={() => { setYear(null); chip.play('blip'); }} data-nav>
+                  GANZES JAHRZEHNT
+                </button>
+                {decadeYears.map((y) => (
+                  <button
+                    key={y}
+                    className="px-btn"
+                    aria-pressed={year === y}
+                    onClick={() => { setYear(year === y ? null : y); chip.play('blip'); }}
+                    data-nav
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="filters" aria-label="Konsole">
               <button
                 className="px-btn big console-button"

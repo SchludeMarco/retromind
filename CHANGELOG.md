@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Filter nach einzelnem Jahr** (2026-10-06, PR #138): Im Katalog
+  von RetroMind - Gaming erscheint nach einem Tipp auf ein Jahrzehnt (80er bis
+  2020er) eine zweite Reihe mit seinen Jahren, z. B. 1990 bis 1999. Ein Tipp
+  auf ein Jahr zeigt nur die Spiele aus diesem Jahr, aus dem kuratierten
+  Katalog und dem Wikipedia-Archiv. „Ganzes Jahrzehnt“ hebt die Auswahl
+  wieder auf, und der Konsolen-Filter lässt sich weiter dazunehmen.
+
 - **Profil aus Google und Drive vollständiger übernommen** (2026-10-06,
   PR #137): Nach der Google-Anmeldung füllt die Zeitreise leere Angaben wie
   Geburtsdatum, Geschlecht, Interessen und Lieblingsmusik aus deiner
