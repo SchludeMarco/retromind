@@ -9,11 +9,14 @@ import { isMuted, subscribeMuted } from './mute';
 // click or key. The clock therefore starts ticking at once where that is
 // allowed, and otherwise from the first touch anywhere on the screen;
 // startTicking reports whether it is still waiting for that touch so the
-// screen can say so. Everything checks lib/mute.ts, so the clock is silent
+// screen can say so. On phones only the end of a tap (touchend / pointerup /
+// click) counts as that permission, a finger merely touching down does not,
+// so the clock listens for those too. iPhones also silence Web Audio with
+// the ring/silent switch unless the page asks for "playback" audio. Everything checks lib/mute.ts, so the clock is silent
 // when sound is switched off or the app is in the background.
 
-const BEAT_MS = 1000;
-const TICK_GAIN = 0.65;
+const BEAT_MS = 500;
+const TICK_GAIN = 0.75;
 const GONG_GAIN = 1.3;
 const GONG_SECONDS = 7;
 
@@ -21,6 +24,14 @@ let ctx: AudioContext | null = null;
 
 function audioContext(): AudioContext | null {
   if (ctx && ctx.state !== 'closed') return ctx;
+  try {
+    // Safari 16.4+: play even with the iPhone's silent switch on, like the
+    // Spotify music does.
+    const session = (navigator as any).audioSession;
+    if (session && session.type !== 'playback') session.type = 'playback';
+  } catch {
+    /* not supported */
+  }
   try {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     ctx = AudioCtx ? new AudioCtx() : null;
@@ -38,6 +49,33 @@ function noiseBuffer(c: BaseAudioContext, seconds: number): AudioBuffer {
   return buffer;
 }
 
+// The click's noise is made once (from a fixed seed) and reused, so every
+// tick has the same, measured peak and the louder tick never clips.
+const clickBuffers = new WeakMap<BaseAudioContext, AudioBuffer>();
+function clickBuffer(c: BaseAudioContext): AudioBuffer {
+  let buffer = clickBuffers.get(c);
+  if (buffer) return buffer;
+  const length = Math.max(1, Math.floor(c.sampleRate * 0.04));
+  buffer = c.createBuffer(1, length, c.sampleRate);
+  const data = buffer.getChannelData(0);
+  let seed = 12345;
+  for (let i = 0; i < length; i++) {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    data[i] = (seed / 0x3fffffff) - 1;
+  }
+  clickBuffers.set(c, buffer);
+  return buffer;
+}
+
+let softClip: Float32Array | null = null;
+function softClipCurve(): Float32Array {
+  if (softClip) return softClip;
+  const n = 1024;
+  softClip = new Float32Array(n);
+  for (let i = 0; i < n; i++) softClip[i] = Math.tanh(((i / (n - 1)) * 2 - 1) * 2) / Math.tanh(2) * 0.95;
+  return softClip;
+}
+
 // One beat of the escapement: a sharp click through a band-pass, then the
 // short knock of the wooden case and a ring of the metal. "Tick" sits a
 // little higher than "tock". Kept in the mids (roughly 700 Hz to 3 kHz),
@@ -46,23 +84,27 @@ export function playBeat(c: BaseAudioContext, high: boolean, dest: AudioNode = c
   const now = c.currentTime;
   const out = c.createGain();
   out.gain.value = TICK_GAIN;
-  out.connect(dest);
+  // Gentle tape-style saturation: makes the tick louder without ever
+  // going past full scale (no hard clipping).
+  const shaper = c.createWaveShaper();
+  shaper.curve = softClipCurve();
+  out.connect(shaper).connect(dest);
 
   const click = c.createBufferSource();
-  click.buffer = noiseBuffer(c, 0.04);
+  click.buffer = clickBuffer(c);
   const band = c.createBiquadFilter();
   band.type = 'bandpass';
   band.frequency.value = high ? 2600 : 1900;
   band.Q.value = 1.5;
   const clickGain = c.createGain();
-  clickGain.gain.setValueAtTime(1.1, now);
+  clickGain.gain.setValueAtTime(0.7, now);
   clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
   click.connect(band).connect(clickGain).connect(out);
   click.start(now);
 
   const tones = [
-    { type: 'triangle' as OscillatorType, freq: high ? 1100 : 820, amp: 0.9, decay: 0.07 },
-    { type: 'sine' as OscillatorType, freq: high ? 2350 : 1750, amp: 0.45, decay: 0.05 },
+    { type: 'triangle' as OscillatorType, freq: high ? 1100 : 820, amp: 0.9, decay: 0.1 },
+    { type: 'sine' as OscillatorType, freq: high ? 2350 : 1750, amp: 0.45, decay: 0.07 },
   ];
   tones.forEach((t) => {
     const osc = c.createOscillator();
@@ -87,13 +129,21 @@ export function startTicking(onWaiting: (waiting: boolean) => void): () => void 
   if (!c) return () => {};
 
   let high = true;
-  const timer = window.setInterval(() => {
+  const beat = () => {
     if (isMuted() || c.state !== 'running') return;
     playBeat(c, high);
     high = !high;
-  }, BEAT_MS);
+  };
+  const timer = window.setInterval(beat, BEAT_MS);
 
-  const report = () => onWaiting(c.state !== 'running');
+  let wasRunning = c.state === 'running';
+  const report = () => {
+    const running = c.state === 'running';
+    // Unlocked just now by a tap: tick at once so the tap gets an answer.
+    if (running && !wasRunning) beat();
+    wasRunning = running;
+    onWaiting(!running);
+  };
   c.addEventListener('statechange', report);
   c.resume().catch(() => {}).finally(report);
   report();
@@ -101,7 +151,7 @@ export function startTicking(onWaiting: (waiting: boolean) => void): () => void 
   const unlock = () => {
     c.resume().catch(() => {});
   };
-  const events = ['pointerdown', 'touchstart', 'keydown'] as const;
+  const events = ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'] as const;
   events.forEach((e) => window.addEventListener(e, unlock, { capture: true }));
 
   return () => {
