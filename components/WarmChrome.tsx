@@ -1,10 +1,9 @@
 import React from 'react';
 import { AppPhase } from '../types';
 import { PHASES } from '../lib/session';
-import { toggleMuted, useMuted } from '../lib/mute';
 
 // The app frame of the "Retro Warm" design (lib/theme.ts), after the Google
-// Stitch mock-ups: a top bar with logo, sound switch, settings and account,
+// Stitch mock-ups: a top bar with logo, feedback, settings and account,
 // a bottom navigation with the four big areas of the journey, and a stepper
 // showing which station of the journey you are at. The other designs keep
 // their floating buttons and the thin progress line instead.
@@ -127,7 +126,6 @@ export const WarmTopBar: React.FC<{
   onOpenFeedback: () => void;
   onToggleAccount: () => void;
 }> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
-  const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
       <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-3">
@@ -136,18 +134,6 @@ export const WarmTopBar: React.FC<{
           <span className="block font-serif font-bold text-lg md:text-xl tracking-tight text-retro-amber-dark">RETROMIND</span>
           <span className="block text-xs text-retro-brown truncate">{PHASE_LABEL[phase]}</span>
         </div>
-        <button
-          onClick={toggleMuted}
-          aria-pressed={muted}
-          aria-label={muted ? 'Ton einschalten' : 'Stummschalten'}
-          className={`h-10 px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
-            muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
-          }`}
-        >
-          <Icon name="wave" className="w-5 h-5" />
-          <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
-          {muted && <span className="sm:hidden">aus</span>}
-        </button>
         <button
           onClick={onOpenFeedback}
           aria-label="Feedback geben"
@@ -192,7 +178,7 @@ const NAV: { target: NavTarget; label: string; icon: IconName; phases: AppPhase[
   { target: 'book', label: 'Erinnerung', icon: 'book', phases: ['diary', 'book', 'finish'] },
 ];
 
-// `center` (the Spotify player bar) sits in the middle, two areas on each side.
+// `center` (the music button, MusicDock) sits in the middle, two areas on each side.
 export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: NavTarget) => void; center?: React.ReactNode }> = ({
   phase,
   onNavigate,
@@ -202,7 +188,7 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
     aria-label="Hauptnavigation"
     className="rm-fixed fixed bottom-0 inset-x-0 z-[60] bg-retro-paper-white/95 backdrop-blur border-t border-[#e6dac8] pb-[env(safe-area-inset-bottom)]"
   >
-    <div className={`mx-auto grid ${center ? 'max-w-2xl grid-cols-[1fr_1fr_auto_1fr_1fr]' : 'max-w-xl grid-cols-4'}`}>
+    <div className={`max-w-xl mx-auto grid ${center ? 'grid-cols-[1fr_1fr_auto_1fr_1fr]' : 'grid-cols-4'}`}>
       {NAV.flatMap((item, i) => {
         const active = item.phases.includes(phase);
         const button = (
@@ -210,7 +196,7 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
             key={item.target}
             onClick={() => onNavigate(item.target)}
             aria-current={active ? 'page' : undefined}
-            className={`h-16 flex flex-col items-center justify-center gap-0.5 font-semibold ${center ? 'text-[11px] sm:text-xs' : 'text-xs'} ${
+            className={`h-16 flex flex-col items-center justify-center gap-0.5 text-xs font-semibold ${
               active ? 'text-retro-amber-dark' : 'text-retro-brown'
             }`}
           >
@@ -218,7 +204,7 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
             {item.label}
           </button>
         );
-        return i === 2 && center ? [<React.Fragment key="center">{center}</React.Fragment>, button] : [button];
+        return i === 2 && center ? [<div key="center" className="flex items-center justify-center px-3">{center}</div>, button] : [button];
       })}
     </div>
   </nav>

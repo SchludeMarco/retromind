@@ -19,4 +19,4 @@ export { MuteToggle } from './MuteToggle';
 export { WhatsNewModal } from './WhatsNewModal';
 export { MusicConsentBanner } from './MusicConsentBanner';
 export { BackToTop } from './BackToTop';
-export { SpotifyBar } from './SpotifyBar';
+export { MusicDock } from './MusicDock';

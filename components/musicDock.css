@@ -1,0 +1,220 @@
+/* Music controls (components/MusicDock): a small black-blue metal button at
+   the bottom centre that opens a panel over the lower half of the screen.
+   Same look in the Zeitreise (every design) and in the gaming hall. */
+
+.music-dock-knob {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 9999px;
+  border: 2px solid #5b6f94;
+  color: #dbe7ff;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.55) 0, rgb(255 255 255 / 0) 34%),
+    conic-gradient(from 210deg, #0b1324, #2c4677, #0d1628, #3a5a92, #0b1324, #22375f, #0b1324);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -3px 6px rgb(0 0 0 / 0.6),
+    0 3px 8px rgb(0 0 0 / 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.music-dock-knob:hover,
+.music-dock-knob:focus-visible {
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    inset 0 -3px 6px rgb(0 0 0 / 0.6),
+    0 0 0 3px rgb(96 140 220 / 0.45),
+    0 3px 8px rgb(0 0 0 / 0.35);
+  outline: none;
+}
+.music-dock-knob:active {
+  transform: scale(0.94);
+}
+/* A soft blue glow while music plays. */
+.music-dock-knob.playing {
+  border-color: #7fa3e0;
+}
+
+.music-dock-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgb(5 8 16 / 0.45);
+  animation: music-dock-fade 0.2s ease-out;
+}
+.music-dock-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(640px, 100%);
+  height: 50vh;
+  height: 50dvh;
+  min-height: 300px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 20px calc(20px + env(safe-area-inset-bottom));
+  color: #e4ecfb;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  text-align: center;
+  border: 2px solid #4d6390;
+  border-bottom: none;
+  border-radius: 26px 26px 0 0;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, rgb(0 0 0 / 0) 1px 3px),
+    linear-gradient(180deg, #22355c 0%, #111c33 38%, #070b16 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 -10px 30px rgb(0 0 0 / 0.45);
+  animation: music-dock-up 0.25s ease-out;
+}
+.music-dock-panel p {
+  margin: 0;
+}
+.music-dock-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 9999px;
+  color: #b9c8e6;
+  background: rgb(255 255 255 / 0.06);
+  cursor: pointer;
+}
+.music-dock-close:hover,
+.music-dock-close:focus-visible {
+  color: #fff;
+  background: rgb(255 255 255 / 0.14);
+  outline: none;
+}
+.music-dock-source {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8fa9d8;
+}
+.music-dock-disc {
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #dbe7ff;
+  background:
+    radial-gradient(circle, #0b1324 0 22%, rgb(0 0 0 / 0) 23%),
+    repeating-radial-gradient(circle, #131d33 0 2px, #1d2c4d 2px 4px);
+  border: 2px solid #4d6390;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.5);
+}
+.music-dock-disc.spinning {
+  animation: music-dock-spin 6s linear infinite;
+}
+.music-dock-label {
+  font-size: 13px;
+  color: #8fa9d8;
+}
+.music-dock-title {
+  max-width: 100%;
+  font-size: clamp(17px, 4.6vw, 22px);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #f2f6ff;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.music-dock-buttons {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 6px;
+}
+.music-dock-buttons button {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 9999px;
+  border: 2px solid #4d6390;
+  color: #dbe7ff;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2a3f69, #0e1629);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 3px 8px rgb(0 0 0 / 0.45);
+}
+.music-dock-buttons .music-dock-play {
+  width: 76px;
+  height: 76px;
+  color: #071022;
+  border-color: #a9c2ef;
+  background: linear-gradient(180deg, #e8f0ff, #8fb0e8);
+}
+.music-dock-buttons button:hover:not(:disabled),
+.music-dock-buttons button:focus-visible {
+  outline: none;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 0 0 3px rgb(96 140 220 / 0.5);
+}
+.music-dock-buttons button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+.music-dock-buttons button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.music-dock-mute {
+  margin-top: 6px;
+  padding: 8px 14px;
+  font: 600 14px/1.2 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #b9c8e6;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid #3a4d74;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+.music-dock-mute:hover,
+.music-dock-mute:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+@keyframes music-dock-up {
+  from { transform: translate(-50%, 100%); }
+  to { transform: translate(-50%, 0); }
+}
+@keyframes music-dock-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes music-dock-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-dock-backdrop,
+  .music-dock-panel,
+  .music-dock-disc.spinning {
+    animation: none;
+  }
+}
+@media print {
+  .music-dock-knob,
+  .music-dock-backdrop {
+    display: none !important;
+  }
+}
