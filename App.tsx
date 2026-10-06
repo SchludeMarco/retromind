@@ -210,6 +210,12 @@ const App: React.FC = () => {
     setResumeTarget(null);
   };
 
+  // Any station straight from the start page's "Etappen" overview.
+  const openStage = (p: AppPhase) => {
+    setResumeTarget(null);
+    goTo(p);
+  };
+
   const goHome = () => {
     playSFX('click');
     setResumeTarget(phase);
@@ -669,7 +675,7 @@ const App: React.FC = () => {
               }}
             />
           )}
-          {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} />}
+          {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }} />}
           {!warm && musicDock}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 
@@ -708,6 +714,8 @@ const App: React.FC = () => {
               onReset={handleResetJourney}
               focusDecade={focusDecade}
               onSelectGalleryItem={selectGalleryItem}
+              diaryWritten={diaryEntry.trim().length > 0}
+              onOpenStage={openStage}
             />
           )}
 

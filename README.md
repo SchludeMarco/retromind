@@ -39,6 +39,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
+- **Etappen frei wählen** – sobald eine Reise begonnen ist, zeigt die Startseite
+  „Deine Etappen“: Profil, Eindrücke, Erkunden, Tagebuch, Erinnerungsbuch und
+  Abschluss als Kacheln, jede jederzeit antippbar, die zuletzt besuchte markiert
+  ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Im Design
+  Retro Warm sind auch die Stationen in „Station x von 7“ antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
   Jahrzehnt wird berechnet und auf 1960–2010 begrenzt. Alles selbst
