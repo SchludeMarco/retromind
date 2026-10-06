@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Player oben ist weg, Musik-Symbol neben ⚙️** (2026-10-06, PR #126):
+  Der große Spotify-Kasten („Listen to the full track … Get Spotify“), der oben
+  im Bild auftauchte, ist wieder unsichtbar. Er war nie zum Anschauen gedacht
+  und rutschte durch einen Fehler nach vorn, in der Zeitreise wie in der
+  Gaming-Halle. In den Designs Klassisch und Nachtschicht sitzt das
+  schwarz-blaue Musik-Symbol jetzt ganz unten direkt links neben dem
+  Einstellungen-Knopf ⚙️.
+
 - **Musiksteuerung hinter einem Metall-Symbol** (2026-10-06, PR #125): Die
   offene Spotify-Leiste von heute Morgen ist wieder weg. Stattdessen sitzt
   ganz unten in der Mitte nur noch ein kleines schwarz-blaues Metall-Symbol
