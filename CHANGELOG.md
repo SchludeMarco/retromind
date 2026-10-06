@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Mehr Luft auf der Erinnerungsreise** (2026-10-06, PR #134): Die Station
+  „Erkunden“ ist ruhiger. Es steht immer nur ein Jahrzehnt da, zuerst deins,
+  und über Knöpfe wechselst du zu den anderen. In „Retro Warm“ sind die Karten
+  schlichter (Name, kurzer Text, „+ Erinnern“), die ganze Karte ist antippbar,
+  und der doppelte Fortschrittskasten ist weg. Das Memory-Labor wartet hinter
+  „📷 Ein altes Foto mitbringen“, statt die halbe Seite zu füllen. In
+  „Klassisch“ und „Nachtschicht“ ist das große Logo oben unterwegs nur noch
+  ein kleines Zeichen; groß bleibt es auf der Startseite.
+
 - **Zurück zum Willkommensbildschirm** (2026-10-06, PR #133): In den
   Einstellungen gibt es jetzt den Knopf „Zurück zum Willkommensbildschirm“.
   Er zeigt wieder die tickende Uhr mit „Go back...“. Die Musik pausiert so

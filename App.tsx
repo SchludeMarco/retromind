@@ -572,7 +572,7 @@ const App: React.FC = () => {
       </div>
       {!showSplash && <MusicConsentBanner />}
 
-      {(!warm || phase === 'intro' || !verified) && <Header />}
+      {(!warm || phase === 'intro' || !verified) && <Header compact={verified && phase !== 'intro'} />}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">

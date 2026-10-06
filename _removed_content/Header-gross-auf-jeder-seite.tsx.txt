@@ -6,21 +6,7 @@ import React from 'react';
 // are warmed slightly towards the paper palette, so it sits on the paper
 // background like a printed part of the page. (The former text headline
 // is kept in _removed_content/Header.tsx.)
-// On the start page the logo is big; once the journey is under way it
-// shrinks to a small mark, so the memories get the room (Marco, 2026-10-06).
-export const Header: React.FC<{ compact?: boolean }> = ({ compact = false }) =>
-  compact ? (
-    <header className="pt-5 pb-1 text-center">
-      <img
-        src="/retromind-logo-header.webp"
-        alt="RetroMind"
-        width={640}
-        height={756}
-        className="mx-auto w-12 h-auto opacity-90"
-        style={{ filter: 'sepia(0.25) saturate(0.85)' }}
-      />
-    </header>
-  ) : (
+export const Header: React.FC = () => (
   <header className="pt-8 pb-6 text-center">
     <h1 className="m-0">
       <img
