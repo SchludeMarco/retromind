@@ -17,6 +17,7 @@ import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGam
 import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { SpotifyAsk } from './components/SpotifyAsk';
+import { SpotifyBar } from '../components/SpotifyBar';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
@@ -775,15 +776,44 @@ export const GamingApp: React.FC = () => {
               <path d="M8 1l7 7h-4v7H5V8H1z" />
             </svg>
           </button>
+          {/* Spotify player bar, bottom centre between "Nach oben" and the
+              Guru (Marco, 2026-10-06). On small screens the Guru button then
+              shows only its face so the three fit side by side. */}
+          {state.music && spotify.active && (
+            <SpotifyBar
+              className="hall-spotify-bar"
+              title={spotify.songTitle}
+              playing={spotify.playing}
+              ready={spotify.ready}
+              canSkip={spotify.canSkip}
+              onPrev={() => {
+                chip.play('blip');
+                spotify.playPrevious();
+              }}
+              onToggle={() => {
+                chip.play('blip');
+                spotify.togglePlay();
+              }}
+              onNext={() => {
+                chip.play('blip');
+                spotify.playNext();
+              }}
+            />
+          )}
           <button
-            className="px-btn big guru-fab"
+            className={`px-btn big guru-fab${state.music && spotify.active ? ' compact' : ''}`}
             onClick={() => {
               chip.play(guruOpen ? 'back' : 'select');
               setGuruOpen(!guruOpen);
             }}
             aria-expanded={guruOpen}
+            aria-label={guruOpen ? 'Guru schließen' : 'Game-Guru'}
           >
-            {guruOpen ? '✕' : '☻ GURU'}
+            {guruOpen ? '✕' : (
+              <>
+                ☻<span className="guru-label"> GURU</span>
+              </>
+            )}
           </button>
           {guruOpen && <GuruChat onClose={() => setGuruOpen(false)} onAsk={() => track('guru')} />}
         </>

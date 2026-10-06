@@ -64,8 +64,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [`api/spotify-tracks.js`](api/spotify-tracks.js) die Titelliste der
   Playlist, ohne sie fängt sie wie früher oben an) – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
-  regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet. In
-  den Einstellungen lässt sich die Wiedergabe pausieren.
+  regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
+  Ganz unten in der Mitte sitzt ein kleiner **Spotify-Player**
+  ([`components/SpotifyBar.tsx`](components/SpotifyBar.tsx)) mit Zurück,
+  Play/Pause und Weiter und dem Namen des Songs: in „Retro Warm“ mitten in der
+  unteren Leiste, in den anderen Designs schwebend über dem Haus-Knopf. Weiter
+  spielt den nächsten Zufallssong, Zurück den Song davor. Pausieren geht auch in
+  den Einstellungen.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
@@ -160,6 +165,9 @@ synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
+Unten in der Mitte, zwischen „Nach oben“ und dem Guru, steuert derselbe kleine
+Spotify-Player wie in der Zeitreise die Musik (Zurück, Play/Pause, Weiter, mit
+Songtitel); auf schmalen Handys zeigt der Guru-Knopf dann nur sein Gesicht ☻.
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem

@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, SpotifyBar } from './components';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
@@ -503,8 +503,24 @@ const App: React.FC = () => {
   const aiOff = aiAvailability === 'not_configured';
   const isAnswered = (id: string) => !!memoryFor(id);
 
+
+  // The Spotify player bar, always at the bottom centre between the buttons
+  // (Marco, 2026-10-06): in Retro Warm inside the bottom navigation, in the
+  // other designs floating above the home button (index.css .rm-spotify-bar).
+  const spotifyBar = spotify.allowed ? (
+    <SpotifyBar
+      className={warm ? 'rm-spotify-bar-nav' : 'rm-spotify-bar rm-fixed'}
+      title={spotify.songTitle}
+      playing={spotify.isPlaying}
+      ready={spotify.isReady}
+      canSkip={spotify.canSkip}
+      onPrev={() => { playSFX('click'); spotify.playPrevious(); }}
+      onToggle={() => { playSFX('click'); spotify.togglePlay(); }}
+      onNext={() => { playSFX('click'); spotify.playNext(); }}
+    />
+  ) : null;
   return (
-    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
+    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : spotifyBar ? 'pb-40' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
       {(!warm || showSplash) && <MuteToggle />}
@@ -534,8 +550,9 @@ const App: React.FC = () => {
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from
-          the Settings modal via play/pause only (Spotify exposes no volume
-          control we could put here). */}
+          the player bar at the bottom centre (spotifyBar below) and the
+          Settings modal (Spotify exposes no volume control we could put
+          here). */}
       <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
       {!showSplash && <MusicConsentBanner />}
 
@@ -624,6 +641,7 @@ const App: React.FC = () => {
           {warm && (
             <WarmBottomNav
               phase={phase}
+              center={spotifyBar}
               onNavigate={(target) => {
                 if (target === 'intro') {
                   if (phase !== 'intro') goHome();
@@ -635,6 +653,7 @@ const App: React.FC = () => {
             />
           )}
           {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} />}
+          {!warm && spotifyBar}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 
           {phase !== 'intro' && (

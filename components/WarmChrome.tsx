@@ -192,20 +192,25 @@ const NAV: { target: NavTarget; label: string; icon: IconName; phases: AppPhase[
   { target: 'book', label: 'Erinnerung', icon: 'book', phases: ['diary', 'book', 'finish'] },
 ];
 
-export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: NavTarget) => void }> = ({ phase, onNavigate }) => (
+// `center` (the Spotify player bar) sits in the middle, two areas on each side.
+export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: NavTarget) => void; center?: React.ReactNode }> = ({
+  phase,
+  onNavigate,
+  center,
+}) => (
   <nav
     aria-label="Hauptnavigation"
     className="rm-fixed fixed bottom-0 inset-x-0 z-[60] bg-retro-paper-white/95 backdrop-blur border-t border-[#e6dac8] pb-[env(safe-area-inset-bottom)]"
   >
-    <div className="max-w-xl mx-auto grid grid-cols-4">
-      {NAV.map((item) => {
+    <div className={`mx-auto grid ${center ? 'max-w-2xl grid-cols-[1fr_1fr_auto_1fr_1fr]' : 'max-w-xl grid-cols-4'}`}>
+      {NAV.flatMap((item, i) => {
         const active = item.phases.includes(phase);
-        return (
+        const button = (
           <button
             key={item.target}
             onClick={() => onNavigate(item.target)}
             aria-current={active ? 'page' : undefined}
-            className={`h-16 flex flex-col items-center justify-center gap-0.5 text-xs font-semibold ${
+            className={`h-16 flex flex-col items-center justify-center gap-0.5 font-semibold ${center ? 'text-[11px] sm:text-xs' : 'text-xs'} ${
               active ? 'text-retro-amber-dark' : 'text-retro-brown'
             }`}
           >
@@ -213,6 +218,7 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
             {item.label}
           </button>
         );
+        return i === 2 && center ? [<React.Fragment key="center">{center}</React.Fragment>, button] : [button];
       })}
     </div>
   </nav>
