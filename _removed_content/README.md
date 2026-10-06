@@ -49,3 +49,6 @@ gebaut oder ausgeliefert.
 - `Header-gross-auf-jeder-seite.tsx.txt`: der Kopf mit großem Logo und
   Unterzeile, der in Klassisch/Nachtschicht auf jeder Station stand (seit
   2026-10-06 nur noch auf der Startseite groß, unterwegs klein).
+- `ExplorationPhase-ein-jahrzehnt.tsx.txt`: „Erkunden“ mit Jahrzehnt-Knöpfen
+  und allen Stichworten eines Jahrzehnts auf einer Seite (PR #134, ersetzt am
+  2026-10-06 durch Sparten zum Antippen auf Marcos Wunsch).

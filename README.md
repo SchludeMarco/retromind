@@ -51,10 +51,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Erinnerungs-Wand** – Stichworte aus fünf Jahrzehnten, sortiert nach deinen
   Interessen. Pro Stichwort eine **KI-generierte persönliche Frage** und ein
   Antwortfeld – **mit Spracheingabe** (Web Speech API) wo verfügbar. Antworten
-  landen automatisch im Buch. Ruhig gestaltet: immer nur ein Jahrzehnt (zuerst
-  deins), umschaltbar über Jahrzehnt-Knöpfe, mit viel Abstand. Unterwegs ist
-  das Logo oben nur noch klein.
-- **Memory-Labor** – wartet hinter „📷 Ein altes Foto mitbringen“; altes Foto hochladen (client-seitig verkleinert), von
+  landen automatisch im Buch. Aufgeteilt in **Sparten** (Musik, Technik,
+  Spielzeug, Alltag & Mode, Naschen & Essen, Foto-Labor): Die Übersicht zeigt
+  nur Kacheln, eine Sparte öffnet sich erst beim Antippen, mit ihren Dingen
+  Jahrzehnt für Jahrzehnt, deins zuerst. Unterwegs ist das Logo oben nur noch
+  klein.
+- **Memory-Labor** – eigene Sparte „📷 Foto-Labor“; altes Foto hochladen (client-seitig verkleinert), von
   **Gemini** beschreiben lassen und die Beschreibung als Erinnerung übernehmen;
   optional per **Veo** zu einem kurzen Video animieren (benötigt Google-Billing).
 - **Echte Hits dieser Dekade** – Ära-Wahl und Spotifys offizielle „All Out …“-
