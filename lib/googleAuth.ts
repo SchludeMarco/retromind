@@ -6,7 +6,8 @@ import { GoogleUser } from '../types';
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
 const BIRTHDAY_SCOPE = 'https://www.googleapis.com/auth/user.birthday.read';
-const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE} ${BIRTHDAY_SCOPE}`;
+const GENDER_SCOPE = 'https://www.googleapis.com/auth/user.gender.read';
+const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE} ${BIRTHDAY_SCOPE} ${GENDER_SCOPE}`;
 
 export interface GoogleToken {
   accessToken: string;
@@ -96,23 +97,35 @@ export function revokeGoogleToken(accessToken: string) {
   (window as any).google?.accounts?.oauth2?.revoke(accessToken, () => {});
 }
 
-// Best-effort lookup of the user's birthday via the People API — only
-// populated if the person has shared a birthday (with year) on their Google
-// account and granted the `user.birthday.read` scope. Used purely to prefill
-// the age-verification field; never required, since most accounts don't
-// expose one.
-export async function fetchGoogleBirthday(accessToken: string): Promise<string | null> {
+export interface GoogleProfileHints {
+  birthday: string | null;
+  gender: string | null;
+}
+
+const GENDER_LABELS: Record<string, string> = { female: 'weiblich', male: 'männlich' };
+
+// Best-effort lookup of birthday and gender via the People API — only
+// populated if the person has them on their Google account and granted the
+// `user.birthday.read` / `user.gender.read` scopes (Google lets people untick
+// them on the consent screen). Used purely to prefill the profile, never
+// required.
+export async function fetchGoogleProfileHints(accessToken: string): Promise<GoogleProfileHints> {
+  const none = { birthday: null, gender: null };
   try {
-    const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=birthdays', {
+    const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=birthdays,genders', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    if (!res.ok) return null;
+    if (!res.ok) return none;
     const data = await res.json();
     const withYear = (data.birthdays || []).find((b: any) => b.date?.year);
-    if (!withYear) return null;
-    const { year, month, day } = withYear.date;
-    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    let birthday: string | null = null;
+    if (withYear) {
+      const { year, month, day } = withYear.date;
+      birthday = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+    const gender = GENDER_LABELS[(data.genders || [])[0]?.value] ?? null;
+    return { birthday, gender };
   } catch {
-    return null;
+    return none;
   }
 }

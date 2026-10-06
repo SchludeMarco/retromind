@@ -69,6 +69,9 @@ const App: React.FC = () => {
   const spotifyAuth = useSpotifyAuth();
   const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const remoteLoadAttempted = useRef(false);
+  // True once the Drive copy has been read (or found missing). Saving waits
+  // for it, so a fresh device can't overwrite the backup before reading it.
+  const [remoteChecked, setRemoteChecked] = useState(false);
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -147,10 +150,25 @@ const App: React.FC = () => {
           loadRemoteState(remote);
           setToast('Gespeicherte Reise aus Google Drive geladen');
         } else {
+          // The local journey wins, but profile fields still empty here
+          // (birthday, gender, …) are taken from the backup.
+          const r = remote.user;
+          if (r) {
+            setUser((prev) => ({
+              ...prev,
+              name: prev.name || r.name || '',
+              birthDate: prev.birthDate || r.birthDate || '',
+              gender: prev.gender || r.gender || '',
+              interests: prev.interests.length ? prev.interests : r.interests ?? [],
+              favoriteArtists: prev.favoriteArtists.length ? prev.favoriteArtists : r.favoriteArtists ?? [],
+            }));
+          }
           setToast('Deine Reise wird jetzt zusätzlich in Google Drive gesichert');
         }
       } catch {
         setDriveSyncState('error');
+      } finally {
+        setRemoteChecked(true);
       }
     })();
     // hasProgress / loadRemoteState are stable enough for this one-shot check.
@@ -159,7 +177,7 @@ const App: React.FC = () => {
 
   // Debounced push of the current session to Drive while signed in.
   useEffect(() => {
-    if (googleAuth.status !== 'signed_in' || !remoteLoadAttempted.current) return;
+    if (googleAuth.status !== 'signed_in' || !remoteChecked) return;
     const timer = setTimeout(async () => {
       const token = await googleAuth.getFreshAccessToken();
       if (!token) {
@@ -176,7 +194,7 @@ const App: React.FC = () => {
     }, 1500);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleAuth.status, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
+  }, [googleAuth.status, remoteChecked, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
@@ -476,6 +494,12 @@ const App: React.FC = () => {
     setToast(`Willkommen, ${name.split(' ')[0]}!`);
   }, [verified, profileEditRequested, googleAuth.status, googleAuth.user, googleAuth.birthdayHint, user.name, user.birthDate]);
 
+  // Gender shared on the Google account fills an empty "Geschlecht" field.
+  useEffect(() => {
+    if (googleAuth.status !== 'signed_in' || !googleAuth.genderHint || user.gender) return;
+    setUser((prev) => (prev.gender ? prev : { ...prev, gender: googleAuth.genderHint! }));
+  }, [googleAuth.status, googleAuth.genderHint, user.gender]);
+
   const handleEditProfile = () => {
     playSFX('click');
     setIsSettingsOpen(false);
@@ -492,6 +516,7 @@ const App: React.FC = () => {
     playSFX('click');
     googleAuth.signOut();
     remoteLoadAttempted.current = false;
+    setRemoteChecked(false);
     setDriveSyncState('idle');
   };
 
