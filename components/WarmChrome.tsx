@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppPhase } from '../types';
 import { PHASES } from '../lib/session';
+import { toggleMuted, useMuted } from '../lib/mute';
 
 // The app frame of the "Retro Warm" design (lib/theme.ts), after the Google
-// Stitch mock-ups: a top bar with logo, feedback, settings and account,
+// Stitch mock-ups: a top bar with logo, sound switch, feedback, settings and account,
 // a bottom navigation with the four big areas of the journey, and a stepper
 // showing which station of the journey you are at. The other designs keep
 // their floating buttons and the thin progress line instead.
@@ -126,6 +127,7 @@ export const WarmTopBar: React.FC<{
   onOpenFeedback: () => void;
   onToggleAccount: () => void;
 }> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
+  const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
       <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-3">
@@ -134,6 +136,18 @@ export const WarmTopBar: React.FC<{
           <span className="block font-serif font-bold text-lg md:text-xl tracking-tight text-retro-amber-dark">RETROMIND</span>
           <span className="block text-xs text-retro-brown truncate">{PHASE_LABEL[phase]}</span>
         </div>
+        <button
+          onClick={toggleMuted}
+          aria-pressed={muted}
+          aria-label={muted ? 'Ton einschalten' : 'Stummschalten'}
+          className={`h-10 px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
+            muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
+          }`}
+        >
+          <Icon name="wave" className="w-5 h-5" />
+          <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
+          {muted && <span className="sm:hidden">aus</span>}
+        </button>
         <button
           onClick={onOpenFeedback}
           aria-label="Feedback geben"
