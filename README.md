@@ -76,7 +76,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Einstellungen. Lange Songtitel werden kleiner geschrieben und laufen, wenn
   das nicht reicht, als Laufschrift durch. Solange Musik läuft, steht oben
   links in kleiner Schrift, welcher Song gerade spielt (auch in der
-  Gaming-Halle).
+  Gaming-Halle). Ein Tipp darauf öffnet ebenfalls die Musiksteuerung.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
