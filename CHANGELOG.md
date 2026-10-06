@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik-Symbol erscheint erst ganz unten, Tonband-Knopf zurück**
+  (2026-10-06, PR #127): In Klassisch und Nachtschicht taucht das
+  Musik-Symbol jetzt wie das Einstellungen-Symbol ⚙️ erst auf, wenn man ganz
+  nach unten scrollt. Der Ton-Knopf „Tonband“ oben in „Retro Warm“ ist wieder
+  da.
+
 - **Spotify-Player oben ist weg, Musik-Symbol neben ⚙️** (2026-10-06, PR #126):
   Der große Spotify-Kasten („Listen to the full track … Get Spotify“), der oben
   im Bild auftauchte, ist wieder unsichtbar. Er war nie zum Anschauen gedacht
@@ -20,9 +26,8 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   ganz unten in der Mitte nur noch ein kleines schwarz-blaues Metall-Symbol
   mit Note, in der Zeitreise (alle Designs) und in der Gaming-Halle. Ein Druck
   darauf öffnet die Musiksteuerung über die halbe Seite: Was gerade läuft,
-  Zurück, Play/Pause und Weiter als Symbole, dazu Ton an/aus. Der grüne
-  „Tonband“-Knopf oben in „Retro Warm“ ist entfernt, der Guru-Knopf heißt auf
-  dem Handy wieder „☻ GURU“.
+  Zurück, Play/Pause und Weiter als Symbole, dazu Ton an/aus. Der
+  Guru-Knopf heißt auf dem Handy wieder „☻ GURU“.
 
 - **Spotify-Player unten in der Mitte** (2026-10-06, PR #124): In der
   Zeitreise (alle Designs) und in der Gaming-Halle sitzt jetzt ganz unten in

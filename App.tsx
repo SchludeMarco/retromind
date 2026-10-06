@@ -509,11 +509,15 @@ const App: React.FC = () => {
   // The music controls (Marco, 2026-10-06): a small black-blue metal button
   // at the bottom centre that opens them as a panel over the lower half of
   // the screen. Retro Warm: in the middle of the bottom navigation; the other
-  // designs: in the bottom row left of the settings button (index.css
-  // .rm-music-knob).
+  // designs: in the bottom row left of the settings button, and like it only
+  // once the page is scrolled to the bottom (index.css .rm-music-knob).
   const musicDock = spotify.allowed ? (
     <MusicDock
-      className={warm ? '' : 'rm-music-knob rm-fixed'}
+      className={
+        warm
+          ? ''
+          : `rm-music-knob rm-fixed transition-opacity duration-300 ${showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`
+      }
       title={spotify.songTitle}
       source={`Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`}
       playing={spotify.isPlaying}

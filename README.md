@@ -68,7 +68,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten links neben
-  dem Einstellungen-Knopf ⚙️. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
+  dem Einstellungen-Knopf ⚙️ (wie dieser erst, wenn man ganz nach unten
+  scrollt). Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
   Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
   Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
   Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
@@ -128,7 +129,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     [`docs/stitch/DESIGN.md`](docs/stitch/DESIGN.md)): Pergament und
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
-    Feedback, Einstellungen und Konten, untere Navigation (Start,
+    Tonband-Schalter, Feedback, Einstellungen und Konten, untere Navigation (Start,
     Zeitreise, Musik-Symbol, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
     Startseite mit Jahrzehnt-Überblick und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).

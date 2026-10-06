@@ -41,7 +41,3 @@ gebaut oder ausgeliefert.
   Songtitel (PR #124, entfernt am 2026-10-06 auf Marcos Wunsch, ersetzt durch
   das kleine schwarz-blaue Metall-Symbol, das die Musiksteuerung als Panel
   über die halbe Seite öffnet).
-- `WarmTopBar-tonband-knopf.tsx.txt`: der grüne „Tonband“-Knopf mit
-  Wellen-Symbol oben in der Leiste von Retro Warm (Stummschalter; entfernt am
-  2026-10-06 auf Marcos Wunsch „Das obere Spotify Element kann weg“; Ton an/aus
-  gibt es jetzt im Musik-Panel unten und in den Einstellungen).
