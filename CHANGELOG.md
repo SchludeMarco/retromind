@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik-Symbol leuchtet gelb, solange Musik läuft** (2026-10-06, PR #128):
+  Das schwarz-blaue Musik-Symbol glüht sanft gelb, sobald Musik spielt, in der
+  Zeitreise wie in der Gaming-Halle. Ist die Musik pausiert oder der Ton aus,
+  ist es wieder schwarz-blau.
+
 - **Musik-Symbol erscheint erst ganz unten, Tonband-Knopf zurück**
   (2026-10-06, PR #127): In Klassisch und Nachtschicht taucht das
   Musik-Symbol jetzt wie das Einstellungen-Symbol ⚙️ erst auf, wenn man ganz

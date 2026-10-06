@@ -69,7 +69,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten links neben
   dem Einstellungen-Knopf ⚙️ (wie dieser erst, wenn man ganz nach unten
-  scrollt). Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
+  scrollt). Solange Musik läuft, leuchtet es gelb. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
   Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
   Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
   Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
@@ -170,7 +170,7 @@ Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
 Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
 schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
-Zurück, Play/Pause, Weiter, Ton an/aus).
+Zurück, Play/Pause, Weiter, Ton an/aus). Läuft Musik, leuchtet es gelb.
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
