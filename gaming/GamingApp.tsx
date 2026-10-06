@@ -391,7 +391,11 @@ export const GamingApp: React.FC = () => {
     <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
       <div className="stars" aria-hidden="true" />
       {/* Off-screen, always mounted: Spotify's player for the hall music. */}
-      <div ref={spotify.containerRef} aria-hidden="true" className="spotify-host" />
+      {/* Spotify swaps the ref'd element for its own iframe, so the hiding
+          sits on a wrapper around it (gaming.css .spotify-host). */}
+      <div aria-hidden="true" className="spotify-host">
+        <div ref={spotify.containerRef} />
+      </div>
       {screen === 'hub' && (
         // Inside the hall: Marco's picture of the arcade (Nano Banana), toned
         // down behind the UI. On wide screens a blurred copy fills the sides.

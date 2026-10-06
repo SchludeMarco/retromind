@@ -809,11 +809,13 @@ a {
 
 /* --- Spotify: off-screen player and the one-time question in the hall --- */
 .spotify-host {
-  position: absolute;
+  position: fixed;
   left: -100vw;
+  top: 0;
   width: 1px;
   height: 1px;
   overflow: hidden;
+  pointer-events: none;
 }
 .spotify-ask {
   position: fixed;

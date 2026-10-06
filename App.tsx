@@ -509,7 +509,8 @@ const App: React.FC = () => {
   // The music controls (Marco, 2026-10-06): a small black-blue metal button
   // at the bottom centre that opens them as a panel over the lower half of
   // the screen. Retro Warm: in the middle of the bottom navigation; the other
-  // designs: floating above the home button (index.css .rm-music-knob).
+  // designs: in the bottom row left of the settings button (index.css
+  // .rm-music-knob).
   const musicDock = spotify.allowed ? (
     <MusicDock
       className={warm ? '' : 'rm-music-knob rm-fixed'}
@@ -527,7 +528,7 @@ const App: React.FC = () => {
     />
   ) : null;
   return (
-    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : musicDock ? 'pb-36' : 'pb-24'}`}>
+    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
       {(!warm || showSplash) && <MuteToggle />}
@@ -560,7 +561,11 @@ const App: React.FC = () => {
           the player bar at the bottom centre (spotifyBar below) and the
           Settings modal (Spotify exposes no volume control we could put
           here). */}
-      <div ref={spotify.containerRef} aria-hidden="true" className="absolute w-px h-px overflow-hidden -left-full" />
+      {/* Spotify swaps the ref'd element for its own iframe (dropping our
+          classes), so the hiding sits on a wrapper around it. */}
+      <div aria-hidden="true" className="spotify-host">
+        <div ref={spotify.containerRef} />
+      </div>
       {!showSplash && <MusicConsentBanner />}
 
       {(!warm || phase === 'intro' || !verified) && <Header />}

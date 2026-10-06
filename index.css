@@ -609,16 +609,35 @@ html[data-theme="nachtschicht"] .splash-start:active {
 }
 
 
-/* Music button (components/MusicDock) in Klassisch and Nachtschicht: bottom
-   centre, above the home button and level with the chat button. In Retro
-   Warm it sits inside the bottom navigation instead. */
+/* Music button (components/MusicDock) in Klassisch and Nachtschicht: in the
+   bottom row, right next to the settings button (⚙️ bottom right), at its
+   size. In Retro Warm it sits inside the bottom navigation instead. */
 .rm-music-knob {
   position: fixed;
-  left: 50%;
-  bottom: calc(5.25rem + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
+  right: 4rem;
+  bottom: 0.5rem;
   z-index: 50;
+  width: 40px;
+  height: 40px;
 }
-.rm-music-knob:active {
-  transform: translateX(-50%) scale(0.94);
+.rm-music-knob svg {
+  width: 19px;
+  height: 19px;
+}
+@media (min-width: 768px) {
+  .rm-music-knob {
+    right: 5.5rem;
+  }
+}
+
+/* The hidden Spotify player (hooks/useSpotifyBackground). Spotify replaces
+   the inner element with its iframe, so this wrapper does the hiding. */
+.spotify-host {
+  position: fixed;
+  left: -100vw;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
 }

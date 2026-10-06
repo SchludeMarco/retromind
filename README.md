@@ -67,8 +67,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
-  mitten in der unteren Leiste, in den anderen Designs schwebend über dem
-  Haus-Knopf. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
+  mitten in der unteren Leiste, in den anderen Designs ganz unten links neben
+  dem Einstellungen-Knopf ⚙️. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
   Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
   Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
   Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
