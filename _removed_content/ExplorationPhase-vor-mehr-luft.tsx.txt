@@ -63,10 +63,7 @@ export const ExplorationPhase: React.FC<{
 }) => {
   const muted = useMuted();
   const warm = useWarmChrome();
-  // One decade at a time, starting with the visitor's own (Marco,
-  // 2026-10-06: "viel mehr Luft zum Atmen und in Erinnerungen schwelgen").
-  const [decade, setDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : Object.keys(DECADES_DB)[0]);
-  const [labOpen, setLabOpen] = useState(!!uploadedImage);
+  const [warmDecade, setWarmDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : Object.keys(DECADES_DB)[0]);
 
   const sortedBuzzwords = (year: string) =>
     [...DECADES_DB[year].buzzwords].sort((a, b) => {
@@ -75,105 +72,77 @@ export const ExplorationPhase: React.FC<{
       return am - bm;
     });
 
-  const words = sortedBuzzwords(decade);
-  const answeredCount = words.filter((bw) => isAnswered(bw.id)).length;
-  const label = (id: string) => (isAnswered(id) ? '✓ Im Erinnerungsbuch' : clickedBuzzwords.includes(id) ? 'Weiter erzählen' : '+ Erinnern');
-
-  const decadeTabs = (
-    <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4" role="group" aria-label="Jahrzehnt wählen">
-      {Object.keys(DECADES_DB).map((year) => (
-        <button
-          key={year}
-          onClick={() => setDecade(year)}
-          aria-pressed={year === decade}
-          className={
-            warm
-              ? `px-5 h-11 rounded-full font-semibold whitespace-nowrap flex-shrink-0 ${
-                  year === decade ? 'bg-retro-amber-dark text-white' : 'bg-[#eee0d6] text-retro-ink'
-                }`
-              : `px-4 h-10 whitespace-nowrap flex-shrink-0 font-bold border-2 ${
-                  year === decade ? 'bg-retro-ink text-white border-retro-ink' : 'bg-transparent border-retro-ink/30 text-retro-ink'
-                }`
-          }
-        >
-          {year}er
-        </button>
-      ))}
-    </div>
-  );
-
-  const intro = (
-    <header className="space-y-5">
-      <h2 className="text-3xl md:text-4xl">{DECADES_DB[decade].title}</h2>
-      <p className="text-retro-brown leading-relaxed max-w-prose">
-        Tippe auf etwas, das dir bekannt vorkommt, und lass dich erinnern.
-        {decade === focusDecade && <span className="font-semibold text-retro-amber-dark"> Das ist deine Zeit.</span>}
-      </p>
-      {decadeTabs}
-    </header>
-  );
-
-  // "Retro Warm": quiet cards, the whole card is the button.
-  const warmWall = (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {words.map((bw) => {
-        const answered = isAnswered(bw.id);
-        return (
-          <button
-            key={bw.id}
-            onClick={() => onOpenBuzzword(bw.id, bw.term, bw.knowledge, decade, bw.question)}
-            className="retro-card bg-retro-paper-white p-6 text-left flex flex-col gap-2"
-          >
-            <span className="flex items-baseline justify-between gap-3">
-              <span className="font-display text-xl text-retro-ink">{bw.term}</span>
-              <span aria-hidden="true" className="text-lg opacity-70">{CATEGORY[bw.category].icon}</span>
-            </span>
-            <span className="text-retro-brown leading-relaxed">{bw.knowledge}</span>
-            <span className={`mt-2 text-sm font-semibold ${answered ? 'text-[#34645c]' : 'text-retro-amber-dark'}`}>{label(bw.id)}</span>
+  // "Retro Warm": one decade at a time, as cards (after the Stitch mock-up).
+  const warmWall = () => {
+    const words = sortedBuzzwords(warmDecade);
+    const answeredCount = words.filter((bw) => isAnswered(bw.id)).length;
+    return (
+      <div>
+        <h2 className="text-3xl mb-2">Popkultur &amp; Zeitgeist</h2>
+        <p className="text-retro-brown mb-5">
+          Tippe auf ein Phänomen. Du bekommst eine persönliche Frage, und deine Antwort kommt in dein
+          Erinnerungsbuch. {userCategories.size > 0 && 'Was zu deinen Interessen passt, steht vorne.'}
+        </p>
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 -mx-4 px-4">
+          {Object.keys(DECADES_DB).map((year) => (
+            <button
+              key={year}
+              onClick={() => setWarmDecade(year)}
+              aria-pressed={year === warmDecade}
+              className={`px-5 h-11 rounded-full font-semibold whitespace-nowrap flex-shrink-0 ${
+                year === warmDecade ? 'bg-retro-amber-dark text-white' : 'bg-[#eee0d6] text-retro-ink'
+              }`}
+            >
+              {year === warmDecade && '✓ '}
+              {year}er
+            </button>
+          ))}
+        </div>
+        <p className="text-sm text-retro-brown mb-4">
+          {DECADES_DB[warmDecade].title}
+          {warmDecade === focusDecade && <span className="ml-2 font-semibold text-retro-amber-dark">· deine Zeit</span>}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {words.map((bw) => {
+            const answered = isAnswered(bw.id);
+            const clicked = clickedBuzzwords.includes(bw.id);
+            const cat = CATEGORY[bw.category];
+            return (
+              <article key={bw.id} className="retro-card bg-retro-paper-white p-5 flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-retro-cream px-3 py-1 text-xs font-semibold text-retro-amber-dark">
+                    <span aria-hidden="true">{cat.icon}</span> {cat.label}
+                  </span>
+                  {userCategories.has(bw.category) && <span className="text-xs font-semibold text-[#34645c]">★ dein Interesse</span>}
+                </div>
+                <h3 className="text-xl mb-1">{bw.term}</h3>
+                <p className="text-sm text-retro-brown mb-4 flex-grow">{bw.knowledge}</p>
+                <button
+                  onClick={() => onOpenBuzzword(bw.id, bw.term, bw.knowledge, warmDecade, bw.question)}
+                  className={`h-11 rounded-full font-semibold text-sm ${
+                    answered ? 'bg-[#4b7b72]/15 text-[#34645c]' : 'bg-retro-cream text-retro-amber-dark'
+                  }`}
+                >
+                  {answered ? '✓ Im Erinnerungsbuch' : clicked ? 'Weiter erzählen' : '+ Erinnern'}
+                </button>
+              </article>
+            );
+          })}
+        </div>
+        <div className="mt-6 rounded-2xl bg-retro-highlight p-4 flex items-center justify-between gap-3 flex-wrap">
+          <p className="font-semibold">
+            {answeredCount} von {words.length} Schätzen erinnert
+            <span className="block text-sm font-normal text-retro-brown">{warmDecade}er · insgesamt {memoriesCount} Erinnerungen</span>
+          </p>
+          <button onClick={onNext} className="retro-button bg-retro-amber text-white px-6 font-bold">
+            Tagebuch →
           </button>
-        );
-      })}
-    </div>
-  );
+        </div>
+      </div>
+    );
+  };
 
-  // Klassisch / Nachtschicht: the decade's keywords as a calm list of tags.
-  const classicWall = (
-    <div className="flex flex-wrap gap-4">
-      {words.map((bw) => {
-        const answered = isAnswered(bw.id);
-        const clicked = clickedBuzzwords.includes(bw.id);
-        return (
-          <button
-            key={bw.id}
-            onClick={() => onOpenBuzzword(bw.id, bw.term, bw.knowledge, decade, bw.question)}
-            aria-label={`${bw.term}: ${label(bw.id)}`}
-            className={`px-5 py-3 border-2 font-bold relative ${
-              answered
-                ? 'bg-retro-green text-white border-transparent'
-                : clicked
-                ? 'bg-retro-purple text-white border-transparent'
-                : 'bg-white border-retro-ink hover:bg-retro-cream'
-            }`}
-          >
-            {bw.term}
-            {answered && <span aria-hidden="true" className="absolute -top-2 -right-2 text-sm">✓</span>}
-          </button>
-        );
-      })}
-    </div>
-  );
-
-  // The memory lab waits behind one quiet line until it is wanted.
-  const lab = !labOpen ? (
-    <div className="text-center">
-      <button
-        onClick={() => setLabOpen(true)}
-        className={`px-6 py-3 font-semibold ${warm ? 'rounded-full bg-retro-cream text-retro-amber-dark' : 'border-2 border-retro-ink/30'}`}
-      >
-        📷 Ein altes Foto mitbringen
-      </button>
-    </div>
-  ) : (
+  const lab = (
     <>
     {/* Memory lab */}
     <div className="retro-card p-6 md:p-8 bg-retro-cream-light border-4 border-double">
@@ -270,17 +239,74 @@ export const ExplorationPhase: React.FC<{
     </>
   );
 
-  return (
-  <div className="py-10 animate-fadeIn space-y-12">
-    <AiNotice aiOff={aiOff} />
-    {intro}
-    {warm ? warmWall : classicWall}
-    <p className="text-center text-sm text-retro-brown">
-      {answeredCount} von {words.length} aus den {decade}ern erinnert · insgesamt {memoriesCount} Erinnerung{memoriesCount === 1 ? '' : 'en'}
-    </p>
-    {lab}
+  const classicWall = (
+    <div className="space-y-10">
+      <div>
+        <h2 className="text-3xl border-b-2 border-retro-ink pb-2">Die Erinnerungs-Wand</h2>
+        <p className="text-sm text-retro-brown mt-2">
+          Tippe auf ein Stichwort. Du bekommst eine persönliche Frage – und ein Feld, um deine Antwort
+          festzuhalten. {userCategories.size > 0 && 'Stichworte zu deinen Interessen stehen oben.'}
+        </p>
+      </div>
 
-    <div className="flex flex-wrap justify-center gap-4 pt-6">
+      {Object.entries(DECADES_DB).map(([year, data]) => {
+        const sorted = sortedBuzzwords(year);
+        return (
+          <div
+            key={year}
+            className={`p-5 rounded-lg ${year === focusDecade ? 'bg-retro-highlight border-2 border-dashed border-retro-amber' : ''}`}
+          >
+            <h3 className="text-2xl mb-5 flex items-center gap-3 flex-wrap">
+              <span className="bg-retro-ink text-white px-3 py-1 text-sm font-bold">{year}er</span>
+              {data.title}
+              {year === focusDecade && <span className="text-xs uppercase font-bold text-retro-amber-dark">deine Zeit</span>}
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {sorted.map((bw) => {
+                const answered = isAnswered(bw.id);
+                const clicked = clickedBuzzwords.includes(bw.id);
+                const highlight = userCategories.has(bw.category);
+                return (
+                  <button
+                    key={bw.id}
+                    onClick={() => onOpenBuzzword(bw.id, bw.term, bw.knowledge, year, bw.question)}
+                    className={`px-5 py-3 border-2 font-bold relative ${
+                      answered
+                        ? 'bg-retro-green text-white border-transparent'
+                        : clicked
+                        ? 'bg-retro-purple text-white border-transparent'
+                        : 'bg-white border-retro-ink hover:bg-retro-cream'
+                    }`}
+                  >
+                    {highlight && <span aria-hidden="true" className="mr-1">★</span>}
+                    {bw.term}
+                    {answered && <span aria-hidden="true" className="absolute -top-2 -right-2 text-sm">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  return (
+  <div className="py-8 animate-fadeIn space-y-14">
+    <AiNotice aiOff={aiOff} />
+    {warm ? (
+      <>
+        {warmWall()}
+        {lab}
+      </>
+    ) : (
+      <>
+        {lab}
+        {classicWall}
+      </>
+    )}
+
+    <div className="flex flex-wrap justify-center gap-4 pt-4">
       <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
         ← Zu den Impressionen
       </button>

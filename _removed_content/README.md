@@ -41,3 +41,11 @@ gebaut oder ausgeliefert.
   Songtitel (PR #124, entfernt am 2026-10-06 auf Marcos Wunsch, ersetzt durch
   das kleine schwarz-blaue Metall-Symbol, das die Musiksteuerung als Panel
   über die halbe Seite öffnet).
+- `ExplorationPhase-vor-mehr-luft.tsx.txt`: die Station „Erkunden“ vor dem
+  ruhigeren Umbau (entfernt am 2026-10-06 auf Marcos Wunsch „mehr Luft zum
+  Atmen“): in Klassisch/Nachtschicht alle Jahrzehnte auf einmal und das
+  Memory-Labor ganz oben, in Retro Warm Karten mit Kategorie-Etikett und
+  großem „+ Erinnern“-Knopf sowie ein zusätzlicher Fortschrittskasten.
+- `Header-gross-auf-jeder-seite.tsx.txt`: der Kopf mit großem Logo und
+  Unterzeile, der in Klassisch/Nachtschicht auf jeder Station stand (seit
+  2026-10-06 nur noch auf der Startseite groß, unterwegs klein).
