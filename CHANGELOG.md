@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zurück zum Willkommensbildschirm** (2026-10-06, PR #133): In den
+  Einstellungen gibt es jetzt den Knopf „Zurück zum Willkommensbildschirm“.
+  Er zeigt wieder die tickende Uhr mit „Go back...“. Die Musik pausiert so
+  lange und spielt nach dem Gong mit demselben Song weiter.
+
 - **Song oben links öffnet die Musiksteuerung** (2026-10-06, PR #132): Wer
   oben links auf den laufenden Song tippt, bekommt dieselbe Musiksteuerung
   wie über das Musik-Symbol unten. Das gilt in der Zeitreise und in der
