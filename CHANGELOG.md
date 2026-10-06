@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Songtitel passen in den Player, „Läuft gerade“ oben links** (2026-10-06,
+  PR #131): Lange Songtitel in der Musiksteuerung werden jetzt kleiner
+  geschrieben, damit sie in eine Zeile passen. Reicht das nicht, laufen sie
+  als Laufschrift durch, statt abgeschnitten zu werden. Außerdem steht
+  oben links in kleiner Schrift, welcher Song gerade läuft, bei langen
+  Titeln ebenfalls als Laufschrift. Das gilt in der Zeitreise und in der
+  Gaming-Halle.
+
 - **Uhr tickt zuverlässig, lauter und schneller** (2026-10-06, PR #130): Auf
   dem Handy blieb das Ticken oft stumm, weil das Antippen des Bildschirms den
   Ton nicht freigeschaltet hat. Jetzt startet die Uhr beim ersten Antippen

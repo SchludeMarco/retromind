@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { FitMarquee } from './FitMarquee';
 import './musicDock.css';
 
 // The music controls (Marco, 2026-10-06): tucked away behind a small
@@ -32,6 +33,9 @@ export interface MusicDockProps {
   /** Symbol on the button and the disc: a note (Zeitreise) or a lightning
    *  bolt (gaming hall, Marco 2026-10-06). */
   icon?: 'note' | 'bolt';
+  /** Small "now playing" line in the top-left corner while music plays
+   *  (Marco, 2026-10-06). On by default. */
+  ticker?: boolean;
 }
 
 const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 28 }) => (
@@ -62,6 +66,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   onOpenChange,
   className = '',
   icon = 'note',
+  ticker = true,
 }) => {
   const symbol = icon === 'bolt' ? BOLT : NOTE;
   const [open, setOpen] = useState(false);
@@ -80,6 +85,17 @@ export const MusicDock: React.FC<MusicDockProps> = ({
 
   return (
     <>
+      {ticker &&
+        playing &&
+        title &&
+        !open &&
+        createPortal(
+          <div className="music-ticker" aria-hidden="true">
+            <Svg d={symbol} size={10} />
+            <FitMarquee text={title} maxSize={10} />
+          </div>,
+          document.body
+        )}
       <button
         type="button"
         className={`music-dock-knob${playing ? ' playing' : ''} ${className}`}
@@ -110,7 +126,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             </div>
             <p className="music-dock-label">{playing ? 'Läuft gerade' : 'Pausiert'}</p>
             <p className="music-dock-title" aria-live="polite">
-              {ready ? title ?? 'Spotify' : 'Spotify lädt …'}
+              <FitMarquee text={ready ? title ?? 'Spotify' : 'Spotify lädt …'} maxSize={22} minSize={14} />
             </p>
             <div className="music-dock-buttons">
               <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label="Vorheriger Song" title="Vorheriger Song">
