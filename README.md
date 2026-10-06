@@ -170,7 +170,8 @@ Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
 Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
 schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
-Zurück, Play/Pause, Weiter, Ton an/aus). Läuft Musik, leuchtet es gelb.
+Zurück, Play/Pause, Weiter, Ton an/aus), nur mit einem Blitz statt einer Note.
+Läuft Musik, leuchtet es gelb.
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem

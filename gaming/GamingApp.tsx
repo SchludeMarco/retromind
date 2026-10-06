@@ -785,6 +785,7 @@ export const GamingApp: React.FC = () => {
           {state.music && spotify.active && (
             <MusicDock
               className="hall-music-knob"
+              icon="bolt"
               title={spotify.songTitle}
               source="Hallenmusik · 80er Heavy Metal"
               playing={spotify.playing}
