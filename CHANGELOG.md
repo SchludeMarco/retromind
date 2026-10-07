@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Warnschild vergräbt sich bei Ton aus** (2026-10-07, PR #154): Schaltest
+  du auf der Startseite der Zeitreise oder am Eingang von Gaming den Ton aus,
+  wackelt das Schild „Warning, extreme loud!“ kurz und versinkt dann im
+  Boden. Nur der kleine Erdhügel bleibt. Schaltest du den Ton wieder ein,
+  kommt es wieder heraus.
+
 - **Wegweiser „To the gaming zone“** (2026-10-07, PR #153): Auf der
   Startseite der Zeitreise steht jetzt in allen Designs ein hölzerner
   Wegweiser mit der Aufschrift „To the gaming zone“. Ein Klick darauf führt
