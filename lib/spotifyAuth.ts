@@ -11,7 +11,9 @@ import { SpotifyUser } from '../types';
 // own token endpoint.
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
-const SCOPES = 'user-read-private user-read-email';
+// streaming + user-modify-playback-state: Spotify's browser player for
+// Premium accounts (lib/spotifyPremium), which fades the music in.
+const SCOPES = 'user-read-private user-read-email streaming user-modify-playback-state';
 const VERIFIER_KEY = 'retromind.spotify.verifier';
 const STATE_KEY = 'retromind.spotify.state';
 const REFRESH_TOKEN_KEY = 'retromind.spotify.refresh_token';
@@ -20,6 +22,8 @@ export interface SpotifyToken {
   accessToken: string;
   refreshToken: string | null;
   expiresAt: number;
+  /** Permissions granted (space separated), e.g. "streaming". */
+  scope: string;
 }
 
 export function getSpotifyClientId(): string | undefined {
@@ -151,6 +155,7 @@ function parseTokenResponse(data: any, fallbackRefreshToken: string | null = nul
     // previous one when a new one isn't sent back.
     refreshToken: data.refresh_token || fallbackRefreshToken,
     expiresAt: Date.now() + (Number(data.expires_in) || 3600) * 1000,
+    scope: typeof data.scope === 'string' ? data.scope : '',
   };
 }
 

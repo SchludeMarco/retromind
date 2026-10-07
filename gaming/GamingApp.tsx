@@ -16,6 +16,7 @@ import { Feedback } from './components/Feedback';
 import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
+import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
 import { MusicDock } from '../components/MusicDock';
 import { QuestBoard } from './components/QuestBoard';
@@ -162,6 +163,9 @@ export const GamingApp: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
   // In the hall the 80s metal playlist from Spotify plays instead of the
   // chiptune tunes, once Spotify is allowed (useHallSpotify).
+  // Optional Spotify login: with Premium the hall music fades in
+  // (lib/spotifyPremium). It also picks up Spotify's redirect back here.
+  const spotifyAuth = useSpotifyAuth();
   const spotify = useHallSpotify(state.musicSource === 'spotify', screen === 'hub' && state.music && !videoPlaying);
   useEffect(() => {
     chip.track = state.track;
@@ -792,7 +796,7 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
-      {settingsOpen && <Settings cloud={cloud} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
       {screen === 'hub' && (

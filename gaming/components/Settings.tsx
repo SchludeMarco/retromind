@@ -6,6 +6,7 @@ import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
 import { warmUpGoogle } from '../../lib/googleAuth';
+import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -27,6 +28,7 @@ const SYNC_TEXT: Record<Cloud['sync'], string> = {
 
 interface Props {
   cloud: Cloud;
+  spotifyAuth: SpotifyAuth;
   state: ArcadeState;
   set: <K extends keyof ArcadeState>(key: K, value: ArcadeState[K]) => void;
   onClose: () => void;
@@ -34,7 +36,7 @@ interface Props {
 
 // Settings: the optional Google account (which brings score, collection and
 // preferences to every device) plus sound and screen colour.
-export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
+export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose }) => {
   const muted = useMuted();
   const youtube = useConsent('youtube') === true;
   const spotify = useConsent('spotify') === true;
@@ -152,6 +154,38 @@ export const Settings: React.FC<Props> = ({ cloud, state, set, onClose }) => {
                 : 'Spotify ist noch nicht erlaubt, bis dahin laufen die Chiptune-Stücke.'
               : 'Selbst komponierte Chiptune-Stücke vom Soundchip, dein Stück wählst du unten.'}
           </p>
+          {state.musicSource === 'spotify' && spotifyAuth.status !== 'not_configured' && (
+            <>
+              <div className="settings-row">
+                {spotifyAuth.status === 'signed_in' ? (
+                  <button className="px-btn" onClick={spotifyAuth.signOut} data-nav>
+                    SPOTIFY ABMELDEN ({spotifyAuth.user?.name ?? '?'})
+                  </button>
+                ) : (
+                  <button
+                    className="px-btn"
+                    onClick={() => {
+                      setConsent('spotify', true);
+                      spotifyAuth.signIn();
+                    }}
+                    disabled={spotifyAuth.status === 'signing_in'}
+                    data-nav
+                  >
+                    {spotifyAuth.status === 'signing_in' ? 'WEITERLEITUNG …' : 'MIT SPOTIFY ANMELDEN'}
+                  </button>
+                )}
+              </div>
+              <p className="dim">
+                {spotifyAuth.status === 'signed_in' && spotifyAuth.user?.product === 'premium'
+                  ? 'Premium erkannt: ganze Songs, die Musik wird beim Start langsam lauter (nicht auf iPhone/iPad).'
+                  : spotifyAuth.status === 'signed_in'
+                    ? 'Ohne Premium bleibt es beim normalen Spotify-Player.'
+                    : spotifyAuth.status === 'error'
+                      ? 'Anmeldung hat nicht geklappt, versuch es nochmal.'
+                      : 'Mit Spotify Premium laufen ganze Songs und die Musik wird beim Start langsam lauter.'}
+              </p>
+            </>
+          )}
           <h4 className="pixel-font">MUSIKSTÜCK (CHIPTUNE)</h4>
           <div className="settings-row" role="group" aria-label="Musikstück">
             {TRACKS.filter((t) => isOwned(t.id, state.owned)).map((t) => (

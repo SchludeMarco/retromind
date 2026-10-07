@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify Premium: Musik wird langsam lauter** (2026-10-07, PR #140): Wer
+  sich mit Spotify Premium anmeldet, hört die Musik in der Zeitreise und in
+  der Gaming-Halle über Spotifys eigenen Browser-Player. Sie beginnt leise und
+  wird beim Start und beim Fortsetzen über etwa 6 Sekunden lauter, und es
+  laufen ganze Songs statt kurzer Vorschauen. In der Gaming-Edition gibt es
+  dafür in den Einstellungen unter „Hallenmusik“ den Knopf „Mit Spotify
+  anmelden“. Ohne Premium und auf iPhone/iPad bleibt alles wie bisher.
+
 - **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #139): Die
   selbst erzeugte Musik in RetroMind - Gaming (Metal-Intro nach dem Eintreten
   und die Chiptune-Stücke) beginnt jetzt leise und wird über etwa 6 Sekunden

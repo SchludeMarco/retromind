@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  createSpotifyEmbedController,
   playlistTracksWithin,
   playlistUri,
   previousSong,
@@ -12,6 +11,7 @@ import {
   trackName,
   trackUri,
 } from '../../lib/spotifyEmbed';
+import { createSpotifyController, usePremiumPlayback } from '../../lib/spotifyPremium';
 import { isMuted, setMuted, useMuted } from '../../lib/mute';
 import { useConsent } from '../../lib/privacy';
 
@@ -36,6 +36,8 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const [ready, setReady] = useState(false);
   const allowed = useConsent('spotify') === true;
+  // Signed in with Premium: Spotify's own player, which fades in.
+  const premium = usePremiumPlayback();
   const muted = useMuted();
   const startedRef = useRef(false);
   // Browsers block audio until the first tap or key press.
@@ -134,7 +136,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
         const first = randomTrack(tracks);
         if (first) rememberSong(historyRef.current, first);
         setSong(first);
-        return createSpotifyEmbedController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID));
+        return createSpotifyController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID));
       })
       .then((controller) => {
         if (cancelled) {
@@ -166,7 +168,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
       setReady(false);
       setPlaying(false);
     };
-  }, [allowed, wanted, sync, nextSong]);
+  }, [allowed, wanted, premium, sync, nextSong]);
 
   useEffect(() => {
     const unlock = () => {
