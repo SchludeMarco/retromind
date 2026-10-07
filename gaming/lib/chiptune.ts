@@ -3,6 +3,7 @@
 // one in sid.ts).
 // Everything is synthesized, including the quiet piece at the entrance door.
 
+import { riseFromSilence, whenRunning } from '../../lib/startupFade';
 import { MetalPlayer } from './metal';
 import { SidPlayer } from './sid';
 import { StreetAmbience } from './street';
@@ -58,6 +59,8 @@ class ChipSound {
     return this.isMuted;
   }
   set muted(on: boolean) {
+    // Setting the same value again must not cut the opening fade short.
+    if (on === this.isMuted) return;
     this.isMuted = on;
     if (!this.ctx || !this.master) return;
     const now = this.ctx.currentTime;
@@ -72,7 +75,14 @@ class ChipSound {
       if (!Ctx) return;
       this.ctx = new Ctx();
       this.master = this.ctx.createGain();
-      this.master.gain.value = this.muted ? 0 : 0.9;
+      // Silent at first, then rising once the page really sounds, so nobody
+      // gets blasted when the app opens (lib/startupFade).
+      this.master.gain.value = 0;
+      const ctx = this.ctx;
+      const master = this.master;
+      whenRunning(ctx, () => {
+        if (!this.isMuted) riseFromSilence(master.gain, ctx, 0.9);
+      });
       // A limiter at the end lets the music sit loud on phone speakers
       // without the peaks clipping.
       const limiter = this.ctx.createDynamicsCompressor();

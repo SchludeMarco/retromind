@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ton beim Öffnen leise, mit Warnschild** (2026-10-07, PR #152): Wer die
+  Zeitreise oder Gaming öffnet, wird nicht mehr sofort laut beschallt. Die
+  tickende Uhr und der Gong der Zeitreise sowie Straße, Tür und Metal-Intro
+  in Gaming starten leise und werden über etwa 10 Sekunden langsam lauter.
+  So bleibt Zeit, den Ton auszuschalten. Solange der Ton an ist, steht rechts
+  neben dem Startknopf („Go back...“ bzw. „ENTER“) ein eingeschlagenes
+  Holzschild: „Warning, extreme loud!“. Mit Spotify Premium am Computer wird
+  auch die Musik langsam lauter. Der normale Spotify-Player lässt sich nicht
+  leiser starten, er beginnt aber erst nach dem Startknopf.
+
 - **Gaming startet im dunklen Design** (2026-10-07, PR #151): Die
   Gaming-Edition öffnet jetzt standardmäßig im dunklen Arcade-Design statt im
   hellen Modul-Design. Wer Gaming schon benutzt hat, bekommt das dunkle Design

@@ -1,0 +1,47 @@
+/* "Warning, extreme loud!" sign next to the start button (LoudSign.tsx). */
+.loud-sign {
+  display: inline-block;
+  flex: none;
+  width: clamp(76px, 22vw, 124px);
+  line-height: 0;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.55));
+  animation: loudSignHammer 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+.loud-sign svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.loud-sign-text {
+  font-family: Impact, 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  fill: #b3150f;
+  stroke: #2a1205;
+  stroke-width: 0.6;
+  paint-order: stroke;
+}
+/* Driven in with two blows of the hammer. */
+@keyframes loudSignHammer {
+  0% {
+    transform: translateY(-40%) rotate(4deg);
+    opacity: 0;
+  }
+  45% {
+    transform: translateY(4%) rotate(-2deg);
+    opacity: 1;
+  }
+  65% {
+    transform: translateY(-6%) rotate(1deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loud-sign {
+    animation: none;
+  }
+}
