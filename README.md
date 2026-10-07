@@ -105,9 +105,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   die Abfrage entfällt bei jedem weiteren Besuch.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
-  Premium-/Free-Status ab. Läuft unabhängig vom bestehenden
-  Playlist-Embed (siehe Echte Hits dieser Dekade) und beeinflusst dessen
-  Wiedergabe nicht. Ohne konfigurierte Spotify-Client-ID bleibt der Button
+  Premium-/Free-Status ab. Mit **Spotify Premium** läuft die Musik
+  (Zeitreise und Gaming-Halle) über Spotifys eigenen Browser-Player
+  ([`lib/spotifyPremium.ts`](lib/spotifyPremium.ts), Web Playback SDK): ganze
+  Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
+  6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf iPhone/iPad
+  oder wenn Spotifys Player nicht startet, bleibt es beim eingebetteten
+  Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
+  „Hallenmusik“. Ohne konfigurierte Spotify-Client-ID bleibt der Button
   unsichtbar.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
@@ -346,6 +351,7 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | Variable                 | Ort         | Beschreibung                                              |
 | ------------------------ | ----------- | ---------------------------------------------------------- |
 | `GEMINI_API_KEY`         | Vercel-Env  | Google-Gemini-API-Schlüssel (nur serverseitig)              |
+| `VITE_SPOTIFY_CLIENT_ID` | Vercel-Env  | Optional: Client-ID einer Spotify-App ([developer.spotify.com](https://developer.spotify.com/dashboard), APIs „Web API“ + „Web Playback SDK“, Redirect-URIs `https://retromind.vercel.app/` und `https://retromind-gaming.vercel.app/`) für „Mit Spotify anmelden“; in beiden Vercel-Projekten setzen |
 | `VITE_GOOGLE_CLIENT_ID`  | Vercel-Env  | Optional: OAuth-Client-ID für „Mit Google anmelden” (Login + Drive-Sicherung); ohne sie bleibt der Button ausgeblendet |
 | `RESEND_API_KEY`         | Vercel-Env  | Optional: API-Schlüssel von [resend.com](https://resend.com) für den Feedback-Versand (nur serverseitig) |
 | `FEEDBACK_TO_EMAIL`      | Vercel-Env  | Optional: Ziel-E-Mail-Adresse für eingereichtes Feedback; ohne `RESEND_API_KEY` + diese Variable meldet der Feedback-Button „nicht verfügbar” |
@@ -371,10 +377,10 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
   widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
   gesichert wird.
-- **Spotify-Lautstärke** lässt sich nicht steuern: Der eingebettete
-  Spotify-Player bietet keine Lautstärke an, deshalb kann die Spotify-Musik
-  (Zeitreise und Gaming-Halle) nicht langsam eingeblendet werden. Nur die
-  selbst erzeugte Musik der Gaming-Halle blendet ein.
+- **Spotify-Einblenden nur mit Premium:** Der eingebettete Spotify-Player
+  bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
+  Premium-Anmeldung, und auf iPhone/iPad unterstützt Spotify seinen
+  Browser-Player gar nicht.
 
 ## Pflege dieses Repos
 
@@ -438,11 +444,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
-
-- **Spotify-Musik langsam einblenden:** Geht nur mit Spotifys Web-Player
-  (Web Playback SDK), der Spotify Premium, eine Anmeldung bei Spotify in der
-  App und eine eingerichtete Spotify-App mit Client-ID braucht. Ohne Premium
-  bliebe es beim jetzigen Player.
 
 - **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
   Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte

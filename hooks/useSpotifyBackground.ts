@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  createSpotifyEmbedController,
   playlistTracksWithin,
   playlistUri,
   previousSong,
@@ -13,6 +12,7 @@ import {
   SpotifyEmbedController,
 } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
+import { createSpotifyController, usePremiumPlayback } from '../lib/spotifyPremium';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
 import { useConsent } from '../lib/privacy';
 
@@ -49,6 +49,8 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   // (or switching sound back on) must not restart it.
   const userPausedRef = useRef(false);
   const allowed = useConsent('spotify') === true;
+  // Signed in with Premium: Spotify's own player, which fades in.
+  const premium = usePremiumPlayback();
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
   const decadeRef = useRef(currentDecade);
@@ -135,7 +137,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         setSong(id);
         shuffleRef.current = !!id;
         heardRef.current = false;
-        return createSpotifyEmbedController(host, id ? trackUri(id) : playlistUri(playlistId));
+        return createSpotifyController(host, id ? trackUri(id) : playlistUri(playlistId));
       })
       .then((controller) => {
         if (cancelled) {
@@ -164,10 +166,10 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
       setIsReady(false);
       setIsPlaying(false);
     };
-    // Only consent recreates the controller — decade switches are handled
-    // by the effect below via loadUri.
+    // Only consent (or a Premium login coming or going) recreates the
+    // controller — decade switches are handled by the effect below via loadUri.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowed]);
+  }, [allowed, premium]);
 
   useEffect(() => {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;

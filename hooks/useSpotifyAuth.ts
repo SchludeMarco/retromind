@@ -10,6 +10,7 @@ import {
   loadPersistedSpotifyRefreshToken,
   SpotifyToken,
 } from '../lib/spotifyAuth';
+import { setPremiumTokenSource } from '../lib/spotifyPremium';
 
 export type SpotifyAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 'signed_in' | 'error';
 
@@ -98,6 +99,14 @@ export function useSpotifyAuth() {
     setUser(null);
     setStatus(configured ? 'signed_out' : 'not_configured');
   }, [configured]);
+
+  // A Premium login that granted "streaming" lets the music play through
+  // Spotify's browser player, which can fade in (lib/spotifyPremium). Logins
+  // from before that permission existed simply keep the normal player.
+  useEffect(() => {
+    const streaming = /\bstreaming\b/.test(tokenRef.current?.scope ?? '');
+    setPremiumTokenSource(status === 'signed_in' && user?.product === 'premium' && streaming ? getFreshAccessToken : null);
+  }, [status, user, getFreshAccessToken]);
 
   return { status, user, signIn, signOut, getFreshAccessToken };
 }
