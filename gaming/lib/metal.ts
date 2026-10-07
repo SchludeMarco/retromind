@@ -61,7 +61,13 @@ export class MetalPlayer {
     shaper.oversample = '4x';
     const lowCut = ctx.createBiquadFilter();
     lowCut.type = 'highpass';
-    lowCut.frequency.value = 110;
+    // Phone speakers play almost nothing below ~200 Hz: what sits there only
+    // came across as a quiet bass rumble (Marco, 2026-10-07), so the guitar
+    // lives above it.
+    lowCut.frequency.value = 180;
+    const lowCut2 = ctx.createBiquadFilter();
+    lowCut2.type = 'highpass';
+    lowCut2.frequency.value = 180;
     const cab = ctx.createBiquadFilter();
     cab.type = 'lowpass';
     cab.frequency.value = 3600;
@@ -70,8 +76,8 @@ export class MetalPlayer {
     crunch.frequency.value = 900;
     crunch.gain.value = 5;
     const level = ctx.createGain();
-    level.gain.value = 0.16;
-    this.guitarIn.connect(shaper).connect(lowCut).connect(crunch).connect(cab).connect(level).connect(this.out);
+    level.gain.value = 0.22;
+    this.guitarIn.connect(shaper).connect(lowCut).connect(lowCut2).connect(crunch).connect(cab).connect(level).connect(this.out);
   }
 
   start() {
@@ -152,7 +158,7 @@ export class MetalPlayer {
     const env = this.ctx.createGain();
     const tone = this.ctx.createBiquadFilter();
     tone.type = 'lowpass';
-    tone.frequency.value = muted ? 700 : 5000;
+    tone.frequency.value = muted ? 1300 : 5000;
     env.gain.setValueAtTime(0, t);
     env.gain.linearRampToValueAtTime(1, t + 0.004);
     env.gain.setTargetAtTime(muted ? 0.3 : 0.75, t + 0.02, muted ? 0.03 : 0.3);
@@ -210,14 +216,17 @@ export class MetalPlayer {
     if (d === 'k') {
       const osc = ctx.createOscillator();
       const env = ctx.createGain();
-      osc.frequency.setValueAtTime(150, t);
-      osc.frequency.exponentialRampToValueAtTime(45, t + 0.12);
-      env.gain.setValueAtTime(1, t);
+      // Punchy rather than deep, plus a beater click a phone can play; a deep
+      // loud kick also made the limiter duck everything else.
+      osc.frequency.setValueAtTime(210, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.08);
+      env.gain.setValueAtTime(0.4, t);
       env.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
       osc.connect(env).connect(this.out);
       osc.start(t);
       osc.stop(t + 0.22);
       this.track(osc);
+      this.noiseHit(t, 'bandpass', 2500, 0.35, 0.025);
       return;
     }
     if (d === 's') {
