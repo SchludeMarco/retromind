@@ -2475,7 +2475,9 @@ a {
   transform: translateX(-50%) scale(0.94);
 }
 
-/* --- Pac-Man in the hall: small, slow, faint, behind the hub (z-index 0).
+/* --- Pac-Man in the hall: small, slow and see-through, drawn over the hub
+   (the cards fill a phone screen, so behind them he was never seen) but
+   under the dock, buttons and popups; taps go through him.
    One lap takes 48s; he crosses in the first 40s, then a short pause. --- */
 .pac-lane {
   position: fixed;
@@ -2483,10 +2485,11 @@ a {
   right: 0;
   bottom: 12vh;
   height: 16px;
-  z-index: 0;
+  z-index: 380;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.7));
 }
 .pac-dots {
   position: absolute;
@@ -2553,7 +2556,7 @@ a {
   to { transform: rotate(30deg); }
 }
 .arcade[data-palette='modul'] .pac-lane {
-  opacity: 0.3;
+  opacity: 0.7;
 }
 @media (prefers-reduced-motion: reduce) {
   .pac-lane {

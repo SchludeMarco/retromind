@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Pac-Man jetzt sichtbar** (2026-10-07, PR #142): Der kleine
+  Pac-Man aus PR #141 lief hinter den Karten der Halle und war auf dem Handy
+  deshalb gar nicht zu sehen. Jetzt läuft er halb durchsichtig über dem
+  Katalog, aber unter der unteren Leiste, den Knöpfen und Fenstern. Antippen
+  geht weiter durch ihn hindurch.
+
 - **Spotify Premium: Musik wird langsam lauter** (2026-10-07, PR #140): Wer
   sich mit Spotify Premium anmeldet, hört die Musik in der Zeitreise und in
   der Gaming-Halle über Spotifys eigenen Browser-Player. Sie beginnt leise und
