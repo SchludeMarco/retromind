@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Metal-Intro auch mit Spotify, Premium schon vor der Tür** (2026-10-07,
+  PR #159): Das neue Metal-Intro läuft jetzt beim Eintreten in die
+  Gaming-Halle auch dann, wenn Spotify die Hallenmusik ist; danach übernimmt
+  Spotify. Wer in Gaming mit Spotify Premium angemeldet ist (Browser am PC),
+  hört dieselbe Spotify-Musik schon vor der Tür leise, und sie wird beim
+  Eintreten laut. Ohne Premium läuft vor der Tür weiter das gedämpfte Intro.
+
 - **Besser klingende Metal-Musik in Gaming** (2026-10-07, PR #158): Das
   Metal-Intro beim Eintreten und der gedämpfte Bass vor der Tür klingen
   jetzt nach einer echten Band: zwei verzerrte Gitarren links und rechts,

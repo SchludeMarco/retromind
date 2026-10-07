@@ -214,9 +214,12 @@ Solo, Schlagzeug und Hall. Es wird vorab in einem kleinen „Studio“
 (`gaming/lib/metalBand.ts`, aufgenommen mit `node scripts/render-metal.mjs`)
 als Datei aufgenommen (`public/gaming/audio/`), damit es auch am Handy
 sauber klingt (`gaming/lib/metal.ts`). Hast du
-Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
+Spotify erlaubt, läuft in der Halle nach dem Intro echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
+Bist du in Gaming mit Spotify Premium angemeldet (Browser am PC), läuft
+dieselbe Spotify-Musik schon vor der Tür leise und wird beim Eintreten laut;
+das Intro entfällt dann. Dumpf machen lässt sich Spotify nicht, nur leiser.
 Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
 schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
 Zurück, Play/Pause, Weiter, Ton an/aus), nur mit einem Blitz statt einer Note.
