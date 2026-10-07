@@ -15,6 +15,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   zur Startseite zurückzumüssen. Im Design Retro Warm gibt es das schon über
   die Stationsleiste.
 
+- **Feedback-Knopf ist jetzt rot und beschriftet** (2026-10-07, PR #149):
+  Bisher war Feedback nur ein kleines Briefsymbol, das viele übersehen haben.
+  Jetzt ist es ein roter Knopf mit der Aufschrift „Feedback“, in allen
+  Designs der Zeitreise und in der Gaming-Edition (dort unter Ton und
+  Zahnrad). In den Designs Klassisch und Nachtschicht sitzt er am Handy oben
+  links, damit er das Logo nicht verdeckt. Damit in „Retro Warm“ am Handy
+  alles in die Kopfleiste passt, fällt dort der Schriftzug „RETROMIND“ auf
+  schmalen Bildschirmen weg (das Logo bleibt) und der Ton-Schalter zeigt nur
+  noch sein Symbol.
+
 - **Gaming: Pac-Mampf in der Chill-Ecke** (2026-10-07, PR #148): Ein neues
   Minispiel im Stil von Pac-Man, mit eigenem Labyrinth und eigener Grafik.
   Punkte futtern, den vier Geistern ausweichen, und nach einer Kraftpille
