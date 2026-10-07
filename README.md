@@ -288,7 +288,8 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   steigen über etwa 10 Sekunden aus der Stille an, damit niemand angeschrien
   wird und Zeit bleibt, den Ton auszuschalten. Solange der Ton an ist, steht
   rechts neben dem Startknopf ein eingeschlagenes Holzschild „Warning, extreme
-  loud!“.
+  loud!“. Bei Ton aus vergräbt es sich im Boden, bei Ton an kommt es wieder
+  heraus.
 - **„Nach oben“-Knopf** ([`hooks/useScrolledDown.ts`](hooks/useScrolledDown.ts)) –
   unten links, erscheint erst nach etwas Scrollen und bringt sanft zurück an den
   Seitenanfang. In der Zeitreise (alle Designs) und in der Gaming-Halle; er
