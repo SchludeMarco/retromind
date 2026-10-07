@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #139): Die
+  selbst erzeugte Musik in RetroMind - Gaming (Metal-Intro nach dem Eintreten
+  und die Chiptune-Stücke) beginnt jetzt leise und wird über etwa 6 Sekunden
+  lauter, auch beim Wiedereinschalten. Die Spotify-Musik startet weiter in
+  normaler Lautstärke, weil Spotifys eingebetteter Player keine
+  Lautstärkeregelung anbietet.
+
 - **Gaming: Filter nach einzelnem Jahr** (2026-10-06, PR #138): Im Katalog
   von RetroMind - Gaming erscheint nach einem Tipp auf ein Jahrzehnt (80er bis
   2020er) eine zweite Reihe mit seinen Jahren, z. B. 1990 bis 1999. Ein Tipp
