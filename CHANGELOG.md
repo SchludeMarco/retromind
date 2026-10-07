@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Vor dem Eingang nur noch der Bass aus der Halle** (2026-10-07, PR #157):
+  Straßengeräusche, Sirenen und die Menschenmenge vor der Gaming-Halle sind
+  weg, weil mehrere Klänge gleichzeitig Probleme machten. Vor der Tür hörst
+  du jetzt nur noch gedämpft durch die Wand Bass und Drums der Metal-Musik von
+  drinnen, die langsam lauter werden.
+
 - **Bass aus der Halle schon vor dem Eingang** (2026-10-07, PR #156): Vor der
   Gaming-Halle hörst du jetzt gedämpft durch die Wand, wie drinnen Metal
   läuft: Bassdrum, Snare und die Basslinie genau des Riffs, das beim

@@ -58,3 +58,8 @@ gebaut oder ausgeliefert.
 - `IntroPhase-gaming-knopf.tsx.txt`: der dunkle Knopf „🕹️ Neu: RetroMind –
   Gaming“ auf der Startseite der Zeitreise (PR #54, ersetzt am 2026-10-07
   durch den Holzwegweiser „To the gaming zone“ auf Marcos Wunsch).
+- `street-ambience.ts.txt`: die Straße vor der Gaming-Halle (murmelnde und
+  rufende Menge, Polizeisirenen, Rauferei; PR #105, seit PR #156 mit dem
+  gedämpften Metal aus der Halle). Am 2026-10-07 auf Marcos Wunsch entfernt,
+  weil sich die gleichzeitigen Geräusche am Handy störten; vor dem Eingang
+  bleibt nur der gedämpfte Bass (`gaming/lib/street.ts`).

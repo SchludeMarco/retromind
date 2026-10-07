@@ -203,9 +203,8 @@ Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
 mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: die verranzte „Arcade Hallen“
 (Marcos Bild, `public/gaming/arcade-hallen.webp`) mit flackernder
 Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach. Dazu hörst
-du leise die Straße: eine murmelnde, ab und zu rufende Menschenmenge,
-Polizeisirenen in der Ferne, manchmal eine Rauferei um die Ecke und
-gedämpft durch die Wand der Bass und die Drums der Metal-Musik aus der Halle
+du leise, gedämpft durch die Wand, den Bass und die Drums der Metal-Musik aus
+der Halle
 (`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
 den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
@@ -285,7 +284,7 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   stumm und spielt beim Zurückkehren weiter.
 - **Leiser Start mit Warnschild** ([`lib/startupFade.ts`](lib/startupFade.ts),
   [`components/LoudSign.tsx`](components/LoudSign.tsx)) – die ersten Klänge
-  beim Öffnen (Uhr und Gong der Zeitreise, Straße, Tür und Intro in Gaming)
+  beim Öffnen (Uhr und Gong der Zeitreise, Bass vor der Tür, Tür und Intro in Gaming)
   steigen über etwa 10 Sekunden aus der Stille an, damit niemand angeschrien
   wird und Zeit bleibt, den Ton auszuschalten. Solange der Ton an ist, steht
   rechts neben dem Startknopf ein eingeschlagenes Holzschild „Warning, extreme
@@ -483,10 +482,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
   geboren ist, in den 1950ern. Beide starten bisher beim nächstgelegenen
   Jahrzehnt; eigene Inhalte dafür würden passen.
-
-- **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
-  Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte
-  Aufnahme (z. B. von freesound.org).
 
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle
   (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
