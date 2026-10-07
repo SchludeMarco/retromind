@@ -7,6 +7,19 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Player: Suche, Musik zum Thema und mehr** (2026-10-07, PR #144):
+  Bist du bei Spotify angemeldet, kann der Musik-Player in der Zeitreise und
+  in der Gaming-Halle viel mehr. Du suchst nach Songs, Alben und
+  Künstler:innen und spielst sie mit einem Tipp ab. Ein Balken zeigt, wo im
+  Song du bist, und du kannst darin springen. Mit Premium gibt es auch einen
+  Lautstärkeregler, das Albumcover und Vor/Zurück innerhalb von Alben.
+  „Musik zum Thema“ (an, abschaltbar) spielt passende Musik von selbst:
+  Öffnest du in der Zeitreise einen Musik-Begriff wie „ABBA-Fieber“ oder
+  „NDW“, läuft der passende Hit. Öffnest du in Gaming ein Spiel, läuft sein
+  Soundtrack, wenn Spotify einen hat. Beim Schließen geht es mit der normalen
+  Musik weiter, und „Zurück zu …“ bringt sie jederzeit zurück. Ohne
+  Anmeldung zeigt der Player einen Knopf zum Anmelden.
+
 - **Gaming: Pac-Man wandert frei durch die Halle** (2026-10-07, PR #143):
   Statt nur unten durchs Bild zu laufen, sucht sich der kleine Pac-Man jetzt
   immer wieder einen zufälligen Punkt irgendwo auf dem Bildschirm und läuft

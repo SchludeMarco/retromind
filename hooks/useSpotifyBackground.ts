@@ -15,6 +15,8 @@ import { DECADES_DB } from '../constants';
 import { createSpotifyController, usePremiumPlayback } from '../lib/spotifyPremium';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
 import { useConsent } from '../lib/privacy';
+import { createMusicStatus, reportPlayback } from '../lib/musicStatus';
+import { SpotifyHit } from '../lib/spotifyApi';
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
@@ -66,6 +68,14 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   // before it, for the player bar.
   const [song, setSong] = useState<string | null>(null);
   const historyRef = useRef<SongHistory>({ ids: [] });
+  // Position, song and volume for the open player panel.
+  const statusRef = useRef(createMusicStatus());
+  // Something other than the decade's songs plays (Marco, 2026-10-07): a
+  // search pick from the player, or (auto) the song to a music word that is
+  // open. null: the decade's own music.
+  const [special, setSpecial] = useState<(SpotifyHit & { auto: boolean }) | null>(null);
+  const specialRef = useRef(special);
+  specialRef.current = special;
   // First playback uses play(); afterwards resume() continues the track.
   const start = useCallback(() => {
     const controller = controllerRef.current;
@@ -81,6 +91,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const controller = controllerRef.current;
     const playlistId = DECADES_DB[decadeRef.current]?.spotifyPlaylistId;
     if (!controller || !playlistId) return;
+    setSpecial(null);
     const id = randomTrack(tracksRef.current[playlistId] ?? []);
     if (id) rememberSong(historyRef.current, id);
     setSong(id);
@@ -95,6 +106,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const playPrevious = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller) return;
+    if (specialRef.current) {
+      if (specialRef.current.kind !== 'track' && controller.previousTrack) controller.previousTrack();
+      else controller.seek(0);
+      return;
+    }
     const id = previousSong(historyRef.current);
     userPausedRef.current = false;
     if (!id) {
@@ -116,8 +132,43 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const playNext = useCallback(() => {
     userPausedRef.current = false;
     if (isMuted()) setMuted(false);
-    playDecade();
+    const sp = specialRef.current;
+    if (sp && sp.kind !== 'track' && controllerRef.current?.nextTrack) controllerRef.current.nextTrack();
+    else playDecade();
   }, [playDecade]);
+
+  // A search pick (or, with `auto`, the song to the topic on screen):
+  // plays it instead of the decade's songs. A single song goes back to the
+  // decade when it ends; an album, artist or playlist keeps running.
+  const playUri = useCallback(
+    (hit: SpotifyHit, auto = false) => {
+      const controller = controllerRef.current;
+      if (!controller) return;
+      setSpecial({ ...hit, auto });
+      setSong(null);
+      shuffleRef.current = false;
+      heardRef.current = false;
+      controller.loadUri(hit.uri);
+      startedRef.current = false;
+      if (!auto) {
+        userPausedRef.current = false;
+        if (isMuted()) setMuted(false);
+      }
+      if (!userPausedRef.current) start();
+    },
+    [start]
+  );
+
+  /** Back to the decade's own music. */
+  const backToTheme = useCallback(() => {
+    if (specialRef.current) playDecade();
+  }, [playDecade]);
+
+  const seek = useCallback((seconds: number) => controllerRef.current?.seek(seconds), []);
+  const setVolume = useCallback((v: number) => {
+    controllerRef.current?.setVolume?.(v);
+    statusRef.current.set({ volume: v });
+  }, []);
 
   // Created once consent is there; later decade changes reuse it via
   // loadUri below. Withdrawing consent removes the player again.
@@ -145,6 +196,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
           return;
         }
         controllerRef.current = controller;
+        statusRef.current.set({ volume: controller.getVolume?.() ?? null, track: null });
         controller.addListener('ready', () => {
           setIsReady(true);
           // play() before the player was ready gets lost: try again now.
@@ -153,9 +205,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         controller.addListener('playback_update', (e: any) => {
           const data = e?.data ?? {};
           setIsPlaying(!data.isPaused);
+          reportPlayback(statusRef.current, data);
           const position = Number(data.position) || 0;
           if (position > 1000) heardRef.current = true;
-          if (shuffleRef.current && songEnded(data, heardRef.current)) playDecade();
+          const single = shuffleRef.current || specialRef.current?.kind === 'track';
+          if (single && songEnded(data, heardRef.current)) playDecade();
         });
         start();
       });
@@ -177,7 +231,8 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const switching = !!controllerRef.current;
     playlistTracksWithin(playlistId, 3000).then((tracks) => {
       if (tracks.length) tracksRef.current[playlistId] = tracks;
-      if (switching && decadeRef.current === currentDecade) playDecade();
+      // A search pick keeps playing; the decade takes over when it is done.
+      if (switching && decadeRef.current === currentDecade && !specialRef.current) playDecade();
     });
   }, [currentDecade, allowed, playDecade]);
 
@@ -240,8 +295,14 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     playNext,
     playPrevious,
     /** "Title · Artist" of the song playing, when known. */
-    songTitle: trackName(song),
+    songTitle: special ? `${special.name} · ${special.sub}` : trackName(song),
     /** A single random song plays, so next/back can switch songs. */
-    canSkip: !!song,
+    canSkip: !!song || !!special,
+    status: statusRef.current,
+    playUri,
+    backToTheme,
+    special,
+    seek,
+    setVolume,
   };
 }

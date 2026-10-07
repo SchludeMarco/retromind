@@ -24,7 +24,8 @@ import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
-import { IMPRINT_URL, PRIVACY_URL } from '../lib/privacy';
+import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
+import { findSoundtrack, useAutoTheme, useSpotifyApi } from '../lib/spotifyApi';
 import { scrollToTop, useScrolledDown } from '../hooks/useScrolledDown';
 
 type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests';
@@ -168,6 +169,30 @@ export const GamingApp: React.FC = () => {
   // (lib/spotifyPremium). It also picks up Spotify's redirect back here.
   const spotifyAuth = useSpotifyAuth();
   const spotify = useHallSpotify(state.musicSource === 'spotify', screen === 'hub' && state.music && !videoPlaying);
+  // Music to the topic (Marco, 2026-10-07): signed in with Spotify, a game
+  // page plays the game's soundtrack if Spotify has one; closing it goes
+  // back to the hall's metal. Switch: "Musik zum Thema" in the player panel.
+  const spotifyApi = useSpotifyApi();
+  const autoTheme = useAutoTheme();
+  const spotifyRef = useRef(spotify);
+  spotifyRef.current = spotify;
+  useEffect(() => {
+    if (!selected || !spotifyApi || !autoTheme || !spotifyRef.current.active) return;
+    // Something picked in the search keeps playing.
+    const picked = spotifyRef.current.special;
+    if (picked && !picked.auto) return;
+    let live = true;
+    findSoundtrack(selected.title).then((hit) => {
+      if (live && hit) spotifyRef.current.playUri(hit, true);
+    });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected?.id, spotifyApi, autoTheme]);
+  useEffect(() => {
+    if (!selected && spotifyRef.current.special?.auto) spotifyRef.current.backToTheme();
+  }, [selected]);
   useEffect(() => {
     chip.track = state.track;
     if (screen === 'hub') chip.setMusic(state.music && !videoPlaying && !spotify.active);
@@ -844,6 +869,30 @@ export const GamingApp: React.FC = () => {
               muted={muted}
               onToggleMute={toggleMute}
               onOpenChange={(open) => chip.play(open ? 'select' : 'back')}
+              extras={{
+                status: spotify.status,
+                signedIn: spotifyApi,
+                onSignIn:
+                  spotifyAuth.status === 'not_configured'
+                    ? undefined
+                    : () => {
+                        setConsent('spotify', true);
+                        spotifyAuth.signIn();
+                      },
+                onSeek: spotify.seek,
+                onVolume: spotify.setVolume,
+                onPick: (hit) => {
+                  chip.play('coin');
+                  spotify.playUri(hit);
+                },
+                special: spotify.special,
+                themeName: '80er Metal',
+                onBackToTheme: () => {
+                  chip.play('blip');
+                  spotify.backToTheme();
+                },
+                themeHint: 'Öffnest du ein Spiel, läuft sein Soundtrack, wenn Spotify einen hat.',
+              }}
             />
           )}
           <button

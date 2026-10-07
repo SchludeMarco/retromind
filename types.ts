@@ -24,6 +24,9 @@ export interface Buzzword {
   category: BuzzwordCategory;
   knowledge: string;
   question: string;
+  /** Music words: a Spotify search for the song that plays while the word
+   *  is open ("Musik zum Thema", needs a Spotify login). */
+  song?: string;
 }
 
 export interface GalleryItem {

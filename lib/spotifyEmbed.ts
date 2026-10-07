@@ -17,6 +17,13 @@ export interface SpotifyEmbedController {
   addListener: (event: string, cb: (e: any) => void) => void;
   removeListener: (event: string, cb?: (e: any) => void) => void;
   destroy: () => void;
+  // Only the Premium browser player (lib/spotifyPremium) has these.
+  /** 0..1, kept for the next visit. */
+  setVolume?: (volume: number) => void;
+  getVolume?: () => number;
+  /** Skip within an album, artist or playlist. */
+  nextTrack?: () => void;
+  previousTrack?: () => void;
 }
 
 interface SpotifyIFrameAPI {

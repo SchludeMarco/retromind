@@ -11,6 +11,7 @@ import {
   SpotifyToken,
 } from '../lib/spotifyAuth';
 import { setPremiumTokenSource } from '../lib/spotifyPremium';
+import { setSpotifyApiToken } from '../lib/spotifyApi';
 
 export type SpotifyAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 'signed_in' | 'error';
 
@@ -106,6 +107,8 @@ export function useSpotifyAuth() {
   useEffect(() => {
     const streaming = /\bstreaming\b/.test(tokenRef.current?.scope ?? '');
     setPremiumTokenSource(status === 'signed_in' && user?.product === 'premium' && streaming ? getFreshAccessToken : null);
+    // Search and music to the topic work with any login (lib/spotifyApi).
+    setSpotifyApiToken(status === 'signed_in' ? getFreshAccessToken : null);
   }, [status, user, getFreshAccessToken]);
 
   return { status, user, signIn, signOut, getFreshAccessToken };
