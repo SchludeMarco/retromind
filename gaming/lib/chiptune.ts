@@ -33,8 +33,8 @@ const MUSIC_LEVEL = 1.4;
 // (Marco, 2026-10-07: "Die Musik sollte langsam immer lauter werden").
 const MUSIC_FADE_IN = 6;
 
-// The street in front of the door (crowd, distant sirens, a scuffle).
-const AMBIENT_LEVEL = 0.8;
+// The hall's music, muffled through the wall in front of the door.
+const AMBIENT_LEVEL = 0.3;
 
 class ChipSound {
   private ctx: AudioContext | null = null;
@@ -198,15 +198,15 @@ class ChipSound {
   }
 
   /**
-   * The street in front of the door: a crowd murmuring and shouting, police
-   * sirens in the distance and now and then a scuffle (see street.ts).
+   * In front of the door: the hall's metal, muffled through the wall
+   * (see street.ts).
    * It may be scheduled while the browser still holds audio back (no tap
    * yet); it then simply starts with the first touch. Returns a stop function.
    */
   ambient(): () => void {
     if (!this.ctx || !this.master || !this.noise) return this.note('ambient', 'aus (kein Web Audio)');
     const street = new StreetAmbience(this.ctx, this.master, this.noise, AMBIENT_LEVEL);
-    this.note('ambient', `Straße läuft (Audio: ${this.ctx.state})`);
+    this.note('ambient', `Bass aus der Halle läuft (Audio: ${this.ctx.state})`);
     return () => street.stop();
   }
 

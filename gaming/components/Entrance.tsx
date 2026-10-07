@@ -4,12 +4,12 @@ import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
-// the entrance and the street murmuring. "ENTER" throws the door open,
+// the entrance and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
 // the logo shines out of the doorway, the picture goes white and the hub
 // follows.
 //
 // Browsers only allow sound after the visitor has touched the page, so the
-// street sound is queued right away and starts with the first tap or key
+// muffled hall sound is queued right away and starts with the first tap or key
 // anywhere (installed apps and often-visited sites may play it at once).
 
 // Open the app with ?ton to see what the intro sounds did on this device.
@@ -53,7 +53,7 @@ export const Entrance: React.FC<{
   const [soundWaiting, setSoundWaiting] = useState(false);
   const stopAmbient = useRef<() => void>(() => {});
 
-  // Queue the street sound now; the first touch or key anywhere lets it play.
+  // Queue the muffled hall sound now; the first touch or key anywhere lets it play.
   useEffect(() => {
     chip.unlock();
     if (!music) {
@@ -117,7 +117,7 @@ export const Entrance: React.FC<{
           {muted
             ? 'Da drin warten die alten Games. Der Ton ist aus.'
             : soundWaiting
-              ? 'Psst … einmal irgendwo hintippen, dann hörst du die Straße.'
+              ? 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.'
               : 'Da drin warten die alten Games. Trau dich, Player 1.'}
         </p>
         <div className="entrance-row">
