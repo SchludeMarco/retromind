@@ -2422,6 +2422,40 @@ a {
 .pinball-pad {
   grid-template-columns: 1fr auto 1fr;
 }
+.pacman-maze {
+  display: block;
+  margin: 0 auto;
+  width: min(100%, 380px, 50vh * 304 / 336);
+  height: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border: 3px solid var(--dim);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.pacman-pad {
+  grid-template-columns: repeat(3, 64px);
+  grid-template-areas: '. up .' 'left mid right' '. down .';
+  justify-content: center;
+  gap: 6px;
+}
+.pacman-pad .pad-up {
+  grid-area: up;
+}
+.pacman-pad .pad-left {
+  grid-area: left;
+}
+.pacman-pad .pad-mid {
+  grid-area: mid;
+  font-size: 10px;
+}
+.pacman-pad .pad-right {
+  grid-area: right;
+}
+.pacman-pad .pad-down {
+  grid-area: down;
+}
 .pinball-pad .px-btn {
   font-size: 12px;
   padding: 16px 8px;

@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Pac-Mampf in der Chill-Ecke** (2026-10-07, PR #148): Ein neues
+  Minispiel im Stil von Pac-Man, mit eigenem Labyrinth und eigener Grafik.
+  Punkte futtern, den vier Geistern ausweichen, und nach einer Kraftpille
+  werden sie blau und lassen sich fressen. Dazu ein Tunnel an der Seite, eine
+  Kirsche als Bonus, und mit jedem Level wird es etwas flotter. Gelenkt wird
+  am Handy durch Wischen über das Labyrinth oder mit dem Steuerkreuz darunter,
+  am Computer mit den Pfeiltasten (oder WASD), die Leertaste pausiert. Ein
+  geschafftes Level zählt als geschafftes Minispiel für Quests und Erfolge,
+  der Rekord wird gespeichert.
+
 - **„Deine Zeit“ passt jetzt zum Geburtsjahr** (2026-10-07, PR #147): Die
   Einstimmung sagte z. B. „Du warst in den 2010ern ungefähr im
   Grundschulalter“, auch wenn man 2010 geboren ist. Das wirkte wie ein

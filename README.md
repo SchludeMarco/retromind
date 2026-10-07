@@ -248,7 +248,7 @@ Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
 **Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: die
-Minispiele klappen direkt darunter auf, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil und Flipper
+Minispiele klappen direkt darunter auf, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper und Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten)
 ([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
 [`gaming/components/minigames/`](gaming/components/minigames/)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
