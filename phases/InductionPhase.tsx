@@ -2,19 +2,21 @@ import React from 'react';
 import { GalleryItem } from '../types';
 import { DECADES_DB } from '../constants';
 import { GalleryCard } from '../components';
+import { describeFocusDecade } from '../lib/format';
 
 export const InductionPhase: React.FC<{
   focusDecade: string;
+  birthDate: string;
   onSelectGalleryItem: (item: GalleryItem) => void;
   onContinue: () => void;
-}> = ({ focusDecade, onSelectGalleryItem, onContinue }) => {
+}> = ({ focusDecade, birthDate, onSelectGalleryItem, onContinue }) => {
   const decadeData = DECADES_DB[focusDecade];
   return (
     <div className="py-8 animate-fadeIn">
       <div className="text-center mb-10">
         <h2 className="text-4xl mb-3">Deine Zeit: {decadeData?.title}</h2>
         <p className="text-retro-brown">
-          Du warst in den {focusDecade}ern ungefähr im Grundschulalter. Ein paar Impressionen zum Einstimmen –
+          {describeFocusDecade(birthDate, focusDecade)} Ein paar Impressionen zum Einstimmen –
           tippe für die Beschreibung.
         </p>
       </div>

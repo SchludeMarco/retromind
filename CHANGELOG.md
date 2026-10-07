@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Deine Zeit“ passt jetzt zum Geburtsjahr** (2026-10-07, PR #147): Die
+  Einstimmung sagte z. B. „Du warst in den 2010ern ungefähr im
+  Grundschulalter“, auch wenn man 2010 geboren ist. Das wirkte wie ein
+  Widerspruch und stimmte bei sehr jungen oder sehr alten Geburtsjahren auch
+  nicht. Jetzt steht dort dein Geburtsjahr und wann du ungefähr in der
+  Grundschule warst, z. B. „Du bist 2010 geboren, in der Grundschule warst du
+  also etwa von 2016 bis 2020“. Fällt deine Grundschulzeit in ein Jahrzehnt,
+  das RetroMind noch nicht hat, sagt die App das und startet beim
+  nächstgelegenen.
+
 - **Spotify-Musik auf Android wieder sofort da** (2026-10-07, PR #146): Mit
   Spotify-Premium-Anmeldung blieb es auf Android-Handys still, weil Spotifys
   Browser-Player dort nicht spielt. Auf Handy und Tablet läuft die Musik jetzt
