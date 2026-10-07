@@ -64,10 +64,37 @@ export function buildBookText(user: UserProfile, decade: string, memories: Captu
 
 // A user was born in `birthDate`; they'd have been ~8 years old (prime
 // nostalgia age) in this decade. Clamped to the decades we have content for.
-export function computeFocusDecade(birthDate: string): string {
-  if (!birthDate) return '1980';
+const FIRST_DECADE = 1960;
+const LAST_DECADE = 2010;
+
+function birthYearOf(birthDate: string): number | null {
+  if (!birthDate) return null;
   const year = new Date(birthDate).getFullYear();
-  if (Number.isNaN(year)) return '1980';
+  return Number.isNaN(year) ? null : year;
+}
+
+export function computeFocusDecade(birthDate: string): string {
+  const year = birthYearOf(birthDate);
+  if (year === null) return '1980';
   const raw = Math.floor((year + 8) / 10) * 10;
-  return String(Math.min(2010, Math.max(1960, raw)));
+  return String(Math.min(LAST_DECADE, Math.max(FIRST_DECADE, raw)));
+}
+
+// Why this decade is "deine Zeit", in concrete years. Saying only "in den
+// 2010ern warst du im Grundschulalter" read as a contradiction to someone
+// born in 2010, and was plainly wrong when the decade had to be clamped.
+export function describeFocusDecade(birthDate: string, focusDecade: string): string {
+  const year = birthYearOf(birthDate);
+  if (year === null) return `Wir starten in den ${focusDecade}ern.`;
+  const from = year + 6;
+  const to = year + 10;
+  const raw = Math.floor((year + 8) / 10) * 10;
+  const intro = `Du bist ${year} geboren, in der Grundschule warst du also etwa von ${from} bis ${to}.`;
+  if (raw > LAST_DECADE) {
+    return `${intro} So weit reicht RetroMind noch nicht, deshalb starten wir mit dem jüngsten Jahrzehnt, den ${focusDecade}ern.`;
+  }
+  if (raw < FIRST_DECADE) {
+    return `${intro} So weit zurück reicht RetroMind noch nicht, deshalb starten wir mit dem ältesten Jahrzehnt, den ${focusDecade}ern.`;
+  }
+  return `${intro} Deshalb starten wir in den ${focusDecade}ern.`;
 }

@@ -46,7 +46,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Retro Warm sind auch die Stationen in „Station x von 7“ antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
-  Jahrzehnt wird berechnet und auf 1960–2010 begrenzt. Alles selbst
+  Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
+  1960–2010 begrenzt. Die Einstimmung nennt dazu dein Geburtsjahr und deine
+  ungefähren Grundschuljahre und sagt ehrlich, wenn dein Jahrzehnt noch
+  fehlt und RetroMind deshalb beim nächstgelegenen startet. Alles selbst
   angegeben – RetroMind "verifiziert" kein Alter/Geschlecht über Dritte,
   weil keiner der Logins (Google, Spotify) das überhaupt hergibt.
 - **Jahrzehnt-Impressionen** – kuratierte Zeit-„Postkarten“ je Dekade
@@ -456,6 +459,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
+  geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
+  geboren ist, in den 1950ern. Beide starten bisher beim nächstgelegenen
+  Jahrzehnt; eigene Inhalte dafür würden passen.
 
 - **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
   Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte

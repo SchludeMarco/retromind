@@ -798,6 +798,7 @@ const App: React.FC = () => {
           {phase === 'induction' && (
             <InductionPhase
               focusDecade={focusDecade}
+              birthDate={user.birthDate}
               onSelectGalleryItem={selectGalleryItem}
               onContinue={() => goTo('exploration')}
             />
