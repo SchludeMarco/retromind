@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
 // focus navigation while a game runs.
 
-export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball';
+export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball' | 'pacman';
 
 const KEY = 'retromind.gaming.mini.v1';
 

@@ -4,10 +4,11 @@ import { Done, loadBests, MiniGameId, saveBest, shuffle } from './minigames/shar
 import { Sudoku, sudokuBest } from './minigames/Sudoku';
 import { Blocks, blocksBest } from './minigames/Blocks';
 import { Pinball, pinballBest } from './minigames/Pinball';
+import { PacMan, pacmanBest } from './minigames/PacMan';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
-// blocks and pinball have their own files in ./minigames. Everything works by
+// blocks, pinball and Pac-Mampf have their own files in ./minigames. Everything works by
 // touch, mouse and keyboard, and sounds go through the chip (which follows
 // lib/mute).
 
@@ -55,6 +56,13 @@ export const MINI_GAMES: { id: MiniGameId; title: string; icon: string; text: st
     icon: '🎱',
     text: 'Kleiner Flippertisch mit drei Kugeln. Linke und rechte Bildschirmhälfte bewegen die Flipper.',
     best: pinballBest,
+  },
+  {
+    id: 'pacman',
+    title: 'PAC-MAMPF',
+    icon: '🟡',
+    text: 'Punkte futtern, Geistern ausweichen, nach der Kraftpille den Spieß umdrehen. Wie Pac-Man am Automaten. Wischen oder Pfeiltasten.',
+    best: pacmanBest,
   },
 ];
 
@@ -384,8 +392,10 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <Sudoku onWin={onWin} />
         ) : id === 'blocks' ? (
           <Blocks onWin={onWin} />
-        ) : (
+        ) : id === 'pinball' ? (
           <Pinball onWin={onWin} />
+        ) : (
+          <PacMan onWin={onWin} />
         )}
       </div>
     </div>
