@@ -194,7 +194,9 @@ Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
 gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
-(`public/gaming/arcade-innen.webp`). Dazu
+(`public/gaming/arcade-innen.webp`). Davor läuft ganz klein, blass und
+langsam ein Pac-Man mit Geist durchs Bild und frisst eine Punktereihe
+(abgeschaltet bei „Bewegung reduzieren“). Dazu
 CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf;
 sie und das Metal-Intro beginnen leise und werden über etwa 6 Sekunden lauter),
 Erfolge, Sammlung, Konami-Code
