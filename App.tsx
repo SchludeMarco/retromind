@@ -13,7 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock, StationPicker } from './components';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
@@ -646,6 +646,9 @@ const App: React.FC = () => {
       {!showSplash && <MusicConsentBanner />}
 
       {(!warm || phase === 'intro' || !verified) && <Header compact={verified && phase !== 'intro'} />}
+      {!warm && verified && phase !== 'intro' && (
+        <StationPicker phase={phase} onSelect={(p) => { if (p === 'intro') goHome(); else goTo(p); }} />
+      )}
 
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">

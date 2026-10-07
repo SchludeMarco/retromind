@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Stationen direkt unter dem Logo wählen** (2026-10-07, PR #150): In
+  den Designs Klassisch und Nachtschicht steht während der Reise unter dem
+  kleinen Logo jetzt „Station x von 7“ mit dem Namen der aktuellen Station.
+  Sie bleibt zugeklappt, bis du sie antippst. Dann siehst du alle Stationen
+  von Start bis Abschluss und springst mit einem Tipp direkt hin, ohne erst
+  zur Startseite zurückzumüssen. Im Design Retro Warm gibt es das schon über
+  die Stationsleiste.
+
 - **Gaming: Pac-Mampf in der Chill-Ecke** (2026-10-07, PR #148): Ein neues
   Minispiel im Stil von Pac-Man, mit eigenem Labyrinth und eigener Grafik.
   Punkte futtern, den vier Geistern ausweichen, und nach einer Kraftpille

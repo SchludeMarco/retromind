@@ -5,9 +5,9 @@ import { AppPhase } from '../types';
 // begun, every station can be opened straight from the start page, in any
 // order, whenever the mood strikes. The "Weiter" buttons inside the
 // stations still suggest the usual order.
-type Stage = { phase: AppPhase; icon: string; label: string; text: string };
+export type Stage = { phase: AppPhase; icon: string; label: string; text: string };
 
-const STAGES: Stage[] = [
+export const STAGES: Stage[] = [
   { phase: 'onboarding', icon: '🙋', label: 'Dein Profil', text: 'Name, Interessen und Lieblingsmusik' },
   { phase: 'induction', icon: '🎞️', label: 'Eindrücke', text: 'Bilder und Klänge deiner Zeit' },
   { phase: 'exploration', icon: '🧭', label: 'Erkunden', text: 'Sparten zum Stöbern und Erinnern' },
