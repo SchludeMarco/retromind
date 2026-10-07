@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #PRNUM): Die
+- **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #139): Die
   selbst erzeugte Musik in RetroMind - Gaming (Metal-Intro nach dem Eintreten
   und die Chiptune-Stücke) beginnt jetzt leise und wird über etwa 6 Sekunden
   lauter, auch beim Wiedereinschalten. Die Spotify-Musik startet weiter in
