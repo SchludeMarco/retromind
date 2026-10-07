@@ -28,6 +28,9 @@ export const DOOR_SWING = 1.2;
 
 // Music bus level; at 0.32 phones barely played the tunes audibly.
 const MUSIC_LEVEL = 1.4;
+// The hall music starts quietly and swells up over this many seconds
+// (Marco, 2026-10-07: "Die Musik sollte langsam immer lauter werden").
+const MUSIC_FADE_IN = 6;
 
 // The street in front of the door (crowd, distant sirens, a scuffle).
 const AMBIENT_LEVEL = 0.8;
@@ -311,13 +314,20 @@ class ChipSound {
     this.metalPending = true;
   }
 
-  startMusic() {
+  /** `fadeIn` = false when the hub tune follows straight on from the metal intro. */
+  startMusic(fadeIn = true) {
     if (!this.musicEnabled || !this.ctx || !this.musicBus || this.musicTimer !== null || this.hubSid || this.metal) return;
+    if (fadeIn) {
+      const now = this.ctx.currentTime;
+      this.musicBus.gain.cancelScheduledValues(now);
+      this.musicBus.gain.setValueAtTime(0.0001, now);
+      this.musicBus.gain.linearRampToValueAtTime(MUSIC_LEVEL, now + MUSIC_FADE_IN);
+    }
     if (this.metalPending && this.noise) {
       this.metalPending = false;
       this.metal = new MetalPlayer(this.ctx, this.musicBus, this.noise, () => {
         this.metal = null;
-        this.startMusic();
+        this.startMusic(false);
       });
       this.metal.start();
       return;

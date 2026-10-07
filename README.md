@@ -195,7 +195,8 @@ zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
 gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
 (`public/gaming/arcade-innen.webp`). Dazu
-CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf),
+CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf;
+sie und das Metal-Intro beginnen leise und werden über etwa 6 Sekunden lauter),
 Erfolge, Sammlung, Konami-Code
 und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
 den 80ern bis heute („Welches Game, Digga?“, „Epic Fail“, „GG“, „no cap“). Lässt sich als eigenständige App installieren
@@ -368,6 +369,10 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
   widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
   gesichert wird.
+- **Spotify-Lautstärke** lässt sich nicht steuern: Der eingebettete
+  Spotify-Player bietet keine Lautstärke an, deshalb kann die Spotify-Musik
+  (Zeitreise und Gaming-Halle) nicht langsam eingeblendet werden. Nur die
+  selbst erzeugte Musik der Gaming-Halle blendet ein.
 
 ## Pflege dieses Repos
 
@@ -431,6 +436,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Spotify-Musik langsam einblenden:** Geht nur mit Spotifys Web-Player
+  (Web Playback SDK), der Spotify Premium, eine Anmeldung bei Spotify in der
+  App und eine eingerichtete Spotify-App mit Client-ID braucht. Ohne Premium
+  bliebe es beim jetzigen Player.
 
 - **Echte Straßenaufnahme am Eingang:** Statt der synthetisierten
   Menschenmenge, Sirenen und Rauferei vor der Tür eine lizenzfreie, echte
