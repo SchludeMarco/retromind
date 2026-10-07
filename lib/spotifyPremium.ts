@@ -185,16 +185,26 @@ async function createPremiumController(source: TokenSource, initialUri: string):
 
   // Quiet to full over FADE_IN_MS, on a curve that sounds even to the ear.
   let volume = savedVolume();
-  const fadeIn = () => {
+  // setLevel's factor and the volume last sent to Spotify.
+  let level = 1;
+  let applied = 0;
+  const apply = (v: number) => {
+    applied = Math.max(0.0001, v);
+    player.setVolume(applied).catch(() => {});
+  };
+  // Glides from the current volume to the target (volume x level).
+  const glide = (from: number, ms: number) => {
     stopFade();
     const started = Date.now();
-    player.setVolume(0.0001).catch(() => {});
+    apply(from);
     fadeTimer = window.setInterval(() => {
-      const p = Math.min(1, (Date.now() - started) / FADE_IN_MS);
-      player.setVolume(Math.max(0.0001, volume * p * p)).catch(() => {});
+      const p = Math.min(1, (Date.now() - started) / ms);
+      const target = volume * level;
+      apply(from + (target - from) * p * p);
       if (p >= 1) stopFade();
     }, 150);
   };
+  const fadeIn = () => glide(0, FADE_IN_MS);
 
   const emit = (state: any) => {
     if (!state) return;
@@ -300,9 +310,15 @@ async function createPremiumController(source: TokenSource, initialUri: string):
       }
       // A fade still running would undo the new level.
       stopFade();
-      player.setVolume(Math.max(0.0001, volume)).catch(() => {});
+      apply(volume * level);
     },
     getVolume: () => volume,
+    setLevel: (factor: number, rampMs: number) => {
+      if (factor === level) return;
+      level = factor;
+      // A fade-in still running simply ends at the new level.
+      if (fadeTimer === null) glide(applied, rampMs);
+    },
     nextTrack: () => {
       player.nextTrack().catch(() => {});
     },

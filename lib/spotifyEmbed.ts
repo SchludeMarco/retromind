@@ -21,6 +21,11 @@ export interface SpotifyEmbedController {
   /** 0..1, kept for the next visit. */
   setVolume?: (volume: number) => void;
   getVolume?: () => number;
+  /**
+   * Scales the volume without touching the saved slider value, gliding
+   * there over `rampMs` (the gaming hall: quiet outside the door, loud inside).
+   */
+  setLevel?: (factor: number, rampMs: number) => void;
   /** Skip within an album, artist or playlist. */
   nextTrack?: () => void;
   previousTrack?: () => void;
