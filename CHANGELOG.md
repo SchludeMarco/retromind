@@ -15,6 +15,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   dafür in den Einstellungen unter „Hallenmusik“ den Knopf „Mit Spotify
   anmelden“. Ohne Premium und auf iPhone/iPad bleibt alles wie bisher.
 
+- **Gaming: kleiner Pac-Man im Hintergrund** (2026-10-07, PR #141): In der
+  Halle von RetroMind - Gaming läuft jetzt ein kleiner, blasser Pac-Man
+  langsam unten durchs Bild, frisst eine Reihe Punkte und hat einen Geist auf
+  den Fersen. Er bleibt hinter Katalog und Knöpfen, lässt sich nicht antippen
+  und ist aus, wenn am Gerät „Bewegung reduzieren“ eingestellt ist.
+
 - **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #139): Die
   selbst erzeugte Musik in RetroMind - Gaming (Metal-Intro nach dem Eintreten
   und die Chiptune-Stücke) beginnt jetzt leise und wird über etwa 6 Sekunden
