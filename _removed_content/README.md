@@ -63,3 +63,8 @@ gebaut oder ausgeliefert.
   gedämpften Metal aus der Halle). Am 2026-10-07 auf Marcos Wunsch entfernt,
   weil sich die gleichzeitigen Geräusche am Handy störten; vor dem Eingang
   bleibt nur der gedämpfte Bass (`gaming/lib/street.ts`).
+- `metal-synth-live.ts.txt` und `hall-wall-synth.ts.txt`: das live im
+  Browser erzeugte Metal-Intro der Gaming-Halle (PR #100 bis #155) und der
+  dazu passende gedämpfte Bass vor der Tür (PR #156/#157). Am 2026-10-07
+  ersetzt, weil die Musik billig klang; jetzt spielt die App vorab
+  aufgenommene Dateien (`gaming/lib/metalBand.ts`, `public/gaming/audio/`).

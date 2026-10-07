@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Besser klingende Metal-Musik in Gaming** (2026-10-07, PR #158): Das
+  Metal-Intro beim Eintreten und der gedämpfte Bass vor der Tür klingen
+  jetzt nach einer echten Band: zwei verzerrte Gitarren links und rechts,
+  ein Bass, ein Solo mit Echo, ein volleres Schlagzeug mit klirrenden
+  Becken und Hall wie in einer Halle. Die Musik wird nicht mehr live im
+  Handy erzeugt, sondern ist vorab aufgenommen. Dadurch ruckelt nichts, und
+  vor der Tür läuft genau dieselbe Musik, nur gedämpft durch die Wand.
+
 - **Vor dem Eingang nur noch der Bass aus der Halle** (2026-10-07, PR #157):
   Straßengeräusche, Sirenen und die Menschenmenge vor der Gaming-Halle sind
   weg, weil mehrere Klänge gleichzeitig Probleme machten. Vor der Tür hörst

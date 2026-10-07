@@ -209,7 +209,11 @@ der Halle
 den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
-synthetisierten 80er-Heavy-Metal-Intro (`gaming/lib/metal.ts`). Hast du
+80er-Heavy-Metal-Intro mit zwei verzerrten Gitarren links und rechts, Bass,
+Solo, Schlagzeug und Hall. Es wird vorab in einem kleinen „Studio“
+(`gaming/lib/metalBand.ts`, aufgenommen mit `node scripts/render-metal.mjs`)
+als Datei aufgenommen (`public/gaming/audio/`), damit es auch am Handy
+sauber klingt (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle stattdessen sofort echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.

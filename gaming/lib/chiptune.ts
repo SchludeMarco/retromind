@@ -4,7 +4,7 @@
 // Everything is synthesized, including the quiet piece at the entrance door.
 
 import { riseFromSilence, whenRunning } from '../../lib/startupFade';
-import { MetalPlayer } from './metal';
+import { loadRecording, METAL_INTRO_URL, MetalPlayer } from './metal';
 import { SidPlayer } from './sid';
 import { StreetAmbience } from './street';
 import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
@@ -34,7 +34,7 @@ const MUSIC_LEVEL = 1.4;
 const MUSIC_FADE_IN = 6;
 
 // The hall's music, muffled through the wall in front of the door.
-const AMBIENT_LEVEL = 0.3;
+const AMBIENT_LEVEL = 0.2;
 
 class ChipSound {
   private ctx: AudioContext | null = null;
@@ -205,7 +205,9 @@ class ChipSound {
    */
   ambient(): () => void {
     if (!this.ctx || !this.master || !this.noise) return this.note('ambient', 'aus (kein Web Audio)');
-    const street = new StreetAmbience(this.ctx, this.master, this.noise, AMBIENT_LEVEL);
+    const street = new StreetAmbience(this.ctx, this.master, AMBIENT_LEVEL);
+    // Load the intro already, so it is ready on "ENTER".
+    loadRecording(this.ctx, METAL_INTRO_URL);
     this.note('ambient', `Bass aus der Halle läuft (Audio: ${this.ctx.state})`);
     return () => street.stop();
   }
@@ -333,9 +335,9 @@ class ChipSound {
       this.musicBus.gain.setValueAtTime(0.0001, now);
       this.musicBus.gain.linearRampToValueAtTime(MUSIC_LEVEL, now + MUSIC_FADE_IN);
     }
-    if (this.metalPending && this.noise) {
+    if (this.metalPending) {
       this.metalPending = false;
-      this.metal = new MetalPlayer(this.ctx, this.musicBus, this.noise, () => {
+      this.metal = new MetalPlayer(this.ctx, this.musicBus, () => {
         this.metal = null;
         this.startMusic(false);
       });
