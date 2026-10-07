@@ -242,11 +242,11 @@ Cloud-Sicherung außerdem `VITE_GOOGLE_CLIENT_ID` und die Domain als erlaubten
 JavaScript-Ursprung im Google-OAuth-Client).
 
 **Design wählbar** – in den Gaming-Einstellungen unter „Bildschirm“ (oder per
-Knopf in der Werkzeugleiste): „Modul“ (Standard, mit Google Stitch entworfen:
-helles Konsolen-Plastik, weiße Modul-Karten mit Griffrillen in der
-Konsolenfarbe, rote Tasten, gut lesbare Schrift und eine Navigation unten mit
-Katalog, Kisten, Stash, Trophäen und Chillen), dazu die Pixel-Looks „Arcade“,
-„Handheld“ und „Bernstein“. Das Design-System liegt in
+Knopf in der Werkzeugleiste): „Arcade“ (Standard, dunkler Pixel-Look mit
+Neonfarben), „Modul“ (mit Google Stitch entworfen: helles Konsolen-Plastik,
+weiße Modul-Karten mit Griffrillen in der Konsolenfarbe, rote Tasten, gut
+lesbare Schrift und eine Navigation unten mit Katalog, Kisten, Stash, Trophäen
+und Chillen), dazu die Pixel-Looks „Handheld“ und „Bernstein“. Das Design-System liegt in
 [`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
 `gaming/gaming.css` (Abschnitt „Design Modul“).
 **Feedback** – roter Knopf mit Briefsymbol und Aufschrift „Feedback“ in der Kopfleiste, unter Ton und Zahnrad. Läuft über dieselbe `/api/feedback` der

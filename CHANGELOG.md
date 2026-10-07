@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming startet im dunklen Design** (2026-10-07, PR #151): Die
+  Gaming-Edition öffnet jetzt standardmäßig im dunklen Arcade-Design statt im
+  hellen Modul-Design. Wer Gaming schon benutzt hat, bekommt das dunkle Design
+  einmal automatisch. Wer danach in den Einstellungen unter „Bildschirm“ ein
+  anderes Design wählt (zum Beispiel wieder Modul), behält es.
+
 - **Stationen direkt unter dem Logo wählen** (2026-10-07, PR #150): In
   den Designs Klassisch und Nachtschicht steht während der Reise unter dem
   kleinen Logo jetzt „Station x von 7“ mit dem Namen der aktuellen Station.

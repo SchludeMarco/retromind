@@ -36,8 +36,9 @@ export interface ArcadeState {
   quests: QuestLog;
 }
 
-/** 2 = the "Modul" design from Google Stitch (PR #93). */
-const DESIGN_REV = 2;
+/** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */
+const DESIGN_REV = 3;
+const DEFAULT_PALETTE: Palette = 'arcade';
 
 const KEY = 'retromind.gaming.v1';
 
@@ -47,7 +48,7 @@ const DEFAULTS: ArcadeState = {
   discovered: [],
   achievements: [],
   customGames: {},
-  palette: 'modul',
+  palette: DEFAULT_PALETTE,
   music: true,
   musicSource: 'spotify',
   track: DEFAULT_TRACK,
@@ -69,7 +70,7 @@ function load(): ArcadeState {
     let state: ArcadeState = { ...DEFAULTS, ...saved };
     // Profiles from before the new default design get it once; picking
     // another design afterwards sticks.
-    if (!(saved.designRev >= DESIGN_REV)) state = { ...state, palette: 'modul', designRev: DESIGN_REV };
+    if (!(saved.designRev >= DESIGN_REV)) state = { ...state, palette: DEFAULT_PALETTE, designRev: DESIGN_REV };
     state = { ...state, quests: freshLog(state.quests) };
     if (!isMusicSource(state.musicSource)) state = { ...state, musicSource: DEFAULTS.musicSource };
     return isTrackId(state.track) ? state : { ...state, track: DEFAULT_TRACK };
