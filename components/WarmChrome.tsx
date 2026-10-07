@@ -130,31 +130,30 @@ export const WarmTopBar: React.FC<{
   const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-3">
-        <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-9 h-auto flex-shrink-0" />
-        <div className="leading-tight min-w-0 flex-grow">
-          <span className="block font-serif font-bold text-lg md:text-xl tracking-tight text-retro-amber-dark">RETROMIND</span>
+      <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-2 sm:gap-3">
+        <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-8 sm:w-9 h-auto flex-shrink-0" />
+        <div className="leading-tight min-w-0 flex-grow overflow-hidden max-[479px]:invisible">
+          <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
           <span className="block text-xs text-retro-brown truncate">{PHASE_LABEL[phase]}</span>
         </div>
         <button
           onClick={toggleMuted}
           aria-pressed={muted}
           aria-label={muted ? 'Ton einschalten' : 'Stummschalten'}
-          className={`h-10 px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
+          className={`h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
             muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
           }`}
         >
           <Icon name="wave" className="w-5 h-5" />
           <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
-          {muted && <span className="sm:hidden">aus</span>}
         </button>
         <button
           onClick={onOpenFeedback}
-          aria-label="Feedback geben"
           title="Feedback geben"
-          className="w-10 h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
+          className="h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1 sm:gap-1.5 text-sm font-bold bg-[#c62828] text-white shadow-sm hover:bg-[#a51f1f] flex-shrink-0"
         >
-          <Icon name="mail" />
+          <Icon name="mail" className="w-5 h-5" />
+          <span>Feedback</span>
         </button>
         {showActions && (
           <>
