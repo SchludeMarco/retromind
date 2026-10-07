@@ -6,6 +6,7 @@ import { viaProxy } from '../lib/privacy';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 import { JourneyStages } from '../components/JourneyStages';
+import { GamingSignpost } from '../components/GamingSignpost';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -88,15 +89,7 @@ const IntroExtras: React.FC<Pick<IntroProps, 'googleUser' | 'spotifyStatus' | 's
   googleUser, spotifyStatus, spotifyUser, onSpotifySignIn,
 }) => (
   <>
-      <a
-        href="/gaming/"
-        className="retro-button block mb-8 px-6 py-4 bg-retro-ink text-retro-paper font-bold no-underline hover:bg-retro-brown"
-      >
-        🕹️ Neu: RetroMind – Gaming
-        <span className="block text-sm font-normal mt-1">
-          Vergessene Videospiele von den 80ern bis heute wiederentdecken.
-        </span>
-      </a>
+      <GamingSignpost />
 
       {googleUser && (
         <div className="mb-4 border-2 border-retro-ink bg-white p-4">

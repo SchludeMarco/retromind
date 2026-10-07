@@ -1,0 +1,12 @@
+// Former start-page link to the gaming edition (IntroExtras in
+// phases/IntroPhase.tsx, PR #54), replaced on 2026-10-07 by the wooden
+// signpost "To the gaming zone" (components/GamingSignpost.tsx).
+      <a
+        href="/gaming/"
+        className="retro-button block mb-8 px-6 py-4 bg-retro-ink text-retro-paper font-bold no-underline hover:bg-retro-brown"
+      >
+        🕹️ Neu: RetroMind – Gaming
+        <span className="block text-sm font-normal mt-1">
+          Vergessene Videospiele von den 80ern bis heute wiederentdecken.
+        </span>
+      </a>
