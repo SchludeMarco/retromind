@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Metal-Intro in der Halle am Handy hörbar** (2026-10-07, PR #155): Beim
+  Betreten der Gaming-Halle kam am Handy vom Metal-Intro nur ein leises
+  Bassbrummen an. Gitarre und Bassdrum liegen jetzt in Tonhöhen, die
+  Handy-Lautsprecher wiedergeben: Die Gitarre ist kräftiger, die Bassdrum
+  knackiger und weniger tief, und sie drückt den Rest nicht mehr leiser.
+  Das Intro wird weiterhin langsam lauter.
+
 - **Warnschild vergräbt sich bei Ton aus** (2026-10-07, PR #154): Schaltest
   du auf der Startseite der Zeitreise oder am Eingang von Gaming den Ton aus,
   wackelt das Schild „Warning, extreme loud!“ kurz und versinkt dann im
