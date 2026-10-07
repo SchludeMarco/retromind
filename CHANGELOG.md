@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: Pac-Man wandert frei durch die Halle** (2026-10-07, PR #143):
+  Statt nur unten durchs Bild zu laufen, sucht sich der kleine Pac-Man jetzt
+  immer wieder einen zufälligen Punkt irgendwo auf dem Bildschirm und läuft
+  langsam dorthin, gerade oder schräg. Auf dem Weg frisst er eine Reihe
+  Punkte, der Geist folgt seiner Spur. Er ist noch durchsichtiger als vorher,
+  lässt sich nicht antippen und ist aus, wenn am Gerät „Bewegung reduzieren“
+  eingestellt ist.
+
 - **Gaming: Pac-Man jetzt sichtbar** (2026-10-07, PR #142): Der kleine
   Pac-Man aus PR #141 lief hinter den Karten der Halle und war auf dem Handy
   deshalb gar nicht zu sehen. Jetzt läuft er halb durchsichtig über dem

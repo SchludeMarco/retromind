@@ -52,3 +52,6 @@ gebaut oder ausgeliefert.
 - `ExplorationPhase-ein-jahrzehnt.tsx.txt`: „Erkunden“ mit Jahrzehnt-Knöpfen
   und allen Stichworten eines Jahrzehnts auf einer Seite (PR #134, ersetzt am
   2026-10-06 durch Sparten zum Antippen auf Marcos Wunsch).
+- `pacman-lane.css.txt`: Pac-Man, der mit Geist in einer festen Reihe unten
+  durch die Gaming-Halle lief (PR #141/#142, ersetzt am 2026-10-07 durch den
+  frei übers Bild wandernden Pac-Man auf Marcos Wunsch).
