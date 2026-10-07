@@ -188,6 +188,8 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
         tracksRef.current = tracks;
         const first = randomTrack(tracks);
         if (first) rememberSong(historyRef.current, first);
+        // A new player (e.g. the embed taking over) starts with the own music.
+        setSpecial(null);
         setSong(first);
         return createSpotifyController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID));
       })

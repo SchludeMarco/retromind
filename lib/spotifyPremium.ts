@@ -34,6 +34,15 @@ type TokenSource = () => Promise<string | null>;
 
 let tokenSource: TokenSource | null = null;
 const listeners = new Set<() => void>();
+// The browser player failed on this device (no sound came, Spotify refused
+// to play there): the embed takes over for the rest of the visit.
+let broken = false;
+function markBroken(reason: string) {
+  if (broken) return;
+  console.warn('[RetroMind] Spotify-Browserplayer ohne Ton, nehme den eingebetteten Player:', reason);
+  broken = true;
+  listeners.forEach((l) => l());
+}
 
 export function setPremiumTokenSource(source: TokenSource | null) {
   if (source === tokenSource) return;
@@ -48,7 +57,7 @@ export function usePremiumPlayback(): boolean {
       listeners.add(cb);
       return () => listeners.delete(cb);
     },
-    () => !!tokenSource && sdkSupported()
+    () => !!tokenSource && sdkSupported() && !broken
   );
 }
 
@@ -63,7 +72,7 @@ function sdkSupported(): boolean {
 /** The Premium browser player when available, otherwise the embed. */
 export async function createSpotifyController(host: HTMLElement, uri: string): Promise<SpotifyEmbedController> {
   const source = tokenSource;
-  if (source && sdkSupported()) {
+  if (source && sdkSupported() && !broken) {
     const premium = await createPremiumController(source, uri);
     if (premium) return premium;
   }
@@ -155,6 +164,16 @@ async function createPremiumController(source: TokenSource, initialUri: string):
   let pending = true;
   let fadeTimer: number | null = null;
   let pollTimer: number | null = null;
+  // Something really played on this player (a song with the clock running).
+  let loaded = false;
+  // After a start, a playing song has to show up soon, or this device can't
+  // play through the browser player (Marco, 2026-10-07: "Es kommt keine
+  // Musik"); the hooks then switch to the embed (markBroken).
+  let confirmTimer: number | null = null;
+  const stopConfirm = () => {
+    if (confirmTimer !== null) window.clearTimeout(confirmTimer);
+    confirmTimer = null;
+  };
   const updateListeners = new Set<(e: any) => void>();
 
   const stopFade = () => {
@@ -178,6 +197,10 @@ async function createPremiumController(source: TokenSource, initialUri: string):
   const emit = (state: any) => {
     if (!state) return;
     const t = state.track_window?.current_track;
+    if (t && !state.paused) {
+      loaded = true;
+      stopConfirm();
+    }
     const images: any[] = t?.album?.images ?? [];
     const data = {
       isPaused: !!state.paused,
@@ -201,36 +224,65 @@ async function createPremiumController(source: TokenSource, initialUri: string):
     player.getCurrentState().then(emit).catch(() => {});
   }, 1000);
 
+  // Right after "ready" Spotify sometimes doesn't know the new device yet
+  // (404), so a failed start is tried again a few times.
   const startUri = async () => {
     pending = false;
-    const token = await source();
-    if (!token) return;
+    stopConfirm();
     const body = uri.startsWith('spotify:track:') ? { uris: [uri] } : { context_uri: uri };
-    await fetch(`${API}/me/player/play?device_id=${encodeURIComponent(deviceId)}`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    }).catch(() => {});
+    let problem = 'kein Token';
+    for (let attempt = 0; attempt < 4; attempt++) {
+      if (attempt) await new Promise((r) => window.setTimeout(r, 1000 * attempt));
+      if (destroyed || pending) return;
+      const token = await source();
+      if (!token) break;
+      const res = await fetch(`${API}/me/player/play?device_id=${encodeURIComponent(deviceId)}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      }).catch(() => null);
+      if (res && res.ok) {
+        confirmTimer = window.setTimeout(() => {
+          confirmTimer = null;
+          if (!destroyed) markBroken('kein Song läuft nach dem Start');
+        }, 10000);
+        return;
+      }
+      problem = res ? `Antwort ${res.status}` : 'Netzwerkfehler';
+      // Premium missing or the login lacks the permission: no retry helps.
+      if (res && (res.status === 401 || res.status === 403)) break;
+    }
+    if (!destroyed && !pending) markBroken(problem);
   };
+  let destroyed = false;
+  // Browsers only let the SDK sound after a gesture; play/resume mostly come
+  // from one (the player's play button, the welcome screen's start).
+  const activate = () => player.activateElement?.().catch?.(() => {});
 
   return {
     play: () => {
+      activate();
       fadeIn();
-      if (pending) startUri();
+      // Nothing came of an earlier start yet: send the song again.
+      if (pending || !loaded) startUri();
       else player.resume().catch(() => {});
     },
     resume: () => {
+      activate();
       fadeIn();
-      if (pending) startUri();
+      if (pending || !loaded) startUri();
       else player.resume().catch(() => {});
     },
     pause: () => {
+      stopConfirm();
       stopFade();
       player.pause().catch(() => {});
     },
     loadUri: (next: string) => {
       uri = next;
       pending = true;
+      loaded = false;
+      stopConfirm();
       stopFade();
       player.pause().catch(() => {});
     },
@@ -267,6 +319,8 @@ async function createPremiumController(source: TokenSource, initialUri: string):
       }
     },
     destroy: () => {
+      destroyed = true;
+      stopConfirm();
       stopFade();
       if (pollTimer !== null) window.clearInterval(pollTimer);
       updateListeners.clear();

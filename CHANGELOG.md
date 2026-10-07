@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik kommt auch, wenn Spotifys Browser-Player streikt** (2026-10-07,
+  PR #145): Mit Spotify-Premium-Anmeldung kam teils gar keine Musik. Jetzt
+  versucht RetroMind den Start mehrmals, und wenn trotzdem kein Song läuft,
+  spielt die Musik wie vor der Anmeldung über den eingebetteten
+  Spotify-Player weiter. Suche und Musik zum Thema bleiben dabei nutzbar.
+
 - **Spotify-Player: Suche, Musik zum Thema und mehr** (2026-10-07, PR #144):
   Bist du bei Spotify angemeldet, kann der Musik-Player in der Zeitreise und
   in der Gaming-Halle viel mehr. Du suchst nach Songs, Alben und
