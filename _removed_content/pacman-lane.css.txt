@@ -1,0 +1,88 @@
+/* --- Pac-Man in the hall: small, slow and see-through, drawn over the hub
+   (the cards fill a phone screen, so behind them he was never seen) but
+   under the dock, buttons and popups; taps go through him.
+   One lap takes 48s; he crosses in the first 40s, then a short pause. --- */
+.pac-lane {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 12vh;
+  height: 16px;
+  z-index: 380;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.7));
+}
+.pac-dots {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--a3) 1.5px, transparent 2px) 0 50% / 26px 16px repeat-x;
+  opacity: 0.7;
+  animation: pac-dots 48s linear infinite;
+}
+.pac-man,
+.pac-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  animation: pac-run 48s linear infinite;
+}
+.pac-man::before,
+.pac-man::after {
+  /* two half discs that open and close: the chomping mouth */
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 8px;
+  background: var(--a3);
+  animation: pac-chomp-top 0.5s ease-in-out infinite alternate;
+}
+.pac-man::before {
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  transform-origin: 50% 100%;
+}
+.pac-man::after {
+  bottom: 0;
+  border-radius: 0 0 8px 8px;
+  transform-origin: 50% 0;
+  animation-name: pac-chomp-bottom;
+}
+.pac-ghost {
+  /* follows a little behind, rounded head, wavy hem, two eyes */
+  margin-left: -46px;
+  border-radius: 8px 8px 2px 2px;
+  background:
+    radial-gradient(circle at 5px 6px, #fff 1.6px, transparent 2px),
+    radial-gradient(circle at 11px 6px, #fff 1.6px, transparent 2px),
+    var(--a1);
+}
+@keyframes pac-run {
+  from { transform: translateX(-60px); }
+  83.3%, to { transform: translateX(calc(100vw + 60px)); }
+}
+@keyframes pac-dots {
+  /* the eaten part of the row disappears right behind Pac-Man */
+  from { clip-path: inset(0 0 0 -52px); }
+  83.3%, to { clip-path: inset(0 0 0 calc(100vw + 68px)); }
+}
+@keyframes pac-chomp-top {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-30deg); }
+}
+@keyframes pac-chomp-bottom {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(30deg); }
+}
+.arcade[data-palette='modul'] .pac-lane {
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pac-lane {
+    display: none;
+  }
+}

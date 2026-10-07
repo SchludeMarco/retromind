@@ -8,6 +8,7 @@ import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { Entrance } from './components/Entrance';
 import { MuteButton } from './components/MuteButton';
+import { PacmanWander } from './components/PacmanWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
@@ -422,15 +423,7 @@ export const GamingApp: React.FC = () => {
           <div className="hb-tint" />
         </div>
       )}
-      {screen === 'hub' && (
-        // A small, slow Pac-Man eats a row of dots over the hall, a ghost on
-        // its heels. Decorative only (gaming.css .pac-lane).
-        <div className="pac-lane" aria-hidden="true">
-          <div className="pac-dots" />
-          <div className="pac-man" />
-          <div className="pac-ghost" />
-        </div>
-      )}
+      {screen === 'hub' && <PacmanWander />}
 
       {screen === 'power' ? (
         <Entrance
