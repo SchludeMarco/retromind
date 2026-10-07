@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **„Deine Zeit“ passt jetzt zum Geburtsjahr** (2026-10-07, PR #PRNUM): Die
+- **„Deine Zeit“ passt jetzt zum Geburtsjahr** (2026-10-07, PR #147): Die
   Einstimmung sagte z. B. „Du warst in den 2010ern ungefähr im
   Grundschulalter“, auch wenn man 2010 geboren ist. Das wirkte wie ein
   Widerspruch und stimmte bei sehr jungen oder sehr alten Geburtsjahren auch
