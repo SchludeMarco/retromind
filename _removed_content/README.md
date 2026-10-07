@@ -55,3 +55,6 @@ gebaut oder ausgeliefert.
 - `pacman-lane.css.txt`: Pac-Man, der mit Geist in einer festen Reihe unten
   durch die Gaming-Halle lief (PR #141/#142, ersetzt am 2026-10-07 durch den
   frei übers Bild wandernden Pac-Man auf Marcos Wunsch).
+- `IntroPhase-gaming-knopf.tsx.txt`: der dunkle Knopf „🕹️ Neu: RetroMind –
+  Gaming“ auf der Startseite der Zeitreise (PR #54, ersetzt am 2026-10-07
+  durch den Holzwegweiser „To the gaming zone“ auf Marcos Wunsch).

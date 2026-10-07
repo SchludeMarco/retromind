@@ -1,0 +1,49 @@
+/* "To the gaming zone" signpost on the start page (GamingSignpost.tsx). */
+.gaming-signpost {
+  display: block;
+  width: clamp(190px, 60vw, 260px);
+  margin: 0 auto 2rem;
+  line-height: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transform-origin: 20% 100%;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.45));
+  transition: transform 0.2s ease;
+}
+.gaming-signpost svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.gaming-signpost-text {
+  font-family: Impact, 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  fill: #fff1c2;
+  stroke: #2a1205;
+  stroke-width: 0.8;
+  paint-order: stroke;
+}
+/* The board nudges towards the arcade on hover, like a gentle push. */
+.gaming-signpost:hover .gaming-signpost-board,
+.gaming-signpost:focus-visible .gaming-signpost-board {
+  animation: gamingSignpostNudge 0.6s ease-in-out;
+}
+.gaming-signpost:focus-visible {
+  outline: 3px dashed currentColor;
+  outline-offset: 6px;
+}
+.gaming-signpost:active {
+  transform: scale(0.97);
+}
+@keyframes gamingSignpostNudge {
+  0%, 100% { translate: 0 0; }
+  40% { translate: 8px 0; }
+  70% { translate: 3px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gaming-signpost:hover .gaming-signpost-board,
+  .gaming-signpost:focus-visible .gaming-signpost-board {
+    animation: none;
+  }
+}

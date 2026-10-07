@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Wegweiser „To the gaming zone“** (2026-10-07, PR #153): Auf der
+  Startseite der Zeitreise steht jetzt in allen Designs ein hölzerner
+  Wegweiser mit der Aufschrift „To the gaming zone“. Ein Klick darauf führt
+  zu RetroMind – Gaming; Ton- und Google-Einstellung werden mitgenommen. Der
+  Wegweiser ersetzt den bisherigen dunklen Knopf „Neu: RetroMind – Gaming“.
+  In den Einstellungen bleibt der Link zu Gaming wie bisher.
+
 - **Ton beim Öffnen leise, mit Warnschild** (2026-10-07, PR #152): Wer die
   Zeitreise oder Gaming öffnet, wird nicht mehr sofort laut beschallt. Die
   tickende Uhr und der Gong der Zeitreise sowie Straße, Tür und Metal-Intro
