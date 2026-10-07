@@ -423,7 +423,7 @@ export const GamingApp: React.FC = () => {
         </div>
       )}
       {screen === 'hub' && (
-        // A small, slow Pac-Man eats a row of dots behind the UI, a ghost on
+        // A small, slow Pac-Man eats a row of dots over the hall, a ghost on
         // its heels. Decorative only (gaming.css .pac-lane).
         <div className="pac-lane" aria-hidden="true">
           <div className="pac-dots" />
