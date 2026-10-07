@@ -476,13 +476,13 @@ export const GamingApp: React.FC = () => {
                 setFeedbackOpen(true);
               }}
               data-nav
-              aria-label="Feedback geben"
               title="Feedback geben"
             >
               <svg viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M1 3h14v10H1zM2 4v8h12V4z" />
                 <path d="M3 5h1v1h1v1h1v1h1v1h2V8h1V7h1V6h1V5h1v1h-1v1h-1v1h-1v1h-1v1H7V9H6V8H5V7H4V6H3z" />
               </svg>
+              <span>Feedback</span>
             </button>
             <MuteButton className="hud-mute" muted={muted} onToggle={toggleMute} />
             <button

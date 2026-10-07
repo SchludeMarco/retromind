@@ -989,16 +989,29 @@ a {
   height: 40px;
   padding: 0;
 }
+/* Feedback: red, labelled, in its own row under mute + settings so
+   testers spot it. */
+.hud {
+  min-height: 112px;
+}
 .feedback-btn {
   position: absolute;
-  top: 8px;
-  right: 96px;
-  width: 40px;
+  top: 60px;
+  right: 0;
   height: 40px;
-  padding: 0;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  font-size: 9px;
+  color: #fff;
+  background: #c62828;
+}
+.feedback-btn:hover,
+.feedback-btn:focus-visible {
+  color: #fff;
+  background: #e53935;
 }
 .feedback-btn svg {
   width: 20px;
@@ -1326,7 +1339,22 @@ a {
   right: 64px;
 }
 .arcade[data-palette='modul'] .feedback-btn {
-  right: 116px;
+  top: 64px;
+  right: 12px;
+  width: auto;
+  padding: 0 14px;
+  gap: 8px;
+  color: #fff;
+  background: var(--a1);
+  border-color: var(--a1-deep);
+}
+.arcade[data-palette='modul'] .feedback-btn:hover,
+.arcade[data-palette='modul'] .feedback-btn:focus-visible {
+  color: #fff;
+  background: #b91c1c;
+}
+.arcade[data-palette='modul'] .hud {
+  min-height: 124px;
 }
 .arcade[data-palette='modul'] .feedback-form textarea,
 .arcade[data-palette='modul'] .feedback-form input {

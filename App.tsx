@@ -612,11 +612,11 @@ const App: React.FC = () => {
       {!warm && !showSplash && (
         <button
           onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
-          aria-label="Feedback geben"
           title="Feedback geben"
-          className="rm-fixed fixed top-3 right-16 md:right-[5.5rem] z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
+          className="rm-fixed fixed top-3 left-4 sm:left-auto sm:right-16 md:right-[5.5rem] z-[1000] h-10 px-3 rounded-full bg-[#c62828] text-white border-2 border-retro-ink retro-button flex items-center gap-1.5 text-sm font-bold hover:bg-[#a51f1f]"
         >
-          ✉️
+          <span aria-hidden="true">✉️</span>
+          <span>Feedback</span>
         </button>
       )}
       {warm && !showSplash && (
