@@ -9,7 +9,7 @@ import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyE
 //
 // It offers the same controller interface as the embed, so the music hooks
 // (useSpotifyBackground, useHallSpotify) don't care which one they drive.
-// Everyone else (not signed in, Spotify Free, iPhone/iPad where Spotify
+// Everyone else (not signed in, Spotify Free, phones and tablets where Spotify
 // doesn't support the SDK, or the SDK failing to start) keeps the embed.
 
 const FADE_IN_MS = 6000;
@@ -61,12 +61,14 @@ export function usePremiumPlayback(): boolean {
   );
 }
 
-// Spotify doesn't support the Web Playback SDK on iPhone/iPad browsers.
+// Spotify supports the Web Playback SDK only in desktop browsers: on
+// iPhone/iPad it doesn't start, and on Android it connects but stays silent
+// (Marco, 2026-10-07: no music on his Android in the gaming hall).
 function sdkSupported(): boolean {
   if (typeof navigator === 'undefined') return false;
   const ua = navigator.userAgent;
   const iOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-  return !iOS;
+  return !iOS && !/Android/i.test(ua);
 }
 
 /** The Premium browser player when available, otherwise the embed. */

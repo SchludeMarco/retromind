@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Musik auf Android wieder sofort da** (2026-10-07, PR #146): Mit
+  Spotify-Premium-Anmeldung blieb es auf Android-Handys still, weil Spotifys
+  Browser-Player dort nicht spielt. Auf Handy und Tablet läuft die Musik jetzt
+  wie ohne Anmeldung über den eingebetteten Spotify-Player. Suche und Musik
+  zum Thema funktionieren dort weiter, Lautstärkeregler und langsames
+  Einblenden gibt es nur am Computer.
+
 - **Musik kommt auch, wenn Spotifys Browser-Player streikt** (2026-10-07,
   PR #145): Mit Spotify-Premium-Anmeldung kam teils gar keine Musik. Jetzt
   versucht RetroMind den Start mehrmals, und wenn trotzdem kein Song läuft,
