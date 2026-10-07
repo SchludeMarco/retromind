@@ -185,6 +185,8 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         // The visitor may have switched decades in the meantime.
         const id = DECADES_DB[decadeRef.current]?.spotifyPlaylistId === playlistId ? randomTrack(tracks) : null;
         if (id) rememberSong(historyRef.current, id);
+        // A new player (e.g. the embed taking over) starts with the own music.
+        setSpecial(null);
         setSong(id);
         shuffleRef.current = !!id;
         heardRef.current = false;

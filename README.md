@@ -111,7 +111,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
   6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf iPhone/iPad
   oder wenn Spotifys Player nicht startet, bleibt es beim eingebetteten
-  Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
+  Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
+  das Abspielen ab oder es bleibt still), übernimmt nach spätestens etwa
+  10 Sekunden von selbst der eingebettete Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
   „Hallenmusik“. Ohne konfigurierte Spotify-Client-ID bleibt der Button
   unsichtbar.
 - **Mehr Musik mit Spotify-Login** – Angemeldet bietet der Musik-Player
