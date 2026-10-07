@@ -109,7 +109,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Zeitreise und Gaming-Halle) über Spotifys eigenen Browser-Player
   ([`lib/spotifyPremium.ts`](lib/spotifyPremium.ts), Web Playback SDK): ganze
   Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
-  6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf iPhone/iPad
+  6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf Handy und Tablet (iPhone, iPad, Android)
   oder wenn Spotifys Player nicht startet, bleibt es beim eingebetteten
   Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
   das Abspielen ab oder es bleibt still), übernimmt nach spätestens etwa
@@ -391,8 +391,8 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   gesichert wird.
 - **Spotify-Einblenden nur mit Premium:** Der eingebettete Spotify-Player
   bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
-  Premium-Anmeldung, und auf iPhone/iPad unterstützt Spotify seinen
-  Browser-Player gar nicht.
+  Premium-Anmeldung am Computer: auf Handy und Tablet (iPhone, iPad, Android)
+  unterstützt Spotify seinen Browser-Player nicht.
 
 ## Pflege dieses Repos
 
