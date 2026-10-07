@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Bass aus der Halle schon vor dem Eingang** (2026-10-07, PR #156): Vor der
+  Gaming-Halle hörst du jetzt gedämpft durch die Wand, wie drinnen Metal
+  läuft: Bassdrum, Snare und die Basslinie genau des Riffs, das beim
+  Eintreten laut wird. So weißt du schon draußen, dass es drinnen laut wird.
+  Es liegt leise unter der Straße und wird mit ihr langsam lauter.
+
 - **Metal-Intro in der Halle am Handy hörbar** (2026-10-07, PR #155): Beim
   Betreten der Gaming-Halle kam am Handy vom Metal-Intro nur ein leises
   Bassbrummen an. Gitarre und Bassdrum liegen jetzt in Tonhöhen, die

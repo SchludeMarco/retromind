@@ -2,6 +2,13 @@
 // now and then shouting, police sirens somewhere in the distance and every so
 // often a scuffle round the corner. Everything sits behind a "distance"
 // filter so it stays quiet and in the background.
+// From behind the door comes the hall's metal, muffled by the wall: kick,
+// snare and the bass line of the very riff that gets loud once you walk in
+// (Marco, 2026-10-07: a bass from inside, so you are ready for loud music).
+
+import { BEAT, RIFF, STEP } from './metal';
+
+const BASS_HZ: Record<string, number> = { E2: 82.41, G2: 98, A2: 110, B2: 123.47, C3: 130.81 };
 
 // Vowel formants (F1, F2 in Hz) the crowd voices wander through.
 const VOWELS: [number, number][] = [
@@ -35,6 +42,9 @@ export class StreetAmbience {
   private nextShout: number;
   private nextSiren: number;
   private nextScuffle: number;
+  private wall: BiquadFilterNode;
+  private nextStep: number;
+  private step = 0;
 
   constructor(
     private ctx: AudioContext,
@@ -52,6 +62,17 @@ export class StreetAmbience {
     this.far.type = 'lowpass';
     this.far.frequency.value = 2600;
     this.far.connect(this.out);
+
+    // Through the wall only the low end gets out; kept up to ~400 Hz, where
+    // phone speakers still play something, so it is heard as a muffled beat.
+    this.wall = ctx.createBiquadFilter();
+    this.wall.type = 'lowpass';
+    this.wall.frequency.value = 420;
+    this.wall.Q.value = 0.9;
+    const wallLevel = ctx.createGain();
+    wallLevel.gain.value = 0.28;
+    this.wall.connect(wallLevel).connect(this.out);
+    this.nextStep = now + 0.2;
 
     for (let i = 0; i < CROWD_VOICES; i++) this.voices.push(this.makeVoice(now));
     this.nextShout = now + rand(2, 5);
@@ -143,6 +164,56 @@ export class StreetAmbience {
       this.scuffle(this.nextScuffle);
       this.nextScuffle += rand(30, 55);
     }
+    while (this.nextStep < ahead) {
+      this.hall(this.nextStep, this.step);
+      this.nextStep += STEP;
+      this.step++;
+    }
+  }
+
+  /** One 16th of the music inside the hall, as heard through the wall. */
+  private hall(t: number, step: number) {
+    const i = step % 16;
+    const bar = RIFF[Math.floor(step / 16) % RIFF.length];
+    const d = BEAT[i];
+    if (d === 'k') this.wallThump(t, 0.9);
+    else if (d === 's') this.noiseBurst(t, 'lowpass', 320, 0.5, 0.09, this.wall);
+    const n = bar[i];
+    if (n === '-' || n === '=') return;
+    let len = 1;
+    while (bar[i + len] === '=') len++;
+    const f = BASS_HZ[n === 'm' ? 'E2' : n] ?? BASS_HZ.E2;
+    this.wallBass(t, f, n === 'm' ? STEP * 0.8 : STEP * len - 0.01);
+  }
+
+  private wallThump(t: number, gain: number) {
+    const osc = this.ctx.createOscillator();
+    osc.frequency.setValueAtTime(180, t);
+    osc.frequency.exponentialRampToValueAtTime(70, t + 0.09);
+    const env = this.ctx.createGain();
+    env.gain.setValueAtTime(gain, t);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    osc.connect(env).connect(this.wall);
+    osc.start(t);
+    osc.stop(t + 0.18);
+    this.track(osc);
+  }
+
+  /** The bass guitar: a sawtooth whose overtones (165-400 Hz) get through the wall. */
+  private wallBass(t: number, f: number, dur: number) {
+    const osc = this.ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = f;
+    const env = this.ctx.createGain();
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.32, t + 0.008);
+    env.gain.setTargetAtTime(0.18, t + 0.02, 0.05);
+    env.gain.setValueAtTime(0.18, t + dur);
+    env.gain.linearRampToValueAtTime(0, t + dur + 0.03);
+    osc.connect(env).connect(this.wall);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+    this.track(osc);
   }
 
   /** Someone in the crowd calling out ("Hey!", "Ey, Alter!"). */
@@ -238,7 +309,7 @@ export class StreetAmbience {
     this.noiseBurst(t, 'lowpass', 900, 0.35, 0.3);
   }
 
-  private noiseBurst(t: number, type: BiquadFilterType, freq: number, gain: number, decay: number) {
+  private noiseBurst(t: number, type: BiquadFilterType, freq: number, gain: number, decay: number, dest: AudioNode = this.far) {
     const ctx = this.ctx;
     const src = ctx.createBufferSource();
     src.buffer = this.noise;
@@ -249,7 +320,7 @@ export class StreetAmbience {
     const env = ctx.createGain();
     env.gain.setValueAtTime(gain, t);
     env.gain.exponentialRampToValueAtTime(0.001, t + decay);
-    src.connect(filter).connect(env).connect(this.far);
+    src.connect(filter).connect(env).connect(dest);
     src.start(t, Math.random() * 0.2);
     src.stop(t + decay + 0.02);
     this.track(src);

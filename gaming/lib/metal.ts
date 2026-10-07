@@ -6,14 +6,14 @@
 import { noteFreq } from './chiptune';
 
 const BPM = 160;
-const STEP = 60 / BPM / 4; // 16th notes
+export const STEP = 60 / BPM / 4; // 16th notes
 
 // Rhythm guitar per 16th: 'm' = palm-muted low E, a note = open power chord
 // on that root, '=' holds it, '-' rests.
 // prettier-ignore
 const GALLOP = ['m','-','m','m','m','-','m','m','m','-','m','m','m','-','m','m'];
 // prettier-ignore
-const RIFF: string[][] = [
+export const RIFF: string[][] = [
   GALLOP,
   ['m','-','m','m','m','-','m','m','G2','=','=','-','A2','=','=','-'],
   GALLOP,
@@ -28,7 +28,7 @@ const LEAD: string[][] = [
   ['E5','=','=','=','=','=','=','=','=','=','=','=','=','=','=','-'],
 ];
 // Drums per 16th: k = kick, s = snare, h = hi-hat, c = crash.
-const BEAT = 'k.hkskh.k.hkskhh';
+export const BEAT = 'k.hkskh.k.hkskhh';
 const FILL = 'k.hksk.hssssssss';
 const BARS = 16; // 8 bars riff, 8 bars riff with the lead; then the final chord
 

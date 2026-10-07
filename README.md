@@ -204,7 +204,8 @@ mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: die verranzte „Arcade Hallen“
 (Marcos Bild, `public/gaming/arcade-hallen.webp`) mit flackernder
 Leuchtschrift und einer wackelnden Glühbirne unter dem Vordach. Dazu hörst
 du leise die Straße: eine murmelnde, ab und zu rufende Menschenmenge,
-Polizeisirenen in der Ferne und manchmal eine Rauferei um die Ecke
+Polizeisirenen in der Ferne, manchmal eine Rauferei um die Ecke und
+gedämpft durch die Wand der Bass und die Drums der Metal-Musik aus der Halle
 (`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
 den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
