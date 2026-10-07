@@ -278,6 +278,13 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   (`?mute=1/0`). Neue Module nutzen denselben Schalter. Liegt die App im
   Hintergrund (andere App oder anderer Tab vorne), gilt sie automatisch als
   stumm und spielt beim Zurückkehren weiter.
+- **Leiser Start mit Warnschild** ([`lib/startupFade.ts`](lib/startupFade.ts),
+  [`components/LoudSign.tsx`](components/LoudSign.tsx)) – die ersten Klänge
+  beim Öffnen (Uhr und Gong der Zeitreise, Straße, Tür und Intro in Gaming)
+  steigen über etwa 10 Sekunden aus der Stille an, damit niemand angeschrien
+  wird und Zeit bleibt, den Ton auszuschalten. Solange der Ton an ist, steht
+  rechts neben dem Startknopf ein eingeschlagenes Holzschild „Warning, extreme
+  loud!“.
 - **„Nach oben“-Knopf** ([`hooks/useScrolledDown.ts`](hooks/useScrolledDown.ts)) –
   unten links, erscheint erst nach etwas Scrollen und bringt sanft zurück an den
   Seitenanfang. In der Zeitreise (alle Designs) und in der Gaming-Halle; er

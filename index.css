@@ -545,6 +545,20 @@ html[data-theme="nachtschicht"] .splash-start:active {
 .splash-start-tilt {
   transform: rotate(-4deg);
 }
+/* Start button with the "extreme loud" sign stuck in the ground beside it. */
+.splash-start-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 3vw, 22px);
+  /* Without the sign the button stays centred as before. */
+  min-height: 1px;
+}
+@media (max-width: 480px) {
+  .splash-start {
+    padding: 1rem 2rem;
+  }
+}
 .splash-start {
   overflow: hidden;
 }

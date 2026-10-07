@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MantelClock } from './MantelClock';
 import { startTicking, playGong } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
+import { LoudSign } from './LoudSign';
 
 // After the start button: the screen turns white with the gong's strike,
 // stays white for a breath, then slowly gives way to the app underneath.
@@ -58,11 +59,14 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
       <p className="relative font-elegant text-xl md:text-2xl italic tracking-wide text-[#c9ab78] mb-12">
         The ticket to your past🏳️
       </p>
-      <span className="splash-start-tilt relative inline-block">
-        <button onClick={handleStart} disabled={struck} className="splash-start relative">
-          Go back...
-        </button>
-      </span>
+      <div className="splash-start-row relative">
+        <span className="splash-start-tilt relative inline-block">
+          <button onClick={handleStart} disabled={struck} className="splash-start relative">
+            Go back...
+          </button>
+        </span>
+        <LoudSign show={!muted && !struck} />
+      </div>
       <p
         aria-live="polite"
         className={`relative mt-6 text-sm text-[#c9ab78]/80 transition-opacity duration-500 ${

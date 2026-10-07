@@ -1,4 +1,5 @@
 import { isMuted, subscribeMuted } from './mute';
+import { riseFromSilence, whenRunning } from './startupFade';
 
 // Sounds of the welcome screen (components/SplashScreen.tsx): the mantel
 // clock's steady "tick … tock" while the screen waits, and the big gong when
@@ -21,6 +22,9 @@ const GONG_GAIN = 1.3;
 const GONG_SECONDS = 7;
 
 let ctx: AudioContext | null = null;
+// Everything of the welcome screen goes through this bus, which rises from
+// silence over the first seconds the page really sounds (lib/startupFade).
+let bus: GainNode | null = null;
 
 function audioContext(): AudioContext | null {
   if (ctx && ctx.state !== 'closed') return ctx;
@@ -37,6 +41,13 @@ function audioContext(): AudioContext | null {
     ctx = AudioCtx ? new AudioCtx() : null;
   } catch {
     ctx = null;
+  }
+  if (ctx) {
+    const c = ctx;
+    bus = c.createGain();
+    bus.gain.value = 0;
+    bus.connect(c.destination);
+    whenRunning(c, () => bus && riseFromSilence(bus.gain, c, 1));
   }
   return ctx;
 }
@@ -131,7 +142,7 @@ export function startTicking(onWaiting: (waiting: boolean) => void): () => void 
   let high = true;
   const beat = () => {
     if (isMuted() || c.state !== 'running') return;
-    playBeat(c, high);
+    playBeat(c, high, bus ?? c.destination);
     high = !high;
   };
   const timer = window.setInterval(beat, BEAT_MS);
@@ -175,7 +186,7 @@ export function playGong() {
   const c = audioContext();
   if (!c) return;
   c.resume().catch(() => {});
-  const master = buildGong(c, c.destination);
+  const master = buildGong(c, bus ?? c.destination);
 
   const unsubscribe = subscribeMuted(() => {
     if (!isMuted()) return;

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { chip, DOOR_SWING } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
+import { LoudSign } from '../../components/LoudSign';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
 // the entrance and the street murmuring. "ENTER" throws the door open,
@@ -125,6 +126,7 @@ export const Entrance: React.FC<{
           <button className="enter-btn" onClick={enter} disabled={entering} autoFocus>
             <span className="enter-label">ENTER</span>
           </button>
+          <LoudSign show={!muted} />
           <MuteButton muted={muted} onToggle={onToggleMute} />
         </div>
       </div>
