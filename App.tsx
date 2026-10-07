@@ -38,6 +38,8 @@ import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDrive
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 import { toggleMuted, useMuted } from './lib/mute';
+import { DECADES_DB } from './constants';
+import { findTrack, useAutoTheme, useSpotifyApi } from './lib/spotifyApi';
 
 const App: React.FC = () => {
   const session = useRetroSession();
@@ -532,6 +534,34 @@ const App: React.FC = () => {
     spotifyAuth.signOut();
   };
 
+  // Music to the topic (Marco, 2026-10-07): signed in with Spotify, opening
+  // a music word (a hit, a band) plays its song; closing it goes back to the
+  // decade's music. Switch: "Musik zum Thema" in the player panel.
+  const spotifyApi = useSpotifyApi();
+  const autoTheme = useAutoTheme();
+  const spotifyRef = useRef(spotify);
+  spotifyRef.current = spotify;
+  const themeWord = selectedWord
+    ? DECADES_DB[selectedWord.decade]?.buzzwords.find((b) => b.id === selectedWord.id && b.category === 'music') ?? null
+    : null;
+  useEffect(() => {
+    if (!themeWord || !spotifyApi || !autoTheme || !spotifyRef.current.allowed) return;
+    // Something picked in the search keeps playing.
+    const picked = spotifyRef.current.special;
+    if (picked && !picked.auto) return;
+    let live = true;
+    findTrack(themeWord.song ?? themeWord.term, themeWord.song ? undefined : currentAudioDecade).then((hit) => {
+      if (live && hit) spotifyRef.current.playUri(hit, true);
+    });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeWord?.id, spotifyApi, autoTheme]);
+  useEffect(() => {
+    if (!themeWord && spotifyRef.current.special?.auto) spotifyRef.current.backToTheme();
+  }, [themeWord]);
+
   // --- render helpers ---
   const aiOff = aiAvailability === 'not_configured';
   const isAnswered = (id: string) => !!memoryFor(id);
@@ -560,6 +590,18 @@ const App: React.FC = () => {
       muted={muted}
       onToggleMute={() => { playSFX('click'); toggleMuted(); }}
       onOpenChange={() => playSFX('click')}
+      extras={{
+        status: spotify.status,
+        signedIn: spotifyApi,
+        onSignIn: spotifyAuth.status === 'not_configured' ? undefined : handleSpotifySignIn,
+        onSeek: spotify.seek,
+        onVolume: spotify.setVolume,
+        onPick: (hit) => { playSFX('click'); spotify.playUri(hit); },
+        special: spotify.special,
+        themeName: `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`,
+        onBackToTheme: () => { playSFX('click'); spotify.backToTheme(); },
+        themeHint: 'Öffnest du einen Musik-Begriff, läuft sein Song.',
+      }}
     />
   ) : null;
   return (

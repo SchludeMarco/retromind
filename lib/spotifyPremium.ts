@@ -13,7 +13,16 @@ import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyE
 // doesn't support the SDK, or the SDK failing to start) keeps the embed.
 
 const FADE_IN_MS = 6000;
-const TARGET_VOLUME = 1;
+// The volume slider in the player (MusicDock); the fade-in rises to it.
+const VOLUME_KEY = 'retromind.spotify.volume';
+function savedVolume(): number {
+  try {
+    const v = Number(localStorage.getItem(VOLUME_KEY));
+    return localStorage.getItem(VOLUME_KEY) !== null && v >= 0 && v <= 1 ? v : 1;
+  } catch {
+    return 1;
+  }
+}
 const SDK_URL = 'https://sdk.scdn.co/spotify-player.js';
 const API = 'https://api.spotify.com/v1';
 
@@ -154,20 +163,35 @@ async function createPremiumController(source: TokenSource, initialUri: string):
   };
 
   // Quiet to full over FADE_IN_MS, on a curve that sounds even to the ear.
+  let volume = savedVolume();
   const fadeIn = () => {
     stopFade();
     const started = Date.now();
     player.setVolume(0.0001).catch(() => {});
     fadeTimer = window.setInterval(() => {
       const p = Math.min(1, (Date.now() - started) / FADE_IN_MS);
-      player.setVolume(Math.max(0.0001, TARGET_VOLUME * p * p)).catch(() => {});
+      player.setVolume(Math.max(0.0001, volume * p * p)).catch(() => {});
       if (p >= 1) stopFade();
     }, 150);
   };
 
   const emit = (state: any) => {
     if (!state) return;
-    const data = { isPaused: !!state.paused, position: state.position, duration: state.duration };
+    const t = state.track_window?.current_track;
+    const images: any[] = t?.album?.images ?? [];
+    const data = {
+      isPaused: !!state.paused,
+      position: state.position,
+      duration: state.duration,
+      // What really plays (also inside albums and playlists), for the player.
+      track: t
+        ? {
+            name: t.name as string,
+            artists: (t.artists ?? []).map((a: any) => a.name).join(', ') as string,
+            image: (images.find((i) => (i.width || 0) >= 200) ?? images[0])?.url ?? null,
+          }
+        : null,
+    };
     updateListeners.forEach((cb) => cb({ data }));
   };
   player.addListener('player_state_changed', emit);
@@ -212,6 +236,24 @@ async function createPremiumController(source: TokenSource, initialUri: string):
     },
     seek: (seconds: number) => {
       player.seek(seconds * 1000).catch(() => {});
+    },
+    setVolume: (v: number) => {
+      volume = Math.min(1, Math.max(0, v));
+      try {
+        localStorage.setItem(VOLUME_KEY, String(volume));
+      } catch {
+        /* not kept, fine */
+      }
+      // A fade still running would undo the new level.
+      stopFade();
+      player.setVolume(Math.max(0.0001, volume)).catch(() => {});
+    },
+    getVolume: () => volume,
+    nextTrack: () => {
+      player.nextTrack().catch(() => {});
+    },
+    previousTrack: () => {
+      player.previousTrack().catch(() => {});
     },
     addListener: (event: string, cb: (e: any) => void) => {
       // Already connected, so "ready" is true right away.

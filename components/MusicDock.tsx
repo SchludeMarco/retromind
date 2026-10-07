@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FitMarquee } from './FitMarquee';
+import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
+import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import './musicDock.css';
 
 // The music controls (Marco, 2026-10-06): tucked away behind a small
@@ -36,7 +38,148 @@ export interface MusicDockProps {
   /** Small "now playing" line in the top-left corner while music plays
    *  (Marco, 2026-10-06). On by default. */
   ticker?: boolean;
+  /** More controls once signed in with Spotify (Marco, 2026-10-07). */
+  extras?: MusicDockExtras;
 }
+
+export interface MusicDockExtras {
+  status: MusicStatus;
+  signedIn: boolean;
+  /** Offered when not signed in (Spotify login). */
+  onSignIn?: () => void;
+  onSeek: (seconds: number) => void;
+  onVolume: (volume: number) => void;
+  onPick: (hit: SpotifyHit) => void;
+  /** What plays instead of the app's own music, if anything. */
+  special: { name: string; auto: boolean } | null;
+  /** The app's own music, e.g. "Musik der 80er". */
+  themeName: string;
+  onBackToTheme: () => void;
+  /** What "Musik zum Thema" does here, one short line. */
+  themeHint: string;
+}
+
+const time = (ms: number) => {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+};
+
+// Search, progress, volume and the "Musik zum Thema" switch.
+const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ extras, onPicked }) => {
+  const { position, duration, volume } = useMusicStatus(extras.status);
+  const auto = useAutoTheme();
+  const [query, setQuery] = useState('');
+  const [hits, setHits] = useState<SpotifyHit[] | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  // Searches as you type, a moment after the last key.
+  useEffect(() => {
+    if (!extras.signedIn) return;
+    const q = query.trim();
+    if (q.length < 2) {
+      setHits(null);
+      return;
+    }
+    let live = true;
+    const timer = window.setTimeout(() => {
+      setBusy(true);
+      searchSpotify(q).then((found) => {
+        if (!live) return;
+        setHits(found);
+        setBusy(false);
+      });
+    }, 350);
+    return () => {
+      live = false;
+      window.clearTimeout(timer);
+    };
+  }, [query, extras.signedIn]);
+
+  if (!extras.signedIn) {
+    return extras.onSignIn ? (
+      <button type="button" className="music-dock-chip" onClick={extras.onSignIn}>
+        Mit Spotify anmelden: Suche, Musik zum Thema und mehr
+      </button>
+    ) : null;
+  }
+
+  return (
+    <div className="music-dock-extras">
+      {duration > 0 && (
+        <div className="music-dock-progress">
+          <span>{time(position)}</span>
+          <input
+            type="range"
+            min={0}
+            max={Math.round(duration / 1000)}
+            value={Math.round(position / 1000)}
+            onChange={(e) => extras.onSeek(Number(e.target.value))}
+            aria-label="Stelle im Song"
+          />
+          <span>{time(duration)}</span>
+        </div>
+      )}
+      {volume !== null && (
+        <label className="music-dock-volume">
+          <span aria-hidden="true">🔈</span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={Math.round(volume * 100)}
+            onChange={(e) => extras.onVolume(Number(e.target.value) / 100)}
+            aria-label="Lautstärke"
+          />
+          <span aria-hidden="true">🔊</span>
+        </label>
+      )}
+      <div className="music-dock-chips">
+        <button type="button" className="music-dock-chip" aria-pressed={auto} onClick={() => setAutoTheme(!auto)} title={extras.themeHint}>
+          {auto ? '✓ ' : ''}Musik zum Thema
+        </button>
+        {extras.special && (
+          <button type="button" className="music-dock-chip" onClick={extras.onBackToTheme}>
+            ↺ Zurück zu {extras.themeName}
+          </button>
+        )}
+      </div>
+      <input
+        type="search"
+        className="music-dock-search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Song, Album oder Künstler:in suchen"
+        aria-label="Bei Spotify suchen"
+        enterKeyHint="search"
+      />
+      {busy && !hits && <p className="music-dock-hint">Suche …</p>}
+      {hits && !hits.length && <p className="music-dock-hint">Nichts gefunden.</p>}
+      {hits && hits.length > 0 && (
+        <ul className="music-dock-hits">
+          {hits.map((h) => (
+            <li key={h.uri}>
+              <button
+                type="button"
+                onClick={() => {
+                  extras.onPick(h);
+                  setQuery('');
+                  setHits(null);
+                  onPicked();
+                }}
+              >
+                {h.image ? <img src={h.image} alt="" loading="lazy" className={h.kind === 'artist' ? 'round' : ''} /> : <span className="music-dock-hit-blank" />}
+                <span className="music-dock-hit-text">
+                  <strong>{h.name}</strong>
+                  <small>{h.sub}</small>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 28 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" fill="currentColor">
@@ -67,8 +210,12 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   className = '',
   icon = 'note',
   ticker = true,
+  extras,
 }) => {
   const symbol = icon === 'bolt' ? BOLT : NOTE;
+  // The Premium player says what really plays (also inside an album).
+  const live = useMusicStatus(extras?.status).track;
+  const shownTitle = live ? `${live.name} · ${live.artists}` : title;
   const [open, setOpen] = useState(false);
   const toggle = (next: boolean) => {
     setOpen(next);
@@ -87,7 +234,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
     <>
       {ticker &&
         playing &&
-        title &&
+        shownTitle &&
         !open &&
         createPortal(
           // Tapping it opens the controls, just like the button below
@@ -96,10 +243,10 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             type="button"
             className="music-ticker"
             onClick={() => toggle(true)}
-            aria-label={`Läuft gerade: ${title}. Musiksteuerung öffnen`}
+            aria-label={`Läuft gerade: ${shownTitle}. Musiksteuerung öffnen`}
           >
             <Svg d={symbol} size={10} />
-            <FitMarquee text={title} maxSize={10} />
+            <FitMarquee text={shownTitle} maxSize={10} />
           </button>,
           document.body
         )}
@@ -119,7 +266,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
         <div className="music-dock-backdrop" onClick={() => toggle(false)}>
           <section
             id="music-dock-panel"
-            className="music-dock-panel"
+            className={`music-dock-panel${extras?.signedIn ? ' music-dock-panel-tall' : ''}`}
             role="dialog"
             aria-label="Musiksteuerung"
             onClick={(e) => e.stopPropagation()}
@@ -127,13 +274,19 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             <button type="button" className="music-dock-close" onClick={() => toggle(false)} aria-label="Musiksteuerung schließen">
               <Svg d={DOWN} size={26} />
             </button>
-            <p className="music-dock-source">{source}</p>
-            <div className={`music-dock-disc${playing ? ' spinning' : ''}`} aria-hidden="true">
-              <Svg d={symbol} size={34} />
-            </div>
+            <p className="music-dock-source">
+              {extras?.special ? (extras.special.auto ? 'Musik zum Thema' : 'Deine Auswahl') : source}
+            </p>
+            {live?.image ? (
+              <img className="music-dock-cover" src={live.image} alt="" />
+            ) : (
+              <div className={`music-dock-disc${playing ? ' spinning' : ''}`} aria-hidden="true">
+                <Svg d={symbol} size={34} />
+              </div>
+            )}
             <p className="music-dock-label">{playing ? 'Läuft gerade' : 'Pausiert'}</p>
             <p className="music-dock-title" aria-live="polite">
-              <FitMarquee text={ready ? title ?? 'Spotify' : 'Spotify lädt …'} maxSize={22} minSize={14} />
+              <FitMarquee text={ready ? shownTitle ?? 'Spotify' : 'Spotify lädt …'} maxSize={22} minSize={14} />
             </p>
             <div className="music-dock-buttons">
               <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label="Vorheriger Song" title="Vorheriger Song">
@@ -153,6 +306,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 <Svg d={NEXT} />
               </button>
             </div>
+            {extras && <Extras extras={extras} onPicked={() => undefined} />}
             {onToggleMute && (
               <button type="button" className="music-dock-mute" onClick={onToggleMute} aria-pressed={!!muted}>
                 {muted ? '🔇 Ton ist aus – einschalten' : '🔊 Ton an – stummschalten'}

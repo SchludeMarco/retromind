@@ -114,6 +114,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
   „Hallenmusik“. Ohne konfigurierte Spotify-Client-ID bleibt der Button
   unsichtbar.
+- **Mehr Musik mit Spotify-Login** – Angemeldet bietet der Musik-Player
+  (Zeitreise und Gaming) eine Suche nach Songs, Alben und Künstler:innen,
+  einen Fortschrittsbalken zum Springen und mit Premium Lautstärkeregler,
+  Albumcover und Vor/Zurück innerhalb von Alben
+  ([`lib/spotifyApi.ts`](lib/spotifyApi.ts), [`components/MusicDock.tsx`](components/MusicDock.tsx)).
+  „Musik zum Thema“ spielt von selbst Passendes: Musik-Begriffe der Zeitreise
+  ihren Hit (Feld `song` in `constants.ts`), Spiele in Gaming ihren
+  Soundtrack. Beim Schließen läuft wieder die normale Musik.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
