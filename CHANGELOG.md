@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Stationen direkt unter dem Logo wählen** (2026-10-07, PR #150): In
+  den Designs Klassisch und Nachtschicht steht während der Reise unter dem
+  kleinen Logo jetzt „Station x von 7“ mit dem Namen der aktuellen Station.
+  Sie bleibt zugeklappt, bis du sie antippst. Dann siehst du alle Stationen
+  von Start bis Abschluss und springst mit einem Tipp direkt hin, ohne erst
+  zur Startseite zurückzumüssen. Im Design Retro Warm gibt es das schon über
+  die Stationsleiste.
+
 - **Feedback-Knopf ist jetzt rot und beschriftet** (2026-10-07, PR #149):
   Bisher war Feedback nur ein kleines Briefsymbol, das viele übersehen haben.
   Jetzt ist es ein roter Knopf mit der Aufschrift „Feedback“, in allen

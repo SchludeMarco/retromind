@@ -44,6 +44,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Abschluss als Kacheln, jede jederzeit antippbar, die zuletzt besuchte markiert
   ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Im Design
   Retro Warm sind auch die Stationen in „Station x von 7“ antippbar.
+- **Stationen-Auswahl unter dem Logo** – in den Designs Klassisch und
+  Nachtschicht steht während der Reise unter dem kleinen Logo eine schmale
+  Leiste „Station x von 7: …“. Erst ein Tipp darauf klappt alle sieben
+  Stationen auf, ein weiterer Tipp springt direkt dorthin
+  ([`components/StationPicker.tsx`](components/StationPicker.tsx)).
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
   Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
