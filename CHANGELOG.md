@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming: kleiner Pac-Man im Hintergrund** (2026-10-07, PR #141): In der
+  Halle von RetroMind - Gaming läuft jetzt ein kleiner, blasser Pac-Man
+  langsam unten durchs Bild, frisst eine Reihe Punkte und hat einen Geist auf
+  den Fersen. Er bleibt hinter Katalog und Knöpfen, lässt sich nicht antippen
+  und ist aus, wenn am Gerät „Bewegung reduzieren“ eingestellt ist.
+
 - **Gaming: Hallenmusik wird langsam lauter** (2026-10-07, PR #139): Die
   selbst erzeugte Musik in RetroMind - Gaming (Metal-Intro nach dem Eintreten
   und die Chiptune-Stücke) beginnt jetzt leise und wird über etwa 6 Sekunden

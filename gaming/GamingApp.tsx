@@ -418,6 +418,15 @@ export const GamingApp: React.FC = () => {
           <div className="hb-tint" />
         </div>
       )}
+      {screen === 'hub' && (
+        // A small, slow Pac-Man eats a row of dots behind the UI, a ghost on
+        // its heels. Decorative only (gaming.css .pac-lane).
+        <div className="pac-lane" aria-hidden="true">
+          <div className="pac-dots" />
+          <div className="pac-man" />
+          <div className="pac-ghost" />
+        </div>
+      )}
 
       {screen === 'power' ? (
         <Entrance
