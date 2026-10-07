@@ -47,8 +47,10 @@ export const Entrance: React.FC<{
   reducedMotion: boolean;
   muted: boolean;
   music: boolean;
+  /** Spotify (Premium) already plays the hall's music quietly out here. */
+  spotifyAtDoor: boolean;
   onToggleMute: () => void;
-}> = ({ onEnter, reducedMotion, muted, music, onToggleMute }) => {
+}> = ({ onEnter, reducedMotion, muted, music, spotifyAtDoor, onToggleMute }) => {
   const [entering, setEntering] = useState(false);
   const [soundWaiting, setSoundWaiting] = useState(false);
   const stopAmbient = useRef<() => void>(() => {});
@@ -60,7 +62,8 @@ export const Entrance: React.FC<{
       chip.debug.ambient = 'aus (Musik ausgeschaltet)';
       return;
     }
-    const stop = chip.ambient();
+    const stop = spotifyAtDoor ? () => {} : chip.ambient();
+    if (spotifyAtDoor) chip.debug.ambient = 'Spotify läuft leise vor der Tür';
     stopAmbient.current = stop;
     const wake = () => chip.unlock();
     const events = ['pointerdown', 'pointerup', 'touchend', 'keydown', 'click'];
@@ -71,7 +74,7 @@ export const Entrance: React.FC<{
       clearInterval(poll);
       stop();
     };
-  }, [music]);
+  }, [music, spotifyAtDoor]);
 
   const enter = () => {
     if (entering) return;

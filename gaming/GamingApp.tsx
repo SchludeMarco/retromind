@@ -168,7 +168,26 @@ export const GamingApp: React.FC = () => {
   // Optional Spotify login: with Premium the hall music fades in
   // (lib/spotifyPremium). It also picks up Spotify's redirect back here.
   const spotifyAuth = useSpotifyAuth();
-  const spotify = useHallSpotify(state.musicSource === 'spotify', screen === 'hub' && state.music && !videoPlaying);
+  // Without Premium at the door, the metal intro plays first when you walk
+  // in, then Spotify takes over (Marco, 2026-10-07).
+  const [introRunning, setIntroRunning] = useState(false);
+  const spotify = useHallSpotify(
+    state.musicSource === 'spotify',
+    screen === 'hub' && state.music && !videoPlaying && !introRunning,
+    screen === 'power' && state.music
+  );
+  useEffect(() => {
+    if (screen !== 'hub' || !spotify.active || !state.music || videoPlaying) return;
+    // With Premium the same Spotify song simply carries on from the door.
+    if (spotify.premium || !chip.introQueued) return;
+    if (chip.startIntro(() => setIntroRunning(false))) setIntroRunning(true);
+  }, [screen, spotify.active, state.music, videoPlaying]);
+  useEffect(() => {
+    if (introRunning && (!state.music || videoPlaying)) {
+      chip.stopIntro();
+      setIntroRunning(false);
+    }
+  }, [introRunning, state.music, videoPlaying]);
   // Music to the topic (Marco, 2026-10-07): signed in with Spotify, a game
   // page plays the game's soundtrack if Spotify has one; closing it goes
   // back to the hall's metal. Switch: "Musik zum Thema" in the player panel.
@@ -455,6 +474,7 @@ export const GamingApp: React.FC = () => {
           reducedMotion={reducedMotion}
           muted={muted}
           music={state.music}
+          spotifyAtDoor={spotify.atDoor}
           onToggleMute={toggleMute}
           onEnter={() => {
             setScreen('hub');

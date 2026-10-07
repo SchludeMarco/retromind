@@ -33,13 +33,26 @@ import { SpotifyHit } from '../../lib/spotifyApi';
 // "The 100 Best Metal Songs of 80s" (The Eighties Guy).
 export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
 
-export function useHallSpotify(wanted: boolean, enabled: boolean) {
+// Signed in with Premium (desktop browser), the hall's Spotify music already
+// plays in front of the door, quietly, and gets loud once you are inside
+// (Marco, 2026-10-07: the same music outside and inside). Spotify's sound
+// can only be made quieter, not muffled; everyone else hears the muffled
+// recording at the door (gaming/lib/street.ts).
+const OUTSIDE_LEVEL = 0.15;
+
+/**
+ * `enabled`: plays in the hall (music on, no video). `outside`: the visitor
+ * stands at the entrance with music on; then it plays quietly with Premium.
+ */
+export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const [ready, setReady] = useState(false);
   const allowed = useConsent('spotify') === true;
   // Signed in with Premium: Spotify's own player, which fades in.
   const premium = usePremiumPlayback();
+  const atDoor = outside && premium;
+  const on = enabled || atDoor;
   const muted = useMuted();
   const startedRef = useRef(false);
   // Browsers block audio until the first tap or key press.
@@ -47,7 +60,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
   // Paused with the player bar: stays paused until play is pressed again.
   const [userPaused, setUserPaused] = useState(false);
   const shouldPlay = useRef(false);
-  shouldPlay.current = enabled && !muted && !userPaused;
+  shouldPlay.current = on && !muted && !userPaused;
   const [playing, setPlaying] = useState(false);
   const [song, setSong] = useState<string | null>(null);
   const historyRef = useRef<SongHistory>({ ids: [] });
@@ -103,7 +116,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
   const wantSound = () => {
     if (isMuted()) setMuted(false);
     setUserPaused(false);
-    shouldPlay.current = enabled && !isMuted();
+    shouldPlay.current = on && !isMuted();
   };
 
   const playNext = useCallback(() => {
@@ -116,7 +129,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
     }
     nextSong();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nextSong, enabled]);
+  }, [nextSong, on]);
 
   const playPrevious = useCallback(() => {
     const controller = controllerRef.current;
@@ -135,7 +148,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
       sync();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadSong, sync, enabled]);
+  }, [loadSong, sync, on]);
 
   // A search pick (or, with `auto`, the soundtrack of the open game): plays
   // instead of the hall's metal. A single song goes back to the metal when
@@ -153,7 +166,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
       sync();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [sync, enabled]
+    [sync, on]
   );
 
   /** Back to the hall's own music. */
@@ -177,7 +190,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
     wantSound();
     sync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing, sync, enabled]);
+  }, [playing, sync, on]);
 
   useEffect(() => {
     if (!allowed || !wanted || !containerRef.current) return;
@@ -239,12 +252,20 @@ export function useHallSpotify(wanted: boolean, enabled: boolean) {
     return () => events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
   }, [sync]);
 
-  useEffect(sync, [enabled, muted, userPaused, sync]);
+  useEffect(sync, [on, muted, userPaused, sync]);
+  // Quiet in front of the door, loud inside (fades over a moment as the door opens).
+  useEffect(() => {
+    controllerRef.current?.setLevel?.(atDoor ? OUTSIDE_LEVEL : 1, 1500);
+  }, [atDoor, ready]);
 
   /** true while Spotify stands in for the chiptune music. */
   const active = wanted && allowed;
   return {
     containerRef,
+    /** Spotify plays at the door (Premium), so the muffled recording stays off. */
+    atDoor: atDoor && active,
+    /** Premium's browser player drives the hall music (with volume control). */
+    premium: premium && active,
     ready,
     allowed,
     active,

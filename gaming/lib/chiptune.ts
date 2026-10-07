@@ -47,6 +47,7 @@ class ChipSound {
   private step = 0;
   private hubSid: SidPlayer | null = null;
   private metal: MetalPlayer | null = null;
+  private intro: MetalPlayer | null = null;
   private metalPending = false;
   musicEnabled = true;
   /** Which hub tune plays (settings); applies from the next startMusic. */
@@ -324,6 +325,41 @@ class ChipSound {
   /** The next startMusic opens with the heavy metal intro (metal.ts), then the hub tune. */
   queueMetalIntro() {
     this.metalPending = true;
+  }
+
+  /**
+   * Plays the queued metal intro on its own, before Spotify takes over as the
+   * hall's music (Marco, 2026-10-07: the intro should play on entering);
+   * `onEnd` hands over. False when there is no intro to play.
+   */
+  startIntro(onEnd: () => void): boolean {
+    if (!this.metalPending || !this.ctx || !this.musicBus || this.isMuted) return false;
+    this.metalPending = false;
+    this.stopIntro();
+    const now = this.ctx.currentTime;
+    this.musicBus.gain.cancelScheduledValues(now);
+    this.musicBus.gain.setValueAtTime(0.0001, now);
+    this.musicBus.gain.linearRampToValueAtTime(MUSIC_LEVEL, now + MUSIC_FADE_IN);
+    const intro = new MetalPlayer(this.ctx, this.musicBus, () => {
+      if (this.intro !== intro) return;
+      this.intro = null;
+      onEnd();
+    });
+    this.intro = intro;
+    intro.start();
+    return true;
+  }
+
+  /** Cuts the intro short (a video starts, the music is switched off). */
+  stopIntro() {
+    const intro = this.intro;
+    this.intro = null;
+    intro?.stop();
+  }
+
+  /** The intro is queued but not played yet (it will be on the next start). */
+  get introQueued() {
+    return this.metalPending;
   }
 
   /** `fadeIn` = false when the hub tune follows straight on from the metal intro. */
