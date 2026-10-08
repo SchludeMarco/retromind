@@ -23,6 +23,7 @@ import { SpotifyAsk } from './components/SpotifyAsk';
 import { MusicDock } from '../components/MusicDock';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
+import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
@@ -89,8 +90,34 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy } = useArcadeState(onAchievement, onQuest);
+  const onEgg = useCallback(
+    (e: Egg) => {
+      chip.play('powerup');
+      showToast(`EASTER EGG: ${e.title.toUpperCase()} · +${e.reward} SPIELMARKEN`, e.text, '🥚');
+    },
+    [showToast]
+  );
+  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg } = useArcadeState(onAchievement, onQuest, onEgg);
   const cloud = useCloudSync(state, mergeIn);
+  // Easter eggs that count taps within one visit (eggs.ts).
+  const [flicker, setFlicker] = useState(false);
+  const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
+  // "Nachteule": in the hall between midnight and four in the morning.
+  useEffect(() => {
+    if (screen === 'hub' && new Date().getHours() < 4) findEgg('night');
+  }, [screen, findEgg]);
+  const tapLogo = () => {
+    const c = eggCounts.current;
+    const now = Date.now();
+    c.logo = now - c.logoAt < 1200 ? c.logo + 1 : 1;
+    c.logoAt = now;
+    if (c.logo < 5) return;
+    c.logo = 0;
+    chip.play('error');
+    setFlicker(true);
+    setTimeout(() => setFlicker(false), 1300);
+    findEgg('logo');
+  };
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
@@ -255,6 +282,7 @@ export const GamingApp: React.FC = () => {
     },
     onKonami: () => {
       unlock('konami');
+      findEgg('konami');
       chip.play('powerup');
       showToast('+30 LEBEN', 'Cheat aktiviert. Voll krass, Player 1. Ehrenmann!');
       setRainbow(true);
@@ -343,6 +371,7 @@ export const GamingApp: React.FC = () => {
     chip.play('coin');
     unlock('first-coin');
     track('coin');
+    if (++eggCounts.current.coins >= 10) findEgg('coins');
     const fresh = GAMES.filter((g) => !state.discovered.includes(g.id));
     const pool = fresh.length ? fresh : GAMES;
     const winner = pool[Math.floor(Math.random() * pool.length)];
@@ -370,6 +399,13 @@ export const GamingApp: React.FC = () => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
+    // Old cheat codes typed into the search find an easter egg instead.
+    const cheat = cheatFor(q);
+    if (cheat) {
+      setQuery('');
+      findEgg(cheat);
+      return;
+    }
     chip.play('select');
     unlock('digger');
     track('search');
@@ -446,6 +482,7 @@ export const GamingApp: React.FC = () => {
     const mine = PALETTES.filter((p) => isOwned(p.id, state.owned));
     const i = mine.findIndex((p) => p.id === state.palette);
     set('palette', mine[(i + 1) % mine.length].id);
+    if (++eggCounts.current.colors >= 8) findEgg('colors');
   };
 
   const score = scoreOf(state);
@@ -453,7 +490,10 @@ export const GamingApp: React.FC = () => {
     view === 'catalog' ? [...catalog, ...archiveShown] : view === 'collection' ? collection : view === 'search' ? results ?? [] : [];
 
   return (
-    <div className={`arcade${rainbow ? ' rainbow' : ''}`} data-palette={state.palette}>
+    <div
+      className={`arcade${rainbow ? ' rainbow' : ''}${flicker ? ' flicker' : ''}${state.partyLogo && state.owned.includes('party') ? ' party' : ''}`}
+      data-palette={state.palette}
+    >
       <div className="stars" aria-hidden="true" />
       {/* Off-screen, always mounted: Spotify's player for the hall music. */}
       {/* Spotify swaps the ref'd element for its own iframe, so the hiding
@@ -469,7 +509,7 @@ export const GamingApp: React.FC = () => {
           <div className="hb-tint" />
         </div>
       )}
-      {screen === 'hub' && <PacmanWander />}
+      {screen === 'hub' && <PacmanWander onCatch={() => findEgg('pacman')} />}
 
       {screen === 'power' ? (
         <Entrance
@@ -486,7 +526,7 @@ export const GamingApp: React.FC = () => {
       ) : (
         <main className="hub">
           <header className="hud pixel-font">
-            <h1 className="brand rgb-split">
+            <h1 className="brand rgb-split" onClick={tapLogo}>
               <img className="brand-motif" src="/gaming/motif.webp" alt="" />
               RETROMIND
               <small>GAMING</small>
@@ -531,14 +571,15 @@ export const GamingApp: React.FC = () => {
             <button
               className="hud-tokens"
               onClick={() => switchView('quests')}
-              aria-label={`${state.tokens} Spielmarken, zu den Quests und zum Preis-Tresen`}
-              title="Spielmarken: zum Preis-Tresen"
+              aria-label={`${state.tokens} Spielmarken${cloud.status === 'signed_in' ? '' : ', nur auf diesem Gerät gespeichert'}, zu den Quests, Easter Eggs und zum Preis-Tresen`}
+              title={cloud.status === 'signed_in' ? 'Spielmarken: zum Preis-Tresen' : 'Spielmarken: nur auf diesem Gerät gespeichert. Mit Google anmelden, um sie zu sichern.'}
               data-nav
             >
-              <span className="label">MARKEN</span>{' '}
+              <span className="label">🪙 MARKEN</span>{' '}
               <span key={state.tokens} className="value bump">
                 {state.tokens}
               </span>
+              {cloud.status !== 'signed_in' && <span className="token-local">NUR HIER</span>}
             </button>
             <div>
               <span className="label">1UP</span> <span className="value">{pad(score)}</span>
@@ -607,7 +648,7 @@ export const GamingApp: React.FC = () => {
               ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
             </button>
             <button className="px-btn view-tab" aria-pressed={view === 'quests'} onClick={() => switchView('quests')} data-nav>
-              QUESTS · {state.tokens} MARKEN
+              QUESTS · EGGS · {state.tokens} MARKEN
             </button>
             {results && (
               <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
@@ -708,17 +749,28 @@ export const GamingApp: React.FC = () => {
           {view === 'chill' ? null : view === 'quests' ? (
             <QuestBoard
               state={state}
+              signedIn={cloud.status === 'signed_in'}
+              onOpenSettings={() => {
+                chip.play('select');
+                setSettingsOpen(true);
+              }}
               onBuy={(id) => {
                 if (!buy(id)) return chip.play('error');
                 const prize = PRIZES.find((p) => p.id === id)!;
                 chip.play('powerup');
+                if (prize.kind === 'effect') {
+                  set('partyLogo', true);
+                  showToast(`FREIGESCHALTET: ${prize.label}`, 'Läuft ab sofort. Am Preis-Tresen kannst du es jederzeit aus- und wieder anschalten.', '🪙');
+                  return;
+                }
                 set(prize.kind, id as never);
                 showToast(`FREIGESCHALTET: ${prize.label}`, 'Läuft ab sofort. In den Einstellungen kannst du jederzeit zurückwechseln.', '🪙');
               }}
               onUse={(id) => {
                 const prize = PRIZES.find((p) => p.id === id)!;
                 chip.play('select');
-                set(prize.kind, id as never);
+                if (prize.kind === 'effect') set('partyLogo', !state.partyLogo);
+                else set(prize.kind, id as never);
               }}
             />
           ) : view === 'trophies' ? (
@@ -928,7 +980,15 @@ export const GamingApp: React.FC = () => {
           >
             {guruOpen ? '✕' : '☻ GURU'}
           </button>
-          {guruOpen && <GuruChat onClose={() => setGuruOpen(false)} onAsk={() => track('guru')} />}
+          {guruOpen && (
+            <GuruChat
+              onClose={() => setGuruOpen(false)}
+              onAsk={(text) => {
+                track('guru');
+                if (asksMeaningOfLife(text)) findEgg('guru42');
+              }}
+            />
+          )}
         </>
       )}
 

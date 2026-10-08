@@ -4,17 +4,21 @@ import React, { useEffect, useRef } from 'react';
 // anywhere on screen (straight or diagonal), eats the row of dots leading
 // there, and a ghost follows in his tracks. Drawn on one see-through canvas
 // that taps go through (gaming.css .pac-wander). Off with reduced motion.
+// A tap right on him calls `onCatch` (the "Waka Waka" easter egg).
 
 const SIZE = 16; // Pac-Man's diameter in px
 const SPEED = 38; // px per second
 const DOT_GAP = 22;
 const GHOST_LAG = 40; // px of path between Pac-Man and the ghost
 const MARGIN = 24;
+const CATCH_RADIUS = 22; // px around Pac-Man that count as a catch
 
 type Pt = { x: number; y: number };
 
-export const PacmanWander: React.FC = () => {
+export const PacmanWander: React.FC<{ onCatch?: () => void }> = ({ onCatch }) => {
   const ref = useRef<HTMLCanvasElement>(null);
+  const onCatchRef = useRef(onCatch);
+  onCatchRef.current = onCatch;
 
   useEffect(() => {
     const canvas = ref.current;
@@ -64,6 +68,12 @@ export const PacmanWander: React.FC = () => {
     layDots();
     // Recent positions, newest last, so the ghost can walk the same path.
     const trail: Pt[] = [{ ...pos }];
+
+    // The canvas lets taps through, so catches are checked on the window.
+    const onTap = (e: PointerEvent) => {
+      if (Math.hypot(e.clientX - pos.x, e.clientY - pos.y) <= CATCH_RADIUS) onCatchRef.current?.();
+    };
+    window.addEventListener('pointerdown', onTap);
 
     let last = performance.now();
     let raf = 0;
@@ -140,6 +150,7 @@ export const PacmanWander: React.FC = () => {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointerdown', onTap);
     };
   }, []);
 
