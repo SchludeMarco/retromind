@@ -33,7 +33,6 @@ import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
-import { isAdminUser } from './lib/admin';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
@@ -720,7 +719,6 @@ const App: React.FC = () => {
               userName={user.name}
               userBirthDate={user.birthDate}
               onEditProfile={handleEditProfile}
-              isAdmin={isAdminUser(googleAuth.user)}
               onDismiss={() => setIsSettingsOpen(false)}
               onCloseClick={closeSettingsWithSfx}
             />
