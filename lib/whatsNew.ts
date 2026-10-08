@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Versionsnummer in den Einstellungen': {
+    title: 'Version number in the settings',
+    text: 'At the very bottom of the settings in both apps you can now see which version is running, for example “Version 2.167 (a1b2c3d)”. The number after the dot goes up with every change, and the code in parentheses shows exactly which build is loaded.',
+  },
   'RetroMind spricht jetzt Englisch': {
     title: 'RetroMind now speaks English',
     text: 'Both apps, Time Travel and RetroMind – Gaming, have been fully translated into American English, and English is the new default language. If you prefer German, switch to “Deutsch” under “Language” in the settings; your choice is saved in your browser. Everything the AI writes (questions, photo analysis, chat, Retro Guru, game guides) also comes in the language you picked. The game tokens are now called “Coins”. The privacy policy and legal notice are now also available in English.',

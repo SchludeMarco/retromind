@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Versionsnummer in den Einstellungen** (2026-10-08, PR #167): Ganz unten in
+  den Einstellungen beider Apps steht jetzt, welche Version läuft, zum Beispiel
+  „Version 2.167 (a1b2c3d)“. Die Zahl hinter dem Punkt steigt mit jeder
+  Änderung, der Code in Klammern zeigt genau, welcher Stand geladen ist.
+
 - **RetroMind spricht jetzt Englisch** (2026-10-08, PR #166): Beide Apps, die
   Zeitreise und RetroMind – Gaming, sind komplett ins amerikanische Englisch
   übersetzt, und Englisch ist die neue Standardsprache. Wer lieber Deutsch

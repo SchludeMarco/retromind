@@ -294,6 +294,9 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
 
+- **Versionsnummer** ([`vite.config.ts`](vite.config.ts)) – unten in den
+  Einstellungen beider Apps steht „Version 2.<PR-Nummer> (<Commit>)“, damit man
+  sieht, welcher Stand gerade läuft.
 - **Englisch als Standardsprache, Deutsch wählbar** ([`lib/i18n.ts`](lib/i18n.ts))
   – beide Apps sind komplett in amerikanischem Englisch. In den Einstellungen
   lässt sich unter „Language“ auf Deutsch umschalten; die Wahl wird im Browser
