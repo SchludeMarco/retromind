@@ -2560,3 +2560,90 @@ a {
 .arcade[data-palette='modul'] .pac-wander {
   opacity: 0.45;
 }
+
+/* --- Easter eggs and the "only on this device" note (quest board) --- */
+.token-save {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-color: var(--a3);
+}
+.token-save.safe {
+  border-color: var(--ok);
+}
+.egg-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.egg {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 2px dashed var(--dim);
+}
+.egg.found {
+  border-style: solid;
+  border-color: var(--ok);
+}
+.egg-icon {
+  font-size: 22px;
+}
+.egg:not(.found) .egg-icon {
+  opacity: 0.6;
+}
+.egg-body {
+  display: grid;
+  gap: 2px;
+}
+.egg-title {
+  font-size: 10px;
+}
+.egg-text {
+  opacity: 0.85;
+}
+.egg-reward {
+  font-size: 9px;
+  color: var(--a3);
+  white-space: nowrap;
+}
+.egg.found .egg-reward {
+  color: var(--ok);
+}
+/* The logo taps for the "Wackelkontakt" egg; the screen flickers briefly. */
+.brand {
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.arcade.flicker .hub {
+  animation: egg-flicker 0.6s steps(2) 2;
+}
+@keyframes egg-flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.35; filter: brightness(1.8); }
+  100% { opacity: 1; }
+}
+/* PARTY-LOGO from the prize counter: the rainbow from the Konami code, slower and for good. */
+.arcade.party .brand {
+  animation: rainbow 4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade.flicker .hub,
+  .arcade.party .brand {
+    animation: none !important;
+  }
+}
+.token-local {
+  margin-left: 6px;
+  font-size: 8px;
+  color: var(--a1);
+  vertical-align: middle;
+}

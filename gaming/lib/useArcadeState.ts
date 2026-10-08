@@ -3,6 +3,7 @@ import { Game } from '../data/games';
 import { hasMuteChoice, setMuted } from '../../lib/mute';
 import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 import { ActiveQuest, activeQuests, freshLog, mergeLogs, PRIZES, QuestEvent, QuestLog, record } from './quests';
+import { Egg, EGGS } from './eggs';
 
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
@@ -34,6 +35,10 @@ export interface ArcadeState {
   /** Prize ids bought at the prize counter. */
   owned: string[];
   quests: QuestLog;
+  /** Easter eggs found (eggs.ts); each paid its tokens once. */
+  eggs: string[];
+  /** The rainbow logo from the prize counter, switched on. */
+  partyLogo: boolean;
 }
 
 /** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */
@@ -58,6 +63,8 @@ const DEFAULTS: ArcadeState = {
   tokens: 0,
   owned: [],
   quests: freshLog(undefined),
+  eggs: [],
+  partyLogo: false,
 };
 
 function load(): ArcadeState {
@@ -106,6 +113,8 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     tokens: Math.max(local.tokens, remote.tokens ?? 0),
     owned: union(local.owned, remote.owned),
     quests: mergeLogs(local.quests, remote.quests),
+    eggs: union(local.eggs, remote.eggs),
+    partyLogo: remote.partyLogo ?? local.partyLogo,
   };
 }
 
@@ -131,7 +140,11 @@ export function scoreOf(s: ArcadeState) {
   return s.discovered.length * 100 + s.favorites.length * 250 + s.completed.length * 500 + s.achievements.length * 1000;
 }
 
-export function useArcadeState(onAchievement: (a: Achievement) => void, onQuest: (q: ActiveQuest) => void) {
+export function useArcadeState(
+  onAchievement: (a: Achievement) => void,
+  onQuest: (q: ActiveQuest) => void,
+  onEgg: (e: Egg) => void
+) {
   const [state, setState] = useState<ArcadeState>(load);
 
   useEffect(() => {
@@ -198,6 +211,19 @@ export function useArcadeState(onAchievement: (a: Achievement) => void, onQuest:
     return true;
   }, []);
 
+  /** Marks an easter egg as found and pays its tokens, once per profile. */
+  const findEgg = useCallback(
+    (id: string) => {
+      const egg = EGGS.find((e) => e.id === id);
+      const s = stateRef.current;
+      if (!egg || s.eggs.includes(id)) return;
+      stateRef.current = { ...s, eggs: [...s.eggs, id], tokens: s.tokens + egg.reward };
+      setState((x) => (x.eggs.includes(id) ? x : { ...x, eggs: [...x.eggs, id], tokens: x.tokens + egg.reward }));
+      onEgg(egg);
+    },
+    [onEgg]
+  );
+
   const discover = useCallback((game: Game) => {
     setState((s) =>
       s.discovered.includes(game.id)
@@ -223,5 +249,5 @@ export function useArcadeState(onAchievement: (a: Achievement) => void, onQuest:
     setState((s) => mergeStates(s, remote));
   }, []);
 
-  return { state, discover, toggleIn, unlock, set, mergeIn, track, buy };
+  return { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg };
 }

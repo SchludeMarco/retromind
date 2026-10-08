@@ -280,6 +280,13 @@ gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
 [`gaming/components/QuestBoard.tsx`](gaming/components/QuestBoard.tsx)).
 Der Marken-Stand steht immer oben in der Kopfleiste (ein Tipp darauf öffnet die
 Quests). Marken und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
+**Easter Eggs** – zehn Geheimnisse in der Halle (alte Cheats wie IDDQD, Rosebud
+oder XYZZY in der Suche, der Konami-Code, Pac-Man fangen, aufs Logo klopfen,
+den Guru nach dem Sinn des Lebens fragen, nachts vorbeischauen …). Jedes
+gefundene Ei bringt einmal Spielmarken; die Liste mit Tipps steht im Reiter
+„Quests“ ([`gaming/lib/eggs.ts`](gaming/lib/eggs.ts)). Am Preis-Tresen gibt es
+dafür zusätzlich das Party-Logo in Regenbogenfarben. Ohne Google-Anmeldung
+zeigt die App deutlich, dass die Marken nur auf diesem Gerät gespeichert sind.
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
@@ -513,6 +520,7 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   geboren ist, in den 1950ern. Beide starten bisher beim nächstgelegenen
   Jahrzehnt; eigene Inhalte dafür würden passen.
 
+- **Mehr Easter Eggs** in der Halle, z. B. in Spieleseiten oder Minispielen.
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle
   (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
   vergessenes Spiel als Geheimtipp aufdeckt.

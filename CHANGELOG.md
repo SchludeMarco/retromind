@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Easter Eggs in der Gaming-Halle** (2026-10-08, PR #164): In der Halle sind
+  jetzt zehn Geheimnisse versteckt, zum Beispiel alte Cheats in der Suche
+  (IDDQD, Rosebud, XYZZY), ein Pac-Man zum Fangen, fünfmal aufs Logo klopfen
+  oder den Guru nach dem Sinn des Lebens fragen. Jedes gefundene Ei bringt
+  einmal Spielmarken, dieselben wie bei den Quests. Unter „Quests“ steht die
+  Liste mit Tipps für alles, was noch fehlt. Am Preis-Tresen gibt es neu das
+  „Party-Logo“ in Regenbogenfarben. Der Marken-Stand steht wie bisher oben in
+  der Kopfleiste. Wer nicht mit Google angemeldet ist, sieht dort „NUR HIER“
+  und unter „Quests“ einen deutlichen Hinweis: Die Marken sind dann nur auf
+  diesem Gerät gespeichert. Mit Anmeldung kommen Marken und gefundene Eier mit
+  ins Google-Backup.
+
 - **Mehr im Adminbereich** (2026-10-08, PR #163): Der Adminbereich hat jetzt
   drei Reiter. Unter „Nutzung“ stehen zusätzlich die Geräte (Handy, Tablet,
   Computer), wie oft die App installiert geöffnet wird und die beliebtesten

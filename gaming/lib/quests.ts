@@ -125,7 +125,7 @@ export function mergeLogs(a: QuestLog | undefined, b: QuestLog | undefined): Que
 
 export interface Prize {
   id: string;
-  kind: 'palette' | 'track';
+  kind: 'palette' | 'track' | 'effect';
   label: string;
   text: string;
   price: number;
@@ -136,6 +136,7 @@ export const PRIZES: Prize[] = [
   { id: 'virtualboy', kind: 'palette', label: 'VIRTUAL BOY', text: 'Design in Rot auf Schwarz wie Nintendos legendärer Flop.', price: 50 },
   { id: 'space', kind: 'track', label: 'WELTRAUM', text: 'Hallen-Musik wie ein Shoot ’em up im All.', price: 30 },
   { id: 'boss', kind: 'track', label: 'BOSSKAMPF', text: 'Hallen-Musik für den Endgegner: hektisch und dramatisch.', price: 30 },
+  { id: 'party', kind: 'effect', label: 'PARTY-LOGO', text: 'Das Logo oben leuchtet dauerhaft in allen Regenbogenfarben.', price: 35 },
 ];
 
 /** Designs and tunes that are only available from the prize counter. */
