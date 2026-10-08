@@ -72,3 +72,8 @@ gebaut oder ausgeliefert.
   Einstellungen von Zeitreise und Gaming, nur für Marcos Google-Konto sichtbar
   (PR #160). Am 2026-10-08 auf Marcos Wunsch entfernt: In den Apps soll kein
   Hinweis auf den Adminbereich stehen, er ist nur über `/admin/` erreichbar.
+- `arcade-hallen.webp`, `entrance-gluehbirne.tsx.txt` und
+  `entrance-gluehbirne.css.txt`: Marcos erstes Eingangsbild der Gaming-Halle
+  („Arcade Hallen“, Querformat, PR #102) mit flackernder Leuchtschrift und der
+  wackelnden Glühbirne unter dem Vordach. Am 2026-10-08 durch sein neues Bild
+  mit dem Buchstabe für Buchstabe leuchtenden ARCADE-Schild ersetzt.
