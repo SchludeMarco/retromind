@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-// A small Pac-Man wanders slowly over the hall: he picks a random spot
+// A small Pac-Man wanders slowly through the hall, underneath the buttons: he picks a random spot
 // anywhere on screen (straight or diagonal), eats the row of dots leading
 // there, and a ghost follows in his tracks. Drawn on one see-through canvas
 // that taps go through (gaming.css .pac-wander). Off with reduced motion.

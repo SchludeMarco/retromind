@@ -2506,20 +2506,21 @@ a {
   transform: translateX(-50%) scale(0.94);
 }
 
-/* --- Pac-Man wandering over the hall (components/PacmanWander.tsx): a
-   see-through canvas over the hub, under the dock, buttons and popups;
-   taps go through it. --- */
+/* --- Pac-Man wandering through the hall (components/PacmanWander.tsx): a
+   see-through canvas between the hall picture and the hub, so he runs
+   underneath every button, card and popup (Marco, 2026-10-08); taps go
+   through it. --- */
 .pac-wander {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 380;
+  z-index: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.6;
 }
 .arcade[data-palette='modul'] .pac-wander {
-  opacity: 0.45;
+  opacity: 0.7;
 }
 
 /* --- Easter eggs and the "only on this device" note (quest board) --- */

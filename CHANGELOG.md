@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Pac-Man läuft unter den Knöpfen durch** (2026-10-08, PR #174): Der kleine
+  Pac-Man mit Geist, der durch die Gaming-Halle wandert, läuft jetzt hinter
+  allen Knöpfen, Karten und Fenstern entlang statt darüber. Dafür ist er auf
+  dem freien Hintergrund etwas besser zu sehen.
+
 - **Blinkender Leuchtrahmen um die Tür** (2026-10-08, PR #173): Die
   ENTRANCE-Tür vor der Gaming-Halle hat jetzt einen dicken, warm-gelben
   Neonrahmen, der wie bei einer Spielhallen-Leuchtreklame blinkt und kurz
