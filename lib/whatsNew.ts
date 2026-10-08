@@ -36,6 +36,10 @@ const EN: Record<string, { title: string; text: string }> = {
     title: 'RetroMind now speaks English',
     text: 'Both apps, Time Travel and RetroMind – Gaming, have been fully translated into American English, and English is the new default language. If you prefer German, switch to “Deutsch” under “Language” in the settings; your choice is saved in your browser. Everything the AI writes (questions, photo analysis, chat, Retro Guru, game guides) also comes in the language you picked. The game tokens are now called “Coins”. The privacy policy and legal notice are now also available in English.',
   },
+  'Anmelden schon am Eingang der Gaming-Halle': {
+    title: 'Sign in right at the gaming hall entrance',
+    text: 'Below the ENTER button there are now two optional buttons: “Sign in with Google” (saves your progress and coins on all your devices) and “Connect Spotify” (hall music in full length, gently louder with Premium). No more detour through the settings. If you’re already signed in, you just see a small check mark with your name.',
+  },
   'Easter Eggs in der Gaming-Halle': {
     title: 'Easter eggs in the gaming hall',
     text: 'Ten secrets are now hidden in the hall, for example old cheats in the search (IDDQD, Rosebud, XYZZY), a Pac-Man to catch, tapping the logo five times, or asking the Guru about the meaning of life. Every egg you find pays out coins once, the same ones you get for quests. Under “Quests” you’ll find a list with hints for everything you’re still missing. The prize counter now has a rainbow-colored “Party Logo”. Your coin balance sits in the header as before. If you’re not signed in with Google, it says “ONLY HERE” and “Quests” shows a clear note: your coins are then only saved on this device. Once you sign in, coins and found eggs go into your Google backup too.',

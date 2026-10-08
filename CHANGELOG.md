@@ -16,6 +16,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Die Spielmarken heißen jetzt in beiden Sprachen „Coins“. Datenschutzerklärung und
   Impressum gibt es zusätzlich auf Englisch.
 
+- **Anmelden schon am Eingang der Gaming-Halle** (2026-10-08, PR #165): Unter
+  dem ENTER-Knopf gibt es jetzt zwei freiwillige Knöpfe: „Mit Google anmelden“
+  (sichert Fortschritt und Coins auf allen Geräten) und „Spotify verbinden“
+  (Hallenmusik in voller Länge, mit Premium sanft lauter). Man muss nicht mehr
+  erst in die Einstellungen. Wer schon angemeldet ist, sieht dort nur einen
+  kurzen Haken mit seinem Namen.
+
 - **Easter Eggs in der Gaming-Halle** (2026-10-08, PR #164): In der Halle sind
   jetzt zehn Geheimnisse versteckt, zum Beispiel alte Cheats in der Suche
   (IDDQD, Rosebud, XYZZY), ein Pac-Man zum Fangen, fünfmal aufs Logo klopfen

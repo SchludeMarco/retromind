@@ -520,6 +520,8 @@ export const GamingApp: React.FC = () => {
           music={state.music}
           spotifyAtDoor={spotify.atDoor}
           onToggleMute={toggleMute}
+          cloud={cloud}
+          spotifyAuth={spotifyAuth}
           onEnter={() => {
             setScreen('hub');
             setFromDoor(!reducedMotion);
