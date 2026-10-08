@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Blinkender Leuchtrahmen um die Tür': {
+    title: 'Blinking neon frame around the door',
+    text: 'The ENTRANCE door outside the gaming hall now has a thick, warm yellow neon frame that blinks and flickers like an arcade sign. You see right away where to go in.',
+  },
   'Rein geht es jetzt durch die Tür': {
     title: 'You now go in through the door',
     text: 'There’s no ENTER button outside the gaming hall anymore. Just tap the ENTRANCE door in the picture; its edges glow softly so you know. The “Warning, extreme loud!” sign now stands in the middle below the picture, with the speaker to its right.',

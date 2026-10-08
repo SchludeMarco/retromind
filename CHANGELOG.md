@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Blinkender Leuchtrahmen um die Tür** (2026-10-08, PR #173): Die
+  ENTRANCE-Tür vor der Gaming-Halle hat jetzt einen dicken, warm-gelben
+  Neonrahmen, der wie bei einer Spielhallen-Leuchtreklame blinkt und kurz
+  flackert. So sieht man sofort, wo es reingeht.
+
 - **Rein geht es jetzt durch die Tür** (2026-10-08, PR #172): Vor der
   Gaming-Halle gibt es keinen ENTER-Knopf mehr. Du tippst einfach auf die
   ENTRANCE-Tür im Bild, sie leuchtet dafür sanft an den Rändern. Das Schild

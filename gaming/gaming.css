@@ -1836,8 +1836,8 @@ a {
   80% { opacity: 1; }
 }
 /* The ENTRANCE door, cut from the photo, over a lit room behind it. */
-/* It is the way in: tap it (Marco, 2026-10-08). A soft light at its edges
-   breathes so it reads as something to touch. */
+/* It is the way in: tap it (Marco, 2026-10-08). A thick neon frame
+   blinks around it like an arcade marquee so it says "come in". */
 .hall-door {
   position: absolute;
   left: 30.606%;
@@ -1850,7 +1850,32 @@ a {
   cursor: pointer;
   perspective: 120cqw;
   -webkit-tap-highlight-color: transparent;
-  animation: door-beckon 2.4s ease-in-out infinite;
+}
+.hall-door::after {
+  content: '';
+  position: absolute;
+  inset: -2.2cqw;
+  z-index: 2;
+  border: 1.8cqw solid #ffcf5a;
+  border-radius: 1.2cqw;
+  pointer-events: none;
+  box-shadow:
+    0 0 1.5cqw 0.4cqw #ff9a2e,
+    0 0 6cqw 1.5cqw rgba(255, 120, 40, 0.65),
+    inset 0 0 1.5cqw 0.4cqw #ff9a2e,
+    inset 0 0 5cqw 1cqw rgba(255, 170, 60, 0.35);
+  animation: door-blink 1.2s steps(1) infinite;
+}
+/* On, off, on, a short flicker, on: a sign that wants you in. */
+@keyframes door-blink {
+  0% { opacity: 1; }
+  40% { opacity: 0.12; }
+  55% { opacity: 1; }
+  80% { opacity: 0.35; }
+  85% { opacity: 1; }
+}
+.entering .hall-door::after {
+  animation: fade-down 0.3s ease-out forwards;
 }
 .hall-door:disabled {
   cursor: default;
@@ -1862,10 +1887,6 @@ a {
 }
 .hall-door:focus-visible {
   box-shadow: 0 0 0 3px #ffd27a, 0 0 4cqw 1cqw rgba(255, 210, 122, 0.6);
-}
-@keyframes door-beckon {
-  0%, 100% { box-shadow: 0 0 1cqw 0 rgba(255, 220, 150, 0.15); }
-  50% { box-shadow: 0 0 4cqw 0.6cqw rgba(255, 220, 150, 0.45); }
 }
 .door-inside {
   display: block;
@@ -2017,7 +2038,7 @@ a {
 }
 @media (prefers-reduced-motion: reduce) {
   .neon-letter.on,
-  .hall-door {
+  .hall-door::after {
     animation: none;
   }
   .entering * {
