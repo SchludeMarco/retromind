@@ -2837,7 +2837,7 @@ section:first-child > .media-head {
    A small stage: the console sits at the bottom, the cartridge floats in,
    lines up over the slot and is pushed in. Everything below the slot line is
    masked off (.ci-mask), so the cartridge really disappears into the console
-   instead of sliding over it. Klack at 55 %, LED on, then the CRT switches on. */
+   instead of sliding over it. Thunk at 55 %, click and LED on at 64 %, then the CRT switches on. */
 .cart-insert {
   position: fixed;
   inset: 0;
@@ -3054,12 +3054,12 @@ section:first-child > .media-head {
   62%, 100% { transform: translateY(0); }
 }
 @keyframes ci-led {
-  0%, 57% { background: #3a0d0d; box-shadow: none; }
-  58%, 100% { background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b, 0 0 3px #fff inset; }
+  0%, 63% { background: #3a0d0d; box-shadow: none; }
+  64%, 100% { background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b, 0 0 3px #fff inset; }
 }
 @keyframes ci-switch {
-  0%, 64% { left: 2px; }
-  68%, 100% { left: 16px; }
+  0%, 66% { left: 2px; }
+  70%, 100% { left: 16px; }
 }
 @keyframes ci-crt {
   0%, 72% { transform: translate(-50%, -50%) scale(0.01, 0.004); opacity: 0; }

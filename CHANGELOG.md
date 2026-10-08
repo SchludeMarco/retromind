@@ -10,8 +10,9 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 - **Modul einlegen, diesmal richtig** (2026-10-08, PR #177): Das Einlegen
   eines Spiels sah bisher schief aus: das Modul fiel an der Konsole vorbei und
   tauchte darunter wieder auf. Jetzt schwebt das Modul mit Cover heran, richtet
-  sich über dem Schacht aus und wird hineingedrückt, bis es mit einem Klack
-  stecken bleibt. Die Konsole ruckelt kurz, die rote Lampe geht an, der
+  sich über dem Schacht aus und wird hineingedrückt: Es schabt beim
+  Reinschieben, landet mit einem satten, dumpfen Rums und rastet mit einem
+  hellen Klick ein. Die Konsole ruckelt kurz, die rote Lampe geht an, der
   Schalter springt um, und der Fernseher schaltet sich mit einem weißen Strich
   ein, aus dem die Spieleseite aufgeht. Antippen überspringt es.
 

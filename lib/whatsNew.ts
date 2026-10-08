@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Modul einlegen, diesmal richtig': {
     title: 'Inserting the cartridge, done right',
-    text: 'Opening a game looked off: the cartridge fell past the console and showed up below it. Now the cartridge floats in with its cover, lines up over the slot and gets pushed in until it clicks home. The console jolts, the red light comes on, the switch flips, and the TV turns on with a white line that opens into the game page. Tap to skip.',
+    text: 'Opening a game looked off: the cartridge fell past the console and showed up below it. Now the cartridge floats in with its cover, lines up over the slot and gets pushed in: it scrapes going in, lands with a full, deep thunk and snaps into place with a crisp click. The console jolts, the red light comes on, the switch flips, and the TV turns on with a white line that opens into the game page. Tap to skip.',
   },
   'Modul einlegen, Highscore-Tafel, neue Automaten-Spiele und die Urzeit': {
     title: 'Insert the cartridge, a high score table, new arcade games and the stone age',

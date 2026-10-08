@@ -5,8 +5,9 @@ import { useCover } from '../lib/covers';
 import { chip } from '../lib/chiptune';
 
 // Opening a game: the cartridge floats in, lines up over the console slot and
-// is pushed in (masked below the slot line so it really goes inside), clicks
-// home, the power LED comes on and the TV switches on. Tap to skip.
+// is pushed in (masked below the slot line so it really goes inside) with a
+// full thunk, clicks home, the power LED comes on and the TV switches on. Tap
+// to skip.
 export const INSERT_MS = 1300;
 
 export const CartInsert: React.FC<{ game: Game; onDone: () => void }> = ({ game, onDone }) => {
@@ -14,10 +15,13 @@ export const CartInsert: React.FC<{ game: Game; onDone: () => void }> = ({ game,
   const finish = useRef(onDone);
   finish.current = onDone;
   useEffect(() => {
-    const click = setTimeout(() => chip.play('start'), INSERT_MS * 0.55);
+    // The push runs from 34 % to 55 % of the animation (ci-insert in gaming.css).
+    const push = setTimeout(() => chip.insert(INSERT_MS * 0.21 / 1000), INSERT_MS * 0.34);
+    const power = setTimeout(() => chip.play('start'), INSERT_MS * 0.74);
     const done = setTimeout(() => finish.current(), INSERT_MS);
     return () => {
-      clearTimeout(click);
+      clearTimeout(push);
+      clearTimeout(power);
       clearTimeout(done);
     };
   }, []);
