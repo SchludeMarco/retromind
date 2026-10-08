@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Rein geht es jetzt durch die Tür** (2026-10-08, PR #172): Vor der
+  Gaming-Halle gibt es keinen ENTER-Knopf mehr. Du tippst einfach auf die
+  ENTRANCE-Tür im Bild, sie leuchtet dafür sanft an den Rändern. Das Schild
+  „Warning, extreme loud!“ steht jetzt mittig unter dem Bild, der Lautsprecher
+  rechts daneben.
+
 - **Neuer Eingang zur Gaming-Halle mit leuchtendem ARCADE-Schild**
   (2026-10-08, PR #171): Vor der Tür steht jetzt Marcos neues Bild, eine
   verranzte Spielhalle mit Sticker-Tür „ENTRANCE“ im Regen. Das Neonschild

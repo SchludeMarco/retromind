@@ -186,7 +186,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 ### Edition „RetroMind – Gaming“ (`/gaming/`)
 
 Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
-Am Eingang (vor ENTER) kann man sich freiwillig mit Google (Savegame und Coins
+Am Eingang (vor der Tür) kann man sich freiwillig mit Google (Savegame und Coins
 in Google Drive) und mit Spotify (Hallenmusik) anmelden, beides geht auch später
 in den Einstellungen ([`gaming/components/Entrance.tsx`](gaming/components/Entrance.tsx)).
 Im Katalog filterst du nach Jahrzehnt (80er bis 2020er) und darin nach einem
@@ -211,7 +211,7 @@ beginnt von vorne (`public/gaming/arcade-sign-0…5.webp`). Dazu hörst
 du leise, gedämpft durch die Wand, den Bass und die Drums der Metal-Musik aus
 der Halle
 (`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
-den Ton ab der ersten Berührung). „ENTER“ (ein Knopf im Look der Metalltür) öffnet die Tür mit langem Knarzen, beim
+den Ton ab der ersten Berührung). Ein Tipp auf die Tür im Bild öffnet sie mit langem Knarzen (das Warnschild „Extreme loud!“ steht mittig darunter), beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
 80er-Heavy-Metal-Intro mit zwei verzerrten Gitarren links und rechts, Bass,

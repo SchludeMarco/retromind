@@ -77,3 +77,6 @@ gebaut oder ausgeliefert.
   („Arcade Hallen“, Querformat, PR #102) mit flackernder Leuchtschrift und der
   wackelnden Glühbirne unter dem Vordach. Am 2026-10-08 durch sein neues Bild
   mit dem Buchstabe für Buchstabe leuchtenden ARCADE-Schild ersetzt.
+- `enter-knopf.tsx.txt` und `enter-knopf.css.txt`: der ENTER-Knopf im Look
+  der Metalltür vor der Gaming-Halle (PR #111). Am 2026-10-08 auf Marcos
+  Wunsch entfernt: Jetzt tippt man direkt auf die Tür im Bild.

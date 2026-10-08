@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Rein geht es jetzt durch die Tür': {
+    title: 'You now go in through the door',
+    text: 'There’s no ENTER button outside the gaming hall anymore. Just tap the ENTRANCE door in the picture; its edges glow softly so you know. The “Warning, extreme loud!” sign now stands in the middle below the picture, with the speaker to its right.',
+  },
   'Neuer Eingang zur Gaming-Halle mit leuchtendem ARCADE-Schild': {
     title: 'New entrance to the gaming hall with a glowing ARCADE sign',
     text: 'Outside the door there’s now Marco’s new picture: a run-down arcade with a sticker-covered ENTRANCE door in the rain. The ARCADE neon sign lights up letter by letter, one more every second; a second after all six are on, everything goes dark and it starts over. ENTER swings the new door open. On a computer the picture stands at full height in the middle, with a blurred copy filling the sides. The old “Arcade Hallen” with the wobbling bulb has moved to the archive.',
