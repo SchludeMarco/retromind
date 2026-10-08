@@ -80,3 +80,8 @@ gebaut oder ausgeliefert.
 - `enter-knopf.tsx.txt` und `enter-knopf.css.txt`: der ENTER-Knopf im Look
   der Metalltür vor der Gaming-Halle (PR #111). Am 2026-10-08 auf Marcos
   Wunsch entfernt: Jetzt tippt man direkt auf die Tür im Bild.
+- `gaming-hallen-werkzeugleisten.tsx.txt`: die zwei Knopfzeilen oben in der
+  Gaming-Halle (Insert Coin, Chill-Ecke, Suche, Reiter Oldschool-Perlen,
+  Stash, Achievements, Quests sowie Musik, SFX, App und Farbwechsel). Am
+  2026-10-08 nach der Gamer-Kritik aufgeräumt: Suche und Insert Coin bleiben
+  oben, die Bereiche sind in der Leiste unten, der Rest in den Einstellungen.

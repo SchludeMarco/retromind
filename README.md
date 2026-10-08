@@ -189,8 +189,20 @@ Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute
 Am Eingang (vor der Tür) kann man sich freiwillig mit Google (Savegame und Coins
 in Google Drive) und mit Spotify (Hallenmusik) anmelden, beides geht auch später
 in den Einstellungen ([`gaming/components/Entrance.tsx`](gaming/components/Entrance.tsx)).
-Im Katalog filterst du nach Jahrzehnt (80er bis 2020er) und darin nach einem
-einzelnen Jahr, dazu nach Konsole.
+Oben in der Halle stehen nur die Suche und „Insert Coin“, darunter eine
+wischbare Zeile mit den Jahrzehnten (80er bis 2020er) und der Konsolenwahl;
+nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.
+Die Bereiche (Katalog, Kisten, Stash, Trophäen, Chillen, Quests) liegen in
+allen Designs in der Leiste unten, Musik, Soundeffekte und Farben in den
+Einstellungen. Die Kopfleiste zeigt Coins, einen Punktestand (SCORE) und wie
+viele der Perlen du entdeckt hast. Jede Spielkarte zeigt das Cover, also das
+Titelbild aus dem Wikipedia-Artikel, für 50 Karten auf einmal geladen
+([`gaming/lib/covers.ts`](gaming/lib/covers.ts)); am Handy liegen zwei Karten
+nebeneinander. Titel und Knöpfe bleiben in Pixelschrift, Beschreibungen
+stehen wie in einem Handbuch in gut lesbarer Schrift und enden mit ganzen
+Sätzen. Am Handy rüttelt es kurz beim Münzeinwurf, beim Öffnen der Tür, bei
+Erfolgen und gekauften Preisen (Android; schaltet sich mit den Soundeffekten
+ab, `gaming/lib/chiptune.ts`).
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
 Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
@@ -200,7 +212,13 @@ die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
 nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live (über `api/proxy.js`),
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
-Longplays, GameFAQs, MobyGames und Internet Archive. Auf jeder Spieleseite
+Longplays, GameFAQs, MobyGames, Kultboy und Handbüchern im Internet Archive.
+Der Reiter „Musik & TV-Werbung“ zeigt den Soundtrack und die alten
+Fernsehspots des Spiels von YouTube, der Reiter „Zeitschriften & heute“ sucht
+auf Knopfdruck im Web nach den Testwertungen von damals (Power Play, ASM,
+Amiga Joker, Video Games, Mega Fun, Man!ac, EGM …), legalen Wegen, das Spiel
+heute zu spielen, und Level-Passwörtern, immer mit Quellen
+(`gamePress` in `api/gemini.js`). Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
 mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: eine verranzte Spielhalle
@@ -261,8 +279,7 @@ unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`, für die
 Cloud-Sicherung außerdem `VITE_GOOGLE_CLIENT_ID` und die Domain als erlaubten
 JavaScript-Ursprung im Google-OAuth-Client).
 
-**Design wählbar** – in den Gaming-Einstellungen unter „Bildschirm“ (oder per
-Knopf in der Werkzeugleiste): „Arcade“ (Standard, dunkler Pixel-Look mit
+**Design wählbar** – in den Gaming-Einstellungen unter „Bildschirm“: „Arcade“ (Standard, dunkler Pixel-Look mit
 Neonfarben), „Modul“ (mit Google Stitch entworfen: helles Konsolen-Plastik,
 weiße Modul-Karten mit Griffrillen in der Konsolenfarbe, rote Tasten, gut
 lesbare Schrift und eine Navigation unten mit Katalog, Kisten, Stash, Trophäen
@@ -275,15 +292,14 @@ und Chillen), dazu die Pixel-Looks „Handheld“ und „Bernstein“. Das Desig
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
-**Chill-Ecke** – über den lila Knopf oben unter „Insert Coin“: die
-Minispiele klappen direkt darunter auf, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper und Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten)
+**Chill-Ecke** – über „Chillen“ in der Leiste unten: die
+Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper und Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten)
 ([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
 [`gaming/components/minigames/`](gaming/components/minigames/)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
 Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den
 Erfolg „Chillmodus“.
-**Quests und Preis-Tresen** – Reiter „Quests“ (im Modul-Design unten in der
-Leiste): jeden Tag drei kleine Aufgaben in der Halle (z. B. Games entdecken,
+**Quests und Preis-Tresen** – „Quests“ in der Leiste unten: jeden Tag drei kleine Aufgaben in der Halle (z. B. Games entdecken,
 Münze einwerfen, ein Minispiel schaffen, den Guru fragen) und eine größere
 pro Woche. Jede geschaffte Quest bringt Coins, die man am Preis-Tresen
 gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
@@ -523,8 +539,7 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
-- **Weitere Gaming-Stitch-Screens umsetzen:** Spiele-Karten mit Cover-Bild,
-  Trophäen-Schrank mit Fortschrittsbalken und Seltenheit, Spieleseite mit
+- **Weitere Gaming-Stitch-Screens umsetzen:** Trophäen-Schrank mit Fortschrittsbalken und Seltenheit, Spieleseite mit
   großem Screenshot oben und „Frag den Game-Guru“-Leiste (Entwurf in
   `docs/stitch/gaming/`).
 - **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google

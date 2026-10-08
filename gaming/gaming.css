@@ -724,14 +724,15 @@ a {
 .guru-fab {
   position: fixed;
   right: 16px;
-  bottom: 16px;
+  /* above the dock */
+  bottom: calc(84px + env(safe-area-inset-bottom));
   z-index: 400;
 }
 /* "Nach oben", bottom left, mirroring the Guru button; shows after scrolling. */
 .to-top {
   position: fixed;
   left: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  bottom: calc(84px + env(safe-area-inset-bottom));
   z-index: 395;
   display: inline-flex;
   align-items: center;
@@ -754,7 +755,7 @@ a {
 .guru {
   position: fixed;
   right: 16px;
-  bottom: 84px;
+  bottom: calc(150px + env(safe-area-inset-bottom));
   z-index: 410;
   width: min(380px, calc(100vw - 32px));
   height: min(480px, 70vh);
@@ -2495,7 +2496,7 @@ a {
 .hall-music-knob {
   position: fixed;
   left: 50%;
-  bottom: calc(18px + env(safe-area-inset-bottom));
+  bottom: calc(88px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 396;
 }
@@ -2606,8 +2607,11 @@ a {
 .token-local {
   margin-left: 6px;
   font-size: 8px;
-  color: var(--a1);
+  color: #fff;
+  background: #b91c1c;
+  padding: 2px 4px;
   vertical-align: middle;
+  text-shadow: none;
 }
 
 /* Optional Google and Spotify sign-in at the door. */
@@ -2645,4 +2649,186 @@ a {
   margin: 4px 0 0;
   text-align: center;
   font-size: 14px;
+}
+
+/* --- Tidy hall (gamer review, 2026-10-08): search and coin slot on top,
+   decades and systems in one swipeable row, sections in the dock. --- */
+.top-bar .search {
+  flex: 1 1 320px;
+}
+.px-btn.big.coin-btn {
+  flex: 0 1 auto;
+  font-size: clamp(10px, 1.6vw, 13px);
+  padding: 12px 16px;
+}
+@media (max-width: 600px) {
+  .top-bar .search,
+  .px-btn.big.coin-btn {
+    flex: 1 1 100%;
+  }
+}
+.filters.scroll-row {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: 4px 2px 6px;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+.filters.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+.filters.scroll-row .px-btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.filters.scroll-row .px-btn.console-button {
+  font-size: 9px;
+  padding: 7px 9px;
+  margin-left: 10px;
+}
+.arcade[data-palette='modul'] .filters.scroll-row .px-btn.console-button {
+  font-size: 13px;
+  padding: 8px 14px;
+}
+.chill-panel {
+  margin-top: 12px;
+}
+
+/* The dock in the pixel designs: same bar, arcade looks. */
+.arcade:not([data-palette='modul']) .dock {
+  background: var(--bg);
+  border-top: 4px solid var(--panel);
+}
+.arcade:not([data-palette='modul']) .dock-btn {
+  font: 8px/1.4 'Press Start 2P', monospace;
+  letter-spacing: 0;
+  color: var(--dim);
+  border-radius: 0;
+}
+.arcade:not([data-palette='modul']) .dock-btn:hover,
+.arcade:not([data-palette='modul']) .dock-btn:focus-visible {
+  color: var(--fg);
+}
+.arcade:not([data-palette='modul']) .dock-btn[aria-current='page'] {
+  color: var(--bg);
+  background: var(--a1);
+  box-shadow: none;
+}
+
+/* --- Cartridges with box art and a readable teaser --- */
+.grid {
+  gap: 26px;
+}
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 14px;
+  }
+  .cart {
+    padding: 14px 8px 10px;
+  }
+  .cart-label {
+    padding: 8px;
+  }
+  .cart-title {
+    font-size: 9px;
+  }
+}
+.cart.has-cover {
+  min-height: 0;
+}
+.cart-cover {
+  display: block;
+  height: 170px;
+  margin-bottom: 8px;
+  background: #121216;
+  border: 3px solid rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.cart-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@media (max-width: 520px) {
+  .cart-cover {
+    height: 150px;
+  }
+}
+/* Pixel font for titles and buttons, the manual's typeface for text. */
+.cart-blurb {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.cart.has-cover .cart-blurb {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+.arcade[data-palette='modul'] .cart-cover {
+  margin: 12px 0 0;
+  border: none;
+  border-bottom: 1px solid var(--ridge);
+  background: #f3f4f6;
+}
+.arcade[data-palette='modul'] .cart.has-cover .cart-label {
+  padding-top: 12px;
+}
+.arcade[data-palette='modul'] .cart.has-cover .cart-badges {
+  top: 18px;
+  right: 8px;
+  padding: 2px 6px;
+  background: #fff;
+  border-radius: 6px;
+}
+@media (max-width: 520px) {
+  .arcade[data-palette='modul'] .cart-title {
+    font-size: 14px;
+  }
+  .arcade[data-palette='modul'] .cart-label {
+    padding: 22px 10px 12px;
+  }
+}
+.cart-badges {
+  z-index: 1;
+  text-shadow: 0 0 4px #000, 0 0 2px #000;
+}
+.hud-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+}
+.token-local {
+  white-space: nowrap;
+}
+
+/* Game page: soundtrack and TV ads tab. */
+.media-head {
+  font-size: 11px;
+  margin: 18px 0 8px;
+  color: var(--a3);
+}
+section:first-child > .media-head {
+  margin-top: 4px;
+}
+.arcade[data-palette='modul'] .media-head {
+  font-size: 14px;
+  color: var(--a1);
+}
+
+/* Running text on the game page in a readable face, like a manual. */
+.dialog .info-layout p:not(.loading),
+.dialog .panel p:not(.loading):not(.pixel-font),
+.dialog .panel li {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
 }

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Cover auf den Karten, aufgeräumte Halle, Soundtrack und alte Testwertungen': {
+    title: 'Box art on the cards, a tidy hall, soundtracks and old magazine scores',
+    text: 'Every game card in the gaming hall now shows the game’s box art, and on phones two cards sit side by side. Up top there’s just the search and “Insert Coin”, with a swipeable row of decades and the console picker below, so the games show up right away. Catalog, systems, stash, trophies, chill zone and quests live in the bar at the bottom in every design; music, sound effects and colors are in the settings. One SCORE replaces 1UP and HI-SCORE, and “ONLY HERE” next to the coins is easy to read. Descriptions use a readable font and no longer stop mid-word. On phones you feel a short buzz when you drop a coin, at the door and for achievements. The game page has a new “Music & TV ads” tab with the soundtrack and the old TV spots, and a “Magazines & today” tab: scores from EGM, Power Play and co., where to play it legally today and level passwords, with sources. Plus links to manuals and Kultboy.',
+  },
   'Pac-Man läuft unter den Knöpfen durch': {
     title: 'Pac-Man runs underneath the buttons',
     text: 'The little Pac-Man and his ghost wandering through the gaming hall now run behind all buttons, cards and windows instead of over them. In return he’s a bit easier to see on the open background.',

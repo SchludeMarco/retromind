@@ -25,6 +25,24 @@ export function noteFreq(note: string): number {
 }
 
 /** How long the door takes to swing open; Entrance.tsx and the CSS follow it. */
+// A short rumble on phones that can (Android browsers; iPhones ignore it),
+// switched together with the sound effects.
+const BUZZ: Partial<Record<SfxName, number | number[]>> = {
+  coin: [25, 40, 25],
+  powerup: [20, 30, 60],
+  achievement: [40, 60, 40, 60, 90],
+  error: 90,
+  start: 45,
+};
+function buzz(pattern: number | number[] | undefined) {
+  if (!pattern || typeof navigator === 'undefined' || !navigator.vibrate) return;
+  try {
+    navigator.vibrate(pattern);
+  } catch {
+    // Some browsers refuse without a user gesture; nothing to do.
+  }
+}
+
 export const DOOR_SWING = 1.2;
 
 // Music bus level; at 0.32 phones barely played the tunes audibly.
@@ -151,6 +169,7 @@ class ChipSound {
   }
 
   play(name: SfxName) {
+    if (this.sfxEnabled) buzz(BUZZ[name]);
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
     const t = this.ctx.currentTime + 0.01;
     const bus = this.sfxBus;
@@ -222,6 +241,7 @@ class ChipSound {
 
   /** An old wooden door thrown open: a short creak, then it bangs against the wall. */
   door() {
+    if (this.sfxEnabled) buzz([60, 90, 140]);
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;
     const ctx = this.ctx;
     const t = ctx.currentTime + 0.01;

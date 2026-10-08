@@ -2,20 +2,22 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Game, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
 import { platformLabel } from '../data/platforms';
 import { fetchImages, fetchSummary, WikiImage, WikiSummary } from '../lib/wiki';
-import { AiUnavailableError, fetchGameGuide, GameGuide } from '../lib/ai';
+import { AiUnavailableError, fetchGameGuide, fetchGamePress, GameGuide } from '../lib/ai';
 import { chip } from '../lib/chiptune';
 import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
-import { fetchVideos, formatViews, YouTubeVideo } from '../lib/youtube';
+import { fetchVideos, formatViews, VideoKind, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
 
-type Tab = 'info' | 'videos' | 'shots' | 'guide' | 'web';
+type Tab = 'info' | 'videos' | 'media' | 'shots' | 'press' | 'guide' | 'web';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'info', label: 'INFO' },
   { id: 'videos', label: 'VIDEOS' },
+  { id: 'media', label: tr('MUSIC & TV ADS', 'MUSIK & TV-WERBUNG') },
   { id: 'shots', label: 'SCREENSHOTS' },
+  { id: 'press', label: tr('MAGAZINES & TODAY', 'ZEITSCHRIFTEN & HEUTE') },
   { id: 'guide', label: 'GUIDE & CHEATS' },
   { id: 'web', label: tr('ON THE WEB', 'IM WEB') },
 ];
@@ -31,6 +33,53 @@ const Loading: React.FC = () => {
   );
 };
 
+/** A row of YouTube clips; a tap plays one in the player at the top. */
+const VideoList: React.FC<{ videos: YouTubeVideo[]; playingId?: string; onPlay: (v: YouTubeVideo) => void }> = ({ videos, playingId, onPlay }) => (
+  <div className="yt-list">
+    {videos.map((v) => (
+      <button key={v.id} className="yt-item" aria-pressed={playingId === v.id} onClick={() => onPlay(v)} data-nav>
+        <img src={viaProxy(v.thumb)} alt="" loading="lazy" />
+        <span className="yt-title">{v.title}</span>
+        <span className="dim yt-meta">
+          {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString(LOCALE)} 👍` : '']
+            .filter(Boolean)
+            .join(' · ')}
+        </span>
+      </button>
+    ))}
+  </div>
+);
+
+/** An AI answer grounded in Google Search, with its sources. */
+const GroundedText: React.FC<{ title: string; result: GameGuide }> = ({ title, result }) => (
+  <div className="panel">
+    <h3 className="pixel-font">{title}</h3>
+    <MiniMarkdown text={result.text} />
+    {!!result.sources.length && (
+      <div className="sources">
+        <p className="dim" style={{ marginBottom: 2 }}>{tr('Sources:', 'Quellen:')}</p>
+        <ul>
+          {result.sources.map((src) => (
+            <li key={src.uri}>
+              <a href={src.uri} target="_blank" rel="noreferrer">
+                {src.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    {result.searchWidget && (
+      <iframe
+        title={tr('Google search suggestions', 'Google-Suchvorschläge')}
+        srcDoc={result.searchWidget}
+        sandbox="allow-popups allow-popups-to-escape-sandbox"
+        style={{ width: '100%', height: 80, border: 0, background: 'transparent' }}
+      />
+    )}
+  </div>
+);
+
 function webLinks(game: Game, wikiUrl?: string) {
   const q = encodeURIComponent(game.title);
   return [
@@ -38,7 +87,8 @@ function webLinks(game: Game, wikiUrl?: string) {
     { href: `https://www.youtube.com/results?search_query=${q}+longplay`, title: 'YouTube Longplay', text: tr('Watch a full playthrough', 'Komplett durchgespielt anschauen') },
     { href: `https://gamefaqs.gamespot.com/search?game=${q}`, title: 'GameFAQs', text: tr('Walkthroughs, maps and cheats from the community', 'Komplettlösungen, Karten und Cheats der Community') },
     { href: `https://www.mobygames.com/search/?q=${q}`, title: 'MobyGames', text: tr('Credits, versions, box art and screenshots', 'Credits, Versionen, Cover und Screenshots') },
-    { href: `https://archive.org/search?query=${q}`, title: 'Internet Archive', text: tr('Old manuals, magazines and ads', 'Alte Handbücher, Magazine und Werbung') },
+    { href: `https://archive.org/search?query=${q}+manual`, title: tr('Manual (Internet Archive)', 'Handbuch (Internet Archive)'), text: tr('Scanned manuals, magazines and ads', 'Eingescannte Handbücher, Magazine und Werbung') },
+    { href: `https://www.google.com/search?q=site%3Akultboy.com+${q}`, title: 'Kultboy', text: tr('Old German magazine reviews with scores', 'Alte Testberichte aus Power Play, ASM & Co. mit Wertung') },
     { href: `https://www.reddit.com/r/retrogaming/search/?q=${q}`, title: 'r/retrogaming', text: tr('Memories and discussions from other fans', 'Erinnerungen und Diskussionen anderer Fans') },
   ].filter(Boolean) as { href: string; title: string; text: string }[];
 }
@@ -64,6 +114,26 @@ export const GameDetail: React.FC<{
   const [videos, setVideos] = useState<YouTubeVideo[] | undefined>(undefined);
   const [playing, setPlaying] = useState<YouTubeVideo | null>(null);
   const youtubeOk = useConsent('youtube') === true;
+  const [media, setMedia] = useState<Partial<Record<VideoKind, YouTubeVideo[]>>>({});
+  const [press, setPress] = useState<GameGuide | null>(null);
+  const [pressState, setPressState] = useState<'idle' | 'loading' | 'error' | 'unavailable'>('idle');
+
+  // Soundtrack and TV ads load once their tab is opened.
+  useEffect(() => {
+    setMedia({});
+    setPress(null);
+    setPressState('idle');
+  }, [game.title]);
+  useEffect(() => {
+    if (tab !== 'media') return;
+    let alive = true;
+    for (const kind of ['soundtrack', 'commercial'] as const) {
+      fetchVideos({ title: game.title, platform: String(game.platform) }, kind).then((v) => alive && setMedia((m) => ({ ...m, [kind]: v })));
+    }
+    return () => {
+      alive = false;
+    };
+  }, [tab, game.title, game.platform]);
 
   // The best rated video starts on its own as soon as the list is there.
   useEffect(() => {
@@ -146,6 +216,25 @@ export const GameDetail: React.FC<{
       setGuideState(e instanceof AiUnavailableError ? 'unavailable' : 'error');
       chip.play('error');
     }
+  };
+
+  const loadPress = async () => {
+    chip.play('coin');
+    setPressState('loading');
+    try {
+      setPress(await fetchGamePress({ title: game.title, platform: String(game.platform), year: game.year }));
+      setPressState('idle');
+      chip.play('powerup');
+    } catch (e) {
+      setPressState(e instanceof AiUnavailableError ? 'unavailable' : 'error');
+      chip.play('error');
+    }
+  };
+
+  const playClip = (v: YouTubeVideo) => {
+    chip.play('select');
+    setPlaying(v);
+    dialogRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const pick = (t: Tab) => {
@@ -261,29 +350,7 @@ export const GameDetail: React.FC<{
               <Loading />
             ) : videos.length ? (
               <>
-                <div className="yt-list">
-                  {videos.map((v) => (
-                    <button
-                      key={v.id}
-                      className="yt-item"
-                      aria-pressed={playing?.id === v.id}
-                      onClick={() => {
-                        chip.play('select');
-                        setPlaying(v);
-                        dialogRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      data-nav
-                    >
-                      <img src={viaProxy(v.thumb)} alt="" loading="lazy" />
-                      <span className="yt-title">{v.title}</span>
-                      <span className="dim yt-meta">
-                        {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString(LOCALE)} 👍` : '']
-                          .filter(Boolean)
-                          .join(' · ')}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                <VideoList videos={videos} playingId={playing?.id} onPlay={playClip} />
                 <p className="dim" style={{ fontSize: 16 }}>{tr('Videos from YouTube, the most popular one plays first.', 'Videos von YouTube, das beliebteste läuft zuerst.')}</p>
               </>
             ) : (
@@ -322,6 +389,66 @@ export const GameDetail: React.FC<{
           </div>
         )}
 
+        {tab === 'media' && (
+          <div>
+            {(['soundtrack', 'commercial'] as const).map((kind) => (
+              <section key={kind}>
+                <h3 className="pixel-font media-head">
+                  {kind === 'soundtrack' ? tr('♪ SOUNDTRACK', '♪ SOUNDTRACK') : tr('📺 TV ADS BACK THEN', '📺 TV-WERBUNG VON DAMALS')}
+                </h3>
+                {media[kind] === undefined ? (
+                  <Loading />
+                ) : media[kind]!.length ? (
+                  <VideoList videos={media[kind]!.slice(0, 6)} playingId={playing?.id} onPlay={playClip} />
+                ) : (
+                  <p className="dim">{tr('Nothing found on YouTube.', 'Auf YouTube nichts gefunden.')}</p>
+                )}
+              </section>
+            ))}
+            <p className="dim" style={{ fontSize: 16 }}>{tr('From YouTube. A tap plays it at the top.', 'Von YouTube. Antippen spielt es oben ab.')}</p>
+          </div>
+        )}
+
+        {tab === 'press' && (
+          <div>
+            {press ? (
+              <GroundedText title={tr('MAGAZINES, TODAY, PASSWORDS', 'ZEITSCHRIFTEN, HEUTE, PASSWÖRTER')} result={press} />
+            ) : pressState === 'loading' ? (
+              <Loading />
+            ) : (
+              <div className="panel">
+                <p style={{ marginTop: 0 }}>
+                  {tr(
+                    'What did Power Play, ASM, EGM and co. give it back then? Where can you play it legally today? And are there passwords? The Retro Guru looks it up on the web, with sources.',
+                    'Was gab die Power Play, ASM, Amiga Joker oder Man!ac damals? Wo kannst du es heute legal zocken? Und gibt es Passwörter? Der Retro-Guru schaut im Web nach, mit Quellen.'
+                  )}
+                </p>
+                <button className="px-btn big" onClick={loadPress} disabled={!aiAvailable} data-nav>
+                  {tr('▶ LOOK IT UP', '▶ NACHSCHLAGEN')}
+                </button>
+                {(!aiAvailable || pressState === 'unavailable') && (
+                  <p className="dim">{tr('The AI is AFK here right now (not set up).', 'Die KI ist hier gerade AFK (nicht eingerichtet).')}</p>
+                )}
+                {pressState === 'error' && <p style={{ color: 'var(--a1)' }}>{tr('GAME OVER – nothing came back. Continue?', 'GAME OVER – nichts zurückgekommen. Continue?')}</p>}
+              </div>
+            )}
+            <div className="links" style={{ marginTop: 12 }}>
+              {[
+                { href: `https://archive.org/search?query=${encodeURIComponent(game.title)}+manual`, title: tr('Manual (Internet Archive)', 'Handbuch (Internet Archive)'), text: tr('Scanned manuals from back then', 'Eingescannte Handbücher von damals') },
+                { href: `https://www.google.com/search?q=site%3Akultboy.com+${encodeURIComponent(game.title)}`, title: 'Kultboy', text: tr('Old German magazine reviews with scores', 'Alte Testberichte aus Power Play, ASM & Co. mit Wertung') },
+              ].map((l) => (
+                <a key={l.href} href={l.href} target="_blank" rel="noreferrer" data-nav>
+                  <span className="pixel-font" style={{ fontSize: 10, color: 'var(--a3)' }}>
+                    {l.title} ↗
+                  </span>
+                  <br />
+                  <span className="dim">{l.text}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {tab === 'guide' && (
           <div>
             {!!game.tips?.length && (
@@ -335,32 +462,7 @@ export const GameDetail: React.FC<{
               </div>
             )}
             {guide ? (
-              <div className="panel">
-                <h3 className="pixel-font">{tr('AI GUIDE (WITH WEB SEARCH)', 'KI-GUIDE (MIT WEBSUCHE)')}</h3>
-                <MiniMarkdown text={guide.text} />
-                {!!guide.sources.length && (
-                  <div className="sources">
-                    <p className="dim" style={{ marginBottom: 2 }}>{tr('Sources:', 'Quellen:')}</p>
-                    <ul>
-                      {guide.sources.map((s) => (
-                        <li key={s.uri}>
-                          <a href={s.uri} target="_blank" rel="noreferrer">
-                            {s.title}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {guide.searchWidget && (
-                  <iframe
-                    title={tr('Google search suggestions', 'Google-Suchvorschläge')}
-                    srcDoc={guide.searchWidget}
-                    sandbox="allow-popups allow-popups-to-escape-sandbox"
-                    style={{ width: '100%', height: 80, border: 0, background: 'transparent' }}
-                  />
-                )}
-              </div>
+              <GroundedText title={tr('AI GUIDE (WITH WEB SEARCH)', 'KI-GUIDE (MIT WEBSUCHE)')} result={guide} />
             ) : guideState === 'loading' ? (
               <Loading />
             ) : (

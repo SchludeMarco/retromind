@@ -1,0 +1,85 @@
+          <div className="toolbar">
+            <button className="px-btn big" onClick={insertCoin} data-nav aria-live="polite">
+              {rolling ? `▶ ${rolling}` : tr('● INSERT COIN · SURPRISE ME!', '● INSERT COIN · ÜBERRASCH MICH!')}
+            </button>
+            <button
+              className="px-btn big chill-btn"
+              aria-pressed={view === 'chill'}
+              onClick={() => switchView(view === 'chill' ? 'catalog' : 'chill')}
+              data-nav
+            >
+              {view === 'chill' ? tr('◄ BACK TO THE CATALOG', '◄ ZURÜCK ZUM KATALOG') : tr('♥ CHILL ZONE · MINI GAMES', '♥ CHILL-ECKE · MINISPIELE')}
+            </button>
+            {/* The games open right under their button, not further down the page. */}
+            {view === 'chill' && (
+              <div className="chill-panel">
+                <MiniGameCorner
+                  onPick={(id) => {
+                    chip.play('select');
+                    countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
+                    setMiniGame(id);
+                  }}
+                />
+              </div>
+            )}
+            <form className="search" onSubmit={runSearch} role="search">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={tr('Which game, dude? e.g. Rayman, Golden Axe …', 'Welches Game, Digga? z. B. Rayman, Golden Axe …')}
+                aria-label={tr('Search for a game', 'Spiel suchen')}
+                data-nav
+              />
+              <button className="px-btn" type="submit" data-nav>
+                GO!
+              </button>
+            </form>
+          </div>
+
+          <div className="toolbar" style={{ marginTop: 4 }}>
+            <button className="px-btn view-tab" aria-pressed={view === 'catalog'} onClick={() => switchView('catalog')} data-nav>
+              {tr('OLD-SCHOOL GEMS', 'OLDSCHOOL-PERLEN')}
+            </button>
+            <button className="px-btn view-tab" aria-pressed={view === 'collection'} onClick={() => switchView('collection')} data-nav>
+              {tr('MY STASH', 'MEIN STASH')} ({collection.length})
+            </button>
+            <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
+              ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
+            </button>
+            <button className="px-btn view-tab" aria-pressed={view === 'quests'} onClick={() => switchView('quests')} data-nav>
+              QUESTS · EGGS · {state.tokens} COINS
+            </button>
+            {results && (
+              <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
+                {tr('SEARCH', 'SUCHE')}
+              </button>
+            )}
+            <span style={{ flex: 1 }} />
+            <button
+              className="px-btn"
+              aria-pressed={state.music}
+              onClick={() => set('music', !state.music)}
+              data-nav
+              aria-label={tr('Music on/off', 'Musik an/aus')}
+            >
+              ♪ {state.music ? tr('ON', 'AN') : tr('OFF', 'AUS')}
+            </button>
+            <button
+              className="px-btn"
+              aria-pressed={state.sfx}
+              onClick={() => set('sfx', !state.sfx)}
+              data-nav
+              aria-label={tr('Sound effects on/off', 'Soundeffekte an/aus')}
+            >
+              SFX {state.sfx ? tr('ON', 'AN') : tr('OFF', 'AUS')}
+            </button>
+            {installPrompt && (
+              <button className="px-btn" onClick={install} data-nav>
+                {tr('⬇ GET THE APP', '⬇ ALS APP')}
+              </button>
+            )}
+            <button className="px-btn" onClick={cyclePalette} data-nav aria-label={tr('Change screen color', 'Bildschirmfarbe wechseln')}>
+              ▣ {PALETTES.find((p) => p.id === state.palette)?.label}
+            </button>
+          </div>
+

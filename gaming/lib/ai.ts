@@ -35,6 +35,12 @@ export async function fetchGameGuide(game: { title: string; platform: string; ye
   return { text: data.text || '', sources: data.sources || [], searchWidget: data.searchWidget };
 }
 
+/** Old magazine scores, where to play it today, passwords: from the web. */
+export async function fetchGamePress(game: { title: string; platform: string; year: number }): Promise<GameGuide> {
+  const data = await call('gamePress', game);
+  return { text: data.text || '', sources: data.sources || [], searchWidget: data.searchWidget };
+}
+
 export async function sendGuruMessage(history: ChatMessage[]): Promise<string> {
   const { text } = await call('chat', { history, persona: 'gaming' });
   return text || '';

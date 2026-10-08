@@ -46,6 +46,18 @@ const GAMING_CHAT_SYSTEM_EN =
   "per answer so everything stays easy to understand. Don't make up facts; say honestly when you're unsure. " +
   "Never link to or recommend illegal ROM downloads.";
 
+// Text plus the web pages Google Search grounded it in, for display.
+function grounded(r) {
+  const meta = r.candidates?.[0]?.groundingMetadata;
+  const seen = new Set();
+  const sources = (meta?.groundingChunks || [])
+    .map((c) => c.web)
+    .filter((w) => w?.uri && !seen.has(w.uri) && seen.add(w.uri))
+    .slice(0, 8)
+    .map((w) => ({ uri: w.uri, title: w.title || w.uri }));
+  return { text: r.text || "", sources, searchWidget: meta?.searchEntryPoint?.renderedContent };
+}
+
 const clip = (v, n) => String(v ?? "").slice(0, n);
 
 function getAI() {
@@ -211,18 +223,46 @@ export default async function handler(req, res) {
             `Don't make anything up; if you're not sure about something, leave it out.`,
           config: { tools: [{ googleSearch: {} }] },
         });
-        const meta = r.candidates?.[0]?.groundingMetadata;
-        const seen = new Set();
-        const sources = (meta?.groundingChunks || [])
-          .map((c) => c.web)
-          .filter((w) => w?.uri && !seen.has(w.uri) && seen.add(w.uri))
-          .slice(0, 8)
-          .map((w) => ({ uri: w.uri, title: w.title || w.uri }));
-        return res.status(200).json({
-          text: r.text || "",
-          sources,
-          searchWidget: meta?.searchEntryPoint?.renderedContent,
+        return res.status(200).json(grounded(r));
+      }
+
+      case "gamePress": {
+        const title = clip(payload.title, 120);
+        if (!title) return res.status(400).json({ error: "no_title" });
+        const platform = clip(payload.platform, 40);
+        const year = clip(payload.year, 4);
+        // The old magazine reviews (German gamers remember the percentages),
+        // where to play it today, and passwords; grounded like the guide.
+        const r = await ai.models.generateContent({
+          model: MODELS.chat,
+          contents: de
+            ? `Recherchiere im Web zu dem Videospiel "${title}" (${platform || "Plattform unbekannt"}, ${year || "Jahr unbekannt"}). ` +
+            `Gliedere exakt in diese Abschnitte mit Markdown-Überschriften (##):\n` +
+            `## Testwertungen von damals\n## Wo heute spielen\n## Passwörter & Codes\n` +
+            `Unter "Testwertungen von damals": Wertungen aus Spielezeitschriften der Erscheinungszeit, ` +
+            `zuerst deutsche (Power Play, ASM, Amiga Joker, Video Games, Mega Fun, Man!ac, PC Player, ` +
+            `PC Games, 64'er, Happy Computer), dann internationale (Zzap!64, Crash, CVG, Famitsu, EGM). ` +
+            `Je ein Stichpunkt im Format "- **Zeitschrift** (Ausgabe): Wertung". Kultboy.com ist eine gute Quelle. ` +
+            `Unter "Wo heute spielen" nur legale, aktuell erhältliche Wege (Neuauflagen, Sammlungen, ` +
+            `Nintendo Switch Online, Steam, GOG, Mini-Konsolen, Originalhardware). ` +
+            `Unter "Passwörter & Codes" Level-Passwörter, Cheats oder Codes, falls das Spiel welche hat; ` +
+            `sonst den Abschnitt weglassen. Nur Angaben, die du in Quellen gefunden hast. ` +
+            `Erfinde keine Wertungen; was du nicht sicher findest, lässt du weg.`
+            : `Research the video game "${title}" (${platform || "platform unknown"}, ${year || "year unknown"}) on the web. ` +
+            `Structure it exactly into these sections with Markdown headings (##):\n` +
+            `## Reviews back then\n## Where to play it today\n## Passwords & codes\n` +
+            `Under "Reviews back then": scores from gaming magazines of the time it came out ` +
+            `(e.g. Electronic Gaming Monthly, GamePro, Nintendo Power, Computer and Video Games, Zzap!64, Crash, ` +
+            `Amiga Power, Famitsu, and the German Power Play, ASM, Amiga Joker, Video Games, Man!ac). ` +
+            `One bullet each in the format "- **Magazine** (issue): score". ` +
+            `Under "Where to play it today" only legal, currently available ways (re-releases, collections, ` +
+            `Nintendo Switch Online, Steam, GOG, mini consoles, original hardware). ` +
+            `Under "Passwords & codes" level passwords, cheats or codes if the game has them; ` +
+            `otherwise leave that section out. Only facts you found in sources. ` +
+            `Never make up a score; if you can't find something for sure, leave it out.`,
+          config: { tools: [{ googleSearch: {} }] },
         });
+        return res.status(200).json(grounded(r));
       }
 
       case "veoStart": {
