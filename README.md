@@ -136,6 +136,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   „Musik zum Thema“ spielt von selbst Passendes: Musik-Begriffe der Zeitreise
   ihren Hit (Feld `song` in `constants.ts`), Spiele in Gaming ihren
   Soundtrack. Beim Schließen läuft wieder die normale Musik.
+- **Lautstärke-Regler** – Im Musik-Player und in den Gaming-Einstellungen
+  („Musik-Lautstärke“) stellst du die Musik lauter oder leiser; sie startet
+  bei der Hälfte. Der Regler gilt für das Metal-Intro, die Chiptune-Stücke
+  und Spotifys Premium-Player im Browser
+  ([`lib/musicVolume.ts`](lib/musicVolume.ts)). Spotifys eingebetteter Player
+  lässt sich von keiner Webseite leiser stellen; dort sagt der Player, dass
+  die Lautstärketasten des Geräts helfen.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.

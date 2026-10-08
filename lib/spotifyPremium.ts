@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { getMusicVolume, onMusicVolume, setMusicVolume } from './musicVolume';
 import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyEmbed';
 
 // Spotify's own browser player (Web Playback SDK) for visitors signed in with
@@ -13,16 +14,6 @@ import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyE
 // doesn't support the SDK, or the SDK failing to start) keeps the embed.
 
 const FADE_IN_MS = 6000;
-// The volume slider in the player (MusicDock); the fade-in rises to it.
-const VOLUME_KEY = 'retromind.spotify.volume';
-function savedVolume(): number {
-  try {
-    const v = Number(localStorage.getItem(VOLUME_KEY));
-    return localStorage.getItem(VOLUME_KEY) !== null && v >= 0 && v <= 1 ? v : 1;
-  } catch {
-    return 1;
-  }
-}
 const SDK_URL = 'https://sdk.scdn.co/spotify-player.js';
 const API = 'https://api.spotify.com/v1';
 
@@ -184,7 +175,7 @@ async function createPremiumController(source: TokenSource, initialUri: string):
   };
 
   // Quiet to full over FADE_IN_MS, on a curve that sounds even to the ear.
-  let volume = savedVolume();
+  let volume = getMusicVolume();
   // setLevel's factor and the volume last sent to Spotify.
   let level = 1;
   let applied = 0;
@@ -267,6 +258,13 @@ async function createPremiumController(source: TokenSource, initialUri: string):
     if (!destroyed && !pending) markBroken(problem);
   };
   let destroyed = false;
+  // The slider in the gaming settings changes the shared volume too.
+  const stopVolume = onMusicVolume((v) => {
+    if (v === volume) return;
+    volume = v;
+    stopFade();
+    apply(volume * level);
+  });
   // Browsers only let the SDK sound after a gesture; play/resume mostly come
   // from one (the player's play button, the welcome screen's start).
   const activate = () => player.activateElement?.().catch?.(() => {});
@@ -303,11 +301,7 @@ async function createPremiumController(source: TokenSource, initialUri: string):
     },
     setVolume: (v: number) => {
       volume = Math.min(1, Math.max(0, v));
-      try {
-        localStorage.setItem(VOLUME_KEY, String(volume));
-      } catch {
-        /* not kept, fine */
-      }
+      setMusicVolume(volume);
       // A fade still running would undo the new level.
       stopFade();
       apply(volume * level);
@@ -338,6 +332,7 @@ async function createPremiumController(source: TokenSource, initialUri: string):
     },
     destroy: () => {
       destroyed = true;
+      stopVolume();
       stopConfirm();
       stopFade();
       if (pollTimer !== null) window.clearInterval(pollTimer);

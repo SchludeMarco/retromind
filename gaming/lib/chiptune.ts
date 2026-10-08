@@ -3,6 +3,7 @@
 // one in sid.ts).
 // Everything is synthesized, including the quiet piece at the entrance door.
 
+import { getMusicVolume, onMusicVolume } from '../../lib/musicVolume';
 import { riseFromSilence, whenRunning } from '../../lib/startupFade';
 import { loadRecording, METAL_INTRO_URL, MetalPlayer } from './metal';
 import { SidPlayer } from './sid';
@@ -117,7 +118,19 @@ class ChipSound {
       this.master.connect(limiter).connect(this.ctx.destination);
       this.musicBus = this.ctx.createGain();
       this.musicBus.gain.value = MUSIC_LEVEL;
-      this.musicBus.connect(this.master);
+      // The visitor's volume slider (music player, settings; lib/musicVolume)
+      // sits behind a limiter of the music's own, so turning it down really
+      // gets quieter instead of being evened out by the master limiter.
+      const musicLimiter = this.ctx.createDynamicsCompressor();
+      musicLimiter.threshold.value = -8;
+      musicLimiter.knee.value = 4;
+      musicLimiter.ratio.value = 12;
+      musicLimiter.attack.value = 0.003;
+      musicLimiter.release.value = 0.15;
+      const musicVolume = this.ctx.createGain();
+      musicVolume.gain.value = getMusicVolume();
+      onMusicVolume((v) => musicVolume.gain.setTargetAtTime(v, ctx.currentTime, 0.05));
+      this.musicBus.connect(musicLimiter).connect(musicVolume).connect(this.master);
       this.sfxBus = this.ctx.createGain();
       this.sfxBus.gain.value = 0.55;
       this.sfxBus.connect(this.master);
@@ -301,7 +314,7 @@ class ChipSound {
     // starts slow and gets faster), the door bangs against the wall and
     // creaks once more as it swings back.
     this.playCreak(this.creakBuffer(DOOR_SWING, 1), t, 0.85);
-    this.tone(this.sfxBus, 140, t + DOOR_SWING, 0.22, 'sine', 0.6, 45);
+    this.tone(this.sfxBus, 140, t + DOOR_SWING, 0.22, 'sine', 0.45, 45);
     this.playCreak(this.creakBuffer(0.5, 0.6), t + DOOR_SWING + 0.1, 0.45);
   }
 

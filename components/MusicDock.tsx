@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FitMarquee } from './FitMarquee';
 import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
+import { setMusicVolume, useMusicVolume } from '../lib/musicVolume';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import { tr } from '../lib/i18n';
 import './musicDock.css';
@@ -41,6 +42,8 @@ export interface MusicDockProps {
   ticker?: boolean;
   /** More controls once signed in with Spotify (Marco, 2026-10-07). */
   extras?: MusicDockExtras;
+  /** The app also plays music of its own that the volume slider turns down (gaming hall). */
+  ownMusic?: boolean;
 }
 
 export interface MusicDockExtras {
@@ -65,9 +68,9 @@ const time = (ms: number) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 };
 
-// Search, progress, volume and the "Musik zum Thema" switch.
+// Search, progress and the "Musik zum Thema" switch.
 const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ extras, onPicked }) => {
-  const { position, duration, volume } = useMusicStatus(extras.status);
+  const { position, duration } = useMusicStatus(extras.status);
   const auto = useAutoTheme();
   const [query, setQuery] = useState('');
   const [hits, setHits] = useState<SpotifyHit[] | null>(null);
@@ -119,20 +122,6 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
           />
           <span>{time(duration)}</span>
         </div>
-      )}
-      {volume !== null && (
-        <label className="music-dock-volume">
-          <span aria-hidden="true">🔈</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={Math.round(volume * 100)}
-            onChange={(e) => extras.onVolume(Number(e.target.value) / 100)}
-            aria-label={tr('Volume', 'Lautstärke')}
-          />
-          <span aria-hidden="true">🔊</span>
-        </label>
       )}
       <div className="music-dock-chips">
         <button type="button" className="music-dock-chip" aria-pressed={auto} onClick={() => setAutoTheme(!auto)} title={extras.themeHint}>
@@ -188,6 +177,50 @@ const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 28 }) => (
   </svg>
 );
 
+// Louder and quieter (Marco, 2026-10-08). The slider sets the shared music
+// volume (lib/musicVolume), which the app's own music and Spotify's Premium
+// browser player follow. The embedded Spotify player can't be turned down by
+// any page, so there the device's own volume buttons are the way.
+const Volume: React.FC<{ extras?: MusicDockExtras; ownMusic: boolean }> = ({ extras, ownMusic }) => {
+  const volume = useMusicVolume();
+  const premium = useMusicStatus(extras?.status).volume !== null;
+  return (
+    <div className="music-dock-volume-box">
+      {(premium || ownMusic) && (
+        <label className="music-dock-volume">
+          <span aria-hidden="true">🔈</span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={Math.round(volume * 100)}
+            onChange={(e) => {
+              const v = Number(e.target.value) / 100;
+              setMusicVolume(v);
+              extras?.onVolume(v);
+            }}
+            aria-label={tr('Volume', 'Lautstärke')}
+          />
+          <span aria-hidden="true">🔊</span>
+        </label>
+      )}
+      {!premium && (
+        <p className="music-dock-volume-note">
+          {ownMusic
+            ? tr(
+                'Spotify’s embedded player doesn’t follow the slider: use your device’s volume buttons for it.',
+                'Spotifys eingebetteter Player hört nicht auf den Regler: Dafür nimmst du die Lautstärketasten deines Geräts.'
+              )
+            : tr(
+                'Spotify’s embedded player can’t be turned down here: use your device’s volume buttons.',
+                'Spotifys eingebetteter Player lässt sich hier nicht leiser stellen: Nimm die Lautstärketasten deines Geräts.'
+              )}
+        </p>
+      )}
+    </div>
+  );
+};
+
 const NOTE = 'M9 3v10.6A3.5 3.5 0 1 0 11 17V8h6V3z';
 const BOLT = 'M13 2L4 14h6l-1 8 9-12h-6z';
 const PREV = 'M6 5h2v14H6zM20 5v14L9 12z';
@@ -212,6 +245,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   icon = 'note',
   ticker = true,
   extras,
+  ownMusic = false,
 }) => {
   const symbol = icon === 'bolt' ? BOLT : NOTE;
   // The Premium player says what really plays (also inside an album).
@@ -307,6 +341,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 <Svg d={NEXT} />
               </button>
             </div>
+            <Volume extras={extras} ownMusic={ownMusic} />
             {extras && <Extras extras={extras} onPicked={() => undefined} />}
             {onToggleMute && (
               <button type="button" className="music-dock-mute" onClick={onToggleMute} aria-pressed={!!muted}>
