@@ -5,6 +5,7 @@ import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
+import { useSecretAdminTaps } from '../lib/admin';
 
 function formatBirthDate(iso: string): string {
   const [y, m, d] = iso.split('-');
@@ -40,6 +41,7 @@ export const SettingsModal: React.FC<{
   const info = DECADES_DB[currentDecade];
   const muted = useMuted();
   const theme = useTheme();
+  const onHeadingTap = useSecretAdminTaps();
 
   return (
     <Modal onClose={onDismiss} label="App-Einstellungen">
@@ -47,7 +49,7 @@ export const SettingsModal: React.FC<{
         ✕
       </button>
       <span className="text-xs uppercase font-bold text-retro-amber-dark block">Allgemein</span>
-      <h3 className="text-3xl font-bold mb-5">Einstellungen</h3>
+      <h3 className="text-3xl font-bold mb-5" onClick={onHeadingTap}>Einstellungen</h3>
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
 

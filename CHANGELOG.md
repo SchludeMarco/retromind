@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Versteckter Zugang zum Adminbereich** (2026-10-08, PR #162): Wer in den
+  Einstellungen von Zeitreise oder Gaming fünfmal schnell auf die Überschrift
+  „Einstellungen“ tippt, landet im Adminbereich. Sichtbar ist davon nichts,
+  und Zahlen sieht dort weiterhin nur Marcos Google-Konto. So geht es auch in
+  der installierten App ohne Adresszeile.
+
 - **Kein Admin-Link mehr in den Apps** (2026-10-08, PR #161): Der Link zum
   Adminbereich ist aus den Einstellungen von Zeitreise und Gaming verschwunden.
   Der Bereich ist nur noch direkt über `/admin/` erreichbar.
