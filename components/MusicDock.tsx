@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { FitMarquee } from './FitMarquee';
 import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
+import { tr } from '../lib/i18n';
 import './musicDock.css';
 
 // The music controls (Marco, 2026-10-06): tucked away behind a small
@@ -98,7 +99,7 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
   if (!extras.signedIn) {
     return extras.onSignIn ? (
       <button type="button" className="music-dock-chip" onClick={extras.onSignIn}>
-        Mit Spotify anmelden: Suche, Musik zum Thema und mehr
+        {tr('Sign in with Spotify: search, theme music and more', 'Mit Spotify anmelden: Suche, Musik zum Thema und mehr')}
       </button>
     ) : null;
   }
@@ -114,7 +115,7 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
             max={Math.round(duration / 1000)}
             value={Math.round(position / 1000)}
             onChange={(e) => extras.onSeek(Number(e.target.value))}
-            aria-label="Stelle im Song"
+            aria-label={tr('Position in song', 'Stelle im Song')}
           />
           <span>{time(duration)}</span>
         </div>
@@ -128,18 +129,18 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
             max={100}
             value={Math.round(volume * 100)}
             onChange={(e) => extras.onVolume(Number(e.target.value) / 100)}
-            aria-label="Lautstärke"
+            aria-label={tr('Volume', 'Lautstärke')}
           />
           <span aria-hidden="true">🔊</span>
         </label>
       )}
       <div className="music-dock-chips">
         <button type="button" className="music-dock-chip" aria-pressed={auto} onClick={() => setAutoTheme(!auto)} title={extras.themeHint}>
-          {auto ? '✓ ' : ''}Musik zum Thema
+          {auto ? '✓ ' : ''}{tr('Theme music', 'Musik zum Thema')}
         </button>
         {extras.special && (
           <button type="button" className="music-dock-chip" onClick={extras.onBackToTheme}>
-            ↺ Zurück zu {extras.themeName}
+            ↺ {tr('Back to', 'Zurück zu')} {extras.themeName}
           </button>
         )}
       </div>
@@ -148,12 +149,12 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
         className="music-dock-search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Song, Album oder Künstler:in suchen"
-        aria-label="Bei Spotify suchen"
+        placeholder={tr('Search for a song, album or artist', 'Song, Album oder Künstler:in suchen')}
+        aria-label={tr('Search Spotify', 'Bei Spotify suchen')}
         enterKeyHint="search"
       />
-      {busy && !hits && <p className="music-dock-hint">Suche …</p>}
-      {hits && !hits.length && <p className="music-dock-hint">Nichts gefunden.</p>}
+      {busy && !hits && <p className="music-dock-hint">{tr('Searching …', 'Suche …')}</p>}
+      {hits && !hits.length && <p className="music-dock-hint">{tr('Nothing found.', 'Nichts gefunden.')}</p>}
       {hits && hits.length > 0 && (
         <ul className="music-dock-hits">
           {hits.map((h) => (
@@ -243,7 +244,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             type="button"
             className="music-ticker"
             onClick={() => toggle(true)}
-            aria-label={`Läuft gerade: ${shownTitle}. Musiksteuerung öffnen`}
+            aria-label={tr(`Now playing: ${shownTitle}. Open music controls`, `Läuft gerade: ${shownTitle}. Musiksteuerung öffnen`)}
           >
             <Svg d={symbol} size={10} />
             <FitMarquee text={shownTitle} maxSize={10} />
@@ -256,8 +257,8 @@ export const MusicDock: React.FC<MusicDockProps> = ({
         onClick={() => toggle(!open)}
         aria-expanded={open}
         aria-controls="music-dock-panel"
-        aria-label={open ? 'Musiksteuerung schließen' : 'Musiksteuerung öffnen'}
-        title="Musik"
+        aria-label={open ? tr('Close music controls', 'Musiksteuerung schließen') : tr('Open music controls', 'Musiksteuerung öffnen')}
+        title={tr('Music', 'Musik')}
       >
         <Svg d={symbol} size={22} />
       </button>
@@ -268,14 +269,14 @@ export const MusicDock: React.FC<MusicDockProps> = ({
             id="music-dock-panel"
             className={`music-dock-panel${extras?.signedIn ? ' music-dock-panel-tall' : ''}`}
             role="dialog"
-            aria-label="Musiksteuerung"
+            aria-label={tr('Music controls', 'Musiksteuerung')}
             onClick={(e) => e.stopPropagation()}
           >
-            <button type="button" className="music-dock-close" onClick={() => toggle(false)} aria-label="Musiksteuerung schließen">
+            <button type="button" className="music-dock-close" onClick={() => toggle(false)} aria-label={tr('Close music controls', 'Musiksteuerung schließen')}>
               <Svg d={DOWN} size={26} />
             </button>
             <p className="music-dock-source">
-              {extras?.special ? (extras.special.auto ? 'Musik zum Thema' : 'Deine Auswahl') : source}
+              {extras?.special ? (extras.special.auto ? tr('Theme music', 'Musik zum Thema') : tr('Your pick', 'Deine Auswahl')) : source}
             </p>
             {live?.image ? (
               <img className="music-dock-cover" src={live.image} alt="" />
@@ -284,12 +285,12 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 <Svg d={symbol} size={34} />
               </div>
             )}
-            <p className="music-dock-label">{playing ? 'Läuft gerade' : 'Pausiert'}</p>
+            <p className="music-dock-label">{playing ? tr('Now playing', 'Läuft gerade') : tr('Paused', 'Pausiert')}</p>
             <p className="music-dock-title" aria-live="polite">
-              <FitMarquee text={ready ? shownTitle ?? 'Spotify' : 'Spotify lädt …'} maxSize={22} minSize={14} />
+              <FitMarquee text={ready ? shownTitle ?? 'Spotify' : tr('Spotify is loading …', 'Spotify lädt …')} maxSize={22} minSize={14} />
             </p>
             <div className="music-dock-buttons">
-              <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label="Vorheriger Song" title="Vorheriger Song">
+              <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label={tr('Previous song', 'Vorheriger Song')} title={tr('Previous song', 'Vorheriger Song')}>
                 <Svg d={PREV} />
               </button>
               <button
@@ -297,19 +298,19 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 className="music-dock-play"
                 onClick={onToggle}
                 disabled={!ready}
-                aria-label={playing ? 'Pause' : 'Abspielen'}
-                title={playing ? 'Pause' : 'Abspielen'}
+                aria-label={playing ? 'Pause' : tr('Play', 'Abspielen')}
+                title={playing ? 'Pause' : tr('Play', 'Abspielen')}
               >
                 <Svg d={playing ? PAUSE : PLAY} size={36} />
               </button>
-              <button type="button" onClick={onNext} disabled={!ready || !canSkip} aria-label="Nächster Song" title="Nächster Song">
+              <button type="button" onClick={onNext} disabled={!ready || !canSkip} aria-label={tr('Next song', 'Nächster Song')} title={tr('Next song', 'Nächster Song')}>
                 <Svg d={NEXT} />
               </button>
             </div>
             {extras && <Extras extras={extras} onPicked={() => undefined} />}
             {onToggleMute && (
               <button type="button" className="music-dock-mute" onClick={onToggleMute} aria-pressed={!!muted}>
-                {muted ? '🔇 Ton ist aus – einschalten' : '🔊 Ton an – stummschalten'}
+                {muted ? tr('🔇 Sound is off – turn on', '🔇 Ton ist aus – einschalten') : tr('🔊 Sound on – mute', '🔊 Ton an – stummschalten')}
               </button>
             )}
           </section>

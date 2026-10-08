@@ -8,12 +8,13 @@ import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/priv
 import { warmUpGoogle } from '../../lib/googleAuth';
 import { useSecretAdminTaps } from '../../lib/admin';
 import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
+import { LANG, LANGUAGES, setLang, tr } from '../../lib/i18n';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
   { id: 'arcade', label: 'ARCADE' },
   { id: 'gameboy', label: 'HANDHELD' },
-  { id: 'amber', label: 'BERNSTEIN' },
+  { id: 'amber', label: tr('AMBER', 'BERNSTEIN') },
   // From the prize counter (quests.ts); only shown once bought.
   { id: 'vapor', label: 'VAPORWAVE' },
   { id: 'virtualboy', label: 'VIRTUAL BOY' },
@@ -21,10 +22,10 @@ export const PALETTES: { id: Palette; label: string }[] = [
 
 const SYNC_TEXT: Record<Cloud['sync'], string> = {
   idle: '',
-  loading: 'Lade dein Savegame …',
+  loading: tr('Loading your save game …', 'Lade dein Savegame …'),
   saving: 'Saving …',
-  saved: '✓ Savegame, Stash und Vorlieben liegen safe in deinem Google Drive.',
-  error: '⚠ Backup gerade nicht drin. Dein Profil bleibt auf diesem Gerät.',
+  saved: tr('✓ Save game, stash and preferences are safe in your Google Drive.', '✓ Savegame, Stash und Vorlieben liegen safe in deinem Google Drive.'),
+  error: tr('⚠ Backup isn’t working right now. Your profile stays on this device.', '⚠ Backup gerade nicht drin. Dein Profil bleibt auf diesem Gerät.'),
 };
 
 interface Props {
@@ -55,35 +56,37 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
         className="dialog settings-dialog"
         role="dialog"
         aria-modal="true"
-        aria-label="Einstellungen"
+        aria-label={tr('Settings', 'Einstellungen')}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="pixel-font" onClick={onHeadingTap}>⚙ EINSTELLUNGEN</h2>
-        <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
+        <h2 className="pixel-font" onClick={onHeadingTap}>{tr('⚙ SETTINGS', '⚙ EINSTELLUNGEN')}</h2>
+        <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
 
         <section>
-          <h3 className="pixel-font">DEIN ACCOUNT</h3>
+          <h3 className="pixel-font">{tr('YOUR ACCOUNT', 'DEIN ACCOUNT')}</h3>
           {cloud.status === 'not_configured' ? (
-            <p className="dim">Die Anmeldung ist auf dieser Seite noch nicht eingerichtet. Dein Profil bleibt auf diesem Gerät.</p>
+            <p className="dim">{tr('Sign-in isn’t set up on this site yet. Your profile stays on this device.', 'Die Anmeldung ist auf dieser Seite noch nicht eingerichtet. Dein Profil bleibt auf diesem Gerät.')}</p>
           ) : signedIn ? (
             <>
               <p className="pixel-font cloud-user">
-                ANGEMELDET ALS {(cloud.user?.name ?? '').toUpperCase()}
+                {tr('SIGNED IN AS', 'ANGEMELDET ALS')} {(cloud.user?.name ?? '').toUpperCase()}
               </p>
               {cloud.user?.email && <p className="dim">{cloud.user.email}</p>}
               {SYNC_TEXT[cloud.sync] && <p role="status">{SYNC_TEXT[cloud.sync]}</p>}
               <button className="px-btn" onClick={cloud.signOut} data-nav>
-                ABMELDEN
+                {tr('SIGN OUT', 'ABMELDEN')}
               </button>
-              <p className="dim">Beim Abmelden bleibt dein Profil auf diesem Gerät erhalten.</p>
+              <p className="dim">{tr('When you sign out, your profile stays on this device.', 'Beim Abmelden bleibt dein Profil auf diesem Gerät erhalten.')}</p>
             </>
           ) : (
             <>
               <p>
-                Melde dich mit Google an, dann sind Highscore, Sammlung, Erfolge und deine Einstellungen auf jedem Gerät
-                da. Gespeichert wird in deinem eigenen Google Drive, in einem privaten Ordner, den nur RetroMind sieht.
+                {tr(
+                  'Sign in with Google and your high score, collection, achievements and settings are there on every device. Everything is saved in your own Google Drive, in a private folder only RetroMind can see.',
+                  'Melde dich mit Google an, dann sind Highscore, Sammlung, Erfolge und deine Einstellungen auf jedem Gerät da. Gespeichert wird in deinem eigenen Google Drive, in einem privaten Ordner, den nur RetroMind sieht.'
+                )}
               </p>
               <button
                 className="px-btn big"
@@ -96,34 +99,36 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
                 data-nav
               >
                 {cloud.status === 'signing_in'
-                  ? 'ANMELDEN …'
+                  ? tr('SIGNING IN …', 'ANMELDEN …')
                   : cloud.status === 'error'
-                    ? 'ERNEUT MIT GOOGLE ANMELDEN'
-                    : 'MIT GOOGLE ANMELDEN'}
+                    ? tr('TRY GOOGLE SIGN-IN AGAIN', 'ERNEUT MIT GOOGLE ANMELDEN')
+                    : tr('SIGN IN WITH GOOGLE', 'MIT GOOGLE ANMELDEN')}
               </button>
               <p className="dim">
-                Ohne Login läuft alles wie gehabt. Hast du schon auf einem anderen Gerät gezockt, werden beide
-                Savegames zusammengeführt, nix geht verloren.
+                {tr(
+                  'Without signing in, everything works just like before. If you’ve already played on another device, both save games get merged, nothing gets lost.',
+                  'Ohne Login läuft alles wie gehabt. Hast du schon auf einem anderen Gerät gezockt, werden beide Savegames zusammengeführt, nix geht verloren.'
+                )}
               </p>
             </>
           )}
         </section>
 
         <section>
-          <h3 className="pixel-font">TON</h3>
+          <h3 className="pixel-font">{tr('SOUND', 'TON')}</h3>
           <div className="settings-row">
             <button className="px-btn" aria-pressed={state.music} onClick={() => set('music', !state.music)} data-nav>
-              ♪ MUSIK {state.music ? 'AN' : 'AUS'}
+              ♪ {tr('MUSIC', 'MUSIK')} {state.music ? tr('ON', 'AN') : tr('OFF', 'AUS')}
             </button>
             <button className="px-btn" aria-pressed={state.sfx} onClick={() => set('sfx', !state.sfx)} data-nav>
-              SFX {state.sfx ? 'AN' : 'AUS'}
+              SFX {state.sfx ? tr('ON', 'AN') : tr('OFF', 'AUS')}
             </button>
             <button className="px-btn" aria-pressed={muted} onClick={toggleMuted} data-nav>
-              {muted ? 'TON AUS' : 'TON AN'}
+              {muted ? tr('SOUND OFF', 'TON AUS') : tr('SOUND ON', 'TON AN')}
             </button>
           </div>
-          <h4 className="pixel-font">HALLENMUSIK</h4>
-          <div className="settings-row" role="group" aria-label="Hallenmusik">
+          <h4 className="pixel-font">{tr('ARCADE MUSIC', 'HALLENMUSIK')}</h4>
+          <div className="settings-row" role="group" aria-label={tr('Arcade music', 'Hallenmusik')}>
             <button
               className="px-btn"
               aria-pressed={state.musicSource === 'spotify'}
@@ -135,7 +140,7 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
               }}
               data-nav
             >
-              🤘 80ER METAL (SPOTIFY)
+              {tr("🤘 '80S METAL (SPOTIFY)", '🤘 80ER METAL (SPOTIFY)')}
             </button>
             <button
               className="px-btn"
@@ -152,16 +157,16 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
           <p className="dim">
             {state.musicSource === 'spotify'
               ? spotify
-                ? 'Heavy Metal aus den 80ern von Spotify. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.'
-                : 'Spotify ist noch nicht erlaubt, bis dahin laufen die Chiptune-Stücke.'
-              : 'Selbst komponierte Chiptune-Stücke vom Soundchip, dein Stück wählst du unten.'}
+                ? tr('’80s heavy metal from Spotify. Without a Spotify login, Spotify only plays short previews.', 'Heavy Metal aus den 80ern von Spotify. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.')
+                : tr('Spotify isn’t allowed yet, so the chiptune tracks play until then.', 'Spotify ist noch nicht erlaubt, bis dahin laufen die Chiptune-Stücke.')
+              : tr('Original chiptune tracks from the sound chip. Pick your track below.', 'Selbst komponierte Chiptune-Stücke vom Soundchip, dein Stück wählst du unten.')}
           </p>
           {state.musicSource === 'spotify' && spotifyAuth.status !== 'not_configured' && (
             <>
               <div className="settings-row">
                 {spotifyAuth.status === 'signed_in' ? (
                   <button className="px-btn" onClick={spotifyAuth.signOut} data-nav>
-                    SPOTIFY ABMELDEN ({spotifyAuth.user?.name ?? '?'})
+                    {tr('SIGN OUT OF SPOTIFY', 'SPOTIFY ABMELDEN')} ({spotifyAuth.user?.name ?? '?'})
                   </button>
                 ) : (
                   <button
@@ -173,23 +178,23 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
                     disabled={spotifyAuth.status === 'signing_in'}
                     data-nav
                   >
-                    {spotifyAuth.status === 'signing_in' ? 'WEITERLEITUNG …' : 'MIT SPOTIFY ANMELDEN'}
+                    {spotifyAuth.status === 'signing_in' ? tr('REDIRECTING …', 'WEITERLEITUNG …') : tr('SIGN IN WITH SPOTIFY', 'MIT SPOTIFY ANMELDEN')}
                   </button>
                 )}
               </div>
               <p className="dim">
                 {spotifyAuth.status === 'signed_in' && spotifyAuth.user?.product === 'premium'
-                  ? 'Premium erkannt: ganze Songs, die Musik wird beim Start langsam lauter (nicht auf iPhone/iPad).'
+                  ? tr('Premium detected: full songs, and the music fades in at the start (not on iPhone/iPad).', 'Premium erkannt: ganze Songs, die Musik wird beim Start langsam lauter (nicht auf iPhone/iPad).')
                   : spotifyAuth.status === 'signed_in'
-                    ? 'Ohne Premium bleibt es beim normalen Spotify-Player.'
+                    ? tr('Without Premium, you get the regular Spotify player.', 'Ohne Premium bleibt es beim normalen Spotify-Player.')
                     : spotifyAuth.status === 'error'
-                      ? 'Anmeldung hat nicht geklappt, versuch es nochmal.'
-                      : 'Mit Spotify Premium laufen ganze Songs und die Musik wird beim Start langsam lauter.'}
+                      ? tr('Sign-in didn’t work, please try again.', 'Anmeldung hat nicht geklappt, versuch es nochmal.')
+                      : tr('With Spotify Premium you get full songs, and the music fades in at the start.', 'Mit Spotify Premium laufen ganze Songs und die Musik wird beim Start langsam lauter.')}
               </p>
             </>
           )}
-          <h4 className="pixel-font">MUSIKSTÜCK (CHIPTUNE)</h4>
-          <div className="settings-row" role="group" aria-label="Musikstück">
+          <h4 className="pixel-font">{tr('TRACK (CHIPTUNE)', 'MUSIKSTÜCK (CHIPTUNE)')}</h4>
+          <div className="settings-row" role="group" aria-label={tr('Track', 'Musikstück')}>
             {TRACKS.filter((t) => isOwned(t.id, state.owned)).map((t) => (
               <button
                 key={t.id}
@@ -211,7 +216,7 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
         </section>
 
         <section>
-          <h3 className="pixel-font">BILDSCHIRM</h3>
+          <h3 className="pixel-font">{tr('SCREEN', 'BILDSCHIRM')}</h3>
           <div className="settings-row">
             {PALETTES.filter((p) => isOwned(p.id, state.owned)).map((p) => (
               <button
@@ -225,30 +230,43 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
               </button>
             ))}
           </div>
-          <p className="dim">Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.</p>
+          <p className="dim">{tr('More designs and tracks are waiting at the prize counter under “Quests”.', 'Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.')}</p>
         </section>
 
         <section>
-          <h3 className="pixel-font">DATENSCHUTZ</h3>
+          <h3 className="pixel-font">{tr('LANGUAGE', 'SPRACHE')}</h3>
+          <div className="settings-row" role="group" aria-label={tr('Language', 'Sprache')}>
+            {LANGUAGES.map((l) => (
+              <button key={l.id} className="px-btn" aria-pressed={LANG === l.id} onClick={() => setLang(l.id)} data-nav>
+                {l.name.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="pixel-font">{tr('PRIVACY', 'DATENSCHUTZ')}</h3>
           <div className="settings-row">
             <button className="px-btn" aria-pressed={youtube} onClick={() => setConsent('youtube', !youtube)} data-nav>
-              ▶ YOUTUBE {youtube ? 'ERLAUBT' : 'AUS'}
+              ▶ YOUTUBE {youtube ? tr('ALLOWED', 'ERLAUBT') : tr('OFF', 'AUS')}
             </button>
             <button className="px-btn" aria-pressed={spotify} onClick={() => setConsent('spotify', !spotify)} data-nav>
-              ♫ SPOTIFY {spotify ? 'ERLAUBT' : 'AUS'}
+              ♫ SPOTIFY {spotify ? tr('ALLOWED', 'ERLAUBT') : tr('OFF', 'AUS')}
             </button>
           </div>
           <p className="dim">
-            Videos laden erst, wenn du YouTube erlaubst, die Metal-Musik erst, wenn du Spotify erlaubst. Bilder und Texte von Wikipedia holt RetroMind über den eigenen
-            Server, dein Browser spricht nicht direkt mit Wikipedia.
+            {tr(
+              'Videos only load once you allow YouTube, and the metal music only once you allow Spotify. RetroMind fetches images and text from Wikipedia through its own server, so your browser never talks to Wikipedia directly.',
+              'Videos laden erst, wenn du YouTube erlaubst, die Metal-Musik erst, wenn du Spotify erlaubst. Bilder und Texte von Wikipedia holt RetroMind über den eigenen Server, dein Browser spricht nicht direkt mit Wikipedia.'
+            )}
           </p>
           <p>
             <a href={PRIVACY_URL} target="_blank" rel="noreferrer">
-              Datenschutzerklärung
+              {tr('Privacy policy', 'Datenschutzerklärung')}
             </a>
             {' · '}
             <a href={IMPRINT_URL} target="_blank" rel="noreferrer">
-              Impressum
+              {tr('Legal notice', 'Impressum')}
             </a>
           </p>
         </section>

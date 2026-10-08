@@ -1,4 +1,5 @@
 import React from 'react';
+import { tr } from '../lib/i18n';
 
 // The header sits under the app-wide CrtOverlay like everything else, so
 // the logo and tagline get the same scanlines, blur and wash as the rest
@@ -32,7 +33,7 @@ export const Header: React.FC<{ compact?: boolean }> = ({ compact = false }) =>
         style={{ filter: 'sepia(0.25) saturate(0.85)' }}
       />
     </h1>
-    <p className="text-lg italic text-retro-brown mt-3">… willkommen zurück in der Vergangenheit</p>
+    <p className="text-lg italic text-retro-brown mt-3">{tr('… welcome back to the past', '… willkommen zurück in der Vergangenheit')}</p>
     <div className="w-32 h-1 bg-retro-ink mx-auto mt-4" />
   </header>
 );

@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { chip } from '../../lib/chiptune';
+import { tr } from '../../../lib/i18n';
 import { Done, saveBest, shuffle, useGameKeys } from './shared';
 
 // A relaxed Sudoku: every new board is generated here, has exactly one
@@ -121,7 +122,10 @@ export const Sudoku: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   return (
     <>
       <p className="mini-score">
-        Feld antippen, dann Zahl wählen · noch {left} {left === 1 ? 'Feld' : 'Felder'}
+        {tr(
+          `Tap a cell, then pick a number · ${left} ${left === 1 ? 'cell' : 'cells'} left`,
+          `Feld antippen, dann Zahl wählen · noch ${left} ${left === 1 ? 'Feld' : 'Felder'}`
+        )}
       </p>
       <div className="sudoku-grid">
         {cells.map((n, i) => {
@@ -145,7 +149,10 @@ export const Sudoku: React.FC<{ onWin: () => void }> = ({ onWin }) => {
               onClick={() => setSel(i)}
               onFocus={() => setSel(i)}
               data-nav
-              aria-label={`Zeile ${Math.floor(i / 9) + 1}, Spalte ${(i % 9) + 1}: ${n || 'leer'}`}
+              aria-label={tr(
+                `Row ${Math.floor(i / 9) + 1}, column ${(i % 9) + 1}: ${n || 'empty'}`,
+                `Zeile ${Math.floor(i / 9) + 1}, Spalte ${(i % 9) + 1}: ${n || 'leer'}`
+              )}
             >
               {n || ''}
             </button>
@@ -159,14 +166,14 @@ export const Sudoku: React.FC<{ onWin: () => void }> = ({ onWin }) => {
               {n}
             </button>
           ))}
-          <button className="px-btn" data-nav onClick={() => put(0)} disabled={sel === null || !!game.puzzle[sel]} aria-label="Zahl löschen">
+          <button className="px-btn" data-nav onClick={() => put(0)} disabled={sel === null || !!game.puzzle[sel]} aria-label={tr('Clear number', 'Zahl löschen')}>
             ✕
           </button>
         </div>
       )}
-      {result && <Done text={`Gelöst in ${fmt(result.secs)} Minuten.`} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Solved in ${fmt(result.secs)} minutes.`, `Gelöst in ${fmt(result.secs)} Minuten.`)} record={result.record} onAgain={again} />}
     </>
   );
 };
 
-export const sudokuBest = (n: number) => `Bestzeit: ${fmt(n)}`;
+export const sudokuBest = (n: number) => tr(`Best time: ${fmt(n)}`, `Bestzeit: ${fmt(n)}`);

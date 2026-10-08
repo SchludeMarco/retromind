@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { chip } from '../../lib/chiptune';
+import { tr } from '../../../lib/i18n';
 import { Done, saveBest, useGameKeys, themeColors } from './shared';
 
 // A small, gentle pinball table: three bumpers, two flippers, three balls.
@@ -238,7 +239,7 @@ export const Pinball: React.FC<{ onWin: () => void }> = ({ onWin }) => {
       ctx.fillStyle = t.dim;
       ctx.font = '16px monospace';
       ctx.textAlign = 'center';
-      if (!s.live && s.balls > 0) ctx.fillText('Tippe START', W / 2, 330);
+      if (!s.live && s.balls > 0) ctx.fillText(tr('Tap START', 'Tippe START'), W / 2, 330);
     };
 
     raf = requestAnimationFrame(loop);
@@ -303,8 +304,8 @@ export const Pinball: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   return (
     <>
       <p className="mini-score">
-        Punkte: {hud.score} · Kugeln: {'●'.repeat(Math.max(0, hud.balls - (hud.live ? 1 : 0)))}
-        {hud.live ? ' + 1 im Spiel' : ''}
+        {tr('Score', 'Punkte')}: {hud.score} · {tr('Balls', 'Kugeln')}: {'●'.repeat(Math.max(0, hud.balls - (hud.live ? 1 : 0)))}
+        {hud.live ? tr(' + 1 in play', ' + 1 im Spiel') : ''}
       </p>
       <canvas
         ref={canvas}
@@ -315,24 +316,24 @@ export const Pinball: React.FC<{ onWin: () => void }> = ({ onWin }) => {
         onPointerUp={onUp}
         onPointerCancel={onUp}
         onContextMenu={(e) => e.preventDefault()}
-        aria-label="Flippertisch: linke oder rechte Hälfte antippen für den jeweiligen Flipper"
+        aria-label={tr('Pinball table: tap the left or right half for that flipper', 'Flippertisch: linke oder rechte Hälfte antippen für den jeweiligen Flipper')}
       />
       {!result && (
         <div className="game-pad pinball-pad">
-          <button className="px-btn" {...hold(0)} aria-label="Linker Flipper">
+          <button className="px-btn" {...hold(0)} aria-label={tr('Left flipper', 'Linker Flipper')}>
             ◄ FLIPPER
           </button>
           <button className="px-btn" onClick={launch} disabled={hud.live} data-nav>
             START
           </button>
-          <button className="px-btn" {...hold(1)} aria-label="Rechter Flipper">
+          <button className="px-btn" {...hold(1)} aria-label={tr('Right flipper', 'Rechter Flipper')}>
             FLIPPER ►
           </button>
         </div>
       )}
-      {result && <Done title="SPIEL VORBEI" text={`${result.score} Punkte erflippert.`} record={result.record} onAgain={again} />}
+      {result && <Done title={tr("GAME OVER", "SPIEL VORBEI")} text={tr(`${result.score} points scored.`, `${result.score} Punkte erflippert.`)} record={result.record} onAgain={again} />}
     </>
   );
 };
 
-export const pinballBest = (n: number) => `Rekord: ${n} Punkte`;
+export const pinballBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

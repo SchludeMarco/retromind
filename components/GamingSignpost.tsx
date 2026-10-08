@@ -1,6 +1,7 @@
 import React from 'react';
 import { withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
+import { tr } from '../lib/i18n';
 import './gamingSignpost.css';
 
 const GAMING_URL = 'https://retromind-gaming.vercel.app/';
@@ -18,7 +19,7 @@ export const GamingSignpost: React.FC = () => (
     onClick={(e) => {
       e.currentTarget.href = withGoogleParam(withMuteParam(GAMING_URL));
     }}
-    aria-label="To the gaming zone – zu RetroMind Gaming"
+    aria-label={tr('To the gaming zone – to RetroMind Gaming', 'To the gaming zone – zu RetroMind Gaming')}
   >
     <svg viewBox="0 0 230 150" aria-hidden="true">
       <defs>

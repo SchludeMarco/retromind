@@ -22,6 +22,14 @@ and PR number). In the same PR, update `README.md`: new features go under
 bottom (sorted into Muss / Sollte / Könnte), and ideas that got built are
 removed from that list.
 
+## Languages
+
+The app UI is American English by default, German selectable (`lib/i18n.ts`).
+All user-visible text goes through `tr('English', 'Deutsch')`, and AI prompts
+in `api/gemini.js` exist in both languages. The What's New dialog shows
+CHANGELOG entries (German) in English via the `EN` map in `lib/whatsNew.ts`:
+add an English title and text there for every new CHANGELOG entry.
+
 ## Feedback
 
 Feedback from the app is stored in `feedback.md` (status "offen"). It only

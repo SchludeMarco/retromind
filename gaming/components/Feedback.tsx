@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { submitFeedback, FeedbackCategory } from '../../services/feedbackService';
+import { tr } from '../../lib/i18n';
 
 const CATEGORIES: { value: FeedbackCategory; label: string }[] = [
-  { value: 'lob', label: 'LOB' },
-  { value: 'tadel', label: 'TADEL' },
-  { value: 'vorschlag', label: 'VORSCHLAG' },
-  { value: 'wunsch', label: 'WUNSCH' },
-  { value: 'sonstiges', label: 'SONSTIGES' },
+  { value: 'lob', label: tr('PRAISE', 'LOB') },
+  { value: 'tadel', label: tr('CRITICISM', 'TADEL') },
+  { value: 'vorschlag', label: tr('SUGGESTION', 'VORSCHLAG') },
+  { value: 'wunsch', label: tr('WISH', 'WUNSCH') },
+  { value: 'sonstiges', label: tr('OTHER', 'SONSTIGES') },
 ];
 
 // Feedback from the Gaming edition. Same channel as the main app (mail to
@@ -33,7 +34,7 @@ export const Feedback: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       await submitFeedback(category, text, contactEmail.trim() || undefined, 'gaming');
       setStatus('sent');
     } catch (err) {
-      setError((err as { message?: string })?.message || 'Das Feedback konnte nicht gesendet werden.');
+      setError((err as { message?: string })?.message || tr('Your feedback couldn’t be sent.', 'Das Feedback konnte nicht gesendet werden.'));
       setStatus('error');
     }
   };
@@ -44,26 +45,26 @@ export const Feedback: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         className="dialog settings-dialog"
         role="dialog"
         aria-modal="true"
-        aria-label="Feedback geben"
+        aria-label={tr('Send feedback', 'Feedback geben')}
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="pixel-font">✉ FEEDBACK</h2>
-        <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
+        <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
 
         {status === 'sent' ? (
           <section>
-            <p className="pixel-font cloud-user">DANKE FÜR DEIN FEEDBACK!</p>
-            <p>Deine Nachricht ist angekommen.</p>
+            <p className="pixel-font cloud-user">{tr('THANKS FOR YOUR FEEDBACK!', 'DANKE FÜR DEIN FEEDBACK!')}</p>
+            <p>{tr('Your message got through.', 'Deine Nachricht ist angekommen.')}</p>
             <button className="px-btn" onClick={onClose} data-nav>
-              WEITER ZOCKEN
+              {tr('KEEP PLAYING', 'WEITER ZOCKEN')}
             </button>
           </section>
         ) : (
           <form className="feedback-form" onSubmit={send}>
-            <p>Lob, Tadel, Vorschläge oder Wünsche zur App? Raus damit.</p>
-            <div className="settings-row" role="group" aria-label="Art des Feedbacks">
+            <p>{tr('Praise, gripes, suggestions or wishes for the app? Let’s hear it.', 'Lob, Tadel, Vorschläge oder Wünsche zur App? Raus damit.')}</p>
+            <div className="settings-row" role="group" aria-label={tr('Type of feedback', 'Art des Feedbacks')}>
               {CATEGORIES.map((c) => (
                 <button
                   key={c.value}
@@ -78,7 +79,7 @@ export const Feedback: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               ))}
             </div>
             <label htmlFor="gm-feedback-message" className="pixel-font">
-              DEINE NACHRICHT
+              {tr('YOUR MESSAGE', 'DEINE NACHRICHT')}
             </label>
             <textarea
               id="gm-feedback-message"
@@ -89,7 +90,7 @@ export const Feedback: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               required
             />
             <label htmlFor="gm-feedback-email" className="pixel-font">
-              E-MAIL FÜR RÜCKFRAGEN (FREIWILLIG)
+              {tr('EMAIL FOR FOLLOW-UP QUESTIONS (OPTIONAL)', 'E-MAIL FÜR RÜCKFRAGEN (FREIWILLIG)')}
             </label>
             <input
               id="gm-feedback-email"
@@ -98,11 +99,11 @@ export const Feedback: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               onChange={(e) => setContactEmail(e.target.value)}
             />
             <p className="dim">
-              Deine Nachricht wird ohne E-Mail-Adresse in unserer öffentlichen Feedback-Liste gespeichert.
+              {tr('Your message is saved without your email address in our public feedback list.', 'Deine Nachricht wird ohne E-Mail-Adresse in unserer öffentlichen Feedback-Liste gespeichert.')}
             </p>
             {status === 'error' && <p role="alert">⚠ {error}</p>}
             <button className="px-btn big" type="submit" disabled={!message.trim() || status === 'sending'} data-nav>
-              {status === 'sending' ? 'WIRD GESENDET …' : 'FEEDBACK ABSENDEN'}
+              {status === 'sending' ? tr('SENDING …', 'WIRD GESENDET …') : tr('SEND FEEDBACK', 'FEEDBACK ABSENDEN')}
             </button>
           </form>
         )}

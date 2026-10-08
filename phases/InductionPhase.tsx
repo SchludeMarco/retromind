@@ -3,6 +3,7 @@ import { GalleryItem } from '../types';
 import { DECADES_DB } from '../constants';
 import { GalleryCard } from '../components';
 import { describeFocusDecade } from '../lib/format';
+import { tr } from '../lib/i18n';
 
 export const InductionPhase: React.FC<{
   focusDecade: string;
@@ -14,10 +15,13 @@ export const InductionPhase: React.FC<{
   return (
     <div className="py-8 animate-fadeIn">
       <div className="text-center mb-10">
-        <h2 className="text-4xl mb-3">Deine Zeit: {decadeData?.title}</h2>
+        <h2 className="text-4xl mb-3">{tr('Your era', 'Deine Zeit')}: {decadeData?.title}</h2>
         <p className="text-retro-brown">
-          {describeFocusDecade(birthDate, focusDecade)} Ein paar Impressionen zum Einstimmen –
-          tippe für die Beschreibung.
+          {describeFocusDecade(birthDate, focusDecade)}{' '}
+          {tr(
+            'A few impressions to get you in the mood – tap one for its story.',
+            'Ein paar Impressionen zum Einstimmen – tippe für die Beschreibung.'
+          )}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -26,12 +30,15 @@ export const InductionPhase: React.FC<{
         ))}
       </div>
       <p className="text-xs text-retro-tan mt-4 text-center italic">
-        Die Bilder sind – wo nicht anders angegeben – symbolische Zeit-Impressionen, keine echten Zeitdokumente.
+        {tr(
+          'Unless noted otherwise, the pictures are symbolic impressions of the era, not real historical documents.',
+          'Die Bilder sind – wo nicht anders angegeben – symbolische Zeit-Impressionen, keine echten Zeitdokumente.'
+        )}
       </p>
 
       <div className="mt-12 text-center">
         <button onClick={onContinue} className="retro-button bg-retro-amber text-white px-12 py-5 text-xl font-bold">
-          In die Details eintauchen
+          {tr('Dive into the details', 'In die Details eintauchen')}
         </button>
       </div>
     </div>

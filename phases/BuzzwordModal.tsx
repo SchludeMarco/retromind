@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, MemoryAnswer } from '../components';
+import { tr } from '../lib/i18n';
 
 export const BuzzwordModal: React.FC<{
   word: { id: string; term: string; knowledge: string; question: string; decade: string };
@@ -34,18 +35,18 @@ export const BuzzwordModal: React.FC<{
   onOpenPerspective,
   onSavePerspective,
 }) => (
-  <Modal onClose={onDismiss} label={`Erinnerung: ${word.term}`}>
-    <button onClick={onCloseClick} aria-label="Schließen" className="absolute top-3 right-3 text-2xl leading-none">
+  <Modal onClose={onDismiss} label={tr(`Memory: ${word.term}`, `Erinnerung: ${word.term}`)}>
+    <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
       ✕
     </button>
-    <span className="text-xs uppercase font-bold text-retro-amber-dark block">Wissen von damals</span>
+    <span className="text-xs uppercase font-bold text-retro-amber-dark block">{tr('Back then', 'Wissen von damals')}</span>
     <h3 className="text-3xl font-bold mb-2">{word.term}</h3>
     <p className="text-base leading-relaxed mb-5 italic">"{word.knowledge}"</p>
 
     <div className="bg-gray-100 p-4 border-l-4 border-retro-amber mb-4">
-      <h4 className="text-xs uppercase font-bold text-retro-brown mb-2">Deine persönliche Frage</h4>
+      <h4 className="text-xs uppercase font-bold text-retro-brown mb-2">{tr('Your personal question', 'Deine persönliche Frage')}</h4>
       {isGenerating ? (
-        <p className="italic text-sm animate-pulse">Die KI überlegt sich eine Frage für dich…</p>
+        <p className="italic text-sm animate-pulse">{tr('The AI is thinking up a question for you…', 'Die KI überlegt sich eine Frage für dich…')}</p>
       ) : (
         <p className="text-lg retro-serif leading-snug">{word.question}</p>
       )}
@@ -54,22 +55,22 @@ export const BuzzwordModal: React.FC<{
     <MemoryAnswer
       value={answerDraft}
       onChange={onAnswerChange}
-      placeholder="Was fällt dir dazu ein? Ein Detail, ein Geruch, ein Moment…"
+      placeholder={tr('What comes to mind? A detail, a smell, a moment…', 'Was fällt dir dazu ein? Ein Detail, ein Geruch, ein Moment…')}
     />
 
     <div className="flex flex-wrap gap-3 mt-5">
       <button onClick={onSave} className="retro-button bg-retro-ink text-white px-6 py-3 font-bold flex-grow">
-        {isExistingMemory ? 'Erinnerung aktualisieren' : 'Erinnerung speichern'}
+        {isExistingMemory ? tr('Update memory', 'Erinnerung aktualisieren') : tr('Save memory', 'Erinnerung speichern')}
       </button>
       <button onClick={onCloseClick} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
-        Später
+        {tr('Later', 'Später')}
       </button>
     </div>
 
     {isExistingMemory && (
       <div className="mt-8 pt-6 border-t-2 border-dashed border-retro-ink/30">
         <h4 className="text-xs uppercase font-bold text-retro-brown mb-3 flex items-center gap-2">
-          <span aria-hidden="true">🔄</span> Perspektivwechsel
+          <span aria-hidden="true">🔄</span> {tr('A different view', 'Perspektivwechsel')}
         </h4>
 
         {!perspective ? (
@@ -79,8 +80,8 @@ export const BuzzwordModal: React.FC<{
             className="text-sm font-bold underline text-retro-amber-dark disabled:opacity-50"
           >
             {isGeneratingPerspective
-              ? 'Frage wird gestellt…'
-              : 'Wie hätte jemand anderes von damals diesen Moment erlebt?'}
+              ? tr('Asking the question…', 'Frage wird gestellt…')
+              : tr('How might someone else from back then have experienced this moment?', 'Wie hätte jemand anderes von damals diesen Moment erlebt?')}
           </button>
         ) : (
           <>
@@ -90,13 +91,13 @@ export const BuzzwordModal: React.FC<{
             <MemoryAnswer
               value={perspectiveDraft}
               onChange={onPerspectiveAnswerChange}
-              placeholder="Erzähl den Moment aus dieser anderen Sicht…"
+              placeholder={tr('Tell the moment from this other point of view…', 'Erzähl den Moment aus dieser anderen Sicht…')}
             />
             <button
               onClick={onSavePerspective}
               className="retro-button bg-retro-purple text-white px-6 py-3 font-bold mt-3"
             >
-              {isPerspectiveSaved ? 'Perspektive aktualisieren' : 'Perspektive speichern'}
+              {isPerspectiveSaved ? tr('Update perspective', 'Perspektive aktualisieren') : tr('Save perspective', 'Perspektive speichern')}
             </button>
           </>
         )}

@@ -6,6 +6,7 @@ import { setConsent } from '../../lib/privacy';
 import { chip, DOOR_SWING } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
+import { isGerman, tr } from '../../lib/i18n';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
 // the entrance and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
@@ -48,7 +49,6 @@ const Bulb: React.FC = () => (
 
 // Optional sign-ins right at the door (Marco, 2026-10-08): Google keeps the
 // profile and coins in sync, Spotify (its own account) brings whole songs.
-// Text in English and German until the app-wide translation lands.
 const LOGIN_TEXT = {
   en: {
     google: 'SIGN IN WITH GOOGLE',
@@ -71,7 +71,7 @@ const LOGIN_TEXT = {
 };
 
 const DoorLogins: React.FC<{ cloud: Cloud; spotifyAuth: SpotifyAuth; disabled: boolean }> = ({ cloud, spotifyAuth, disabled }) => {
-  const t = LOGIN_TEXT[document.documentElement.lang.startsWith('de') ? 'de' : 'en'];
+  const t = LOGIN_TEXT[isGerman ? 'de' : 'en'];
   const google = cloud.status === 'signed_in';
   const spotifyOn = spotifyAuth.status !== 'not_configured';
   const spotify = spotifyAuth.status === 'signed_in';
@@ -192,10 +192,10 @@ export const Entrance: React.FC<{
       <div className="entrance-controls">
         <p className="dim entrance-hint">
           {muted
-            ? 'Da drin warten die alten Games. Der Ton ist aus.'
+            ? tr('The old games are waiting inside. Sound is off.', 'Da drin warten die alten Games. Der Ton ist aus.')
             : soundWaiting
-              ? 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.'
-              : 'Da drin warten die alten Games. Trau dich, Player 1.'}
+              ? tr('Psst … tap anywhere once and you’ll hear what’s going on inside.', 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.')
+              : tr('The old games are waiting inside. Go on in, Player 1.', 'Da drin warten die alten Games. Trau dich, Player 1.')}
         </p>
         <div className="entrance-row">
           {/* Looks like the EINGANG door itself: grey metal frame, roll shutter

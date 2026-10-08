@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { chip } from '../../lib/chiptune';
+import { tr } from '../../../lib/i18n';
 import { Done, saveBest, useGameKeys, themeColors } from './shared';
 
 // Pac-Mampf: our own little maze game in the style of the arcade classic.
@@ -596,11 +597,11 @@ export const PacMan: React.FC<{ onWin: () => void }> = ({ onWin }) => {
       // Messages below the house
       const msg =
         s.phase === 'ready'
-          ? 'BEREIT?'
+          ? tr('READY?', 'BEREIT?')
           : s.paused
             ? 'PAUSE'
             : s.phase === 'clear'
-              ? `LEVEL ${s.level} GESCHAFFT`
+              ? tr(`LEVEL ${s.level} CLEAR`, `LEVEL ${s.level} GESCHAFFT`)
               : '';
       if (msg) {
         ctx.font = '8px "Press Start 2P", monospace';
@@ -679,7 +680,7 @@ export const PacMan: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   return (
     <>
       <p className="mini-score">
-        Punkte: {hud.score} · Level {hud.level} · Leben: {'●'.repeat(spare) || '–'}
+        {tr('Score', 'Punkte')}: {hud.score} · Level {hud.level} · {tr('Lives', 'Leben')}: {'●'.repeat(spare) || '–'}
       </p>
       <canvas
         ref={canvas}
@@ -691,31 +692,31 @@ export const PacMan: React.FC<{ onWin: () => void }> = ({ onWin }) => {
         onPointerUp={onUp}
         onPointerCancel={() => (touch.current = null)}
         onContextMenu={(e) => e.preventDefault()}
-        aria-label="Labyrinth: wischen zum Lenken, tippen zum Starten oder Pausieren"
+        aria-label={tr('Maze: swipe to steer, tap to start or pause', 'Labyrinth: wischen zum Lenken, tippen zum Starten oder Pausieren')}
       />
       {!result && (
         <div className="game-pad pacman-pad">
-          <button className="px-btn pad-up" {...pad(UP)} aria-label="Nach oben">
+          <button className="px-btn pad-up" {...pad(UP)} aria-label={tr('Up', 'Nach oben')}>
             ▲
           </button>
-          <button className="px-btn pad-left" {...pad(LEFT)} aria-label="Nach links">
+          <button className="px-btn pad-left" {...pad(LEFT)} aria-label={tr('Left', 'Nach links')}>
             ◄
           </button>
           <button className="px-btn pad-mid" onClick={start} data-nav>
             {hud.phase === 'ready' ? 'START' : hud.paused ? '▶' : 'II'}
           </button>
-          <button className="px-btn pad-right" {...pad(RIGHT)} aria-label="Nach rechts">
+          <button className="px-btn pad-right" {...pad(RIGHT)} aria-label={tr('Right', 'Nach rechts')}>
             ►
           </button>
-          <button className="px-btn pad-down" {...pad(DOWN)} aria-label="Nach unten">
+          <button className="px-btn pad-down" {...pad(DOWN)} aria-label={tr('Down', 'Nach unten')}>
             ▼
           </button>
         </div>
       )}
       {result && (
         <Done
-          title="SPIEL VORBEI"
-          text={`${result.score} Punkte, bis Level ${result.level} gekommen.`}
+          title={tr("GAME OVER", "SPIEL VORBEI")}
+          text={tr(`${result.score} points, made it to level ${result.level}.`, `${result.score} Punkte, bis Level ${result.level} gekommen.`)}
           record={result.record}
           onAgain={again}
         />
@@ -785,4 +786,4 @@ function drawCherry(ctx: CanvasRenderingContext2D, x: number, y: number) {
   }
 }
 
-export const pacmanBest = (n: number) => `Rekord: ${n} Punkte`;
+export const pacmanBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

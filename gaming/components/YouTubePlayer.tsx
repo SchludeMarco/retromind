@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useMuted } from '../../lib/mute';
 import { PRIVACY_URL, setConsent, useConsent, viaProxy } from '../../lib/privacy';
+import { isGerman, tr } from '../../lib/i18n';
 
 // Embedded YouTube player that starts on its own. It follows the app-wide
 // mute switch: it starts muted when sound is off, and flipping the switch
@@ -15,18 +16,20 @@ export const YouTubePlayer: React.FC<{ id: string; title: string; thumb?: string
 const AskFirst: React.FC<{ thumb?: string }> = ({ thumb }) => (
   <div className="yt-frame yt-ask" style={thumb ? { backgroundImage: `url("${viaProxy(thumb)}")` } : undefined}>
     <div className="yt-ask-box">
-      <p className="pixel-font">▶ VIDEO VON YOUTUBE</p>
+      <p className="pixel-font">{tr('▶ VIDEO FROM YOUTUBE', '▶ VIDEO VON YOUTUBE')}</p>
       <p>
-        Erst wenn du's erlaubst, lädt der Player von YouTube. Dabei gehen Daten wie deine IP-Adresse an Google, und
-        YouTube kann Cookies setzen.{' '}
+        {tr(
+          'The YouTube player only loads once you allow it. Data such as your IP address is then sent to Google, and YouTube may set cookies.',
+          "Erst wenn du's erlaubst, lädt der Player von YouTube. Dabei gehen Daten wie deine IP-Adresse an Google, und YouTube kann Cookies setzen."
+        )}{' '}
         <a href={PRIVACY_URL} target="_blank" rel="noreferrer">
-          Datenschutz
+          {tr('Privacy', 'Datenschutz')}
         </a>
       </p>
       <button className="px-btn big" onClick={() => setConsent('youtube', true)} data-nav>
-        YOUTUBE ERLAUBEN
+        {tr('ALLOW YOUTUBE', 'YOUTUBE ERLAUBEN')}
       </button>
-      <p className="dim">Gilt ab jetzt für alle Videos. Zurücknehmen kannst du's in den Einstellungen.</p>
+      <p className="dim">{tr('Applies to all videos from now on. You can take it back in the settings.', "Gilt ab jetzt für alle Videos. Zurücknehmen kannst du's in den Einstellungen.")}</p>
     </div>
   </div>
 );
@@ -47,7 +50,7 @@ const Player: React.FC<{ id: string; title: string }> = ({ id, title }) => {
 
   const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${
     startMuted.current ? 1 : 0
-  }&enablejsapi=1&rel=0&modestbranding=1&playsinline=1&hl=de&origin=${encodeURIComponent(window.location.origin)}`;
+  }&enablejsapi=1&rel=0&modestbranding=1&playsinline=1&hl=${isGerman ? 'de' : 'en'}&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <div className="yt-frame">

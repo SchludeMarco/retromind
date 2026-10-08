@@ -1,4 +1,6 @@
 import { CapturedMemory, UserProfile } from '../types';
+import { GENDER_LABELS, INTEREST_LABELS } from '../constants';
+import { tr, LOCALE } from './i18n';
 
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 export const todayStamp = () => new Date().toISOString().slice(0, 10);
@@ -37,28 +39,32 @@ export function downscaleImage(dataUrl: string, max = 1280, quality = 0.82): Pro
 
 export function buildBookText(user: UserProfile, decade: string, memories: CapturedMemory[], note: string): string {
   const out: string[] = [
-    'RETROMIND — ERINNERUNGS-BUCH',
+    tr('RETROMIND — MEMORY BOOK', 'RETROMIND — ERINNERUNGS-BUCH'),
     '================================',
-    user.name ? `Für: ${user.name}` : '',
-    user.birthDate ? `Geboren: ${user.birthDate}` : '',
-    user.gender ? `Geschlecht: ${user.gender}` : '',
-    `Schwerpunkt: die ${decade}er Jahre`,
-    user.interests.length ? `Interessen: ${user.interests.join(', ')}` : '',
-    user.favoriteArtists.length ? `Lieblingsmusiker:innen: ${user.favoriteArtists.join(', ')}` : '',
-    `Erstellt: ${new Date().toLocaleString('de-DE')}`,
+    user.name ? tr(`For: ${user.name}`, `Für: ${user.name}`) : '',
+    user.birthDate ? tr(`Born: ${user.birthDate}`, `Geboren: ${user.birthDate}`) : '',
+    user.gender ? tr('Gender', 'Geschlecht') + `: ${GENDER_LABELS[user.gender] ?? user.gender}` : '',
+    tr(`Focus: the ${decade}s`, `Schwerpunkt: die ${decade}er Jahre`),
+    user.interests.length
+      ? tr('Interests', 'Interessen') + `: ${user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ')}`
+      : '',
+    user.favoriteArtists.length
+      ? tr('Favorite artists', 'Lieblingsmusiker:innen') + `: ${user.favoriteArtists.join(', ')}`
+      : '',
+    tr('Created', 'Erstellt') + `: ${new Date().toLocaleString(LOCALE)}`,
   ].filter(Boolean);
 
   const groups: Record<string, CapturedMemory[]> = {};
   for (const m of memories) (groups[m.decade] ||= []).push(m);
   for (const d of Object.keys(groups).sort()) {
-    out.push('', `— ${d}er —`, '');
+    out.push('', tr(`— ${d}s —`, `— ${d}er —`), '');
     for (const m of groups[d]) {
       out.push(`• ${m.term}`);
-      if (m.prompt) out.push(`  Frage: ${m.prompt}`);
-      out.push(`  ${m.answer.trim() || '(keine Notiz)'}`, '');
+      if (m.prompt) out.push(`  ${tr('Question', 'Frage')}: ${m.prompt}`);
+      out.push(`  ${m.answer.trim() || tr('(no note)', '(keine Notiz)')}`, '');
     }
   }
-  if (note.trim()) out.push('', '— FREIE NOTIZ —', '', note.trim());
+  if (note.trim()) out.push('', tr('— FREE NOTE —', '— FREIE NOTIZ —'), '', note.trim());
   return out.join('\n') + '\n';
 }
 
@@ -85,16 +91,25 @@ export function computeFocusDecade(birthDate: string): string {
 // born in 2010, and was plainly wrong when the decade had to be clamped.
 export function describeFocusDecade(birthDate: string, focusDecade: string): string {
   const year = birthYearOf(birthDate);
-  if (year === null) return `Wir starten in den ${focusDecade}ern.`;
+  if (year === null) return tr(`We’ll start in the ${focusDecade}s.`, `Wir starten in den ${focusDecade}ern.`);
   const from = year + 6;
   const to = year + 10;
   const raw = Math.floor((year + 8) / 10) * 10;
-  const intro = `Du bist ${year} geboren, in der Grundschule warst du also etwa von ${from} bis ${to}.`;
+  const intro = tr(
+    `You were born in ${year}, so you were in elementary school from about ${from} to ${to}.`,
+    `Du bist ${year} geboren, in der Grundschule warst du also etwa von ${from} bis ${to}.`
+  );
   if (raw > LAST_DECADE) {
-    return `${intro} So weit reicht RetroMind noch nicht, deshalb starten wir mit dem jüngsten Jahrzehnt, den ${focusDecade}ern.`;
+    return tr(
+      `${intro} RetroMind doesn’t reach that far yet, so we’ll start with the most recent decade, the ${focusDecade}s.`,
+      `${intro} So weit reicht RetroMind noch nicht, deshalb starten wir mit dem jüngsten Jahrzehnt, den ${focusDecade}ern.`
+    );
   }
   if (raw < FIRST_DECADE) {
-    return `${intro} So weit zurück reicht RetroMind noch nicht, deshalb starten wir mit dem ältesten Jahrzehnt, den ${focusDecade}ern.`;
+    return tr(
+      `${intro} RetroMind doesn’t go back that far yet, so we’ll start with the earliest decade, the ${focusDecade}s.`,
+      `${intro} So weit zurück reicht RetroMind noch nicht, deshalb starten wir mit dem ältesten Jahrzehnt, den ${focusDecade}ern.`
+    );
   }
-  return `${intro} Deshalb starten wir in den ${focusDecade}ern.`;
+  return tr(`${intro} That’s why we’ll start in the ${focusDecade}s.`, `${intro} Deshalb starten wir in den ${focusDecade}ern.`);
 }

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { tr } from './i18n';
 
 // The app's selectable designs ("Design" in the settings). A design is
 // mostly a set of colour tokens: index.css redefines the --color-retro-*
@@ -16,21 +17,27 @@ export const THEMES = [
   {
     id: 'retro-warm',
     name: 'Retro Warm',
-    description: 'Karamell und Terrakotta, große Schrift, ruhig und hell. Entworfen mit Google Stitch.',
+    description: tr(
+      'Caramel and terracotta, large type, calm and bright. Designed with Google Stitch.',
+      'Karamell und Terrakotta, große Schrift, ruhig und hell. Entworfen mit Google Stitch.'
+    ),
     swatches: ['#f7f3e9', '#d95d39', '#e8a838'],
     browserColor: '#f7f3e9',
   },
   {
     id: 'klassisch',
-    name: 'Klassisch',
-    description: 'Vergilbtes Papier, Tinte und Bernstein.',
+    name: tr('Classic', 'Klassisch'),
+    description: tr('Yellowed paper, ink and amber.', 'Vergilbtes Papier, Tinte und Bernstein.'),
     swatches: ['#f4e4bc', '#2c1810', '#d97706'],
     browserColor: '#f4e4bc',
   },
   {
     id: 'nachtschicht',
-    name: 'Nachtschicht',
-    description: 'Dunkel wie ein Wohnzimmer um Mitternacht, mit warmem Röhrenglühen.',
+    name: tr('Night Shift', 'Nachtschicht'),
+    description: tr(
+      'Dark as a living room at midnight, with a warm tube glow.',
+      'Dunkel wie ein Wohnzimmer um Mitternacht, mit warmem Röhrenglühen.'
+    ),
     swatches: ['#1a120c', '#f3e3c3', '#f59e0b'],
     browserColor: '#1a120c',
   },

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GalleryItem } from '../types';
 import { viaProxy } from '../lib/privacy';
+import { tr } from '../lib/i18n';
 
 export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> = ({ item, onClick }) => {
   const [imgFailed, setImgFailed] = useState(false);
@@ -17,7 +18,7 @@ export const GalleryCard: React.FC<{ item: GalleryItem; onClick: () => void }> =
         />
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-retro-paper">
-          <span className="text-[10px] uppercase tracking-widest font-bold text-retro-tan">Zeit-Impression</span>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-retro-tan">{tr('Time Snapshot', 'Zeit-Impression')}</span>
           <span className="retro-serif text-2xl font-bold text-retro-ink mt-2 leading-tight">{item.title}</span>
         </div>
       )}

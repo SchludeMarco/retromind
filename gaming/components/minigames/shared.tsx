@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { tr } from '../../../lib/i18n';
 
 // Bits every mini game in the Chill-Ecke shares: best results on this device,
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
@@ -46,13 +47,13 @@ export const Done: React.FC<{ text: string; record: boolean; onAgain: () => void
   text,
   record,
   onAgain,
-  title = 'GESCHAFFT!',
+  title = tr('YOU DID IT!', 'GESCHAFFT!'),
 }) => (
   <div className="mini-done" role="status">
-    <p className="pixel-font">{record ? '★ NEUER REKORD! ★' : title}</p>
+    <p className="pixel-font">{record ? tr('★ NEW HIGH SCORE! ★', '★ NEUER REKORD! ★') : title}</p>
     <p>{text}</p>
     <button className="px-btn big" onClick={onAgain} data-nav autoFocus>
-      NOCHMAL
+      {tr('PLAY AGAIN', 'NOCHMAL')}
     </button>
   </div>
 );

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { warmUpGoogle } from '../lib/googleAuth';
 import { isAdminUser } from '../lib/admin';
+import { LOCALE, isGerman, tr } from '../lib/i18n';
 
 // Admin area (/admin/), only for Marco: usage numbers (api/stats.js), the
 // feedback inbox and a live check of both domains (api/admin.js). Every API
@@ -53,17 +54,17 @@ interface Live {
 }
 type Load<T> = { state: 'idle' | 'loading' | 'forbidden' | 'error' } | { state: 'ready'; data: T };
 
-const APP_LABELS: Record<AppId, string> = { zeitreise: 'Zeitreise', gaming: 'Gaming' };
+const APP_LABELS: Record<AppId, string> = { zeitreise: tr('Time Travel', 'Zeitreise'), gaming: 'Gaming' };
 const TOP_LABELS: Record<string, string> = {
-  decade: 'Meist erkundete Jahrzehnte',
-  game: 'Meist geöffnete Spiele',
-  minigame: 'Meist gespielte Minispiele',
+  decade: tr('Most explored decades', 'Meist erkundete Jahrzehnte'),
+  game: tr('Most opened games', 'Meist geöffnete Spiele'),
+  minigame: tr('Most played minigames', 'Meist gespielte Minispiele'),
 };
 const RANGES = [7, 30, 90];
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'usage', label: 'Nutzung' },
+  { id: 'usage', label: tr('Usage', 'Nutzung') },
   { id: 'feedback', label: 'Feedback' },
-  { id: 'live', label: 'Live-Check' },
+  { id: 'live', label: tr('Live check', 'Live-Check') },
 ];
 // Feedback and the live check need the GitHub token, which only the main
 // project has; on the Gaming domain the page asks the main domain for them.
@@ -74,15 +75,15 @@ const MAIN_API =
 
 const fmtDay = (iso: string) => {
   const [y, m, d] = iso.slice(0, 10).split('-');
-  return `${d}.${m}.${y}`;
+  return isGerman ? `${d}.${m}.${y}` : `${m}/${d}/${y}`;
 };
 const fmtMonth = (ym?: string) => {
-  if (!ym) return 'diesen Monat';
+  if (!ym) return tr('this month', 'diesen Monat');
   const [y, m] = ym.split('-');
-  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(LOCALE, { month: 'long', year: 'numeric' });
 };
 const sum = (days: Day[], key: 'starts' | 'visitors') => days.reduce((n, d) => n + d[key], 0);
-const decadeLabel = (key: string) => (/^\d{4}$/.test(key) ? `${key}er` : key);
+const decadeLabel = (key: string) => (/^\d{4}$/.test(key) ? tr(`${key}s`, `${key}er`) : key);
 
 export const AdminApp: React.FC = () => {
   const auth = useGoogleAuth();
@@ -114,19 +115,24 @@ export const AdminApp: React.FC = () => {
     <main className="admin">
       <header className="admin-head">
         <div>
-          <p className="eyebrow">RetroMind · nur für den Betreiber</p>
-          <h1>Adminbereich</h1>
+          <p className="eyebrow">{tr('RetroMind · operator only', 'RetroMind · nur für den Betreiber')}</p>
+          <h1>{tr('Admin area', 'Adminbereich')}</h1>
         </div>
         <a className="btn ghost" href="/">
-          ← Zur App
+          {tr('← Back to the app', '← Zur App')}
         </a>
       </header>
 
-      {auth.status === 'not_configured' && <p className="note">Google-Anmeldung ist auf dieser Seite nicht eingerichtet.</p>}
+      {auth.status === 'not_configured' && <p className="note">{tr('Google sign-in isn’t set up on this page.', 'Google-Anmeldung ist auf dieser Seite nicht eingerichtet.')}</p>}
 
       {!signedIn && auth.status !== 'not_configured' && (
         <section className="card">
-          <p>Melde dich mit deinem Google-Konto an. Zahlen sieht nur das Konto des Betreibers.</p>
+          <p>
+            {tr(
+              'Sign in with your Google account. Only the operator’s account can see the numbers.',
+              'Melde dich mit deinem Google-Konto an. Zahlen sieht nur das Konto des Betreibers.'
+            )}
+          </p>
           <button
             className="btn"
             onClick={auth.signIn}
@@ -135,21 +141,21 @@ export const AdminApp: React.FC = () => {
             onFocus={warmUpGoogle}
             disabled={auth.status === 'signing_in'}
           >
-            {auth.status === 'signing_in' ? 'Anmeldung läuft …' : 'Mit Google anmelden'}
+            {auth.status === 'signing_in' ? tr('Signing in …', 'Anmeldung läuft …') : tr('Sign in with Google', 'Mit Google anmelden')}
           </button>
-          {auth.status === 'error' && <p className="note">Die Anmeldung hat nicht geklappt. Bitte noch einmal.</p>}
+          {auth.status === 'error' && <p className="note">{tr('Sign-in didn’t work. Please try again.', 'Die Anmeldung hat nicht geklappt. Bitte noch einmal.')}</p>}
         </section>
       )}
 
       {signedIn && (
         <>
           <p className="who">
-            Angemeldet als {auth.user?.email}
+            {tr('Signed in as', 'Angemeldet als')} {auth.user?.email}
             <button className="link" onClick={auth.signOut}>
-              Abmelden
+              {tr('Sign out', 'Abmelden')}
             </button>
           </p>
-          <nav className="tabs" role="tablist" aria-label="Bereiche">
+          <nav className="tabs" role="tablist" aria-label={tr('Sections', 'Bereiche')}>
             {TABS.map((t) => (
               <button key={t.id} role="tab" aria-selected={tab === t.id} className="btn small" onClick={() => setTab(t.id)}>
                 {t.label}
@@ -168,20 +174,20 @@ export const AdminApp: React.FC = () => {
 type Api = <T>(url: string, init?: RequestInit) => Promise<Load<T>>;
 
 const Problem: React.FC<{ load: Load<unknown>; onRetry: () => void; isAdmin?: boolean }> = ({ load, onRetry, isAdmin }) => {
-  if (load.state === 'loading') return <p className="note">Wird geladen …</p>;
+  if (load.state === 'loading') return <p className="note">{tr('Loading …', 'Wird geladen …')}</p>;
   if (load.state === 'forbidden')
     return (
       <section className="card">
-        <p>Dieses Google-Konto hat keinen Zugang zum Adminbereich.</p>
-        {isAdmin && <p className="note">Bitte ab- und wieder anmelden.</p>}
+        <p>{tr('This Google account doesn’t have access to the admin area.', 'Dieses Google-Konto hat keinen Zugang zum Adminbereich.')}</p>
+        {isAdmin && <p className="note">{tr('Please sign out and back in.', 'Bitte ab- und wieder anmelden.')}</p>}
       </section>
     );
   if (load.state === 'error')
     return (
       <section className="card">
-        <p>Das konnte nicht geladen werden.</p>
+        <p>{tr('That couldn’t be loaded.', 'Das konnte nicht geladen werden.')}</p>
         <button className="btn" onClick={onRetry}>
-          Noch einmal
+          {tr('Try again', 'Noch einmal')}
         </button>
       </section>
     );
@@ -203,10 +209,10 @@ const UsageTab: React.FC<{ api: Api; isAdmin: boolean }> = ({ api, isAdmin }) =>
 
   return (
     <>
-      <div className="ranges" role="radiogroup" aria-label="Zeitraum">
+      <div className="ranges" role="radiogroup" aria-label={tr('Time range', 'Zeitraum')}>
         {RANGES.map((n) => (
           <button key={n} role="radio" aria-checked={range === n} className="btn small" onClick={() => setRange(n)}>
-            {n} Tage
+            {tr(`${n} days`, `${n} Tage`)}
           </button>
         ))}
       </div>
@@ -214,8 +220,16 @@ const UsageTab: React.FC<{ api: Api; isAdmin: boolean }> = ({ api, isAdmin }) =>
       {load.state === 'ready' && !load.data.configured && (
         <section className="card">
           <p>
-            <strong>Der Zähler hat noch keinen Speicher.</strong> In Vercel unter Storage eine kostenlose Upstash-Redis-Datenbank
-            anlegen und mit beiden Projekten (retromind und retromind-gaming) verbinden, danach neu deployen.
+            {tr(
+              <>
+                <strong>The counter has no storage yet.</strong> In Vercel under Storage, create a free Upstash Redis database,
+                connect it to both projects (retromind and retromind-gaming), then redeploy.
+              </>,
+              <>
+                <strong>Der Zähler hat noch keinen Speicher.</strong> In Vercel unter Storage eine kostenlose Upstash-Redis-Datenbank
+                anlegen und mit beiden Projekten (retromind und retromind-gaming) verbinden, danach neu deployen.
+              </>
+            )}
           </p>
         </section>
       )}
@@ -225,10 +239,20 @@ const UsageTab: React.FC<{ api: Api; isAdmin: boolean }> = ({ api, isAdmin }) =>
             <AppStats key={app} label={APP_LABELS[app]} data={load.data.apps![app]} month={load.data.month} />
           ))}
           <p className="note">
-            Gezählt wird anonym{load.data.since ? ` seit ${fmtDay(load.data.since)}` : ''}: ohne Cookies und ohne gespeicherte
-            IP-Adressen. Ein Besucher zählt einmal pro Tag und App. Wer an mehreren Tagen kommt, zählt an jedem Tag neu, deshalb
-            sind die Summen über mehrere Tage „Besuche“, keine verschiedenen Personen. Geräte zählen pro App-Start, Beliebtes
-            einmal pro Besuch und Eintrag; Geräte und Beliebtes gibt es seit dem 08.10.2026.
+            {tr(
+              <>
+                Counted anonymously{load.data.since ? ` since ${fmtDay(load.data.since)}` : ''}: no cookies and no stored IP
+                addresses. A visitor counts once per day and app. Anyone who comes back on several days counts again on each day, so
+                totals across several days are “visits,” not distinct people. Devices count per app start, favorites once per visit
+                and entry; devices and favorites have been tracked since 10/08/2026.
+              </>,
+              <>
+                Gezählt wird anonym{load.data.since ? ` seit ${fmtDay(load.data.since)}` : ''}: ohne Cookies und ohne gespeicherte
+                IP-Adressen. Ein Besucher zählt einmal pro Tag und App. Wer an mehreren Tagen kommt, zählt an jedem Tag neu, deshalb
+                sind die Summen über mehrere Tage „Besuche“, keine verschiedenen Personen. Geräte zählen pro App-Start, Beliebtes
+                einmal pro Besuch und Eintrag; Geräte und Beliebtes gibt es seit dem 08.10.2026.
+              </>
+            )}
           </p>
         </>
       )}
@@ -250,16 +274,21 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
     <section className="card">
       <h2>{label}</h2>
       <div className="tiles">
-        <Tile value={today?.visitors ?? 0} label="Besucher heute" />
-        <Tile value={sum(last7, 'visitors')} label="Besuche, 7 Tage" />
-        <Tile value={sum(days, 'visitors')} label={`Besuche, ${days.length} Tage`} />
-        <Tile value={data.totalStarts} label="App-Starts gesamt" />
+        <Tile value={today?.visitors ?? 0} label={tr('Visitors today', 'Besucher heute')} />
+        <Tile value={sum(last7, 'visitors')} label={tr('Visits, 7 days', 'Besuche, 7 Tage')} />
+        <Tile value={sum(days, 'visitors')} label={tr(`Visits, ${days.length} days`, `Besuche, ${days.length} Tage`)} />
+        <Tile value={data.totalStarts} label={tr('Total app starts', 'App-Starts gesamt')} />
       </div>
 
       <div className="chart-head">
-        <span>Besucher pro Tag</span>
+        <span>{tr('Visitors per day', 'Besucher pro Tag')}</span>
         <span className="readout" aria-live="polite">
-          {shown ? `${fmtDay(shown.day)}: ${shown.visitors} Besucher, ${shown.starts} Starts` : `max. ${max} an einem Tag`}
+          {shown
+            ? tr(
+                `${fmtDay(shown.day)}: ${shown.visitors} visitors, ${shown.starts} starts`,
+                `${fmtDay(shown.day)}: ${shown.visitors} Besucher, ${shown.starts} Starts`
+              )
+            : tr(`max. ${max} in one day`, `max. ${max} an einem Tag`)}
         </span>
       </div>
       <div className="bars" onPointerLeave={() => setHover(null)}>
@@ -270,7 +299,10 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
             onPointerEnter={() => setHover(i)}
             onFocus={() => setHover(i)}
             onBlur={() => setHover(null)}
-            aria-label={`${fmtDay(d.day)}: ${d.visitors} Besucher, ${d.starts} Starts`}
+            aria-label={tr(
+              `${fmtDay(d.day)}: ${d.visitors} visitors, ${d.starts} starts`,
+              `${fmtDay(d.day)}: ${d.visitors} Besucher, ${d.starts} Starts`
+            )}
           >
             <span style={{ height: `${(d.visitors / max) * 100}%` }} />
           </button>
@@ -278,17 +310,17 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
       </div>
       <div className="axis">
         <span>{fmtDay(days[0].day)}</span>
-        <span>heute</span>
+        <span>{tr('today', 'heute')}</span>
       </div>
 
       <details>
-        <summary>Als Tabelle</summary>
+        <summary>{tr('As a table', 'Als Tabelle')}</summary>
         <table>
           <thead>
             <tr>
-              <th>Tag</th>
-              <th>Besucher</th>
-              <th>App-Starts</th>
+              <th>{tr('Day', 'Tag')}</th>
+              <th>{tr('Visitors', 'Besucher')}</th>
+              <th>{tr('App starts', 'App-Starts')}</th>
             </tr>
           </thead>
           <tbody>
@@ -303,22 +335,24 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
         </table>
       </details>
 
-      <h3>Geräte, {days.length} Tage</h3>
+      <h3>{tr(`Devices, ${days.length} days`, `Geräte, ${days.length} Tage`)}</h3>
       {devTotal === 0 ? (
         <p className="note">Noch keine Daten.</p>
       ) : (
         <>
           <Rows
             rows={[
-              { key: 'Handy', count: dev.phone },
+              { key: tr('Phone', 'Handy'), count: dev.phone },
               { key: 'Tablet', count: dev.tablet },
               { key: 'Computer', count: dev.desktop },
             ]}
             total={devTotal}
           />
           <p className="note">
-            Davon als App installiert geöffnet: {dev.installed.toLocaleString('de-DE')} von {devTotal.toLocaleString('de-DE')}{' '}
-            Starts ({Math.round((dev.installed / devTotal) * 100)} %).
+            {tr(
+              `Opened as an installed app: ${dev.installed.toLocaleString(LOCALE)} of ${devTotal.toLocaleString(LOCALE)} starts (${Math.round((dev.installed / devTotal) * 100)}%).`,
+              `Davon als App installiert geöffnet: ${dev.installed.toLocaleString(LOCALE)} von ${devTotal.toLocaleString(LOCALE)} Starts (${Math.round((dev.installed / devTotal) * 100)} %).`
+            )}
           </p>
         </>
       )}
@@ -328,7 +362,7 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
           <h3>{TOP_LABELS[kind] ?? kind}</h3>
           <div className="top-grid">
             <TopList title={fmtMonth(month)} list={lists.month} kind={kind} />
-            <TopList title="Insgesamt" list={lists.all} kind={kind} />
+            <TopList title={tr('All time', 'Insgesamt')} list={lists.all} kind={kind} />
           </div>
         </div>
       ))}
@@ -359,8 +393,8 @@ const Rows: React.FC<{ rows: TopEntry[]; total?: number }> = ({ rows, total }) =
             <span style={{ width: `${(r.count / max) * 100}%` }} />
           </span>
           <span className="row-value">
-            {r.count.toLocaleString('de-DE')}
-            {total ? ` · ${Math.round((r.count / total) * 100)} %` : ''}
+            {r.count.toLocaleString(LOCALE)}
+            {total ? ` · ${Math.round((r.count / total) * 100)}${tr('', ' ')}%` : ''}
           </span>
         </li>
       ))}
@@ -370,7 +404,7 @@ const Rows: React.FC<{ rows: TopEntry[]; total?: number }> = ({ rows, total }) =
 
 const Tile: React.FC<{ value: number; label: string }> = ({ value, label }) => (
   <div className="tile">
-    <strong>{value.toLocaleString('de-DE')}</strong>
+    <strong>{value.toLocaleString(LOCALE)}</strong>
     <span>{label}</span>
   </div>
 );
@@ -378,9 +412,9 @@ const Tile: React.FC<{ value: number; label: string }> = ({ value, label }) => (
 // ---------------------------------------------------------------- Feedback
 
 const STATUS_LABELS: Record<FeedbackEntry['status'], string> = {
-  offen: 'Offen',
-  übernommen: 'Als To Do übernommen',
-  erledigt: 'Erledigt',
+  offen: tr('Open', 'Offen'),
+  übernommen: tr('Added as a To Do', 'Als To Do übernommen'),
+  erledigt: tr('Done', 'Erledigt'),
 };
 
 const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
@@ -423,7 +457,12 @@ const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
   if (!load.data.configured)
     return (
       <section className="card">
-        <p>Feedback-Speicher ist nicht eingerichtet (FEEDBACK_GITHUB_TOKEN fehlt in Vercel).</p>
+        <p>
+          {tr(
+            'Feedback storage isn’t set up (FEEDBACK_GITHUB_TOKEN is missing in Vercel).',
+            'Feedback-Speicher ist nicht eingerichtet (FEEDBACK_GITHUB_TOKEN fehlt in Vercel).'
+          )}
+        </p>
       </section>
     );
 
@@ -433,15 +472,18 @@ const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
     <>
       <div className="toolbar">
         <span className="who">
-          {open.length} offen · {load.data.entries.length} insgesamt
+          {tr(
+            `${open.length} open · ${load.data.entries.length} total`,
+            `${open.length} offen · ${load.data.entries.length} insgesamt`
+          )}
         </span>
         <button className="btn small" aria-pressed={showAll} onClick={() => setShowAll((v) => !v)}>
-          {showAll ? 'Nur offene' : 'Alle zeigen'}
+          {showAll ? tr('Open only', 'Nur offene') : tr('Show all', 'Alle zeigen')}
         </button>
       </div>
       {list.length === 0 && (
         <section className="card">
-          <p>{showAll ? 'Noch kein Feedback.' : 'Kein offenes Feedback. 🎉'}</p>
+          <p>{showAll ? tr('No feedback yet.', 'Noch kein Feedback.') : tr('No open feedback. 🎉', 'Kein offenes Feedback. 🎉')}</p>
         </section>
       )}
       {list.map((e) => (
@@ -453,19 +495,21 @@ const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
           {e.status === 'offen' && (
             <div className="actions">
               <button className="btn small" disabled={busy === e.id} onClick={() => act(e.id, 'accept')}>
-                Als To Do übernehmen
+                {tr('Add as To Do', 'Als To Do übernehmen')}
               </button>
               <button className="btn small" disabled={busy === e.id} onClick={() => act(e.id, 'done')}>
-                Erledigt
+                {tr('Done', 'Erledigt')}
               </button>
             </div>
           )}
-          {failed === e.id && <p className="note">Hat nicht geklappt. Bitte noch einmal versuchen.</p>}
+          {failed === e.id && <p className="note">{tr('That didn’t work. Please try again.', 'Hat nicht geklappt. Bitte noch einmal versuchen.')}</p>}
         </section>
       ))}
       <p className="note">
-        „Als To Do übernehmen“ schreibt den Punkt in die README. Das löst wie jede Code-Änderung neue Builds in Vercel aus.
-        „Erledigt“ ändert nur feedback.md und kostet keinen Build.
+        {tr(
+          '“Add as To Do” writes the item into the README. Like any code change, that triggers new builds in Vercel. “Done” only changes feedback.md and doesn’t cost a build.',
+          '„Als To Do übernehmen“ schreibt den Punkt in die README. Das löst wie jede Code-Änderung neue Builds in Vercel aus. „Erledigt“ ändert nur feedback.md und kostet keinen Build.'
+        )}
       </p>
     </>
   );
@@ -474,10 +518,10 @@ const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
 // ---------------------------------------------------------------- Live-Check
 
 const STATE_TEXT: Record<LiveDomain['state'], string> = {
-  current: '✓ Aktuell',
-  stale: '⚠ Veraltet',
-  unknown: '? Version unbekannt',
-  unreachable: '✕ Nicht erreichbar',
+  current: tr('✓ Up to date', '✓ Aktuell'),
+  stale: tr('⚠ Outdated', '⚠ Veraltet'),
+  unknown: tr('? Version unknown', '? Version unbekannt'),
+  unreachable: tr('✕ Unreachable', '✕ Nicht erreichbar'),
 };
 
 const LiveTab: React.FC<{ api: Api }> = ({ api }) => {
@@ -495,7 +539,7 @@ const LiveTab: React.FC<{ api: Api }> = ({ api }) => {
   return (
     <>
       <section className="card">
-        <p className="eyebrow">Neuester Stand im Code (master)</p>
+        <p className="eyebrow">{tr('Latest code (master)', 'Neuester Stand im Code (master)')}</p>
         <p>
           <code>{master.sha.slice(0, 7)}</code> · {master.message}
         </p>
@@ -506,23 +550,33 @@ const LiveTab: React.FC<{ api: Api }> = ({ api }) => {
           <h2>{d.label}</h2>
           <p className={`live ${d.state}`}>{STATE_TEXT[d.state]}</p>
           <p className="note">
-            {d.url.replace('https://', '')} liefert{' '}
-            {d.sha ? <code>{d.sha.slice(0, 7)}</code> : 'keine Versionsangabe'} aus
-            {d.state === 'stale' && d.behind > 0 ? `, ${d.behind} ${d.behind === 1 ? 'Commit' : 'Commits'} hinter master` : ''}.
+            {d.url.replace('https://', '')} {tr('serves', 'liefert')}{' '}
+            {d.sha ? <code>{d.sha.slice(0, 7)}</code> : tr('no version info', 'keine Versionsangabe')}
+            {tr('', ' aus')}
+            {d.state === 'stale' && d.behind > 0
+              ? tr(
+                  `, ${d.behind} ${d.behind === 1 ? 'commit' : 'commits'} behind master`,
+                  `, ${d.behind} ${d.behind === 1 ? 'Commit' : 'Commits'} hinter master`
+                )
+              : ''}
+            .
           </p>
           {d.state === 'stale' && (
             <p>
-              Hier fehlt eine neuere Version.{' '}
+              {tr('A newer version is missing here.', 'Hier fehlt eine neuere Version.')}{' '}
               <a href={`https://vercel.com/marco-schlude-s-projects/${d.project}/deployments`} target="_blank" rel="noreferrer">
-                In Vercel neu deployen
+                {tr('Redeploy in Vercel', 'In Vercel neu deployen')}
               </a>{' '}
-              (beim obersten Eintrag ⋯ → Redeploy). Wenn gerade erst gemergt wurde, kann der Build auch noch laufen.
+              {tr(
+                '(on the top entry ⋯ → Redeploy). If something was just merged, the build may still be running.',
+                '(beim obersten Eintrag ⋯ → Redeploy). Wenn gerade erst gemergt wurde, kann der Build auch noch laufen.'
+              )}
             </p>
           )}
         </section>
       ))}
       <button className="btn" onClick={fetchLive}>
-        Neu prüfen
+        {tr('Check again', 'Neu prüfen')}
       </button>
     </>
   );

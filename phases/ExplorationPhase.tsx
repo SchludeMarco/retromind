@@ -3,20 +3,29 @@ import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
 import { useWarmChrome } from '../lib/theme';
+import { tr } from '../lib/i18n';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
-  music: { icon: '🎵', label: 'Musik' },
-  tech: { icon: '📺', label: 'Technik' },
-  toy: { icon: '🧸', label: 'Spielzeug' },
-  lifestyle: { icon: '👗', label: 'Alltag & Mode' },
-  food: { icon: '🍬', label: 'Naschen & Essen' },
+  music: { icon: '🎵', label: tr('Music', 'Musik') },
+  tech: { icon: '📺', label: tr('Tech', 'Technik') },
+  toy: { icon: '🧸', label: tr('Toys', 'Spielzeug') },
+  lifestyle: { icon: '👗', label: tr('Everyday Life & Fashion', 'Alltag & Mode') },
+  food: { icon: '🍬', label: tr('Snacks & Food', 'Naschen & Essen') },
 };
 
 const AiNotice: React.FC<{ aiOff: boolean }> = ({ aiOff }) =>
   aiOff ? (
     <div className="mb-6 border-2 border-retro-ink bg-retro-highlight p-3 text-sm text-retro-ink">
-      <strong>Demo-Hinweis:</strong> Dieses Demo läuft ohne KI-Schlüssel. Erinnerungsfragen kommen aus der
-      Sammlung; Bildanalyse, Video und Chat-Begleiter sind deaktiviert.
+      {tr(
+        <>
+          <strong>Demo note:</strong> This demo runs without an AI key. Memory questions come from the
+          collection; photo analysis, video and the chat companion are turned off.
+        </>,
+        <>
+          <strong>Demo-Hinweis:</strong> Dieses Demo läuft ohne KI-Schlüssel. Erinnerungsfragen kommen aus der
+          Sammlung; Bildanalyse, Video und Chat-Begleiter sind deaktiviert.
+        </>
+      )}
     </div>
   ) : null;
 
@@ -78,7 +87,12 @@ export const ExplorationPhase: React.FC<{
   const categories = (Object.keys(CATEGORY) as BuzzwordCategory[]).sort(
     (a, b) => (userCategories.has(a) ? 0 : 1) - (userCategories.has(b) ? 0 : 1)
   );
-  const label = (id: string) => (isAnswered(id) ? '✓ Im Erinnerungsbuch' : clickedBuzzwords.includes(id) ? 'Weiter erzählen' : '+ Erinnern');
+  const label = (id: string) =>
+    isAnswered(id)
+      ? tr('✓ In your memory book', '✓ Im Erinnerungsbuch')
+      : clickedBuzzwords.includes(id)
+      ? tr('Keep telling', 'Weiter erzählen')
+      : tr('+ Remember', '+ Erinnern');
 
   const tileClass = warm
     ? 'retro-card bg-retro-paper-white p-5 text-left flex flex-col gap-1 min-h-[132px]'
@@ -87,9 +101,12 @@ export const ExplorationPhase: React.FC<{
   const overview = (
     <div className="space-y-8">
       <header className="space-y-3">
-        <h2 className="text-3xl md:text-4xl">Worauf hast du Lust?</h2>
+        <h2 className="text-3xl md:text-4xl">{tr('What are you in the mood for?', 'Worauf hast du Lust?')}</h2>
         <p className="text-retro-brown leading-relaxed max-w-prose">
-          Such dir eine Sparte aus. Darin findest du Dinge aus deiner Zeit und den Jahrzehnten drumherum.
+          {tr(
+            'Pick a category. Inside you’ll find things from your era and the decades around it.',
+            'Such dir eine Sparte aus. Darin findest du Dinge aus deiner Zeit und den Jahrzehnten drumherum.'
+          )}
         </p>
       </header>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -101,20 +118,25 @@ export const ExplorationPhase: React.FC<{
               <span aria-hidden="true" className="text-3xl mb-1">{CATEGORY[cat].icon}</span>
               <span className="font-bold text-lg leading-tight text-retro-ink">{CATEGORY[cat].label}</span>
               <span className="text-sm text-retro-brown">
-                {done > 0 ? `${done} von ${words.length} erinnert` : `${words.length} Erinnerungen warten`}
+                {done > 0
+                  ? tr(`${done} of ${words.length} remembered`, `${done} von ${words.length} erinnert`)
+                  : tr(`${words.length} memories waiting`, `${words.length} Erinnerungen warten`)}
               </span>
-              {userCategories.has(cat) && <span className="text-xs font-semibold text-[#34645c]">★ dein Interesse</span>}
+              {userCategories.has(cat) && <span className="text-xs font-semibold text-[#34645c]">{tr('★ your interest', '★ dein Interesse')}</span>}
             </button>
           );
         })}
         <button onClick={() => open('lab')} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📷</span>
-          <span className="font-bold text-lg leading-tight text-retro-ink">Foto-Labor</span>
-          <span className="text-sm text-retro-brown">Ein altes Foto mitbringen</span>
+          <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Photo Lab', 'Foto-Labor')}</span>
+          <span className="text-sm text-retro-brown">{tr('Bring an old photo', 'Ein altes Foto mitbringen')}</span>
         </button>
       </div>
       <p className="text-center text-sm text-retro-brown">
-        Insgesamt {memoriesCount} Erinnerung{memoriesCount === 1 ? '' : 'en'} in deinem Buch
+        {tr(
+          `${memoriesCount} memor${memoriesCount === 1 ? 'y' : 'ies'} in your book so far`,
+          `Insgesamt ${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'} in deinem Buch`
+        )}
       </p>
     </div>
   );
@@ -124,7 +146,7 @@ export const ExplorationPhase: React.FC<{
       onClick={() => open(null)}
       className={`font-semibold ${warm ? 'px-5 h-11 rounded-full bg-[#eee0d6] text-retro-ink' : 'px-4 py-2 border-2 border-retro-ink/30'}`}
     >
-      ← Alle Sparten
+      {tr('← All categories', '← Alle Sparten')}
     </button>
   );
 
@@ -143,7 +165,8 @@ export const ExplorationPhase: React.FC<{
         return (
           <section key={year} className="space-y-4">
             <h3 className="text-sm uppercase tracking-wide font-bold text-retro-brown">
-              {year}er{year === focusDecade && <span className="text-retro-amber-dark"> · deine Zeit</span>}
+              {tr(`${year}s`, `${year}er`)}
+              {year === focusDecade && <span className="text-retro-amber-dark">{tr(' · your era', ' · deine Zeit')}</span>}
             </h3>
             {warm ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -197,10 +220,13 @@ export const ExplorationPhase: React.FC<{
     {/* Memory lab */}
     <div className="retro-card p-6 md:p-8 bg-retro-cream-light border-4 border-double">
       <h2 className="text-3xl mb-3 flex items-center gap-3">
-        <span aria-hidden="true">🧪</span> Das Memory-Labor
+        <span aria-hidden="true">🧪</span> {tr('The Memory Lab', 'Das Memory-Labor')}
       </h2>
       <p className="mb-6 text-retro-brown italic">
-        Lade ein altes Foto hoch. Die KI beschreibt es dir – und du kannst die Beschreibung als Erinnerung behalten.
+        {tr(
+          'Upload an old photo. The AI describes it for you – and you can keep the description as a memory.',
+          'Lade ein altes Foto hoch. Die KI beschreibt es dir – und du kannst die Beschreibung als Erinnerung behalten.'
+        )}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -210,17 +236,17 @@ export const ExplorationPhase: React.FC<{
               <div className="retro-photo-frame inline-block">
                 <img
                   src={uploadedImage}
-                  alt="Dein hochgeladenes Foto"
+                  alt={tr('Your uploaded photo', 'Dein hochgeladenes Foto')}
                   className="max-h-56 border-2 border-retro-ink shadow-md retro-photo retro-photo-live"
                 />
               </div>
               <button onClick={onClearImage} className="mt-3 text-xs underline font-bold text-retro-brown">
-                Anderes Bild wählen
+                {tr('Choose a different picture', 'Anderes Bild wählen')}
               </button>
             </>
           ) : (
             <label className="retro-button bg-retro-ink text-white px-6 py-3 cursor-pointer font-bold">
-              Bild hochladen
+              {tr('Upload a picture', 'Bild hochladen')}
               <input type="file" className="hidden" accept="image/*" onChange={onImageUpload} />
             </label>
           )}
@@ -233,7 +259,7 @@ export const ExplorationPhase: React.FC<{
             onClick={onAnalyze}
             className={`retro-button py-3 font-bold w-full ${!uploadedImage || aiOff ? 'opacity-50 cursor-not-allowed bg-white' : 'bg-white hover:bg-gray-100'}`}
           >
-            Foto beschreiben lassen
+            {tr('Describe my photo', 'Foto beschreiben lassen')}
           </button>
           <div>
             <button
@@ -243,24 +269,26 @@ export const ExplorationPhase: React.FC<{
                 !uploadedImage || aiOff || videoStatus.status === 'generating' ? 'bg-gray-400 cursor-not-allowed' : 'bg-retro-amber hover:bg-retro-amber-dark'
               }`}
             >
-              {videoStatus.status === 'generating' ? 'KI arbeitet…' : 'Foto zum Leben erwecken (Video)'}
+              {videoStatus.status === 'generating'
+                ? tr('AI at work…', 'KI arbeitet…')
+                : tr('Bring the photo to life (video)', 'Foto zum Leben erwecken (Video)')}
             </button>
             <p className="text-xs mt-1 text-retro-tan text-center">
-              Video-Funktion benötigt ein Google-Projekt mit Billing.
+              {tr('The video feature needs a Google project with billing enabled.', 'Video-Funktion benötigt ein Google-Projekt mit Billing.')}
             </p>
           </div>
 
           {analysis && (
             <div className="p-4 bg-white border-2 border-retro-ink text-sm leading-relaxed">
-              <p className="font-bold mb-2 uppercase text-retro-amber-dark">Nostalgische Beschreibung</p>
+              <p className="font-bold mb-2 uppercase text-retro-amber-dark">{tr('Nostalgic description', 'Nostalgische Beschreibung')}</p>
               <div className="whitespace-pre-wrap">{analysis}</div>
-              {analysis !== 'Analysiere…' && (
+              {analysis !== tr('Analyzing…', 'Analysiere…') && (
                 <button
                   onClick={onSaveAnalysis}
                   disabled={analysisSaved}
                   className="mt-3 text-xs font-bold uppercase border-2 border-retro-ink px-3 py-1.5 bg-retro-cream disabled:opacity-50"
                 >
-                  {analysisSaved ? '✓ Im Buch gespeichert' : 'Zur Erinnerung hinzufügen'}
+                  {analysisSaved ? tr('✓ Saved in your book', '✓ Im Buch gespeichert') : tr('Add as a memory', 'Zur Erinnerung hinzufügen')}
                 </button>
               )}
             </div>
@@ -269,14 +297,18 @@ export const ExplorationPhase: React.FC<{
           {videoStatus.status !== 'idle' && (
             <div className="p-4 bg-retro-ink text-white border-2 border-white">
               <p className="text-xs font-bold uppercase mb-1">
-                {videoStatus.status === 'generating' ? 'Filmrolle wird entwickelt…' : videoStatus.status === 'done' ? 'Fertig!' : 'Hinweis'}
+                {videoStatus.status === 'generating'
+                  ? tr('Developing the film roll…', 'Filmrolle wird entwickelt…')
+                  : videoStatus.status === 'done'
+                  ? tr('Done!', 'Fertig!')
+                  : tr('Note', 'Hinweis')}
               </p>
               <p className="text-xs opacity-90">{videoStatus.message}</p>
               {videoStatus.url && (
                 <div className="mt-3">
                   <video src={videoStatus.url} controls muted={muted} className="w-full border-2 border-white" />
                   <a href={videoStatus.url} className="text-xs underline mt-2 block font-bold text-orange-200">
-                    Video herunterladen
+                    {tr('Download video', 'Video herunterladen')}
                   </a>
                 </div>
               )}
@@ -303,10 +335,10 @@ export const ExplorationPhase: React.FC<{
 
     <div className="flex flex-wrap justify-center gap-4 pt-6">
       <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
-        ← Zu den Impressionen
+        {tr('← Back to the impressions', '← Zu den Impressionen')}
       </button>
       <button onClick={onNext} className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-        Weiter zum Tagebuch ({memoriesCount})
+        {tr('On to the diary', 'Weiter zum Tagebuch')} ({memoriesCount})
       </button>
     </div>
   </div>

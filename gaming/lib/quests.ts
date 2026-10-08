@@ -1,3 +1,5 @@
+import { tr } from '../../lib/i18n';
+
 // Quests and the prize counter: every day three small tasks in the hall and
 // one bigger one per week. Each finished quest pays tokens (Spielmarken),
 // which the prize counter trades for extra designs and hub tunes, like the
@@ -15,21 +17,21 @@ export interface Quest {
 }
 
 const DAILY: Quest[] = [
-  { id: 'discover', event: 'discover', goal: 3, reward: 15, text: 'Entdecke 3 Games, die du noch nie geöffnet hast.' },
-  { id: 'open', event: 'open', goal: 5, reward: 10, text: 'Schau dir 5 Games genauer an.' },
-  { id: 'coin', event: 'coin', goal: 2, reward: 10, text: 'Wirf 2-mal eine Münze ein (Insert Coin).' },
-  { id: 'search', event: 'search', goal: 2, reward: 10, text: 'Such 2-mal nach einem Game.' },
-  { id: 'minigame', event: 'minigame', goal: 1, reward: 20, text: 'Schaff ein Minispiel in der Chill-Ecke.' },
-  { id: 'favorite', event: 'favorite', goal: 1, reward: 15, text: 'Pack ein Game in deinen Stash.' },
-  { id: 'console', event: 'console', goal: 2, reward: 10, text: 'Stöber bei 2 Konsolen (Welche Kiste?).' },
-  { id: 'guru', event: 'guru', goal: 1, reward: 15, text: 'Stell dem Guru eine Frage.' },
+  { id: 'discover', event: 'discover', goal: 3, reward: 15, text: tr('Discover 3 games you’ve never opened before.', 'Entdecke 3 Games, die du noch nie geöffnet hast.') },
+  { id: 'open', event: 'open', goal: 5, reward: 10, text: tr('Take a closer look at 5 games.', 'Schau dir 5 Games genauer an.') },
+  { id: 'coin', event: 'coin', goal: 2, reward: 10, text: tr('Drop a quarter in the slot twice (Insert Coin).', 'Wirf 2-mal eine Münze ein (Insert Coin).') },
+  { id: 'search', event: 'search', goal: 2, reward: 10, text: tr('Search for a game twice.', 'Such 2-mal nach einem Game.') },
+  { id: 'minigame', event: 'minigame', goal: 1, reward: 20, text: tr('Beat a minigame in the Chill Zone.', 'Schaff ein Minispiel in der Chill-Ecke.') },
+  { id: 'favorite', event: 'favorite', goal: 1, reward: 15, text: tr('Put a game in your stash.', 'Pack ein Game in deinen Stash.') },
+  { id: 'console', event: 'console', goal: 2, reward: 10, text: tr('Browse 2 consoles (Which System?).', 'Stöber bei 2 Konsolen (Welche Kiste?).') },
+  { id: 'guru', event: 'guru', goal: 1, reward: 15, text: tr('Ask the Guru a question.', 'Stell dem Guru eine Frage.') },
 ];
 
 const WEEKLY: Quest[] = [
-  { id: 'w-discover', event: 'discover', goal: 15, reward: 60, text: 'Entdecke diese Woche 15 neue Games.' },
-  { id: 'w-minigame', event: 'minigame', goal: 5, reward: 60, text: 'Schaff diese Woche 5 Minispiele.' },
-  { id: 'w-open', event: 'open', goal: 25, reward: 50, text: 'Schau dir diese Woche 25 Games an.' },
-  { id: 'w-finish', event: 'finish', goal: 1, reward: 50, text: 'Markier diese Woche ein Game als durchgezockt.' },
+  { id: 'w-discover', event: 'discover', goal: 15, reward: 60, text: tr('Discover 15 new games this week.', 'Entdecke diese Woche 15 neue Games.') },
+  { id: 'w-minigame', event: 'minigame', goal: 5, reward: 60, text: tr('Beat 5 minigames this week.', 'Schaff diese Woche 5 Minispiele.') },
+  { id: 'w-open', event: 'open', goal: 25, reward: 50, text: tr('Check out 25 games this week.', 'Schau dir diese Woche 25 Games an.') },
+  { id: 'w-finish', event: 'finish', goal: 1, reward: 50, text: tr('Mark a game as beaten this week.', 'Markier diese Woche ein Game als durchgezockt.') },
 ];
 
 export interface QuestLog {
@@ -132,11 +134,11 @@ export interface Prize {
 }
 
 export const PRIZES: Prize[] = [
-  { id: 'vapor', kind: 'palette', label: 'VAPORWAVE', text: 'Design in Pink, Lila und Türkis wie ein 90er-Sonnenuntergang.', price: 40 },
-  { id: 'virtualboy', kind: 'palette', label: 'VIRTUAL BOY', text: 'Design in Rot auf Schwarz wie Nintendos legendärer Flop.', price: 50 },
-  { id: 'space', kind: 'track', label: 'WELTRAUM', text: 'Hallen-Musik wie ein Shoot ’em up im All.', price: 30 },
-  { id: 'boss', kind: 'track', label: 'BOSSKAMPF', text: 'Hallen-Musik für den Endgegner: hektisch und dramatisch.', price: 30 },
-  { id: 'party', kind: 'effect', label: 'PARTY-LOGO', text: 'Das Logo oben leuchtet dauerhaft in allen Regenbogenfarben.', price: 35 },
+  { id: 'vapor', kind: 'palette', label: 'VAPORWAVE', text: tr('A design in pink, purple and teal like a ’90s sunset.', 'Design in Pink, Lila und Türkis wie ein 90er-Sonnenuntergang.'), price: 40 },
+  { id: 'virtualboy', kind: 'palette', label: 'VIRTUAL BOY', text: tr('A design in red on black like Nintendo’s legendary flop.', 'Design in Rot auf Schwarz wie Nintendos legendärer Flop.'), price: 50 },
+  { id: 'space', kind: 'track', label: tr('OUTER SPACE', 'WELTRAUM'), text: tr('Hall music like a shoot ’em up in space.', 'Hallen-Musik wie ein Shoot ’em up im All.'), price: 30 },
+  { id: 'boss', kind: 'track', label: tr('BOSS FIGHT', 'BOSSKAMPF'), text: tr('Hall music for the final boss: frantic and dramatic.', 'Hallen-Musik für den Endgegner: hektisch und dramatisch.'), price: 30 },
+  { id: 'party', kind: 'effect', label: tr('PARTY LOGO', 'PARTY-LOGO'), text: tr('The logo up top glows in every color of the rainbow, all the time.', 'Das Logo oben leuchtet dauerhaft in allen Regenbogenfarben.'), price: 35 },
 ];
 
 /** Designs and tunes that are only available from the prize counter. */

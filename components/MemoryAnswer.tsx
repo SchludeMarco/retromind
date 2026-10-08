@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { tr, LOCALE } from '../lib/i18n';
 
 // Web Speech API is prefixed in most browsers and missing in others.
 const SpeechRecognitionImpl: any =
@@ -22,7 +23,7 @@ export const MemoryAnswer: React.FC<{
       return;
     }
     const rec = new SpeechRecognitionImpl();
-    rec.lang = 'de-DE';
+    rec.lang = LOCALE;
     rec.interimResults = false;
     rec.continuous = false;
     rec.onresult = (e: any) => {
@@ -54,7 +55,7 @@ export const MemoryAnswer: React.FC<{
             listening ? 'bg-retro-amber text-white animate-pulse' : 'bg-white text-retro-ink'
           }`}
         >
-          {listening ? '● Höre zu…' : '🎙 Antwort sprechen'}
+          {listening ? tr('● Listening…', '● Höre zu…') : tr('🎙 Speak your answer', '🎙 Antwort sprechen')}
         </button>
       )}
     </div>

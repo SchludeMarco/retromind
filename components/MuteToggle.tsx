@@ -1,5 +1,6 @@
 import React from 'react';
 import { toggleMuted, useMuted } from '../lib/mute';
+import { tr } from '../lib/i18n';
 
 // The app-wide speaker switch (see lib/mute): silences the boot chime,
 // welcome voice, click sounds, Spotify and videos. Drawn as an SVG, since
@@ -7,7 +8,7 @@ import { toggleMuted, useMuted } from '../lib/mute';
 // splash screen so sound can be switched off before the first note.
 export const MuteToggle: React.FC = () => {
   const muted = useMuted();
-  const label = muted ? 'Ton einschalten' : 'Stummschalten';
+  const label = muted ? tr('Turn sound on', 'Ton einschalten') : tr('Mute', 'Stummschalten');
   return (
     <button
       onClick={toggleMuted}

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { KIND_ICON, MAKERS, PLATFORMS, PlatformInfo, photoUrl } from '../data/platforms';
+import { KIND_ICON, MAKERS, PLATFORMS, PlatformInfo, photoUrl, platformLabel } from '../data/platforms';
+import { tr } from '../../lib/i18n';
 
 // The console shelf: one tap opens every system, grouped by maker like the
 // shelves in an old game shop. Each tile is a photo of the console (from
@@ -82,7 +83,7 @@ export const ConsolePicker: React.FC<{
       <span className="console-pic">
         <Photo file={photo} icon={icon} />
       </span>
-      <span className="console-name">{id}</span>
+      <span className="console-name">{platformLabel(id)}</span>
       {sub && <span className="console-sub">{sub}</span>}
     </button>
   );
@@ -90,11 +91,11 @@ export const ConsolePicker: React.FC<{
   const shelves = [
     ...MAKERS.map((m) => {
       const list = PLATFORMS.filter((p) => p.maker === m.id && matches(query, p, m.label)).sort((a, b) => a.from - b.from);
-      return { id: m.id as string, label: m.label, ids: list.map((p) => p.id), tiles: list.map((p) => tile(p.id, KIND_ICON[p.kind], p.color, `seit ${p.from}`, p.photo)) };
+      return { id: m.id as string, label: m.label, ids: list.map((p) => p.id), tiles: list.map((p) => tile(p.id, KIND_ICON[p.kind], p.color, tr(`since ${p.from}`, `seit ${p.from}`), p.photo)) };
     }),
     (() => {
-      const list = extras.filter((id) => matches(query, { id }, 'Sonstiges'));
-      return { id: 'extras', label: 'Sonstiges', ids: list, tiles: list.map((id) => tile(id, '🌐', '#b03a6f', 'nur Schätze')) };
+      const list = extras.filter((id) => matches(query, { id }, `${tr('Other', 'Sonstiges')} ${platformLabel(id)}`));
+      return { id: 'extras', label: tr('Other', 'Sonstiges'), ids: list, tiles: list.map((id) => tile(id, '🌐', '#b03a6f', tr('treasures only', 'nur Schätze'))) };
     })(),
   ].filter((s) => s.ids.length > 0);
   const hits = shelves.flatMap((s) => s.ids);
@@ -105,12 +106,12 @@ export const ConsolePicker: React.FC<{
         className="dialog console-picker"
         role="dialog"
         aria-modal="true"
-        aria-label="Konsole wählen"
+        aria-label={tr('Choose a console', 'Konsole wählen')}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="console-head">
-          <h2 className="pixel-font">WELCHE KISTE?</h2>
-          <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
+          <h2 className="pixel-font">{tr('WHICH SYSTEM?', 'WELCHE KISTE?')}</h2>
+          <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
             ✕
           </button>
           <div className="search console-search">
@@ -124,13 +125,13 @@ export const ConsolePicker: React.FC<{
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && hits.length === 1) onPick(hits[0]);
               }}
-              placeholder="Kiste suchen, z. B. PS2, Sega, Game Boy …"
-              aria-label="Konsole suchen"
+              placeholder={tr('Search systems, e.g. PS2, Sega, Game Boy …', 'Kiste suchen, z. B. PS2, Sega, Game Boy …')}
+              aria-label={tr('Search consoles', 'Konsole suchen')}
               enterKeyHint="go"
               data-nav
             />
             {query && (
-              <button className="px-btn" onClick={() => (setQuery(''), field.current?.focus())} aria-label="Suche leeren" data-nav>
+              <button className="px-btn" onClick={() => (setQuery(''), field.current?.focus())} aria-label={tr('Clear search', 'Suche leeren')} data-nav>
                 ✕
               </button>
             )}
@@ -139,9 +140,9 @@ export const ConsolePicker: React.FC<{
         {!query && (
           <>
             <button className="px-btn big console-all" aria-pressed={current === null} onClick={() => onPick(null)} data-nav>
-              ★ ALLE KONSOLEN
+              {tr('★ ALL CONSOLES', '★ ALLE KONSOLEN')}
             </button>
-            <p className="dim console-credit">Fotos: Wikimedia Commons (freie Lizenzen)</p>
+            <p className="dim console-credit">{tr('Photos: Wikimedia Commons (free licenses)', 'Fotos: Wikimedia Commons (freie Lizenzen)')}</p>
           </>
         )}
         {shelves.map((shelf) => (
@@ -152,9 +153,9 @@ export const ConsolePicker: React.FC<{
         ))}
         {query && hits.length === 0 && (
           <p className="dim console-none">
-            Keine Kiste passt zu „{query}“. Ätzend.{' '}
+            {tr(<>No system matches “{query}”. Bummer.</>, <>Keine Kiste passt zu „{query}“. Ätzend.</>)}{' '}
             <button className="px-btn" onClick={() => setQuery('')} data-nav>
-              ALLE ZEIGEN
+              {tr('SHOW ALL', 'ALLE ZEIGEN')}
             </button>
           </p>
         )}

@@ -30,7 +30,7 @@ async function readJsonBody(req) {
   }
 }
 
-const FAILED = { error: "upstream", message: "Der Feedback-Versand ist fehlgeschlagen." };
+const FAILED = { error: "upstream", message: "Sending your feedback failed." };
 
 async function sendMail({ apiKey, toEmail, categoryLabel, text, contact, approveUrl }) {
   const bodyLines = [
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
     res.status(503).json({
       error: "not_configured",
       message:
-        "Dieses Demo läuft ohne konfigurierten Feedback-Versand – dein Feedback kann hier nicht zugestellt werden.",
+        "This demo runs without feedback delivery set up – your feedback can’t be delivered here.",
     });
     return;
   }

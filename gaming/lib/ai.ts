@@ -1,4 +1,5 @@
 import { ChatMessage } from '../../types';
+import { LANG, tr } from '../../lib/i18n';
 
 // Gaming-specific calls to the shared /api/gemini proxy. The key stays on
 // the server; without it these calls fail soft and the UI says so.
@@ -21,11 +22,11 @@ async function call(action: string, payload: unknown): Promise<any> {
   const res = await fetch('/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, payload }),
+    body: JSON.stringify({ action, payload, lang: LANG }),
   });
   const data = await res.json().catch(() => ({}));
-  if (res.status === 503 || res.status === 404) throw new AiUnavailableError(data?.message || 'KI nicht verfügbar');
-  if (!res.ok) throw new Error(data?.message || `API-Fehler ${res.status}`);
+  if (res.status === 503 || res.status === 404) throw new AiUnavailableError(data?.message || tr('AI not available', 'KI nicht verfügbar'));
+  if (!res.ok) throw new Error(data?.message || tr(`API error ${res.status}`, `API-Fehler ${res.status}`));
   return data;
 }
 

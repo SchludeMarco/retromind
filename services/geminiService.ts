@@ -1,4 +1,5 @@
 import { ChatMessage } from "../types";
+import { LANG, tr } from "../lib/i18n";
 
 // Thin client for the /api/gemini serverless proxy. The API key lives on the
 // server only; this module never sees it.
@@ -13,11 +14,11 @@ async function callApi(action: string, payload?: unknown): Promise<any> {
   const res = await fetch("/api/gemini", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, payload }),
+    body: JSON.stringify({ action, payload, lang: LANG }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const err = new Error(data?.message || `API-Fehler ${res.status}`) as ApiError;
+    const err = new Error(data?.message || tr(`API error ${res.status}`, `API-Fehler ${res.status}`)) as ApiError;
     err.code = data?.error;
     throw err;
   }
@@ -77,12 +78,18 @@ export async function analyzeMemoryImage(
 ): Promise<string> {
   try {
     const { text } = await callApi("analyzeImage", { imageBase64, mimeType });
-    return (text as string) || "Ich konnte dieses Bild leider nicht beschreiben.";
+    return (text as string) || tr("Sorry, I couldn't describe this picture.", "Ich konnte dieses Bild leider nicht beschreiben.");
   } catch (e) {
     if ((e as ApiError).code === "not_configured") {
-      return "Die Bildanalyse ist in diesem Demo nicht aktiv (kein Server-Schlüssel).";
+      return tr(
+        "Photo analysis isn't active in this demo (no server key).",
+        "Die Bildanalyse ist in diesem Demo nicht aktiv (kein Server-Schlüssel)."
+      );
     }
-    return "Die Bildanalyse ist gerade fehlgeschlagen. Versuch es später noch einmal.";
+    return tr(
+      "Photo analysis just failed. Please try again later.",
+      "Die Bildanalyse ist gerade fehlgeschlagen. Versuch es später noch einmal."
+    );
   }
 }
 

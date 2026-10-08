@@ -5,6 +5,7 @@ import { Sudoku, sudokuBest } from './minigames/Sudoku';
 import { Blocks, blocksBest } from './minigames/Blocks';
 import { Pinball, pinballBest } from './minigames/Pinball';
 import { PacMan, pacmanBest } from './minigames/PacMan';
+import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
@@ -14,54 +15,64 @@ import { PacMan, pacmanBest } from './minigames/PacMan';
 
 export type { MiniGameId };
 
-export const MINI_GAMES: { id: MiniGameId; title: string; icon: string; text: string; best: (n: number) => string }[] = [
+export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the stable key for usage stats. */ statKey: string; icon: string; text: string; best: (n: number) => string }[] = [
   {
     id: 'memory',
-    title: 'PIXEL-MEMORY',
+    title: tr('PIXEL MEMORY', 'PIXEL-MEMORY'),
+    statKey: 'PIXEL-MEMORY',
     icon: '👾',
-    text: 'Karten umdrehen, Pärchen finden. Ganz ohne Zeitdruck.',
-    best: (n) => `Bestes Spiel: ${n} Züge`,
+    text: tr('Flip cards, find pairs. No time pressure at all.', 'Karten umdrehen, Pärchen finden. Ganz ohne Zeitdruck.'),
+    best: (n) => tr(`Best game: ${n} moves`, `Bestes Spiel: ${n} Züge`),
   },
   {
     id: 'puzzle',
-    title: 'SCHIEBEPUZZLE',
+    title: tr('SLIDE PUZZLE', 'SCHIEBEPUZZLE'),
+    statKey: 'SCHIEBEPUZZLE',
     icon: '🧩',
-    text: 'Plättchen 1 bis 8 wieder in die richtige Reihenfolge schieben, wie beim Taschenpuzzle von früher.',
-    best: (n) => `Bestes Spiel: ${n} Züge`,
+    text: tr('Slide tiles 1 to 8 back into the right order, just like the pocket puzzles of old.', 'Plättchen 1 bis 8 wieder in die richtige Reihenfolge schieben, wie beim Taschenpuzzle von früher.'),
+    best: (n) => tr(`Best game: ${n} moves`, `Bestes Spiel: ${n} Züge`),
   },
   {
     id: 'senso',
-    title: 'SENSO',
+    title: tr('SIMON', 'SENSO'),
+    statKey: 'SENSO',
     icon: '🔴',
-    text: 'Melodie anhören und nachtippen. Jede Runde kommt ein Ton dazu.',
-    best: (n) => `Rekord: Runde ${n}`,
+    text: tr('Listen to the tune and tap it back. Every round adds a note.', 'Melodie anhören und nachtippen. Jede Runde kommt ein Ton dazu.'),
+    best: (n) => tr(`Record: round ${n}`, `Rekord: Runde ${n}`),
   },
   {
     id: 'sudoku',
     title: 'SUDOKU',
+    statKey: 'SUDOKU',
     icon: '🔢',
-    text: 'Die Zahlen 1 bis 9 in jede Zeile, Spalte und jedes Kästchen. Jedes Rätsel ist neu.',
+    text: tr('The numbers 1 to 9 in every row, column and box. Every puzzle is new.', 'Die Zahlen 1 bis 9 in jede Zeile, Spalte und jedes Kästchen. Jedes Rätsel ist neu.'),
     best: sudokuBest,
   },
   {
     id: 'blocks',
-    title: 'BLOCKSTAPLER',
+    title: tr('BLOCK STACKER', 'BLOCKSTAPLER'),
+    statKey: 'BLOCKSTAPLER',
     icon: '🧱',
-    text: 'Fallende Blöcke zu vollen Reihen stapeln, wie beim Game-Boy-Klassiker. Startet gemütlich.',
+    text: tr('Stack falling blocks into full rows, like the Game Boy classic. Starts out nice and easy.', 'Fallende Blöcke zu vollen Reihen stapeln, wie beim Game-Boy-Klassiker. Startet gemütlich.'),
     best: blocksBest,
   },
   {
     id: 'pinball',
-    title: 'FLIPPER',
+    title: tr('PINBALL', 'FLIPPER'),
+    statKey: 'FLIPPER',
     icon: '🎱',
-    text: 'Kleiner Flippertisch mit drei Kugeln. Linke und rechte Bildschirmhälfte bewegen die Flipper.',
+    text: tr('A little pinball table with three balls. The left and right halves of the screen move the flippers.', 'Kleiner Flippertisch mit drei Kugeln. Linke und rechte Bildschirmhälfte bewegen die Flipper.'),
     best: pinballBest,
   },
   {
     id: 'pacman',
-    title: 'PAC-MAMPF',
+    title: tr('PAC-MUNCH', 'PAC-MAMPF'),
+    statKey: 'PAC-MAMPF',
     icon: '🟡',
-    text: 'Punkte futtern, Geistern ausweichen, nach der Kraftpille den Spieß umdrehen. Wie Pac-Man am Automaten. Wischen oder Pfeiltasten.',
+    text: tr(
+      'Gobble dots, dodge ghosts, turn the tables after a power pellet. Just like Pac-Man at the arcade. Swipe or use the arrow keys.',
+      'Punkte futtern, Geistern ausweichen, nach der Kraftpille den Spieß umdrehen. Wie Pac-Man am Automaten. Wischen oder Pfeiltasten.'
+    ),
     best: pacmanBest,
   },
 ];
@@ -115,7 +126,7 @@ const Memory: React.FC<{ onWin: () => void }> = ({ onWin }) => {
 
   return (
     <>
-      <p className="mini-score">Züge: {moves} · Pärchen: {found.length}/{MEMORY_ICONS.length}</p>
+      <p className="mini-score">{tr('Moves', 'Züge')}: {moves} · {tr('Pairs', 'Pärchen')}: {found.length}/{MEMORY_ICONS.length}</p>
       <div className="memory-grid">
         {cards.map((icon, i) => {
           const shown = open.includes(i) || found.includes(icon);
@@ -125,14 +136,14 @@ const Memory: React.FC<{ onWin: () => void }> = ({ onWin }) => {
               className={`memory-card${shown ? ' shown' : ''}${found.includes(icon) ? ' found' : ''}`}
               onClick={() => flip(i)}
               data-nav
-              aria-label={shown ? icon : 'verdeckte Karte'}
+              aria-label={shown ? icon : tr('face-down card', 'verdeckte Karte')}
             >
               <span aria-hidden="true">{shown ? icon : '?'}</span>
             </button>
           );
         })}
       </div>
-      {result && <Done text={`Alle Pärchen in ${moves} Zügen gefunden.`} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Found all pairs in ${moves} moves.`, `Alle Pärchen in ${moves} Zügen gefunden.`)} record={result.record} onAgain={again} />}
     </>
   );
 };
@@ -201,7 +212,7 @@ const Puzzle: React.FC<{ onWin: () => void }> = ({ onWin }) => {
 
   return (
     <>
-      <p className="mini-score">Züge: {moves} · Ziel: 1 bis 8 der Reihe nach</p>
+      <p className="mini-score">{tr('Moves', 'Züge')}: {moves} · {tr('Goal: 1 to 8 in order', 'Ziel: 1 bis 8 der Reihe nach')}</p>
       <div className="puzzle-grid">
         {tiles.map((t, i) =>
           t ? (
@@ -211,7 +222,7 @@ const Puzzle: React.FC<{ onWin: () => void }> = ({ onWin }) => {
               style={{ gridRow: Math.floor(i / SIZE) + 1, gridColumn: (i % SIZE) + 1 }}
               onClick={() => slide(i)}
               data-nav
-              aria-label={`Plättchen ${t}`}
+              aria-label={tr(`Tile ${t}`, `Plättchen ${t}`)}
             >
               {t}
             </button>
@@ -220,7 +231,7 @@ const Puzzle: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           )
         )}
       </div>
-      {result && <Done text={`In ${moves} Zügen sortiert.`} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Sorted in ${moves} moves.`, `In ${moves} Zügen sortiert.`)} record={result.record} onAgain={again} />}
     </>
   );
 };
@@ -228,10 +239,10 @@ const Puzzle: React.FC<{ onWin: () => void }> = ({ onWin }) => {
 /* ------------------------------------------------------------------ Senso */
 
 const PADS = [
-  { name: 'Grün', note: 'E4' },
-  { name: 'Rot', note: 'A4' },
-  { name: 'Gelb', note: 'C#5' },
-  { name: 'Blau', note: 'E5' },
+  { name: tr('Green', 'Grün'), note: 'E4' },
+  { name: tr('Red', 'Rot'), note: 'A4' },
+  { name: tr('Yellow', 'Gelb'), note: 'C#5' },
+  { name: tr('Blue', 'Blau'), note: 'E5' },
 ];
 
 const Senso: React.FC<{ onWin: () => void }> = ({ onWin }) => {
@@ -303,12 +314,12 @@ const Senso: React.FC<{ onWin: () => void }> = ({ onWin }) => {
     <>
       <p className="mini-score" aria-live="polite">
         {phase === 'idle'
-          ? 'Hör gut zu und tippe die Farben in derselben Reihenfolge nach.'
+          ? tr('Listen closely and tap the colors back in the same order.', 'Hör gut zu und tippe die Farben in derselben Reihenfolge nach.')
           : phase === 'show'
-            ? `Runde ${seq.length}: hör zu …`
+            ? tr(`Round ${seq.length}: listen …`, `Runde ${seq.length}: hör zu …`)
             : phase === 'input'
-              ? `Runde ${seq.length}: du bist dran (${pos}/${seq.length})`
-              : `Runde ${seq.length} war knapp daneben.`}
+              ? tr(`Round ${seq.length}: your turn (${pos}/${seq.length})`, `Runde ${seq.length}: du bist dran (${pos}/${seq.length})`)
+              : tr(`Round ${seq.length} was a near miss.`, `Runde ${seq.length} war knapp daneben.`)}
       </p>
       <div className={`senso-board${phase === 'input' ? ' ready' : ''}`}>
         {PADS.map((p, i) => (
@@ -331,7 +342,11 @@ const Senso: React.FC<{ onWin: () => void }> = ({ onWin }) => {
       )}
       {phase === 'over' && result && (
         <Done
-          text={result.round ? `Du hast ${result.round} ${result.round === 1 ? 'Runde' : 'Runden'} geschafft.` : 'Gleich nochmal, das wird!'}
+          text={
+            result.round
+              ? tr(`You made it through ${result.round} ${result.round === 1 ? 'round' : 'rounds'}.`, `Du hast ${result.round} ${result.round === 1 ? 'Runde' : 'Runden'} geschafft.`)
+              : tr('Go again, you’ve got this!', 'Gleich nochmal, das wird!')
+          }
           record={result.record}
           onAgain={start}
         />
@@ -347,7 +362,7 @@ export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void }> = ({
   const bests = loadBests();
   return (
     <>
-      <p className="dim archive-count">Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.</p>
+      <p className="dim archive-count">{tr('Take a quick break: mini games to unwind, no ads and no sign-up.', 'Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.')}</p>
       <div className="grid mini-list" style={{ marginTop: 12 }}>
         {MINI_GAMES.map((g) => (
           <button key={g.id} className="panel mini-card" onClick={() => onPick(g.id)} data-nav>
@@ -379,7 +394,7 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
         <h2 className="pixel-font">
           {game.icon} {game.title}
         </h2>
-        <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
+        <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
         {id === 'memory' ? (

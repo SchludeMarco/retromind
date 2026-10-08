@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../types';
 import { SFX } from '../lib/sfx';
 import { sendChatMessage } from '../services/geminiService';
+import { tr } from '../lib/i18n';
 
 export const ChatBot: React.FC<{
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const ChatBot: React.FC<{
       const reply = await sendChatMessage(next);
       setMessages((m) => [...m, { role: 'model', text: reply || '…' }]);
     } catch {
-      setMessages((m) => [...m, { role: 'model', text: 'Entschuldige, die Verbindung klemmt gerade.' }]);
+      setMessages((m) => [...m, { role: 'model', text: tr('Sorry, the connection is acting up right now.', 'Entschuldige, die Verbindung klemmt gerade.') }]);
     } finally {
       setIsTyping(false);
     }
@@ -42,18 +43,21 @@ export const ChatBot: React.FC<{
   return (
     <div className="rm-chat-panel rm-fixed fixed bottom-36 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-retro-cream flex flex-col animate-fadeIn overflow-hidden">
       <div className="bg-retro-ink text-white p-3 flex justify-between items-center">
-        <span className="font-bold text-sm">Nostalgie-Begleiter</span>
-        <button onClick={onClose} aria-label="Chat schließen" className="text-lg leading-none px-1">
+        <span className="font-bold text-sm">{tr('Nostalgia Buddy', 'Nostalgie-Begleiter')}</span>
+        <button onClick={onClose} aria-label={tr('Close chat', 'Chat schließen')} className="text-lg leading-none px-1">
           ✕
         </button>
       </div>
       <div ref={scrollRef} className="flex-grow p-4 overflow-y-auto space-y-3 bg-retro-cream-light">
         {disabled ? (
           <p className="text-xs text-retro-brown">
-            Der Chat-Begleiter braucht den KI-Server und ist in diesem Demo gerade nicht verfügbar.
+            {tr(
+              'The chat buddy needs the AI server and isn’t available in this demo right now.',
+              'Der Chat-Begleiter braucht den KI-Server und ist in diesem Demo gerade nicht verfügbar.'
+            )}
           </p>
         ) : messages.length === 0 ? (
-          <p className="text-xs text-retro-brown">Frag mich etwas über „damals" – oder erzähl einfach los.</p>
+          <p className="text-xs text-retro-brown">{tr('Ask me anything about “back then” – or just start telling.', 'Frag mich etwas über „damals" – oder erzähl einfach los.')}</p>
         ) : (
           messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -67,7 +71,7 @@ export const ChatBot: React.FC<{
             </div>
           ))
         )}
-        {isTyping && <div className="text-xs text-retro-brown animate-pulse">Schreibt…</div>}
+        {isTyping && <div className="text-xs text-retro-brown animate-pulse">{tr('Typing…', 'Schreibt…')}</div>}
       </div>
       {!disabled && (
         <div className="p-3 border-t-2 border-retro-ink flex gap-2">
@@ -75,11 +79,11 @@ export const ChatBot: React.FC<{
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Frag nach damals…"
-            aria-label="Nachricht an den Begleiter"
+            placeholder={tr('Ask about back then…', 'Frag nach damals…')}
+            aria-label={tr('Message to your buddy', 'Nachricht an den Begleiter')}
             className="flex-grow text-sm p-2 border-2 border-retro-ink bg-white focus:outline-none focus:ring-2 focus:ring-retro-amber"
           />
-          <button onClick={handleSend} aria-label="Senden" className="bg-retro-ink text-white px-3 font-bold">
+          <button onClick={handleSend} aria-label={tr('Send', 'Senden')} className="bg-retro-ink text-white px-3 font-bold">
             ↑
           </button>
         </div>

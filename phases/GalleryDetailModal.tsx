@@ -2,6 +2,7 @@ import React from 'react';
 import { GalleryItem } from '../types';
 import { Modal } from '../components';
 import { viaProxy } from '../lib/privacy';
+import { tr } from '../lib/i18n';
 
 export const GalleryDetailModal: React.FC<{
   item: GalleryItem;
@@ -9,10 +10,10 @@ export const GalleryDetailModal: React.FC<{
   onCloseClick: () => void;
 }> = ({ item, onDismiss, onCloseClick }) => (
   <Modal onClose={onDismiss} label={item.title}>
-    <button onClick={onCloseClick} aria-label="Schließen" className="absolute top-3 right-3 text-2xl leading-none">
+    <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
       ✕
     </button>
-    <span className="text-xs uppercase font-bold text-retro-amber-dark block">Zeit-Impression</span>
+    <span className="text-xs uppercase font-bold text-retro-amber-dark block">{tr('Impression of the era', 'Zeit-Impression')}</span>
     <h3 className="text-3xl font-bold mb-3">{item.title}</h3>
     {item.image && (
       <div className="retro-photo-frame mb-3">
@@ -24,7 +25,7 @@ export const GalleryDetailModal: React.FC<{
     </p>
     {item.credit && <p className="text-xs text-retro-tan mt-2">{item.credit}</p>}
     <button onClick={onCloseClick} className="w-full mt-6 retro-button bg-retro-ink text-white py-3 font-bold uppercase">
-      Schließen
+      {tr('Close', 'Schließen')}
     </button>
   </Modal>
 );

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { tr } from './i18n';
 
 // Spotify Web API for signed-in visitors (Marco, 2026-10-07: with a Spotify
 // login the player should do much more, play music matching the topic on
@@ -73,7 +74,7 @@ export async function searchSpotify(query: string): Promise<SpotifyHit[]> {
   const artists: SpotifyHit[] = (data.artists?.items ?? []).filter(Boolean).slice(0, 3).map((a: any) => ({
     uri: a.uri,
     name: a.name,
-    sub: 'Künstler:in',
+    sub: tr('Artist', 'Künstler:in'),
     image: smallestImage(a.images),
     kind: 'artist',
   }));

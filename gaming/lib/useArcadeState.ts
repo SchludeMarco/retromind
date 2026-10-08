@@ -4,6 +4,7 @@ import { hasMuteChoice, setMuted } from '../../lib/mute';
 import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 import { ActiveQuest, activeQuests, freshLog, mergeLogs, PRIZES, QuestEvent, QuestLog, record } from './quests';
 import { Egg, EGGS } from './eggs';
+import { tr } from '../../lib/i18n';
 
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
@@ -125,14 +126,14 @@ export interface Achievement {
 }
 
 export const ACHIEVEMENTS: Achievement[] = [
-  { id: 'first-coin', title: 'Erste Münze', text: 'Erste Münze eingeworfen. Läuft bei dir!' },
-  { id: 'explorer-5', title: 'Schatzsucher', text: '5 Games wiederentdeckt. Nice!' },
-  { id: 'explorer-15', title: 'Videothek-Profi', text: '15 Games wiederentdeckt. Absolut goated.' },
-  { id: 'collector', title: 'Sammler', text: 'Erstes Game im Stash. Ehrensache.' },
-  { id: 'finisher', title: 'Abspann gesehen', text: 'Ein Game durchgezockt. GG!' },
-  { id: 'digger', title: 'Grabbelkiste', text: 'Abseits des Katalogs gewühlt. Echter Digger.' },
-  { id: 'chill', title: 'Chillmodus', text: 'Ein Minispiel in der Chill-Ecke geschafft. Entspannt!' },
-  { id: 'konami', title: '↑↑↓↓←→←→BA', text: 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!' },
+  { id: 'first-coin', title: tr('First Quarter', 'Erste Münze'), text: tr('Dropped your first quarter. You’re on a roll!', 'Erste Münze eingeworfen. Läuft bei dir!') },
+  { id: 'explorer-5', title: tr('Treasure Hunter', 'Schatzsucher'), text: tr('Rediscovered 5 games. Nice!', '5 Games wiederentdeckt. Nice!') },
+  { id: 'explorer-15', title: tr('Video Store Pro', 'Videothek-Profi'), text: tr('Rediscovered 15 games. Absolutely goated.', '15 Games wiederentdeckt. Absolut goated.') },
+  { id: 'collector', title: tr('Collector', 'Sammler'), text: tr('First game in your stash. Obviously.', 'Erstes Game im Stash. Ehrensache.') },
+  { id: 'finisher', title: tr('Saw the Credits', 'Abspann gesehen'), text: tr('Beat a game. GG!', 'Ein Game durchgezockt. GG!') },
+  { id: 'digger', title: tr('Bargain Bin', 'Grabbelkiste'), text: tr('Dug around beyond the catalog. A true crate digger.', 'Abseits des Katalogs gewühlt. Echter Digger.') },
+  { id: 'chill', title: tr('Chill Mode', 'Chillmodus'), text: tr('Beat a minigame in the Chill Zone. Relaxed!', 'Ein Minispiel in der Chill-Ecke geschafft. Entspannt!') },
+  { id: 'konami', title: '↑↑↓↓←→←→BA', text: tr('Entered the most famous cheat in the world. Old-school legend!', 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!') },
 ];
 
 /** Score = what a player would see on the HUD; a playful progress number. */

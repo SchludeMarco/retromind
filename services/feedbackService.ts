@@ -1,3 +1,5 @@
+import { tr } from "../lib/i18n";
+
 export type FeedbackCategory = "lob" | "tadel" | "vorschlag" | "wunsch" | "sonstiges";
 
 interface FeedbackApiError extends Error {
@@ -24,7 +26,7 @@ export async function submitFeedback(
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    const err = new Error(data?.message || `API-Fehler ${res.status}`) as FeedbackApiError;
+    const err = new Error(data?.message || tr(`API error ${res.status}`, `API-Fehler ${res.status}`)) as FeedbackApiError;
     err.code = data?.error;
     throw err;
   }

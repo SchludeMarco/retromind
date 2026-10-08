@@ -1,6 +1,7 @@
 import React from 'react';
 import { SpotifyUser } from '../types';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
+import { tr } from '../lib/i18n';
 
 const PRODUCT_LABEL: Record<string, string> = {
   premium: '★ Premium',
@@ -40,9 +41,9 @@ export const SpotifyAuthControl: React.FC<{
           <button
             onClick={onSignOut}
             className="retro-button border border-retro-ink px-2 py-1 font-bold bg-white shrink-0"
-            aria-label="Von Spotify abmelden"
+            aria-label={tr('Sign out of Spotify', 'Von Spotify abmelden')}
           >
-            Abmelden
+            {tr('Sign out', 'Abmelden')}
           </button>
         </>
       ) : (
@@ -51,7 +52,11 @@ export const SpotifyAuthControl: React.FC<{
           disabled={status === 'signing_in'}
           className="retro-button border border-retro-ink px-2 py-1 font-bold bg-white disabled:opacity-60"
         >
-          {status === 'signing_in' ? 'Weiterleitung …' : status === 'error' ? 'Erneut mit Spotify anmelden' : 'Mit Spotify anmelden'}
+          {status === 'signing_in'
+            ? tr('Redirecting …', 'Weiterleitung …')
+            : status === 'error'
+            ? tr('Sign in with Spotify again', 'Erneut mit Spotify anmelden')
+            : tr('Sign in with Spotify', 'Mit Spotify anmelden')}
         </button>
       )}
     </div>

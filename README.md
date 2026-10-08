@@ -277,23 +277,29 @@ Erfolg „Chillmodus“.
 **Quests und Preis-Tresen** – Reiter „Quests“ (im Modul-Design unten in der
 Leiste): jeden Tag drei kleine Aufgaben in der Halle (z. B. Games entdecken,
 Münze einwerfen, ein Minispiel schaffen, den Guru fragen) und eine größere
-pro Woche. Jede geschaffte Quest bringt Spielmarken, die man am Preis-Tresen
+pro Woche. Jede geschaffte Quest bringt Coins, die man am Preis-Tresen
 gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
 (Weltraum, Bosskampf) eintauscht ([`gaming/lib/quests.ts`](gaming/lib/quests.ts),
 [`gaming/components/QuestBoard.tsx`](gaming/components/QuestBoard.tsx)).
-Der Marken-Stand steht immer oben in der Kopfleiste (ein Tipp darauf öffnet die
-Quests). Marken und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
+Der Coin-Stand steht immer oben in der Kopfleiste (ein Tipp darauf öffnet die
+Quests). Coins und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
 **Easter Eggs** – zehn Geheimnisse in der Halle (alte Cheats wie IDDQD, Rosebud
 oder XYZZY in der Suche, der Konami-Code, Pac-Man fangen, aufs Logo klopfen,
 den Guru nach dem Sinn des Lebens fragen, nachts vorbeischauen …). Jedes
-gefundene Ei bringt einmal Spielmarken; die Liste mit Tipps steht im Reiter
+gefundene Ei bringt einmal Coins; die Liste mit Tipps steht im Reiter
 „Quests“ ([`gaming/lib/eggs.ts`](gaming/lib/eggs.ts)). Am Preis-Tresen gibt es
 dafür zusätzlich das Party-Logo in Regenbogenfarben. Ohne Google-Anmeldung
-zeigt die App deutlich, dass die Marken nur auf diesem Gerät gespeichert sind.
+zeigt die App deutlich, dass die Coins nur auf diesem Gerät gespeichert sind.
 Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
 
+- **Englisch als Standardsprache, Deutsch wählbar** ([`lib/i18n.ts`](lib/i18n.ts))
+  – beide Apps sind komplett in amerikanischem Englisch. In den Einstellungen
+  lässt sich unter „Language“ auf Deutsch umschalten; die Wahl wird im Browser
+  gespeichert. Auch die KI (Fragen, Fotoanalyse, Chat, Retro-Guru, Spieleguides)
+  antwortet in der gewählten Sprache. Die rechtlichen Seiten gibt es auf
+  Englisch (`privacy.html`, `imprint.html`) und Deutsch.
 - **Ein Stummschalter** ([`lib/mute.ts`](lib/mute.ts)) – ein Lautsprecher-Knopf
   schaltet jedes Modul stumm, auch über verschiedene Adressen hinweg
   (`?mute=1/0`). Neue Module nutzen denselben Schalter. Liegt die App im
@@ -538,6 +544,5 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   statt über den Druckdialog.
 - **Erinnerungen teilen:** Ein Buch oder einzelne Erinnerungen mit Familie
   und Freund:innen teilen, die eigene Erinnerungen ergänzen.
-- **Englische Sprachversion.**
 - **Video im Memory-Labor ohne Google-Billing**, z. B. durch eine animierte
   Diashow statt Veo.
