@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Musik schon vor der Gaming-Halle, auch am Handy** (2026-10-08,
+  PR #168): Wer mit Spotify Premium angemeldet ist, hört die Hallenmusik jetzt
+  auch am Handy schon vor der Tür, und beim Eintreten läuft derselbe Song
+  einfach weiter, ohne Metal-Intro dazwischen. Bisher ging das nur im Browser
+  am PC. Am Handy ist die Musik draußen gleich normal laut, weil sich der
+  Spotify-Player dort nicht leiser stellen lässt.
+
 - **Versionsnummer in den Einstellungen** (2026-10-08, PR #167): Ganz unten in
   den Einstellungen beider Apps steht jetzt, welche Version läuft, zum Beispiel
   „Version 2.167 (a1b2c3d)“. Die Zahl hinter dem Punkt steigt mit jeder

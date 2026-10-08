@@ -220,9 +220,11 @@ sauber klingt (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle nach dem Intro echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
-Bist du in Gaming mit Spotify Premium angemeldet (Browser am PC), läuft
-dieselbe Spotify-Musik schon vor der Tür leise und wird beim Eintreten laut;
-das Intro entfällt dann. Dumpf machen lässt sich Spotify nicht, nur leiser.
+Bist du in Gaming mit Spotify Premium angemeldet, läuft die Spotify-Musik
+schon vor der Tür, und derselbe Song spielt drinnen einfach weiter; das Intro
+entfällt dann. Im Browser am PC ist sie draußen leise und wird beim Eintreten
+laut, am Handy (eingebetteter Player ohne Lautstärke) läuft sie gleich normal
+laut. Dumpf machen lässt sich Spotify nicht, nur leiser.
 Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
 schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
 Zurück, Play/Pause, Weiter, Ton an/aus), nur mit einem Blitz statt einer Note.
