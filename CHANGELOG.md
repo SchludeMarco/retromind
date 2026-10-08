@@ -7,6 +7,22 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Cover auf den Karten, aufgeräumte Halle, Soundtrack und alte Testwertungen**
+  (2026-10-08, PR #175): Jede Spielkarte in der Gaming-Halle zeigt jetzt das
+  Cover des Spiels, am Handy liegen zwei Karten nebeneinander. Oben stehen nur
+  noch die Suche und „Insert Coin“, darunter eine wischbare Zeile mit den
+  Jahrzehnten und der Konsolenwahl, sodass die Spiele sofort zu sehen sind.
+  Katalog, Kisten, Stash, Trophäen, Chill-Ecke und Quests liegen in jedem
+  Design in der Leiste unten; Musik, Soundeffekte und Farben stellst du in den
+  Einstellungen ein. Statt 1UP und HI-SCORE gibt es einen Punktestand, „NUR
+  HIER“ an den Coins ist gut lesbar. Beschreibungen stehen in einer gut
+  lesbaren Schrift und brechen nicht mehr mitten im Wort ab. Am Handy rüttelt
+  es kurz beim Münzeinwurf, an der Tür und bei Erfolgen. Auf der Spieleseite
+  gibt es neu den Reiter „Musik & TV-Werbung“ mit Soundtrack und den alten
+  Fernsehspots und den Reiter „Zeitschriften & heute“: Wertungen aus Power
+  Play, ASM, Amiga Joker und Co., wo du das Spiel heute legal zocken kannst
+  und Level-Passwörter, mit Quellen. Dazu Links zu Handbüchern und Kultboy.
+
 - **Pac-Man läuft unter den Knöpfen durch** (2026-10-08, PR #174): Der kleine
   Pac-Man mit Geist, der durch die Gaming-Halle wandert, läuft jetzt hinter
   allen Knöpfen, Karten und Fenstern entlang statt darüber. Dafür ist er auf

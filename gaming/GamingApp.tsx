@@ -4,6 +4,7 @@ import { KIND_ICON, PLATFORMS, platformInfo, platformLabel } from './data/platfo
 import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
+import { useCover } from './lib/covers';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { Entrance } from './components/Entrance';
@@ -12,7 +13,7 @@ import { PacmanWander } from './components/PacmanWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
-import { Settings, PALETTES } from './components/Settings';
+import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { countOpened } from '../lib/usage';
@@ -22,7 +23,7 @@ import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
 import { MusicDock } from '../components/MusicDock';
 import { QuestBoard } from './components/QuestBoard';
-import { ActiveQuest, isOwned, PRIZES } from './lib/quests';
+import { ActiveQuest, PRIZES } from './lib/quests';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
@@ -37,28 +38,49 @@ type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests
 const pad = (n: number, len = 6) => String(n).padStart(len, '0');
 // 'Fundstück' is the platform id for loose search finds (matched in lib/); only its label is translated.
 
-const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () => void }> = ({ game, fav, done, onOpen }) => (
-  <button
-    className="cart"
-    onClick={onOpen}
-    data-nav
-    style={{ ['--label' as string]: PLATFORM_COLORS[game.platform] ?? 'var(--a1)' }}
-    aria-label={`${game.title}, ${platformLabel(game.platform)}${game.year ? `, ${game.year}` : ''}`}
-  >
-    <span className="cart-badges" aria-hidden="true">
-      {fav && '★'}
-      {done && '✓'}
-    </span>
-    <span className="cart-label">
-      <span className="cart-meta">
-        {platformLabel(game.platform)}
-        {game.year ? ` · ${game.year}` : ''}
+/** The first sentences that fit a short teaser, so cards never stop mid-word. */
+const teaser = (text: string, max = 120) => {
+  const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) ?? [text];
+  let out = '';
+  for (const s of sentences) {
+    if (out && (out + s).length > max) break;
+    out += s;
+  }
+  return out.trim();
+};
+
+const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () => void }> = ({ game, fav, done, onOpen }) => {
+  const cover = useCover(game.wiki);
+  const [coverOk, setCoverOk] = useState(true);
+  const showCover = Boolean(cover && coverOk);
+  return (
+    <button
+      className={`cart${showCover ? ' has-cover' : ''}`}
+      onClick={onOpen}
+      data-nav
+      style={{ ['--label' as string]: PLATFORM_COLORS[game.platform] ?? 'var(--a1)' }}
+      aria-label={`${game.title}, ${platformLabel(game.platform)}${game.year ? `, ${game.year}` : ''}`}
+    >
+      <span className="cart-badges" aria-hidden="true">
+        {fav && '★'}
+        {done && '✓'}
       </span>
-      <span className="cart-title">{game.title}</span>
-      {game.blurb && <span className="cart-blurb">{game.blurb.length > 110 ? `${game.blurb.slice(0, 108)}…` : game.blurb}</span>}
-    </span>
-  </button>
-);
+      {showCover && (
+        <span className="cart-cover" aria-hidden="true">
+          <img src={cover!} alt="" loading="lazy" onError={() => setCoverOk(false)} />
+        </span>
+      )}
+      <span className="cart-label">
+        <span className="cart-meta">
+          {platformLabel(game.platform)}
+          {game.year ? ` · ${game.year}` : ''}
+        </span>
+        <span className="cart-title">{game.title}</span>
+        {game.blurb && <span className="cart-blurb">{teaser(game.blurb)}</span>}
+      </span>
+    </button>
+  );
+};
 
 // How long an Easter egg or badge note stays up.
 const TOAST_MS = 12000;
@@ -498,12 +520,10 @@ export const GamingApp: React.FC = () => {
     setView(v);
   };
 
-  const cyclePalette = () => {
-    chip.play('select');
-    const mine = PALETTES.filter((p) => isOwned(p.id, state.owned));
-    const i = mine.findIndex((p) => p.id === state.palette);
-    set('palette', mine[(i + 1) % mine.length].id);
-    if (++eggCounts.current.colors >= 8) findEgg('colors');
+  // Settings changes; switching the screen color 8 times finds an egg.
+  const setFromSettings: typeof set = (key, value) => {
+    set(key, value);
+    if (key === 'palette' && value !== state.palette && ++eggCounts.current.colors >= 8) findEgg('colors');
   };
 
   const score = scoreOf(state);
@@ -620,16 +640,15 @@ export const GamingApp: React.FC = () => {
               </span>
               {cloud.status !== 'signed_in' && <span className="token-local">{tr('ONLY HERE', 'NUR HIER')}</span>}
             </button>
-            <div>
-              <span className="label">1UP</span> <span className="value">{pad(score)}</span>
-            </div>
-            <div>
-              <span className="label">HI-SCORE</span> <span className="value">{pad(state.hiScore)}</span>
-            </div>
-            <div>
-              <span className="label">{tr('FOUND', 'ENTDECKT')}</span>{' '}
-              <span className="value">
-                {state.discovered.filter((id) => GAMES.some((g) => g.id === id)).length}/{GAMES.length}
+            <div className="hud-stats">
+              <span title={tr('Points for found games, stash and achievements', 'Punkte für entdeckte Games, Stash und Erfolge')}>
+                <span className="label">SCORE</span> <span className="value">{pad(score)}</span>
+              </span>
+              <span>
+                <span className="label">{tr('FOUND', 'ENTDECKT')}</span>{' '}
+                <span className="value">
+                  {state.discovered.filter((id) => GAMES.some((g) => g.id === id)).length}/{GAMES.length}
+                </span>
               </span>
             </div>
           </header>
@@ -638,30 +657,9 @@ export const GamingApp: React.FC = () => {
             <span>{tr('FUN FACT, DUDE', 'FUN FACT, DIGGA')} ★ {tickerFact}</span>
           </div>
 
-          <div className="toolbar">
-            <button className="px-btn big" onClick={insertCoin} data-nav aria-live="polite">
-              {rolling ? `▶ ${rolling}` : tr('● INSERT COIN · SURPRISE ME!', '● INSERT COIN · ÜBERRASCH MICH!')}
-            </button>
-            <button
-              className="px-btn big chill-btn"
-              aria-pressed={view === 'chill'}
-              onClick={() => switchView(view === 'chill' ? 'catalog' : 'chill')}
-              data-nav
-            >
-              {view === 'chill' ? tr('◄ BACK TO THE CATALOG', '◄ ZURÜCK ZUM KATALOG') : tr('♥ CHILL ZONE · MINI GAMES', '♥ CHILL-ECKE · MINISPIELE')}
-            </button>
-            {/* The games open right under their button, not further down the page. */}
-            {view === 'chill' && (
-              <div className="chill-panel">
-                <MiniGameCorner
-                  onPick={(id) => {
-                    chip.play('select');
-                    countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
-                    setMiniGame(id);
-                  }}
-                />
-              </div>
-            )}
+          {/* Only search and the coin slot up here; the sections live in the
+              dock at the bottom, music, SFX and colors in the settings. */}
+          <div className="toolbar top-bar">
             <form className="search" onSubmit={runSearch} role="search">
               <input
                 value={query}
@@ -674,58 +672,37 @@ export const GamingApp: React.FC = () => {
                 GO!
               </button>
             </form>
-          </div>
-
-          <div className="toolbar" style={{ marginTop: 4 }}>
-            <button className="px-btn view-tab" aria-pressed={view === 'catalog'} onClick={() => switchView('catalog')} data-nav>
-              {tr('OLD-SCHOOL GEMS', 'OLDSCHOOL-PERLEN')}
+            <button className="px-btn big coin-btn" onClick={insertCoin} data-nav aria-live="polite">
+              {rolling ? `▶ ${rolling}` : tr('🪙 INSERT COIN · SURPRISE ME!', '🪙 INSERT COIN · ÜBERRASCH MICH!')}
             </button>
-            <button className="px-btn view-tab" aria-pressed={view === 'collection'} onClick={() => switchView('collection')} data-nav>
-              {tr('MY STASH', 'MEIN STASH')} ({collection.length})
-            </button>
-            <button className="px-btn view-tab" aria-pressed={view === 'trophies'} onClick={() => switchView('trophies')} data-nav>
-              ACHIEVEMENTS {state.achievements.length}/{ACHIEVEMENTS.length}
-            </button>
-            <button className="px-btn view-tab" aria-pressed={view === 'quests'} onClick={() => switchView('quests')} data-nav>
-              QUESTS · EGGS · {state.tokens} COINS
-            </button>
-            {results && (
-              <button className="px-btn" aria-pressed={view === 'search'} onClick={() => switchView('search')} data-nav>
-                {tr('SEARCH', 'SUCHE')}
+            {results && view !== 'search' && (
+              <button className="px-btn" onClick={() => switchView('search')} data-nav>
+                {tr('◄ BACK TO SEARCH RESULTS', '◄ ZURÜCK ZU DEN SUCHERGEBNISSEN')}
               </button>
             )}
-            <span style={{ flex: 1 }} />
-            <button
-              className="px-btn"
-              aria-pressed={state.music}
-              onClick={() => set('music', !state.music)}
-              data-nav
-              aria-label={tr('Music on/off', 'Musik an/aus')}
-            >
-              ♪ {state.music ? tr('ON', 'AN') : tr('OFF', 'AUS')}
-            </button>
-            <button
-              className="px-btn"
-              aria-pressed={state.sfx}
-              onClick={() => set('sfx', !state.sfx)}
-              data-nav
-              aria-label={tr('Sound effects on/off', 'Soundeffekte an/aus')}
-            >
-              SFX {state.sfx ? tr('ON', 'AN') : tr('OFF', 'AUS')}
-            </button>
             {installPrompt && (
               <button className="px-btn" onClick={install} data-nav>
                 {tr('⬇ GET THE APP', '⬇ ALS APP')}
               </button>
             )}
-            <button className="px-btn" onClick={cyclePalette} data-nav aria-label={tr('Change screen color', 'Bildschirmfarbe wechseln')}>
-              ▣ {PALETTES.find((p) => p.id === state.palette)?.label}
-            </button>
           </div>
+
+          {/* The mini games: one of the sections in the dock. */}
+          {view === 'chill' && (
+            <div className="chill-panel">
+              <MiniGameCorner
+                onPick={(id) => {
+                  chip.play('select');
+                  countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
+                  setMiniGame(id);
+                }}
+              />
+            </div>
+          )}
 
           {view === 'catalog' && (
             <>
-            <div className="filters" aria-label={tr('Decade', 'Jahrzehnt')}>
+            <div className="filters scroll-row" aria-label={tr('Decade and console', 'Jahrzehnt und Konsole')}>
               <button className="px-btn" aria-pressed={!decade && !platform} onClick={() => { setDecade(null); setYear(null); setPlatform(null); chip.play('blip'); }} data-nav>
                 {tr('ALL', 'ALLE')}
               </button>
@@ -740,9 +717,30 @@ export const GamingApp: React.FC = () => {
                   {d.label.toUpperCase()}
                 </button>
               ))}
+              <button
+                className="px-btn console-button"
+                aria-pressed={platform !== null}
+                aria-haspopup="dialog"
+                onClick={() => { setPickerOpen(true); chip.play('select'); }}
+                data-nav
+              >
+                {platform
+                  ? `${KIND_ICON[platformInfo(platform)?.kind ?? 'console']} ${platformLabel(platform).toUpperCase()} ▾`
+                  : tr('🎮 WHICH SYSTEM? ▾', '🎮 WELCHE KISTE? ▾')}
+              </button>
+              {platform && (
+                <button
+                  className="px-btn"
+                  onClick={() => { setPlatform(null); chip.play('back'); }}
+                  aria-label={tr('Remove console filter', 'Konsolen-Filter entfernen')}
+                  data-nav
+                >
+                  ✕
+                </button>
+              )}
             </div>
             {decadeYears.length > 0 && (
-              <div className="filters years" aria-label={tr('Year', 'Jahr')}>
+              <div className="filters years scroll-row" aria-label={tr('Year', 'Jahr')}>
                 <button className="px-btn" aria-pressed={!year} onClick={() => { setYear(null); chip.play('blip'); }} data-nav>
                   {tr('WHOLE DECADE', 'GANZES JAHRZEHNT')}
                 </button>
@@ -759,29 +757,6 @@ export const GamingApp: React.FC = () => {
                 ))}
               </div>
             )}
-            <div className="filters" aria-label={tr('Console', 'Konsole')}>
-              <button
-                className="px-btn big console-button"
-                aria-pressed={platform !== null}
-                aria-haspopup="dialog"
-                onClick={() => { setPickerOpen(true); chip.play('select'); }}
-                data-nav
-              >
-                {platform
-                  ? `${KIND_ICON[platformInfo(platform)?.kind ?? 'console']} ${tr('SYSTEM', 'KISTE')}: ${platformLabel(platform).toUpperCase()} ▾`
-                  : tr('🎮 WHICH SYSTEM? ▾', '🎮 WELCHE KISTE? ▾')}
-              </button>
-              {platform && (
-                <button
-                  className="px-btn"
-                  onClick={() => { setPlatform(null); chip.play('back'); }}
-                  aria-label={tr('Remove console filter', 'Konsolen-Filter entfernen')}
-                  data-nav
-                >
-                  ✕
-                </button>
-              )}
-            </div>
             </>
           )}
 
@@ -905,7 +880,7 @@ export const GamingApp: React.FC = () => {
         </main>
       )}
 
-      {screen === 'hub' && state.palette === 'modul' && (
+      {screen === 'hub' && (
         <nav className="dock" aria-label={tr('Sections', 'Bereiche')}>
           <button className="dock-btn" aria-current={view === 'catalog' ? 'page' : undefined} onClick={() => switchView('catalog')} data-nav>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v13l-2 2H8l-2-2zM9 7h6v5H9zM8 21h8" /></svg>
@@ -943,7 +918,7 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
-      {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={set} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={setFromSettings} onClose={() => setSettingsOpen(false)} />}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
       {screen === 'hub' && (

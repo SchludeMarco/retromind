@@ -14,9 +14,17 @@ export interface YouTubeVideo {
 
 const cache = new Map<string, Promise<YouTubeVideo[]>>();
 
-export function fetchVideos(game: { title: string; platform: string }): Promise<YouTubeVideo[]> {
+/** What kind of clips: playthroughs, the music, or the TV ads from back then. */
+export type VideoKind = 'gameplay' | 'soundtrack' | 'commercial';
+const SUFFIX: Record<VideoKind, string> = {
+  gameplay: 'gameplay',
+  soundtrack: 'soundtrack OST',
+  commercial: 'commercial TV ad',
+};
+
+export function fetchVideos(game: { title: string; platform: string }, kind: VideoKind = 'gameplay'): Promise<YouTubeVideo[]> {
   const platform = game.platform === 'Fundstück' || game.platform === 'Multiplattform' ? '' : game.platform;
-  const q = `${game.title} ${platform} gameplay`.replace(/\s+/g, ' ').trim();
+  const q = `${game.title} ${platform} ${SUFFIX[kind]}`.replace(/\s+/g, ' ').trim();
   if (!cache.has(q)) {
     cache.set(
       q,
