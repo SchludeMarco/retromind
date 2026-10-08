@@ -1,0 +1,27 @@
+// Admin-Link in den Einstellungen (PR #160), am 2026-10-08 auf Marcos Wunsch
+// entfernt: In den Apps soll kein Hinweis auf den Adminbereich stehen.
+
+// --- components/SettingsModal.tsx (Zeitreise), Prop `isAdmin` aus App.tsx:
+//     isAdmin={isAdminUser(googleAuth.user)}
+      {isAdmin && (
+        <div className="mt-6 pt-5 border-t border-retro-ink/20">
+          <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Nur für dich</span>
+          <a
+            href={ADMIN_URL}
+            className="retro-button inline-block px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+          >
+            📊 Adminbereich: Nutzungszahlen
+          </a>
+        </div>
+      )}
+
+// --- gaming/components/Settings.tsx (Gaming):
+        {isAdminUser(cloud.user) && signedIn && (
+          <section>
+            <h3 className="pixel-font">NUR FÜR DICH</h3>
+            <a className="px-btn" href={ADMIN_URL} data-nav>
+              📊 ADMINBEREICH
+            </a>
+            <p className="dim">Wie viele Leute Zeitreise und Gaming nutzen.</p>
+          </section>
+        )}

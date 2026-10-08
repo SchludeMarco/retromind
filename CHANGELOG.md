@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Kein Admin-Link mehr in den Apps** (2026-10-08, PR #161): Der Link zum
+  Adminbereich ist aus den Einstellungen von Zeitreise und Gaming verschwunden.
+  Der Bereich ist nur noch direkt über `/admin/` erreichbar.
+
 - **Adminbereich mit Nutzungszahlen** (2026-10-08, PR #160): Unter
   `/admin/` gibt es jetzt einen Bereich nur für Marco. Er zeigt, wie viele
   Leute Zeitreise und Gaming geöffnet haben: Besucher heute, Besuche der

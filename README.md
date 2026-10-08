@@ -319,8 +319,8 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 - **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
   [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter
-  `/admin/` auf beiden Domains, verlinkt in den Einstellungen von Zeitreise und
-  Gaming (nur sichtbar, wenn Marcos Google-Konto angemeldet ist). Zeigt für
+  `/admin/` auf beiden Domains, bewusst nirgends in den Apps verlinkt (nur
+  direkt über die Adresse erreichbar). Zeigt für
   beide Editionen Besucher pro Tag, Besuche über 7/30/90 Tage und App-Starts
   insgesamt, als Balken und als Tabelle. Den Zugang prüft der Server: Das
   Google-Token muss zur App gehören und zu `ADMIN_EMAIL` (Standard

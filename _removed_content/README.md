@@ -68,3 +68,7 @@ gebaut oder ausgeliefert.
   dazu passende gedämpfte Bass vor der Tür (PR #156/#157). Am 2026-10-07
   ersetzt, weil die Musik billig klang; jetzt spielt die App vorab
   aufgenommene Dateien (`gaming/lib/metalBand.ts`, `public/gaming/audio/`).
+- `admin-link-einstellungen.tsx.txt`: der Link „Adminbereich“ in den
+  Einstellungen von Zeitreise und Gaming, nur für Marcos Google-Konto sichtbar
+  (PR #160). Am 2026-10-08 auf Marcos Wunsch entfernt: In den Apps soll kein
+  Hinweis auf den Adminbereich stehen, er ist nur über `/admin/` erreichbar.
