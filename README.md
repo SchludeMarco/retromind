@@ -211,7 +211,7 @@ beginnt von vorne (`public/gaming/arcade-sign-0…5.webp`). Dazu hörst
 du leise, gedämpft durch die Wand, den Bass und die Drums der Metal-Musik aus
 der Halle
 (`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
-den Ton ab der ersten Berührung). Ein Tipp auf die Tür im Bild öffnet sie mit langem Knarzen (das Warnschild „Extreme loud!“ steht mittig darunter), beim
+den Ton ab der ersten Berührung). Ein Tipp auf die Tür im Bild (mit blinkendem Neonrahmen) öffnet sie mit langem Knarzen (das Warnschild „Extreme loud!“ steht mittig darunter), beim
 Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
 das Bild wird weiß und der Katalog erscheint, begleitet von einem
 80er-Heavy-Metal-Intro mit zwei verzerrten Gitarren links und rechts, Bass,
