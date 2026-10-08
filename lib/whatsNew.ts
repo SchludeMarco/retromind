@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Der Retro-Guru antwortet wieder': {
+    title: 'The Retro Guru talks again',
+    text: 'In the gaming edition, the Guru and the other AI features only said “Lag! Connection lost”, because Google switched off the AI model we used for new keys. The app now always uses Google’s current model and switches to another one on its own if one goes away.',
+  },
   'Leiser reinkommen und Lautstärke-Regler': {
     title: 'A quieter entrance and a volume slider',
     text: 'The music was far too loud when you walked into the arcade hall. It now starts at half volume, and the door bang is a bit softer. The music player has a slider for louder and quieter, and in the gaming edition there’s one in the settings too, under “Music volume”. It works for the metal intro, the chiptune tracks and Spotify with Premium on a computer. No website can turn down Spotify’s embedded player (without signing in, and on phones); use your device’s volume buttons there, and the player tells you so.',
