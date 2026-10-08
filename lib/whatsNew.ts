@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Pac-Man läuft unter den Knöpfen durch': {
+    title: 'Pac-Man runs underneath the buttons',
+    text: 'The little Pac-Man and his ghost wandering through the gaming hall now run behind all buttons, cards and windows instead of over them. In return he’s a bit easier to see on the open background.',
+  },
   'Blinkender Leuchtrahmen um die Tür': {
     title: 'Blinking neon frame around the door',
     text: 'The ENTRANCE door outside the gaming hall now has a thick, warm yellow neon frame that blinks and flickers like an arcade sign. You see right away where to go in.',

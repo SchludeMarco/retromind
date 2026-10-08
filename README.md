@@ -238,8 +238,8 @@ Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
 gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
-(`public/gaming/arcade-innen.webp`). Über dem Katalog wandert ganz klein,
-durchsichtig und langsam ein Pac-Man mit Geist kreuz und quer zu zufälligen
+(`public/gaming/arcade-innen.webp`). Hinter Knöpfen und Karten des Katalogs wandert ganz klein,
+halb durchsichtig und langsam ein Pac-Man mit Geist kreuz und quer zu zufälligen
 Punkten und frisst die Punktereihe auf dem Weg
 (`gaming/components/PacmanWander.tsx`; nicht antippbar, abgeschaltet bei
 „Bewegung reduzieren“). Dazu
