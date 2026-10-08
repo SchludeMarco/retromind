@@ -1,7 +1,7 @@
 import { PLATFORMS } from './platforms';
 import { tr } from '../../lib/i18n';
 
-// Curated catalog of half-forgotten games, from the 1980s to today. Every entry is hand-written and
+// Curated catalog of half-forgotten games, from the 1970s to today. Every entry is hand-written and
 // deliberately conservative: facts here are the well-documented ones. Live
 // details (summary, screenshots) are pulled from Wikipedia at runtime via
 // `wiki` (the English article title), and deeper guides come from the AI.
@@ -63,6 +63,73 @@ export const PLATFORM_COLORS: Record<string, string> = {
 };
 
 export const GAMES: Game[] = [
+  // The stone age before 1980, where it all began.
+  {
+    id: 'pong',
+    title: 'Pong',
+    year: 1972,
+    platform: 'Arcade',
+    developer: 'Atari',
+    genre: tr('Sports', 'Sport'),
+    wiki: 'Pong',
+    blurb: tr('Two paddles, one ball, a beep: Atari’s table tennis machine kicked off the arcade boom.', 'Zwei Schläger, ein Ball, ein Piepen: Ataris Tischtennis-Automat hat den Spielhallen-Boom ausgelöst.'),
+    funFact: tr('The first test machine in a bar in Sunnyvale stopped working because its coin box was overflowing with quarters.', 'Der erste Testautomat in einer Kneipe in Sunnyvale streikte, weil sein Münzkasten mit Quarters überquoll.'),
+  },
+  {
+    id: 'breakout-1976',
+    title: 'Breakout',
+    year: 1976,
+    platform: 'Arcade',
+    developer: 'Atari',
+    genre: tr('Action', 'Action'),
+    wiki: 'Breakout (video game)',
+    blurb: tr('Pong turned against a wall: knock out row after row of bricks with the ball.', 'Pong gegen eine Wand: Mit dem Ball eine Steinreihe nach der anderen wegschießen.'),
+    funFact: tr('Steve Jobs took on the design job at Atari and brought in his friend Steve Wozniak, a year before they founded Apple.', 'Steve Jobs übernahm den Entwurf bei Atari und holte seinen Freund Steve Wozniak dazu, ein Jahr bevor die beiden Apple gründeten.'),
+  },
+  {
+    id: 'combat',
+    title: 'Combat',
+    year: 1977,
+    platform: 'Atari 2600',
+    developer: 'Atari',
+    genre: tr('Action', 'Action'),
+    wiki: 'Combat (video game)',
+    blurb: tr('Tanks and biplanes for two: the game that came in the box with the Atari 2600.', 'Panzer und Doppeldecker zu zweit: das Spiel, das beim Atari 2600 mit im Karton lag.'),
+    funFact: tr('It packs 27 variations of tank, biplane and jet battles into one cartridge.', 'Auf dem einen Modul stecken 27 Varianten von Panzer-, Doppeldecker- und Jet-Duellen.'),
+  },
+  {
+    id: 'space-invaders',
+    title: 'Space Invaders',
+    year: 1978,
+    platform: 'Arcade',
+    developer: 'Taito',
+    genre: 'Shoot ’em up',
+    wiki: 'Space Invaders',
+    blurb: tr('Rows of aliens march down step by step, and the fewer are left, the faster they get.', 'Reihen von Aliens marschieren Schritt für Schritt herab, und je weniger übrig sind, desto schneller werden sie.'),
+    funFact: tr('The speed-up was an accident: the hardware simply drew fewer aliens faster, and designer Tomohiro Nishikado kept it.', 'Das Schnellerwerden war Zufall: Die Hardware zeichnete weniger Aliens einfach schneller, und Entwickler Tomohiro Nishikado ließ es drin.'),
+  },
+  {
+    id: 'asteroids',
+    title: 'Asteroids',
+    year: 1979,
+    platform: 'Arcade',
+    developer: 'Atari',
+    genre: 'Shoot ’em up',
+    wiki: 'Asteroids (video game)',
+    blurb: tr('A tiny triangle ship in a field of space rocks that split into smaller ones with every hit.', 'Ein kleines Dreiecks-Schiff in einem Feld aus Weltraumfelsen, die bei jedem Treffer in kleinere zerfallen.'),
+    funFact: tr('Its glowing lines are vector graphics, drawn straight onto the screen by the electron beam.', 'Die leuchtenden Linien sind Vektorgrafik, direkt vom Elektronenstrahl auf den Bildschirm gezeichnet.'),
+  },
+  {
+    id: 'galaxian',
+    title: 'Galaxian',
+    year: 1979,
+    platform: 'Arcade',
+    developer: 'Namco',
+    genre: 'Shoot ’em up',
+    wiki: 'Galaxian',
+    blurb: tr('Like Space Invaders, but the aliens break formation and swoop down at you.', 'Wie Space Invaders, nur dass die Aliens aus der Formation ausbrechen und auf dich herabstürzen.'),
+    funFact: tr('One of the first arcade games with fully colored sprites.', 'Eines der ersten Automatenspiele mit komplett farbigen Figuren.'),
+  },
   {
     id: 'little-nemo',
     title: 'Little Nemo: The Dream Master',
@@ -657,6 +724,7 @@ export const GAMES: Game[] = [
 ];
 
 export const DECADES = [
+  { id: '70s', label: tr("’70s", "70er"), from: 1970, to: 1979 },
   { id: '80s', label: tr("’80s", "80er"), from: 1980, to: 1989 },
   { id: '90s', label: tr("’90s", "90er"), from: 1990, to: 1999 },
   { id: '00s', label: tr("2000s", "2000er"), from: 2000, to: 2009 },

@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { tr } from '../../../lib/i18n';
+import { BoardGame } from '../../lib/highscores';
+import { HighscoreBoard } from './HighscoreBoard';
 
 // Bits every mini game in the Chill-Ecke shares: best results on this device,
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
 // focus navigation while a game runs.
 
-export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball' | 'pacman';
+export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball' | 'pacman' | 'breakout' | 'snake' | 'invaders' | 'quiz';
 
 const KEY = 'retromind.gaming.mini.v1';
 
@@ -43,16 +45,18 @@ export function shuffle<T>(list: T[]): T[] {
   return a;
 }
 
-export const Done: React.FC<{ text: string; record: boolean; onAgain: () => void; title?: string }> = ({
+export const Done: React.FC<{ text: string; record: boolean; onAgain: () => void; title?: string; board?: { game: BoardGame; score: number } }> = ({
   text,
   record,
   onAgain,
   title = tr('YOU DID IT!', 'GESCHAFFT!'),
+  board,
 }) => (
   <div className="mini-done" role="status">
     <p className="pixel-font">{record ? tr('★ NEW HIGH SCORE! ★', '★ NEUER REKORD! ★') : title}</p>
     <p>{text}</p>
-    <button className="px-btn big" onClick={onAgain} data-nav autoFocus>
+    {board && board.score > 0 && <HighscoreBoard game={board.game} score={board.score} />}
+    <button className="px-btn big" onClick={onAgain} data-nav autoFocus={!board}>
       {tr('PLAY AGAIN', 'NOCHMAL')}
     </button>
   </div>

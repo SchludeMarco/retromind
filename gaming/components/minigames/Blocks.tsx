@@ -329,6 +329,7 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           )}
           record={result.record}
           onAgain={again}
+          board={{ game: 'blocks', score: result.score }}
         />
       )}
     </>

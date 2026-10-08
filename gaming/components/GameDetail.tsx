@@ -97,13 +97,39 @@ export const GameDetail: React.FC<{
   game: Game;
   isFavorite: boolean;
   isCompleted: boolean;
+  isHadBack?: boolean;
+  onToggleHadBack?: () => void;
   onToggleFavorite: () => void;
   onToggleCompleted: () => void;
   onClose: () => void;
   aiAvailable: boolean;
   /** Tells the hub whether a video is playing, so the chiptune music pauses. */
   onVideoChange?: (playing: boolean) => void;
-}> = ({ game, isFavorite, isCompleted, onToggleFavorite, onToggleCompleted, onClose, aiAvailable, onVideoChange }) => {
+  /** The cards left and right of this one; swiping flips to them. */
+  onPrev?: () => void;
+  onNext?: () => void;
+  /** Where a swiped-in game slides in from. */
+  slideFrom?: 'left' | 'right' | null;
+}> = ({ game, isFavorite, isCompleted, isHadBack, onToggleHadBack, onToggleFavorite, onToggleCompleted, onClose, aiAvailable, onVideoChange, onPrev, onNext, slideFrom }) => {
+  // Horizontal swipe on the page flips to the next or previous game.
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touch.current = e.touches.length === 1 ? { x: t.clientX, y: t.clientY } : null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touch.current;
+    touch.current = null;
+    if (!start) return;
+    // Not when swiping through a row of videos or screenshots.
+    if ((e.target as HTMLElement).closest('.yt-list, .shots, iframe')) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    if (dx < 0) onNext?.();
+    else onPrev?.();
+  };
   const [tab, setTab] = useState<Tab>('info');
   const [summary, setSummary] = useState<WikiSummary | null | undefined>(undefined);
   const [images, setImages] = useState<WikiImage[] | undefined>(undefined);
@@ -248,16 +274,29 @@ export const GameDetail: React.FC<{
     <div className="overlay" onClick={onClose}>
       <div
         ref={dialogRef}
-        className="dialog"
+        className={`dialog${slideFrom ? ` slide-from-${slideFrom}` : ' booting'}`}
         role="dialog"
         aria-modal="true"
         aria-label={game.title}
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
         style={{ borderColor: label }}
       >
         <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
+        {(onPrev || onNext) && (
+          <div className="flip-nav">
+            <button className="px-btn" onClick={onPrev} disabled={!onPrev} aria-label={tr('Previous game', 'Voriges Spiel')} data-nav>
+              ◄
+            </button>
+            <span className="dim">{tr('swipe to browse', 'wischen zum Blättern')}</span>
+            <button className="px-btn" onClick={onNext} disabled={!onNext} aria-label={tr('Next game', 'Nächstes Spiel')} data-nav>
+              ►
+            </button>
+          </div>
+        )}
         <h2 className="pixel-font rgb-split">{game.title}</h2>
         <p className="dim" style={{ margin: 0 }}>
           {[platformLabel(game.platform), game.year || '—', game.developer, game.genre].filter(Boolean).join(' · ')}
@@ -270,6 +309,11 @@ export const GameDetail: React.FC<{
           <button className="px-btn" aria-pressed={isCompleted} onClick={onToggleCompleted} data-nav>
             {isCompleted ? tr('✓ BEATEN', '✓ DURCHGESPIELT') : tr('○ BEATEN IT?', '○ DURCHGESPIELT?')}
           </button>
+          {onToggleHadBack && (
+            <button className="px-btn" aria-pressed={!!isHadBack} onClick={onToggleHadBack} data-nav>
+              {isHadBack ? tr('♥ HAD IT', '♥ HATTE ICH') : tr('♡ HAD IT BACK THEN?', '♡ HATTE ICH DAMALS?')}
+            </button>
+          )}
         </div>
 
         {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} thumb={playing.thumb} />}

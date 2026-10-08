@@ -71,11 +71,12 @@ function request(title: string, cb: (src: string | null) => void) {
   if (timer === undefined) timer = window.setTimeout(flush, 60);
 }
 
-/** The cover image URL for a Wikipedia article, or null when there is none. */
-export function useCover(wikiTitle: string): string | null {
-  const [src, setSrc] = useState<string | null>(() => known.get(wikiTitle) ?? null);
+/** The cover image URL for a Wikipedia article: undefined while it loads, null when there is none. */
+export function useCoverLookup(wikiTitle: string): string | null | undefined {
+  const [src, setSrc] = useState<string | null | undefined>(() => known.get(wikiTitle));
   useEffect(() => {
     if (known.has(wikiTitle)) return void setSrc(known.get(wikiTitle) ?? null);
+    setSrc(undefined);
     let live = true;
     request(wikiTitle, (s) => live && setSrc(s));
     return () => {
@@ -83,4 +84,9 @@ export function useCover(wikiTitle: string): string | null {
     };
   }, [wikiTitle]);
   return src;
+}
+
+/** The cover image URL for a Wikipedia article, or null when there is none (yet). */
+export function useCover(wikiTitle: string): string | null {
+  return useCoverLookup(wikiTitle) ?? null;
 }

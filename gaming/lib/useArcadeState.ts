@@ -40,6 +40,9 @@ export interface ArcadeState {
   eggs: string[];
   /** The rainbow logo from the prize counter, switched on. */
   partyLogo: boolean;
+  /** "Had it back then": games and systems the player really owned as a kid. */
+  hadBack: string[];
+  hadSystems: string[];
 }
 
 /** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */
@@ -66,6 +69,8 @@ const DEFAULTS: ArcadeState = {
   quests: freshLog(undefined),
   eggs: [],
   partyLogo: false,
+  hadBack: [],
+  hadSystems: [],
 };
 
 function load(): ArcadeState {
@@ -116,6 +121,8 @@ export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): A
     quests: mergeLogs(local.quests, remote.quests),
     eggs: union(local.eggs, remote.eggs),
     partyLogo: remote.partyLogo ?? local.partyLogo,
+    hadBack: union(local.hadBack, remote.hadBack),
+    hadSystems: union(local.hadSystems, remote.hadSystems),
   };
 }
 
@@ -225,6 +232,12 @@ export function useArcadeState(
     [onEgg]
   );
 
+  /** Coins won outside the quests (the game quiz). */
+  const earn = useCallback((n: number) => {
+    stateRef.current = { ...stateRef.current, tokens: stateRef.current.tokens + n };
+    setState((s) => ({ ...s, tokens: s.tokens + n }));
+  }, []);
+
   const discover = useCallback((game: Game) => {
     setState((s) =>
       s.discovered.includes(game.id)
@@ -233,11 +246,11 @@ export function useArcadeState(
     );
   }, []);
 
-  const toggleIn = useCallback((list: 'favorites' | 'completed', game: Game) => {
+  const toggleIn = useCallback((list: 'favorites' | 'completed' | 'hadBack', game: Game) => {
     setState((s) => {
       const has = s[list].includes(game.id);
       const customGames = game.custom && !has ? { ...s.customGames, [game.id]: game } : s.customGames;
-      const quests = has ? s.quests : record(s.quests, list === 'favorites' ? 'favorite' : 'finish');
+      const quests = has || list === 'hadBack' ? s.quests : record(s.quests, list === 'favorites' ? 'favorite' : 'finish');
       return { ...s, customGames, quests, [list]: has ? s[list].filter((id) => id !== game.id) : [...s[list], game.id] };
     });
   }, []);
@@ -250,5 +263,5 @@ export function useArcadeState(
     setState((s) => mergeStates(s, remote));
   }, []);
 
-  return { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg };
+  return { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg, earn };
 }

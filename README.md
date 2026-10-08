@@ -6,7 +6,7 @@ RetroMind ist eine interaktive, KI-gestützte Reise durch die eigene
 Vergangenheit. Die App führt Jahrzehnt für Jahrzehnt (1960–2010) zurück,
 stellt persönliche Erinnerungsfragen, **sammelt die Antworten** und fasst sie
 zu einem exportierbaren **Erinnerungs-Buch** zusammen. Die Gaming-Edition
-macht dasselbe für Videospiele von den 1980ern bis heute.
+macht dasselbe für Videospiele von den 1970ern bis heute.
 
 Alle Änderungen an der App stehen in der [CHANGELOG.md](CHANGELOG.md).
 
@@ -185,12 +185,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Edition „RetroMind – Gaming“ (`/gaming/`)
 
-Eigene Seite im selben Projekt: vergessene Videospiele von den 1980ern bis heute wiederentdecken.
+Eigene Seite im selben Projekt: vergessene Videospiele von den 1970ern bis heute wiederentdecken.
+Die „Urzeit“ der 70er (Pong, Breakout, Combat, Space Invaders, Asteroids, Galaxian) steht als eigenes Jahrzehnt im Katalog.
 Am Eingang (vor der Tür) kann man sich freiwillig mit Google (Savegame und Coins
 in Google Drive) und mit Spotify (Hallenmusik) anmelden, beides geht auch später
 in den Einstellungen ([`gaming/components/Entrance.tsx`](gaming/components/Entrance.tsx)).
 Oben in der Halle stehen nur die Suche und „Insert Coin“, darunter eine
-wischbare Zeile mit den Jahrzehnten (80er bis 2020er) und der Konsolenwahl;
+wischbare Zeile mit den Jahrzehnten (70er bis 2020er) und der Konsolenwahl;
 nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.
 Die Bereiche (Katalog, Kisten, Stash, Trophäen, Chillen, Quests) liegen in
 allen Designs in der Leiste unten, Musik, Soundeffekte und Farben in den
@@ -202,7 +203,21 @@ nebeneinander. Titel und Knöpfe bleiben in Pixelschrift, Beschreibungen
 stehen wie in einem Handbuch in gut lesbarer Schrift und enden mit ganzen
 Sätzen. Am Handy rüttelt es kurz beim Münzeinwurf, beim Öffnen der Tür, bei
 Erfolgen und gekauften Preisen (Android; schaltet sich mit den Soundeffekten
-ab, `gaming/lib/chiptune.ts`).
+ab, `gaming/lib/chiptune.ts`). „Insert Coin“ geht auch von Hand: die Münze
+neben dem Knopf in den Schlitz ziehen (`gaming/components/CoinDrop.tsx`).
+Unter der Suche steht jeden Tag „Heute vor X Jahren“: ein bekanntes Spiel,
+das an diesem Datum erschienen ist, aus Wikidata über `api/proxy.js`
+([`gaming/lib/onThisDay.ts`](gaming/lib/onThisDay.ts)). Tippst du eine Karte an,
+rutscht das Modul in einen Konsolenschacht, die Lampe geht an, der Bildschirm
+flackert und die Spieleseite „bootet“ (`gaming/components/CartInsert.tsx`); auf
+der Spieleseite blätterst du per Wischen oder mit ◄ ► zum nächsten Spiel der
+Liste. Erfolge erscheinen wie auf der Konsole als runde Pokal-Leiste unten mit
+weichem „Plopp“. Hinter dem Katalog blinken die Lichter der Automaten, und
+nach einer Minute ohne Eingabe startet wie bei alten Automaten der Attract
+Mode: Cover laufen durch, INSERT COIN blinkt
+(`gaming/components/AttractMode.tsx`). Neben dem Stash gibt es das Regal
+„Hatte ich damals“ für die Spiele (Knopf auf der Spieleseite) und Konsolen,
+die man als Kind wirklich hatte; es kommt mit ins Google-Backup.
 Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
 Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
@@ -293,7 +308,7 @@ Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
 **Chill-Ecke** – über „Chillen“ in der Leiste unten: die
-Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper und Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten)
+Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper, Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten), Breakout, Snake, die Weltraum-Invasion im Stil von Space Invaders und das Quiz „Erkennst du das Spiel?“ (Cover-Ausschnitt, vier Titel, jede richtige Antwort bringt einen Coin, bis zu fünf am Tag). Nach einer guten Runde in den Punkte-Spielen trägst du wie am Automaten drei Buchstaben in die Highscore-Tafel ein; die Top 10 sind für alle Spieler gemeinsam (`api/highscores.js`, im selben Upstash-Redis wie die Statistik), ohne Datenbank bleibt die Tafel auf dem Gerät
 ([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
 [`gaming/components/minigames/`](gaming/components/minigames/)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
@@ -561,8 +576,7 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
   vergessenes Spiel als Geheimtipp aufdeckt.
 
-- **Mehr Minispiele in der Chill-Ecke** (z. B. ein gemütliches Snake oder
-  Solitär), Sudoku in mehreren Schwierigkeitsstufen und die Bestwerte mit in
+- **Mehr Minispiele in der Chill-Ecke** (z. B. Solitär), Sudoku in mehreren Schwierigkeitsstufen und die Bestwerte mit in
   die Cloud-Sicherung nehmen.
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und

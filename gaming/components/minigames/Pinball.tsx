@@ -331,7 +331,7 @@ export const Pinball: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           </button>
         </div>
       )}
-      {result && <Done title={tr("GAME OVER", "SPIEL VORBEI")} text={tr(`${result.score} points scored.`, `${result.score} Punkte erflippert.`)} record={result.record} onAgain={again} />}
+      {result && <Done title={tr("GAME OVER", "SPIEL VORBEI")} text={tr(`${result.score} points scored.`, `${result.score} Punkte erflippert.`)} record={result.record} onAgain={again} board={{ game: 'pinball', score: result.score }} />}
     </>
   );
 };
