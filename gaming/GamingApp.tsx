@@ -475,6 +475,19 @@ export const GamingApp: React.FC = () => {
     if (btn) btn.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
   }, [view, reducedMotion]);
 
+  // Out of the hall again: the game closes, the music stops and the
+  // entrance with the muffled bass from inside is back.
+  const leaveClub = () => {
+    chip.play('select');
+    chip.stopIntro();
+    setIntroRunning(false);
+    setSelected(null);
+    setVideoPlaying(false);
+    setFromDoor(false);
+    setScreen('power');
+    window.scrollTo(0, 0);
+  };
+
   const switchView = (v: View) => {
     chip.play('blip');
     setView(v);
@@ -536,6 +549,19 @@ export const GamingApp: React.FC = () => {
               RETROMIND
               <small>GAMING</small>
             </h1>
+            {/* Back out to the street in front of the door (Marco, 2026-10-08). */}
+            <button
+              className="px-btn exit-btn"
+              onClick={leaveClub}
+              data-nav
+              aria-label={tr('Leave the club', 'Club verlassen')}
+              title={tr('Leave the club', 'Club verlassen')}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M2 1h9v4H9V3H4v10h5v-2h2v4H2z" />
+                <path d="M10 6h2V4h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v-2h-2H6V7h4z" />
+              </svg>
+            </button>
             <button
               className="px-btn feedback-btn"
               onClick={() => {

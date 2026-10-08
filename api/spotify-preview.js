@@ -35,9 +35,11 @@ async function spotifyPreview(id) {
 }
 
 async function deezerPreview(q) {
-  const [title, artist] = q.split(" · ");
+  const [rawTitle, artist] = q.split(" · ");
+  // Spotify's "Run to the Hills - 2015 Remaster": Deezer knows the song by its plain title.
+  const title = (rawTitle || "").replace(/\s+-\s+.*$/, "").trim();
   if (!title) return null;
-  const query = artist ? `artist:"${artist.split(",")[0].trim()}" track:"${title.trim()}"` : title;
+  const query = artist ? `${artist.split(",")[0].trim()} ${title}` : title;
   try {
     const res = await fetch(`https://api.deezer.com/search?limit=1&q=${encodeURIComponent(query)}`, {
       headers: { "User-Agent": USER_AGENT },

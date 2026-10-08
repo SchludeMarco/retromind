@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Club wieder verlassen': {
+    title: 'Leave the club',
+    text: 'In the gaming hall there’s now a door button in the top bar next to sound and settings. It takes you back outside the door, where the music comes muffled through the wall again; ENTER takes you back in.',
+  },
   'Vor der Gaming-Halle wieder dumpf und bassig, mit dem Song von drinnen': {
     title: 'Muffled and bassy outside the gaming hall again, with the song from inside',
     text: 'If you’re signed in with Spotify Premium, the music in front of the door sounds muffled and bassy again, as if through the wall, but now it’s exactly the song playing inside. Outside you hear a clip of the song, and inside Spotify then plays it in full, on phones too. If there’s no clip for a song, you hear the muffled metal from the hall outside, as before.',

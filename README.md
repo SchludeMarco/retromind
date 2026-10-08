@@ -267,6 +267,8 @@ lesbare Schrift und eine Navigation unten mit Katalog, Kisten, Stash, Trophäen
 und Chillen), dazu die Pixel-Looks „Handheld“ und „Bernstein“. Das Design-System liegt in
 [`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
 `gaming/gaming.css` (Abschnitt „Design Modul“).
+**Club verlassen** – oben in der Kopfleiste, links neben Ton und Zahnrad, führt ein Tür-Knopf aus der Halle zurück auf die Straße vor die Tür; ein offenes Spiel schließt sich, die Musik von drinnen ist wieder nur dumpf durch die Wand zu hören.
+
 **Feedback** – roter Knopf mit Briefsymbol und Aufschrift „Feedback“ in der Kopfleiste, unter Ton und Zahnrad. Läuft über dieselbe `/api/feedback` der
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“

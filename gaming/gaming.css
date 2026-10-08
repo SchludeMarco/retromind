@@ -989,6 +989,23 @@ a {
   height: 40px;
   padding: 0;
 }
+.exit-btn {
+  position: absolute;
+  top: 8px;
+  right: 96px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.exit-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
 /* Feedback: red, labelled, in its own row under mute + settings so
    testers spot it. */
 .hud {
@@ -1326,6 +1343,7 @@ a {
 }
 .arcade[data-palette='modul'] .settings-btn,
 .arcade[data-palette='modul'] .feedback-btn,
+.arcade[data-palette='modul'] .exit-btn,
 .arcade[data-palette='modul'] .hud-mute {
   top: 12px;
   width: 44px;
@@ -1337,6 +1355,9 @@ a {
 }
 .arcade[data-palette='modul'] .hud-mute {
   right: 64px;
+}
+.arcade[data-palette='modul'] .exit-btn {
+  right: 116px;
 }
 .arcade[data-palette='modul'] .feedback-btn {
   top: 64px;
@@ -1355,6 +1376,7 @@ a {
 }
 .arcade[data-palette='modul'] .hud {
   min-height: 124px;
+  padding-right: 176px;
 }
 .arcade[data-palette='modul'] .feedback-form textarea,
 .arcade[data-palette='modul'] .feedback-form input {
