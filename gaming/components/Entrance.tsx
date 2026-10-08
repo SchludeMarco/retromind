@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Cloud } from '../lib/useCloudSync';
+import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
+import { warmUpGoogle } from '../../lib/googleAuth';
+import { setConsent } from '../../lib/privacy';
 import { chip, DOOR_SWING } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
@@ -42,6 +46,74 @@ const Bulb: React.FC = () => (
   </div>
 );
 
+// Optional sign-ins right at the door (Marco, 2026-10-08): Google keeps the
+// profile and coins in sync, Spotify (its own account) brings whole songs.
+// Text in English and German until the app-wide translation lands.
+const LOGIN_TEXT = {
+  en: {
+    google: 'SIGN IN WITH GOOGLE',
+    googleBusy: 'SIGNING IN …',
+    googleAs: (n: string) => `Signed in with Google as ${n}`,
+    spotify: 'CONNECT SPOTIFY',
+    spotifyBusy: 'REDIRECTING …',
+    spotifyAs: (n: string) => `Spotify connected (${n})`,
+    note: 'Optional. Google saves your progress and coins, Spotify plays the hall music in full.',
+  },
+  de: {
+    google: 'MIT GOOGLE ANMELDEN',
+    googleBusy: 'ANMELDEN …',
+    googleAs: (n: string) => `Mit Google angemeldet als ${n}`,
+    spotify: 'SPOTIFY VERBINDEN',
+    spotifyBusy: 'WEITERLEITUNG …',
+    spotifyAs: (n: string) => `Spotify verbunden (${n})`,
+    note: 'Freiwillig. Google sichert Fortschritt und Coins, mit Spotify läuft die Hallenmusik in voller Länge.',
+  },
+};
+
+const DoorLogins: React.FC<{ cloud: Cloud; spotifyAuth: SpotifyAuth; disabled: boolean }> = ({ cloud, spotifyAuth, disabled }) => {
+  const t = LOGIN_TEXT[document.documentElement.lang.startsWith('de') ? 'de' : 'en'];
+  const google = cloud.status === 'signed_in';
+  const spotifyOn = spotifyAuth.status !== 'not_configured';
+  const spotify = spotifyAuth.status === 'signed_in';
+  return (
+    <div className="door-logins">
+      <div className="door-login-row">
+        {google ? (
+          <span className="door-login-done">✓ {t.googleAs(cloud.user?.name?.split(' ')[0] ?? '')}</span>
+        ) : (
+          <button
+            className="px-btn"
+            onClick={cloud.signIn}
+            // Google's script only loads once someone reaches for this button.
+            onPointerEnter={warmUpGoogle}
+            onPointerDown={warmUpGoogle}
+            onFocus={warmUpGoogle}
+            disabled={disabled || cloud.status === 'signing_in'}
+          >
+            {cloud.status === 'signing_in' ? t.googleBusy : t.google}
+          </button>
+        )}
+        {spotifyOn &&
+          (spotify ? (
+            <span className="door-login-done">✓ {t.spotifyAs(spotifyAuth.user?.name ?? '')}</span>
+          ) : (
+            <button
+              className="px-btn"
+              onClick={() => {
+                setConsent('spotify', true);
+                spotifyAuth.signIn();
+              }}
+              disabled={disabled || spotifyAuth.status === 'signing_in'}
+            >
+              {spotifyAuth.status === 'signing_in' ? t.spotifyBusy : t.spotify}
+            </button>
+          ))}
+      </div>
+      {!(google && (spotify || !spotifyOn)) && <p className="dim door-login-note">{t.note}</p>}
+    </div>
+  );
+};
+
 export const Entrance: React.FC<{
   onEnter: () => void;
   reducedMotion: boolean;
@@ -50,7 +122,9 @@ export const Entrance: React.FC<{
   /** Spotify (Premium) already plays the hall's music quietly out here. */
   spotifyAtDoor: boolean;
   onToggleMute: () => void;
-}> = ({ onEnter, reducedMotion, muted, music, spotifyAtDoor, onToggleMute }) => {
+  cloud: Cloud;
+  spotifyAuth: SpotifyAuth;
+}> = ({ onEnter, reducedMotion, muted, music, spotifyAtDoor, onToggleMute, cloud, spotifyAuth }) => {
   const [entering, setEntering] = useState(false);
   const [soundWaiting, setSoundWaiting] = useState(false);
   const stopAmbient = useRef<() => void>(() => {});
@@ -132,6 +206,7 @@ export const Entrance: React.FC<{
           <LoudSign show={!muted} />
           <MuteButton muted={muted} onToggle={onToggleMute} />
         </div>
+        <DoorLogins cloud={cloud} spotifyAuth={spotifyAuth} disabled={entering} />
       </div>
       <div className="white-out" />
       {SOUND_DEBUG && <SoundDebug />}
