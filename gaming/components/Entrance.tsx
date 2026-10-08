@@ -4,6 +4,7 @@ import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
 import { warmUpGoogle } from '../../lib/googleAuth';
 import { setConsent } from '../../lib/privacy';
 import { chip, DOOR_SWING } from '../lib/chiptune';
+import { DoorSong } from '../lib/street';
 import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
 import { isGerman, tr } from '../../lib/i18n';
@@ -120,14 +121,17 @@ export const Entrance: React.FC<{
   muted: boolean;
   music: boolean;
   /** Spotify (Premium) already plays the hall's music out here. */
-  spotifyAtDoor: boolean;
+  doorSong: DoorSong | null;
   onToggleMute: () => void;
   cloud: Cloud;
   spotifyAuth: SpotifyAuth;
-}> = ({ onEnter, reducedMotion, muted, music, spotifyAtDoor, onToggleMute, cloud, spotifyAuth }) => {
+}> = ({ onEnter, reducedMotion, muted, music, doorSong, onToggleMute, cloud, spotifyAuth }) => {
   const [entering, setEntering] = useState(false);
   const [soundWaiting, setSoundWaiting] = useState(false);
-  const stopAmbient = useRef<() => void>(() => {});
+  const ambient = useRef<{ stop: () => void; songPlaying: () => boolean }>({
+    stop: () => {},
+    songPlaying: () => false,
+  });
 
   // Queue the muffled hall sound now; the first touch or key anywhere lets it play.
   useEffect(() => {
@@ -136,9 +140,9 @@ export const Entrance: React.FC<{
       chip.debug.ambient = 'aus (Musik ausgeschaltet)';
       return;
     }
-    const stop = spotifyAtDoor ? () => {} : chip.ambient();
-    if (spotifyAtDoor) chip.debug.ambient = 'Spotify läuft leise vor der Tür';
-    stopAmbient.current = stop;
+    // With Premium the song from inside, muffled (it restarts once its name is known).
+    const door = chip.ambient(doorSong);
+    ambient.current = door;
     const wake = () => chip.unlock();
     const events = ['pointerdown', 'pointerup', 'touchend', 'keydown', 'click'];
     events.forEach((e) => window.addEventListener(e, wake, true));
@@ -146,18 +150,19 @@ export const Entrance: React.FC<{
     return () => {
       events.forEach((e) => window.removeEventListener(e, wake, true));
       clearInterval(poll);
-      stop();
+      door.stop();
     };
-  }, [music, spotifyAtDoor]);
+  }, [music, doorSong?.id, doorSong?.name]);
 
   const enter = () => {
     if (entering) return;
     setEntering(true);
     chip.unlock();
-    stopAmbient.current();
+    const songOutside = ambient.current.songPlaying();
+    ambient.current.stop();
     // Inside the hall a heavy metal riff kicks in before the hub tune, unless
-    // Spotify already plays out here and simply carries on inside.
-    if (!spotifyAtDoor) chip.queueMetalIntro();
+    // the song from inside already played out here and simply goes on.
+    if (!songOutside) chip.queueMetalIntro();
     if (reducedMotion) {
       chip.chime();
       setTimeout(onEnter, 300);

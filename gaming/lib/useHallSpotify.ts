@@ -33,19 +33,16 @@ import { SpotifyHit } from '../../lib/spotifyApi';
 // "The 100 Best Metal Songs of 80s" (The Eighties Guy).
 export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
 
-// Signed in with Premium, the hall's Spotify music already plays in front of
-// the door and the same song carries on inside (Marco, 2026-10-07 and
-// 2026-10-08). In a desktop browser (Premium's own player) it is quiet
-// outside and gets loud once you are inside; on phones the embedded player
-// has no volume, so it plays at full level from the start. Spotify's sound
-// can only be made quieter, not muffled; everyone else hears the muffled
-// recording at the door (gaming/lib/street.ts).
-const OUTSIDE_LEVEL = 0.15;
+// Signed in with Premium, the song that plays inside is already heard in
+// front of the door (Marco, 2026-10-07 and 2026-10-08), muffled and bassy as
+// through the wall, and carries on inside. Spotify's own player can't be
+// muffled, so at the door the song's preview clip plays through a filter
+// (gaming/lib/street.ts) and Spotify starts the same song once you are in.
 
 /**
  * `enabled`: plays in the hall (music on, no video). `outside`: the visitor
- * stands at the entrance with music on; then it plays with Premium.
- * `premiumAccount`: signed in with a Spotify Premium account, also on devices
+ * stands at the entrance with music on; with Premium the hook names the song
+ * for the door (`doorSong`). `premiumAccount`: signed in with a Spotify Premium account, also on devices
  * where the embed plays (phones).
  */
 export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false, premiumAccount = false) {
@@ -57,7 +54,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   const premium = usePremiumPlayback();
   const doorMusic = premium || premiumAccount;
   const atDoor = outside && doorMusic;
-  const on = enabled || atDoor;
+  const on = enabled;
   const muted = useMuted();
   const startedRef = useRef(false);
   // Browsers block audio until the first tap or key press.
@@ -258,19 +255,13 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   }, [sync]);
 
   useEffect(sync, [on, muted, userPaused, sync]);
-  // Quiet in front of the door, loud inside (fades over a moment as the door opens).
-  useEffect(() => {
-    controllerRef.current?.setLevel?.(atDoor ? OUTSIDE_LEVEL : 1, 1500);
-  }, [atDoor, ready]);
 
   /** true while Spotify stands in for the chiptune music. */
   const active = wanted && allowed;
   return {
     containerRef,
-    /** Spotify plays at the door (Premium), so the muffled recording stays off. */
-    atDoor: atDoor && active,
-    /** Premium: the door's song simply carries on inside (no metal intro). */
-    fromDoor: doorMusic && active,
+    /** Premium at the door: the song that will play inside, heard muffled outside. */
+    doorSong: atDoor && active && song && !special ? { id: song, name: trackName(song) } : null,
     /** Premium's browser player drives the hall music (with volume control). */
     premium: premium && active,
     ready,

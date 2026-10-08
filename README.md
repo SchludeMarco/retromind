@@ -220,11 +220,13 @@ sauber klingt (`gaming/lib/metal.ts`). Hast du
 Spotify erlaubt, läuft in der Halle nach dem Intro echter Heavy Metal der
 80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
 Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
-Bist du in Gaming mit Spotify Premium angemeldet, läuft die Spotify-Musik
-schon vor der Tür, und derselbe Song spielt drinnen einfach weiter; das Intro
-entfällt dann. Im Browser am PC ist sie draußen leise und wird beim Eintreten
-laut, am Handy (eingebetteter Player ohne Lautstärke) läuft sie gleich normal
-laut. Dumpf machen lässt sich Spotify nicht, nur leiser.
+Bist du in Gaming mit Spotify Premium angemeldet, hörst du vor der Tür schon
+den Song, der drinnen läuft, dumpf und bassig wie durch die Wand, und drinnen
+spielt Spotify genau diesen Song; das Intro entfällt dann. Weil sich Spotifys
+Player nicht filtern lässt, läuft draußen der 30-Sekunden-Ausschnitt des Songs
+in Schleife durch einen Tiefpass (`api/spotify-preview.js` holt ihn über unseren
+Server bei Spotify, sonst bei Deezer; [`gaming/lib/street.ts`](gaming/lib/street.ts)).
+Gibt es keinen Ausschnitt, läuft draußen die gedämpfte Hallen-Aufnahme.
 Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
 schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
 Zurück, Play/Pause, Weiter, Ton an/aus), nur mit einem Blitz statt einer Note.
@@ -265,6 +267,8 @@ lesbare Schrift und eine Navigation unten mit Katalog, Kisten, Stash, Trophäen
 und Chillen), dazu die Pixel-Looks „Handheld“ und „Bernstein“. Das Design-System liegt in
 [`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
 `gaming/gaming.css` (Abschnitt „Design Modul“).
+**Club verlassen** – oben in der Kopfleiste, links neben Ton und Zahnrad, führt ein Tür-Knopf aus der Halle zurück auf die Straße vor die Tür; ein offenes Spiel schließt sich, die Musik von drinnen ist wieder nur dumpf durch die Wand zu hören.
+
 **Feedback** – roter Knopf mit Briefsymbol und Aufschrift „Feedback“ in der Kopfleiste, unter Ton und Zahnrad. Läuft über dieselbe `/api/feedback` der
 Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“

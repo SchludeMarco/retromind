@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Club wieder verlassen** (2026-10-08, PR #169): In der Gaming-Halle sitzt
+  oben in der Kopfleiste jetzt ein Tür-Knopf neben Ton und Einstellungen. Er
+  bringt dich zurück vor die Tür, wo die Musik wieder gedämpft durch die Wand
+  kommt; mit „ENTER“ geht es wieder hinein.
+
+- **Vor der Gaming-Halle wieder dumpf und bassig, mit dem Song von drinnen**
+  (2026-10-08, PR #169): Wer mit Spotify Premium angemeldet ist, hört vor der
+  Tür wieder gedämpfte, bassige Musik wie durch die Wand, jetzt aber genau den
+  Song, der drinnen läuft. Draußen ist das ein Ausschnitt des Songs, drinnen
+  spielt Spotify ihn dann komplett, auch am Handy. Gibt es für einen Song keinen
+  Ausschnitt, kommt draußen wie früher der gedämpfte Metal aus der Halle.
+
 - **Spotify-Musik schon vor der Gaming-Halle, auch am Handy** (2026-10-08,
   PR #168): Wer mit Spotify Premium angemeldet ist, hört die Hallenmusik jetzt
   auch am Handy schon vor der Tür, und beim Eintreten läuft derselbe Song
