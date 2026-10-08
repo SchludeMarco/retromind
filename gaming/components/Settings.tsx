@@ -6,6 +6,7 @@ import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
 import { warmUpGoogle } from '../../lib/googleAuth';
+import { useSecretAdminTaps } from '../../lib/admin';
 import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
 
 export const PALETTES: { id: Palette; label: string }[] = [
@@ -39,6 +40,7 @@ interface Props {
 export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose }) => {
   const muted = useMuted();
   const youtube = useConsent('youtube') === true;
+  const onHeadingTap = useSecretAdminTaps();
   const spotify = useConsent('spotify') === true;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -56,7 +58,7 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
         aria-label="Einstellungen"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="pixel-font">⚙ EINSTELLUNGEN</h2>
+        <h2 className="pixel-font" onClick={onHeadingTap}>⚙ EINSTELLUNGEN</h2>
         <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
           ✕
         </button>
