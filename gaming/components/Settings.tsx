@@ -270,6 +270,8 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
             </a>
           </p>
         </section>
+
+        <p className="dim settings-version">RetroMind – Gaming · Version {__APP_VERSION__}</p>
       </div>
     </div>
   );
