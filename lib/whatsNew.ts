@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Modul einlegen, diesmal richtig': {
+    title: 'Inserting the cartridge, done right',
+    text: 'Opening a game looked off: the cartridge fell past the console and showed up below it. Now the cartridge floats in with its cover, lines up over the slot and gets pushed in until it clicks home. The console jolts, the red light comes on, the switch flips, and the TV turns on with a white line that opens into the game page. Tap to skip.',
+  },
   'Modul einlegen, Highscore-Tafel, neue Automaten-Spiele und die Urzeit': {
     title: 'Insert the cartridge, a high score table, new arcade games and the stone age',
     text: 'Tap a game card and the cartridge slides into a console slot before the game page “boots”; there you swipe to the next game. Achievements pop up like on a console, as a round trophy bar with a “bloop”. You can drag the coin into the slot by hand, the cabinets blink behind the catalog, and after a minute without input the attract mode runs covers with a blinking INSERT COIN. New in the chill zone: Breakout, Snake, a space invasion and the “Name that game” quiz with coins as the reward. After a good round you put your three initials on the shared high score table. Every day the hall shows “Today X years ago”, a game released on that date. Next to the stash there’s a “Had it back then” shelf for the games and consoles of your childhood, and the ’70s with Pong, Space Invaders and co. are in as the stone age.',

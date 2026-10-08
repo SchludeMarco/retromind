@@ -208,8 +208,9 @@ neben dem Knopf in den Schlitz ziehen (`gaming/components/CoinDrop.tsx`).
 Unter der Suche steht jeden Tag „Heute vor X Jahren“: ein bekanntes Spiel,
 das an diesem Datum erschienen ist, aus Wikidata über `api/proxy.js`
 ([`gaming/lib/onThisDay.ts`](gaming/lib/onThisDay.ts)). Tippst du eine Karte an,
-rutscht das Modul in einen Konsolenschacht, die Lampe geht an, der Bildschirm
-flackert und die Spieleseite „bootet“ (`gaming/components/CartInsert.tsx`); auf
+schwebt das Modul heran und wird in den Schacht der Konsole gedrückt (es
+steckt danach sichtbar drin), es klackt, die Lampe geht an, der Fernseher
+schaltet sich mit einem weißen Strich ein und die Spieleseite „bootet“ (`gaming/components/CartInsert.tsx`); auf
 der Spieleseite blätterst du per Wischen oder mit ◄ ► zum nächsten Spiel der
 Liste. Erfolge erscheinen wie auf der Konsole als runde Pokal-Leiste unten mit
 weichem „Plopp“. Hinter dem Katalog blinken die Lichter der Automaten, und
