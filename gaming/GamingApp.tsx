@@ -5,10 +5,14 @@ import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { useCover } from './lib/covers';
+import { DayGame, fetchOnThisDay } from './lib/onThisDay';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { Entrance } from './components/Entrance';
 import { MuteButton } from './components/MuteButton';
+import { CartInsert } from './components/CartInsert';
+import { CoinDrop } from './components/CoinDrop';
+import { ATTRACT_AFTER_MS, AttractMode } from './components/AttractMode';
 import { PacmanWander } from './components/PacmanWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
@@ -82,6 +86,15 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
   );
 };
 
+// Blinking lights on the cabinets in the hall picture, spread over its middle.
+const HALL_LIGHTS = Array.from({ length: 12 }, (_, i) => ({
+  x: 6 + ((i * 37) % 88),
+  y: 22 + ((i * 53) % 55),
+  c: ['#ff3b6b', '#3bd5ff', '#ffd84a', '#7cff6b'][i % 4],
+  d: 2.2 + (i % 5) * 0.7,
+  delay: (i * 0.9) % 4,
+}));
+
 // How long an Easter egg or badge note stays up.
 const TOAST_MS = 12000;
 
@@ -91,11 +104,11 @@ export const GamingApp: React.FC = () => {
   const [screen, setScreen] = useState<'power' | 'hub'>('power');
   // After the door the hub comes up out of the white picture.
   const [fromDoor, setFromDoor] = useState(false);
-  const [toast, setToast] = useState<{ title: string; text: string; icon?: string } | null>(null);
+  const [toast, setToast] = useState<{ title: string; text: string; icon?: string; xbox?: boolean } | null>(null);
   const [rainbow, setRainbow] = useState(false);
 
-  const showToast = useCallback((title: string, text: string, icon?: string) => {
-    setToast({ title, text, icon });
+  const showToast = useCallback((title: string, text: string, icon?: string, xbox?: boolean) => {
+    setToast({ title, text, icon, xbox });
   }, []);
   // Found an egg or a badge: the note stays long enough to read it (Marco,
   // 2026-10-08: 3.8 s was far too short) and the x closes it earlier.
@@ -107,8 +120,9 @@ export const GamingApp: React.FC = () => {
 
   const onAchievement = useCallback(
     (a: Achievement) => {
-      chip.play('achievement');
-      showToast(`ACHIEVEMENT UNLOCKED: ${a.title}`, a.text);
+      // Like on a console: the round trophy pops up at the bottom with its "plopp".
+      chip.play('plopp');
+      showToast(tr('Achievement unlocked', 'Erfolg freigeschaltet'), a.title, '🏆', true);
     },
     [showToast]
   );
@@ -126,7 +140,7 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg } = useArcadeState(onAchievement, onQuest, onEgg);
+  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg);
   const cloud = useCloudSync(state, mergeIn);
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
@@ -287,9 +301,10 @@ export const GamingApp: React.FC = () => {
       .catch(() => setAiAvailable(false));
   }, []);
 
-  const open = useCallback(
+  // The game page itself; `from` is the side a swiped-in game slides from.
+  const [slideFrom, setSlideFrom] = useState<'left' | 'right' | null>(null);
+  const show = useCallback(
     (game: Game) => {
-      chip.play('select');
       discover(game);
       track('open');
       countOpened('gaming', 'game', game.title);
@@ -297,6 +312,21 @@ export const GamingApp: React.FC = () => {
     },
     [discover, track]
   );
+  // A tapped card first slides into the console slot (CartInsert).
+  const [inserting, setInserting] = useState<Game | null>(null);
+  const open = useCallback(
+    (game: Game) => {
+      chip.play('select');
+      setSlideFrom(null);
+      if (reducedMotion) show(game);
+      else setInserting(game);
+    },
+    [show, reducedMotion]
+  );
+  const insertDone = () => {
+    if (inserting) show(inserting);
+    setInserting(null);
+  };
   const closeDetail = useCallback(() => {
     chip.play('back');
     setSelected(null);
@@ -324,6 +354,12 @@ export const GamingApp: React.FC = () => {
     const ids = Array.from(new Set([...state.favorites, ...state.completed]));
     return ids.map((id) => GAMES.find((g) => g.id === id) ?? state.customGames[id]).filter(Boolean) as Game[];
   }, [state.favorites, state.completed, state.customGames]);
+  // The "had it back then" shelf next to the stash.
+  const [shelf, setShelf] = useState<'stash' | 'hadback'>('stash');
+  const hadBackGames = useMemo(
+    () => state.hadBack.map((id) => GAMES.find((g) => g.id === id) ?? state.customGames[id]).filter(Boolean) as Game[],
+    [state.hadBack, state.customGames]
+  );
 
   // The years the filter covers: one year, a decade, or none (all of them).
   const yearRange = useMemo(() => {
@@ -528,7 +564,75 @@ export const GamingApp: React.FC = () => {
 
   const score = scoreOf(state);
   const shown: Game[] =
-    view === 'catalog' ? [...catalog, ...archiveShown] : view === 'collection' ? collection : view === 'search' ? results ?? [] : [];
+    view === 'catalog'
+      ? [...catalog, ...archiveShown]
+      : view === 'collection'
+        ? shelf === 'hadback'
+          ? hadBackGames
+          : collection
+        : view === 'search'
+          ? results ?? []
+          : [];
+
+  // Swiping on the game page flips through the cards the way they are shown,
+  // like browsing a shelf.
+  const neighbor = (dir: 1 | -1): Game | undefined => {
+    if (!selected) return undefined;
+    const i = shown.findIndex((g) => g.id === selected.id);
+    return i < 0 ? undefined : shown[i + dir];
+  };
+  const browse = (dir: 1 | -1) => {
+    const g = neighbor(dir);
+    if (!g) return;
+    chip.play('blip');
+    setSlideFrom(dir === 1 ? 'right' : 'left');
+    show(g);
+  };
+
+  // "Today X years ago": a game released on this date, once per visit.
+  const [dayGame, setDayGame] = useState<DayGame | null>(null);
+  useEffect(() => {
+    if (screen !== 'hub') return;
+    let alive = true;
+    fetchOnThisDay().then((list) => alive && setDayGame(list[0] ?? null));
+    return () => {
+      alive = false;
+    };
+  }, [screen]);
+  const openDayGame = () => {
+    if (!dayGame) return;
+    const title = dayGame.wiki.replace(/ \((\d{4} )?video game\)$/i, '');
+    open(
+      withCurated({
+        id: `wiki:${dayGame.wiki}`,
+        title,
+        year: dayGame.year,
+        platform: 'Fundstück',
+        developer: '',
+        genre: tr('released on this day', 'heute vor Jahren erschienen'),
+        wiki: dayGame.wiki,
+        custom: true,
+      })
+    );
+  };
+
+  // Attract mode: a minute without input in the hall and the covers run by.
+  const [attract, setAttract] = useState(false);
+  const attractAllowed = screen === 'hub' && !selected && !inserting && !miniGame && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
+  useEffect(() => {
+    if (!attractAllowed || reducedMotion) return;
+    let id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
+    const reset = () => {
+      clearTimeout(id);
+      id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
+    };
+    const events = ['pointerdown', 'keydown', 'wheel', 'scroll', 'touchstart'] as const;
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    return () => {
+      clearTimeout(id);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, [attractAllowed, reducedMotion]);
 
   return (
     <div
@@ -548,6 +652,15 @@ export const GamingApp: React.FC = () => {
         <div className="hall-bg" aria-hidden="true">
           <img className="hb-photo" src="/gaming/arcade-innen.webp" alt="" />
           <div className="hb-tint" />
+          {/* The cabinets' lights keep blinking behind the catalog. */}
+          <div className="hb-lights">
+            {HALL_LIGHTS.map((l, i) => (
+              <span
+                key={i}
+                style={{ left: `${l.x}%`, top: `${l.y}%`, ['--c' as string]: l.c, ['--d' as string]: `${l.d}s`, ['--delay' as string]: `${-l.delay}s` }}
+              />
+            ))}
+          </div>
         </div>
       )}
       {screen === 'hub' && <PacmanWander onCatch={() => findEgg('pacman')} />}
@@ -672,9 +785,10 @@ export const GamingApp: React.FC = () => {
                 GO!
               </button>
             </form>
-            <button className="px-btn big coin-btn" onClick={insertCoin} data-nav aria-live="polite">
-              {rolling ? `▶ ${rolling}` : tr('🪙 INSERT COIN · SURPRISE ME!', '🪙 INSERT COIN · ÜBERRASCH MICH!')}
-            </button>
+            <CoinDrop
+              onInsert={insertCoin}
+              label={rolling ? `▶ ${rolling}` : tr('INSERT COIN · SURPRISE ME!', 'INSERT COIN · ÜBERRASCH MICH!')}
+            />
             {results && view !== 'search' && (
               <button className="px-btn" onClick={() => switchView('search')} data-nav>
                 {tr('◄ BACK TO SEARCH RESULTS', '◄ ZURÜCK ZU DEN SUCHERGEBNISSEN')}
@@ -686,6 +800,17 @@ export const GamingApp: React.FC = () => {
               </button>
             )}
           </div>
+
+          {dayGame && view === 'catalog' && (
+            <button className="day-game" onClick={openDayGame} data-nav>
+              <span className="pixel-font">
+                {tr(`TODAY ${new Date().getFullYear() - dayGame.year} YEARS AGO`, `HEUTE VOR ${new Date().getFullYear() - dayGame.year} JAHREN`)}
+              </span>
+              <span>
+                {dayGame.wiki.replace(/ \((\d{4} )?video game\)$/i, '')} {tr('came out', 'kam raus')} ({dayGame.year}) ►
+              </span>
+            </button>
+          )}
 
           {/* The mini games: one of the sections in the dock. */}
           {view === 'chill' && (
@@ -757,6 +882,44 @@ export const GamingApp: React.FC = () => {
                 ))}
               </div>
             )}
+            </>
+          )}
+
+          {view === 'collection' && (
+            <>
+              <div className="filters scroll-row" aria-label={tr('Shelf', 'Regal')}>
+                <button className="px-btn" aria-pressed={shelf === 'stash'} onClick={() => { setShelf('stash'); chip.play('blip'); }} data-nav>
+                  {tr('★ MY STASH', '★ MEIN STASH')} ({collection.length})
+                </button>
+                <button className="px-btn" aria-pressed={shelf === 'hadback'} onClick={() => { setShelf('hadback'); chip.play('blip'); }} data-nav>
+                  {tr('♥ HAD IT BACK THEN', '♥ HATTE ICH DAMALS')} ({hadBackGames.length + state.hadSystems.length})
+                </button>
+              </div>
+              {shelf === 'hadback' && (
+                <div className="panel had-systems">
+                  <h3 className="pixel-font">{tr('MY SYSTEMS BACK THEN', 'MEINE KISTEN DAMALS')}</h3>
+                  <p className="dim" style={{ margin: '0 0 8px' }}>
+                    {tr('Tap the consoles and computers you really had as a kid.', 'Tipp die Konsolen und Computer an, die du als Kind wirklich hattest.')}
+                  </p>
+                  <div className="filters">
+                    {PLATFORMS.map((p) => (
+                      <button
+                        key={p.id}
+                        className="px-btn"
+                        aria-pressed={state.hadSystems.includes(p.id)}
+                        onClick={() => {
+                          const on = state.hadSystems.includes(p.id);
+                          chip.play(on ? 'back' : 'coin');
+                          set('hadSystems', on ? state.hadSystems.filter((x) => x !== p.id) : [...state.hadSystems, p.id]);
+                        }}
+                        data-nav
+                      >
+                        {KIND_ICON[p.kind]} {platformLabel(p.id)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
 
@@ -858,7 +1021,9 @@ export const GamingApp: React.FC = () => {
             </>
           ) : (
             <p className="empty pixel-font" style={{ fontSize: 11 }}>
-              {view === 'collection'
+              {view === 'collection' && shelf === 'hadback'
+                ? tr('NO GAMES ON THIS SHELF YET. OPEN A GAME AND TAP ♥ HAD IT.', 'NOCH KEINE GAMES IM REGAL. ÖFFNE EIN GAME UND TIPP AUF ♥ HATTE ICH.')
+                : view === 'collection'
                 ? tr('NOTHING HERE YET. ★ COLLECT THE GAMES THAT SHAPED YOU.', 'TOTE HOSE HIER. ★ SAMMLE GAMES, DIE DICH GEPRÄGT HABEN.')
                 : view === 'search'
                   ? tr('NOTHING FOUND. EPIC FAIL. TRY ANOTHER NAME.', 'NIX GEFUNDEN. EPIC FAIL. PROBIER NEN ANDEREN NAMEN.')
@@ -1036,6 +1201,7 @@ export const GamingApp: React.FC = () => {
             unlock('chill');
             track('minigame');
           }}
+          onEarn={earn}
           onClose={() => {
             chip.play('back');
             setMiniGame(null);
@@ -1043,11 +1209,24 @@ export const GamingApp: React.FC = () => {
         />
       )}
 
+      {inserting && <CartInsert game={inserting} onDone={insertDone} />}
+
+      {attract && <AttractMode onExit={() => setAttract(false)} />}
+
       {selected && (
         <GameDetail
+          key={selected.id}
           game={selected}
+          slideFrom={slideFrom}
+          onPrev={neighbor(-1) ? () => browse(-1) : undefined}
+          onNext={neighbor(1) ? () => browse(1) : undefined}
           isFavorite={state.favorites.includes(selected.id)}
           isCompleted={state.completed.includes(selected.id)}
+          isHadBack={state.hadBack.includes(selected.id)}
+          onToggleHadBack={() => {
+            chip.play(state.hadBack.includes(selected.id) ? 'back' : 'coin');
+            toggleIn('hadBack', selected);
+          }}
           onToggleFavorite={() => {
             chip.play(state.favorites.includes(selected.id) ? 'back' : 'coin');
             toggleIn('favorites', selected);
@@ -1063,7 +1242,7 @@ export const GamingApp: React.FC = () => {
       )}
 
       {toast && (
-        <div className="toast" role="status">
+        <div className={`toast${toast.xbox ? ' xbox' : ''}`} role="status">
           <span style={{ fontSize: 28 }} aria-hidden="true">
             {toast.icon ?? '🏆'}
           </span>

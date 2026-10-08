@@ -9,7 +9,7 @@ import { SidPlayer } from './sid';
 import { DoorSong, StreetAmbience } from './street';
 import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
 
-export type SfxName = 'blip' | 'select' | 'back' | 'coin' | 'powerup' | 'error' | 'start' | 'achievement';
+export type SfxName = 'blip' | 'select' | 'back' | 'coin' | 'powerup' | 'error' | 'start' | 'achievement' | 'plopp';
 
 type Wave = OscillatorType;
 
@@ -31,6 +31,7 @@ const BUZZ: Partial<Record<SfxName, number | number[]>> = {
   coin: [25, 40, 25],
   powerup: [20, 30, 60],
   achievement: [40, 60, 40, 60, 90],
+  plopp: [35, 50, 70],
   error: 90,
   start: 45,
 };
@@ -200,6 +201,13 @@ class ChipSound {
         break;
       case 'achievement':
         seq(['C6', 'E6', 'G6', 'E6', 'G6', 'C7'], 0.08, 'square', 0.15);
+        break;
+      case 'plopp':
+        // The soft, round "bloop" of a console achievement: a quick drop,
+        // then a brighter pair of sine notes.
+        this.tone(bus, 520, t, 0.09, 'sine', 0.3, 300);
+        this.tone(bus, noteFreq('E6'), t + 0.1, 0.16, 'sine', 0.22);
+        this.tone(bus, noteFreq('B6'), t + 0.18, 0.28, 'sine', 0.18);
         break;
     }
   }

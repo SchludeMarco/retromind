@@ -5,6 +5,10 @@ import { Sudoku, sudokuBest } from './minigames/Sudoku';
 import { Blocks, blocksBest } from './minigames/Blocks';
 import { Pinball, pinballBest } from './minigames/Pinball';
 import { PacMan, pacmanBest } from './minigames/PacMan';
+import { Breakout, breakoutBest } from './minigames/Breakout';
+import { Snake, snakeBest } from './minigames/Snake';
+import { Invaders, invadersBest } from './minigames/Invaders';
+import { Quiz, quizBest } from './minigames/Quiz';
 import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
@@ -74,6 +78,38 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
       'Punkte futtern, Geistern ausweichen, nach der Kraftpille den Spieß umdrehen. Wie Pac-Man am Automaten. Wischen oder Pfeiltasten.'
     ),
     best: pacmanBest,
+  },
+  {
+    id: 'quiz',
+    title: tr('NAME THAT GAME', 'ERKENNST DU DAS SPIEL?'),
+    statKey: 'SPIELE-QUIZ',
+    icon: '🕹️',
+    text: tr('A close-up of a box cover, four titles: which game is it? Every right answer pays a coin (up to 5 a day).', 'Ein Ausschnitt vom Cover, vier Titel: Welches Spiel ist es? Jede richtige Antwort bringt einen Coin (bis zu 5 am Tag).'),
+    best: quizBest,
+  },
+  {
+    id: 'breakout',
+    title: 'BREAKOUT',
+    statKey: 'BREAKOUT',
+    icon: '🏓',
+    text: tr('Bounce the ball into the wall of bricks, like the 1976 arcade classic. Drag to move the paddle.', 'Den Ball in die Steinmauer schmettern, wie beim Automaten-Klassiker von 1976. Ziehen bewegt den Schläger.'),
+    best: breakoutBest,
+  },
+  {
+    id: 'snake',
+    title: 'SNAKE',
+    statKey: 'SNAKE',
+    icon: '🐍',
+    text: tr('Eat the apples, don’t bite your tail, just like on the old phones. Swipe to steer.', 'Äpfel futtern, nicht in den eigenen Schwanz beißen, wie auf den alten Handys. Wischen zum Lenken.'),
+    best: snakeBest,
+  },
+  {
+    id: 'invaders',
+    title: tr('SPACE INVASION', 'WELTRAUM-INVASION'),
+    statKey: 'WELTRAUM-INVASION',
+    icon: '🛸',
+    text: tr('Rows of aliens march down: shoot them before they land, like Space Invaders in 1978. Drag to move, tap to fire.', 'Reihen von Aliens marschieren herab: abschießen, bevor sie landen, wie Space Invaders 1978. Ziehen zum Bewegen, tippen zum Schießen.'),
+    best: invadersBest,
   },
 ];
 
@@ -349,6 +385,7 @@ const Senso: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           }
           record={result.record}
           onAgain={start}
+          board={{ game: 'senso', score: result.round ?? 0 }}
         />
       )}
     </>
@@ -380,7 +417,7 @@ export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void }> = ({
 };
 
 /** One mini game in a sheet over the hub. */
-export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onWin: () => void }> = ({ id, onClose, onWin }) => {
+export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onWin: () => void; onEarn?: (coins: number) => void }> = ({ id, onClose, onWin, onEarn }) => {
   const game = MINI_GAMES.find((g) => g.id === id)!;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -409,6 +446,14 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <Blocks onWin={onWin} />
         ) : id === 'pinball' ? (
           <Pinball onWin={onWin} />
+        ) : id === 'breakout' ? (
+          <Breakout onWin={onWin} />
+        ) : id === 'snake' ? (
+          <Snake onWin={onWin} />
+        ) : id === 'invaders' ? (
+          <Invaders onWin={onWin} />
+        ) : id === 'quiz' ? (
+          <Quiz onWin={onWin} onEarn={onEarn} />
         ) : (
           <PacMan onWin={onWin} />
         )}

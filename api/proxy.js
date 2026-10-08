@@ -12,9 +12,11 @@ const ALLOWED_HOSTS = [
   /^i\.ytimg\.com$/,
   /^assets\.mixkit\.co$/,
   /^www\.transparenttextures\.com$/,
+  // Wikidata's query service: games released on today's date (Gaming).
+  /^query\.wikidata\.org$/,
 ];
 
-const ALLOWED_TYPES = /^(image\/|audio\/|application\/json|application\/problem\+json)/;
+const ALLOWED_TYPES = /^(image\/|audio\/|application\/json|application\/problem\+json|application\/sparql-results\+json)/;
 // Vercel functions answer with at most 4.5 MB.
 const MAX_BYTES = 4 * 1024 * 1024;
 const USER_AGENT = "RetroMind/2.0 (https://retromind.vercel.app; privacy proxy)";

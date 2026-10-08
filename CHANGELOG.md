@@ -7,6 +7,21 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Modul einlegen, Highscore-Tafel, neue Automaten-Spiele und die Urzeit**
+  (2026-10-08, PR #176): Tippst du eine Spielkarte an, rutscht das Modul in
+  einen Konsolenschacht und die Spieleseite „bootet“; dort blätterst du per
+  Wischen zum nächsten Spiel. Erfolge kommen wie auf der Konsole als runde
+  Pokal-Leiste mit „Plopp“. Die Münze lässt sich von Hand in den Schlitz
+  ziehen, hinter dem Katalog blinken die Automaten, und nach einer Minute ohne
+  Eingabe läuft der Attract Mode mit Covern und blinkendem INSERT COIN. Neu
+  in der Chill-Ecke: Breakout, Snake, eine Weltraum-Invasion und das Quiz
+  „Erkennst du das Spiel?“ mit Coins als Belohnung. Nach einer guten Runde
+  trägst du dich mit drei Buchstaben in die gemeinsame Highscore-Tafel ein.
+  Jeden Tag zeigt die Halle „Heute vor X Jahren“ ein Spiel, das an diesem
+  Datum erschienen ist. Neben dem Stash gibt es das Regal „Hatte ich damals“
+  für Spiele und Konsolen deiner Kindheit, und die 70er mit Pong, Space
+  Invaders und Co. sind als Urzeit dazugekommen.
+
 - **Cover auf den Karten, aufgeräumte Halle, Soundtrack und alte Testwertungen**
   (2026-10-08, PR #175): Jede Spielkarte in der Gaming-Halle zeigt jetzt das
   Cover des Spiels, am Handy liegen zwei Karten nebeneinander. Oben stehen nur

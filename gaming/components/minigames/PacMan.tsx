@@ -719,6 +719,7 @@ export const PacMan: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           text={tr(`${result.score} points, made it to level ${result.level}.`, `${result.score} Punkte, bis Level ${result.level} gekommen.`)}
           record={result.record}
           onAgain={again}
+          board={{ game: 'pacman', score: result.score }}
         />
       )}
     </>

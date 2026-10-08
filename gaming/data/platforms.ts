@@ -45,7 +45,7 @@ export const PLATFORMS: PlatformInfo[] = [
   { id: 'Atari 2600', category: 'Atari 2600 games', color: '#a0522d', maker: 'Spielhalle', kind: 'console', photo: 'Atari-2600-Wood-4Sw-Set.png', from: 1977 },
   { id: 'C64', category: 'Commodore 64 games', color: '#8e7cc3', maker: 'Computer', kind: 'computer', photo: 'Commodore-64-Computer-FL.jpg', from: 1982 },
   { id: 'ZX Spectrum', category: 'ZX Spectrum games', color: '#d35400', maker: 'Computer', kind: 'computer', photo: 'ZXSpectrum48k.jpg', from: 1982 },
-  { id: 'Arcade', category: 'Arcade video games', color: '#e84393', maker: 'Spielhalle', kind: 'arcade', photo: 'Fliperama.jpg', from: 1978 },
+  { id: 'Arcade', category: 'Arcade video games', color: '#e84393', maker: 'Spielhalle', kind: 'arcade', photo: 'Fliperama.jpg', from: 1971 },
   { id: 'NES', category: 'Nintendo Entertainment System games', color: '#c0392b', maker: 'Nintendo', kind: 'console', photo: 'NES-Console-Set.png', from: 1983 },
   { id: 'Master System', category: 'Master System games', color: '#e74c3c', maker: 'Sega', kind: 'console', photo: 'Sega-Master-System-Set.png', from: 1985 },
   { id: 'Amiga', category: 'Amiga games', color: '#e67e22', maker: 'Computer', kind: 'computer', photo: 'Amiga500_system.jpg', from: 1985 },

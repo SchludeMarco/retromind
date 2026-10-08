@@ -38,6 +38,9 @@
     "api/stats.js": {
       "maxDuration": 10
     },
+    "api/highscores.js": {
+      "maxDuration": 10
+    },
     "api/admin.js": {
       "maxDuration": 15
     },
