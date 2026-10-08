@@ -857,6 +857,24 @@ a {
   animation: toast-in 0.3s steps(3);
   max-width: calc(100vw - 32px);
 }
+.toast-close {
+  align-self: flex-start;
+  margin: -6px -8px 0 4px;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--a3);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.toast-close:hover,
+.toast-close:focus-visible {
+  color: #fff;
+}
 .toast .pixel-font {
   font-size: 10px;
   color: var(--a3);
@@ -1678,6 +1696,10 @@ a {
   border-bottom: 4px solid var(--a3);
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.arcade[data-palette='modul'] .toast-close:hover,
+.arcade[data-palette='modul'] .toast-close:focus-visible {
+  color: var(--a1);
 }
 .arcade[data-palette='modul'] .spotify-ask {
   background: #fff;

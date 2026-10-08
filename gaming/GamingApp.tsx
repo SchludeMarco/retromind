@@ -60,6 +60,9 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
   </button>
 );
 
+// How long an Easter egg or badge note stays up.
+const TOAST_MS = 12000;
+
 export const GamingApp: React.FC = () => {
   const scrolledDown = useScrolledDown();
   const reducedMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
@@ -72,9 +75,11 @@ export const GamingApp: React.FC = () => {
   const showToast = useCallback((title: string, text: string, icon?: string) => {
     setToast({ title, text, icon });
   }, []);
+  // Found an egg or a badge: the note stays long enough to read it (Marco,
+  // 2026-10-08: 3.8 s was far too short) and the x closes it earlier.
   useEffect(() => {
     if (!toast) return;
-    const id = setTimeout(() => setToast(null), 3800);
+    const id = setTimeout(() => setToast(null), TOAST_MS);
     return () => clearTimeout(id);
   }, [toast]);
 
@@ -1091,6 +1096,9 @@ export const GamingApp: React.FC = () => {
             <div className="pixel-font">{toast.title}</div>
             <div>{toast.text}</div>
           </div>
+          <button className="toast-close" onClick={() => setToast(null)} aria-label={tr('Close', 'Schließen')} title={tr('Close', 'Schließen')}>
+            ×
+          </button>
         </div>
       )}
 

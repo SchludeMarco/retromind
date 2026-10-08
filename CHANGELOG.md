@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Easter-Egg-Meldung bleibt länger stehen** (2026-10-08, PR #170): Findest
+  du in der Gaming-Halle ein Easter Egg oder ein Abzeichen, bleibt die Meldung
+  jetzt 12 statt knapp 4 Sekunden stehen, damit man sie in Ruhe lesen kann.
+  Mit dem „×“ oben rechts lässt sie sich früher schließen.
+
 - **Club wieder verlassen** (2026-10-08, PR #169): In der Gaming-Halle sitzt
   oben in der Kopfleiste jetzt ein Tür-Knopf neben Ton und Einstellungen. Er
   bringt dich zurück vor die Tür, wo die Musik wieder gedämpft durch die Wand
