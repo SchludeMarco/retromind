@@ -212,6 +212,50 @@ class ChipSound {
     }
   }
 
+  /**
+   * A cartridge pushed into the console (CartInsert, Marco 2026-10-08: "ein
+   * satter Sound und dann ein Klick"): the plastic scrapes into the slot for
+   * `push` seconds, lands with a full, deep thunk, and a moment later the
+   * module snaps into place with a crisp double click. The thunk keeps its
+   * body in the mids, since phone speakers drop most of what is under 200 Hz.
+   */
+  insert(push: number) {
+    if (this.sfxEnabled) buzz([20, Math.round(push * 1000) - 20, 80, 50, 25]);
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus || !this.noise) return;
+    const ctx = this.ctx;
+    const bus = this.sfxBus;
+    const t = ctx.currentTime + 0.01;
+    const noise = (start: number, dur: number, type: BiquadFilterType, from: number, to: number, q: number, gain: number, attack = 0.005) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.noise!;
+      src.loop = true;
+      const f = ctx.createBiquadFilter();
+      f.type = type;
+      f.Q.value = q;
+      f.frequency.setValueAtTime(from, start);
+      f.frequency.exponentialRampToValueAtTime(to, start + dur);
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.exponentialRampToValueAtTime(gain, start + attack);
+      env.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      src.connect(f).connect(env).connect(bus);
+      src.start(start);
+      src.stop(start + dur + 0.02);
+    };
+    // Sliding in: a scrape that gets lower and fuller as it goes deeper.
+    noise(t, push, 'bandpass', 2200, 700, 1.2, 1.4, push * 0.5);
+    // Landing: a deep body thump plus a woody "thock" in the mids.
+    const land = t + push;
+    this.tone(bus, 230, land, 0.22, 'sine', 0.75, 70);
+    this.tone(bus, 460, land, 0.07, 'triangle', 0.35, 180);
+    noise(land, 0.12, 'lowpass', 1400, 300, 0.8, 0.7, 0.002);
+    // Locking in: a sharp click, then a smaller one as the latch settles.
+    const lock = land + 0.12;
+    noise(lock, 0.025, 'highpass', 3500, 3500, 0.7, 0.8, 0.001);
+    this.tone(bus, 2600, lock, 0.02, 'square', 0.18, 1800);
+    noise(lock + 0.045, 0.02, 'highpass', 4500, 4500, 0.7, 0.4, 0.001);
+  }
+
   /** One soft, round note for the mini games (Senso pads, memory flips). */
   softNote(note: string, dur = 0.35) {
     if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return;

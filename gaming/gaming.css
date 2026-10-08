@@ -2833,109 +2833,240 @@ section:first-child > .media-head {
   line-height: 1.55;
 }
 
-/* --- Opening a game: the cartridge slides into the console (CartInsert) --- */
+/* --- Opening a game: the cartridge goes into the console (CartInsert) ---
+   A small stage: the console sits at the bottom, the cartridge floats in,
+   lines up over the slot and is pushed in. Everything below the slot line is
+   masked off (.ci-mask), so the cartridge really disappears into the console
+   instead of sliding over it. Thunk at 55 %, click and LED on at 64 %, then the CRT switches on. */
 .cart-insert {
   position: fixed;
   inset: 0;
   z-index: 620;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.78);
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 60%, rgba(40, 30, 60, 0.92), rgba(0, 0, 0, 0.95) 70%);
   overflow: hidden;
+  cursor: pointer;
+}
+.ci-stage {
+  position: relative;
+  width: 300px;
+  height: 390px;
+}
+.ci-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -40vh;
+  height: calc(40vh + 278px);
+  overflow: hidden;
+  z-index: 2;
 }
 .ci-cart {
-  position: relative;
-  z-index: 1;
-  width: 150px;
-  height: 190px;
-  padding: 12px 10px 0;
-  background: #2b2b33;
-  clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-  border-top: 10px solid var(--label);
+  position: absolute;
+  left: 82px;
+  top: calc(40vh + 160px);
+  width: 136px;
+  height: 170px;
+  padding: 18px 9px 0;
+  background: linear-gradient(90deg, #2c2c34, #43434d 50%, #2c2c34);
+  border-radius: 10px 10px 3px 3px;
+  box-shadow: inset 0 -2px 0 #1b1b20, inset 2px 0 0 #50505b;
+  animation: ci-insert 1.3s both;
+}
+/* Grip ridges along the top edge, like the real modules. */
+.ci-cart::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 18px;
+  right: 18px;
+  height: 9px;
+  background: repeating-linear-gradient(90deg, #1d1d23 0 3px, transparent 3px 7px);
+  border-radius: 2px;
+}
+.ci-label {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  animation: ci-slide 0.95s cubic-bezier(0.5, 0, 0.75, 0) both;
-}
-.ci-cart img {
-  width: 100%;
-  height: 130px;
-  object-fit: contain;
+  height: 104px;
+  border: 3px solid var(--label);
+  border-top: 0;
   background: #121216;
+  overflow: hidden;
+}
+.ci-label img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ci-meta {
+  flex: none;
+  height: 14px;
+  padding: 0 3px;
+  background: var(--label);
+  text-align: center;
+  font-size: 9px;
+  line-height: 12px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .ci-title {
   flex: 1;
   display: flex;
   align-items: center;
-  text-align: center;
-  font-size: 10px;
-  color: #fff;
-  background: var(--label);
-  width: 100%;
+  justify-content: center;
   padding: 6px;
+  text-align: center;
+  font-size: 9px;
+  line-height: 1.4;
+  color: #fff;
+  background: linear-gradient(160deg, var(--label), #121216 140%);
 }
-.ci-meta {
-  font-size: 16px;
-  color: #ddd;
-}
+/* The console: a top face in perspective with the slot, and a front face. */
 .ci-console {
-  position: relative;
-  z-index: 2;
-  width: 240px;
-  height: 70px;
-  margin-top: -6px;
-  background: linear-gradient(#55555f, #33333b);
-  border-radius: 6px 6px 14px 14px;
-  box-shadow: 0 10px 0 #1d1d22, 0 18px 30px rgba(0, 0, 0, 0.6);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 258px;
+  height: 122px;
+  z-index: 1;
+  animation: ci-thud 1.3s both;
+}
+.ci-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 42px;
+  background: linear-gradient(#d8d8de, #b9b9c2);
+  clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
 }
 .ci-slot {
   position: absolute;
-  top: 10px;
-  left: 40px;
-  right: 40px;
+  top: 12px;
+  left: 76px;
+  right: 76px;
   height: 14px;
-  background: #0b0b0e;
+  background: #050507;
+  border-radius: 3px;
+  box-shadow: inset 0 4px 5px #000, 0 1px 0 #f2f2f6;
+}
+.ci-front {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(#a7a7b1, #8a8a95);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.7), inset 0 2px 0 #c9c9d1;
+}
+.ci-front::after {
+  content: '';
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 30px;
+  height: 4px;
+  background: #6c6c77;
   border-radius: 2px;
-  box-shadow: inset 0 3px 4px #000;
+}
+.ci-brand {
+  position: absolute;
+  right: 24px;
+  bottom: 14px;
+  font-size: 9px;
+  color: #4b4b55;
+  letter-spacing: 1px;
 }
 .ci-led {
   position: absolute;
-  bottom: 14px;
-  left: 18px;
+  left: 24px;
+  bottom: 16px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #400;
-  animation: ci-led 0.95s steps(1) both;
+  background: #3a0d0d;
+  animation: ci-led 1.3s steps(1) both;
 }
-.ci-flash {
+.ci-power {
   position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: #fff;
-  opacity: 0;
-  pointer-events: none;
-  animation: ci-flash 0.95s linear both;
+  left: 42px;
+  bottom: 15px;
+  width: 30px;
+  height: 12px;
+  border-radius: 3px;
+  background: #5a5a64;
+  box-shadow: inset 0 2px 3px #2a2a30;
 }
-/* The cartridge sits above the slot, sinks in and clicks home at ~55 %. */
-@keyframes ci-slide {
-  0% { transform: translateY(-60vh); }
-  45% { transform: translateY(-40px); }
-  55%, 100% { transform: translateY(150px); }
+.ci-power::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  width: 12px;
+  height: 10px;
+  border-radius: 2px;
+  background: #b03ad8;
+  animation: ci-switch 1.3s both;
+}
+/* The front lip of the slot, drawn over the cartridge so it goes in behind it. */
+.ci-lip {
+  position: absolute;
+  top: 277px;
+  left: 76px;
+  right: 76px;
+  height: 7px;
+  z-index: 3;
+  background: linear-gradient(#0b0b0e, #2a2a30 60%, #cfcfd6 61%);
+  border-radius: 0 0 3px 3px;
+  animation: ci-thud 1.3s both;
+}
+/* The TV switches on: a dot, a line, then the full picture. */
+.ci-crt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100vw;
+  height: 100vh;
+  z-index: 4;
+  background: #fff;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0, 0);
+  animation: ci-crt 1.3s both;
+}
+@keyframes ci-insert {
+  0% { transform: translateY(-260px) rotate(-8deg) scale(1.2); opacity: 0; animation-timing-function: ease-out; }
+  14% { opacity: 1; }
+  26% { transform: translateY(-150px) rotate(0) scale(1); animation-timing-function: ease-in-out; }
+  34% { transform: translateY(-160px); animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.5); }
+  55% { transform: translateY(5px); animation-timing-function: ease-out; }
+  60% { transform: translateY(-3px); }
+  64%, 100% { transform: translateY(0); }
+}
+@keyframes ci-thud {
+  0%, 54% { transform: translateY(0); }
+  57% { transform: translateY(4px); }
+  62%, 100% { transform: translateY(0); }
 }
 @keyframes ci-led {
-  0%, 54% { background: #400; box-shadow: none; }
-  55%, 100% { background: #f33; box-shadow: 0 0 10px #f33; }
+  0%, 63% { background: #3a0d0d; box-shadow: none; }
+  64%, 100% { background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b, 0 0 3px #fff inset; }
 }
-@keyframes ci-flash {
-  0%, 70% { opacity: 0; }
-  76% { opacity: 0.9; }
-  82% { opacity: 0.2; }
-  88% { opacity: 0.7; }
-  100% { opacity: 0; }
+@keyframes ci-switch {
+  0%, 66% { left: 2px; }
+  70%, 100% { left: 16px; }
+}
+@keyframes ci-crt {
+  0%, 72% { transform: translate(-50%, -50%) scale(0.01, 0.004); opacity: 0; }
+  73% { transform: translate(-50%, -50%) scale(0.01, 0.004); opacity: 1; }
+  79% { transform: translate(-50%, -50%) scale(1, 0.004); opacity: 1; }
+  91% { transform: translate(-50%, -50%) scale(1, 1); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) scale(1, 1); opacity: 0; }
 }
 
 /* The game page "boots" after the cartridge, or slides in when swiped. */
