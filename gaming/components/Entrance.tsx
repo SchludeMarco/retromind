@@ -10,7 +10,7 @@ import { LoudSign } from '../../components/LoudSign';
 import { isGerman, tr } from '../../lib/i18n';
 
 // The way in: a run-down arcade on a rainy street, the ARCADE neon sign
-// lighting up letter by letter and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
+// lighting up letter by letter and the hall's metal thumping muffled through the wall. Tapping the door throws it open,
 // the logo shines out of the doorway, the picture goes white and the hub
 // follows.
 //
@@ -217,29 +217,31 @@ export const Entrance: React.FC<{
       {/* Marco's run-down arcade (generated with ChatGPT, 2026-10-08); the
           ENTRANCE door is cut out of the same photo so it can swing open. */}
       <div className="hall-blur" aria-hidden="true" />
-      <div className="hall" aria-hidden="true">
+      <div className="hall">
         <img className="hall-photo" src="/gaming/arcade-entrance.webp" alt="" />
         <NeonSign still={reducedMotion} />
-        <div className="hall-door">
-          <div className="door-inside" />
+        {/* The door itself is the way in (Marco, 2026-10-08). */}
+        <button
+          className="hall-door"
+          onClick={enter}
+          disabled={entering}
+          aria-label={tr('Enter the arcade', 'In die Spielhalle')}
+          autoFocus
+        >
+          <span className="door-inside" />
           <img className="door-leaf" src="/gaming/arcade-entrance-door.webp" alt="" />
-        </div>
+        </button>
         <img className="door-logo" src="/gaming/logo.webp" alt="" />
       </div>
       <div className="entrance-controls">
         <p className="dim entrance-hint">
           {muted
-            ? tr('The old games are waiting inside. Sound is off.', 'Da drin warten die alten Games. Der Ton ist aus.')
+            ? tr('The old games are waiting inside. Tap the door. Sound is off.', 'Da drin warten die alten Games. Tipp auf die Tür. Der Ton ist aus.')
             : soundWaiting
               ? tr('Psst … tap anywhere once and you’ll hear what’s going on inside.', 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.')
-              : tr('The old games are waiting inside. Go on in, Player 1.', 'Da drin warten die alten Games. Trau dich, Player 1.')}
+              : tr('The old games are waiting inside. Tap the door, Player 1.', 'Da drin warten die alten Games. Tipp auf die Tür, Player 1.')}
         </p>
         <div className="entrance-row">
-          {/* Looks like the old EINGANG door: grey metal frame, roll shutter
-              and graffiti, with the white sign lettering. */}
-          <button className="enter-btn" onClick={enter} disabled={entering} autoFocus>
-            <span className="enter-label">ENTER</span>
-          </button>
           <LoudSign show={!muted} />
           <MuteButton muted={muted} onToggle={onToggleMute} />
         </div>

@@ -1,0 +1,8 @@
+// Removed 2026-10-08: the ENTER button of the gaming entrance
+// (gaming/components/Entrance.tsx). Tapping the ENTRANCE door replaced it.
+
+          {/* Looks like the old EINGANG door: grey metal frame, roll shutter
+              and graffiti, with the white sign lettering. */}
+          <button className="enter-btn" onClick={enter} disabled={entering} autoFocus>
+            <span className="enter-label">ENTER</span>
+          </button>
