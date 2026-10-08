@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Easter-Egg-Meldung bleibt länger stehen': {
+    title: 'Easter egg message stays up longer',
+    text: 'When you find an Easter egg or a badge in the gaming hall, the message now stays up for 12 seconds instead of barely 4, so you can read it in peace. The “×” in the top right closes it sooner.',
+  },
   'Club wieder verlassen': {
     title: 'Leave the club',
     text: 'In the gaming hall there’s now a door button in the top bar next to sound and settings. It takes you back outside the door, where the music comes muffled through the wall again; ENTER takes you back in.',
