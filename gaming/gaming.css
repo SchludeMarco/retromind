@@ -1780,26 +1780,35 @@ a {
   }
 }
 
-/* --- Entrance: the run-down "Arcade Hallen" with a wobbly bulb --- */
+/* --- Entrance: the run-down arcade with the ARCADE neon sign --- */
 .entrance,
 .arcade[data-palette='modul'] .entrance {
   overflow: hidden;
   justify-content: flex-end;
   padding: 0;
-  background: #1d1c1a;
+  background: #0d0b10;
   container-type: size;
 }
-/* The photo covers the screen and keeps the EINGANG door in view; every
-   piece on it is placed in photo coordinates (1408 x 768). */
+/* The portrait photo (941 x 1672) fills a phone; on wide screens it keeps
+   its full height and a blurred copy fills the sides. Every piece on it is
+   placed in photo coordinates. */
+.hall-blur {
+  position: absolute;
+  inset: -40px;
+  background: url('/gaming/arcade-entrance.webp') center / cover;
+  filter: blur(28px) brightness(0.45);
+}
 .hall {
-  --w: max(100cqw, 100cqh * 1408 / 768);
+  --w: min(max(100cqw, 100cqh * 941 / 1672), 112cqh * 941 / 1672);
+  --h: calc(var(--w) * 1672 / 941);
   position: absolute;
   width: var(--w);
-  aspect-ratio: 1408 / 768;
-  left: clamp(calc(100cqw - var(--w)), calc(50cqw - var(--w) * 0.497), 0px);
-  top: clamp(calc(100cqh - var(--w) * 768 / 1408), calc(50cqh - var(--w) * 768 / 1408 * 0.55), 0px);
-  transform-origin: 49.7% 60%;
+  aspect-ratio: 941 / 1672;
+  left: calc(50cqw - var(--w) / 2);
+  top: clamp(calc(100cqh - var(--h)), calc(50cqh - var(--h) * 0.5), 0px);
+  transform-origin: 50.7% 60%;
   container-type: inline-size;
+  box-shadow: 0 0 60px 20px rgba(0, 0, 0, 0.6);
 }
 .hall-photo {
   position: absolute;
@@ -1808,102 +1817,32 @@ a {
   height: 100%;
   display: block;
 }
-/* The neon "ARCADE" letters buzz and drop out now and then. */
-.hall-neon {
+/* One letter of the sign, lit; it flickers on like a real neon tube. */
+.neon-letter {
   position: absolute;
-  left: 26%;
-  top: 9%;
-  width: 25%;
-  height: 15%;
-  background: radial-gradient(ellipse at 50% 50%, rgba(255, 120, 80, 0.4), transparent 70%);
-  mix-blend-mode: screen;
-  animation: neon-buzz 4.2s steps(1) infinite;
-}
-@keyframes neon-buzz {
-  0%, 100% { opacity: 1; }
-  12% { opacity: 0.2; }
-  13% { opacity: 1; }
-  47% { opacity: 0.85; }
-  61% { opacity: 0; }
-  62% { opacity: 0.9; }
-  64% { opacity: 0.1; }
-  66% { opacity: 1; }
-}
-/* Warm light the bulb throws on the canopy and the door. */
-.hall-glow {
-  position: absolute;
-  left: 49.93%;
-  top: 7.5%;
-  width: 46cqw;
-  height: 46cqw;
-  transform: translate(-50%, -16%);
-  background: radial-gradient(circle at 50% 16%, rgba(255, 214, 140, 0.55), rgba(255, 170, 80, 0.16) 30%, transparent 62%);
-  mix-blend-mode: screen;
+  display: block;
+  opacity: 0;
   pointer-events: none;
-  animation: lamp-flicker 5.5s steps(1) infinite;
 }
-.hall-lamp {
-  position: absolute;
-  left: 49.93%;
-  top: 6.6%;
-  width: 2cqw;
-  margin-left: -1cqw;
-  transform-origin: 50% 0;
-  animation: lamp-sway 2.6s infinite;
+.neon-letter.on {
+  opacity: 1;
+  animation: neon-ignite 0.28s steps(1);
 }
-.hall-lamp-cord {
-  display: block;
-  width: 0.18cqw;
-  height: 0.7cqw;
-  margin: 0 auto;
-  background: #141414;
-}
-.hall-lamp-bulb {
-  display: block;
-  overflow: visible;
-  width: 2cqw;
-  height: 3.2cqw;
-}
-.lamp-glass {
-  fill: #ffe6a8;
-  filter: drop-shadow(0 0 8px rgba(255, 200, 110, 0.95));
-  animation: lamp-flicker 5.5s steps(1) infinite;
-}
-.lamp-filament {
-  fill: none;
-  stroke: #fff6d8;
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-/* An old bulb with a loose contact: mostly on, with nervous drop-outs. */
-@keyframes lamp-flicker {
-  0% { opacity: 1; }
-  7% { opacity: 0.35; }
-  8% { opacity: 1; }
-  9% { opacity: 0.2; }
-  10% { opacity: 0.95; }
-  31% { opacity: 0.85; }
-  32% { opacity: 1; }
-  54% { opacity: 0.1; }
-  55% { opacity: 0.6; }
-  56% { opacity: 0.05; }
-  59% { opacity: 1; }
-  78% { opacity: 0.9; }
-  79% { opacity: 0.4; }
+@keyframes neon-ignite {
+  0% { opacity: 0.55; }
+  20% { opacity: 0.1; }
+  40% { opacity: 0.85; }
+  60% { opacity: 0.3; }
   80% { opacity: 1; }
 }
-@keyframes lamp-sway {
-  0%, 100% { transform: rotate(-14deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
-  50% { transform: rotate(14deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
-}
-/* The EINGANG door, cut from the photo, over a lit room behind it. */
+/* The ENTRANCE door, cut from the photo, over a lit room behind it. */
 .hall-door {
   position: absolute;
-  left: 44.318%;
-  top: 41.927%;
-  width: 10.795%;
-  height: 35.937%;
-  perspective: 60cqw;
+  left: 30.606%;
+  top: 44.139%;
+  width: 39.107%;
+  height: 37.919%;
+  perspective: 120cqw;
 }
 .door-inside {
   position: absolute;
@@ -1927,8 +1866,8 @@ a {
 }
 .door-logo {
   position: absolute;
-  left: 49.7%;
-  top: 58%;
+  left: 50.7%;
+  top: 60%;
   width: min(66vw, 300px);
   height: auto;
   image-rendering: pixelated;
@@ -2118,10 +2057,7 @@ a {
   to { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hall-lamp,
-  .hall-glow,
-  .hall-neon,
-  .lamp-glass {
+  .neon-letter.on {
     animation: none;
   }
   .entering * {

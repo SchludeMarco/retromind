@@ -1,0 +1,17 @@
+// Removed 2026-10-08: the wobbling bulb over the old 'Arcade Hallen' entrance
+// (gaming/components/Entrance.tsx, PR #102), replaced by the ARCADE neon sign.
+
+// A bare bulb on a short cord under the hall's canopy, wobbling and
+// flickering. Sized relative to the photo so it sits on the real socket.
+const Bulb: React.FC = () => (
+  <div className="hall-lamp">
+    <span className="hall-lamp-cord" />
+    <svg className="hall-lamp-bulb" viewBox="0 0 60 96">
+      <rect x="20" y="0" width="20" height="22" rx="3" fill="#2b2b2b" />
+      <rect x="18" y="20" width="24" height="8" rx="2" fill="#bdb7a8" />
+      <path d="M18 30 h24 v6 c10 6 14 16 14 26 a26 26 0 0 1 -52 0 c0 -10 4 -20 14 -26z" className="lamp-glass" />
+      <path d="M24 40 l3 18 l3 -10 l3 10 l3 -18" className="lamp-filament" />
+    </svg>
+  </div>
+);
+

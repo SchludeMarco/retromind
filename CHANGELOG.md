@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Neuer Eingang zur Gaming-Halle mit leuchtendem ARCADE-Schild**
+  (2026-10-08, PR #171): Vor der Tür steht jetzt Marcos neues Bild, eine
+  verranzte Spielhalle mit Sticker-Tür „ENTRANCE“ im Regen. Das Neonschild
+  „ARCADE“ geht Buchstabe für Buchstabe an, jede Sekunde einer mehr; eine
+  Sekunde nachdem alle sechs leuchten, geht alles aus und es beginnt von
+  vorne. „ENTER“ schwingt die neue Tür auf. Am Computer steht das Bild in
+  voller Höhe in der Mitte, die Seiten füllt eine unscharfe Kopie. Die alte
+  „Arcade Hallen“ mit der wackelnden Glühbirne ist ins Archiv gewandert.
+
 - **Easter-Egg-Meldung bleibt länger stehen** (2026-10-08, PR #170): Findest
   du in der Gaming-Halle ein Easter Egg oder ein Abzeichen, bleibt die Meldung
   jetzt 12 statt knapp 4 Sekunden stehen, damit man sie in Ruhe lesen kann.

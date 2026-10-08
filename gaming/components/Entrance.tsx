@@ -9,8 +9,8 @@ import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
 import { isGerman, tr } from '../../lib/i18n';
 
-// The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
-// the entrance and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
+// The way in: a run-down arcade on a rainy street, the ARCADE neon sign
+// lighting up letter by letter and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
 // the logo shines out of the doorway, the picture goes white and the hub
 // follows.
 //
@@ -34,19 +34,51 @@ const SoundDebug: React.FC = () => {
   );
 };
 
-// A bare bulb on a short cord under the hall's canopy, wobbling and
-// flickering. Sized relative to the photo so it sits on the real socket.
-const Bulb: React.FC = () => (
-  <div className="hall-lamp">
-    <span className="hall-lamp-cord" />
-    <svg className="hall-lamp-bulb" viewBox="0 0 60 96">
-      <rect x="20" y="0" width="20" height="22" rx="3" fill="#2b2b2b" />
-      <rect x="18" y="20" width="24" height="8" rx="2" fill="#bdb7a8" />
-      <path d="M18 30 h24 v6 c10 6 14 16 14 26 a26 26 0 0 1 -52 0 c0 -10 4 -20 14 -26z" className="lamp-glass" />
-      <path d="M24 40 l3 18 l3 -10 l3 10 l3 -18" className="lamp-filament" />
-    </svg>
-  </div>
-);
+// The ARCADE neon sign over the door (Marco, 2026-10-08): one more letter
+// lights up every second, a second after all six burn everything goes dark,
+// then it starts again. The photo itself carries the sign switched off; each
+// letter is a lit cut-out of the original picture, placed in photo pixels.
+const PHOTO_W = 941;
+const PHOTO_H = 1672;
+const SIGN_LETTERS: [x: number, y: number, w: number, h: number][] = [
+  [93, 145, 182, 293],
+  [266, 145, 129, 293],
+  [386, 145, 111, 293],
+  [488, 145, 149, 293],
+  [628, 145, 115, 293],
+  [734, 145, 124, 293],
+];
+
+const NeonSign: React.FC<{ still: boolean }> = ({ still }) => {
+  // 1..6 letters lit, 0 = all dark.
+  const [lit, setLit] = useState(still ? 6 : 1);
+  useEffect(() => {
+    if (still) {
+      setLit(6);
+      return;
+    }
+    const id = setInterval(() => setLit((n) => (n + 1) % 7), 1000);
+    return () => clearInterval(id);
+  }, [still]);
+  return (
+    <>
+      {SIGN_LETTERS.map(([x, y, w, h], i) => (
+        <img
+          key={i}
+          className={`neon-letter${i < lit ? ' on' : ''}`}
+          src={`/gaming/arcade-sign-${i}.webp`}
+          alt=""
+          style={{
+            left: `${(x / PHOTO_W) * 100}%`,
+            top: `${(y / PHOTO_H) * 100}%`,
+            width: `${(w / PHOTO_W) * 100}%`,
+            height: `${(h / PHOTO_H) * 100}%`,
+          }}
+        />
+      ))}
+    </>
+  );
+};
 
 // Optional sign-ins right at the door (Marco, 2026-10-08): Google keeps the
 // profile and coins in sync, Spotify (its own account) brings whole songs.
@@ -182,17 +214,16 @@ export const Entrance: React.FC<{
 
   return (
     <div className={`screen-full entrance${entering ? ' entering' : ''}`}>
-      {/* Marco's run-down "Arcade Hallen" (generated with Nano Banana); the
-          EINGANG door is cut out of the same photo so it can swing open. */}
+      {/* Marco's run-down arcade (generated with ChatGPT, 2026-10-08); the
+          ENTRANCE door is cut out of the same photo so it can swing open. */}
+      <div className="hall-blur" aria-hidden="true" />
       <div className="hall" aria-hidden="true">
-        <img className="hall-photo" src="/gaming/arcade-hallen.webp" alt="" />
-        <div className="hall-neon" />
-        <div className="hall-glow" />
+        <img className="hall-photo" src="/gaming/arcade-entrance.webp" alt="" />
+        <NeonSign still={reducedMotion} />
         <div className="hall-door">
           <div className="door-inside" />
-          <img className="door-leaf" src="/gaming/arcade-door.webp" alt="" />
+          <img className="door-leaf" src="/gaming/arcade-entrance-door.webp" alt="" />
         </div>
-        <Bulb />
         <img className="door-logo" src="/gaming/logo.webp" alt="" />
       </div>
       <div className="entrance-controls">
@@ -204,7 +235,7 @@ export const Entrance: React.FC<{
               : tr('The old games are waiting inside. Go on in, Player 1.', 'Da drin warten die alten Games. Trau dich, Player 1.')}
         </p>
         <div className="entrance-row">
-          {/* Looks like the EINGANG door itself: grey metal frame, roll shutter
+          {/* Looks like the old EINGANG door: grey metal frame, roll shutter
               and graffiti, with the white sign lettering. */}
           <button className="enter-btn" onClick={enter} disabled={entering} autoFocus>
             <span className="enter-label">ENTER</span>

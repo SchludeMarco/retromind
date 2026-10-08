@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Neuer Eingang zur Gaming-Halle mit leuchtendem ARCADE-Schild': {
+    title: 'New entrance to the gaming hall with a glowing ARCADE sign',
+    text: 'Outside the door there’s now Marco’s new picture: a run-down arcade with a sticker-covered ENTRANCE door in the rain. The ARCADE neon sign lights up letter by letter, one more every second; a second after all six are on, everything goes dark and it starts over. ENTER swings the new door open. On a computer the picture stands at full height in the middle, with a blurred copy filling the sides. The old “Arcade Hallen” with the wobbling bulb has moved to the archive.',
+  },
   'Easter-Egg-Meldung bleibt länger stehen': {
     title: 'Easter egg message stays up longer',
     text: 'When you find an Easter egg or a badge in the gaming hall, the message now stays up for 12 seconds instead of barely 4, so you can read it in peace. The “×” in the top right closes it sooner.',
