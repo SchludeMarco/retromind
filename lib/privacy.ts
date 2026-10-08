@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { isGerman } from './i18n';
 
 // Privacy helpers shared by every RetroMind module.
 //
@@ -69,6 +70,7 @@ export function useConsent(service: ExternalService): boolean | undefined {
   return useSyncExternalStore(subscribe, () => choices[service], () => undefined);
 }
 
-/** Links to the legal pages (static files in public/, same on both domains). */
-export const PRIVACY_URL = '/datenschutz.html';
-export const IMPRINT_URL = '/impressum.html';
+/** Links to the legal pages (static files in public/, same on both domains),
+ *  in the app's language. */
+export const PRIVACY_URL = isGerman ? '/datenschutz.html' : '/privacy.html';
+export const IMPRINT_URL = isGerman ? '/impressum.html' : '/imprint.html';

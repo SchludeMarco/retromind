@@ -39,7 +39,8 @@ import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDrive
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 import { toggleMuted, useMuted } from './lib/mute';
-import { DECADES_DB } from './constants';
+import { DECADES_DB, INTEREST_LABELS } from './constants';
+import { tr } from './lib/i18n';
 import { findTrack, useAutoTheme, useSpotifyApi } from './lib/spotifyApi';
 
 const App: React.FC = () => {
@@ -151,7 +152,7 @@ const App: React.FC = () => {
         if (!remote) return;
         if (!hasProgress) {
           loadRemoteState(remote);
-          setToast('Gespeicherte Reise aus Google Drive geladen');
+          setToast(tr('Loaded your saved journey from Google Drive', 'Gespeicherte Reise aus Google Drive geladen'));
         } else {
           // The local journey wins, but profile fields still empty here
           // (birthday, gender, …) are taken from the backup.
@@ -166,7 +167,7 @@ const App: React.FC = () => {
               favoriteArtists: prev.favoriteArtists.length ? prev.favoriteArtists : r.favoriteArtists ?? [],
             }));
           }
-          setToast('Deine Reise wird jetzt zusätzlich in Google Drive gesichert');
+          setToast(tr('Your journey is now also backed up to Google Drive', 'Deine Reise wird jetzt zusätzlich in Google Drive gesichert'));
         }
       } catch {
         setDriveSyncState('error');
@@ -319,7 +320,7 @@ const App: React.FC = () => {
       (await generateDeepQuestion(
         term,
         user.name,
-        user.interests.join(', ') || 'allgemein',
+        user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ') || tr('general', 'allgemein'),
         decade,
         fallbackQuestion
       ));
@@ -340,16 +341,19 @@ const App: React.FC = () => {
       createdAt: Date.now(),
     });
     setSelectedWord(null);
-    setToast('Erinnerung gespeichert');
+    setToast(tr('Memory saved', 'Erinnerung gespeichert'));
   };
 
   const openPerspective = async () => {
     if (!selectedWord) return;
     playSFX('click');
     setIsGeneratingPerspective(true);
-    const fallback =
+    const fallback = tr(
+      `Imagine a close friend, a sibling or a parent from back then had experienced ` +
+        `"${selectedWord.term}" – how would that person have told the story?`,
       `Stell dir vor, eine gute Freundin, ein Geschwister oder ein Elternteil von ` +
-      `damals hätte "${selectedWord.term}" erlebt – wie hätte diese Person den Moment wohl erzählt?`;
+        `damals hätte "${selectedWord.term}" erlebt – wie hätte diese Person den Moment wohl erzählt?`
+    );
     const question = await generatePerspectiveQuestion(
       selectedWord.term,
       user.name,
@@ -368,12 +372,12 @@ const App: React.FC = () => {
       id: `pw-${selectedWord.id}`,
       kind: 'perspective',
       decade: selectedWord.decade,
-      term: `${selectedWord.term} · Perspektivwechsel`,
+      term: `${selectedWord.term} · ${tr('A different view', 'Perspektivwechsel')}`,
       prompt: perspective.question,
       answer: perspectiveDraft.trim(),
       createdAt: Date.now(),
     });
-    setToast('Perspektive gespeichert');
+    setToast(tr('Perspective saved', 'Perspektive gespeichert'));
   };
 
   // --- photo lab ---
@@ -382,11 +386,11 @@ const App: React.FC = () => {
     e.target.value = '';
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      setUploadError('Bitte eine Bilddatei wählen.');
+      setUploadError(tr('Please choose an image file.', 'Bitte eine Bilddatei wählen.'));
       return;
     }
     if (file.size > 20 * 1024 * 1024) {
-      setUploadError('Das Bild ist zu groß (max. 20 MB).');
+      setUploadError(tr('That image is too large (max. 20 MB).', 'Das Bild ist zu groß (max. 20 MB).'));
       return;
     }
     setUploadError(null);
@@ -404,7 +408,7 @@ const App: React.FC = () => {
   const handleAnalyze = async () => {
     if (!uploadedImage) return;
     playSFX('click');
-    setAnalysis('Analysiere…');
+    setAnalysis(tr('Analyzing…', 'Analysiere…'));
     setAnalysisSaved(false);
     const base64 = uploadedImage.split(',')[1];
     const mime = uploadedImage.split(';')[0].split(':')[1] || 'image/jpeg';
@@ -418,36 +422,39 @@ const App: React.FC = () => {
       id: `photo-${uid()}`,
       kind: 'photo',
       decade: currentAudioDecade,
-      term: 'Mein Foto',
-      prompt: 'Was die KI in diesem Bild gesehen hat',
+      term: tr('My photo', 'Mein Foto'),
+      prompt: tr('What the AI saw in this picture', 'Was die KI in diesem Bild gesehen hat'),
       answer: analysis,
       photo: uploadedImage,
       createdAt: Date.now(),
     });
     setAnalysisSaved(true);
-    setToast('Foto-Erinnerung gespeichert');
+    setToast(tr('Photo memory saved', 'Foto-Erinnerung gespeichert'));
   };
 
   const handleGenerateVideo = async () => {
     if (!uploadedImage || videoStatus.status === 'generating') return;
     playSFX('click');
-    setVideoStatus({ status: 'generating', message: 'Erwecke das Bild zum Leben – das dauert ein paar Minuten.' });
+    setVideoStatus({ status: 'generating', message: tr('Bringing your picture to life – this takes a few minutes.', 'Erwecke das Bild zum Leben – das dauert ein paar Minuten.') });
     const base64 = uploadedImage.split(',')[1];
     const mime = uploadedImage.split(';')[0].split(':')[1] || 'image/png';
     const result = await generateVeoVideo(
-      'Ein nostalgisches Video, das dieses Foto sanft zum Leben erweckt, ruhige Bewegungen, warme Atmosphäre.',
+      tr(
+        'A nostalgic video that gently brings this photo to life, calm movements, warm atmosphere.',
+        'Ein nostalgisches Video, das dieses Foto sanft zum Leben erweckt, ruhige Bewegungen, warme Atmosphäre.'
+      ),
       base64,
       mime
     );
     if (result.url) {
-      setVideoStatus({ status: 'done', url: result.url, message: 'Fertig – dein Foto bewegt sich.' });
+      setVideoStatus({ status: 'done', url: result.url, message: tr('Done – your photo is moving.', 'Fertig – dein Foto bewegt sich.') });
     } else {
       const msg =
         result.error === 'not_configured'
-          ? 'Video-Generierung ist in diesem Demo nicht aktiv.'
+          ? tr('Video generation isn’t turned on in this demo.', 'Video-Generierung ist in diesem Demo nicht aktiv.')
           : result.error === 'timeout'
-          ? 'Die Generierung hat zu lange gedauert. Versuch es später noch einmal.'
-          : 'Die Video-Generierung ist fehlgeschlagen (benötigt ein Google-Projekt mit Billing).';
+          ? tr('That took too long. Please try again later.', 'Die Generierung hat zu lange gedauert. Versuch es später noch einmal.')
+          : tr('Video generation failed (it needs a Google project with billing enabled).', 'Die Video-Generierung ist fehlgeschlagen (benötigt ein Google-Projekt mit Billing).');
       setVideoStatus({ status: 'error', message: msg });
     }
   };
@@ -456,21 +463,21 @@ const App: React.FC = () => {
   const exportText = () => {
     playSFX('click');
     downloadBlob(
-      `retromind-erinnerungsbuch-${todayStamp()}.txt`,
+      `retromind-${tr('memory-book', 'erinnerungsbuch')}-${todayStamp()}.txt`,
       buildBookText(user, focusDecade, memories, diaryEntry),
       'text/plain;charset=utf-8'
     );
   };
   const exportSessionFile = () => {
     playSFX('click');
-    downloadBlob(`retromind-sitzung-${todayStamp()}.json`, JSON.stringify(exportSession(), null, 2), 'application/json');
+    downloadBlob(`retromind-${tr('session', 'sitzung')}-${todayStamp()}.json`, JSON.stringify(exportSession(), null, 2), 'application/json');
   };
   const importSessionFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
     const ok = await importSession(file);
-    setToast(ok ? 'Sitzung geladen' : 'Diese Datei konnte nicht gelesen werden');
+    setToast(ok ? tr('Session loaded', 'Sitzung geladen') : tr('Couldn’t read this file', 'Diese Datei konnte nicht gelesen werden'));
   };
   const printBook = () => {
     playSFX('click');
@@ -495,7 +502,7 @@ const App: React.FC = () => {
     if (!name || !birthDate) return;
     setUser((prev) => ({ ...prev, name, birthDate }));
     setVerified(true);
-    setToast(`Willkommen, ${name.split(' ')[0]}!`);
+    setToast(tr(`Welcome, ${name.split(' ')[0]}!`, `Willkommen, ${name.split(' ')[0]}!`));
   }, [verified, profileEditRequested, googleAuth.status, googleAuth.user, googleAuth.birthdayHint, user.name, user.birthDate]);
 
   // Gender shared on the Google account fills an empty "Geschlecht" field.
@@ -574,6 +581,10 @@ const App: React.FC = () => {
   // the screen. Retro Warm: in the middle of the bottom navigation; the other
   // designs: in the bottom row left of the settings button, and like it only
   // once the page is scrolled to the bottom (index.css .rm-music-knob).
+  const decadeMusicName = tr(
+    `Music of the ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}s`,
+    `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`
+  );
   const musicDock = spotify.allowed ? (
     <MusicDock
       className={
@@ -582,7 +593,7 @@ const App: React.FC = () => {
           : `rm-music-knob rm-fixed transition-opacity duration-300 ${showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`
       }
       title={spotify.songTitle}
-      source={`Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`}
+      source={decadeMusicName}
       playing={spotify.isPlaying}
       ready={spotify.isReady}
       canSkip={spotify.canSkip}
@@ -600,9 +611,9 @@ const App: React.FC = () => {
         onVolume: spotify.setVolume,
         onPick: (hit) => { playSFX('click'); spotify.playUri(hit); },
         special: spotify.special,
-        themeName: `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`,
+        themeName: decadeMusicName,
         onBackToTheme: () => { playSFX('click'); spotify.backToTheme(); },
-        themeHint: 'Öffnest du einen Musik-Begriff, läuft sein Song.',
+        themeHint: tr('Open a music term and its song plays.', 'Öffnest du einen Musik-Begriff, läuft sein Song.'),
       }}
     />
   ) : null;
@@ -614,7 +625,7 @@ const App: React.FC = () => {
       {!warm && !showSplash && (
         <button
           onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
-          title="Feedback geben"
+          title={tr('Send feedback', 'Feedback geben')}
           className="rm-fixed fixed top-3 left-4 sm:left-auto sm:right-16 md:right-[5.5rem] z-[1000] h-10 px-3 rounded-full bg-[#c62828] text-white border-2 border-retro-ink retro-button flex items-center gap-1.5 text-sm font-bold hover:bg-[#a51f1f]"
         >
           <span aria-hidden="true">✉️</span>
@@ -694,7 +705,7 @@ const App: React.FC = () => {
           {!warm && (
           <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
-            aria-label="App-Einstellungen öffnen"
+            aria-label={tr('Open app settings', 'App-Einstellungen öffnen')}
             className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
               showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
@@ -756,7 +767,7 @@ const App: React.FC = () => {
               {!warm && (
               <button
                 onClick={goHome}
-                aria-label="Zum Startbildschirm zurückkehren"
+                aria-label={tr('Back to the home screen', 'Zum Startbildschirm zurückkehren')}
                 className="rm-fixed fixed bottom-2 left-1/2 -translate-x-1/2 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
               >
                 🏠
@@ -764,7 +775,7 @@ const App: React.FC = () => {
               )}
               <button
                 onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
-                aria-label={isChatOpen ? 'Begleiter schließen' : 'Begleiter öffnen'}
+                aria-label={isChatOpen ? tr('Close companion', 'Begleiter schließen') : tr('Open companion', 'Begleiter öffnen')}
                 className="rm-chat-button rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
               >
                 {warm ? <Icon name={isChatOpen ? 'close' : 'chat'} /> : isChatOpen ? '✕' : '💬'}
@@ -899,9 +910,9 @@ const App: React.FC = () => {
         </>
       )}
       <footer className="no-print relative z-10 mt-12 text-center text-xs text-retro-tan">
-        <a href={PRIVACY_URL} className="underline">Datenschutz</a>
+        <a href={PRIVACY_URL} className="underline">{tr('Privacy', 'Datenschutz')}</a>
         {' · '}
-        <a href={IMPRINT_URL} className="underline">Impressum</a>
+        <a href={IMPRINT_URL} className="underline">{tr('Legal notice', 'Impressum')}</a>
       </footer>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Game, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
+import { platformLabel } from '../data/platforms';
 import { fetchImages, fetchSummary, WikiImage, WikiSummary } from '../lib/wiki';
 import { AiUnavailableError, fetchGameGuide, GameGuide } from '../lib/ai';
 import { chip } from '../lib/chiptune';
@@ -7,6 +8,7 @@ import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
 import { fetchVideos, formatViews, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
+import { LOCALE, tr } from '../../lib/i18n';
 
 type Tab = 'info' | 'videos' | 'shots' | 'guide' | 'web';
 
@@ -15,7 +17,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'videos', label: 'VIDEOS' },
   { id: 'shots', label: 'SCREENSHOTS' },
   { id: 'guide', label: 'GUIDE & CHEATS' },
-  { id: 'web', label: 'IM WEB' },
+  { id: 'web', label: tr('ON THE WEB', 'IM WEB') },
 ];
 
 const randomLoading = () => LOADING_LINES[Math.floor(Math.random() * LOADING_LINES.length)];
@@ -32,12 +34,12 @@ const Loading: React.FC = () => {
 function webLinks(game: Game, wikiUrl?: string) {
   const q = encodeURIComponent(game.title);
   return [
-    wikiUrl && { href: wikiUrl, title: 'Wikipedia', text: 'Artikel mit Geschichte und Hintergründen' },
-    { href: `https://www.youtube.com/results?search_query=${q}+longplay`, title: 'YouTube Longplay', text: 'Komplett durchgespielt anschauen' },
-    { href: `https://gamefaqs.gamespot.com/search?game=${q}`, title: 'GameFAQs', text: 'Komplettlösungen, Karten und Cheats der Community' },
-    { href: `https://www.mobygames.com/search/?q=${q}`, title: 'MobyGames', text: 'Credits, Versionen, Cover und Screenshots' },
-    { href: `https://archive.org/search?query=${q}`, title: 'Internet Archive', text: 'Alte Handbücher, Magazine und Werbung' },
-    { href: `https://www.reddit.com/r/retrogaming/search/?q=${q}`, title: 'r/retrogaming', text: 'Erinnerungen und Diskussionen anderer Fans' },
+    wikiUrl && { href: wikiUrl, title: 'Wikipedia', text: tr('Article with history and background', 'Artikel mit Geschichte und Hintergründen') },
+    { href: `https://www.youtube.com/results?search_query=${q}+longplay`, title: 'YouTube Longplay', text: tr('Watch a full playthrough', 'Komplett durchgespielt anschauen') },
+    { href: `https://gamefaqs.gamespot.com/search?game=${q}`, title: 'GameFAQs', text: tr('Walkthroughs, maps and cheats from the community', 'Komplettlösungen, Karten und Cheats der Community') },
+    { href: `https://www.mobygames.com/search/?q=${q}`, title: 'MobyGames', text: tr('Credits, versions, box art and screenshots', 'Credits, Versionen, Cover und Screenshots') },
+    { href: `https://archive.org/search?query=${q}`, title: 'Internet Archive', text: tr('Old manuals, magazines and ads', 'Alte Handbücher, Magazine und Werbung') },
+    { href: `https://www.reddit.com/r/retrogaming/search/?q=${q}`, title: 'r/retrogaming', text: tr('Memories and discussions from other fans', 'Erinnerungen und Diskussionen anderer Fans') },
   ].filter(Boolean) as { href: string; title: string; text: string }[];
 }
 
@@ -164,20 +166,20 @@ export const GameDetail: React.FC<{
         onClick={(e) => e.stopPropagation()}
         style={{ borderColor: label }}
       >
-        <button className="px-btn close-x" onClick={onClose} aria-label="Schließen" data-nav>
+        <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
         <h2 className="pixel-font rgb-split">{game.title}</h2>
         <p className="dim" style={{ margin: 0 }}>
-          {[game.platform, game.year || '—', game.developer, game.genre].filter(Boolean).join(' · ')}
+          {[platformLabel(game.platform), game.year || '—', game.developer, game.genre].filter(Boolean).join(' · ')}
         </p>
 
         <div className="toolbar" style={{ margin: '12px 0 0' }}>
           <button className="px-btn" aria-pressed={isFavorite} onClick={onToggleFavorite} data-nav>
-            {isFavorite ? '★ IN SAMMLUNG' : '☆ SAMMELN'}
+            {isFavorite ? tr('★ IN COLLECTION', '★ IN SAMMLUNG') : tr('☆ COLLECT', '☆ SAMMELN')}
           </button>
           <button className="px-btn" aria-pressed={isCompleted} onClick={onToggleCompleted} data-nav>
-            {isCompleted ? '✓ DURCHGESPIELT' : '○ DURCHGESPIELT?'}
+            {isCompleted ? tr('✓ BEATEN', '✓ DURCHGESPIELT') : tr('○ BEATEN IT?', '○ DURCHGESPIELT?')}
           </button>
         </div>
 
@@ -189,7 +191,7 @@ export const GameDetail: React.FC<{
             {playing.views > 0 && ` · ${formatViews(playing.views)}`}
             {' '}
             <button className="px-btn" onClick={() => { chip.play('back'); setPlaying(null); }} data-nav>
-              ■ STOPP
+              {tr('■ STOP', '■ STOPP')}
             </button>
           </p>
         )}
@@ -220,7 +222,7 @@ export const GameDetail: React.FC<{
                 <>
                   <p>{summary.extract}</p>
                   <p className="dim" style={{ fontSize: 16 }}>
-                    Quelle:{' '}
+                    {tr('Source:', 'Quelle:')}{' '}
                     <a href={summary.url} target="_blank" rel="noreferrer">
                       Wikipedia ({summary.lang.toUpperCase()})
                     </a>
@@ -228,11 +230,11 @@ export const GameDetail: React.FC<{
                   </p>
                 </>
               ) : (
-                <p className="dim">Kein Wikipedia-Artikel gefunden.</p>
+                <p className="dim">{tr('No Wikipedia article found.', 'Kein Wikipedia-Artikel gefunden.')}</p>
               )}
               {game.funFact && (
                 <div className="panel">
-                  <h3 className="pixel-font">WUSSTEST DU?</h3>
+                  <h3 className="pixel-font">{tr('DID YOU KNOW?', 'WUSSTEST DU?')}</h3>
                   {game.funFact}
                 </div>
               )}
@@ -242,7 +244,7 @@ export const GameDetail: React.FC<{
                 <img
                   className="boxart"
                   src={summary.thumbnail}
-                  alt={`Titelbild: ${game.title}`}
+                  alt={tr(`Box art: ${game.title}`, `Titelbild: ${game.title}`)}
                   onError={(e) => {
                     const small = summary.thumbnailSmall;
                     if (small && e.currentTarget.src !== new URL(small, window.location.href).href) e.currentTarget.src = small;
@@ -275,18 +277,18 @@ export const GameDetail: React.FC<{
                       <img src={viaProxy(v.thumb)} alt="" loading="lazy" />
                       <span className="yt-title">{v.title}</span>
                       <span className="dim yt-meta">
-                        {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString('de-DE')} 👍` : '']
+                        {[v.channel, v.duration, formatViews(v.views), v.likes ? `${v.likes.toLocaleString(LOCALE)} 👍` : '']
                           .filter(Boolean)
                           .join(' · ')}
                       </span>
                     </button>
                   ))}
                 </div>
-                <p className="dim" style={{ fontSize: 16 }}>Videos von YouTube, das beliebteste läuft zuerst.</p>
+                <p className="dim" style={{ fontSize: 16 }}>{tr('Videos from YouTube, the most popular one plays first.', 'Videos von YouTube, das beliebteste läuft zuerst.')}</p>
               </>
             ) : (
               <p className="dim">
-                Keine Videos am Start. Unter „IM WEB“ geht’s direkt zur YouTube-Suche.
+                {tr('No videos around. “ON THE WEB” takes you straight to a YouTube search.', 'Keine Videos am Start. Unter „IM WEB“ geht’s direkt zur YouTube-Suche.')}
               </p>
             )}
           </div>
@@ -309,12 +311,12 @@ export const GameDetail: React.FC<{
                   ))}
                 </div>
                 <p className="dim" style={{ fontSize: 16 }}>
-                  Bilder aus Wikipedia/Wikimedia. Lizenz und Urheber stehen auf der jeweiligen Bildseite.
+                  {tr('Images from Wikipedia/Wikimedia. License and author are listed on each image page.', 'Bilder aus Wikipedia/Wikimedia. Lizenz und Urheber stehen auf der jeweiligen Bildseite.')}
                 </p>
               </>
             ) : (
               <p className="dim">
-                Keine Bilder am Start. Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.
+                {tr('No images around. Check “ON THE WEB” for longplays and screenshot collections.', 'Keine Bilder am Start. Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.')}
               </p>
             )}
           </div>
@@ -324,7 +326,7 @@ export const GameDetail: React.FC<{
           <div>
             {!!game.tips?.length && (
               <div className="panel">
-                <h3 className="pixel-font">TIPPS AUS DER SPIELEZEITSCHRIFT</h3>
+                <h3 className="pixel-font">{tr('TIPS FROM THE GAMING MAGAZINE', 'TIPPS AUS DER SPIELEZEITSCHRIFT')}</h3>
                 <ul>
                   {game.tips.map((t) => (
                     <li key={t}>{t}</li>
@@ -334,11 +336,11 @@ export const GameDetail: React.FC<{
             )}
             {guide ? (
               <div className="panel">
-                <h3 className="pixel-font">KI-GUIDE (MIT WEBSUCHE)</h3>
+                <h3 className="pixel-font">{tr('AI GUIDE (WITH WEB SEARCH)', 'KI-GUIDE (MIT WEBSUCHE)')}</h3>
                 <MiniMarkdown text={guide.text} />
                 {!!guide.sources.length && (
                   <div className="sources">
-                    <p className="dim" style={{ marginBottom: 2 }}>Quellen:</p>
+                    <p className="dim" style={{ marginBottom: 2 }}>{tr('Sources:', 'Quellen:')}</p>
                     <ul>
                       {guide.sources.map((s) => (
                         <li key={s.uri}>
@@ -352,7 +354,7 @@ export const GameDetail: React.FC<{
                 )}
                 {guide.searchWidget && (
                   <iframe
-                    title="Google-Suchvorschläge"
+                    title={tr('Google search suggestions', 'Google-Suchvorschläge')}
                     srcDoc={guide.searchWidget}
                     sandbox="allow-popups allow-popups-to-escape-sandbox"
                     style={{ width: '100%', height: 80, border: 0, background: 'transparent' }}
@@ -364,16 +366,18 @@ export const GameDetail: React.FC<{
             ) : (
               <div className="panel">
                 <p style={{ marginTop: 0 }}>
-                  Der Retro-Guru checkt das Web nach Tipps, Secrets und legalen Wegen, das Game heute noch zu
-                  zocken.
+                  {tr(
+                    'The Retro Guru scours the web for tips, secrets and legal ways to still play this game today.',
+                    'Der Retro-Guru checkt das Web nach Tipps, Secrets und legalen Wegen, das Game heute noch zu zocken.'
+                  )}
                 </p>
                 <button className="px-btn big" onClick={loadGuide} disabled={!aiAvailable} data-nav>
-                  ▶ GUIDE LADEN
+                  {tr('▶ LOAD GUIDE', '▶ GUIDE LADEN')}
                 </button>
                 {(!aiAvailable || guideState === 'unavailable') && (
-                  <p className="dim">Die KI ist hier gerade AFK (nicht eingerichtet).</p>
+                  <p className="dim">{tr('The AI is AFK here right now (not set up).', 'Die KI ist hier gerade AFK (nicht eingerichtet).')}</p>
                 )}
-                {guideState === 'error' && <p style={{ color: 'var(--a1)' }}>GAME OVER – der Guide hat nicht geladen. Continue?</p>}
+                {guideState === 'error' && <p style={{ color: 'var(--a1)' }}>{tr('GAME OVER – the guide didn’t load. Continue?', 'GAME OVER – der Guide hat nicht geladen. Continue?')}</p>}
               </div>
             )}
           </div>
@@ -399,7 +403,7 @@ export const GameDetail: React.FC<{
             <p style={{ maxWidth: 800, textAlign: 'center' }}>
               {lightbox.caption}{' '}
               <a href={lightbox.filePage} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
-                Bildquelle & Lizenz ↗
+                {tr('Image source & license ↗', 'Bildquelle & Lizenz ↗')}
               </a>
             </p>
           </div>

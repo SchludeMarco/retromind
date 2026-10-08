@@ -3,6 +3,8 @@
 // sampled or copyrighted. Step patterns are 8th notes, 8 bars of 8 steps:
 // a note name starts a note, '=' holds it, '-' is a rest.
 
+import { tr } from '../../lib/i18n';
+
 export type TrackId = 'quest' | 'c64' | 'turbo' | 'dungeon' | 'beach' | 'space' | 'boss';
 
 export interface StepTrack {
@@ -179,14 +181,14 @@ const BOSS: StepTrack = {
 };
 
 export const TRACKS: Track[] = [
-  { id: 'quest', label: 'ABENTEUER', text: 'Die klassische Hub-Melodie in a-Moll.', steps: QUEST },
-  { id: 'c64', label: 'C64', text: 'Der Titelsong im Stil des Commodore-64-Soundchips.', steps: null },
-  { id: 'turbo', label: 'TURBO', text: 'Schnell und treibend wie ein Rennspiel.', steps: TURBO },
-  { id: 'dungeon', label: 'VERLIES', text: 'Langsam und düster, für Rollenspiel-Abende.', steps: DUNGEON },
-  { id: 'beach', label: 'STRAND', text: 'Sonnig und gut gelaunt wie ein Jump ’n’ Run.', steps: BEACH },
+  { id: 'quest', label: tr('ADVENTURE', 'ABENTEUER'), text: tr('The classic hub melody in A minor.', 'Die klassische Hub-Melodie in a-Moll.'), steps: QUEST },
+  { id: 'c64', label: 'C64', text: tr('The theme song in the style of the Commodore 64 sound chip.', 'Der Titelsong im Stil des Commodore-64-Soundchips.'), steps: null },
+  { id: 'turbo', label: 'TURBO', text: tr('Fast and driving like a racing game.', 'Schnell und treibend wie ein Rennspiel.'), steps: TURBO },
+  { id: 'dungeon', label: tr('DUNGEON', 'VERLIES'), text: tr('Slow and gloomy, for RPG nights.', 'Langsam und düster, für Rollenspiel-Abende.'), steps: DUNGEON },
+  { id: 'beach', label: tr('BEACH', 'STRAND'), text: tr('Sunny and upbeat like a platformer.', 'Sonnig und gut gelaunt wie ein Jump ’n’ Run.'), steps: BEACH },
   // From the prize counter (quests.ts); only listed once bought.
-  { id: 'space', label: 'WELTRAUM', text: 'Wie ein Shoot ’em up im All.', steps: SPACE },
-  { id: 'boss', label: 'BOSSKAMPF', text: 'Hektisch und dramatisch, für den Endgegner.', steps: BOSS },
+  { id: 'space', label: tr('OUTER SPACE', 'WELTRAUM'), text: tr('Like a shoot ’em up in space.', 'Wie ein Shoot ’em up im All.'), steps: SPACE },
+  { id: 'boss', label: tr('BOSS FIGHT', 'BOSSKAMPF'), text: tr('Frantic and dramatic, for the final boss.', 'Hektisch und dramatisch, für den Endgegner.'), steps: BOSS },
 ];
 
 export const isTrackId = (v: unknown): v is TrackId => TRACKS.some((t) => t.id === v);

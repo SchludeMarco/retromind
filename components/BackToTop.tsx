@@ -1,5 +1,6 @@
 import React from 'react';
 import { scrollToTop, useScrolledDown } from '../hooks/useScrolledDown';
+import { tr } from '../lib/i18n';
 
 // Round "Nach oben" button, bottom left. Fades in only after some scrolling.
 // Retro Warm: sits just above the bottom nav, mirroring the chat button on
@@ -10,8 +11,8 @@ export const BackToTop: React.FC<{ warm: boolean; hidden?: boolean; onClick?: ()
   return (
     <button
       onClick={() => { onClick?.(); scrollToTop(); }}
-      aria-label="Nach oben"
-      title="Nach oben"
+      aria-label={tr('Back to top', 'Nach oben')}
+      title={tr('Back to top', 'Nach oben')}
       aria-hidden={!show}
       tabIndex={show ? 0 : -1}
       className={`rm-back-to-top rm-fixed fixed left-4 md:left-10 z-[61] rounded-full retro-button flex items-center justify-center shadow-lg transition-opacity duration-300 ${

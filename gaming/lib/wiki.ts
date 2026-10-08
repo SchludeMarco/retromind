@@ -1,8 +1,10 @@
 import { viaProxy } from '../../lib/privacy';
+import { isGerman } from '../../lib/i18n';
 
 // Live web content from Wikipedia/Wikimedia, fetched through our own server
 // (/api/proxy) so the visitor's browser never contacts Wikipedia directly.
-// German text is preferred, English is the fallback.
+// In German mode German text is preferred with English as the fallback;
+// in English mode the English article is used directly.
 
 export interface WikiSummary {
   title: string;
@@ -77,6 +79,7 @@ export function fetchSummary(enTitle: string): Promise<WikiSummary | null> {
     summaryCache.set(
       enTitle,
       (async () => {
+        if (!isGerman) return summaryIn('en', enTitle);
         const de = await germanTitle(enTitle);
         return (de && (await summaryIn('de', de))) || (await summaryIn('en', enTitle));
       })()

@@ -1,5 +1,7 @@
 // Client for /api/youtube: videos for a game, best rated first.
 
+import { LOCALE, tr } from '../../lib/i18n';
+
 export interface YouTubeVideo {
   id: string;
   title: string;
@@ -32,9 +34,12 @@ export function fetchVideos(game: { title: string; platform: string }): Promise<
 
 export const formatViews = (n: number) =>
   n >= 1_000_000
-    ? `${(n / 1_000_000).toLocaleString('de-DE', { maximumFractionDigits: 1 })} Mio. Aufrufe`
+    ? tr(
+        `${(n / 1_000_000).toLocaleString(LOCALE, { maximumFractionDigits: 1 })}M views`,
+        `${(n / 1_000_000).toLocaleString(LOCALE, { maximumFractionDigits: 1 })} Mio. Aufrufe`
+      )
     : n >= 1000
-      ? `${Math.round(n / 1000).toLocaleString('de-DE')}k Aufrufe`
+      ? tr(`${Math.round(n / 1000).toLocaleString(LOCALE)}K views`, `${Math.round(n / 1000).toLocaleString(LOCALE)}k Aufrufe`)
       : n
-        ? `${n} Aufrufe`
+        ? tr(`${n} views`, `${n} Aufrufe`)
         : '';

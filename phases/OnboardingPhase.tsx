@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../types';
+import { INTEREST_LABELS, GENDER_LABELS } from '../constants';
+import { tr } from '../lib/i18n';
 
-const INTEREST_LABELS = ['Musik', 'Technik', 'Spielzeug', 'Alltag', 'Mode', 'Essen'];
-const GENDER_OPTIONS = ['weiblich', 'männlich', 'divers'];
+// Stored values stay German (ids, see lib/session.ts INTEREST_TO_CATEGORY);
+// only the labels are translated.
+const INTEREST_IDS = Object.keys(INTEREST_LABELS);
+const GENDER_OPTIONS = Object.keys(GENDER_LABELS);
 
 export const OnboardingPhase: React.FC<{
   user: UserProfile;
@@ -28,28 +32,28 @@ export const OnboardingPhase: React.FC<{
   return (
   <div className="py-8 animate-fadeIn">
     <div className="retro-card p-6 md:p-12 bg-retro-cream">
-      <h2 className="text-3xl mb-8 border-b-2 border-retro-ink pb-2">Erzähl uns mehr von dir, {user.name || 'Zeitreisende:r'}</h2>
+      <h2 className="text-3xl mb-8 border-b-2 border-retro-ink pb-2">{tr('Tell us more about yourself', 'Erzähl uns mehr von dir')}, {user.name || tr('time traveler', 'Zeitreisende:r')}</h2>
       <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div>
-            <label htmlFor="rm-gender" className="block text-sm font-bold uppercase mb-1">Geschlecht (optional)</label>
+            <label htmlFor="rm-gender" className="block text-sm font-bold uppercase mb-1">{tr('Gender (optional)', 'Geschlecht (optional)')}</label>
             <select
               id="rm-gender"
               value={user.gender}
               onChange={(e) => onUserChange({ ...user, gender: e.target.value })}
               className="w-full border-2 border-retro-ink p-3 bg-white"
             >
-              <option value="">– keine Angabe –</option>
+              <option value="">{tr('– prefer not to say –', '– keine Angabe –')}</option>
               {GENDER_OPTIONS.map((g) => (
-                <option key={g} value={g}>{g}</option>
+                <option key={g} value={g}>{GENDER_LABELS[g]}</option>
               ))}
             </select>
           </div>
         </div>
         <div className="space-y-4">
-          <span className="block text-sm font-bold uppercase mb-1">Interessen (für persönlichere Fragen)</span>
+          <span className="block text-sm font-bold uppercase mb-1">{tr('Interests (for more personal questions)', 'Interessen (für persönlichere Fragen)')}</span>
           <div className="flex flex-wrap gap-2">
-            {INTEREST_LABELS.map((interest) => (
+            {INTEREST_IDS.map((interest) => (
               <button
                 key={interest}
                 type="button"
@@ -59,13 +63,13 @@ export const OnboardingPhase: React.FC<{
                   user.interests.includes(interest) ? 'bg-retro-ink text-white' : 'bg-white'
                 }`}
               >
-                {interest}
+                {INTEREST_LABELS[interest]}
               </button>
             ))}
           </div>
           <div>
             <label htmlFor="rm-artist" className="block text-sm font-bold uppercase mb-1">
-              Lieblingsmusiker:innen (optional)
+              {tr('Favorite musicians (optional)', 'Lieblingsmusiker:innen (optional)')}
             </label>
             <div className="flex gap-2">
               <input
@@ -79,7 +83,7 @@ export const OnboardingPhase: React.FC<{
                   addArtist();
                 }}
                 className="w-full border-2 border-retro-ink p-3 bg-white"
-                placeholder="z. B. ABBA, Queen, Nena …"
+                placeholder={tr('e.g. ABBA, Queen, Madonna …', 'z. B. ABBA, Queen, Nena …')}
               />
               <button
                 type="button"
@@ -100,7 +104,7 @@ export const OnboardingPhase: React.FC<{
                     <button
                       type="button"
                       onClick={() => removeArtist(artist)}
-                      aria-label={`${artist} entfernen`}
+                      aria-label={tr(`Remove ${artist}`, `${artist} entfernen`)}
                       className="text-retro-brown hover:text-retro-ink"
                     >
                       ✕
@@ -113,7 +117,7 @@ export const OnboardingPhase: React.FC<{
         </div>
         <div className="md:col-span-2 text-right pt-2">
           <button type="submit" className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-            Weiter
+            {tr('Next', 'Weiter')}
           </button>
         </div>
       </form>

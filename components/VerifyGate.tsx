@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GoogleUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { warmUpGoogle } from '../lib/googleAuth';
+import { tr } from '../lib/i18n';
 
 // The very first thing anyone does once past the splash: tell RetroMind their
 // name and birthday, so the right decades and questions show up. Everything
@@ -51,10 +52,12 @@ export const VerifyGate: React.FC<{
   return (
     <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
       <div className="retro-card p-8 md:p-12 max-w-lg bg-retro-cream">
-        <h2 className="text-3xl mb-6">Bevor es losgeht …</h2>
+        <h2 className="text-3xl mb-6">{tr('Before we get started …', 'Bevor es losgeht …')}</h2>
         <p className="text-lg mb-8 leading-relaxed">
-          RetroMind richtet sich nach deinem Alter, damit die richtigen Jahrzehnte und Fragen erscheinen.
-          Deine Angaben bleiben auf diesem Gerät.
+          {tr(
+            'RetroMind adapts to your age so the right decades and questions show up. Your details stay on this device.',
+            'RetroMind richtet sich nach deinem Alter, damit die richtigen Jahrzehnte und Fragen erscheinen. Deine Angaben bleiben auf diesem Gerät.'
+          )}
         </p>
 
         <form onSubmit={handleSubmit} className="text-left space-y-4">
@@ -68,7 +71,12 @@ export const VerifyGate: React.FC<{
                   className="w-10 h-10 rounded-full border border-retro-ink shrink-0"
                 />
               )}
-              <p className="font-bold text-sm">☁️ Angemeldet als {googleUser.name}: deine Reise wird zusätzlich in deinem Google Drive gesichert.</p>
+              <p className="font-bold text-sm">
+                {tr(
+                  `☁️ Signed in as ${googleUser.name}: your journey is also backed up to your Google Drive.`,
+                  `☁️ Angemeldet als ${googleUser.name}: deine Reise wird zusätzlich in deinem Google Drive gesichert.`
+                )}
+              </p>
             </div>
           )}
           <div>
@@ -80,11 +88,11 @@ export const VerifyGate: React.FC<{
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full border-2 border-retro-ink p-3 bg-white"
-              placeholder="Wie wirst du genannt?"
+              placeholder={tr('What should we call you?', 'Wie wirst du genannt?')}
             />
           </div>
           <div>
-            <label htmlFor="rm-verify-birth" className="block text-sm font-bold uppercase mb-1">Geburtsdatum</label>
+            <label htmlFor="rm-verify-birth" className="block text-sm font-bold uppercase mb-1">{tr('Date of birth', 'Geburtsdatum')}</label>
             <input
               id="rm-verify-birth"
               required
@@ -96,12 +104,12 @@ export const VerifyGate: React.FC<{
               className="w-full border-2 border-retro-ink p-3 bg-white"
             />
             {birthdayHint && birthDate === birthdayHint && (
-              <p className="text-xs text-retro-brown mt-1">Aus deinem Google-Konto übernommen – bei Bedarf anpassen.</p>
+              <p className="text-xs text-retro-brown mt-1">{tr('Taken from your Google account – adjust if needed.', 'Aus deinem Google-Konto übernommen – bei Bedarf anpassen.')}</p>
             )}
           </div>
           <div className="text-right pt-2">
             <button type="submit" className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-              Weiter
+              {tr('Continue', 'Weiter')}
             </button>
           </div>
         </form>
@@ -109,9 +117,18 @@ export const VerifyGate: React.FC<{
         {googleStatus !== 'not_configured' && googleStatus !== 'signed_in' && (
           <div className="mt-8 pt-6 border-t-2 border-dashed border-retro-ink text-left">
             <p className="text-sm leading-relaxed mb-3">
-              <strong>☁️ Optional: in der Cloud sichern.</strong> Mit Google angemeldet wird deine Reise zusätzlich
-              in deinem eigenen Google Drive gespeichert, damit du auf jedem Gerät weitermachen kannst. Das geht
-              auch später noch über „Mit Google anmelden“ unten links.
+              {tr(
+                <>
+                  <strong>☁️ Optional: back up to the cloud.</strong> Signed in with Google, your journey is also
+                  saved to your own Google Drive, so you can pick up on any device. You can also do this later via
+                  “Sign in with Google” at the bottom left.
+                </>,
+                <>
+                  <strong>☁️ Optional: in der Cloud sichern.</strong> Mit Google angemeldet wird deine Reise zusätzlich
+                  in deinem eigenen Google Drive gespeichert, damit du auf jedem Gerät weitermachen kannst. Das geht
+                  auch später noch über „Mit Google anmelden“ unten links.
+                </>
+              )}
             </p>
             <button
               type="button"
@@ -123,10 +140,10 @@ export const VerifyGate: React.FC<{
               className="retro-button bg-retro-amber text-white px-6 py-3 font-bold hover:bg-retro-amber-dark disabled:opacity-60"
             >
               {googleStatus === 'signing_in'
-                ? 'Anmelden …'
+                ? tr('Signing in …', 'Anmelden …')
                 : googleStatus === 'error'
-                ? 'Erneut mit Google anmelden'
-                : 'Mit Google anmelden'}
+                ? tr('Sign in with Google again', 'Erneut mit Google anmelden')
+                : tr('Sign in with Google', 'Mit Google anmelden')}
             </button>
           </div>
         )}

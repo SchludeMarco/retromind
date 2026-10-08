@@ -3,6 +3,7 @@
 // filter shows hundreds of games instead of only the curated picks.
 
 import { viaProxy } from '../../lib/privacy';
+import { tr } from '../../lib/i18n';
 
 export interface PlatformInfo {
   id: string;
@@ -29,8 +30,8 @@ export const MAKERS: { id: Maker; label: string }[] = [
   { id: 'Sega', label: 'Sega' },
   { id: 'Sony', label: 'Sony' },
   { id: 'Microsoft', label: 'Microsoft' },
-  { id: 'Computer', label: 'Heimcomputer & PC' },
-  { id: 'Spielhalle', label: 'Atari, Arcade & Exoten' },
+  { id: 'Computer', label: tr('Home Computers & PC', 'Heimcomputer & PC') },
+  { id: 'Spielhalle', label: tr('Atari, Arcade & Oddballs', 'Atari, Arcade & Exoten') },
 ];
 
 export const KIND_ICON: Record<PlatformInfo['kind'], string> = {
@@ -80,3 +81,16 @@ export const PLATFORMS: PlatformInfo[] = [
 ];
 
 export const platformInfo = (id: string) => PLATFORMS.find((p) => p.id === id);
+
+/**
+ * Display name of a platform id. The catalog and the live archive use a few
+ * German pseudo-platforms as ids ('Multiplattform', 'Fundstück', 'Archiv');
+ * they stay as ids (compared in code, stored in saves), only the label is
+ * localized. Every other id is a real system name and shown as is.
+ */
+const SPECIAL_PLATFORM_LABELS: Record<string, string> = {
+  Multiplattform: tr('Multiplatform', 'Multiplattform'),
+  Fundstück: tr('Lucky Find', 'Fundstück'),
+  Archiv: tr('Archive', 'Archiv'),
+};
+export const platformLabel = (id: string) => SPECIAL_PLATFORM_LABELS[id] ?? id;

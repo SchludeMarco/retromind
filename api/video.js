@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const uri = typeof req.query.uri === "string" ? req.query.uri : "";
 
   if (!apiKey) {
-    res.status(503).end("Server ohne Schlüssel konfiguriert.");
+    res.status(503).end("Server configured without a key.");
     return;
   }
 
@@ -14,13 +14,13 @@ export default async function handler(req, res) {
   try {
     target = new URL(uri);
   } catch {
-    res.status(400).end("Ungültige URL.");
+    res.status(400).end("Invalid URL.");
     return;
   }
   // Only allow Google's own media hosts — prevents this route from being an
   // open proxy.
   if (target.protocol !== "https:" || !/(^|\.)googleapis\.com$/.test(target.hostname)) {
-    res.status(400).end("Nicht erlaubte Quelle.");
+    res.status(400).end("Source not allowed.");
     return;
   }
 
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   try {
     const upstream = await fetch(target.toString());
     if (!upstream.ok || !upstream.body) {
-      res.status(502).end("Video konnte nicht geladen werden.");
+      res.status(502).end("Video could not be loaded.");
       return;
     }
     res.setHeader("Content-Type", upstream.headers.get("content-type") || "video/mp4");
@@ -41,6 +41,6 @@ export default async function handler(req, res) {
     res.status(200).send(buf);
   } catch (e) {
     console.error("video proxy error:", e?.message || e);
-    res.status(502).end("Video-Proxy-Fehler.");
+    res.status(502).end("Video proxy error.");
   }
 }

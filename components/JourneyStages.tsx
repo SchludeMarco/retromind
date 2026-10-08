@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppPhase } from '../types';
+import { tr } from '../lib/i18n';
 
 // The journey as free "Etappen" (Marco, 2026-10-06): once a journey has
 // begun, every station can be opened straight from the start page, in any
@@ -8,12 +9,12 @@ import { AppPhase } from '../types';
 export type Stage = { phase: AppPhase; icon: string; label: string; text: string };
 
 export const STAGES: Stage[] = [
-  { phase: 'onboarding', icon: '🙋', label: 'Dein Profil', text: 'Name, Interessen und Lieblingsmusik' },
-  { phase: 'induction', icon: '🎞️', label: 'Eindrücke', text: 'Bilder und Klänge deiner Zeit' },
-  { phase: 'exploration', icon: '🧭', label: 'Erkunden', text: 'Sparten zum Stöbern und Erinnern' },
-  { phase: 'diary', icon: '✍️', label: 'Tagebuch', text: 'Deine Gedanken in eigenen Worten' },
-  { phase: 'book', icon: '📖', label: 'Erinnerungsbuch', text: 'Alles gesammelt, zum Lesen und Drucken' },
-  { phase: 'finish', icon: '🏁', label: 'Abschluss', text: 'Die Reise feierlich beenden' },
+  { phase: 'onboarding', icon: '🙋', label: tr('Your Profile', 'Dein Profil'), text: tr('Name, interests and favorite music', 'Name, Interessen und Lieblingsmusik') },
+  { phase: 'induction', icon: '🎞️', label: tr('Impressions', 'Eindrücke'), text: tr('Pictures and sounds of your time', 'Bilder und Klänge deiner Zeit') },
+  { phase: 'exploration', icon: '🧭', label: tr('Explore', 'Erkunden'), text: tr('Categories to browse and remember', 'Sparten zum Stöbern und Erinnern') },
+  { phase: 'diary', icon: '✍️', label: tr('Diary', 'Tagebuch'), text: tr('Your thoughts in your own words', 'Deine Gedanken in eigenen Worten') },
+  { phase: 'book', icon: '📖', label: tr('Memory Book', 'Erinnerungsbuch'), text: tr('Everything collected, to read and print', 'Alles gesammelt, zum Lesen und Drucken') },
+  { phase: 'finish', icon: '🏁', label: tr('Wrap-Up', 'Abschluss'), text: tr('Bring the journey to a festive close', 'Die Reise feierlich beenden') },
 ];
 
 export const JourneyStages: React.FC<{
@@ -26,17 +27,23 @@ export const JourneyStages: React.FC<{
   const status = (p: AppPhase) =>
     p === 'exploration'
       ? memoriesCount > 0
-        ? `${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}`
+        ? tr(
+            `${memoriesCount} ${memoriesCount === 1 ? 'memory' : 'memories'}`,
+            `${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}`
+          )
         : null
       : p === 'diary'
-      ? diaryWritten ? 'geschrieben' : null
+      ? diaryWritten ? tr('written', 'geschrieben') : null
       : null;
 
   return (
-    <section aria-label="Etappen der Reise" className={warm ? 'rounded-2xl bg-retro-cream p-6 md:p-8' : 'mb-8 text-left'}>
-      <h2 className={warm ? 'text-xl md:text-2xl mb-2' : 'text-2xl mb-2'}>Deine Etappen</h2>
+    <section aria-label={tr('Stages of the journey', 'Etappen der Reise')} className={warm ? 'rounded-2xl bg-retro-cream p-6 md:p-8' : 'mb-8 text-left'}>
+      <h2 className={warm ? 'text-xl md:text-2xl mb-2' : 'text-2xl mb-2'}>{tr('Your Stages', 'Deine Etappen')}</h2>
       <p className="text-retro-brown mb-5 leading-relaxed">
-        Tippe eine Station an, wann immer dir danach ist. Die Reihenfolge bestimmst du.
+        {tr(
+          'Tap a stop whenever you feel like it. You decide the order.',
+          'Tippe eine Station an, wann immer dir danach ist. Die Reihenfolge bestimmst du.'
+        )}
       </p>
       <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {STAGES.map((s, i) => {
@@ -61,7 +68,7 @@ export const JourneyStages: React.FC<{
                   <span className="text-sm text-retro-brown leading-snug">{s.text}</span>
                   {(last || note) && (
                     <span className="text-xs font-semibold text-retro-amber-dark mt-1">
-                      {[last && 'Hier warst du zuletzt', note].filter(Boolean).join(' · ')}
+                      {[last && tr('You were here last', 'Hier warst du zuletzt'), note].filter(Boolean).join(' · ')}
                     </span>
                   )}
                 </span>

@@ -23,6 +23,7 @@ import './index.css';
 // Applies the saved design before the first render, so it doesn't flash.
 import './lib/theme';
 import { countAppStart } from './lib/usage';
+import { tr } from './lib/i18n';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -53,9 +54,12 @@ class ErrorBoundary extends React.Component<
             textAlign: 'center',
           }}
         >
-          <h1 style={{ fontFamily: "'Playfair Display', serif" }}>Ups – da ist etwas schiefgelaufen.</h1>
+          <h1 style={{ fontFamily: "'Playfair Display', serif" }}>{tr('Oops – something went wrong.', 'Ups – da ist etwas schiefgelaufen.')}</h1>
           <p>
-            Dein Tagebuch und deine Erinnerungen sind in diesem Browser gespeichert und bleiben erhalten.
+            {tr(
+              'Your diary and your memories are saved in this browser and are still there.',
+              'Dein Tagebuch und deine Erinnerungen sind in diesem Browser gespeichert und bleiben erhalten.'
+            )}
           </p>
           <button
             onClick={() => window.location.reload()}
@@ -69,7 +73,7 @@ class ErrorBoundary extends React.Component<
               cursor: 'pointer',
             }}
           >
-            Neu laden
+            {tr('Reload', 'Neu laden')}
           </button>
         </div>
       );

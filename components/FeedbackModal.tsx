@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { submitFeedback, FeedbackCategory } from '../services/feedbackService';
+import { tr } from '../lib/i18n';
 
 const CATEGORIES: { value: FeedbackCategory; label: string }[] = [
-  { value: 'lob', label: 'Lob' },
-  { value: 'tadel', label: 'Tadel' },
-  { value: 'vorschlag', label: 'Vorschlag' },
-  { value: 'wunsch', label: 'Wunsch' },
-  { value: 'sonstiges', label: 'Sonstiges' },
+  { value: 'lob', label: tr('Praise', 'Lob') },
+  { value: 'tadel', label: tr('Criticism', 'Tadel') },
+  { value: 'vorschlag', label: tr('Suggestion', 'Vorschlag') },
+  { value: 'wunsch', label: tr('Wish', 'Wunsch') },
+  { value: 'sonstiges', label: tr('Other', 'Sonstiges') },
 ];
 
 const MAX_LENGTH = 4000;
@@ -36,35 +37,38 @@ export const FeedbackModal: React.FC<{
     } catch (err) {
       setStatus('error');
       setErrorMessage(
-        (err as { message?: string })?.message || 'Das Feedback konnte nicht gesendet werden.'
+        (err as { message?: string })?.message || tr('Your feedback couldn’t be sent.', 'Das Feedback konnte nicht gesendet werden.')
       );
     }
   };
 
   return (
-    <Modal onClose={onDismiss} label="Feedback geben">
-      <button onClick={onCloseClick} aria-label="Schließen" className="absolute top-3 right-3 text-2xl leading-none">
+    <Modal onClose={onDismiss} label={tr('Give feedback', 'Feedback geben')}>
+      <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
         ✕
       </button>
       <span className="text-xs uppercase font-bold text-retro-amber-dark block">Feedback</span>
-      <h3 className="text-3xl font-bold mb-5">Deine Meinung zählt</h3>
+      <h3 className="text-3xl font-bold mb-5">{tr('Your opinion matters', 'Deine Meinung zählt')}</h3>
 
       {status === 'sent' ? (
         <div className="py-6">
-          <p className="font-bold mb-2">Danke für dein Feedback! 🙏</p>
-          <p className="text-sm text-retro-brown">Es ist gerade auf dem Weg zu uns.</p>
+          <p className="font-bold mb-2">{tr('Thanks for your feedback! 🙏', 'Danke für dein Feedback! 🙏')}</p>
+          <p className="text-sm text-retro-brown">{tr('It’s on its way to us right now.', 'Es ist gerade auf dem Weg zu uns.')}</p>
           <button onClick={onCloseClick} className="retro-button mt-6 px-4 py-2 border-2 border-retro-ink bg-retro-amber font-bold">
-            Schließen
+            {tr('Close', 'Schließen')}
           </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
           <p className="text-sm text-retro-brown mb-4">
-            Lob, Tadel, Vorschläge oder Wünsche – schreib uns, was dir auf dem Herzen liegt.
+            {tr(
+              'Praise, criticism, suggestions or wishes – tell us what’s on your mind.',
+              'Lob, Tadel, Vorschläge oder Wünsche – schreib uns, was dir auf dem Herzen liegt.'
+            )}
           </p>
 
           <fieldset className="mb-4">
-            <legend className="text-[10px] font-bold uppercase text-retro-tan mb-2">Art des Feedbacks</legend>
+            <legend className="text-[10px] font-bold uppercase text-retro-tan mb-2">{tr('Type of feedback', 'Art des Feedbacks')}</legend>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((c) => (
                 <button
@@ -83,7 +87,7 @@ export const FeedbackModal: React.FC<{
           </fieldset>
 
           <label htmlFor="rm-feedback-message" className="block text-[10px] font-bold uppercase text-retro-tan mb-1">
-            Deine Nachricht
+            {tr('Your message', 'Deine Nachricht')}
           </label>
           <textarea
             id="rm-feedback-message"
@@ -92,24 +96,27 @@ export const FeedbackModal: React.FC<{
             maxLength={MAX_LENGTH}
             rows={5}
             required
-            placeholder="Schreib uns, was du denkst…"
+            placeholder={tr('Tell us what you think…', 'Schreib uns, was du denkst…')}
             className="w-full text-sm p-3 border-2 border-retro-ink bg-white focus:outline-none focus:ring-2 focus:ring-retro-amber resize-none"
           />
           <p className="text-[10px] text-retro-tan text-right mt-1">{trimmed.length} / {MAX_LENGTH}</p>
 
           <label htmlFor="rm-feedback-email" className="block text-[10px] font-bold uppercase text-retro-tan mb-1 mt-3">
-            Deine E-Mail (optional, falls du eine Antwort möchtest)
+            {tr('Your email (optional, if you’d like a reply)', 'Deine E-Mail (optional, falls du eine Antwort möchtest)')}
           </label>
           <input
             id="rm-feedback-email"
             type="email"
             value={contactEmail}
             onChange={(e) => setContactEmail(e.target.value)}
-            placeholder="name@beispiel.de"
+            placeholder={tr('name@example.com', 'name@beispiel.de')}
             className="w-full text-sm p-2 border-2 border-retro-ink bg-white focus:outline-none focus:ring-2 focus:ring-retro-amber"
           />
           <p className="text-[10px] text-retro-tan mt-2">
-            Deine Nachricht wird ohne E-Mail-Adresse in unserer öffentlichen Feedback-Liste gespeichert.
+            {tr(
+              'Your message is saved to our public feedback list without your email address.',
+              'Deine Nachricht wird ohne E-Mail-Adresse in unserer öffentlichen Feedback-Liste gespeichert.'
+            )}
           </p>
 
           {status === 'error' && (
@@ -123,7 +130,7 @@ export const FeedbackModal: React.FC<{
             disabled={!canSubmit}
             className="retro-button mt-5 px-4 py-2 border-2 border-retro-ink bg-retro-amber font-bold w-full disabled:opacity-40"
           >
-            {status === 'sending' ? 'Wird gesendet…' : 'Feedback absenden'}
+            {status === 'sending' ? tr('Sending…', 'Wird gesendet…') : tr('Send feedback', 'Feedback absenden')}
           </button>
         </form>
       )}

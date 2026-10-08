@@ -2,6 +2,7 @@ import React from 'react';
 import { AppPhase } from '../types';
 import { PHASES } from '../lib/session';
 import { toggleMuted, useMuted } from '../lib/mute';
+import { tr } from '../lib/i18n';
 
 // The app frame of the "Retro Warm" design (lib/theme.ts), after the Google
 // Stitch mock-ups: a top bar with logo, sound switch, feedback, settings and account,
@@ -100,22 +101,22 @@ export const Icon: React.FC<{ name: IconName; className?: string }> = ({ name, c
 
 export const PHASE_LABEL: Record<AppPhase, string> = {
   intro: 'Start',
-  onboarding: 'Dein Profil',
-  induction: 'Zeitreise',
-  exploration: 'Erkunden',
-  diary: 'Tagebuch',
-  book: 'Erinnerungsbuch',
-  finish: 'Geschafft',
+  onboarding: tr('Your Profile', 'Dein Profil'),
+  induction: tr('Time Travel', 'Zeitreise'),
+  exploration: tr('Explore', 'Erkunden'),
+  diary: tr('Diary', 'Tagebuch'),
+  book: tr('Memory Book', 'Erinnerungsbuch'),
+  finish: tr('Done', 'Geschafft'),
 };
 
 const STEP_LABEL: Record<AppPhase, string> = {
   intro: 'Start',
-  onboarding: 'Profil',
-  induction: 'Eindrücke',
-  exploration: 'Erkunden',
-  diary: 'Tagebuch',
-  book: 'Buch',
-  finish: 'Ende',
+  onboarding: tr('Profile', 'Profil'),
+  induction: tr('Impressions', 'Eindrücke'),
+  exploration: tr('Explore', 'Erkunden'),
+  diary: tr('Diary', 'Tagebuch'),
+  book: tr('Book', 'Buch'),
+  finish: tr('End', 'Ende'),
 };
 
 export const WarmTopBar: React.FC<{
@@ -139,17 +140,17 @@ export const WarmTopBar: React.FC<{
         <button
           onClick={toggleMuted}
           aria-pressed={muted}
-          aria-label={muted ? 'Ton einschalten' : 'Stummschalten'}
+          aria-label={muted ? tr('Turn sound on', 'Ton einschalten') : tr('Mute', 'Stummschalten')}
           className={`h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
             muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
           }`}
         >
           <Icon name="wave" className="w-5 h-5" />
-          <span className="hidden sm:inline">{muted ? 'Ton aus' : 'Tonband'}</span>
+          <span className="hidden sm:inline">{muted ? tr('Sound off', 'Ton aus') : tr('Tape on', 'Tonband')}</span>
         </button>
         <button
           onClick={onOpenFeedback}
-          title="Feedback geben"
+          title={tr('Give feedback', 'Feedback geben')}
           className="h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1 sm:gap-1.5 text-sm font-bold bg-[#c62828] text-white shadow-sm hover:bg-[#a51f1f] flex-shrink-0"
         >
           <Icon name="mail" className="w-5 h-5" />
@@ -159,18 +160,18 @@ export const WarmTopBar: React.FC<{
           <>
             <button
               onClick={onOpenSettings}
-              aria-label="App-Einstellungen öffnen"
+              aria-label={tr('Open app settings', 'App-Einstellungen öffnen')}
               className="relative w-10 h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
             >
               <Icon name="settings" />
               {hasUnseenNews && (
-                <span aria-label="neue Einträge" className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-600 border-2 border-retro-paper" />
+                <span aria-label={tr('new entries', 'neue Einträge')} className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-600 border-2 border-retro-paper" />
               )}
             </button>
             <button
               onClick={onToggleAccount}
               aria-pressed={accountOpen}
-              aria-label="Konten (Google, Spotify)"
+              aria-label={tr('Accounts (Google, Spotify)', 'Konten (Google, Spotify)')}
               className="w-10 h-10 rounded-full flex items-center justify-center bg-retro-amber-dark text-white flex-shrink-0"
             >
               <Icon name="person" className="w-5 h-5" />
@@ -186,9 +187,9 @@ type NavTarget = 'intro' | 'induction' | 'exploration' | 'book';
 
 const NAV: { target: NavTarget; label: string; icon: IconName; phases: AppPhase[] }[] = [
   { target: 'intro', label: 'Start', icon: 'start', phases: ['intro', 'onboarding'] },
-  { target: 'induction', label: 'Zeitreise', icon: 'journey', phases: ['induction'] },
-  { target: 'exploration', label: 'Erkunden', icon: 'explore', phases: ['exploration'] },
-  { target: 'book', label: 'Erinnerung', icon: 'book', phases: ['diary', 'book', 'finish'] },
+  { target: 'induction', label: tr('Time Travel', 'Zeitreise'), icon: 'journey', phases: ['induction'] },
+  { target: 'exploration', label: tr('Explore', 'Erkunden'), icon: 'explore', phases: ['exploration'] },
+  { target: 'book', label: tr('Memories', 'Erinnerung'), icon: 'book', phases: ['diary', 'book', 'finish'] },
 ];
 
 // `center` (the music button, MusicDock) sits in the middle, two areas on each side.
@@ -198,7 +199,7 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
   center,
 }) => (
   <nav
-    aria-label="Hauptnavigation"
+    aria-label={tr('Main navigation', 'Hauptnavigation')}
     className="rm-fixed fixed bottom-0 inset-x-0 z-[60] bg-retro-paper-white/95 backdrop-blur border-t border-[#e6dac8] pb-[env(safe-area-inset-bottom)]"
   >
     <div className={`max-w-xl mx-auto grid ${center ? 'grid-cols-[1fr_1fr_auto_1fr_1fr]' : 'grid-cols-4'}`}>
@@ -228,12 +229,12 @@ export const WarmJourneyStepper: React.FC<{ phase: AppPhase; onSelect: (p: AppPh
   const index = PHASES.indexOf(phase);
   const percent = Math.round((index / (PHASES.length - 1)) * 100);
   return (
-    <section aria-label="Fortschritt der Reise" className="rounded-2xl bg-retro-highlight/70 p-4 md:p-5 mt-4">
+    <section aria-label={tr('Journey progress', 'Fortschritt der Reise')} className="rounded-2xl bg-retro-highlight/70 p-4 md:p-5 mt-4">
       <div className="flex items-start justify-between gap-3 mb-3">
         <p className="font-semibold leading-snug">
-          Station {index + 1} von {PHASES.length}: {PHASE_LABEL[phase]}
+          {tr(`Stop ${index + 1} of ${PHASES.length}`, `Station ${index + 1} von ${PHASES.length}`)}: {PHASE_LABEL[phase]}
         </p>
-        <p className="text-sm text-retro-brown whitespace-nowrap">{percent}&nbsp;% geschafft</p>
+        <p className="text-sm text-retro-brown whitespace-nowrap">{tr(`${percent}% done`, `${percent} % geschafft`)}</p>
       </div>
       <div className="h-1.5 rounded-full bg-[#e6dac8] overflow-hidden mb-4">
         <div className="h-full bg-retro-amber-dark rounded-full transition-all duration-500" style={{ width: `${percent}%` }} />
@@ -247,7 +248,7 @@ export const WarmJourneyStepper: React.FC<{ phase: AppPhase; onSelect: (p: AppPh
               <button
                 onClick={() => onSelect(p)}
                 aria-current={current ? 'step' : undefined}
-                aria-label={`Station ${i + 1}: ${PHASE_LABEL[p]}`}
+                aria-label={tr(`Stop ${i + 1}: ${PHASE_LABEL[p]}`, `Station ${i + 1}: ${PHASE_LABEL[p]}`)}
                 className="w-full flex flex-col items-center gap-1 text-center"
               >
               <span

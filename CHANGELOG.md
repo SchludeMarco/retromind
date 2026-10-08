@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **RetroMind spricht jetzt Englisch** (2026-10-08, PR #PRNUM): Beide Apps, die
+  Zeitreise und RetroMind – Gaming, sind komplett ins amerikanische Englisch
+  übersetzt, und Englisch ist die neue Standardsprache. Wer lieber Deutsch
+  möchte, stellt in den Einstellungen unter „Language“ auf „Deutsch“ um; die
+  Wahl bleibt im Browser gespeichert. Auch alles, was die KI schreibt (Fragen,
+  Fotoanalyse, Chat, Retro-Guru, Spieleguides), kommt in der gewählten Sprache.
+  Die Spielmarken heißen jetzt in beiden Sprachen „Coins“. Datenschutzerklärung und
+  Impressum gibt es zusätzlich auf Englisch.
+
 - **Easter Eggs in der Gaming-Halle** (2026-10-08, PR #164): In der Halle sind
   jetzt zehn Geheimnisse versteckt, zum Beispiel alte Cheats in der Suche
   (IDDQD, Rosebud, XYZZY), ein Pac-Man zum Fangen, fünfmal aufs Logo klopfen

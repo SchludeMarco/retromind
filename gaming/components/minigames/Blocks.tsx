@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { chip } from '../../lib/chiptune';
+import { tr } from '../../../lib/i18n';
 import { Done, saveBest, useGameKeys, themeColors } from './shared';
 
 // Falling blocks in the style of the Game Boy classic. Starts slow and only
@@ -279,10 +280,10 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
     <>
       <div className="blocks-top">
         <p className="mini-score">
-          Punkte: {hud.score} · Reihen: {hud.lines}
+          {tr('Score', 'Punkte')}: {hud.score} · {tr('Lines', 'Reihen')}: {hud.lines}
         </p>
         <div className="blocks-next">
-          <span className="dim">Nächster</span>
+          <span className="dim">{tr('Next', 'Nächster')}</span>
           <canvas ref={preview} width={64} height={32} />
         </div>
       </div>
@@ -295,20 +296,23 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={() => (touch.current = null)}
-        aria-label="Spielfeld: tippen zum Drehen, wischen zum Schieben, nach unten wischen zum Fallenlassen"
+        aria-label={tr(
+          'Playfield: tap to rotate, swipe to move, swipe down to drop',
+          'Spielfeld: tippen zum Drehen, wischen zum Schieben, nach unten wischen zum Fallenlassen'
+        )}
       />
       {!result && (
         <div className="game-pad">
-          <button className="px-btn" onClick={() => move(-1)} aria-label="Nach links">
+          <button className="px-btn" onClick={() => move(-1)} aria-label={tr('Left', 'Nach links')}>
             ◄
           </button>
-          <button className="px-btn" onClick={turn} aria-label="Drehen">
+          <button className="px-btn" onClick={turn} aria-label={tr('Rotate', 'Drehen')}>
             ⟳
           </button>
-          <button className="px-btn" onClick={() => move(1)} aria-label="Nach rechts">
+          <button className="px-btn" onClick={() => move(1)} aria-label={tr('Right', 'Nach rechts')}>
             ►
           </button>
-          <button className="px-btn" onClick={hardDrop} aria-label="Fallen lassen">
+          <button className="px-btn" onClick={hardDrop} aria-label={tr('Drop', 'Fallen lassen')}>
             ▼
           </button>
           <button className="px-btn" onClick={() => setPaused((p) => !p)} aria-pressed={paused}>
@@ -318,8 +322,11 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
       )}
       {result && (
         <Done
-          title="SPIEL VORBEI"
-          text={`${result.score} Punkte, ${result.lines} ${result.lines === 1 ? 'Reihe' : 'Reihen'} abgeräumt.`}
+          title={tr("GAME OVER", "SPIEL VORBEI")}
+          text={tr(
+            `${result.score} points, ${result.lines} ${result.lines === 1 ? 'line' : 'lines'} cleared.`,
+            `${result.score} Punkte, ${result.lines} ${result.lines === 1 ? 'Reihe' : 'Reihen'} abgeräumt.`
+          )}
           record={result.record}
           onAgain={again}
         />
@@ -328,4 +335,4 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const blocksBest = (n: number) => `Rekord: ${n} Punkte`;
+export const blocksBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

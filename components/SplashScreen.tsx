@@ -3,6 +3,7 @@ import { MantelClock } from './MantelClock';
 import { startTicking, playGong } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
 import { LoudSign } from './LoudSign';
+import { tr } from '../lib/i18n';
 
 // After the start button: the screen turns white with the gong's strike,
 // stays white for a breath, then slowly gives way to the app underneath.
@@ -73,7 +74,7 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
           waitingForTouch && !muted && !struck ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.
+        {tr('🔊 Tap anywhere on the screen to hear the clock tick.', '🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.')}
       </p>
       {struck && (
         <div

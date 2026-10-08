@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { chip, DOOR_SWING } from '../lib/chiptune';
 import { MuteButton } from './MuteButton';
 import { LoudSign } from '../../components/LoudSign';
+import { tr } from '../../lib/i18n';
 
 // The way in: a run-down arcade hall on a rainy street, a wobbly bulb over
 // the entrance and the hall's metal thumping muffled through the wall. "ENTER" throws the door open,
@@ -118,10 +119,10 @@ export const Entrance: React.FC<{
       <div className="entrance-controls">
         <p className="dim entrance-hint">
           {muted
-            ? 'Da drin warten die alten Games. Der Ton ist aus.'
+            ? tr('The old games are waiting inside. Sound is off.', 'Da drin warten die alten Games. Der Ton ist aus.')
             : soundWaiting
-              ? 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.'
-              : 'Da drin warten die alten Games. Trau dich, Player 1.'}
+              ? tr('Psst … tap anywhere once and you’ll hear what’s going on inside.', 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.')
+              : tr('The old games are waiting inside. Go on in, Player 1.', 'Da drin warten die alten Games. Trau dich, Player 1.')}
         </p>
         <div className="entrance-row">
           {/* Looks like the EINGANG door itself: grey metal frame, roll shutter

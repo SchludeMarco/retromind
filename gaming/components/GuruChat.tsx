@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../../types';
 import { AiUnavailableError, sendGuruMessage } from '../lib/ai';
 import { chip } from '../lib/chiptune';
+import { tr } from '../../lib/i18n';
 
 // The "Retro-Guru": a chat persona that knows old games, cheats and where to
 // play them legally today. Text appears letter by letter like an RPG dialog box.
@@ -58,8 +59,8 @@ export const GuruChat: React.FC<{ onClose: () => void; onAsk?: (text: string) =>
           role: 'model',
           text:
             err instanceof AiUnavailableError
-              ? 'Der Guru ist gerade AFK (kein KI-Server eingerichtet).'
-              : 'Lag! Verbindung weg, wie ein Wackelkontakt am Modul. Einmal pusten und nochmal.',
+              ? tr('The Guru is AFK right now (no AI server set up).', 'Der Guru ist gerade AFK (kein KI-Server eingerichtet).')
+              : tr('Lag! Connection lost, like a loose cartridge. Blow on it and try again.', 'Lag! Verbindung weg, wie ein Wackelkontakt am Modul. Einmal pusten und nochmal.'),
         },
       ]);
     } finally {
@@ -68,18 +69,20 @@ export const GuruChat: React.FC<{ onClose: () => void; onAsk?: (text: string) =>
   };
 
   return (
-    <div className="guru" role="dialog" aria-label="Retro-Guru">
+    <div className="guru" role="dialog" aria-label={tr('Retro Guru', 'Retro-Guru')}>
       <div className="guru-head pixel-font">
-        <span>☻ RETRO-GURU</span>
-        <button onClick={onClose} aria-label="Guru schließen">
+        <span>{tr('☻ RETRO GURU', '☻ RETRO-GURU')}</span>
+        <button onClick={onClose} aria-label={tr('Close Guru', 'Guru schließen')}>
           ✕
         </button>
       </div>
       <div className="guru-log" ref={logRef} aria-live="polite">
         {messages.length === 0 && (
           <p className="dim">
-            Yo, Player 1! Frag mich nach einem Game, an das du dich nur halb erinnerst („das mit dem Opossum und
-            dem Raketenrucksack …“), nach Cheats oder wie du es heute noch zocken kannst.
+            {tr(
+              'Yo, Player 1! Ask me about a game you only half remember (“the one with the possum and the rocket pack …”), about cheats, or how you can still play it today.',
+              'Yo, Player 1! Frag mich nach einem Game, an das du dich nur halb erinnerst („das mit dem Opossum und dem Raketenrucksack …“), nach Cheats oder wie du es heute noch zocken kannst.'
+            )}
           </p>
         )}
         {messages.map((m, i) => (
@@ -93,8 +96,8 @@ export const GuruChat: React.FC<{ onClose: () => void; onAsk?: (text: string) =>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Frag den Guru, Digga …"
-          aria-label="Nachricht an den Retro-Guru"
+          placeholder={tr('Ask the Guru, dude …', 'Frag den Guru, Digga …')}
+          aria-label={tr('Message to the Retro Guru', 'Nachricht an den Retro-Guru')}
           autoFocus
         />
         <button className="px-btn" type="submit" disabled={busy}>

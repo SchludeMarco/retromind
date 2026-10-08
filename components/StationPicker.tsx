@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppPhase } from '../types';
 import { STAGES } from './JourneyStages';
+import { tr } from '../lib/i18n';
 
 // A small, folded-away station switch right under the logo, for the
 // designs without the Retro Warm stepper (Klassisch, Nachtschicht): only
@@ -15,7 +16,7 @@ export const StationPicker: React.FC<{ phase: AppPhase; onSelect: (p: AppPhase) 
   if (!current) return null;
 
   return (
-    <nav aria-label="Stationen der Reise" className="max-w-3xl mx-auto px-4 mb-2 text-center">
+    <nav aria-label={tr('Stops on the journey', 'Stationen der Reise')} className="max-w-3xl mx-auto px-4 mb-2 text-center">
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
@@ -24,7 +25,7 @@ export const StationPicker: React.FC<{ phase: AppPhase; onSelect: (p: AppPhase) 
       >
         <span aria-hidden="true">{current.icon}</span>
         <span>
-          Station {index + 1} von {STATIONS.length}: <strong>{current.label}</strong>
+          {tr(`Stop ${index + 1} of ${STATIONS.length}`, `Station ${index + 1} von ${STATIONS.length}`)}: <strong>{current.label}</strong>
         </span>
         <span aria-hidden="true" className={`transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>

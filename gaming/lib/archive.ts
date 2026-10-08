@@ -9,6 +9,7 @@
 import { Game } from '../data/games';
 import { PLATFORMS, platformInfo } from '../data/platforms';
 import { viaProxy } from '../../lib/privacy';
+import { tr } from '../../lib/i18n';
 
 const API = 'https://en.wikipedia.org/w/api.php';
 export const ARCHIVE_PAGE = 48;
@@ -80,8 +81,12 @@ export function searchArchive(query: string, offset = 0, related = false): Promi
   return cached(`search|${related}|${words.join(' ').toLowerCase()}|${offset}`, async () => {
     const page = await load(search, offset, { platform: null, decade: null }, 'Fundstück');
     if (!related) return page;
-    const note = `Erwähnt „${words.join(' ')}“, etwa als Vorbild oder Ableger.`;
-    return { ...page, games: page.games.map((g) => ({ ...g, blurb: `${note} ${g.blurb?.startsWith('Auch für') ? g.blurb.split('.')[0] + '.' : ''}`.trim() })) };
+    const note = tr(
+      `Mentions “${words.join(' ')}”, e.g. as an inspiration or spin-off.`,
+      `Erwähnt „${words.join(' ')}“, etwa als Vorbild oder Ableger.`
+    );
+    const alsoOn = tr('Also on', 'Auch für');
+    return { ...page, games: page.games.map((g) => ({ ...g, blurb: `${note} ${g.blurb?.startsWith(alsoOn) ? g.blurb.split('.')[0] + '.' : ''}`.trim() })) };
   });
 }
 
@@ -160,12 +165,15 @@ async function load(search: string, offset: number, q: ArchiveQuery, fallbackLab
       year,
       platform,
       developer: '',
-      genre: found.length > 1 ? `auch für ${found.slice(1).join(', ')}` : 'aus dem Archiv',
+      genre: found.length > 1 ? tr(`also on ${found.slice(1).join(', ')}`, `auch für ${found.slice(1).join(', ')}`) : tr('from the archive', 'aus dem Archiv'),
       wiki: p.title,
       blurb:
         found.length > 1
-          ? `Auch für ${found.slice(1).join(', ')}. Öffnen für Infos, Screenshots und Guide.`
-          : 'Aus dem Archiv: öffnen für Infos, Screenshots und Guide.',
+          ? tr(
+              `Also on ${found.slice(1).join(', ')}. Open it for info, screenshots and a guide.`,
+              `Auch für ${found.slice(1).join(', ')}. Öffnen für Infos, Screenshots und Guide.`
+            )
+          : tr('From the archive: open it for info, screenshots and a guide.', 'Aus dem Archiv: öffnen für Infos, Screenshots und Guide.'),
       custom: true,
     };
   });
