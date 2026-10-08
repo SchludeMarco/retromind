@@ -3,12 +3,38 @@ import { GoogleGenAI } from "@google/genai";
 // Server-side proxy for all Gemini / Veo calls. The API key lives only here
 // (Vercel env var GEMINI_API_KEY) and never reaches the browser.
 
+// Each text model has fallbacks: Google retires model names (2026-10-08:
+// "gemini-2.5-flash is no longer available to new users" on the gaming
+// project's newer key, so the Retro Guru only answered "Connection lost").
+// The "-latest" aliases follow Google's current model; on a 404 the next
+// name in the list is tried.
 const MODELS = {
-  question: "gemini-flash-lite-latest",
-  vision: "gemini-2.5-flash",
-  chat: "gemini-2.5-flash",
+  question: ["gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.5-flash-lite"],
+  vision: ["gemini-flash-latest", "gemini-3.8-flash", "gemini-2.5-flash"],
+  chat: ["gemini-flash-latest", "gemini-3.8-flash", "gemini-2.5-flash"],
   veo: "veo-3.1-fast-generate-preview",
 };
+
+const isMissingModel = (err) => {
+  const text = String(err?.message || err);
+  return err?.status === 404 || /\b404\b|NOT_FOUND|no longer available/i.test(text);
+};
+
+// generateContent with the first model of `params.model` (a list) that exists.
+async function generate(ai, params) {
+  const models = Array.isArray(params.model) ? params.model : [params.model];
+  let last;
+  for (const model of models) {
+    try {
+      return await ai.models.generateContent({ ...params, model });
+    } catch (err) {
+      last = err;
+      if (!isMissingModel(err)) throw err;
+      console.warn("gemini model unavailable, trying next:", model);
+    }
+  }
+  throw last;
+}
 
 // Every prompt exists in American English (the default) and German; the
 // client sends the visitor's language as `lang` ("en" | "de", see
@@ -104,7 +130,7 @@ export default async function handler(req, res) {
 
       case "deepQuestion": {
         const { term, name, interests, decade } = payload;
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.question,
           contents: de
             ? `Handle als einfühlsamer Biografie-Begleiter. Erstelle EINE ` +
@@ -129,7 +155,7 @@ export default async function handler(req, res) {
 
       case "perspectiveQuestion": {
         const { term, name, decade, originalAnswer } = payload;
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.question,
           contents: de
             ? `Handle als einfühlsamer Biografie-Begleiter. ${name || "Die Person"} hat ` +
@@ -155,7 +181,7 @@ export default async function handler(req, res) {
       case "analyzeImage": {
         const { imageBase64, mimeType } = payload;
         if (!imageBase64) return res.status(400).json({ error: "no_image" });
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.vision,
           contents: {
             parts: [
@@ -184,7 +210,7 @@ export default async function handler(req, res) {
             parts: [{ text: m.text }],
           }));
         if (!contents.length) return res.status(400).json({ error: "empty_history" });
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.chat,
           contents,
           config: {
@@ -204,7 +230,7 @@ export default async function handler(req, res) {
         const year = clip(payload.year, 4);
         // Grounded in Google Search so tips come from real guides and fan pages
         // rather than the model's memory; sources are passed back for display.
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.chat,
           contents: de
             ? `Erstelle einen kompakten deutschsprachigen Spieleguide zu "${title}" ` +
@@ -233,7 +259,7 @@ export default async function handler(req, res) {
         const year = clip(payload.year, 4);
         // The old magazine reviews (German gamers remember the percentages),
         // where to play it today, and passwords; grounded like the guide.
-        const r = await ai.models.generateContent({
+        const r = await generate(ai, {
           model: MODELS.chat,
           contents: de
             ? `Recherchiere im Web zu dem Videospiel "${title}" (${platform || "Plattform unbekannt"}, ${year || "Jahr unbekannt"}). ` +

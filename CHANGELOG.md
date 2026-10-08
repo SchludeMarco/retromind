@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Der Retro-Guru antwortet wieder** (2026-10-08, PR #179): In der
+  Gaming-Edition kam vom Guru und den anderen KI-Funktionen nur „Lag!
+  Connection lost“, weil Google das bisher genutzte KI-Modell für neue
+  Schlüssel abgeschaltet hat. Die App nimmt jetzt immer Googles aktuelles
+  Modell und weicht von selbst auf ein anderes aus, wenn eines wegfällt.
+
 - **Leiser reinkommen und Lautstärke-Regler** (2026-10-08, PR #178): Die
   Musik beim Betreten der Spielhalle war viel zu laut. Sie startet jetzt bei
   halber Lautstärke, und der Türknall ist etwas leiser. Im Musik-Player gibt
