@@ -126,8 +126,11 @@
   <h2>10. Anonyme Nutzungsstatistik</h2>
   <p>
     Damit der Betreiber sieht, wie viele Menschen RetroMind nutzen, zählt unser Server, wie oft die Zeitreise und die
-    Gaming-Edition geöffnet werden. Dafür schickt die App beim Start nur den Namen der App („zeitreise“ oder
-    „gaming“) an unseren Server. Es werden <strong>keine Cookies</strong> gesetzt, nichts auf deinem Gerät gespeichert
+    Gaming-Edition geöffnet werden. Dafür schickt die App beim Start den Namen der App („zeitreise“ oder
+    „gaming“), die Geräteart (Handy, Tablet oder Computer, aus der Browser-Kennung abgeleitet) und ob die App als
+    installierte App läuft an unseren Server. Außerdem zählt sie, welche Jahrzehnte in der Zeitreise und welche Spiele
+    und Minispiele in der Gaming-Edition geöffnet werden; dabei wird nur der Name des Jahrzehnts, Spiels oder
+    Minispiels übertragen. Es werden <strong>keine Cookies</strong> gesetzt, nichts auf deinem Gerät gespeichert
     und keine Kennung mitgeschickt.
   </p>
   <p>
@@ -136,7 +139,8 @@
     fließt in einen Zähler (HyperLogLog), der nur die Anzahl verschiedener Besucher kennt und den Wert selbst nicht
     speichert. IP-Adresse und Browser-Kennung werden dabei nicht gespeichert. Der Zufallswert wird nach spätestens
     zwei Tagen gelöscht; danach kann niemand, auch der Betreiber nicht, einen Besuch einer Person oder einem anderen
-    Tag zuordnen. Gespeichert bleiben nur Zahlen: App-Starts und Besucher pro Tag und App.
+    Tag zuordnen. Gespeichert bleiben nur Zahlen: App-Starts, Besucher und Geräteart pro Tag und App sowie, wie oft
+    ein Jahrzehnt, Spiel oder Minispiel geöffnet wurde, ohne jeden Bezug zu einem Besucher.
   </p>
   <p>
     Die Zahlen liegen in einer Datenbank des Dienstes Upstash (Upstash, Inc., USA, Server in der EU), den wir über

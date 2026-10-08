@@ -33,6 +33,7 @@ import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
+import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
 import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
@@ -304,6 +305,7 @@ const App: React.FC = () => {
     fallbackQuestion: string
   ) => {
     playSFX('click');
+    countOpened('zeitreise', 'decade', decade);
     setClickedBuzzwords((prev) => (prev.includes(wordId) ? prev : [...prev, wordId]));
     const existing = memoryFor(wordId);
     setAnswerDraft(existing?.answer ?? '');

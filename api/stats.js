@@ -5,7 +5,12 @@
 //   a random salt that exists for one day only (Redis key with a 48 h expiry)
 //   and drops the hash into a HyperLogLog, which can count distinct visitors
 //   but cannot give any hash back. Once the salt is gone, nobody (not even
-//   Marco) can link a visit to a person or to another day.
+//   Marco) can link a visit to a person or to another day. Optional fields:
+//   device ("phone" | "tablet" | "desktop") and installed (opened as an
+//   installed app) are added to per-day tallies.
+// POST /api/stats {app, event: {kind, key}} → counts what is opened (decades
+//   in the Zeitreise, games and mini-games in Gaming) in plain tallies per
+//   month and overall, with no link to the visitor.
 // GET /api/stats?days=30 with "Authorization: Bearer <Google access token>"
 //   → daily numbers for the admin page. The token is checked with Google: it
 //   must belong to this app's OAuth client and to ADMIN_EMAIL.
@@ -16,9 +21,12 @@
 // sees both editions. Without it, counting is a silent no-op.
 
 import crypto from "node:crypto";
+import { isAdmin, readJsonBody } from "./_admin.js";
 
 const APPS = ["zeitreise", "gaming"];
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "marco.schlude@gmail.com").toLowerCase();
+const DEVICES = ["phone", "tablet", "desktop"];
+const EVENT_KINDS = { zeitreise: ["decade"], gaming: ["game", "minigame"] };
+const TOP_KEEP = 300;
 const BOT_RE = /bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|facebookexternalhit|curl|wget/i;
 const MAX_DAYS = 90;
 
@@ -51,24 +59,6 @@ function lastDays(n) {
   return days;
 }
 
-async function readJsonBody(req) {
-  if (req.body && typeof req.body === "object") return req.body;
-  if (typeof req.body === "string") {
-    try {
-      return JSON.parse(req.body);
-    } catch {
-      return {};
-    }
-  }
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  try {
-    return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  } catch {
-    return {};
-  }
-}
-
 let saltCache = { day: "", salt: "" };
 
 async function dailySalt(day) {
@@ -82,64 +72,84 @@ async function dailySalt(day) {
   return salt;
 }
 
+const monthKey = (day) => day.slice(0, 7);
+// Keys come from the browser: plain text only, short, no control characters.
+const cleanKey = (key) =>
+  typeof key === "string" ? key.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 60) : "";
+
 async function countVisit(req, res) {
-  const { app } = await readJsonBody(req);
+  const { app, device, installed, event } = await readJsonBody(req);
   const ua = String(req.headers["user-agent"] || "");
   if (!APPS.includes(app) || !configured() || !ua || BOT_RE.test(ua)) return res.status(204).end();
 
-  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket?.remoteAddress || "";
   const day = dayKey(new Date());
   try {
+    if (event) {
+      const key = cleanKey(event.key);
+      if (!EVENT_KINDS[app].includes(event.kind) || !key) return res.status(204).end();
+      const base = `rm:${app}:top:${event.kind}`;
+      await redis([
+        ["ZINCRBY", `${base}:all`, 1, key],
+        ["ZINCRBY", `${base}:${monthKey(day)}`, 1, key],
+        ["ZREMRANGEBYRANK", `${base}:all`, 0, -(TOP_KEEP + 1)],
+        ["ZREMRANGEBYRANK", `${base}:${monthKey(day)}`, 0, -(TOP_KEEP + 1)],
+      ]);
+      return res.status(204).end();
+    }
+
+    const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket?.remoteAddress || "";
     const salt = await dailySalt(day);
     const visitor = crypto.createHash("sha256").update(`${salt}|${ip}|${ua}|${app}`).digest("hex").slice(0, 32);
-    await redis([
+    const commands = [
       ["INCR", `rm:${app}:starts:${day}`],
       ["INCR", `rm:${app}:starts:total`],
       ["PFADD", `rm:${app}:visitors:${day}`, visitor],
       ["SET", "rm:since", day, "NX"],
-    ]);
+    ];
+    if (DEVICES.includes(device)) commands.push(["HINCRBY", `rm:${app}:devices:${day}`, device, 1]);
+    if (installed === true) commands.push(["HINCRBY", `rm:${app}:devices:${day}`, "installed", 1]);
+    await redis(commands);
   } catch (err) {
     console.error("stats count failed", err);
   }
   return res.status(204).end();
 }
 
-// Google access tokens are opaque; Google's tokeninfo endpoint says whose
-// they are and which OAuth client they were issued to.
-async function isAdmin(req) {
-  const auth = String(req.headers.authorization || "");
-  const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-  const clientId = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
-  if (!token || !clientId) return false;
-  const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(token)}`);
-  if (!res.ok) return false;
-  const info = await res.json();
-  return (
-    info.aud === clientId &&
-    String(info.email_verified) === "true" &&
-    String(info.email || "").toLowerCase() === ADMIN_EMAIL &&
-    Number(info.expires_in) > 0
-  );
-}
+const toTop = (flat) => {
+  const list = [];
+  for (let i = 0; i + 1 < (flat || []).length; i += 2) list.push({ key: flat[i], count: Number(flat[i + 1]) || 0 });
+  return list;
+};
+
+const fromHash = (flat) => {
+  const out = {};
+  for (let i = 0; i + 1 < (flat || []).length; i += 2) out[flat[i]] = Number(flat[i + 1]) || 0;
+  return out;
+};
 
 async function summary(req, res) {
   res.setHeader("Cache-Control", "no-store");
-  let allowed = false;
-  try {
-    allowed = await isAdmin(req);
-  } catch (err) {
-    console.error("stats auth failed", err);
-  }
-  if (!allowed) return res.status(403).json({ error: "forbidden" });
+  if (!(await isAdmin(req))) return res.status(403).json({ error: "forbidden" });
   if (!configured()) return res.status(200).json({ configured: false });
 
   const n = Math.min(MAX_DAYS, Math.max(1, Number(req.query?.days) || 30));
   const days = lastDays(n);
+  const month = monthKey(days[days.length - 1]);
   const commands = [["GET", "rm:since"]];
   for (const app of APPS) {
     commands.push(["GET", `rm:${app}:starts:total`]);
     for (const day of days) {
-      commands.push(["GET", `rm:${app}:starts:${day}`], ["PFCOUNT", `rm:${app}:visitors:${day}`]);
+      commands.push(
+        ["GET", `rm:${app}:starts:${day}`],
+        ["PFCOUNT", `rm:${app}:visitors:${day}`],
+        ["HGETALL", `rm:${app}:devices:${day}`],
+      );
+    }
+    for (const kind of EVENT_KINDS[app]) {
+      commands.push(
+        ["ZREVRANGE", `rm:${app}:top:${kind}:${month}`, 0, 9, "WITHSCORES"],
+        ["ZREVRANGE", `rm:${app}:top:${kind}:all`, 0, 9, "WITHSCORES"],
+      );
     }
   }
   try {
@@ -149,14 +159,20 @@ async function summary(req, res) {
     const apps = {};
     for (const app of APPS) {
       const totalStarts = Number(results[i++]) || 0;
-      const daily = days.map((day) => ({
-        day,
-        starts: Number(results[i++]) || 0,
-        visitors: Number(results[i++]) || 0,
-      }));
-      apps[app] = { totalStarts, daily };
+      const devices = { phone: 0, tablet: 0, desktop: 0, installed: 0 };
+      const daily = days.map((day) => {
+        const row = { day, starts: Number(results[i++]) || 0, visitors: Number(results[i++]) || 0 };
+        const d = fromHash(results[i++]);
+        for (const k of Object.keys(devices)) devices[k] += d[k] || 0;
+        return row;
+      });
+      const top = {};
+      for (const kind of EVENT_KINDS[app]) {
+        top[kind] = { month: toTop(results[i++]), all: toTop(results[i++]) };
+      }
+      apps[app] = { totalStarts, daily, devices, top };
     }
-    return res.status(200).json({ configured: true, since, days, apps });
+    return res.status(200).json({ configured: true, since, days, month, apps });
   } catch (err) {
     console.error("stats read failed", err);
     return res.status(502).json({ error: "upstream" });

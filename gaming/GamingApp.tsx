@@ -14,7 +14,8 @@ import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings, PALETTES } from './components/Settings';
 import { Feedback } from './components/Feedback';
-import { MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { countOpened } from '../lib/usage';
 import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
@@ -234,6 +235,7 @@ export const GamingApp: React.FC = () => {
       chip.play('select');
       discover(game);
       track('open');
+      countOpened('gaming', 'game', game.title);
       setSelected(game);
     },
     [discover, track]
@@ -574,6 +576,7 @@ export const GamingApp: React.FC = () => {
                 <MiniGameCorner
                   onPick={(id) => {
                     chip.play('select');
+                    countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.title ?? id);
                     setMiniGame(id);
                   }}
                 />

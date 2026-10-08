@@ -330,6 +330,13 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   aus IP, Browser und einem Tageswert, der nach zwei Tagen gelöscht wird, landet
   in einem HyperLogLog-Zähler in Upstash Redis (kostenlos über den Vercel
   Marketplace). Ohne verbundene Datenbank zählt nichts, die App läuft normal.
+  Drei Reiter: **Nutzung** (dazu Geräte Handy/Tablet/Computer, Anteil der als
+  App installierten Starts und die beliebtesten Jahrzehnte, Spiele und
+  Minispiele, diesen Monat und insgesamt), **Feedback** (alle Einträge aus
+  `feedback.md`, mit „Als To Do übernehmen“ und „Erledigt“, siehe
+  [`api/admin.js`](api/admin.js)) und **Live-Check** (welchen Commit
+  beide Domains ausliefern, verglichen mit `master`, mit Link zum Redeploy in
+  Vercel, wenn eine Domain veraltet ist).
 
 ## Architektur
 
@@ -500,9 +507,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
-
-- **Mehr im Adminbereich:** zum Beispiel welche Jahrzehnte, Spiele oder
-  Minispiele am häufigsten geöffnet werden, ebenfalls nur als anonyme Zähler.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952

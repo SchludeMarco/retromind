@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Mehr im Adminbereich** (2026-10-08, PR #163): Der Adminbereich hat jetzt
+  drei Reiter. Unter „Nutzung“ stehen zusätzlich die Geräte (Handy, Tablet,
+  Computer), wie oft die App installiert geöffnet wird und die beliebtesten
+  Jahrzehnte, Spiele und Minispiele, für diesen Monat und insgesamt. Unter
+  „Feedback“ steht alles Feedback, offene Punkte lassen sich direkt als To Do
+  übernehmen oder als erledigt abhaken. Der „Live-Check“ zeigt, ob beide
+  Domains wirklich die neueste Version ausliefern, und verlinkt sonst den
+  Redeploy in Vercel. Alles bleibt anonym; die Datenschutzerklärung ist
+  ergänzt.
+
 - **Versteckter Zugang zum Adminbereich** (2026-10-08, PR #162): Wer in den
   Einstellungen von Zeitreise oder Gaming fünfmal schnell auf die Überschrift
   „Einstellungen“ tippt, landet im Adminbereich. Sichtbar ist davon nichts,

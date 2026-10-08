@@ -68,6 +68,10 @@ export default async function handler(req, res) {
     const meta = `<p>${esc(entry.categoryLabel)} vom ${esc(entry.date)}</p>`;
 
     if (req.method === "GET") {
+      if (entry.status === "erledigt") {
+        page(res, 200, "Schon erledigt", `${meta}${quote}<p>Im Adminbereich als erledigt abgehakt.</p>`);
+        return;
+      }
       if (entry.status === "übernommen") {
         page(res, 200, "Schon übernommen", `${meta}${quote}<p>Steht bereits als To Do in der README.</p>`);
         return;
