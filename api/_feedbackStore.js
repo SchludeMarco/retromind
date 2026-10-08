@@ -102,6 +102,7 @@ E-Mail-Adressen werden hier nie gespeichert, sie stehen nur in der Mail an Marco
 
 Status **offen**: wartet auf Marcos Zustimmung (Link in der Feedback-Mail).
 Status **übernommen**: steht als To Do in der README unter „Ideen und offene Punkte“.
+Status **erledigt**: von Marco im Adminbereich abgehakt, ohne To Do.
 `;
 
 export function addEntry(content, { id, date, categoryLabel, text }) {
@@ -124,7 +125,7 @@ export function findEntry(content, id) {
   const headStart = content.lastIndexOf("\n## ", at) + 1;
   const headEnd = content.indexOf("\n", headStart);
   const heading = content.slice(headStart, headEnd);
-  const m = heading.match(/^## (.+?) · (.+?) · (offen|übernommen)$/);
+  const m = heading.match(/^## (.+?) · (.+?) · (offen|übernommen|erledigt)$/);
   if (!m) return null;
   const nextHead = content.indexOf("\n## ", at);
   const block = content.slice(at, nextHead === -1 ? content.length : nextHead);
@@ -142,6 +143,24 @@ export function markAccepted(content, id) {
   const e = findEntry(content, id);
   if (!e || e.status !== "offen") return null;
   return content.slice(0, e.headStart) + e.heading.replace(/ · offen$/, " · übernommen") + content.slice(e.headEnd);
+}
+
+export function markDone(content, id) {
+  const e = findEntry(content, id);
+  if (!e || e.status !== "offen") return null;
+  return content.slice(0, e.headStart) + e.heading.replace(/ · offen$/, " · erledigt") + content.slice(e.headEnd);
+}
+
+/** Every entry in feedback.md, newest first (the file's order). */
+export function listEntries(content) {
+  if (!content) return [];
+  const ids = [...content.matchAll(/<!-- id: (fb-[\w-]+) -->/g)].map((m) => m[1]);
+  return ids
+    .map((id) => {
+      const e = findEntry(content, id);
+      return e && { id, date: e.date, categoryLabel: e.categoryLabel, status: e.status, text: e.text };
+    })
+    .filter(Boolean);
 }
 
 // Adds a To Do line to the README's "### To Do" list (created if missing)
