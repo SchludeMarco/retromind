@@ -19,11 +19,13 @@ export default defineConfig({
     },
   },
   build: {
-    // Two pages: the RetroMind journey at / and the Gaming edition at /gaming/.
+    // Three pages: the RetroMind journey at /, the Gaming edition at /gaming/
+    // and the admin area (usage numbers, only for Marco) at /admin/.
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
         gaming: path.resolve(__dirname, 'gaming/index.html'),
+        admin: path.resolve(__dirname, 'admin/index.html'),
       },
     },
   },

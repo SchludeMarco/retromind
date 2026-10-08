@@ -317,6 +317,18 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
   `/datenschutz.html` und `/impressum.html` auf beiden Domains und sind in der
   Fußzeile und in den Einstellungen verlinkt.
 
+- **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
+  [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter
+  `/admin/` auf beiden Domains, verlinkt in den Einstellungen von Zeitreise und
+  Gaming (nur sichtbar, wenn Marcos Google-Konto angemeldet ist). Zeigt für
+  beide Editionen Besucher pro Tag, Besuche über 7/30/90 Tage und App-Starts
+  insgesamt, als Balken und als Tabelle. Den Zugang prüft der Server: Das
+  Google-Token muss zur App gehören und zu `ADMIN_EMAIL` (Standard
+  marco.schlude@gmail.com). Gezählt wird anonym ohne Cookies: ein Einweg-Hash
+  aus IP, Browser und einem Tageswert, der nach zwei Tagen gelöscht wird, landet
+  in einem HyperLogLog-Zähler in Upstash Redis (kostenlos über den Vercel
+  Marketplace). Ohne verbundene Datenbank zählt nichts, die App läuft normal.
+
 ## Architektur
 
 ```
@@ -397,6 +409,8 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | `FEEDBACK_TO_EMAIL`      | Vercel-Env  | Optional: Ziel-E-Mail-Adresse für eingereichtes Feedback; ohne `RESEND_API_KEY` + diese Variable meldet der Feedback-Button „nicht verfügbar” |
 | `FEEDBACK_FROM_EMAIL`    | Vercel-Env  | Optional: Absenderadresse der Feedback-Mail (Standard: Resend-Sandbox-Adresse) |
 | `YOUTUBE_API_KEY`        | Vercel-Env  | Optional (Gaming): Schlüssel für die YouTube Data API v3. Damit sortiert die Videosuche nach Likes; ohne ihn liest `api/youtube.js` die öffentliche YouTube-Suche (nur Aufrufe) |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Vercel-Env | Werden automatisch gesetzt, wenn eine Upstash-Redis-Datenbank (Vercel → Storage, Free-Plan, Region Frankfurt) mit dem Projekt verbunden ist. Dieselbe Datenbank mit `retromind` **und** `retromind-gaming` verbinden, dann zeigt der Adminbereich beide Editionen |
+| `ADMIN_EMAIL`            | Vercel-Env  | Optional: Google-Konto mit Zugang zum Adminbereich (Standard marco.schlude@gmail.com) |
 | `FEEDBACK_GITHUB_TOKEN`  | Vercel-Env  | Optional: GitHub-Token (fein granuliert, nur dieses Repo, „Contents: Read and write“). Speichert Feedback in `feedback.md` und ermöglicht den „Als To Do übernehmen“-Link in der Mail |
 
 ## Bekannte Einschränkungen
@@ -484,6 +498,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Mehr im Adminbereich:** zum Beispiel welche Jahrzehnte, Spiele oder
+  Minispiele am häufigsten geöffnet werden, ebenfalls nur als anonyme Zähler.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
