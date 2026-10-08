@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **RetroMind spricht jetzt Englisch** (2026-10-08, PR #PRNUM): Beide Apps, die
+- **RetroMind spricht jetzt Englisch** (2026-10-08, PR #166): Beide Apps, die
   Zeitreise und RetroMind – Gaming, sind komplett ins amerikanische Englisch
   übersetzt, und Englisch ist die neue Standardsprache. Wer lieber Deutsch
   möchte, stellt in den Einstellungen unter „Language“ auf „Deutsch“ um; die
