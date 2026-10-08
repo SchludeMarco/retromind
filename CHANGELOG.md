@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Leiser reinkommen und Lautstärke-Regler** (2026-10-08, PR #178): Die
+  Musik beim Betreten der Spielhalle war viel zu laut. Sie startet jetzt bei
+  halber Lautstärke, und der Türknall ist etwas leiser. Im Musik-Player gibt
+  es einen Regler für lauter und leiser, in der Gaming-Edition zusätzlich in
+  den Einstellungen unter „Musik-Lautstärke“. Er gilt für das Metal-Intro,
+  die Chiptune-Stücke und Spotify mit Premium am Computer. Spotifys
+  eingebetteten Player (ohne Anmeldung und auf dem Handy) kann keine
+  Webseite leiser stellen; dafür nimmst du die Lautstärketasten, und der
+  Player sagt dir das auch.
+
 - **Modul einlegen, diesmal richtig** (2026-10-08, PR #177): Das Einlegen
   eines Spiels sah bisher schief aus: das Modul fiel an der Konsole vorbei und
   tauchte darunter wieder auf. Jetzt schwebt das Modul mit Cover heran, richtet

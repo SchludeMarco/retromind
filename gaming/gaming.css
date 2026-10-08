@@ -3463,3 +3463,21 @@ section:first-child > .media-head {
 .had-systems .filters {
   margin: 0;
 }
+
+/* Music volume in the settings (Marco, 2026-10-08), see lib/musicVolume. */
+.settings-volume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+  font-size: 10px;
+}
+.settings-volume input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--a1);
+}
+.settings-volume span:last-child {
+  min-width: 3ch;
+  text-align: right;
+}

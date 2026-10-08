@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Leiser reinkommen und Lautstärke-Regler': {
+    title: 'A quieter entrance and a volume slider',
+    text: 'The music was far too loud when you walked into the arcade hall. It now starts at half volume, and the door bang is a bit softer. The music player has a slider for louder and quieter, and in the gaming edition there’s one in the settings too, under “Music volume”. It works for the metal intro, the chiptune tracks and Spotify with Premium on a computer. No website can turn down Spotify’s embedded player (without signing in, and on phones); use your device’s volume buttons there, and the player tells you so.',
+  },
   'Modul einlegen, diesmal richtig': {
     title: 'Inserting the cartridge, done right',
     text: 'Opening a game looked off: the cartridge fell past the console and showed up below it. Now the cartridge floats in with its cover, lines up over the slot and gets pushed in: it scrapes going in, lands with a full, deep thunk and snaps into place with a crisp click. The console jolts, the red light comes on, the switch flips, and the TV turns on with a white line that opens into the game page. Tap to skip.',

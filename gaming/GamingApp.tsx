@@ -1109,6 +1109,7 @@ export const GamingApp: React.FC = () => {
             <MusicDock
               className="hall-music-knob"
               icon="bolt"
+              ownMusic
               title={spotify.songTitle}
               source={tr('Arcade music · \'80s heavy metal', 'Hallenmusik · 80er Heavy Metal')}
               playing={spotify.playing}

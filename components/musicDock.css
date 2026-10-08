@@ -332,6 +332,21 @@
   gap: 10px;
 }
 .music-dock-progress,
+.music-dock-volume-box {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.music-dock-volume-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #8fa9d8;
+  text-align: center;
+}
 .music-dock-volume {
   display: flex;
   align-items: center;

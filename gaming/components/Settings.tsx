@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
+import { setMusicVolume, useMusicVolume } from '../../lib/musicVolume';
 import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
@@ -40,6 +41,7 @@ interface Props {
 // preferences to every device) plus sound and screen colour.
 export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose }) => {
   const muted = useMuted();
+  const musicVolume = useMusicVolume();
   const youtube = useConsent('youtube') === true;
   const onHeadingTap = useSecretAdminTaps();
   const spotify = useConsent('spotify') === true;
@@ -127,6 +129,21 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
               {muted ? tr('SOUND OFF', 'TON AUS') : tr('SOUND ON', 'TON AN')}
             </button>
           </div>
+          {/* Louder and quieter for the music (Marco, 2026-10-08), the same
+              volume as the slider in the music player. */}
+          <label className="settings-volume">
+            <span className="pixel-font">{tr('MUSIC VOLUME', 'MUSIK-LAUTSTÄRKE')}</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(musicVolume * 100)}
+              onChange={(e) => setMusicVolume(Number(e.target.value) / 100)}
+              aria-label={tr('Music volume', 'Musik-Lautstärke')}
+              data-nav
+            />
+            <span className="pixel-font">{Math.round(musicVolume * 100)}</span>
+          </label>
           <h4 className="pixel-font">{tr('ARCADE MUSIC', 'HALLENMUSIK')}</h4>
           <div className="settings-row" role="group" aria-label={tr('Arcade music', 'Hallenmusik')}>
             <button
