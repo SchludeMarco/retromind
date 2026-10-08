@@ -22,6 +22,7 @@ import '@fontsource/plus-jakarta-sans/latin-700.css';
 import './index.css';
 // Applies the saved design before the first render, so it doesn't flash.
 import './lib/theme';
+import { countAppStart } from './lib/usage';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -81,6 +82,8 @@ const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error('Could not find root element to mount to');
 }
+
+countAppStart('zeitreise');
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

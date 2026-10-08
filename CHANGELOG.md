@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Adminbereich mit Nutzungszahlen** (2026-10-08, PR #160): Unter
+  `/admin/` gibt es jetzt einen Bereich nur für Marco. Er zeigt, wie viele
+  Leute Zeitreise und Gaming geöffnet haben: Besucher heute, Besuche der
+  letzten 7, 30 oder 90 Tage und alle App-Starts, als Balken und Tabelle.
+  Hinein kommt nur Marcos Google-Konto, das prüft der Server. Der Link steht in
+  den Einstellungen beider Apps und ist nur für ihn sichtbar. Gezählt wird
+  anonym, ohne Cookies und ohne gespeicherte IP-Adressen; die
+  Datenschutzerklärung erklärt das in einem neuen Abschnitt.
+
 - **Metal-Intro auch mit Spotify, Premium schon vor der Tür** (2026-10-07,
   PR #159): Das neue Metal-Intro läuft jetzt beim Eintreten in die
   Gaming-Halle auch dann, wenn Spotify die Hallenmusik ist; danach übernimmt

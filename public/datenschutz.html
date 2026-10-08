@@ -13,12 +13,13 @@
   <h1>Datenschutzerklärung</h1>
   <p class="muted">
     Gilt für RetroMind – Zeitreise (retromind.vercel.app) und RetroMind – Gaming (retromind-gaming.vercel.app).
-    Stand: 3. Oktober 2026
+    Stand: 8. Oktober 2026
   </p>
 
   <h2>Kurz gesagt</h2>
   <ul>
-    <li>Kein Tracking, keine Analyse-Tools, keine Werbung, keine Tracking-Cookies von RetroMind selbst.</li>
+    <li>Kein Tracking, keine fremden Analyse-Tools, keine Werbung, keine Cookies von RetroMind selbst. Gezählt wird nur
+      anonym, wie oft die Apps geöffnet werden (siehe Abschnitt 10).</li>
     <li>Deine Reise, dein Profil und deine Einstellungen bleiben in deinem Browser auf deinem Gerät.</li>
     <li>Schriften liegen auf unserem eigenen Server. Bilder, Klänge und Texte von Wikipedia/Wikimedia holt unser
       Server für dich ab, dein Browser verbindet sich dafür nicht mit fremden Servern.</li>
@@ -122,7 +123,30 @@
     dort gilt dessen Datenschutzerklärung.
   </p>
 
-  <h2>10. Feedback</h2>
+  <h2>10. Anonyme Nutzungsstatistik</h2>
+  <p>
+    Damit der Betreiber sieht, wie viele Menschen RetroMind nutzen, zählt unser Server, wie oft die Zeitreise und die
+    Gaming-Edition geöffnet werden. Dafür schickt die App beim Start nur den Namen der App („zeitreise“ oder
+    „gaming“) an unseren Server. Es werden <strong>keine Cookies</strong> gesetzt, nichts auf deinem Gerät gespeichert
+    und keine Kennung mitgeschickt.
+  </p>
+  <p>
+    Um Besucher pro Tag zu zählen, bildet der Server aus deiner IP-Adresse, der Browser-Kennung (User-Agent), dem
+    Namen der App und einem zufälligen Wert, der nur einen Tag lang existiert, einen Einweg-Hashwert. Dieser Wert
+    fließt in einen Zähler (HyperLogLog), der nur die Anzahl verschiedener Besucher kennt und den Wert selbst nicht
+    speichert. IP-Adresse und Browser-Kennung werden dabei nicht gespeichert. Der Zufallswert wird nach spätestens
+    zwei Tagen gelöscht; danach kann niemand, auch der Betreiber nicht, einen Besuch einer Person oder einem anderen
+    Tag zuordnen. Gespeichert bleiben nur Zahlen: App-Starts und Besucher pro Tag und App.
+  </p>
+  <p>
+    Die Zahlen liegen in einer Datenbank des Dienstes Upstash (Upstash, Inc., USA, Server in der EU), den wir über
+    Vercel nutzen; es gilt deren Auftragsverarbeitungsvertrag mit den EU-Standardvertragsklauseln. Sehen kann die
+    Zahlen nur der Betreiber nach Anmeldung mit seinem Google-Konto. Rechtsgrundlage ist unser berechtigtes Interesse,
+    zu wissen, ob und wie stark RetroMind genutzt wird (Art. 6 Abs. 1 lit. f DSGVO); auf dein Gerät wird dabei nicht
+    zugegriffen (§ 25 TDDDG ist nicht berührt). Du kannst widersprechen (Art. 21 DSGVO), eine formlose Nachricht genügt.
+  </p>
+
+  <h2>11. Feedback</h2>
   <p>
     Über „Feedback“ (Briefsymbol oben auf der Startseite, auch in der Gaming-Edition) kannst du uns eine Nachricht schicken. Wir erhalten deine Nachricht, die
     gewählte Kategorie und, nur wenn du sie angibst, deine E-Mail-Adresse für eine Antwort. Die Nachricht wird per
@@ -135,7 +159,7 @@
     Für Übermittlungen in die USA gelten die EU-Standardvertragsklauseln bzw. das EU-US Data Privacy Framework.
   </p>
 
-  <h2>11. Deine Rechte</h2>
+  <h2>12. Deine Rechte</h2>
   <p>Du hast das Recht auf</p>
   <ul>
     <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO),</li>

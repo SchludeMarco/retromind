@@ -5,6 +5,7 @@ import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
+import { ADMIN_URL } from '../lib/admin';
 
 function formatBirthDate(iso: string): string {
   const [y, m, d] = iso.split('-');
@@ -27,6 +28,8 @@ export const SettingsModal: React.FC<{
   userName: string;
   userBirthDate: string;
   onEditProfile: () => void;
+  /** Marco's Google account is signed in: show the link to the admin area. */
+  isAdmin?: boolean;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
@@ -34,7 +37,7 @@ export const SettingsModal: React.FC<{
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
-  userName, userBirthDate, onEditProfile,
+  userName, userBirthDate, onEditProfile, isAdmin,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -214,6 +217,18 @@ export const SettingsModal: React.FC<{
           🕰️ Zurück zum Willkommensbildschirm
         </button>
       </div>
+
+      {isAdmin && (
+        <div className="mt-6 pt-5 border-t border-retro-ink/20">
+          <span className="block text-xs uppercase font-bold text-retro-brown mb-2">Nur für dich</span>
+          <a
+            href={ADMIN_URL}
+            className="retro-button inline-block px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+          >
+            📊 Adminbereich: Nutzungszahlen
+          </a>
+        </div>
+      )}
 
       <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}

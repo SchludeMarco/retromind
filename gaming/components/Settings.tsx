@@ -6,6 +6,7 @@ import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
 import { warmUpGoogle } from '../../lib/googleAuth';
+import { ADMIN_URL, isAdminUser } from '../../lib/admin';
 import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
 
 export const PALETTES: { id: Palette; label: string }[] = [
@@ -225,6 +226,16 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
           </div>
           <p className="dim">Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.</p>
         </section>
+
+        {isAdminUser(cloud.user) && signedIn && (
+          <section>
+            <h3 className="pixel-font">NUR FÜR DICH</h3>
+            <a className="px-btn" href={ADMIN_URL} data-nav>
+              📊 ADMINBEREICH
+            </a>
+            <p className="dim">Wie viele Leute Zeitreise und Gaming nutzen.</p>
+          </section>
+        )}
 
         <section>
           <h3 className="pixel-font">DATENSCHUTZ</h3>

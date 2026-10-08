@@ -11,9 +11,12 @@ import '@fontsource/plus-jakarta-sans/latin-400.css';
 import '@fontsource/plus-jakarta-sans/latin-600.css';
 import '@fontsource/plus-jakarta-sans/latin-700.css';
 import './gaming.css';
+import { countAppStart } from '../lib/usage';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Could not find root element to mount to');
+
+countAppStart('gaming');
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
