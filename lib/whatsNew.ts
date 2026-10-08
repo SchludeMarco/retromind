@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spotify-Musik schon vor der Gaming-Halle, auch am Handy': {
+    title: 'Spotify music outside the gaming hall, on phones too',
+    text: 'If you’re signed in with Spotify Premium, you now hear the hall music in front of the door on your phone too, and when you walk in the same song simply keeps playing, with no metal intro in between. Until now this only worked in a desktop browser. On phones the music plays at normal volume outside, because Spotify’s player there can’t be turned down.',
+  },
   'Versionsnummer in den Einstellungen': {
     title: 'Version number in the settings',
     text: 'At the very bottom of the settings in both apps you can now see which version is running, for example “Version 2.167 (a1b2c3d)”. The number after the dot goes up with every change, and the code in parentheses shows exactly which build is loaded.',

@@ -119,7 +119,7 @@ export const Entrance: React.FC<{
   reducedMotion: boolean;
   muted: boolean;
   music: boolean;
-  /** Spotify (Premium) already plays the hall's music quietly out here. */
+  /** Spotify (Premium) already plays the hall's music out here. */
   spotifyAtDoor: boolean;
   onToggleMute: () => void;
   cloud: Cloud;
@@ -155,8 +155,9 @@ export const Entrance: React.FC<{
     setEntering(true);
     chip.unlock();
     stopAmbient.current();
-    // Inside the hall a heavy metal riff kicks in before the hub tune.
-    chip.queueMetalIntro();
+    // Inside the hall a heavy metal riff kicks in before the hub tune, unless
+    // Spotify already plays out here and simply carries on inside.
+    if (!spotifyAtDoor) chip.queueMetalIntro();
     if (reducedMotion) {
       chip.chime();
       setTimeout(onEnter, 300);

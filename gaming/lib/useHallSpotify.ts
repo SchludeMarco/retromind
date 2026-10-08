@@ -33,25 +33,30 @@ import { SpotifyHit } from '../../lib/spotifyApi';
 // "The 100 Best Metal Songs of 80s" (The Eighties Guy).
 export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
 
-// Signed in with Premium (desktop browser), the hall's Spotify music already
-// plays in front of the door, quietly, and gets loud once you are inside
-// (Marco, 2026-10-07: the same music outside and inside). Spotify's sound
+// Signed in with Premium, the hall's Spotify music already plays in front of
+// the door and the same song carries on inside (Marco, 2026-10-07 and
+// 2026-10-08). In a desktop browser (Premium's own player) it is quiet
+// outside and gets loud once you are inside; on phones the embedded player
+// has no volume, so it plays at full level from the start. Spotify's sound
 // can only be made quieter, not muffled; everyone else hears the muffled
 // recording at the door (gaming/lib/street.ts).
 const OUTSIDE_LEVEL = 0.15;
 
 /**
  * `enabled`: plays in the hall (music on, no video). `outside`: the visitor
- * stands at the entrance with music on; then it plays quietly with Premium.
+ * stands at the entrance with music on; then it plays with Premium.
+ * `premiumAccount`: signed in with a Spotify Premium account, also on devices
+ * where the embed plays (phones).
  */
-export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false) {
+export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false, premiumAccount = false) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const [ready, setReady] = useState(false);
   const allowed = useConsent('spotify') === true;
   // Signed in with Premium: Spotify's own player, which fades in.
   const premium = usePremiumPlayback();
-  const atDoor = outside && premium;
+  const doorMusic = premium || premiumAccount;
+  const atDoor = outside && doorMusic;
   const on = enabled || atDoor;
   const muted = useMuted();
   const startedRef = useRef(false);
@@ -264,6 +269,8 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     containerRef,
     /** Spotify plays at the door (Premium), so the muffled recording stays off. */
     atDoor: atDoor && active,
+    /** Premium: the door's song simply carries on inside (no metal intro). */
+    fromDoor: doorMusic && active,
     /** Premium's browser player drives the hall music (with volume control). */
     premium: premium && active,
     ready,
