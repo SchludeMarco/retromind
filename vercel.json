@@ -40,6 +40,9 @@
     },
     "api/admin.js": {
       "maxDuration": 15
+    },
+    "api/spotify-preview.js": {
+      "maxDuration": 15
     }
   },
   "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)feedback.md'"

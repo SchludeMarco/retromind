@@ -6,7 +6,7 @@
 import { riseFromSilence, whenRunning } from '../../lib/startupFade';
 import { loadRecording, METAL_INTRO_URL, MetalPlayer } from './metal';
 import { SidPlayer } from './sid';
-import { StreetAmbience } from './street';
+import { DoorSong, StreetAmbience } from './street';
 import { DEFAULT_TRACK, StepTrack, TrackId, trackById } from './tracks';
 
 export type SfxName = 'blip' | 'select' | 'back' | 'coin' | 'powerup' | 'error' | 'start' | 'achievement';
@@ -35,6 +35,9 @@ const MUSIC_FADE_IN = 6;
 
 // The hall's music, muffled through the wall in front of the door.
 const AMBIENT_LEVEL = 0.2;
+// The song's clip through the wall filter (it has less low end than the
+// recording made for it).
+const DOOR_SONG_LEVEL = 0.35;
 
 class ChipSound {
   private ctx: AudioContext | null = null;
@@ -200,17 +203,21 @@ class ChipSound {
 
   /**
    * In front of the door: the hall's metal, muffled through the wall
-   * (see street.ts).
+   * (see street.ts), or with `song` the hall's Spotify song, muffled the
+   * same way.
    * It may be scheduled while the browser still holds audio back (no tap
-   * yet); it then simply starts with the first touch. Returns a stop function.
+   * yet); it then simply starts with the first touch. Returns a stop function
+   * and whether the song (not the recording) plays.
    */
-  ambient(): () => void {
-    if (!this.ctx || !this.master || !this.noise) return this.note('ambient', 'aus (kein Web Audio)');
-    const street = new StreetAmbience(this.ctx, this.master, AMBIENT_LEVEL);
+  ambient(song: DoorSong | null = null): { stop: () => void; songPlaying: () => boolean } {
+    if (!this.ctx || !this.master || !this.noise) {
+      return { stop: this.note('ambient', 'aus (kein Web Audio)'), songPlaying: () => false };
+    }
+    const street = new StreetAmbience(this.ctx, this.master, AMBIENT_LEVEL, song, DOOR_SONG_LEVEL);
     // Load the intro already, so it is ready on "ENTER".
     loadRecording(this.ctx, METAL_INTRO_URL);
-    this.note('ambient', `Bass aus der Halle läuft (Audio: ${this.ctx.state})`);
-    return () => street.stop();
+    this.note('ambient', song ? `Song gedämpft: ${song.name ?? song.id}` : `Bass aus der Halle läuft (Audio: ${this.ctx.state})`);
+    return { stop: () => street.stop(), songPlaying: () => street.songPlaying };
   }
 
   /** An old wooden door thrown open: a short creak, then it bangs against the wall. */

@@ -209,8 +209,8 @@ export const GamingApp: React.FC = () => {
   );
   useEffect(() => {
     if (screen !== 'hub' || !spotify.active || !state.music || videoPlaying) return;
-    // With Premium the same Spotify song simply carries on from the door.
-    if (spotify.fromDoor || !chip.introQueued) return;
+    // The entrance queues the intro unless the song already played outside.
+    if (!chip.introQueued) return;
     if (chip.startIntro(() => setIntroRunning(false))) setIntroRunning(true);
   }, [screen, spotify.active, state.music, videoPlaying]);
   useEffect(() => {
@@ -519,7 +519,7 @@ export const GamingApp: React.FC = () => {
           reducedMotion={reducedMotion}
           muted={muted}
           music={state.music}
-          spotifyAtDoor={spotify.atDoor}
+          doorSong={spotify.doorSong}
           onToggleMute={toggleMute}
           cloud={cloud}
           spotifyAuth={spotifyAuth}

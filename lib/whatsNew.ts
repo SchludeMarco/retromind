@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Vor der Gaming-Halle wieder dumpf und bassig, mit dem Song von drinnen': {
+    title: 'Muffled and bassy outside the gaming hall again, with the song from inside',
+    text: 'If you’re signed in with Spotify Premium, the music in front of the door sounds muffled and bassy again, as if through the wall, but now it’s exactly the song playing inside. Outside you hear a clip of the song, and inside Spotify then plays it in full, on phones too. If there’s no clip for a song, you hear the muffled metal from the hall outside, as before.',
+  },
   'Spotify-Musik schon vor der Gaming-Halle, auch am Handy': {
     title: 'Spotify music outside the gaming hall, on phones too',
     text: 'If you’re signed in with Spotify Premium, you now hear the hall music in front of the door on your phone too, and when you walk in the same song simply keeps playing, with no metal intro in between. Until now this only worked in a desktop browser. On phones the music plays at normal volume outside, because Spotify’s player there can’t be turned down.',
