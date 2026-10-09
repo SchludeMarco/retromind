@@ -89,3 +89,7 @@ gebaut oder ausgeliefert.
   (Grundbild, sechs ARCADE-Buchstaben, Türflügel) mit Nintendo-, SEGA- und
   Atari-Logos und bekannten Spielfiguren. Am 2026-10-09 durch Marcos neues
   Bild ohne fremde Marken ersetzt.
+- `gaming-entrance-figures/`: das Eingangsbild vom Morgen des 2026-10-09
+  (ohne Logos, aber noch mit Pac-Man-Geistern, Mario-Pilz und „?“-Block).
+  Noch am selben Tag durch Marcos Version mit nur eigenen Pixel-Symbolen
+  ersetzt.
