@@ -93,3 +93,10 @@ gebaut oder ausgeliefert.
   (ohne Logos, aber noch mit Pac-Man-Geistern, Mario-Pilz und „?“-Block).
   Noch am selben Tag durch Marcos Version mit nur eigenen Pixel-Symbolen
   ersetzt.
+- `gaming-covers-wikipedia.ts.txt`: das Laden der Spiele-Cover aus den
+  Wikipedia-Artikeln (früher `gaming/lib/covers.ts`, entfernt am 2026-10-09,
+  weil die Cover den Spielefirmen gehören). Ersetzt durch eigene
+  Pixel-Kacheln in `gaming/components/PixelCover.tsx`.
+- `Quiz-cover-ausschnitt.tsx.txt`: das Quiz „Erkennst du das Spiel?“ mit
+  Cover-Ausschnitt (entfernt am 2026-10-09). Das Quiz zeigt jetzt eine kurze
+  Beschreibung mit geschwärztem Namen.

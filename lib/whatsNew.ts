@@ -32,6 +32,14 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Eigene Pixel-Kacheln statt Spiele-Cover': {
+    title: 'Our own pixel tiles instead of game covers',
+    text: 'The game cards in the Gaming edition no longer show cover photos from Wikipedia, because those pictures belong to the game companies. Instead the app draws its own pixel tile for every game: a little pixel monster in the console’s color, with the title and year underneath. Every game always gets the same figure. The tiles appear on the cards, on the game page, on the cartridge when it goes in and in attract mode. The “Name that game” quiz now shows a short description with platform and year (the name blacked out) instead of a close-up of the cover.',
+  },
+  'Datenschutzerklärung auf dem neuesten Stand': {
+    title: 'Privacy policy brought up to date',
+    text: 'It now also explains the shared high score table (only the game, three letters and the score are stored) and that with Spotify Premium your browser loads Spotify’s player.',
+  },
   'Postanschrift im Impressum': {
     title: 'Postal address in the legal notice',
     text: 'The legal notice of Time Travel and the Gaming edition now lists a postal address (c/o Block Services in Fellbach), as German law requires. Marco’s home address stays private.',

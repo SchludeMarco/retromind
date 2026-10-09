@@ -1,25 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { GAMES, Game } from '../../data/games';
-import { platformLabel } from '../../data/platforms';
+import { useCoverLookup } from '../../lib/covers';
 import { chip } from '../../lib/chiptune';
 import { tr } from '../../../lib/i18n';
 import { Done, saveBest, shuffle } from './shared';
 
-// "Name that game": the short description of a game (its name blacked out),
-// with platform and year, and four titles to pick from. Every right answer
-// pays a coin, up to five a day. Only games with a description take part.
+// "Name that game": a close-up of a box cover, four titles to pick from.
+// Every right answer pays a coin, up to five a day.
 
 const ROUNDS = 5;
 const DAILY_COINS = 5;
 const KEY = 'retromind.gaming.quiz.v1';
-const QUIZ_GAMES = GAMES.filter((g) => g.blurb);
-
-/** Blacks out the title and its longer words, so the description doesn't give the answer away. */
-function hideTitle(text: string, title: string): string {
-  const words = [title, ...title.split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 3)];
-  const esc = (w: string) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return words.reduce((t, w) => t.replace(new RegExp(esc(w), 'giu'), '▮▮▮'), text);
-}
 
 function coinsLeftToday(): number {
   try {
@@ -40,12 +31,19 @@ function spendCoin() {
   }
 }
 
-const Round: React.FC<{ game: Game; onAnswer: (right: boolean) => void }> = ({ game, onAnswer }) => {
+const Round: React.FC<{ game: Game; onSkip: () => void; onAnswer: (right: boolean) => void }> = ({ game, onSkip, onAnswer }) => {
+  const cover = useCoverLookup(game.wiki);
   const [picked, setPicked] = useState<string | null>(null);
   const options = useMemo(
     () => shuffle([game, ...shuffle(GAMES.filter((g) => g.id !== game.id)).slice(0, 3)]),
     [game]
   );
+  const spot = useMemo(() => `${20 + Math.random() * 60}% ${20 + Math.random() * 60}%`, []);
+  // Games without a cover on Wikipedia are skipped.
+  React.useEffect(() => {
+    if (cover === null) onSkip();
+  }, [cover, onSkip]);
+  if (!cover) return <p className="loading pixel-font" style={{ fontSize: 11 }}>LOADING … <span className="blink">▮</span></p>;
   const pick = (g: Game) => {
     if (picked) return;
     setPicked(g.id);
@@ -54,13 +52,12 @@ const Round: React.FC<{ game: Game; onAnswer: (right: boolean) => void }> = ({ g
   };
   return (
     <>
-      <div className="quiz-clue panel">
-        <p className="pixel-font quiz-meta">
-          {platformLabel(game.platform)}
-          {game.year ? ` · ${game.year}` : ''}
-        </p>
-        <p>{picked ? game.blurb : hideTitle(game.blurb ?? '', game.title)}</p>
-      </div>
+      <div
+        className={`quiz-pic${picked ? ' revealed' : ''}`}
+        style={{ backgroundImage: `url("${cover}")`, backgroundPosition: picked ? 'center' : spot }}
+        role="img"
+        aria-label={tr('Close-up of a game cover', 'Ausschnitt eines Spiele-Covers')}
+      />
       <div className="quiz-options">
         {options.map((g) => (
           <button
@@ -84,12 +81,13 @@ const Round: React.FC<{ game: Game; onAnswer: (right: boolean) => void }> = ({ g
 };
 
 export const Quiz: React.FC<{ onWin: () => void; onEarn?: (coins: number) => void }> = ({ onWin, onEarn }) => {
-  const [deck, setDeck] = useState(() => shuffle(QUIZ_GAMES));
+  const [deck, setDeck] = useState(() => shuffle(GAMES));
   const [round, setRound] = useState(0);
   const [right, setRight] = useState(0);
   const [result, setResult] = useState<{ right: number; record: boolean } | null>(null);
   const [earned, setEarned] = useState(0);
 
+  const skip = React.useCallback(() => setDeck((d) => [...d.slice(0, round), ...d.slice(round + 1)]), [round]);
   const answer = (ok: boolean) => {
     let n = right;
     if (ok) {
@@ -110,7 +108,7 @@ export const Quiz: React.FC<{ onWin: () => void; onEarn?: (coins: number) => voi
   };
   const again = () => {
     chip.play('select');
-    setDeck(shuffle(QUIZ_GAMES));
+    setDeck(shuffle(GAMES));
     setRound(0);
     setRight(0);
     setEarned(0);
@@ -123,7 +121,7 @@ export const Quiz: React.FC<{ onWin: () => void; onEarn?: (coins: number) => voi
         {tr('Round', 'Runde')} {Math.min(round + 1, ROUNDS)}/{ROUNDS} · {tr('Right', 'Richtig')}: {right}
         {coinsLeftToday() === 0 && !result && ` · ${tr('no more coins today', 'heute keine Coins mehr')}`}
       </p>
-      {!result && deck[round] && <Round key={deck[round].id + round} game={deck[round]} onAnswer={answer} />}
+      {!result && deck[round] && <Round key={deck[round].id + round} game={deck[round]} onSkip={skip} onAnswer={answer} />}
       {result && (
         <Done
           title={tr('QUIZ OVER', 'QUIZ VORBEI')}

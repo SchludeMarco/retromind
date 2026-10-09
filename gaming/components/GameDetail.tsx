@@ -6,6 +6,7 @@ import { AiUnavailableError, fetchGameGuide, fetchGamePress, GameGuide } from '.
 import { chip } from '../lib/chiptune';
 import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
+import { PixelCover } from './PixelCover';
 import { fetchVideos, formatViews, VideoKind, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
@@ -373,17 +374,7 @@ export const GameDetail: React.FC<{
               )}
             </div>
             <div>
-              {summary?.thumbnail && (
-                <img
-                  className="boxart"
-                  src={summary.thumbnail}
-                  alt={tr(`Box art: ${game.title}`, `Titelbild: ${game.title}`)}
-                  onError={(e) => {
-                    const small = summary.thumbnailSmall;
-                    if (small && e.currentTarget.src !== new URL(small, window.location.href).href) e.currentTarget.src = small;
-                  }}
-                />
-              )}
+              <PixelCover game={game} className="boxart" />
             </div>
           </div>
         )}

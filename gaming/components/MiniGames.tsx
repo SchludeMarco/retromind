@@ -84,7 +84,7 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
     title: tr('NAME THAT GAME', 'ERKENNST DU DAS SPIEL?'),
     statKey: 'SPIELE-QUIZ',
     icon: '🕹️',
-    text: tr('A close-up of a box cover, four titles: which game is it? Every right answer pays a coin (up to 5 a day).', 'Ein Ausschnitt vom Cover, vier Titel: Welches Spiel ist es? Jede richtige Antwort bringt einen Coin (bis zu 5 am Tag).'),
+    text: tr('A short description, platform and year, four titles: which game is it? Every right answer pays a coin (up to 5 a day).', 'Eine kurze Beschreibung, Plattform und Jahr, vier Titel: Welches Spiel ist es? Jede richtige Antwort bringt einen Coin (bis zu 5 am Tag).'),
     best: quizBest,
   },
   {
