@@ -7,6 +7,12 @@ Status **offen**: wartet auf Marcos Zustimmung (Link in der Feedback-Mail).
 Status **übernommen**: steht als To Do in der README unter „Ideen und offene Punkte“.
 Status **erledigt**: von Marco im Adminbereich abgehakt, ohne To Do.
 
+## 2026-10-09 18:12 · Lob (Gaming) · offen
+
+<!-- id: fb-20261009-308f68 -->
+
+> Echt geil das Ding mehr davon
+
 ## 2026-10-07 13:54 · Tadel · offen
 
 <!-- id: fb-20261007-bf65d2 -->
