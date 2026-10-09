@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Neues Eingangsbild ohne fremde Logos': {
     title: 'A new entrance picture without other brands’ logos',
-    text: 'Marco’s new picture now hangs outside the arcade hall. Instead of Nintendo, SEGA and Atari logos and well-known game characters, the door and pillars show our own pixel stickers like a treasure chest, a sword, a joystick and a dartboard. The glowing ARCADE letters and the blinking door frame work just like before.',
+    text: 'Marco’s new picture now hangs outside the arcade hall. Instead of Nintendo, SEGA and Atari logos and well-known game characters like Pac-Man or Mario, the door and pillars show our own pixel symbols like a spaceship, a planet, a UFO, a joystick and hearts. The glowing ARCADE letters and the blinking door frame work just like before.',
   },
   'Der Retro-Guru antwortet wieder': {
     title: 'The Retro Guru talks again',
