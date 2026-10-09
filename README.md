@@ -525,6 +525,9 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   gestrichen und im CHANGELOG vermerkt.
 - **[`_removed_content/`](_removed_content/):** Entfernte Teile der App werden
   hier aufbewahrt statt gelöscht (wird nicht gebaut oder ausgeliefert).
+- **Automatische Prüfung:** Bei jedem Pull Request prüft GitHub
+  ([`.github/workflows/check.yml`](.github/workflows/check.yml)) mit
+  `npm run typecheck` und dem Vercel-Build, ob alles fehlerfrei baut.
 
 ## Lizenz
 
@@ -541,22 +544,13 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 - **Ladungsfähige Anschrift im Impressum:** Name und E-Mail stehen drin, die
   Postanschrift fehlt noch (Marco möchte seine Privatadresse nicht
-  veröffentlichen). Lösung z. B. eine c/o- bzw. Impressum-Service-Adresse
-  (kostet ein paar Euro im Monat) und dann in `public/impressum.html`
-  eintragen.
+  veröffentlichen). Marco hat eine Impressum-Service-Adresse bei
+  Anschrift.net beantragt; sobald sie freigeschaltet ist, kommt sie in
+  `public/impressum.html` und `public/imprint.html`.
 - **Gemini-Tarif prüfen:** Im kostenlosen Tarif der Gemini-API darf Google
   Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
   Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
   datenschutzfreundlicher; danach die Datenschutzerklärung prüfen.
-- **Auftragsverarbeitung abschließen:** Die Data Processing Addenda von Vercel,
-  Google (Gemini) und Resend gelten über deren Nutzungsbedingungen; einmal
-  prüfen, ob sie für die genutzten Konten akzeptiert sind.
-- **Automatisches Deployment absichern:** Mehrfach kamen gemergte Änderungen
-  erst nach einem manuellen „Redeploy“ in Vercel live. Ursache klären, damit
-  jeder Merge zuverlässig ausgeliefert wird.
-- **Automatische Prüfung bei jedem Pull Request:** Bisher prüft nur der
-  Vercel-Build. Ein GitHub-Workflow mit `npm run typecheck` und
-  `npm run build` würde Fehler vor dem Merge finden.
 
 ### Sollte
 
