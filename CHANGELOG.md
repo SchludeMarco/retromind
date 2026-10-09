@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Neues Eingangsbild ohne fremde Logos** (2026-10-09, PR #180): Vor der
+  Spielhalle hängt Marcos neues Bild. Statt Nintendo-, SEGA- und
+  Atari-Logos und bekannter Spielfiguren zeigen Tür und Säulen jetzt eigene
+  Pixel-Sticker wie Schatzkiste, Schwert, Joystick und Dartscheibe. Die
+  leuchtenden ARCADE-Buchstaben und der blinkende Türrahmen bleiben wie
+  gewohnt.
+
 - **Der Retro-Guru antwortet wieder** (2026-10-08, PR #179): In der
   Gaming-Edition kam vom Guru und den anderen KI-Funktionen nur „Lag!
   Connection lost“, weil Google das bisher genutzte KI-Modell für neue

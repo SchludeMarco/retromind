@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Neues Eingangsbild ohne fremde Logos': {
+    title: 'A new entrance picture without other brands’ logos',
+    text: 'Marco’s new picture now hangs outside the arcade hall. Instead of Nintendo, SEGA and Atari logos and well-known game characters, the door and pillars show our own pixel stickers like a treasure chest, a sword, a joystick and a dartboard. The glowing ARCADE letters and the blinking door frame work just like before.',
+  },
   'Der Retro-Guru antwortet wieder': {
     title: 'The Retro Guru talks again',
     text: 'In the gaming edition, the Guru and the other AI features only said “Lag! Connection lost”, because Google switched off the AI model we used for new keys. The app now always uses Google’s current model and switches to another one on its own if one goes away.',

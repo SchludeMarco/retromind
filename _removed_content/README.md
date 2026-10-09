@@ -85,3 +85,7 @@ gebaut oder ausgeliefert.
   Stash, Achievements, Quests sowie Musik, SFX, App und Farbwechsel). Am
   2026-10-08 nach der Gamer-Kritik aufgeräumt: Suche und Insert Coin bleiben
   oben, die Bereiche sind in der Leiste unten, der Rest in den Einstellungen.
+- `gaming-entrance-logos/`: das bisherige Eingangsbild der Gaming-Halle
+  (Grundbild, sechs ARCADE-Buchstaben, Türflügel) mit Nintendo-, SEGA- und
+  Atari-Logos und bekannten Spielfiguren. Am 2026-10-09 durch Marcos neues
+  Bild ohne fremde Marken ersetzt.
