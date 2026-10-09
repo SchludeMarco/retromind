@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Postanschrift im Impressum** (2026-10-09, PR #183): Im Impressum von
+  Zeitreise und Gaming-Edition steht jetzt eine Postanschrift (c/o Block
+  Services in Fellbach), wie es das Gesetz verlangt. Marcos Privatadresse
+  bleibt dabei privat.
+
 - **Neues Eingangsbild ohne fremde Logos** (2026-10-09, PR #180, #181): Vor
   der Spielhalle hängt Marcos neues Bild. Statt Nintendo-, SEGA- und
   Atari-Logos und bekannter Spielfiguren wie Pac-Man oder Mario zeigen Tür

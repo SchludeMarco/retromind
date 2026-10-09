@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Postanschrift im Impressum': {
+    title: 'Postal address in the legal notice',
+    text: 'The legal notice of Time Travel and the Gaming edition now lists a postal address (c/o Block Services in Fellbach), as German law requires. Marco’s home address stays private.',
+  },
   'Neues Eingangsbild ohne fremde Logos': {
     title: 'A new entrance picture without other brands’ logos',
     text: 'Marco’s new picture now hangs outside the arcade hall. Instead of Nintendo, SEGA and Atari logos and well-known game characters like Pac-Man or Mario, the door and pillars show our own pixel symbols like a spaceship, a planet, a UFO, a joystick and hearts. The glowing ARCADE letters and the blinking door frame work just like before.',
