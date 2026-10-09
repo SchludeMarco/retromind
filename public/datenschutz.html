@@ -13,7 +13,7 @@
   <h1>Datenschutzerklärung</h1>
   <p class="muted">
     Gilt für RetroMind – Zeitreise (retromind.vercel.app) und RetroMind – Gaming (retromind-gaming.vercel.app).
-    Stand: 8. Oktober 2026
+    Stand: 9. Oktober 2026
   </p>
 
   <h2>Kurz gesagt</h2>
@@ -93,7 +93,11 @@
     Spotify-Konto anmelden (Spotify erhält dann Profildaten und E-Mail; wir speichern nur ein Anmelde-Token in deinem
     Browser). Angemeldet mit Spotify Premium hörst du vor der Spielhalle einen kurzen Ausschnitt des Songs, der drinnen
     läuft; diesen Ausschnitt holt unser Server bei Spotify (oder, falls es dort keinen gibt, bei Deezer), dein Browser
-    spricht dafür nicht mit diesen Diensten, und außer dem Song wird nichts übermittelt. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du kannst sie
+    spricht dafür nicht mit diesen Diensten, und außer dem Song wird nichts übermittelt. Mit Premium spielt die
+    Gaming-Edition die Musik außerdem direkt im Browser über Spotifys Web Playback SDK ab: Dafür lädt dein Browser
+    das Abspielprogramm von Spotify (sdk.scdn.co) und meldet sich mit deinem Anmelde-Token bei Spotify an, das
+    dabei sieht, welche Songs du hörst. Welche Songs in einer Playlist stehen, fragt unser Server bei Spotify ab,
+    ohne Daten über dich. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du kannst sie
     jederzeit in den Einstellungen (⚙️) widerrufen („Spotify nicht mehr laden“). Datenschutzhinweise von Spotify:
     <a href="https://www.spotify.com/de/legal/privacy-policy/" target="_blank" rel="noreferrer">spotify.com/de/legal/privacy-policy</a>.
   </p>
@@ -152,7 +156,19 @@
     zugegriffen (§ 25 TDDDG ist nicht berührt). Du kannst widersprechen (Art. 21 DSGVO), eine formlose Nachricht genügt.
   </p>
 
-  <h2>11. Feedback</h2>
+  <h2>11. Highscore-Tafel (Gaming-Edition)</h2>
+  <p>
+    Nach einer guten Runde in einem Punkte-Minispiel kannst du dich wie am Automaten mit drei Buchstaben oder Ziffern
+    in die Highscore-Tafel eintragen. Nur wenn du auf „OK“ tippst, schickt die App das Spiel, deine drei Zeichen und
+    deine Punktzahl an unseren Server. Er speichert sie in derselben Upstash-Datenbank wie die Statistik (siehe
+    Abschnitt 10); behalten werden die besten 50 Einträge pro Spiel, die besten 10 sieht jeder, der das Spiel
+    öffnet. Gespeichert wird nichts weiter, insbesondere keine IP-Adresse und keine Kennung. Wähl deshalb bitte
+    keine Buchstaben, die dich für andere erkennbar machen, wenn du das nicht möchtest. Deine letzten Buchstaben und
+    eine eigene Tafel merkt sich die App außerdem in deinem Browser. Rechtsgrundlage ist deine Einwilligung durch
+    das Eintragen (Art. 6 Abs. 1 lit. a DSGVO); einen Eintrag entfernen wir auf Wunsch.
+  </p>
+
+  <h2>12. Feedback</h2>
   <p>
     Über „Feedback“ (Briefsymbol oben auf der Startseite, auch in der Gaming-Edition) kannst du uns eine Nachricht schicken. Wir erhalten deine Nachricht, die
     gewählte Kategorie und, nur wenn du sie angibst, deine E-Mail-Adresse für eine Antwort. Die Nachricht wird per
@@ -165,7 +181,7 @@
     Für Übermittlungen in die USA gelten die EU-Standardvertragsklauseln bzw. das EU-US Data Privacy Framework.
   </p>
 
-  <h2>12. Deine Rechte</h2>
+  <h2>13. Deine Rechte</h2>
   <p>Du hast das Recht auf</p>
   <ul>
     <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO),</li>

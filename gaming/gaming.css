@@ -2747,11 +2747,8 @@ a {
   border: 3px solid rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
-.cart-cover img {
-  display: block;
-  width: 100%;
+.cart-cover .pxc {
   height: 100%;
-  object-fit: contain;
 }
 @media (max-width: 520px) {
   .cart-cover {
@@ -2894,12 +2891,17 @@ section:first-child > .media-head {
   background: #121216;
   overflow: hidden;
 }
-.ci-label img {
+.ci-label .ci-cover {
   flex: 1;
   min-height: 0;
-  width: 100%;
-  object-fit: cover;
-  display: block;
+  gap: 2px;
+  padding: 4px;
+}
+.ci-cover .pxc-title {
+  font-size: 7px;
+}
+.ci-cover .pxc-year {
+  font-size: 6px;
 }
 .ci-meta {
   flex: none;
@@ -2913,18 +2915,6 @@ section:first-child > .media-head {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.ci-title {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px;
-  text-align: center;
-  font-size: 9px;
-  line-height: 1.4;
-  color: #fff;
-  background: linear-gradient(160deg, var(--label), #121216 140%);
 }
 /* The console: a top face in perspective with the slot, and a front face. */
 .ci-console {
@@ -3201,19 +3191,10 @@ section:first-child > .media-head {
   align-items: center;
   animation: am-in 0.6s ease-out;
 }
-.am-slide img,
-.am-nocover {
+.am-cover {
   width: min(70vw, 300px);
-  height: min(55vh, 380px);
-  object-fit: contain;
+  height: min(55vh, 300px);
   filter: drop-shadow(0 0 24px var(--label));
-}
-.am-nocover {
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  font-size: 16px;
-  background: var(--label);
 }
 .am-title {
   font-size: 13px;
@@ -3381,19 +3362,19 @@ section:first-child > .media-head {
 }
 
 /* --- Name that game (quiz) --- */
-.quiz-pic {
-  width: min(100%, 260px);
-  aspect-ratio: 1;
-  margin: 0 auto;
-  border: 4px solid var(--a3);
-  background-color: #000;
-  background-repeat: no-repeat;
-  background-size: 360%;
-  image-rendering: pixelated;
-  transition: background-size 0.6s ease-out, background-position 0.6s ease-out;
+.quiz-clue {
+  max-width: 520px;
+  margin: 0 auto 12px;
+  font-size: 16px;
+  line-height: 1.5;
 }
-.quiz-pic.revealed {
-  background-size: contain;
+.quiz-clue p {
+  margin: 0;
+}
+.quiz-clue .quiz-meta {
+  margin-bottom: 8px;
+  font-size: 10px;
+  color: var(--a3);
 }
 .quiz-options {
   display: grid;
@@ -3480,4 +3461,69 @@ section:first-child > .media-head {
 .settings-volume span:last-child {
   min-width: 3ch;
   text-align: right;
+}
+
+/* --- Pixel tiles instead of box art (components/PixelCover.tsx) --- */
+.pxc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  box-sizing: border-box;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 4px),
+    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--label) 35%, #121216), #121216 70%);
+  border-top: 4px solid var(--label);
+  text-align: center;
+  overflow: hidden;
+}
+.pxc-sprite {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 120px;
+}
+.pxc-title {
+  font-size: 9px;
+  line-height: 1.5;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.pxc-year {
+  font-size: 8px;
+  color: #ffd84a;
+}
+.boxart.pxc {
+  aspect-ratio: 3 / 4;
+  gap: 12px;
+  padding: 18px;
+}
+.boxart .pxc-sprite {
+  max-width: 160px;
+}
+.boxart .pxc-title {
+  font-size: 12px;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+.boxart .pxc-year {
+  font-size: 11px;
+}
+.am-cover .pxc-sprite {
+  max-width: none;
+}
+.arcade[data-palette='modul'] .pxc {
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--label) 18%, #fff), #f3f4f6 70%);
+}
+.arcade[data-palette='modul'] .pxc-title {
+  color: #1d1d23;
+}
+.arcade[data-palette='modul'] .pxc-year {
+  color: var(--label);
 }

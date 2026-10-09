@@ -203,9 +203,11 @@ nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.
 Die Bereiche (Katalog, Kisten, Stash, Trophäen, Chillen, Quests) liegen in
 allen Designs in der Leiste unten, Musik, Soundeffekte und Farben in den
 Einstellungen. Die Kopfleiste zeigt Coins, einen Punktestand (SCORE) und wie
-viele der Perlen du entdeckt hast. Jede Spielkarte zeigt das Cover, also das
-Titelbild aus dem Wikipedia-Artikel, für 50 Karten auf einmal geladen
-([`gaming/lib/covers.ts`](gaming/lib/covers.ts)); am Handy liegen zwei Karten
+viele der Perlen du entdeckt hast. Jede Spielkarte zeigt eine eigene Pixel-Kachel
+statt eines Covers (die gehören den Spielefirmen): ein aus dem Titel
+berechnetes 8×8-Pixel-Monster in der Konsolenfarbe mit Titel und Jahr
+([`gaming/components/PixelCover.tsx`](gaming/components/PixelCover.tsx)), auch
+auf der Spieleseite, dem Modul und im Attract Mode; am Handy liegen zwei Karten
 nebeneinander. Titel und Knöpfe bleiben in Pixelschrift, Beschreibungen
 stehen wie in einem Handbuch in gut lesbarer Schrift und enden mit ganzen
 Sätzen. Am Handy rüttelt es kurz beim Münzeinwurf, beim Öffnen der Tür, bei
@@ -223,7 +225,7 @@ der Spieleseite blätterst du per Wischen oder mit ◄ ► zum nächsten Spiel d
 Liste. Erfolge erscheinen wie auf der Konsole als runde Pokal-Leiste unten mit
 weichem „Plopp“. Hinter dem Katalog blinken die Lichter der Automaten, und
 nach einer Minute ohne Eingabe startet wie bei alten Automaten der Attract
-Mode: Cover laufen durch, INSERT COIN blinkt
+Mode: die Pixel-Kacheln laufen durch, INSERT COIN blinkt
 (`gaming/components/AttractMode.tsx`). Neben dem Stash gibt es das Regal
 „Hatte ich damals“ für die Spiele (Knopf auf der Spieleseite) und Konsolen,
 die man als Kind wirklich hatte; es kommt mit ins Google-Backup.
@@ -317,7 +319,7 @@ Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
 `retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
 markiert.
 **Chill-Ecke** – über „Chillen“ in der Leiste unten: die
-Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper, Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten), Breakout, Snake, die Weltraum-Invasion im Stil von Space Invaders und das Quiz „Erkennst du das Spiel?“ (Cover-Ausschnitt, vier Titel, jede richtige Antwort bringt einen Coin, bis zu fünf am Tag). Nach einer guten Runde in den Punkte-Spielen trägst du wie am Automaten drei Buchstaben in die Highscore-Tafel ein; die Top 10 sind für alle Spieler gemeinsam (`api/highscores.js`, im selben Upstash-Redis wie die Statistik), ohne Datenbank bleibt die Tafel auf dem Gerät
+Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper, Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten), Breakout, Snake, die Weltraum-Invasion im Stil von Space Invaders und das Quiz „Erkennst du das Spiel?“ (kurze Beschreibung mit geschwärztem Namen, Plattform und Jahr, vier Titel, jede richtige Antwort bringt einen Coin, bis zu fünf am Tag). Nach einer guten Runde in den Punkte-Spielen trägst du wie am Automaten drei Buchstaben in die Highscore-Tafel ein; die Top 10 sind für alle Spieler gemeinsam (`api/highscores.js`, im selben Upstash-Redis wie die Statistik), ohne Datenbank bleibt die Tafel auf dem Gerät
 ([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
 [`gaming/components/minigames/`](gaming/components/minigames/)). Töne
 kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
@@ -559,6 +561,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
 - **Mehr Spiele im kuratierten Gaming-Katalog** mit eigenen Tipps.
+- **Screenshots auf der Spieleseite prüfen:** Der Reiter „Screenshots“ zeigt
+  Bilder aus dem Wikipedia-Artikel; viele davon sind wie die Cover nicht frei
+  lizenziert. Besser nur frei lizenzierte Bilder von Wikimedia Commons zeigen
+  oder den Reiter durch Videos ersetzen.
 - **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
   Rücksprache).
 

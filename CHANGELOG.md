@@ -7,6 +7,21 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Eigene Pixel-Kacheln statt Spiele-Cover** (2026-10-09, PR #184): Die
+  Spielkarten in der Gaming-Edition zeigen keine Cover-Fotos von Wikipedia
+  mehr, denn die Bilder gehören den Spielefirmen. Stattdessen malt die App
+  für jedes Spiel eine eigene Pixel-Kachel: ein kleines Pixel-Monster in der
+  Farbe der Konsole, darunter Titel und Jahr. Jedes Spiel bekommt immer
+  dieselbe Figur. Die Kacheln stehen auf den Karten, auf der Spieleseite, auf
+  dem Modul beim Einlegen und im Attract Mode. Das Quiz „Erkennst du das
+  Spiel?“ zeigt jetzt eine kurze Beschreibung mit Plattform und Jahr (der
+  Name ist geschwärzt) statt eines Cover-Ausschnitts.
+
+- **Datenschutzerklärung auf dem neuesten Stand** (2026-10-09, PR #184): Sie
+  erklärt jetzt auch die gemeinsame Highscore-Tafel (nur Spiel, drei
+  Buchstaben und Punkte werden gespeichert) und dass mit Spotify Premium dein
+  Browser Spotifys Abspielprogramm lädt.
+
 - **Postanschrift im Impressum** (2026-10-09, PR #183): Im Impressum von
   Zeitreise und Gaming-Edition steht jetzt eine Postanschrift (c/o Block
   Services in Fellbach), wie es das Gesetz verlangt. Marcos Privatadresse

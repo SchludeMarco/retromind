@@ -1,19 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Game, GAMES, PLATFORM_COLORS } from '../data/games';
 import { platformLabel } from '../data/platforms';
-import { useCover } from '../lib/covers';
+import { PixelCover } from './PixelCover';
 import { tr } from '../../lib/i18n';
 
-// Like an arcade cabinet nobody plays: after a while without input, covers
-// of the hand-picked games run by and INSERT COIN blinks. Any touch ends it.
+// Like an arcade cabinet nobody plays: after a while without input, the pixel
+// tiles of the hand-picked games run by and INSERT COIN blinks. Any touch ends it.
 export const ATTRACT_AFTER_MS = 60_000;
 const SLIDE_MS = 3500;
 
 const Slide: React.FC<{ game: Game }> = ({ game }) => {
-  const cover = useCover(game.wiki);
   return (
     <div className="am-slide" style={{ ['--label' as string]: PLATFORM_COLORS[game.platform] ?? 'var(--a1)' }}>
-      {cover ? <img src={cover} alt="" /> : <div className="am-nocover pixel-font">{game.title}</div>}
+      <PixelCover game={game} className="am-cover" showText={false} />
       <p className="pixel-font am-title">{game.title}</p>
       <p className="am-meta">
         {platformLabel(game.platform)}

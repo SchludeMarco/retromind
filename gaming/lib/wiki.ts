@@ -89,14 +89,16 @@ export function fetchSummary(enTitle: string): Promise<WikiSummary | null> {
 }
 
 /**
- * Screenshots, box art and photos from the English article's media list.
+ * Screenshots and photos from the English article's media list.
  * Logos and icons are SVGs on Wikipedia, so skipping SVG drops most clutter.
+ * The lead image is left out: for games it is the publisher's box art, which
+ * the app replaces with its own pixel tile (components/PixelCover.tsx).
  */
 export async function fetchImages(enTitle: string, max = 8): Promise<WikiImage[]> {
   const data = await getJson(`${rest('en')}/page/media-list/${enc(enTitle)}`);
   const items: any[] = data?.items ?? [];
   return items
-    .filter((it) => it.type === 'image' && it.showInGallery !== false && !/\.svg$/i.test(it.title ?? ''))
+    .filter((it) => it.type === 'image' && it.showInGallery !== false && !it.leadImage && !/\.svg$/i.test(it.title ?? ''))
     .map((it) => {
       const best = (it.srcset ?? []).slice(-1)[0]?.src ?? '';
       return {

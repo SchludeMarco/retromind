@@ -4,7 +4,7 @@ import { KIND_ICON, PLATFORMS, platformInfo, platformLabel } from './data/platfo
 import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
-import { useCover } from './lib/covers';
+import { PixelCover } from './components/PixelCover';
 import { DayGame, fetchOnThisDay } from './lib/onThisDay';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
@@ -53,38 +53,31 @@ const teaser = (text: string, max = 120) => {
   return out.trim();
 };
 
-const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () => void }> = ({ game, fav, done, onOpen }) => {
-  const cover = useCover(game.wiki);
-  const [coverOk, setCoverOk] = useState(true);
-  const showCover = Boolean(cover && coverOk);
-  return (
-    <button
-      className={`cart${showCover ? ' has-cover' : ''}`}
-      onClick={onOpen}
-      data-nav
-      style={{ ['--label' as string]: PLATFORM_COLORS[game.platform] ?? 'var(--a1)' }}
-      aria-label={`${game.title}, ${platformLabel(game.platform)}${game.year ? `, ${game.year}` : ''}`}
-    >
-      <span className="cart-badges" aria-hidden="true">
-        {fav && '★'}
-        {done && '✓'}
+const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () => void }> = ({ game, fav, done, onOpen }) => (
+  <button
+    className="cart has-cover"
+    onClick={onOpen}
+    data-nav
+    style={{ ['--label' as string]: PLATFORM_COLORS[game.platform] ?? 'var(--a1)' }}
+    aria-label={`${game.title}, ${platformLabel(game.platform)}${game.year ? `, ${game.year}` : ''}`}
+  >
+    <span className="cart-badges" aria-hidden="true">
+      {fav && '★'}
+      {done && '✓'}
+    </span>
+    <span className="cart-cover" aria-hidden="true">
+      <PixelCover game={game} />
+    </span>
+    <span className="cart-label">
+      <span className="cart-meta">
+        {platformLabel(game.platform)}
+        {game.year ? ` · ${game.year}` : ''}
       </span>
-      {showCover && (
-        <span className="cart-cover" aria-hidden="true">
-          <img src={cover!} alt="" loading="lazy" onError={() => setCoverOk(false)} />
-        </span>
-      )}
-      <span className="cart-label">
-        <span className="cart-meta">
-          {platformLabel(game.platform)}
-          {game.year ? ` · ${game.year}` : ''}
-        </span>
-        <span className="cart-title">{game.title}</span>
-        {game.blurb && <span className="cart-blurb">{teaser(game.blurb)}</span>}
-      </span>
-    </button>
-  );
-};
+      <span className="cart-title">{game.title}</span>
+      {game.blurb && <span className="cart-blurb">{teaser(game.blurb)}</span>}
+    </span>
+  </button>
+);
 
 // Blinking lights on the cabinets in the hall picture, spread over its middle.
 const HALL_LIGHTS = Array.from({ length: 12 }, (_, i) => ({
