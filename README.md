@@ -542,11 +542,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Muss
 
-- **Ladungsfähige Anschrift im Impressum:** Name und E-Mail stehen drin, die
-  Postanschrift fehlt noch (Marco möchte seine Privatadresse nicht
-  veröffentlichen). Marco hat eine Impressum-Service-Adresse bei
-  Anschrift.net beantragt; sobald sie freigeschaltet ist, kommt sie in
-  `public/impressum.html` und `public/imprint.html`.
 - **Gemini-Tarif prüfen:** Im kostenlosen Tarif der Gemini-API darf Google
   Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
   Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
