@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Videos passen zum richtigen Spiel': {
+    title: 'Videos match the right game',
+    text: 'In the Gaming edition’s “Videos” tab (and in Music & TV ads), games with sequels often played clips of the wrong part, for Fallout (1997) for example Fallout 4. The search now includes the release year, and videos about sequels like “Fallout 4” or “Fallout 76” are sorted out. Videos with the game’s name in the title come first.',
+  },
   'Eigene Pixel-Kacheln statt Spiele-Cover': {
     title: 'Our own pixel tiles instead of game covers',
     text: 'The game cards in the Gaming edition no longer show cover photos from Wikipedia, because those pictures belong to the game companies. Instead the app draws its own pixel tile for every game: a little pixel monster in the console’s color, with the title and year underneath. Every game always gets the same figure. The tiles appear on the cards, on the game page, on the cartridge when it goes in and in attract mode. The “Name that game” quiz now shows a short description with platform and year (the name blacked out) instead of a close-up of the cover.',
