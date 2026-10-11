@@ -253,7 +253,9 @@ heute zu spielen, und Level-Passwörtern, immer mit Quellen
 (`gamePress` in `api/gemini.js`). Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
-mit `YOUTUBE_API_KEY`). Zum Start ein Eingang: eine verranzte Spielhalle
+mit `YOUTUBE_API_KEY`). Gesucht wird mit Titel und Erscheinungsjahr, Videos
+zu Nachfolgern („Fallout 4“ bei Fallout von 1997) fliegen raus
+(`gaming/lib/youtube.ts`). Zum Start ein Eingang: eine verranzte Spielhalle
 im Regen mit Sticker-Tür „ENTRANCE“ (Marcos Bild, `public/gaming/arcade-entrance.webp`),
 deren Neonschild „ARCADE“ Buchstabe für Buchstabe angeht, jede Sekunde einer
 mehr, bis alle sechs leuchten; eine Sekunde später ist alles aus und es

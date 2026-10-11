@@ -18,6 +18,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   eine Burg und so weiter, bei jedem Spiel etwas anders. In der Halle zeigt
   die Karte nur das Bild, weil der Titel schon auf dem Etikett steht.
 
+- **Videos passen zum richtigen Spiel** (2026-10-11, PR #185): Im Reiter
+  „Videos“ (und bei Musik & TV-Werbung) der Gaming-Edition liefen bei Spielen
+  mit Nachfolgern oft Videos zum falschen Teil, bei Fallout (1997) zum
+  Beispiel Fallout 4. Die Suche nimmt jetzt das Erscheinungsjahr mit, und
+  Videos zu Nachfolgern wie „Fallout 4“ oder „Fallout 76“ werden aussortiert.
+  Videos, die den Spielnamen im Titel tragen, stehen vorne.
+
 - **Eigene Pixel-Kacheln statt Spiele-Cover** (2026-10-09, PR #184): Die
   Spielkarten in der Gaming-Edition zeigen keine Cover-Fotos von Wikipedia
   mehr, denn die Bilder gehören den Spielefirmen. Stattdessen malt die App

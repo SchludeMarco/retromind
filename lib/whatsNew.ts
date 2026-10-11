@@ -36,6 +36,10 @@ const EN: Record<string, { title: string; text: string }> = {
     title: 'Our own pixel pictures for every game',
     text: 'Instead of the little pixel monster, every game card now shows a whole pixel picture. The 44 games in the catalog each have a hand-drawn scene of their world, like an airship between floating islands or a country road at sunset. Real covers, famous characters and logos are deliberately left out, because they belong to the game companies. Every other game from the archive and search gets a fitting picture automatically: racing games a road, space games stars and planets, dragon games a castle and so on, a little different for every game. In the hall the card shows only the picture, because the title is already on the label.',
   },
+  'Videos passen zum richtigen Spiel': {
+    title: 'Videos match the right game',
+    text: 'In the Gaming edition’s “Videos” tab (and in Music & TV ads), games with sequels often played clips of the wrong part, for Fallout (1997) for example Fallout 4. The search now includes the release year, and videos about sequels like “Fallout 4” or “Fallout 76” are sorted out. Videos with the game’s name in the title come first.',
+  },
   'Eigene Pixel-Kacheln statt Spiele-Cover': {
     title: 'Our own pixel tiles instead of game covers',
     text: 'The game cards in the Gaming edition no longer show cover photos from Wikipedia, because those pictures belong to the game companies. Instead the app draws its own pixel tile for every game: a little pixel monster in the console’s color, with the title and year underneath. Every game always gets the same figure. The tiles appear on the cards, on the game page, on the cartridge when it goes in and in attract mode. The “Name that game” quiz now shows a short description with platform and year (the name blacked out) instead of a close-up of the cover.',
