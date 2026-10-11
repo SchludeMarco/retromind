@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Eigene Pixelbilder für jedes Spiel': {
+    title: 'Our own pixel pictures for every game',
+    text: 'Instead of the little pixel monster, every game card now shows a whole pixel picture. The 44 games in the catalog each have a hand-drawn scene of their world, like an airship between floating islands or a country road at sunset. Real covers, famous characters and logos are deliberately left out, because they belong to the game companies. Every other game from the archive and search gets a fitting picture automatically: racing games a road, space games stars and planets, dragon games a castle and so on, a little different for every game. In the hall the card shows only the picture, because the title is already on the label.',
+  },
   'Eigene Pixel-Kacheln statt Spiele-Cover': {
     title: 'Our own pixel tiles instead of game covers',
     text: 'The game cards in the Gaming edition no longer show cover photos from Wikipedia, because those pictures belong to the game companies. Instead the app draws its own pixel tile for every game: a little pixel monster in the console’s color, with the title and year underneath. Every game always gets the same figure. The tiles appear on the cards, on the game page, on the cartridge when it goes in and in attract mode. The “Name that game” quiz now shows a short description with platform and year (the name blacked out) instead of a close-up of the cover.',

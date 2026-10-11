@@ -2894,8 +2894,10 @@ section:first-child > .media-head {
 .ci-label .ci-cover {
   flex: 1;
   min-height: 0;
+}
+.ci-cover .pxc-band {
   gap: 2px;
-  padding: 4px;
+  padding: 3px 4px;
 }
 .ci-cover .pxc-title {
   font-size: 7px;
@@ -3463,67 +3465,17 @@ section:first-child > .media-head {
   text-align: right;
 }
 
-/* --- Pixel tiles instead of box art (components/PixelCover.tsx) --- */
+/* --- Own pixel pictures instead of box art (components/PixelCover.tsx, lib/coverArt.ts) --- */
 .pxc {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px;
+  justify-content: flex-end;
   box-sizing: border-box;
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 4px),
-    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--label) 35%, #121216), #121216 70%);
+  background: #121216;
   border-top: 4px solid var(--label);
   text-align: center;
   overflow: hidden;
-}
-.pxc-sprite {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  max-width: 120px;
-}
-.pxc-title {
-  font-size: 9px;
-  line-height: 1.5;
-  color: #fff;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
-}
-.pxc-year {
-  font-size: 8px;
-  color: #ffd84a;
-}
-.boxart.pxc {
-  aspect-ratio: 3 / 4;
-  gap: 12px;
-  padding: 18px;
-}
-.boxart .pxc-sprite {
-  max-width: 160px;
-}
-.boxart .pxc-title {
-  font-size: 12px;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-}
-.boxart .pxc-year {
-  font-size: 11px;
-}
-.am-cover .pxc-sprite {
-  max-width: none;
-}
-/* Hand-made scenes (lib/coverArt.ts) fill the whole tile, title on a band below. */
-.pxc.pxc-scene {
-  position: relative;
-  justify-content: flex-end;
-  padding: 0;
-  background: #121216;
 }
 .pxc-art {
   position: absolute;
@@ -3542,26 +3494,32 @@ section:first-child > .media-head {
   box-sizing: border-box;
   background: rgba(10, 10, 14, 0.78);
 }
+.pxc-title {
+  font-size: 9px;
+  line-height: 1.5;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.pxc-year {
+  font-size: 8px;
+  color: #ffd84a;
+}
+.boxart.pxc {
+  aspect-ratio: 3 / 4;
+}
 .boxart .pxc-band {
   padding: 10px 12px;
   gap: 8px;
 }
-.arcade[data-palette='modul'] .pxc {
-  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--label) 18%, #fff), #f3f4f6 70%);
+.boxart .pxc-title {
+  font-size: 12px;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
 }
-.arcade[data-palette='modul'] .pxc-title {
-  color: #1d1d23;
-}
-.arcade[data-palette='modul'] .pxc-year {
-  color: var(--label);
-}
-
-.arcade[data-palette='modul'] .pxc.pxc-scene {
-  background: #121216;
-}
-.arcade[data-palette='modul'] .pxc-scene .pxc-title {
-  color: #fff;
-}
-.arcade[data-palette='modul'] .pxc-scene .pxc-year {
-  color: #ffd84a;
+.boxart .pxc-year {
+  font-size: 11px;
 }

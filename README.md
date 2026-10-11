@@ -203,11 +203,17 @@ nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.
 Die Bereiche (Katalog, Kisten, Stash, Trophäen, Chillen, Quests) liegen in
 allen Designs in der Leiste unten, Musik, Soundeffekte und Farben in den
 Einstellungen. Die Kopfleiste zeigt Coins, einen Punktestand (SCORE) und wie
-viele der Perlen du entdeckt hast. Jede Spielkarte zeigt eine eigene Pixel-Kachel
-statt eines Covers (die gehören den Spielefirmen): ein aus dem Titel
-berechnetes 8×8-Pixel-Monster in der Konsolenfarbe mit Titel und Jahr
-([`gaming/components/PixelCover.tsx`](gaming/components/PixelCover.tsx)), auch
-auf der Spieleseite, dem Modul und im Attract Mode; am Handy liegen zwei Karten
+viele der Perlen du entdeckt hast. Jede Spielkarte zeigt ein eigenes Pixelbild
+statt eines Covers (die gehören den Spielefirmen): Die 44 Katalogspiele haben
+je eine selbst gezeichnete Szene ihrer Spielwelt und Stimmung, ohne bekannte
+Figuren, Logos oder Cover-Aufbau; alle anderen Spiele aus dem Archiv und der
+Suche bekommen eine automatisch gebaute Szene (Weltraum, Rennstrecke, Burg,
+Fußballplatz, Stadt bei Nacht, Meer …), deren Thema aus dem Titel geraten wird
+und die pro Spiel anders aussieht
+([`gaming/lib/coverArt.ts`](gaming/lib/coverArt.ts),
+[`gaming/components/PixelCover.tsx`](gaming/components/PixelCover.tsx)). Die
+Bilder stehen auf den Karten, mit Titel und Jahr auch auf der Spieleseite, dem
+Modul und im Attract Mode; am Handy liegen zwei Karten
 nebeneinander. Titel und Knöpfe bleiben in Pixelschrift, Beschreibungen
 stehen wie in einem Handbuch in gut lesbarer Schrift und enden mit ganzen
 Sätzen. Am Handy rüttelt es kurz beim Münzeinwurf, beim Öffnen der Tür, bei
@@ -225,7 +231,7 @@ der Spieleseite blätterst du per Wischen oder mit ◄ ► zum nächsten Spiel d
 Liste. Erfolge erscheinen wie auf der Konsole als runde Pokal-Leiste unten mit
 weichem „Plopp“. Hinter dem Katalog blinken die Lichter der Automaten, und
 nach einer Minute ohne Eingabe startet wie bei alten Automaten der Attract
-Mode: die Pixel-Kacheln laufen durch, INSERT COIN blinkt
+Mode: die Pixelbilder laufen durch, INSERT COIN blinkt
 (`gaming/components/AttractMode.tsx`). Neben dem Stash gibt es das Regal
 „Hatte ich damals“ für die Spiele (Knopf auf der Spieleseite) und Konsolen,
 die man als Kind wirklich hatte; es kommt mit ins Google-Backup.
@@ -575,6 +581,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   geboren ist, in den 1950ern. Beide starten bisher beim nächstgelegenen
   Jahrzehnt; eigene Inhalte dafür würden passen.
 
+- **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
+  wie die Katalogspiele ein eigenes, von Hand gezeichnetes Pixelbild bekommen
+  statt der automatischen Szene.
 - **Mehr Easter Eggs** in der Halle, z. B. in Spieleseiten oder Minispielen.
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle
   (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein

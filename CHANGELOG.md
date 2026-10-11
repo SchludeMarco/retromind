@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Eigene Pixelbilder für jedes Spiel** (2026-10-11, PR #186):
+  Statt des kleinen Pixel-Monsters zeigt jede Spielkarte jetzt ein ganzes
+  Pixelbild. Die 44 Spiele im Katalog haben je eine selbst gezeichnete Szene
+  ihrer Spielwelt, etwa ein Luftschiff zwischen schwebenden Inseln oder eine
+  Landstraße im Sonnenuntergang. Echte Cover, bekannte Figuren und Logos sind
+  bewusst nicht dabei, die gehören den Spielefirmen. Alle anderen Spiele aus
+  dem Archiv und der Suche bekommen automatisch ein passendes Bild:
+  Rennspiele eine Straße, Weltraumspiele Sterne und Planeten, Drachenspiele
+  eine Burg und so weiter, bei jedem Spiel etwas anders. In der Halle zeigt
+  die Karte nur das Bild, weil der Titel schon auf dem Etikett steht.
+
 - **Eigene Pixel-Kacheln statt Spiele-Cover** (2026-10-09, PR #184): Die
   Spielkarten in der Gaming-Edition zeigen keine Cover-Fotos von Wikipedia
   mehr, denn die Bilder gehören den Spielefirmen. Stattdessen malt die App
