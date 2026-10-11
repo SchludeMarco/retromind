@@ -100,3 +100,7 @@ gebaut oder ausgeliefert.
 - `Quiz-cover-ausschnitt.tsx.txt`: das Quiz „Erkennst du das Spiel?“ mit
   Cover-Ausschnitt (entfernt am 2026-10-09). Das Quiz zeigt jetzt eine kurze
   Beschreibung mit geschwärztem Namen.
+- `PixelCover-8x8-symbol.tsx.txt`: die erste Version der eigenen
+  Pixel-Kacheln (ein gespiegeltes 8×8-Symbol pro Titel, entfernt am
+  2026-10-11). Ersetzt durch eigene Pixel-Szenen pro Spiel in
+  `gaming/lib/coverArt.ts`.

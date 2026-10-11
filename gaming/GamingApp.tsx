@@ -66,7 +66,7 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
       {done && '✓'}
     </span>
     <span className="cart-cover" aria-hidden="true">
-      <PixelCover game={game} />
+      <PixelCover game={game} showText={false} />
     </span>
     <span className="cart-label">
       <span className="cart-meta">
