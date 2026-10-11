@@ -155,19 +155,19 @@ export const GameDetail: React.FC<{
     if (tab !== 'media') return;
     let alive = true;
     for (const kind of ['soundtrack', 'commercial'] as const) {
-      fetchVideos({ title: game.title, platform: String(game.platform) }, kind).then((v) => alive && setMedia((m) => ({ ...m, [kind]: v })));
+      fetchVideos({ title: game.title, platform: String(game.platform), year: game.year }, kind).then((v) => alive && setMedia((m) => ({ ...m, [kind]: v })));
     }
     return () => {
       alive = false;
     };
-  }, [tab, game.title, game.platform]);
+  }, [tab, game.title, game.platform, game.year]);
 
   // The best rated video starts on its own as soon as the list is there.
   useEffect(() => {
     let alive = true;
     setVideos(undefined);
     setPlaying(null);
-    fetchVideos({ title: game.title, platform: String(game.platform) }).then((v) => {
+    fetchVideos({ title: game.title, platform: String(game.platform), year: game.year }).then((v) => {
       if (!alive) return;
       setVideos(v);
       setPlaying(v[0] ?? null);
@@ -175,7 +175,7 @@ export const GameDetail: React.FC<{
     return () => {
       alive = false;
     };
-  }, [game.title, game.platform]);
+  }, [game.title, game.platform, game.year]);
 
   // Only counts as playing once YouTube is allowed and the player is there.
   const videoOn = !!playing && youtubeOk;
