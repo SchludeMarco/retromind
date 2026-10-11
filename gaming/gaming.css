@@ -3518,6 +3518,34 @@ section:first-child > .media-head {
 .am-cover .pxc-sprite {
   max-width: none;
 }
+/* Hand-made scenes (lib/coverArt.ts) fill the whole tile, title on a band below. */
+.pxc.pxc-scene {
+  position: relative;
+  justify-content: flex-end;
+  padding: 0;
+  background: #121216;
+}
+.pxc-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pxc-band {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  background: rgba(10, 10, 14, 0.78);
+}
+.boxart .pxc-band {
+  padding: 10px 12px;
+  gap: 8px;
+}
 .arcade[data-palette='modul'] .pxc {
   background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--label) 18%, #fff), #f3f4f6 70%);
 }
@@ -3526,4 +3554,14 @@ section:first-child > .media-head {
 }
 .arcade[data-palette='modul'] .pxc-year {
   color: var(--label);
+}
+
+.arcade[data-palette='modul'] .pxc.pxc-scene {
+  background: #121216;
+}
+.arcade[data-palette='modul'] .pxc-scene .pxc-title {
+  color: #fff;
+}
+.arcade[data-palette='modul'] .pxc-scene .pxc-year {
+  color: #ffd84a;
 }

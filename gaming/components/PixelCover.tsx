@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
 import { Game, PLATFORM_COLORS } from '../data/games';
+import { GRID, SCENES, paint } from '../lib/coverArt';
 
 // Our own box art: no scans of real covers (those belong to the publishers),
-// but a tile drawn by the app itself. A little 8×8 sprite, mirrored like a
-// Space Invader and worked out from the title, so every game always gets the
-// same one, with the title and year underneath in the pixel font.
+// but a tile drawn by the app itself. Catalog games get a hand-made pixel
+// scene of their setting (lib/coverArt.ts); games found via search get a
+// little 8×8 sprite, mirrored like a Space Invader and worked out from the
+// title, so every game always gets the same one. Title and year sit
+// underneath in the pixel font.
 
 const SIZE = 8;
 
@@ -45,12 +48,36 @@ export const PixelCover: React.FC<{ game: Game; className?: string; showText?: b
   className = '',
   showText = true,
 }) => {
-  const pixels = useMemo(() => sprite(hash(game.title)), [game.title]);
+  const scene = SCENES[game.id];
+  const pixels = useMemo(() => (scene ? null : sprite(hash(game.title))), [scene, game.title]);
+  const art = useMemo(() => (scene ? paint(scene) : null), [scene]);
   const color = PLATFORM_COLORS[game.platform] ?? 'var(--a1)';
+  if (art) {
+    return (
+      <span className={`pxc pxc-scene ${className}`} style={{ ['--label' as string]: color }} aria-hidden="true">
+        <svg
+          className="pxc-art"
+          viewBox={`0 0 ${GRID} ${GRID}`}
+          preserveAspectRatio="xMidYMid slice"
+          shapeRendering="crispEdges"
+        >
+          {art.map((p, i) => (
+            <rect key={i} x={p.x} y={p.y} width={p.w} height={p.h} fill={p.c} />
+          ))}
+        </svg>
+        {showText && (
+          <span className="pxc-band">
+            <span className="pxc-title pixel-font">{game.title}</span>
+            {game.year ? <span className="pxc-year pixel-font">{game.year}</span> : null}
+          </span>
+        )}
+      </span>
+    );
+  }
   return (
     <span className={`pxc ${className}`} style={{ ['--label' as string]: color }} aria-hidden="true">
       <svg className="pxc-sprite" viewBox={`-1 -1 ${SIZE + 2} ${SIZE + 2}`} shapeRendering="crispEdges">
-        {pixels.flatMap((row, y) =>
+        {pixels!.flatMap((row, y) =>
           row.map((p, x) =>
             p ? <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={p === 1 ? color : '#ffd84a'} /> : null
           )

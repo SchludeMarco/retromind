@@ -5,6 +5,7 @@ import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
 import { searchGames } from './lib/wiki';
 import { PixelCover } from './components/PixelCover';
+import { SCENES } from './lib/coverArt';
 import { DayGame, fetchOnThisDay } from './lib/onThisDay';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
@@ -66,7 +67,7 @@ const Cartridge: React.FC<{ game: Game; fav: boolean; done: boolean; onOpen: () 
       {done && '✓'}
     </span>
     <span className="cart-cover" aria-hidden="true">
-      <PixelCover game={game} />
+      <PixelCover game={game} showText={!SCENES[game.id]} />
     </span>
     <span className="cart-label">
       <span className="cart-meta">
