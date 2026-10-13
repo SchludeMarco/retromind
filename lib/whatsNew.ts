@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Ramponierter Wegweiser': {
+    title: 'Battle-worn signpost',
+    text: 'The signpost to the gaming zone now looks like it has seen a few battles: frayed edges, blade cuts in the wood, a charred arrow tip with glowing embers and scorch marks. The dark outline around the metal letters has chipped off in many places.',
+  },
   'Musik-Schalter, sanfterer Einstieg, „Deine Zeit“ und Buch-Fortschritt': {
     title: 'Music switch, a softer start, “Your era” and book progress',
     text: 'The question about music from Spotify is now a switch right on the welcome screen. If you leave it alone, you are asked after the name form instead of in the middle of it. Above the name form the mantel clock floats in, small, so the change from the dark clock room feels less abrupt. Before the journey starts, the start page shows your own decade with things from back then and three postcards to open. And a bar shows how full your memory book is: every answered question is a page, the diary is one more, and ten pages are the first goal.',

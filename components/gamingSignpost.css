@@ -20,11 +20,16 @@
   font-family: 'Cinzel', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif;
   font-weight: 900;
   letter-spacing: 0.08em;
-  fill: url(#gaming-sign-metal);
+}
+/* Dark outline, broken up by the noise filter so it looks battle-worn. */
+.gaming-signpost-edge {
+  fill: #1a0d05;
   stroke: #1a0d05;
-  stroke-width: 1.6;
+  stroke-width: 2.6;
   stroke-linejoin: miter;
-  paint-order: stroke;
+}
+.gaming-signpost-face {
+  fill: url(#gaming-sign-metal);
 }
 /* The board nudges towards the arcade on hover, like a gentle push. */
 .gaming-signpost:hover .gaming-signpost-board,
