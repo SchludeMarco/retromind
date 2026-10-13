@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Wegweiser im God-of-War-Stil** (2026-10-13, PR #188): Auf dem
+  Holzwegweiser zur Gaming-Zone steht „To the gaming zone“ jetzt in
+  kantigen, griechisch anmutenden Großbuchstaben aus gebürstetem Metall,
+  angelehnt an das Logo von God of War. Die Schrift ist frei lizenziert
+  (Cinzel) und kommt direkt von RetroMind, nicht von einem fremden Server.
+
 - **Feinschliff nach dem Grok-Test** (2026-10-13, PR #187): Auf schmalen
   Handys passt die Kopfleiste wieder ganz auf den Bildschirm, die Knöpfe
   sind etwas kleiner und der Feedback-Knopf zeigt dort nur das Wort. Die
