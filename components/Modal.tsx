@@ -2,6 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 export const Modal: React.FC<{ onClose: () => void; label: string; children: React.ReactNode }> = ({ onClose, label, children }) => {
   const ref = useRef<HTMLDivElement>(null);
+  // Parents pass a fresh onClose on every render (e.g. each time the song
+  // changes). Keeping it in a ref lets the setup below run only once, so the
+  // dialog doesn't jump back to its first button and scroll to the top.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -10,7 +15,7 @@ export const Modal: React.FC<{ onClose: () => void; label: string; children: Rea
     (node?.querySelector<HTMLElement>(selector) || node)?.focus();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') return onClose();
+      if (e.key === 'Escape') return closeRef.current();
       if (e.key !== 'Tab' || !node) return;
       const items = Array.from(node.querySelectorAll<HTMLElement>(selector)).filter((el) => !el.hasAttribute('disabled'));
       if (!items.length) return;
@@ -32,7 +37,7 @@ export const Modal: React.FC<{ onClose: () => void; label: string; children: Rea
       document.body.style.overflow = prevOverflow;
       previouslyFocused?.focus?.();
     };
-  }, [onClose]);
+  }, []);
 
   return (
     <div className="rm-fixed fixed inset-0 bg-black/60 z-[650] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>

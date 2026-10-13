@@ -443,6 +443,10 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
 
+- **Fenster bleiben, wo man ist** ([`components/Modal.tsx`](components/Modal.tsx))
+  – offene Fenster (Einstellungen, Was ist neu, Feedback und andere) behalten
+  ihre Scroll-Position, auch wenn im Hintergrund die Musik zum nächsten Lied
+  wechselt. Der Fokus springt nur beim Öffnen auf den ersten Knopf.
 - **Versionsnummer** ([`vite.config.ts`](vite.config.ts)) – unten in den
   Einstellungen beider Apps steht „Version 2.<PR-Nummer> (<Commit>)“, damit man
   sieht, welcher Stand gerade läuft.
