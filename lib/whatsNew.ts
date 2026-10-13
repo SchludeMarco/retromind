@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zurück zur Zeitreise': {
+    title: 'Back to the time travel',
+    text: 'If you come to the gaming edition through the signpost or the settings of the time travel, you now see a clearly visible “Back to RetroMind” button in the top left, at the door and in the hall. It stays for your whole visit, even after a reload, and takes your sound and Google settings back with you.',
+  },
   'Gaming-Edition: Fakten & Geheimnisse zu jedem Spiel': {
     title: 'Facts & secrets for every game',
     text: 'Every game page has a new “Facts & secrets” tab. It has a fact sheet (who developed, designed and scored the game, when it came out on which platform, series, predecessor and sequel, awards, sales, age ratings), the review scores from back then, the whole Wikipedia article in chapters with the stories behind the game (development, music, controversies, versions) at the top. On top come direct links to the matching game databases, such as The Cutting Room Floor, where fans collect cut levels and hidden messages. Everything comes from freely licensed sources (Wikidata and Wikipedia) and is shown with its source and license. The “Screenshots” tab now only shows freely licensed images from Wikimedia Commons, no more protected screenshots or box art.',

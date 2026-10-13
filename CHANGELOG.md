@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zurück zur Zeitreise** (2026-10-13, PR #192): Wer über den Wegweiser
+  oder die Einstellungen der Zeitreise in die Gaming-Edition kommt, sieht dort
+  jetzt oben links einen gut sichtbaren Knopf „Zurück zu RetroMind“, vor der
+  Tür und in der Halle. Er bleibt den ganzen Besuch über da, auch nach dem
+  Neuladen, und nimmt Ton- und Google-Einstellung mit zurück.
+
 - **Gaming-Edition: Fakten & Geheimnisse zu jedem Spiel** (2026-10-13,
   PR #191): Jede Spieleseite hat einen neuen Reiter „Fakten & Geheimnisse“. Dort stehen ein
   Steckbrief (wer das Spiel entwickelt, gestaltet und vertont hat, wann es

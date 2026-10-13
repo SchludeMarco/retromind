@@ -221,6 +221,11 @@ Die „Urzeit“ der 70er (Pong, Breakout, Combat, Space Invaders, Asteroids, Ga
 Am Eingang (vor der Tür) kann man sich freiwillig mit Google (Savegame und Coins
 in Google Drive) und mit Spotify (Hallenmusik) anmelden, beides geht auch später
 in den Einstellungen ([`gaming/components/Entrance.tsx`](gaming/components/Entrance.tsx)).
+Wer aus der Zeitreise kommt (Wegweiser oder Einstellungen, Parameter
+`?from=zeitreise`), sieht vor der Tür und oben in der Halle den Knopf „Zurück
+zu RetroMind“; er gilt für den ganzen Besuch im Tab
+([`gaming/lib/cameFrom.ts`](gaming/lib/cameFrom.ts),
+[`gaming/components/BackToZeitreise.tsx`](gaming/components/BackToZeitreise.tsx)).
 Oben in der Halle stehen nur die Suche und „Insert Coin“, darunter eine
 wischbare Zeile mit den Jahrzehnten (70er bis 2020er) und der Konsolenwahl;
 nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.

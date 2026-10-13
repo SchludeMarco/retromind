@@ -6,6 +6,7 @@ import { setConsent } from '../../lib/privacy';
 import { chip, DOOR_SWING } from '../lib/chiptune';
 import { DoorSong } from '../lib/street';
 import { MuteButton } from './MuteButton';
+import { BackToZeitreise } from './BackToZeitreise';
 import { LoudSign } from '../../components/LoudSign';
 import { isGerman, tr } from '../../lib/i18n';
 
@@ -247,6 +248,7 @@ export const Entrance: React.FC<{
         </div>
         <DoorLogins cloud={cloud} spotifyAuth={spotifyAuth} disabled={entering} />
       </div>
+      <BackToZeitreise className="pixel-font back-door" />
       <div className="white-out" />
       {SOUND_DEBUG && <SoundDebug />}
     </div>
