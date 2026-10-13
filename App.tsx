@@ -123,7 +123,7 @@ const App: React.FC = () => {
     getAiAvailability().then(setAiAvailability);
   }, []);
 
-  // Settings and Google-account controls stay out of the way while reading —
+  // The account controls (and the classic music knob) stay out of the way while reading —
   // they slide in only once the page is scrolled (near) to the bottom.
   useEffect(() => {
     const checkScrollPosition = () => {
@@ -623,12 +623,27 @@ const App: React.FC = () => {
     <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
-      {(!warm || showSplash) && <MuteToggle />}
+      {(!warm || showSplash) && <MuteToggle besideSettings={!warm && !showSplash} />}
+      {!warm && !showSplash && (
+        // Always in the top-right corner, also while scrolling and before the
+        // name form is filled in (it used to wait at the bottom right).
+        <button
+          onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
+          aria-label={unseenNews
+            ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
+            : tr('Open app settings', 'App-Einstellungen öffnen')}
+          title={unseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
+          className="rm-fixed fixed top-3 right-4 md:right-10 z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
+        >
+          ⚙️
+          {unseenNews && <NewBadge />}
+        </button>
+      )}
       {!warm && !showSplash && (
         <button
           onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
           title={tr('Send feedback', 'Feedback geben')}
-          className="rm-fixed fixed top-3 left-4 sm:left-auto sm:right-16 md:right-[5.5rem] z-[1000] h-10 px-3 rounded-full bg-[#c62828] text-white border-2 border-retro-ink retro-button flex items-center gap-1.5 text-sm font-bold hover:bg-[#a51f1f]"
+          className="rm-fixed fixed top-3 left-4 sm:left-auto sm:right-28 md:right-[8.5rem] z-[1000] h-10 px-3 rounded-full bg-[#c62828] text-white border-2 border-retro-ink retro-button flex items-center gap-1.5 text-sm font-bold hover:bg-[#a51f1f]"
         >
           <span aria-hidden="true">✉️</span>
           <span>Feedback</span>
@@ -637,7 +652,7 @@ const App: React.FC = () => {
       {warm && !showSplash && (
         <WarmTopBar
           phase={phase}
-          showActions={verified}
+          showAccount={verified}
           hasUnseenNews={unseenNews}
           accountOpen={isAccountOpen}
           onOpenSettings={() => { playSFX('click'); setIsSettingsOpen(true); }}
@@ -680,6 +695,34 @@ const App: React.FC = () => {
         />
       )}
 
+      {isSettingsOpen && (
+        <SettingsModal
+          fontScale={fontScale}
+          onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
+          currentDecade={currentAudioDecade}
+          onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+          isSpotifyReady={spotify.isReady}
+          isSpotifyPlaying={spotify.isPlaying}
+          onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
+          spotifyAllowed={spotify.allowed}
+          onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
+          onBackToWelcome={() => { playSFX('click'); setIsSettingsOpen(false); setMenuRevealed(false); setShowSplash(true); }}
+          hasUnseenNews={unseenNews}
+          userName={user.name}
+          userBirthDate={user.birthDate}
+          onEditProfile={handleEditProfile}
+          onDismiss={() => setIsSettingsOpen(false)}
+          onCloseClick={closeSettingsWithSfx}
+        />
+      )}
+
+      {isWhatsNewOpen && (
+        <WhatsNewModal
+          onDismiss={() => setIsWhatsNewOpen(false)}
+          onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
+        />
+      )}
+
       {!verified ? (
         <VerifyGate
           googleStatus={googleAuth.status}
@@ -706,49 +749,6 @@ const App: React.FC = () => {
             onSpotifySignOut={handleSpotifySignOut}
             visible={warm ? isAccountOpen : showBottomControls}
           />
-
-          {!warm && (
-          <button
-            onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
-            aria-label={unseenNews
-              ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
-              : tr('Open app settings', 'App-Einstellungen öffnen')}
-            title={unseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
-            className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
-              showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            ⚙️
-            {unseenNews && <NewBadge />}
-          </button>
-          )}
-          {isSettingsOpen && (
-            <SettingsModal
-              fontScale={fontScale}
-              onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
-              currentDecade={currentAudioDecade}
-              onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
-              isSpotifyReady={spotify.isReady}
-              isSpotifyPlaying={spotify.isPlaying}
-              onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
-              spotifyAllowed={spotify.allowed}
-              onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
-              onBackToWelcome={() => { playSFX('click'); setIsSettingsOpen(false); setMenuRevealed(false); setShowSplash(true); }}
-              hasUnseenNews={unseenNews}
-              userName={user.name}
-              userBirthDate={user.birthDate}
-              onEditProfile={handleEditProfile}
-              onDismiss={() => setIsSettingsOpen(false)}
-              onCloseClick={closeSettingsWithSfx}
-            />
-          )}
-
-          {isWhatsNewOpen && (
-            <WhatsNewModal
-              onDismiss={() => setIsWhatsNewOpen(false)}
-              onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
-            />
-          )}
 
           {warm && (
             <WarmBottomNav
@@ -797,7 +797,9 @@ const App: React.FC = () => {
             <IntroPhase
               resumeTarget={resumeTarget}
               memoriesCount={memories.length}
+              googleStatus={googleAuth.status}
               googleUser={googleAuth.user}
+              onGoogleSignIn={handleGoogleSignIn}
               spotifyStatus={spotifyAuth.status}
               spotifyUser={spotifyAuth.user}
               onSpotifySignIn={handleSpotifySignIn}

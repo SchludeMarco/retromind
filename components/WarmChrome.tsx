@@ -132,13 +132,13 @@ const STEP_LABEL: Record<AppPhase, string> = {
 
 export const WarmTopBar: React.FC<{
   phase: AppPhase;
-  showActions: boolean;
+  showAccount: boolean;
   hasUnseenNews: boolean;
   accountOpen: boolean;
   onOpenSettings: () => void;
   onOpenFeedback: () => void;
   onToggleAccount: () => void;
-}> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
+}> = ({ phase, showAccount, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
   const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur">
@@ -168,28 +168,26 @@ export const WarmTopBar: React.FC<{
           <Icon name="mail" className="w-5 h-5 max-[399px]:hidden" />
           <span>Feedback</span>
         </button>
-        {showActions && (
-          <>
-            <button
-              onClick={onOpenSettings}
-              aria-label={hasUnseenNews
-                ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
-                : tr('Open app settings', 'App-Einstellungen öffnen')}
-              title={hasUnseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
-              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
-            >
-              <Icon name="settings" />
-              {hasUnseenNews && <NewBadge />}
-            </button>
-            <button
-              onClick={onToggleAccount}
-              aria-pressed={accountOpen}
-              aria-label={tr('Accounts (Google, Spotify)', 'Konten (Google, Spotify)')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-retro-amber-dark text-white flex-shrink-0"
-            >
-              <Icon name="person" className="w-5 h-5" />
-            </button>
-          </>
+        <button
+          onClick={onOpenSettings}
+          aria-label={hasUnseenNews
+            ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
+            : tr('Open app settings', 'App-Einstellungen öffnen')}
+          title={hasUnseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
+          className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
+        >
+          <Icon name="settings" />
+          {hasUnseenNews && <NewBadge />}
+        </button>
+        {showAccount && (
+          <button
+            onClick={onToggleAccount}
+            aria-pressed={accountOpen}
+            aria-label={tr('Accounts (Google, Spotify)', 'Konten (Google, Spotify)')}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-retro-amber-dark text-white flex-shrink-0"
+          >
+            <Icon name="person" className="w-5 h-5" />
+          </button>
         )}
       </div>
       <div aria-hidden="true" className="rm-wood-rail" />

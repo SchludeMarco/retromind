@@ -4,6 +4,7 @@ import { DECADES_DB } from '../constants';
 import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
+import { warmUpGoogle } from '../lib/googleAuth';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 import { JourneyStages } from '../components/JourneyStages';
 import { GamingSignpost } from '../components/GamingSignpost';
@@ -21,7 +22,9 @@ const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
 export const IntroPhase: React.FC<{
   resumeTarget: AppPhase | null;
   memoriesCount: number;
+  googleStatus: GoogleAuthStatus;
   googleUser: GoogleUser | null;
+  onGoogleSignIn: () => void;
   spotifyStatus: SpotifyAuthStatus;
   spotifyUser: SpotifyUser | null;
   onSpotifySignIn: () => void;
@@ -39,7 +42,8 @@ type IntroProps = React.ComponentProps<typeof IntroPhase>;
 
 const ClassicIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount,
-  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName, ...rest
+  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName,
+  googleStatus, googleUser, onGoogleSignIn, ...rest
 }) => (
   <div className="flex flex-col items-center py-6 md:py-10 text-center animate-fadeIn">
     {/* The living room comes first in every design (components/LivingRoom.tsx). */}
@@ -62,6 +66,8 @@ const ClassicIntro: React.FC<IntroProps> = ({
           {tr('Start the time travel', 'Zeitreise starten')}
         </button>
       )}
+
+      {!resumeTarget && <GoogleStartLogin warm={false} status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />}
 
       {!resumeTarget && (
         <EraSpotlight warm={false} userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
@@ -87,6 +93,8 @@ const ClassicIntro: React.FC<IntroProps> = ({
         </div>
       )}
 
+      {resumeTarget && <GoogleStartLogin warm={false} status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />}
+
       {resumeTarget && (
         <JourneyStages
           warm={false}
@@ -109,22 +117,64 @@ const ClassicIntro: React.FC<IntroProps> = ({
   </div>
 );
 
-const IntroExtras: React.FC<Pick<IntroProps, 'googleUser' | 'spotifyStatus' | 'spotifyUser' | 'onSpotifySignIn'>> = ({
-  googleUser, spotifyStatus, spotifyUser, onSpotifySignIn,
+// The optional Google sign-in, right under the start button: before, it only
+// showed up at the bottom of the page (or behind the account button in Retro
+// Warm). Google's script still loads only once someone reaches for the
+// button (warmUpGoogle), unless they chose Google before (useGoogleAuth).
+const GoogleStartLogin: React.FC<{
+  warm: boolean;
+  status: GoogleAuthStatus;
+  user: GoogleUser | null;
+  onSignIn: () => void;
+}> = ({ warm, status, user, onSignIn }) => {
+  if (status === 'not_configured') return null;
+  const box = warm
+    ? 'mt-4 rounded-2xl bg-retro-cream px-4 py-3 text-sm'
+    : 'mb-8 border-2 border-retro-ink bg-white p-4 text-sm';
+  if (status === 'signed_in' && user) {
+    return (
+      <div className={box}>
+        <p className="font-bold">
+          {tr(
+            `☁️ Signed in as ${user.name} – your journey is backed up to your own Google Drive.`,
+            `☁️ Angemeldet als ${user.name} – deine Reise wird in deinem eigenen Google Drive gesichert.`
+          )}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className={`${box} flex flex-col items-center gap-2 text-center`}>
+      <p>
+        {tr(
+          '☁️ Optional: back up your journey to your own Google Drive and continue on any device.',
+          '☁️ Freiwillig: Sichere deine Reise in deinem eigenen Google Drive und mach auf jedem Gerät weiter.'
+        )}
+      </p>
+      <button
+        onClick={onSignIn}
+        // Google's script only loads once someone reaches for this button.
+        onPointerEnter={warmUpGoogle}
+        onPointerDown={warmUpGoogle}
+        onFocus={warmUpGoogle}
+        disabled={status === 'signing_in'}
+        className={`border-2 border-retro-ink px-5 py-2 font-bold bg-white disabled:opacity-60 ${warm ? 'rounded-full' : 'retro-button'}`}
+      >
+        {status === 'signing_in'
+          ? tr('Signing in …', 'Anmelden …')
+          : status === 'error'
+          ? tr('Sign in with Google again', 'Erneut mit Google anmelden')
+          : tr('Sign in with Google', 'Mit Google anmelden')}
+      </button>
+    </div>
+  );
+};
+
+const IntroExtras: React.FC<Pick<IntroProps, 'spotifyStatus' | 'spotifyUser' | 'onSpotifySignIn'>> = ({
+  spotifyStatus, spotifyUser, onSpotifySignIn,
 }) => (
   <>
       <GamingSignpost />
-
-      {googleUser && (
-        <div className="mb-4 border-2 border-retro-ink bg-white p-4">
-          <p className="font-bold">
-            {tr(
-              `☁️ Signed in as ${googleUser.name} – your journey is backed up to your own Google Drive.`,
-              `☁️ Angemeldet als ${googleUser.name} – deine Reise wird in deinem eigenen Google Drive gesichert.`
-            )}
-          </p>
-        </div>
-      )}
 
       {spotifyStatus !== 'not_configured' && (
         <div className="mb-8 border-2 border-retro-ink bg-white p-4">
@@ -198,7 +248,8 @@ const FEATURES = [
 
 const WarmIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount, onStart, onResume, onReset,
-  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName, ...rest
+  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName,
+  googleStatus, googleUser, onGoogleSignIn, ...rest
 }) => {
   const decades = Object.keys(DECADES_DB);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
@@ -261,6 +312,7 @@ const WarmIntro: React.FC<IntroProps> = ({
               <p className="text-sm text-retro-brown text-center mt-2">{tr('Free · Take all the time you like', 'Kostenlos · Ganz in Ruhe, so lange du magst')}</p>
             </>
           )}
+          <GoogleStartLogin warm status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />
         </div>
       </section>
 

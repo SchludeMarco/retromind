@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Google-Anmeldung auf der Startseite, Einstellungen immer oben rechts': {
+    title: 'Google sign-in on the start page, settings always top right',
+    text: '“Sign in with Google” now sits on the start page right under the start button, in all three designs. Before, Classic and Night Shift only offered it at the very bottom of the page, and Retro Warm behind the account icon. The settings gear in Classic and Night Shift now stays fixed in the top-right corner while you scroll instead of only appearing at the bottom. In every design the settings can already be opened on the name form, for example to switch the language.',
+  },
   'Kein Sprung nach oben beim Liedwechsel': {
     title: 'No more jumping to the top when the song changes',
     text: 'When the music moves on to the next song, open windows no longer jump back to the top. In the Zeitreise this happened in the settings and every other window (What’s new, feedback, rummage box, ticker info), in Gaming on the console shelf.',
