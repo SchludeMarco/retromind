@@ -7,6 +7,21 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Fakten & Geheimnisse zu jedem Spiel** (2026-10-13,
+  PR #PRNUM): Jede
+  Spieleseite hat einen neuen Reiter „Fakten & Geheimnisse“. Dort stehen ein
+  Steckbrief (wer das Spiel entwickelt, gestaltet und vertont hat, wann es
+  auf welcher Plattform erschien, Reihe, Vorgänger und Nachfolger,
+  Auszeichnungen, Verkaufszahlen, Alterseinstufungen), die Testwertungen von
+  damals, der ganze Wikipedia-Artikel in Kapiteln, mit den Geschichten hinter
+  dem Spiel (Entwicklung, Musik, Kontroversen, Versionen) ganz oben, und,
+  wo es sie gibt, herausgeschnittene Level, Debug-Menüs und versteckte
+  Botschaften, die Fans im Code gefunden haben. Dazu kommen direkte Links in
+  die passenden Spieledatenbanken. Alles stammt aus frei lizenzierten Quellen
+  (Wikidata, Wikipedia, The Cutting Room Floor) und steht mit Quelle und
+  Lizenz da. Der Reiter „Screenshots“ zeigt jetzt nur noch frei lizenzierte
+  Bilder von Wikimedia Commons, keine geschützten Screenshots und Cover mehr.
+
 - **Ramponierter Wegweiser** (2026-10-13, PR #190): Der Wegweiser zur
   Gaming-Zone sieht jetzt aus, als hätte er schon einige Schlachten hinter
   sich: ausgefranste Ränder, Schwerthiebe im Holz, eine verkohlte

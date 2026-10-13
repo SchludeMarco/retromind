@@ -14,6 +14,8 @@ const ALLOWED_HOSTS = [
   /^www\.transparenttextures\.com$/,
   // Wikidata's query service: games released on today's date (Gaming).
   /^query\.wikidata\.org$/,
+  // The Cutting Room Floor (CC BY 3.0): cut and hidden content of a game.
+  /^tcrf\.net$/,
 ];
 
 const ALLOWED_TYPES = /^(image\/|audio\/|application\/json|application\/problem\+json|application\/sparql-results\+json)/;

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Fakten & Geheimnisse zu jedem Spiel': {
+    title: 'Facts & secrets for every game',
+    text: 'Every game page has a new “Facts & secrets” tab. It has a fact sheet (who developed, designed and scored the game, when it came out on which platform, series, predecessor and sequel, awards, sales, age ratings), the review scores from back then, the whole Wikipedia article in chapters with the stories behind the game (development, music, controversies, versions) at the top, and, where they exist, cut levels, debug menus and hidden messages that fans found in the code. On top come direct links to the matching game databases. Everything comes from freely licensed sources (Wikidata, Wikipedia, The Cutting Room Floor) and is shown with its source and license. The “Screenshots” tab now only shows freely licensed images from Wikimedia Commons, no more protected screenshots or box art.',
+  },
   'Ramponierter Wegweiser': {
     title: 'Battle-worn signpost',
     text: 'The signpost to the gaming zone now looks like it has seen a few battles: frayed edges, blade cuts in the wood, a charred arrow tip with glowing embers and scorch marks. The dark outline around the metal letters has chipped off in many places.',

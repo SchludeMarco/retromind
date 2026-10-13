@@ -3523,3 +3523,68 @@ section:first-child > .media-head {
 .boxart .pxc-year {
   font-size: 11px;
 }
+
+/* Game page: facts & secrets tab (components/GameFacts.tsx). */
+.facts-sheet {
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) minmax(0, 1fr);
+  gap: 6px 14px;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.facts-sheet dt {
+  color: var(--a3);
+  font-weight: 700;
+}
+.facts-sheet dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 520px) {
+  .facts-sheet {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .facts-sheet dd {
+    margin-bottom: 8px;
+  }
+}
+.facts-reviews {
+  columns: 2 220px;
+}
+.dialog .panel .facts-reviews li {
+  break-inside: avoid;
+}
+.facts-chapter {
+  border-top: 2px solid var(--bg2);
+  padding: 6px 0;
+}
+.facts-chapter summary {
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--a2);
+  padding: 6px 0;
+}
+.facts-chapter[open] summary {
+  color: var(--a1);
+}
+.facts-chapter h4 {
+  font-size: 15px;
+  margin: 12px 0 4px;
+  color: var(--a3);
+}
+.facts-lang {
+  margin: 0 0 10px;
+}
+.dialog .panel p.facts-credit,
+.facts-credit {
+  font-size: 13px;
+  margin: 10px 0 0;
+}
+.arcade[data-palette='modul'] .facts-chapter summary {
+  font-size: 13px;
+}

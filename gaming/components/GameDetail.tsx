@@ -7,14 +7,16 @@ import { chip } from '../lib/chiptune';
 import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
 import { PixelCover } from './PixelCover';
+import { GameFactsTab } from './GameFacts';
 import { fetchVideos, formatViews, VideoKind, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
 
-type Tab = 'info' | 'videos' | 'media' | 'shots' | 'press' | 'guide' | 'web';
+type Tab = 'info' | 'facts' | 'videos' | 'media' | 'shots' | 'press' | 'guide' | 'web';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'info', label: 'INFO' },
+  { id: 'facts', label: tr('FACTS & SECRETS', 'FAKTEN & GEHEIMNISSE') },
   { id: 'videos', label: 'VIDEOS' },
   { id: 'media', label: tr('MUSIC & TV ADS', 'MUSIK & TV-WERBUNG') },
   { id: 'shots', label: 'SCREENSHOTS' },
@@ -379,6 +381,8 @@ export const GameDetail: React.FC<{
           </div>
         )}
 
+        {tab === 'facts' && <GameFactsTab game={game} />}
+
         {tab === 'videos' && (
           <div>
             {videos === undefined ? (
@@ -413,12 +417,12 @@ export const GameDetail: React.FC<{
                   ))}
                 </div>
                 <p className="dim" style={{ fontSize: 16 }}>
-                  {tr('Images from Wikipedia/Wikimedia. License and author are listed on each image page.', 'Bilder aus Wikipedia/Wikimedia. Lizenz und Urheber stehen auf der jeweiligen Bildseite.')}
+                  {tr('Only freely licensed images from Wikimedia Commons. License and author are listed on each image page.', 'Nur frei lizenzierte Bilder von Wikimedia Commons. Lizenz und Urheber stehen auf der jeweiligen Bildseite.')}
                 </p>
               </>
             ) : (
               <p className="dim">
-                {tr('No images around. Check “ON THE WEB” for longplays and screenshot collections.', 'Keine Bilder am Start. Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.')}
+                {tr('No freely licensed images around (screenshots usually belong to the game makers). Check “ON THE WEB” for longplays and screenshot collections.', 'Keine frei lizenzierten Bilder am Start (Screenshots gehören meist den Spielefirmen). Unter „IM WEB“ findest du Longplays und Screenshot-Sammlungen.')}
               </p>
             )}
           </div>
