@@ -10,9 +10,7 @@ import { GamingSignpost } from '../components/GamingSignpost';
 import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
-import { CozyRoom, DayTime, dayTime } from '../components/CozyRoom';
-import { WeatherSwitch } from '../components/WeatherSwitch';
-import { useWindowWeather } from '../lib/weather';
+import { LivingRoom } from '../components/LivingRoom';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -43,9 +41,18 @@ const ClassicIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount,
   onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName, ...rest
 }) => (
-  <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
+  <div className="flex flex-col items-center py-6 md:py-10 text-center animate-fadeIn">
+    {/* The living room comes first in every design (components/LivingRoom.tsx). */}
+    <LivingRoom
+      warm={false}
+      userName={userName}
+      resuming={!!resumeTarget}
+      onStart={onStart}
+      onResume={onResume}
+      onOpenStage={onOpenStage}
+    />
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
-      <h2 className="text-4xl mb-6">{tr('Welcome, time traveler', 'Willkommen, Zeitreisende:r')}</h2>
+      <h2 className="text-3xl mb-6">{tr('Welcome, time traveler', 'Willkommen, Zeitreisende:r')}</h2>
 
       {!resumeTarget && (
         <button
@@ -181,23 +188,6 @@ const IntroExtras: React.FC<Pick<IntroProps, 'googleUser' | 'spotifyStatus' | 's
   </>
 );
 
-// A greeting that knows the time of day, like someone at home who looks up
-// when you come in.
-function cozyGreeting(time: DayTime, userName: string): { title: string; line: string } {
-  const name = userName.trim();
-  const n = name ? `, ${name}` : '';
-  switch (time) {
-    case 'morning':
-      return { title: tr(`Good morning${n}`, `Guten Morgen${n}`), line: tr('The coffee is fresh, have a seat.', 'Der Kaffee ist frisch, setz dich zu uns.') };
-    case 'day':
-      return { title: tr(`How lovely you’re here${n}`, `Schön, dass du da bist${n}`), line: tr('Make yourself at home, the tea is steeping.', 'Mach es dir gemütlich, der Tee zieht schon.') };
-    case 'evening':
-      return { title: tr(`Good evening${n}`, `Guten Abend${n}`), line: tr('The lamp is on and the couch is warm.', 'Die Lampe brennt und die Couch ist warm.') };
-    default:
-      return { title: tr(`Still up${n}?`, `Noch wach${n}?`), line: tr('Snuggle in, the lamp is still on for you.', 'Kuschel dich ein, die Lampe brennt noch für dich.') };
-  }
-}
-
 // "Retro Warm" start page, after the Google Stitch mock-up: welcome card with
 // what the journey offers, a decade overview and a strip of archive finds.
 const FEATURES = [
@@ -211,9 +201,6 @@ const WarmIntro: React.FC<IntroProps> = ({
   focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName, ...rest
 }) => {
   const decades = Object.keys(DECADES_DB);
-  const time = dayTime();
-  const weather = useWindowWeather();
-  const greeting = cozyGreeting(time, userName);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
   const shown = DECADES_DB[shownDecade];
   const finds = Object.values(DECADES_DB)
@@ -223,15 +210,16 @@ const WarmIntro: React.FC<IntroProps> = ({
   return (
     <div className="max-w-2xl mx-auto space-y-6 pb-4 animate-fadeIn">
       <section className="retro-card bg-retro-paper-white p-4 md:p-6">
-        {/* The living room everyone sits down in first (components/CozyRoom.tsx). */}
-        <div className="cozy-frame rounded-xl overflow-hidden mb-5">
-          <CozyRoom time={time} weather={weather} />
-        </div>
-        <WeatherSwitch />
+        {/* The living room everyone sits down in first (components/LivingRoom.tsx). */}
+        <LivingRoom
+          warm
+          userName={userName}
+          resuming={!!resumeTarget}
+          onStart={onStart}
+          onResume={onResume}
+          onOpenStage={onOpenStage}
+        />
         <div className="px-2">
-          <span className="block text-xs font-semibold uppercase tracking-wider text-retro-amber-dark">{tr('Memory journey', 'Erinnerungsreise')}</span>
-          <h2 className="text-2xl md:text-3xl mt-1 mb-1">{greeting.title}</h2>
-          <p className="text-lg italic text-retro-brown mb-4">{greeting.line}</p>
           <p className="text-lg leading-relaxed mb-5">
             {tr(
               'Grab a blanket, lean back and leaf through the decades of your childhood and youth with us. We’ll chat about the old days, find long-lost favorite things again and keep your loveliest moments in a memory book.',

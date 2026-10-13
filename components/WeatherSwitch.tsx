@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { tr } from '../lib/i18n';
 import { PRIVACY_URL } from '../lib/privacy';
 import { findPlace, locate, setWeatherPlace, useWeatherPlace } from '../lib/weather';
@@ -6,9 +6,17 @@ import { findPlace, locate, setWeatherPlace, useWeatherPlace } from '../lib/weat
 // The small line under the living room that switches the real weather in its
 // window on and off (lib/weather.ts). Nothing is asked or sent until the
 // person picks one of the two ways to give a place.
-export const WeatherSwitch: React.FC = () => {
+// `openSignal` opens it from outside: tapping the window in the room counts up.
+export const WeatherSwitch: React.FC<{ openSignal?: number }> = ({ openSignal = 0 }) => {
   const place = useWeatherPlace();
   const [open, setOpen] = useState(false);
+  const panel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (openSignal > 0) setOpen(true);
+  }, [openSignal]);
+  useEffect(() => {
+    if (open && openSignal > 0) panel.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [open, openSignal]);
   const [query, setQuery] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -83,7 +91,7 @@ export const WeatherSwitch: React.FC = () => {
   }
 
   return (
-    <div className="rounded-xl bg-retro-cream p-4 mb-5 text-left">
+    <div ref={panel} className="rounded-xl bg-retro-cream p-4 mb-5 text-left">
       <p className="font-semibold mb-1">{tr('Rain, snow or sunshine, like outside your door', 'Regen, Schnee oder Sonne, wie vor deiner Tür')}</p>
       <p className="text-sm text-retro-brown mb-3">
         {tr(

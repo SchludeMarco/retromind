@@ -32,6 +32,14 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die Stube zum Anfassen, in jedem Design': {
+    title: 'A living room you can touch, in every design',
+    text: 'The drawn living room now sits at the top of the start page in every design, Classic and Night Shift too (before, only Retro Warm had it). And everything in it can be tapped: the old tube TV with its test pattern in the corner starts the time travel (or continues it), the floor lamp clicks on and off, the wood stove can be lit and left to go out, the cat wakes up when you stroke it, purrs and sends up little hearts, and the window opens the real weather. Once you have started a journey, the picture on the wall takes you to your decades and the stack of books to your memory book. Every touch makes a little sound, and on a phone you feel a short buzz in your hand. While the stove burns, you can hear it crackle and pop softly (only with sound on). The potted plant has moved to the windowsill.',
+  },
+  'Mehr zu jedem Spruch im Laufband': {
+    title: 'More about every saying in the ticker',
+    text: 'Tap a saying in the ticker and a card opens with more about it, for example where “Don’t have a cow, man!” comes from or why people waited in line for gas on odd and even days. From there you can put it straight into the Grabbelkiste, and the Grabbelkiste shows the explanation too.',
+  },
   'Echtes Wetter im Stubenfenster': {
     title: 'Real weather in the living-room window',
     text: 'Below the drawn living room you can now switch on “Show your real weather in the window”. Then it rains in the window when it rains where you are, it snows (with snow on the windowsill and white hills), lightning flashes in a thunderstorm, fog makes it hazy and clouds drift by. You either use your rough location or type in your town. The place is rounded to about 10 km and stays on your device, and our server gets the weather from the free weather service Open-Meteo. If you don’t switch it on, the window stays as before, and “Turn off” deletes the place again. The privacy policy has been updated.',
