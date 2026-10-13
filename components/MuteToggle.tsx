@@ -5,8 +5,9 @@ import { tr } from '../lib/i18n';
 // The app-wide speaker switch (see lib/mute): silences the boot chime,
 // welcome voice, click sounds, Spotify and videos. Drawn as an SVG, since
 // many phone fonts lack the 🔇 glyph. Sits above the boot overlay and the
-// splash screen so sound can be switched off before the first note.
-export const MuteToggle: React.FC = () => {
+// splash screen so sound can be switched off before the first note. In the
+// Classic and Night Shift designs it moves aside for the settings button.
+export const MuteToggle: React.FC<{ besideSettings?: boolean }> = ({ besideSettings = false }) => {
   const muted = useMuted();
   const label = muted ? tr('Turn sound on', 'Ton einschalten') : tr('Mute', 'Stummschalten');
   return (
@@ -15,7 +16,7 @@ export const MuteToggle: React.FC = () => {
       aria-pressed={muted}
       aria-label={label}
       title={label}
-      className="rm-fixed fixed top-3 right-4 md:right-10 z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-retro-ink"
+      className={`rm-fixed fixed top-3 ${besideSettings ? 'right-16 md:right-[5.5rem]' : 'right-4 md:right-10'} z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-retro-ink`}
     >
       <svg viewBox="0 0 16 16" className="w-5 h-5" fill="currentColor" aria-hidden="true">
         <path d="M1 6h3l4-4h1v12H8l-4-4H1z" />

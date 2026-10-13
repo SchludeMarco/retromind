@@ -129,9 +129,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
-  mitten in der unteren Leiste, in den anderen Designs ganz unten links neben
-  dem Einstellungen-Knopf ⚙️ (wie dieser erst, wenn man ganz nach unten
-  scrollt). Solange Musik läuft, leuchtet es gelb. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
+  mitten in der unteren Leiste, in den anderen Designs ganz unten rechts
+  (erst, wenn man ganz nach unten scrollt). Solange Musik läuft, leuchtet es gelb. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
   Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
   Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
   Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
@@ -155,7 +154,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   freigegeben, sonst aus der Drive-Sicherung);
   ändern lässt es sich in den Einstellungen unter „Deine Angaben“. Ohne Google
   fragt die App beim ersten Mal; danach bleiben die Angaben auf dem Gerät und
-  die Abfrage entfällt bei jedem weiteren Besuch.
+  die Abfrage entfällt bei jedem weiteren Besuch. Der Knopf „Mit Google
+  anmelden“ steht auf der Startseite direkt unter „Zeitreise starten“ (bzw.
+  unter „Weitermachen“), in allen Designs; Googles Skript lädt erst, wenn man
+  nach dem Knopf greift.
+- **Einstellungen immer oben rechts** – das Zahnrad ⚙️ sitzt in allen Designs
+  fest oben rechts in der Ecke, bleibt beim Scrollen stehen und ist schon auf
+  dem Namensformular erreichbar (z. B. um die Sprache umzustellen).
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Mit **Spotify Premium** läuft die Musik

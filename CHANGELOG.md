@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Google-Anmeldung auf der Startseite, Einstellungen immer oben rechts**
+  (2026-10-13, PR #PRNUM): „Mit Google anmelden“ steht jetzt auf der
+  Startseite direkt unter dem Startknopf, in allen drei Designs. Bisher kam
+  man in „Klassisch“ und „Nachtschicht“ erst ganz unten auf der Seite daran,
+  in „Retro Warm“ nur über das Konto-Symbol. Das Zahnrad für die
+  Einstellungen sitzt in „Klassisch“ und „Nachtschicht“ jetzt fest oben
+  rechts und bleibt beim Scrollen sichtbar, statt erst ganz unten
+  aufzutauchen. In allen Designs erreicht man die Einstellungen schon auf dem
+  Namensformular, etwa um die Sprache umzustellen.
+
 - **Kein Sprung nach oben beim Liedwechsel** (2026-10-13, PR #199): Wenn
   die Musik zum nächsten Lied wechselt, springen offene Fenster nicht mehr
   an den Anfang zurück. In der Zeitreise passierte das in den
