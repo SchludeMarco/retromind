@@ -7,15 +7,12 @@ import {
   ArticleSection,
   fetchArticle,
   fetchFacts,
-  fetchTcrf,
   GameFacts as Facts,
-  TcrfPage,
 } from '../lib/facts';
 import { isGerman, tr } from '../../lib/i18n';
 
 // The "FACTS & SECRETS" tab of the game page: fact sheet (Wikidata), the
-// stories behind the game (Wikipedia), cut and hidden content (The Cutting
-// Room Floor) and direct database links. See lib/facts.ts for the sources.
+// stories behind the game (Wikipedia) and direct database links. See lib/facts.ts for the sources.
 
 const Paragraphs: React.FC<{ text: string }> = ({ text }) => (
   <>
@@ -64,20 +61,13 @@ export const GameFactsTab: React.FC<{ game: Game }> = ({ game }) => {
   const [langs, setLangs] = useState<('de' | 'en')[]>([]);
   const [lang, setLang] = useState<'de' | 'en'>(isGerman ? 'de' : 'en');
   const [article, setArticle] = useState<Article | null | undefined>(undefined);
-  const [tcrf, setTcrf] = useState<TcrfPage | null | undefined>(undefined);
 
   useEffect(() => {
     let alive = true;
     setFacts(undefined);
-    setTcrf(undefined);
     setLangs([]);
     setLang(isGerman ? 'de' : 'en');
-    fetchFacts(game.wiki).then((f) => {
-      if (!alive) return;
-      setFacts(f);
-      if (f?.tcrf) fetchTcrf(f.tcrf).then((t) => alive && setTcrf(t));
-      else setTcrf(null);
-    });
+    fetchFacts(game.wiki).then((f) => alive && setFacts(f));
     articleLanguages(game.wiki).then((l) => {
       if (!alive) return;
       setLangs(l);
@@ -209,39 +199,6 @@ export const GameFactsTab: React.FC<{ game: Game }> = ({ game }) => {
           <p className="dim">{tr('No Wikipedia article with more chapters found.', 'Kein Wikipedia-Artikel mit weiteren Kapiteln gefunden.')}</p>
         )}
       </div>
-
-      {tcrf && (
-        <div className="panel">
-          <h3 className="pixel-font">{tr('CUT & HIDDEN CONTENT', 'HERAUSGESCHNITTEN & VERSTECKT')}</h3>
-          <p className="dim" style={{ marginTop: 0 }}>
-            {tr(
-              'Unused levels, debug menus, developer messages: what fans found in the game’s code.',
-              'Unbenutzte Level, Debug-Menüs, Botschaften der Entwickler: was Fans im Code des Spiels gefunden haben. Der Text ist auf Englisch.'
-            )}
-          </p>
-          {tcrf.sections.map((s, i) => (
-            <details key={`${s.title}-${i}`} className="facts-chapter" open={i < 2}>
-              <summary data-nav>{s.title}</summary>
-              <Paragraphs text={s.text} />
-            </details>
-          ))}
-          <Credit>
-            {tr('Text:', 'Text:')}{' '}
-            <a href={tcrf.url} target="_blank" rel="noreferrer">
-              The Cutting Room Floor, {tr('“', '„')}{tcrf.title}{tr('”', '“')}
-            </a>
-            ,{' '}
-            <a href={tcrf.historyUrl} target="_blank" rel="noreferrer">
-              {tr('authors', 'Autoren')}
-            </a>
-            ,{' '}
-            <a href="https://creativecommons.org/licenses/by/3.0/deed.de" target="_blank" rel="noreferrer">
-              CC BY 3.0
-            </a>
-            . {tr('Text only, without the images.', 'Nur der Text, ohne die Bilder.')}
-          </Credit>
-        </div>
-      )}
 
       {!!facts?.links.length && (
         <>

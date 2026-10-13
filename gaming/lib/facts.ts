@@ -3,13 +3,13 @@ import { isGerman, LOCALE, tr } from '../../lib/i18n';
 
 // "Facts & secrets" on the game page: everything we may show and pass on,
 // all fetched through our own server (/api/proxy), so the visitor's browser
-// never contacts Wikipedia, Wikidata or The Cutting Room Floor directly.
+// never contacts Wikipedia or Wikidata directly.
 //
 //  - Fact sheet and old review scores from Wikidata (CC0, public domain).
 //  - The full Wikipedia article split into its sections (CC BY-SA 4.0).
-//  - Unused and hidden content from The Cutting Room Floor (tcrf.net,
-//    CC BY 3.0), text only: its screenshots belong to the game makers.
-//  - Direct links into game databases, as listed on Wikidata.
+//  - Direct links into game databases, as listed on Wikidata (among them
+//    The Cutting Room Floor for cut and hidden content; its server refuses
+//    our requests, so its text can't be shown here).
 //
 // Every block names its source, license and a link to the authors.
 
@@ -36,8 +36,6 @@ export interface GameFacts {
   rows: FactRow[];
   reviews: ReviewScore[];
   links: DbLink[];
-  /** Page name on tcrf.net, if Wikidata knows one. */
-  tcrf?: string;
 }
 
 export interface ArticleSection {
@@ -55,13 +53,6 @@ export interface Article {
   historyUrl: string;
   intro: string;
   sections: ArticleSection[];
-}
-
-export interface TcrfPage {
-  title: string;
-  url: string;
-  historyUrl: string;
-  sections: { title: string; text: string }[];
 }
 
 async function getJson(url: string): Promise<any | null> {
@@ -189,7 +180,7 @@ function formatDate(iso: string, precision: number): string {
   return date.toLocaleDateString(LOCALE, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 }
 
-async function factSheet(qid: string): Promise<Omit<GameFacts, 'qid' | 'links' | 'tcrf'>> {
+async function factSheet(qid: string): Promise<Omit<GameFacts, 'qid' | 'links'>> {
   const values = PROPS.map(([p]) => `("${p}" p:${p} ps:${p} psv:${p})`).join(' ');
   const langs = isGerman ? "de,mul,en" : "en,mul,de";
   const data = await sparql(`SELECT ?pid ?v ?vLabel ?prec ?platLabel ?byLabel ?placeLabel WHERE {
@@ -246,7 +237,7 @@ async function factSheet(qid: string): Promise<Omit<GameFacts, 'qid' | 'links' |
   return { rows, reviews };
 }
 
-async function dbLinks(qid: string): Promise<{ links: DbLink[]; tcrf?: string }> {
+async function dbLinks(qid: string): Promise<DbLink[]> {
   const values = DB_PROPS.map(([p]) => `wd:${p}`).join(' ');
   const data = await sparql(`SELECT ?prop ?id ?fmt WHERE {
   VALUES ?prop { ${values} }
@@ -268,15 +259,15 @@ async function dbLinks(qid: string): Promise<{ links: DbLink[]; tcrf?: string }>
     if (!/^https?:\/\//.test(url)) continue;
     links.push({ name, url, text: tr(en, de) });
   }
-  return { links, tcrf: found.get('P8607')?.id };
+  return links;
 }
 
 /** Fact sheet, review scores and database links for a game (Wikidata, CC0). */
 export const fetchFacts = memo(async (enTitle: string): Promise<GameFacts | null> => {
   const { qid } = await pageInfo(enTitle);
   if (!qid) return null;
-  const [sheet, db] = await Promise.all([factSheet(qid), dbLinks(qid)]);
-  return { qid, ...sheet, ...db };
+  const [sheet, links] = await Promise.all([factSheet(qid), dbLinks(qid)]);
+  return { qid, ...sheet, links };
 });
 
 // --- Wikipedia article in sections -------------------------------------------
@@ -360,58 +351,3 @@ export const fetchArticle = memo(async (key: string): Promise<Article | null> =>
 });
 
 export const articleKey = (lang: 'de' | 'en', enTitle: string) => `${lang}:${enTitle}`;
-
-// --- The Cutting Room Floor --------------------------------------------------
-
-/** Text of a tcrf.net page by section; images, tables and galleries are left out. */
-export const fetchTcrf = memo(async (page: string): Promise<TcrfPage | null> => {
-  const q = new URLSearchParams({
-    action: 'parse',
-    page: page.replace(/_/g, ' '),
-    prop: 'text',
-    redirects: '1',
-    disableeditsection: '1',
-    disabletoc: '1',
-    format: 'json',
-    formatversion: '2',
-  });
-  const data = await getJson(`https://tcrf.net/api.php?${q}`);
-  const html: string | undefined = data?.parse?.text;
-  if (!html || typeof DOMParser === 'undefined') return null;
-  // DOMParser builds an inert document: no scripts run, no images load.
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  doc.querySelectorAll('table, .gallery, .thumb, figure, img, style, script, sup.reference, .mw-references-wrap, .references, .noprint, .mw-empty-elt').forEach((el) => el.remove());
-  const root = doc.querySelector('.mw-parser-output') ?? doc.body;
-  const sections: { title: string; text: string }[] = [];
-  let current = { title: '', text: '' };
-  const flush = () => {
-    const text = current.text.replace(/\n{3,}/g, '\n\n').trim();
-    if (text && !/^(references|see also|external links)$/i.test(current.title)) sections.push({ title: current.title, text });
-  };
-  for (const el of Array.from(root.children)) {
-    const tag = el.tagName.toLowerCase();
-    const heading = /^h[2-4]$/.test(tag) ? el : el.classList.contains('mw-heading') ? el.querySelector('h2, h3, h4') : null;
-    if (heading) {
-      flush();
-      current = { title: (heading.textContent ?? '').trim(), text: '' };
-      continue;
-    }
-    if (tag === 'p' || tag === 'pre' || tag === 'blockquote') current.text += `${(el.textContent ?? '').trim()}\n\n`;
-    else if (tag === 'ul' || tag === 'ol' || tag === 'dl')
-      current.text += `${Array.from(el.querySelectorAll('li, dd, dt'))
-        .map((li) => `• ${(li.textContent ?? '').trim()}`)
-        .join('\n')}\n\n`;
-  }
-  flush();
-  // The intro is the infobox caption and "To do" notes; real finds have headings.
-  const finds = sections.filter((s) => s.title && !/^to ?do/i.test(s.title));
-  if (!finds.length) return null;
-  const title = (data.parse.title as string) ?? page.replace(/_/g, ' ');
-  const slug = encodeURIComponent(title.replace(/ /g, '_'));
-  return {
-    title,
-    url: `https://tcrf.net/${slug}`,
-    historyUrl: `https://tcrf.net/index.php?title=${slug}&action=history`,
-    sections: finds,
-  };
-});

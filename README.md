@@ -286,9 +286,9 @@ Nachfolger, Auszeichnungen, Verkaufszahlen, USK/PEGI/ESRB) mit den
 Testwertungen von damals, den ganzen Wikipedia-Artikel in Kapiteln
 (CC BY-SA 4.0, deutsch oder englisch umschaltbar; Entwicklung, Musik,
 Kontroversen, Versionen und Ähnliches sind mit ★ markiert und stehen oben),
-herausgeschnittene und versteckte Inhalte von The Cutting Room Floor
-(CC BY 3.0, nur Text) und direkte Links in die Spieledatenbanken, die Wikidata
-kennt (MobyGames, Kultboy, Lemon64, Hall of Light, VGMdb …). Alles läuft über
+und direkte Links in die Spieledatenbanken, die Wikidata kennt (The Cutting
+Room Floor für herausgeschnittene und versteckte Inhalte, MobyGames, Kultboy,
+Lemon64, Hall of Light, VGMdb …). Alles läuft über
 `api/proxy.js`, der Browser hat keinen Kontakt zu den Quellen. Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
@@ -613,6 +613,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
+- **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
+  dort stehen unter CC BY 3.0 und passen perfekt zu „Fakten & Geheimnisse“
+  (unbenutzte Level, Debug-Menüs, Botschaften der Entwickler). Der Server von
+  tcrf.net lässt unseren Abruf aber nicht durch; dafür bräuchte es eine
+  Freigabe der Betreiber. Bis dahin gibt es nur den Link.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
