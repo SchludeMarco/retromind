@@ -43,10 +43,16 @@ import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './
 import { toggleMuted, useMuted } from './lib/mute';
 import { DECADES_DB, INTEREST_LABELS } from './constants';
 import { tr } from './lib/i18n';
+import { readPage, writePage } from './lib/pageMemory';
 import { findTrack, useAutoTheme, useSpotifyApi } from './lib/spotifyApi';
 
+// Where this tab was before a reload: the open page and whether the welcome screen was passed.
+const PAGE_KEY = 'retromind.page';
+type OpenPage = { phase: AppPhase; splashDone: boolean };
+
 const App: React.FC = () => {
-  const session = useRetroSession();
+  const reloaded = useMemo(() => readPage<OpenPage>(PAGE_KEY), []);
+  const session = useRetroSession(reloaded?.phase);
   const {
     phase, setPhase,
     resumeTarget, setResumeTarget,
@@ -62,8 +68,9 @@ const App: React.FC = () => {
 
   const currentAudioDecade = manualDecade || focusDecade;
   const { sfxRef, playSFX } = useAudioPlayer();
-  // The welcome screen sits on top of everything on each fresh load; music waits until it is gone.
-  const [showSplash, setShowSplash] = useState(true);
+  // The welcome screen sits on top of everything on each fresh visit (a reload
+  // keeps the page that was open); music waits until it is gone.
+  const [showSplash, setShowSplash] = useState(!reloaded?.splashDone);
   // Music starts the moment the main menu shows through the white-out, not
   // after the splash is fully gone (the browser only allows audio shortly
   // after the start button press).
@@ -201,6 +208,10 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleAuth.status, remoteChecked, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
+
+  useEffect(() => {
+    writePage(PAGE_KEY, { phase, splashDone: !showSplash } satisfies OpenPage);
+  }, [phase, showSplash]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
