@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gemütliche Stube': {
+    title: 'A cozy living room',
+    text: 'In the Retro Warm design, the time travel now feels like an evening on a warm couch. At the top of the start page sits a drawn living room: a caramel sofa with a crocheted blanket, a fringed floor lamp that glows softly, a steaming cup of tea and a cat asleep on the rug that twitches its tail now and then. Outside the window it’s the real time of day: the sun in the morning, the sunset in the evening, moon and stars at night, and in the evening the room gets dim and the lamp warmer. RetroMind also greets you by name to suit the hour (“Good evening, Marco. The lamp is on and the couch is warm.”). The background is a delicate wallpaper with warm lamplight from the corner, the cards are made of thick paper, and a wooden rail runs along the top and bottom. The texts are warmer too, like “Come on in, make yourself at home” on the name form. If you have turned off motion, the room stays still. The type stays large and easy to read.',
+  },
   'Hallenmusik hört nie mehr auf': {
     title: 'The arcade music never stops',
     text: 'The music in the gaming hall could suddenly go quiet, for example when Spotify hung, an ad blocker slowed Spotify down, the browser didn’t let the next song start, or the phone put the sound to sleep when the screen locked. Now a watchdog keeps an eye on it: if Spotify stays silent for a few seconds, another song comes first, and if that doesn’t work either, the hall’s own music keeps playing right away. Every two minutes (or when you tap Next in the music player) the hall tries Spotify again. If the metal intro hangs, it moves on after a minute at the latest, and the sound wakes up by itself after you unlock your phone. Your own pause, the mute switch and “Music off” still count.',

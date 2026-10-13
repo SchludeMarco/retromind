@@ -37,6 +37,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Zeitreise
 
+- **Gemütliche Stube** – im Standarddesign Retro Warm empfängt dich oben auf
+  der Startseite eine gezeichnete Stube (Couch mit Häkeldecke, leuchtende
+  Stehlampe, dampfender Tee, schlafende Katze), deren Fenster die echte
+  Tageszeit zeigt, dazu eine Begrüßung mit Namen passend zur Uhrzeit,
+  Tapeten-Hintergrund mit warmem Lampenlicht, Papierkarten und Holzleisten
+  ([`components/CozyRoom.tsx`](components/CozyRoom.tsx)).
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
 - **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
@@ -624,6 +630,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Mehr Stube auf den anderen Seiten:** Kleine Stuben-Details auch in den
+  Reise-Stationen, etwa ein Fernseher bei den Eindrücken, ein Plattenspieler
+  bei der Musik oder ein Sessel neben dem Tagebuch.
 
 - **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
   dort stehen unter CC BY 3.0 und passen perfekt zu „Fakten & Geheimnisse“

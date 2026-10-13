@@ -7,6 +7,21 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gemütliche Stube** (2026-10-13, PR #194): Im Design Retro Warm fühlt sich
+  die Zeitreise jetzt an wie ein Abend auf der warmen Couch. Ganz oben auf der
+  Startseite sitzt eine gezeichnete Stube: Karamell-Sofa mit Häkeldecke,
+  Stehlampe mit Fransen, die sanft leuchtet, eine Tasse Tee, die dampft, und
+  eine Katze, die auf dem Teppich schläft und ab und zu mit dem Schwanz zuckt.
+  Draußen vor dem Fenster ist die echte Tageszeit: morgens die Sonne, abends
+  der Sonnenuntergang, nachts Mond und Sterne, und abends wird es in der Stube
+  dämmrig und die Lampe wärmer. Dazu begrüßt dich RetroMind passend zur Uhrzeit
+  mit deinem Namen („Guten Abend, Marco – die Lampe brennt und die Couch ist
+  warm“). Der Hintergrund ist eine zarte Tapete mit warmem Lampenlicht aus der
+  Ecke, die Karten sind aus griffigem Papier, und oben und unten schließt eine
+  Holzleiste ab. Auch die Texte sind wärmer geworden, etwa „Komm rein, mach es
+  dir gemütlich“ beim Namensformular. Wer Bewegung abgeschaltet hat, sieht die
+  Stube still. Die Schrift bleibt groß und gut lesbar.
+
 - **Hallenmusik hört nie mehr auf** (2026-10-13, PR #193): In der
   Gaming-Halle konnte die Musik plötzlich verstummen, etwa wenn Spotify hing,
   ein Werbeblocker Spotify ausbremste, der Browser den nächsten Song nicht

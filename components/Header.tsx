@@ -34,6 +34,6 @@ export const Header: React.FC<{ compact?: boolean }> = ({ compact = false }) =>
       />
     </h1>
     <p className="text-lg italic text-retro-brown mt-3">{tr('… welcome back to the past', '… willkommen zurück in der Vergangenheit')}</p>
-    <div className="w-32 h-1 bg-retro-ink mx-auto mt-4" />
+    <div className="rm-header-rule w-32 h-1 bg-retro-ink mx-auto mt-4" />
   </header>
 );

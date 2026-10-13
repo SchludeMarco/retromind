@@ -141,7 +141,7 @@ export const WarmTopBar: React.FC<{
 }> = ({ phase, showActions, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
   const muted = useMuted();
   return (
-    <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
+    <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8 h-16 flex items-center gap-1.5 sm:gap-3">
         <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-8 sm:w-9 h-auto flex-shrink-0" />
         <div className="leading-tight min-w-0 flex-grow overflow-hidden max-[479px]:invisible">
@@ -192,6 +192,7 @@ export const WarmTopBar: React.FC<{
           </>
         )}
       </div>
+      <div aria-hidden="true" className="rm-wood-rail" />
     </header>
   );
 };
@@ -213,8 +214,9 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
 }) => (
   <nav
     aria-label={tr('Main navigation', 'Hauptnavigation')}
-    className="rm-fixed fixed bottom-0 inset-x-0 z-[60] bg-retro-paper-white/95 backdrop-blur border-t border-[#e6dac8] pb-[env(safe-area-inset-bottom)]"
+    className="rm-fixed fixed bottom-0 inset-x-0 z-[60] bg-retro-paper-white/95 backdrop-blur pb-[env(safe-area-inset-bottom)]"
   >
+    <div aria-hidden="true" className="rm-wood-rail" />
     <div className={`max-w-xl mx-auto grid ${center ? 'grid-cols-[1fr_1fr_auto_1fr_1fr]' : 'grid-cols-4'}`}>
       {NAV.flatMap((item, i) => {
         const active = item.phases.includes(phase);
