@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Google-Anmeldung auf der Startseite, Einstellungen immer oben rechts**
-  (2026-10-13, PR #PRNUM): „Mit Google anmelden“ steht jetzt auf der
+  (2026-10-13, PR #200): „Mit Google anmelden“ steht jetzt auf der
   Startseite direkt unter dem Startknopf, in allen drei Designs. Bisher kam
   man in „Klassisch“ und „Nachtschicht“ erst ganz unten auf der Seite daran,
   in „Retro Warm“ nur über das Konto-Symbol. Das Zahnrad für die
