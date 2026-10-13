@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { WeatherKind } from '../lib/weather';
+import { useMuted } from '../lib/mute';
+import { tr } from '../lib/i18n';
+import { playClick, playCrackle, playPurr, playTvOn, setFireSound, tapFeel } from '../lib/roomSounds';
 
 // The "Stube" at the top of the Retro Warm start page (Marco, 2026-10-13:
 // "man soll sich direkt wie Zuhause auf der warmen Couch in der warmen Stube
@@ -8,8 +11,15 @@ import type { WeatherKind } from '../lib/weather';
 // that burns in the evening and a cat asleep on the rug. The window shows the
 // real time of day, so in the evening the sun sets outside and at night the
 // moon is up; with the real weather switched on (lib/weather.ts) it also
-// rains, snows, storms or gets foggy out there. Purely decorative; the gentle
-// animations stop for people who ask for reduced motion (index.css).
+// rains, snows, storms or gets foggy out there. The gentle animations stop
+// for people who ask for reduced motion (index.css).
+//
+// Since Marco's "größeres Update in Haptik und Optik" the room is the start
+// page in every design and can be touched: the old TV starts the journey,
+// the lamp clicks on and off, the stove can be lit (and then crackles), the
+// cat purrs, the window opens the real weather, and the picture and the
+// books lead to the journey's stations. Each touch gives a little sound
+// (lib/roomSounds.ts) and, on phones that can, a short buzz.
 
 export type DayTime = 'morning' | 'day' | 'evening' | 'night';
 
@@ -57,21 +67,125 @@ const WindowWeather: React.FC<{ kind: WeatherKind; lit: boolean }> = ({ kind, li
   </g>
 );
 
-export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; className?: string }> = ({
-  time = dayTime(),
-  weather = null,
-  className = '',
-}) => {
+type Box = [x: number, y: number, w: number, h: number];
+
+// Something in the room that can be touched: a button for the keyboard and
+// screen readers too, with a dashed outline on hover and keyboard focus.
+const Hot: React.FC<{
+  on: boolean;
+  label: string;
+  onAct: () => void;
+  box: Box;
+  extra?: Box;
+  hint?: boolean;
+  children: React.ReactNode;
+}> = ({ on, label, onAct, box, extra, hint = false, children }) => {
+  if (!on) return <g>{children}</g>;
+  const [x, y, w, h] = box;
+  const act = () => {
+    tapFeel();
+    onAct();
+  };
+  return (
+    <g
+      className="cozy-hot"
+      role="button"
+      tabIndex={0}
+      aria-label={label}
+      onClick={act}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          act();
+        }
+      }}
+    >
+      {children}
+      <rect x={x} y={y} width={w} height={h} fill="transparent" />
+      {extra && <rect x={extra[0]} y={extra[1]} width={extra[2]} height={extra[3]} fill="transparent" />}
+      <rect className={`cozy-hot-ring ${hint ? 'is-hint' : ''}`} x={x} y={y} width={w} height={h} rx="6" fill="none" />
+    </g>
+  );
+};
+
+export interface RoomActions {
+  /** The TV: starts (or continues) the journey. */
+  onTv?: () => void;
+  onWindow?: () => void;
+  onPicture?: () => void;
+  onBooks?: () => void;
+}
+
+export const CozyRoom: React.FC<{
+  time?: DayTime;
+  weather?: WeatherKind | null;
+  className?: string;
+  /** Makes the things in the room touchable. */
+  interactive?: boolean;
+  actions?: RoomActions;
+  /** Read out for the TV, e.g. "Start the time travel". */
+  tvLabel?: string;
+}> = ({ time = dayTime(), weather = null, className = '', interactive = false, actions = {}, tvLabel }) => {
   const [skyTop, skyBottom] = SKY[time];
-  const lit = time === 'evening' || time === 'night';
+  const evening = time === 'evening' || time === 'night';
+  const [lampOn, setLampOn] = useState(true);
+  const [fireOn, setFireOn] = useState(evening);
+  const [petted, setPetted] = useState(0);
+  const [tvOn, setTvOn] = useState(false);
+  const [wobble, setWobble] = useState<'' | 'picture' | 'books'>('');
+  const timers = useRef<number[]>([]);
+  const muted = useMuted();
+  const later = (fn: () => void, ms: number) => {
+    timers.current.push(window.setTimeout(fn, ms));
+  };
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+
+  // A burning stove crackles quietly, as long as sound is on.
+  useEffect(() => {
+    setFireSound(interactive && fireOn && !muted);
+    return () => setFireSound(false);
+  }, [interactive, fireOn, muted]);
+
+  const lit = evening && lampOn;
+  const fire = fireOn;
+  const dark = evening ? (lampOn ? (time === 'night' ? 0.2 : 0.1) : time === 'night' ? 0.42 : 0.3) : lampOn ? 0 : 0.06;
+
+  const tapTv = () => {
+    playTvOn();
+    setTvOn(true);
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    later(() => actions.onTv?.(), reduce ? 150 : 900);
+  };
+  const tapLamp = () => {
+    playClick();
+    setLampOn((v) => !v);
+  };
+  const tapStove = () => {
+    if (!fireOn) playCrackle();
+    else playClick();
+    setFireOn((v) => !v);
+  };
+  const tapCat = () => {
+    playPurr();
+    setPetted((n) => n + 1);
+    later(() => setPetted((n) => Math.max(0, n - 1)), 2600);
+  };
+  const wiggle = (what: 'picture' | 'books', go?: () => void) => {
+    playClick();
+    setWobble(what);
+    later(() => setWobble(''), 700);
+    if (go) later(go, 450);
+  };
+  const awake = petted > 0;
   // Rain, snow and fog hide the sun and the moon; clouds only drift past.
   const overcast = weather === 'rain' || weather === 'snow' || weather === 'fog' || weather === 'storm';
   return (
     <svg
       viewBox="0 0 400 220"
-      className={`cozy-room block w-full h-auto ${className}`}
-      aria-hidden="true"
-      focusable="false"
+      className={`cozy-room block w-full h-auto ${interactive ? 'is-interactive' : ''} ${className}`}
+      {...(interactive
+        ? { role: 'group', 'aria-label': tr('The living room. Everything in it can be tapped.', 'Die Stube. Alles darin kann man antippen.') }
+        : { 'aria-hidden': true, focusable: 'false' })}
     >
       <defs>
         <pattern id="cozy-wallpaper" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -80,6 +194,9 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
           <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
           <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
         </pattern>
+        <clipPath id="cozy-screen">
+          <rect x="344" y="123" width="36" height="30" rx="7" />
+        </clipPath>
         <clipPath id="cozy-glass">
           <rect x="268" y="40" width="72" height="74" />
         </clipPath>
@@ -96,6 +213,10 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
           <stop offset="0" stopColor="#ff8a3c" stopOpacity="0.55" />
           <stop offset="0.5" stopColor="#ff7a2a" stopOpacity="0.18" />
           <stop offset="1" stopColor="#ff7a2a" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cozy-tv-glow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#cfe6ff" stopOpacity="0.6" />
+          <stop offset="1" stopColor="#cfe6ff" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="cozy-couch" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#d48a4b" />
@@ -121,7 +242,12 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
       <rect y="160" width="400" height="1.5" fill="#a46a43" />
 
       {/* Window with the real time of day outside */}
-      <g>
+      <Hot
+        on={interactive && !!actions.onWindow}
+        label={tr('Window: show your real weather', 'Fenster: dein echtes Wetter zeigen')}
+        onAct={() => actions.onWindow?.()}
+        box={[248, 26, 112, 98]}
+      >
         <rect x="262" y="34" width="84" height="86" rx="3" fill="#fff4e2" />
         <rect x="268" y="40" width="72" height="74" fill="url(#cozy-sky)" />
         {!overcast && (
@@ -146,8 +272,8 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
           </>
         )}
         {/* far hills */}
-        <path d="M268 106q18-10 36-2t36-4v14h-72z" fill={weather === 'snow' ? '#f4f6f8' : lit ? '#3d3555' : '#9cc49a'} opacity="0.85" />
-        {weather && weather !== 'clear' && <WindowWeather kind={weather} lit={lit} />}
+        <path d="M268 106q18-10 36-2t36-4v14h-72z" fill={weather === 'snow' ? '#f4f6f8' : evening ? '#3d3555' : '#9cc49a'} opacity="0.85" />
+        {weather && weather !== 'clear' && <WindowWeather kind={weather} lit={evening} />}
         <rect x="302.5" y="40" width="3" height="74" fill="#fff4e2" />
         <rect x="268" y="75" width="72" height="3" fill="#fff4e2" />
         <rect x="256" y="118" width="96" height="6" rx="2" fill="#e9d2b0" />
@@ -159,19 +285,29 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
         <rect x="246" y="24" width="116" height="5" rx="2.5" fill="#8a5a33" />
         <circle cx="246" cy="26.5" r="4" fill="#8a5a33" />
         <circle cx="362" cy="26.5" r="4" fill="#8a5a33" />
-      </g>
+        {/* a small plant on the sill */}
+        <path d="M264 109h12l-1.6 9h-8.8z" fill="#c2532f" />
+        <path d="M270 109c-1-7-6-10-9-11 3 4 4.5 7 5 11M270 109c.5-8 4-13 8-15-2 5-3.5 10-4 15M270 109c0-6-1-12-.5-17 1.5 5 2 11 1.5 17" fill="#5f8f6a" />
+      </Hot>
 
       {/* Pictures on the wall */}
-      <g>
-        <rect x="128" y="36" width="56" height="42" rx="2" fill="#c99a4c" />
-        <rect x="133" y="41" width="46" height="32" fill="#f6e3bf" />
-        <circle cx="168" cy="50" r="5" fill="#e8a838" />
-        <path d="M133 73l13-15 9 9 7-6 17 12z" fill="#6f9a7c" />
+      <Hot
+        on={interactive && !!actions.onPicture}
+        label={tr('Picture: explore your decades', 'Bild: deine Jahrzehnte erkunden')}
+        onAct={() => wiggle('picture', actions.onPicture)}
+        box={[124, 32, 98, 48]}
+      >
+        <g className={wobble === 'picture' ? 'cozy-wobble' : ''}>
+          <rect x="128" y="36" width="56" height="42" rx="2" fill="#c99a4c" />
+          <rect x="133" y="41" width="46" height="32" fill="#f6e3bf" />
+          <circle cx="168" cy="50" r="5" fill="#e8a838" />
+          <path d="M133 73l13-15 9 9 7-6 17 12z" fill="#6f9a7c" />
+        </g>
         <ellipse cx="208" cy="58" rx="13" ry="16" fill="#c99a4c" />
         <ellipse cx="208" cy="58" rx="9.5" ry="12.5" fill="#f3e1c4" />
         <circle cx="208" cy="54" r="4" fill="#9a7b62" />
         <path d="M200 69c1-6 5-9 8-9s7 3 8 9" fill="#9a7b62" />
-      </g>
+      </Hot>
 
 
       {/* Rug */}
@@ -183,7 +319,12 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
       {/* Wood stove (Marco, 2026-10-13): a cast-iron stove with a glass door.
           In the evening and at night the fire burns and flickers and throws
           its glow into the room; by day only the embers glow. */}
-      <g>
+      <Hot
+        on={interactive}
+        label={fireOn ? tr('Stove: let the fire go out', 'Ofen: Feuer ausgehen lassen') : tr('Stove: light the fire', 'Ofen: Feuer anzünden')}
+        onAct={tapStove}
+        box={[8, 104, 48, 90]}
+      >
         <rect x="27" y="0" width="9" height="122" fill="#3a302b" />
         <rect x="25" y="70" width="13" height="4" rx="1" fill="#2b231f" />
         <rect x="12" y="120" width="40" height="6" rx="2" fill="#2b231f" />
@@ -194,7 +335,7 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
         <rect x="19" y="134" width="26" height="30" rx="3" fill="#1c1411" stroke="#5c4d44" strokeWidth="1.5" />
         {/* logs */}
         <path d="M21 160l22-5M22 156l20 6" stroke="#6b4428" strokeWidth="3.5" strokeLinecap="round" />
-        {lit ? (
+        {fire ? (
           <g className="cozy-fire">
             <path className="cozy-flame cozy-flame-1" d="M24 159c-2-7 3-10 2-17 4 4 7 9 5 17z" fill="#e8552a" />
             <path className="cozy-flame cozy-flame-2" d="M29 159c-3-9 4-13 3-22 5 6 8 13 5 22z" fill="#ff9a3c" />
@@ -218,7 +359,7 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
           <circle cx="3" cy="186.5" r="2.3" fill="#d9a066" />
           <circle cx="5" cy="181.5" r="2.3" fill="#d9a066" />
         </g>
-      </g>
+      </Hot>
 
       {/* Couch */}
       <g>
@@ -248,24 +389,45 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
       </g>
 
       {/* Floor lamp, in front of the couch's left arm */}
+      <Hot
+        on={interactive}
+        label={lampOn ? tr('Lamp: switch off', 'Lampe: ausschalten') : tr('Lamp: switch on', 'Lampe: einschalten')}
+        onAct={tapLamp}
+        box={[42, 46, 74, 44]}
+        extra={[70, 88, 16, 106]}
+      >
       <g transform="translate(20 0)">
         <ellipse cx="58" cy="190" rx="16" ry="4" fill="#5e3a22" />
         <rect x="56" y="78" width="4" height="112" fill="#6e4528" />
-        <path d="M34 50h48l10 30H24z" fill="#f2b24f" />
-        <path d="M34 50h48l10 30H24z" fill="#ffe2a4" opacity="0.45" />
+        <path d="M34 50h48l10 30H24z" fill={lampOn ? '#f2b24f' : '#c98a3c'} />
+        {lampOn && <path d="M34 50h48l10 30H24z" fill="#ffe2a4" opacity="0.45" />}
+        {/* pull chain */}
+        <path d="M70 80v14" stroke="#b08d57" strokeWidth="0.9" strokeDasharray="1.2 1" />
+        <circle cx="70" cy="95.5" r="1.6" fill="#b08d57" />
         <path d="M24 80h68" stroke="#d98b2b" strokeWidth="2" />
         {Array.from({ length: 12 }, (_, i) => (
           <line key={i} x1={26 + i * 5.8} y1="81" x2={26 + i * 5.8} y2="86" stroke="#d98b2b" strokeWidth="1.2" />
         ))}
       </g>
+      </Hot>
 
       {/* Side table with a cup of tea and a book */}
       <g>
         <rect x="282" y="146" width="48" height="6" rx="2" fill="#8a5a33" />
         <rect x="288" y="152" width="4" height="36" fill="#6e4528" />
         <rect x="320" y="152" width="4" height="36" fill="#6e4528" />
-        <rect x="286" y="140" width="22" height="6" rx="1" fill="#4b7b72" />
-        <rect x="288" y="135" width="18" height="5" rx="1" fill="#d95d39" />
+        <Hot
+          on={interactive && !!actions.onBooks}
+          label={tr('Books: open your memory book', 'Bücher: dein Erinnerungsbuch aufschlagen')}
+          onAct={() => wiggle('books', actions.onBooks)}
+          box={[282, 128, 30, 20]}
+        >
+          <g className={wobble === 'books' ? 'cozy-wobble' : ''}>
+            <rect x="286" y="140" width="22" height="6" rx="1" fill="#4b7b72" />
+            <rect x="288" y="135" width="18" height="5" rx="1" fill="#d95d39" />
+            <rect x="287" y="130" width="19" height="5" rx="1" fill="#e8a838" />
+          </g>
+        </Hot>
         <path d="M312 132h12v8a6 6 0 0 1-12 0z" fill="#fff6e6" />
         <path d="M324 134a3.5 3.5 0 0 1 0 7" fill="none" stroke="#fff6e6" strokeWidth="1.8" />
         <ellipse cx="318" cy="146" rx="9" ry="1.6" fill="#e9d2b0" />
@@ -273,39 +435,110 @@ export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; 
         <path className="cozy-steam cozy-steam-2" d="M321 128c-3-4 3-6 0-10" fill="none" stroke="#b98b62" strokeWidth="1.4" strokeLinecap="round" opacity="0.55" />
       </g>
 
-      {/* Plant */}
-      <g>
-        <path d="M362 172h22l-3 18h-16z" fill="#c2532f" />
-        <path d="M373 172c-2-14-12-20-18-22 6 8 9 14 10 22M373 172c1-16 8-26 16-30-4 10-7 20-8 30M373 172c0-12-2-24-1-34 3 10 4 22 3 34" fill="#5f8f6a" />
-      </g>
+      {/* The old tube TV on its cabinet: the way into the time travel. */}
+      <Hot
+        on={interactive && !!actions.onTv}
+        label={tvLabel || tr('TV: start the time travel', 'Fernseher: Zeitreise starten')}
+        onAct={tapTv}
+        box={[334, 92, 64, 100]}
+        hint
+      >
+        <rect x="336" y="156" width="60" height="30" rx="2" fill="#8a5a33" />
+        <rect x="339" y="160" width="26" height="22" rx="1.5" fill="#9c6a3e" />
+        <rect x="367" y="160" width="26" height="22" rx="1.5" fill="#9c6a3e" />
+        <circle cx="362" cy="171" r="1.3" fill="#e9d2b0" />
+        <circle cx="370" cy="171" r="1.3" fill="#e9d2b0" />
+        <rect x="339" y="186" width="4" height="5" fill="#5e3a22" />
+        <rect x="389" y="186" width="4" height="5" fill="#5e3a22" />
+        <path d="M366 118l-13-22M368 118l13-22" stroke="#3a302b" strokeWidth="1.3" strokeLinecap="round" />
+        <circle cx="353" cy="96" r="1.6" fill="#3a302b" />
+        <circle cx="381" cy="96" r="1.6" fill="#3a302b" />
+        <ellipse cx="367" cy="118.5" rx="6" ry="2.6" fill="#3a302b" />
+        <rect x="340" y="119" width="54" height="38" rx="5" fill="#6e4528" />
+        <rect x="340" y="119" width="54" height="2.5" rx="1" fill="#8a5a33" />
+        <rect x="344" y="123" width="36" height="30" rx="7" fill="#26302c" />
+        <g clipPath="url(#cozy-screen)">
+          {tvOn ? (
+            <rect className="cozy-tv-on" x="344" y="123" width="36" height="30" fill="#f6fbff" />
+          ) : (
+            <g className="cozy-tv-flicker" opacity="0.85">
+              {['#e6e6e6', '#e8d23c', '#3cc6d0', '#4cc04a', '#c84ac0', '#d0403c', '#3c4ad0'].map((c, i) => (
+                <rect key={c} x={344 + i * (36 / 7)} y="123" width={36 / 7 + 0.2} height="22" fill={c} />
+              ))}
+              <rect x="344" y="145" width="36" height="8" fill="#1c1c22" />
+              <circle cx="362" cy="138" r="7" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.7" />
+            </g>
+          )}
+          <path d="M346 126c6-2 14-2 20 0" stroke="#ffffff" strokeWidth="1.6" opacity="0.25" fill="none" />
+        </g>
+        <circle cx="387" cy="129" r="2.6" fill="#e9d2b0" />
+        <circle cx="387" cy="137" r="2.6" fill="#e9d2b0" />
+        <path d="M387 127v2.4M387 135v2.4" stroke="#6e4528" strokeWidth="0.9" />
+        <rect x="384" y="143" width="6" height="1.2" fill="#3a302b" />
+        <rect x="384" y="146" width="6" height="1.2" fill="#3a302b" />
+        <rect x="384" y="149" width="6" height="1.2" fill="#3a302b" />
+      </Hot>
 
       {/* Lamplight: in the evening the room dims a little and the lamp pours
           warm light over the couch; by day it only glows softly. */}
-      {lit && <rect width="400" height="220" fill="#3b1f10" opacity={time === 'night' ? 0.2 : 0.1} />}
-      <path d="M54 84L10 220h150L102 84z" fill="#ffd27a" opacity={lit ? 0.16 : 0.06} style={{ mixBlendMode: 'screen' }} />
-      <circle
-        className="cozy-glow"
-        cx="78"
-        cy="68"
-        r={lit ? 130 : 80}
-        fill="url(#cozy-glow)"
-        opacity={lit ? 0.9 : 0.45}
-        style={{ mixBlendMode: 'screen' }}
-      />
+      <g pointerEvents="none">
+        {dark > 0 && <rect width="400" height="220" fill="#3b1f10" opacity={dark} />}
+        {lampOn && (
+          <>
+            <path d="M54 84L10 220h150L102 84z" fill="#ffd27a" opacity={lit ? 0.16 : 0.06} style={{ mixBlendMode: 'screen' }} />
+            <circle
+              className="cozy-glow"
+              cx="78"
+              cy="68"
+              r={lit ? 130 : 80}
+              fill="url(#cozy-glow)"
+              opacity={lit ? 0.9 : 0.45}
+              style={{ mixBlendMode: 'screen' }}
+            />
+          </>
+        )}
+        {fire && (
+          <circle className="cozy-fire-glow" cx="32" cy="150" r={evening ? 70 : 50} fill="url(#cozy-fire-glow)" opacity={evening ? 1 : 0.6} style={{ mixBlendMode: 'screen' }} />
+        )}
+        {tvOn && <circle cx="362" cy="138" r="60" fill="url(#cozy-tv-glow)" style={{ mixBlendMode: 'screen' }} />}
+      </g>
 
-      {lit && (
-        <circle className="cozy-fire-glow" cx="32" cy="150" r="70" fill="url(#cozy-fire-glow)" style={{ mixBlendMode: 'screen' }} />
-      )}
-
-      {/* The cat, curled up asleep on the rug */}
+      {/* The cat, curled up asleep on the rug; it purrs when stroked. */}
+      <Hot
+        on={interactive}
+        label={tr('Cat: stroke it', 'Katze: streicheln')}
+        onAct={tapCat}
+        box={[150, 168, 78, 36]}
+      >
       <g className="cozy-cat">
         <path className="cozy-tail" d="M198 196c10 4 22 2 24-6" fill="none" stroke="#6b5446" strokeWidth="5" strokeLinecap="round" />
         <ellipse className="cozy-cat-body" cx="182" cy="192" rx="20" ry="10" fill="#6b5446" />
         <path d="M172 186c3 2 5 2 8 0M182 184c3 2 5 2 8 0" stroke="#87705f" strokeWidth="2" fill="none" strokeLinecap="round" />
         <circle cx="164" cy="190" r="8" fill="#6b5446" />
         <path d="M158 184l1-8 5 5zM166 182l4-7 2 7z" fill="#6b5446" />
-        <path d="M159.5 190.5q2 1.5 4 0M165.5 190.5q2 1.5 4 0" stroke="#3c2e25" strokeWidth="1" fill="none" strokeLinecap="round" />
+        {awake ? (
+          <>
+            <ellipse cx="161.5" cy="190" rx="1.3" ry="1.6" fill="#e8c34a" />
+            <ellipse cx="167.5" cy="190" rx="1.3" ry="1.6" fill="#e8c34a" />
+          </>
+        ) : (
+          <path d="M159.5 190.5q2 1.5 4 0M165.5 190.5q2 1.5 4 0" stroke="#3c2e25" strokeWidth="1" fill="none" strokeLinecap="round" />
+        )}
       </g>
+      {awake ? (
+        <g key={petted} className="cozy-hearts" fill="#e0472a" stroke="#fff6e6" strokeWidth="0.8">
+          <path d="M158 174c-3-4.5-9-1.5-6 3l6 6 6-6c3-4.5-3-7.5-6-3z" />
+          <path className="cozy-heart-2" d="M174 168c-2.4-3.6-7.2-1.2-4.8 2.4l4.8 4.8 4.8-4.8c2.4-3.6-2.4-6-4.8-2.4z" />
+        </g>
+      ) : (
+        interactive && (
+          <g className="cozy-zzz" fill="#6b5446" fontFamily="Georgia, serif" fontStyle="italic">
+            <text x="150" y="178" fontSize="7">z</text>
+            <text x="145" y="170" fontSize="9">z</text>
+          </g>
+        )
+      )}
+      </Hot>
     </svg>
   );
 };

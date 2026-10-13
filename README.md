@@ -37,21 +37,27 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Zeitreise
 
-- **Gemütliche Stube** – im Standarddesign Retro Warm empfängt dich oben auf
-  der Startseite eine gezeichnete Stube (Couch mit Häkeldecke, leuchtende
-  Stehlampe, dampfender Tee, schlafende Katze), deren Fenster die echte
-  Tageszeit zeigt, dazu eine Begrüßung mit Namen passend zur Uhrzeit,
-  Tapeten-Hintergrund mit warmem Lampenlicht, Papierkarten und Holzleisten.
-  Ein Holzofen brennt abends und nachts, tagsüber glüht nur die Glut. Auf
-  Wunsch zeigt das Fenster das echte Wetter (Regen, Schnee, Gewitter, Nebel,
-  Wolken) über Open-Meteo, mit Standort oder eingegebenem Ort, nur nach
-  Einschalten ([`components/CozyRoom.tsx`](components/CozyRoom.tsx),
-  [`lib/weather.ts`](lib/weather.ts)).
+- **Gemütliche Stube zum Anfassen** – oben auf der Startseite, in allen
+  Designs, eine gezeichnete Stube (Couch mit Häkeldecke, Stehlampe,
+  dampfender Tee, Holzofen, schlafende Katze, Röhrenfernseher), deren
+  Fenster die echte Tageszeit zeigt, dazu eine Begrüßung mit Namen passend
+  zur Uhrzeit. Alles darin lässt sich antippen, mit kleinen Geräuschen und
+  kurzem Summen auf dem Handy: Der Fernseher startet oder setzt die Reise
+  fort, Lampe und Ofen gehen an und aus (der brennende Ofen knistert hörbar),
+  die Katze schnurrt, das Fenster schaltet das echte Wetter ein, Bild und
+  Bücher führen zu Erkunden und Erinnerungsbuch. Retro Warm hat dazu
+  Tapeten-Hintergrund, Papierkarten und Holzleisten. Auf Wunsch zeigt das
+  Fenster das echte Wetter (Regen, Schnee, Gewitter, Nebel, Wolken) über
+  Open-Meteo, mit Standort oder eingegebenem Ort, nur nach Einschalten
+  ([`components/LivingRoom.tsx`](components/LivingRoom.tsx),
+  [`components/CozyRoom.tsx`](components/CozyRoom.tsx),
+  [`lib/roomSounds.ts`](lib/roomSounds.ts), [`lib/weather.ts`](lib/weather.ts)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
   dahinter legt sie in die **Grabbelkiste**, die vorn im Laufband zählt und
-  alles Gesammelte zeigt. Langsam, mit Pause-Knopf, hält bei Berührung an
+  alles Gesammelte zeigt. Ein Tipp auf den Spruch selbst erklärt, woher er
+  kommt. Langsam, mit Pause-Knopf, hält bei Berührung an
   ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
   [`lib/tickerItems.ts`](lib/tickerItems.ts)).
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`

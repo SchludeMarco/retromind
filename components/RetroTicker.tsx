@@ -9,7 +9,8 @@ import { Modal } from './Modal';
 // things from back then run past like the news crawl on an old TV. Behind
 // each one sits a floppy disk; tapping it puts the saying into the
 // Grabbelkiste (lib/grabbelkiste.ts), the box at the start of the ticker,
-// which opens a list of everything collected.
+// which opens a list of everything collected. Tapping the saying itself
+// opens a little card with where it comes from.
 //
 // Easy on older eyes and hands: it moves slowly, stops while a finger or the
 // mouse is on it or a disk has keyboard focus, has its own pause button
@@ -43,11 +44,26 @@ export const BoxIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6
 
 const decadeLabel = (d: string) => tr(`${d}s`, `${d}er`);
 
-const Entry: React.FC<{ item: TickerItem; saved: boolean; copy: boolean; onToggle: (item: TickerItem) => void }> = ({
-  item, saved, copy, onToggle,
-}) => (
+const kindLabel = (item: TickerItem) => (item.kind === 'saying' ? tr('Saying', 'Spruch') : tr('Back then', 'Damals'));
+
+const Entry: React.FC<{
+  item: TickerItem;
+  saved: boolean;
+  copy: boolean;
+  onToggle: (item: TickerItem) => void;
+  onOpen: (item: TickerItem) => void;
+}> = ({ item, saved, copy, onToggle, onOpen }) => (
   <li className="rm-ticker-entry">
-    <span>{item.text}</span>
+    {/* Tapping the saying itself tells a little more about it (Marco). */}
+    <button
+      type="button"
+      onClick={() => onOpen(item)}
+      tabIndex={copy ? -1 : undefined}
+      aria-label={tr(`More about: ${item.text}`, `Mehr dazu: ${item.text}`)}
+      className="rm-ticker-text"
+    >
+      {item.text}
+    </button>
     <button
       type="button"
       onClick={() => onToggle(item)}
@@ -65,6 +81,43 @@ const Entry: React.FC<{ item: TickerItem; saved: boolean; copy: boolean; onToggl
   </li>
 );
 
+const CloseButton: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+  <button
+    type="button"
+    onClick={onClose}
+    aria-label={tr('Close', 'Schließen')}
+    className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-2xl leading-none hover:bg-retro-highlight"
+  >
+    ✕
+  </button>
+);
+
+// What opens when a saying in the ticker is tapped: the saying, where it
+// comes from, and the floppy disk to keep it.
+const InfoModal: React.FC<{ item: TickerItem; saved: boolean; onToggle: (item: TickerItem) => void; onClose: () => void }> = ({
+  item, saved, onToggle, onClose,
+}) => (
+  <Modal onClose={onClose} label={item.text}>
+    <div className="flex items-start justify-between gap-3 mb-1">
+      <span className="text-sm font-semibold uppercase tracking-wider text-retro-amber-dark pt-3">
+        {decadeLabel(item.decade)} · {kindLabel(item)}
+      </span>
+      <CloseButton onClose={onClose} />
+    </div>
+    <h2 className="text-2xl md:text-3xl mb-3 leading-snug">{item.text}</h2>
+    <p className="text-lg leading-relaxed mb-5">{item.info}</p>
+    <button
+      type="button"
+      onClick={() => onToggle(item)}
+      aria-pressed={saved}
+      className={`retro-button w-full py-3 font-bold flex items-center justify-center gap-2 ${saved ? 'bg-white border-2 border-retro-ink' : 'bg-retro-amber text-white'}`}
+    >
+      <FloppyIcon saved={saved} className={`w-6 h-6 ${saved ? 'text-retro-amber-dark' : ''}`} />
+      {saved ? tr('In your Grabbelkiste (tap to take out)', 'In deiner Grabbelkiste (antippen zum Herausnehmen)') : tr('Put in the Grabbelkiste', 'In die Grabbelkiste legen')}
+    </button>
+  </Modal>
+);
+
 const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ ids, onClose }) => {
   const items = ids.map(tickerItem).filter((i): i is TickerItem => !!i);
   return (
@@ -74,14 +127,7 @@ const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ i
           <BoxIcon className="w-7 h-7 text-retro-amber-dark" />
           {tr('Your Grabbelkiste', 'Deine Grabbelkiste')}
         </h2>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={tr('Close', 'Schließen')}
-          className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-2xl leading-none hover:bg-retro-highlight"
-        >
-          ✕
-        </button>
+        <CloseButton onClose={onClose} />
       </div>
       <p className="text-retro-brown mb-4">
         {tr(
@@ -101,8 +147,9 @@ const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ i
               <span className="flex-grow">
                 <span className="block font-semibold leading-snug">{item.text}</span>
                 <span className="block text-sm text-retro-brown">
-                  {decadeLabel(item.decade)} · {item.kind === 'saying' ? tr('Saying', 'Spruch') : tr('Back then', 'Damals')}
+                  {decadeLabel(item.decade)} · {kindLabel(item)}
                 </span>
+                <span className="block text-sm mt-1 leading-snug">{item.info}</span>
               </span>
               <button
                 type="button"
@@ -127,6 +174,8 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
   const [held, setHeld] = useState(false);
   const [boxOpen, setBoxOpen] = useState(false);
   const closeBox = useCallback(() => setBoxOpen(false), []);
+  const [infoItem, setInfoItem] = useState<TickerItem | null>(null);
+  const closeInfo = useCallback(() => setInfoItem(null), []);
   const [bump, setBump] = useState(0);
   const [announce, setAnnounce] = useState('');
   const copyRef = useRef<HTMLUListElement>(null);
@@ -192,13 +241,13 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
         >
           <ul ref={copyRef} className="rm-ticker-copy">
             {run.map((item) => (
-              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy={false} onToggle={toggle} />
+              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy={false} onToggle={toggle} onOpen={setInfoItem} />
             ))}
           </ul>
           {/* The same run once more, so the loop has no gap. */}
           <ul aria-hidden="true" className="rm-ticker-copy rm-ticker-copy-2">
             {run.map((item) => (
-              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy onToggle={toggle} />
+              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy onToggle={toggle} onOpen={setInfoItem} />
             ))}
           </ul>
         </div>
@@ -218,6 +267,10 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
       </button>
       <p aria-live="polite" className="sr-only">{announce}</p>
       {/* Portalled: the pinned ticker is its own layer below the top bar. */}
+      {infoItem && createPortal(
+        <InfoModal item={infoItem} saved={saved.includes(infoItem.id)} onToggle={toggle} onClose={closeInfo} />,
+        document.body
+      )}
       {boxOpen && createPortal(<GrabbelkisteModal ids={saved} onClose={closeBox} />, document.body)}
     </section>
   );

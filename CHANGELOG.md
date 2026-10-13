@@ -7,6 +7,25 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Die Stube zum Anfassen, in jedem Design** (2026-10-13, PR #196): Die
+  gezeichnete Stube steht jetzt oben auf der Startseite in allen Designs,
+  auch in Klassisch und Nachtschicht (bisher gab es sie nur in Retro Warm).
+  Und man kann alles darin antippen: Der alte Röhrenfernseher mit Testbild
+  rechts in der Ecke startet die Zeitreise (oder setzt sie fort), die
+  Stehlampe klickt an und aus, der Holzofen lässt sich anzünden und
+  ausgehen lassen, die Katze wacht beim Streicheln auf, schnurrt und lässt
+  Herzchen steigen, und das Fenster öffnet das echte Wetter. Hast du schon
+  eine Reise begonnen, führt das Bild an der Wand zu deinen Jahrzehnten und
+  der Bücherstapel zu deinem Erinnerungsbuch. Jede Berührung macht ein
+  kleines Geräusch, und auf dem Handy summt es kurz in der Hand. Solange der
+  Ofen brennt, hört man ihn leise knistern und knacken (nur mit Ton an).
+  Die Topfpflanze ist aufs Fensterbrett umgezogen.
+- **Mehr zu jedem Spruch im Laufband** (2026-10-13, PR #196): Ein Tipp auf
+  einen Spruch im Laufband öffnet eine Karte mit mehr dazu, zum Beispiel
+  woher „Ich hab fertig!“ kommt oder warum 1973 alle auf der Autobahn
+  spazieren gingen. Von dort lässt er sich auch gleich in die Grabbelkiste
+  legen, und in der Grabbelkiste steht die Erklärung mit dabei.
+
 - **Echtes Wetter im Stubenfenster** (2026-10-13, PR #195): Unter der
   gezeichneten Stube kannst du jetzt „Dein echtes Wetter im Fenster zeigen“
   einschalten. Dann regnet es im Fenster, wenn es bei dir regnet, es schneit

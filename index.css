@@ -378,6 +378,91 @@
   from { opacity: 0.35; }
   to { opacity: 1; }
 }
+/* Touchable things in the room: a dashed outline on hover and keyboard
+   focus, a little press when tapped, and the TV gently calls for a tap. */
+.cozy-room.is-interactive .cozy-hot {
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cozy-room .cozy-hot-ring {
+  stroke: #fff6e6;
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+@media (hover: hover) {
+  .cozy-room .cozy-hot:hover .cozy-hot-ring {
+    opacity: 0.9;
+  }
+}
+.cozy-room .cozy-hot:focus-visible .cozy-hot-ring {
+  opacity: 1;
+  stroke: #2a1a10;
+  stroke-width: 2.5;
+  stroke-dasharray: none;
+}
+.cozy-room .cozy-hot-ring.is-hint {
+  animation: cozy-hint 2.4s ease-in-out infinite;
+}
+.cozy-room .cozy-wobble {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: cozy-wobble 0.7s ease-out;
+}
+.cozy-room .cozy-tv-flicker {
+  animation: cozy-tv-flicker 3s steps(1) infinite;
+}
+.cozy-room .cozy-tv-on {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: cozy-tv-on 0.9s ease-out forwards;
+}
+.cozy-room .cozy-hearts {
+  animation: cozy-float 2.6s ease-out forwards;
+}
+.cozy-room .cozy-heart-2 {
+  animation: cozy-float 2.6s ease-out 0.3s both;
+}
+.cozy-room .cozy-zzz text {
+  animation: cozy-zzz 4s ease-in-out infinite;
+}
+.cozy-room .cozy-zzz text:nth-child(2) {
+  animation-delay: 2s;
+}
+@keyframes cozy-hint {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.95; }
+}
+@keyframes cozy-wobble {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  55% { transform: rotate(3deg); }
+  80% { transform: rotate(-1.5deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes cozy-tv-flicker {
+  0%, 100% { opacity: 0.85; }
+  47% { opacity: 0.7; }
+  50% { opacity: 0.88; }
+}
+@keyframes cozy-tv-on {
+  0% { transform: scale(1, 0.04); opacity: 1; }
+  35% { transform: scale(1, 1); opacity: 1; }
+  100% { transform: scale(1, 1); opacity: 0.9; }
+}
+@keyframes cozy-float {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(-22px); opacity: 0; }
+}
+@keyframes cozy-zzz {
+  0%, 100% { transform: translate(0, 0); opacity: 0; }
+  30% { opacity: 0.8; }
+  80% { transform: translate(-3px, -6px); opacity: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
   .cozy-room * {
     animation: none !important;
@@ -475,6 +560,25 @@
   gap: 0.4rem;
   white-space: nowrap;
   padding-left: 1rem;
+}
+.rm-ticker-text {
+  min-height: 2.75rem;
+  padding: 0 0.25rem;
+  border-radius: 0.4rem;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: underline dotted rgba(251, 238, 215, 0.45);
+  text-underline-offset: 4px;
+}
+.rm-ticker-text:hover {
+  background: rgba(251, 238, 215, 0.12);
+  text-decoration-color: #fbeed7;
+}
+.rm-ticker-text:focus-visible {
+  outline: 3px solid #fbeed7;
+  outline-offset: -3px;
 }
 .rm-ticker-disk {
   width: 2.5rem;
