@@ -132,12 +132,12 @@ export const VerifyGate: React.FC<{
                 <>
                   <strong>☁️ Optional: back up to the cloud.</strong> Signed in with Google, your journey is also
                   saved to your own Google Drive, so you can pick up on any device. You can also do this later via
-                  “Sign in with Google” on the start page.
+                  “Sign in with Google” in the settings (⚙️).
                 </>,
                 <>
                   <strong>☁️ Optional: in der Cloud sichern.</strong> Mit Google angemeldet wird deine Reise zusätzlich
                   in deinem eigenen Google Drive gespeichert, damit du auf jedem Gerät weitermachen kannst. Das geht
-                  auch später noch über „Mit Google anmelden“ auf der Startseite.
+                  auch später noch über „Mit Google anmelden“ in den Einstellungen (⚙️).
                 </>
               )}
             </p>

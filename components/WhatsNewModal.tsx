@@ -13,7 +13,8 @@ const formatDate = (iso: string) => {
 export const WhatsNewModal: React.FC<{
   onDismiss: () => void;
   onCloseClick: () => void;
-}> = ({ onDismiss, onCloseClick }) => {
+  aboveSplash?: boolean;
+}> = ({ onDismiss, onCloseClick, aboveSplash = false }) => {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export const WhatsNewModal: React.FC<{
   const total = WHATS_NEW.reduce((n, s) => n + s.entries.length, 0);
 
   return (
-    <Modal onClose={onDismiss} label={tr('What’s new?', 'Was ist neu?')}>
+    <Modal onClose={onDismiss} label={tr('What’s new?', 'Was ist neu?')} above={aboveSplash}>
       <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
         ✕
       </button>
