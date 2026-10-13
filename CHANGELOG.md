@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ramponierter Wegweiser** (2026-10-13, PR #190): Der Wegweiser zur
+  Gaming-Zone sieht jetzt aus, als hätte er schon einige Schlachten hinter
+  sich: ausgefranste Ränder, Schwerthiebe im Holz, eine verkohlte
+  Pfeilspitze mit glimmender Glut und Brandflecken. Die dunkle Umrandung
+  der Metallbuchstaben ist an vielen Stellen abgeplatzt.
+
 - **Musik-Schalter, sanfterer Einstieg, „Deine Zeit“ und Buch-Fortschritt**
   (2026-10-13, PR #189): Die Frage nach der Musik von Spotify steht jetzt
   als Schalter direkt auf dem Willkommensbildschirm. Wer ihn nicht anfasst,
