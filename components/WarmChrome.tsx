@@ -99,6 +99,17 @@ export const Icon: React.FC<{ name: IconName; className?: string }> = ({ name, c
   }
 };
 
+// Says in a word what used to be a bare red dot on the settings button:
+// there are entries in "What's new" the person hasn't seen yet.
+export const NewBadge: React.FC = () => (
+  <span
+    aria-hidden="true"
+    className="absolute -top-1.5 -right-2 px-1 rounded-full bg-red-600 text-white text-xs leading-4 font-bold border border-retro-paper pointer-events-none"
+  >
+    {tr('New', 'Neu')}
+  </span>
+);
+
 export const PHASE_LABEL: Record<AppPhase, string> = {
   intro: 'Start',
   onboarding: tr('Your Profile', 'Dein Profil'),
@@ -131,7 +142,7 @@ export const WarmTopBar: React.FC<{
   const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur border-b border-[#e6dac8]">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-2 sm:gap-3">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8 h-16 flex items-center gap-1.5 sm:gap-3">
         <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-8 sm:w-9 h-auto flex-shrink-0" />
         <div className="leading-tight min-w-0 flex-grow overflow-hidden max-[479px]:invisible">
           <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
@@ -141,7 +152,7 @@ export const WarmTopBar: React.FC<{
           onClick={toggleMuted}
           aria-pressed={muted}
           aria-label={muted ? tr('Turn sound on', 'Ton einschalten') : tr('Mute', 'Stummschalten')}
-          className={`h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
+          className={`h-9 sm:h-10 px-2 sm:px-3 rounded-full flex items-center gap-1.5 text-sm font-semibold flex-shrink-0 ${
             muted ? 'bg-[#eee0d6] text-retro-brown' : 'bg-[#4b7b72]/15 text-[#34645c]'
           }`}
         >
@@ -151,28 +162,30 @@ export const WarmTopBar: React.FC<{
         <button
           onClick={onOpenFeedback}
           title={tr('Give feedback', 'Feedback geben')}
-          className="h-10 px-2.5 sm:px-3 rounded-full flex items-center gap-1 sm:gap-1.5 text-sm font-bold bg-[#c62828] text-white shadow-sm hover:bg-[#a51f1f] flex-shrink-0"
+          className="h-9 sm:h-10 px-3 rounded-full flex items-center gap-1 sm:gap-1.5 text-sm font-bold bg-[#c62828] text-white shadow-sm hover:bg-[#a51f1f] flex-shrink-0"
         >
-          <Icon name="mail" className="w-5 h-5" />
+          {/* Narrow phones keep the word, which testers look for, and drop the envelope. */}
+          <Icon name="mail" className="w-5 h-5 max-[399px]:hidden" />
           <span>Feedback</span>
         </button>
         {showActions && (
           <>
             <button
               onClick={onOpenSettings}
-              aria-label={tr('Open app settings', 'App-Einstellungen öffnen')}
-              className="relative w-10 h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
+              aria-label={hasUnseenNews
+                ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
+                : tr('Open app settings', 'App-Einstellungen öffnen')}
+              title={hasUnseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
+              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-retro-ink hover:bg-retro-highlight flex-shrink-0"
             >
               <Icon name="settings" />
-              {hasUnseenNews && (
-                <span aria-label={tr('new entries', 'neue Einträge')} className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-600 border-2 border-retro-paper" />
-              )}
+              {hasUnseenNews && <NewBadge />}
             </button>
             <button
               onClick={onToggleAccount}
               aria-pressed={accountOpen}
               aria-label={tr('Accounts (Google, Spotify)', 'Konten (Google, Spotify)')}
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-retro-amber-dark text-white flex-shrink-0"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-retro-amber-dark text-white flex-shrink-0"
             >
               <Icon name="person" className="w-5 h-5" />
             </button>

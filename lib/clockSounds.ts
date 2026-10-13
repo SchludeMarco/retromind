@@ -133,9 +133,10 @@ export function playBeat(c: BaseAudioContext, high: boolean, dest: AudioNode = c
 /**
  * Starts the clock's tick-tock. onWaiting(true) means the browser still
  * holds sound back until the first touch; onWaiting(false) once it plays.
+ * onBeat fires with every audible tick, so the screen can show it too.
  * Returns the function that stops the clock.
  */
-export function startTicking(onWaiting: (waiting: boolean) => void): () => void {
+export function startTicking(onWaiting: (waiting: boolean) => void, onBeat?: () => void): () => void {
   const c = audioContext();
   if (!c) return () => {};
 
@@ -144,6 +145,7 @@ export function startTicking(onWaiting: (waiting: boolean) => void): () => void 
     if (isMuted() || c.state !== 'running') return;
     playBeat(c, high, bus ?? c.destination);
     high = !high;
+    onBeat?.();
   };
   const timer = window.setInterval(beat, BEAT_MS);
 

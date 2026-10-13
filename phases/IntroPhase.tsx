@@ -256,17 +256,20 @@ const WarmIntro: React.FC<IntroProps> = ({
         <p className="text-retro-brown mb-4">
           {tr('Tap a decade to see what’s waiting for you there.', 'Tippe auf ein Jahrzehnt, um zu sehen, was dich dort erwartet.')}
         </p>
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* A steady grid instead of free-wrapping pills, so narrow phones get
+            neat rows; "your era" sits as a small second line. */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-4">
           {decades.map((d) => (
             <button
               key={d}
               onClick={() => setShownDecade(d)}
               aria-pressed={d === shownDecade}
-              className={`px-4 h-10 rounded-full text-sm font-semibold ${
+              className={`min-h-11 px-2 py-1 rounded-2xl text-sm font-semibold leading-tight flex flex-col items-center justify-center ${
                 d === shownDecade ? 'bg-retro-amber-dark text-white' : 'bg-[#eee0d6] text-retro-brown'
               }`}
             >
-              {tr(`${d}s`, `${d}er`)}{d === focusDecade && tr(' (your era)', ' (deine Zeit)')}
+              {tr(`${d}s`, `${d}er`)}
+              {d === focusDecade && <span className="text-xs font-normal">{tr('your era', 'deine Zeit')}</span>}
             </button>
           ))}
         </div>

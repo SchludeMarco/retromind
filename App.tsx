@@ -17,7 +17,7 @@ import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, Cha
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
-import { WarmTopBar, WarmBottomNav, WarmJourneyStepper, Icon } from './components/WarmChrome';
+import { WarmTopBar, WarmBottomNav, WarmJourneyStepper, Icon, NewBadge } from './components/WarmChrome';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -705,15 +705,16 @@ const App: React.FC = () => {
           {!warm && (
           <button
             onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
-            aria-label={tr('Open app settings', 'App-Einstellungen öffnen')}
+            aria-label={unseenNews
+              ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
+              : tr('Open app settings', 'App-Einstellungen öffnen')}
+            title={unseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
             className={`rm-fixed fixed bottom-2 right-4 md:right-10 z-50 w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base transition-opacity duration-300 ${
               showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
             ⚙️
-            {unseenNews && (
-              <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-600 border-2 border-white" />
-            )}
+            {unseenNews && <NewBadge />}
           </button>
           )}
           {isSettingsOpen && (

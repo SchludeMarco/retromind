@@ -161,14 +161,17 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 - **„Was ist neu?“** – in den Einstellungen; zeigt die Einträge der
   [CHANGELOG.md](CHANGELOG.md) direkt in der App ([`lib/whatsNew.ts`](lib/whatsNew.ts)),
-  ein roter Punkt am Zahnrad meldet Neues seit dem letzten Blick.
+  ein kleines rotes „New“ (deutsch „Neu“) am Zahnrad meldet Neues seit dem
+  letzten Blick.
 - **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
   Kaminuhr, die laut und zweimal pro Sekunde tickt. Der „Go back...“-Knopf trägt den Look des
   gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf schlägt einen großen Gong, der
   Bildschirm wird weiß und geht langsam in die App über. Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab dem ersten
-  Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones). In
+  Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones);
+  danach zeigt ein kurz hüpfender Lautsprecher „die Uhr läuft“, damit man
+  auch ohne Ton sieht, dass der Tipp angekommen ist. In
   den Einstellungen führt „Zurück zum Willkommensbildschirm“ jederzeit wieder
   dorthin; die Musik pausiert so lange und spielt danach weiter.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
@@ -181,10 +184,15 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
     Tonband-Schalter, Feedback, Einstellungen und Konten, untere Navigation (Start,
     Zeitreise, Musik-Symbol, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
-    Startseite mit Jahrzehnt-Überblick und Archiv-Fundstücken, „Erkunden“ als
+    Startseite mit Jahrzehnt-Überblick (sechs gleich große Knöpfe in zwei
+    Reihen, auf dem Handy drei pro Reihe) und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).
   - **Klassisch**: vergilbtes Papier mit Röhrenbildschirm-Look.
   - **Nachtschicht**: dunkel mit warmem Röhrenglühen.
+
+  Weiße Schrift auf Orange/Terrakotta ist in allen Designs gut lesbar
+  (Kontrast mindestens 4,5 : 1), und die Kopfleiste passt auch auf schmale
+  Handys (320 px).
 
   Die Wahl gilt sofort und bleibt im Browser gespeichert
   ([`lib/theme.ts`](lib/theme.ts)); Farben stehen in [`index.css`](index.css).
@@ -577,6 +585,12 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Aus dem Grok-Test (2026-10-13), noch offen:** sanfterer Übergang von der
+  Uhr zum Namensformular, Musik-Frage früher stellen (z. B. als Schalter auf
+  dem Willkommensbildschirm statt mitten im Formular), nach der Anmeldung
+  eine kurze Vorschau der Jahrzehnte mit mehr „Wow“, und eine sichtbare
+  Fortschrittsanzeige fürs Erinnerungsbuch.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
