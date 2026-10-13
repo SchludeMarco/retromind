@@ -64,8 +64,12 @@ export const ConsolePicker: React.FC<{
   const field = useRef<HTMLInputElement>(null);
   useEffect(() => {
     // On a phone the keyboard would hide the shelf, so only jump into the
-    // field where there is a real keyboard anyway.
+    // field where there is a real keyboard anyway. Only when opening: onClose
+    // changes on every render of the hall (e.g. a new song), and focusing again
+    // would scroll the shelf back up.
     if (window.matchMedia?.('(pointer: fine)').matches) field.current?.focus();
+  }, []);
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);

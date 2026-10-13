@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Kein Sprung nach oben beim Liedwechsel** (2026-10-13, PR #199): Wenn
+  die Musik zum nächsten Lied wechselt, springen offene Fenster nicht mehr
+  an den Anfang zurück. In der Zeitreise passierte das in den
+  Einstellungen und in allen anderen Fenstern (Was ist neu, Feedback,
+  Grabbelkiste, Infos zu Laufband-Sprüchen), in Gaming in der
+  Konsolen-Auswahl.
+
 - **Helden deiner Jugend** (2026-10-13, PR #198): Beim Erkunden gibt es eine
   neue Sparte „Helden deiner Jugend“. Dort hängen die Helden deines
   Jahrzehnts wie Poster an der Kinderzimmerwand, von Michael Knight und
