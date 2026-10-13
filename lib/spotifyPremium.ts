@@ -35,6 +35,16 @@ function markBroken(reason: string) {
   listeners.forEach((l) => l());
 }
 
+/**
+ * The hall's watchdog heard nothing from the browser player: switch to the
+ * embed for the rest of the visit. false when that already happened.
+ */
+export function giveUpPremium(reason: string): boolean {
+  if (broken) return false;
+  markBroken(reason);
+  return true;
+}
+
 export function setPremiumTokenSource(source: TokenSource | null) {
   if (source === tokenSource) return;
   tokenSource = source;

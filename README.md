@@ -332,7 +332,14 @@ Läuft Musik, leuchtet es gelb.
 Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
 Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
 zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
-gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Drinnen liegt
+gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Verstummen
+darf sie sonst nie: Ein Wächter in `useHallSpotify` merkt, wenn Spotifys Uhr
+ein paar Sekunden stillsteht (Player lädt nicht, Song hängt, Werbeblocker,
+Browser blockt den Start), probiert einen anderen Song und lässt danach die
+eigene Chiptune-Hallenmusik weiterspielen, bis Spotify wieder läuft (neuer
+Versuch alle zwei Minuten oder mit Weiter im Player). Ein hängendes Intro gibt
+nach spätestens einer Minute ab, und der Ton wacht nach dem Entsperren des
+Handys wieder auf. Drinnen liegt
 hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
 (`public/gaming/arcade-innen.webp`). Hinter Knöpfen und Karten des Katalogs wandert ganz klein,
 halb durchsichtig und langsam ein Pac-Man mit Geist kreuz und quer zu zufälligen

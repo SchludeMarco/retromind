@@ -11,11 +11,12 @@ import {
   trackName,
   trackUri,
 } from '../../lib/spotifyEmbed';
-import { createSpotifyController, usePremiumPlayback } from '../../lib/spotifyPremium';
+import { createSpotifyController, giveUpPremium, usePremiumPlayback } from '../../lib/spotifyPremium';
 import { isMuted, setMuted, useMuted } from '../../lib/mute';
 import { useConsent } from '../../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../../lib/musicStatus';
 import { SpotifyHit } from '../../lib/spotifyApi';
+import { tr } from '../../lib/i18n';
 
 // 80s heavy metal from Spotify as the hall's background music (Marco,
 // 2026-10-05), through the same Spotify player as the Zeitreise
@@ -39,6 +40,19 @@ export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
 // muffled, so at the door the song's preview clip plays through a filter
 // (gaming/lib/street.ts) and Spotify starts the same song once you are in.
 
+// The music must never stop (Marco, 2026-10-13: "die Musik muss irgendwie
+// immer weiter laufen"). A watchdog checks that Spotify's clock really runs
+// whenever music should play. Silent for STALL_MS (the player never loaded,
+// an ad blocker swallowed it, the song hung or Spotify stopped it): first
+// another song, and if that stays silent too the hall's own chiptune music
+// takes over (`fallback`, played by GamingApp). Every PROBE_MS, or on next/
+// play in the player, Spotify gets another try while the chiptune keeps
+// going; once a song really runs, Spotify is back. A pause pressed in the
+// player, the speaker switch and the music setting are always respected.
+const STALL_MS = 7000;
+const PROBE_MS = 120000;
+const WATCH_EVERY_MS = 1500;
+
 /**
  * `enabled`: plays in the hall (music on, no video). `outside`: the visitor
  * stands at the entrance with music on; with Premium the hook names the song
@@ -61,8 +75,25 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   const unlockedRef = useRef(false);
   // Paused with the player bar: stays paused until play is pressed again.
   const [userPaused, setUserPaused] = useState(false);
+  const userPausedRef = useRef(userPaused);
+  userPausedRef.current = userPaused;
+  // Spotify stays silent: the own music plays (see STALL_MS above).
+  const [fallback, setFallback] = useState(false);
+  const fallbackRef = useRef(false);
+  fallbackRef.current = fallback;
+  // In fallback: Spotify is being tried again (the chiptune keeps playing).
+  const probingRef = useRef(false);
+  // Watchdog: when Spotify's clock last moved (or a start/grace began),
+  // the last position seen, failed recoveries in a row, the last probe.
+  const aliveAtRef = useRef(Date.now());
+  const lastPosRef = useRef(-1);
+  const strikesRef = useRef(0);
+  const probeAtRef = useRef(0);
+  const kick = () => {
+    aliveAtRef.current = Date.now();
+  };
   const shouldPlay = useRef(false);
-  shouldPlay.current = on && !muted && !userPaused;
+  shouldPlay.current = on && !muted && !userPaused && (!fallback || probingRef.current);
   const [playing, setPlaying] = useState(false);
   const [song, setSong] = useState<string | null>(null);
   const historyRef = useRef<SongHistory>({ ids: [] });
@@ -87,6 +118,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       return;
     }
     if (!unlockedRef.current) return;
+    kick();
     if (startedRef.current) controller.resume();
     else controller.play();
     startedRef.current = true;
@@ -99,6 +131,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       setSpecial(null);
       setSong(id);
       heardRef.current = false;
+      lastPosRef.current = -1;
       controller.loadUri(trackUri(id));
       startedRef.current = false;
       sync();
@@ -118,11 +151,31 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   const wantSound = () => {
     if (isMuted()) setMuted(false);
     setUserPaused(false);
-    shouldPlay.current = on && !isMuted();
+    shouldPlay.current = on && !isMuted() && (!fallbackRef.current || probingRef.current);
   };
+
+  // Spotify is silent and the own music plays: try Spotify again with a new
+  // song while the chiptune goes on (the watchdog decides how it went).
+  const probe = useCallback(() => {
+    probeAtRef.current = Date.now();
+    if (!controllerRef.current) return;
+    probingRef.current = true;
+    shouldPlay.current = on && !isMuted() && !userPausedRef.current;
+    strikesRef.current = 0;
+    const id = randomTrack(tracksRef.current);
+    if (id) {
+      rememberSong(historyRef.current, id);
+      loadSong(id);
+    } else {
+      startedRef.current = false;
+      sync();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadSong, sync, on]);
 
   const playNext = useCallback(() => {
     wantSound();
+    if (fallbackRef.current) return probe();
     const sp = specialRef.current;
     if (sp && sp.kind !== 'track' && controllerRef.current?.nextTrack) {
       controllerRef.current.nextTrack();
@@ -131,12 +184,13 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     }
     nextSong();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nextSong, on]);
+  }, [nextSong, probe, on]);
 
   const playPrevious = useCallback(() => {
     const controller = controllerRef.current;
     if (!controller) return;
     wantSound();
+    if (fallbackRef.current) return probe();
     if (specialRef.current) {
       if (specialRef.current.kind !== 'track' && controller.previousTrack) controller.previousTrack();
       else controller.seek(0);
@@ -150,7 +204,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       sync();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadSong, sync, on]);
+  }, [loadSong, sync, probe, on]);
 
   // A search pick (or, with `auto`, the soundtrack of the open game): plays
   // instead of the hall's metal. A single song goes back to the metal when
@@ -160,6 +214,12 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       const controller = controllerRef.current;
       if (!controller) return;
       if (!auto) wantSound();
+      // A search pick is a new try for Spotify, also while the own music plays.
+      if (fallbackRef.current && !auto) {
+        probingRef.current = true;
+        probeAtRef.current = Date.now();
+        shouldPlay.current = on && !isMuted();
+      }
       setSpecial({ ...hit, auto });
       setSong(null);
       heardRef.current = false;
@@ -183,6 +243,12 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   }, []);
 
   const togglePlay = useCallback(() => {
+    // The own music stands in: the button pauses and resumes it.
+    if (fallbackRef.current && !probingRef.current) {
+      if (userPausedRef.current) wantSound();
+      else setUserPaused(true);
+      return;
+    }
     if (playing) {
       shouldPlay.current = false;
       setUserPaused(true);
@@ -214,6 +280,8 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
           return;
         }
         controllerRef.current = controller;
+        kick();
+        lastPosRef.current = -1;
         statusRef.current.set({ volume: controller.getVolume?.() ?? null, track: null });
         heardRef.current = false;
         // play() before the player was ready gets lost: try again now.
@@ -226,6 +294,17 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
           const data = e?.data ?? {};
           setPlaying(!data.isPaused);
           reportPlayback(statusRef.current, data);
+          // Spotify's clock moves: it really plays (watchdog).
+          const pos = Number(data.position) || 0;
+          if (!data.isPaused && pos > 0 && pos !== lastPosRef.current) {
+            kick();
+            strikesRef.current = 0;
+            if (fallbackRef.current) {
+              probingRef.current = false;
+              setFallback(false);
+            }
+          }
+          lastPosRef.current = pos;
           if (!tracksRef.current.length) return;
           if ((Number(data.position) || 0) > 1000) heardRef.current = true;
           const sp = specialRef.current;
@@ -254,10 +333,62 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     return () => events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
   }, [sync]);
 
-  useEffect(sync, [on, muted, userPaused, sync]);
+  useEffect(sync, [on, muted, userPaused, fallback, sync]);
 
-  /** true while Spotify stands in for the chiptune music. */
+  // The watchdog (see STALL_MS). Only counts while music should play: in the
+  // hall, music on, sound on, not paused, page visible, audio unlocked.
   const active = wanted && allowed;
+  useEffect(() => {
+    if (!active) {
+      setFallback(false);
+      probingRef.current = false;
+      return;
+    }
+    const timer = window.setInterval(() => {
+      const listening = on && !isMuted() && !userPausedRef.current && unlockedRef.current && !document.hidden;
+      if (!listening) return kick();
+      const now = Date.now();
+      if (fallbackRef.current && !probingRef.current) {
+        if (now - probeAtRef.current >= PROBE_MS) probe();
+        return kick();
+      }
+      if (now - aliveAtRef.current < STALL_MS) return;
+      kick();
+      // The track list may have failed to load: ask again for the next try.
+      if (!tracksRef.current.length) {
+        playlistTracksWithin(HALL_PLAYLIST_ID, 4000).then((t) => {
+          if (t.length && !tracksRef.current.length) tracksRef.current = t;
+        });
+      }
+      const controller = controllerRef.current;
+      if (probingRef.current) {
+        // The new try stayed silent too: the own music goes on.
+        probingRef.current = false;
+        controller?.pause();
+        console.warn('[RetroMind] Spotify still silent, own music keeps playing');
+        return;
+      }
+      // Spotify's browser player (Premium) stays silent: the embed takes over
+      // (the hook rebuilds the player), before anything else is tried.
+      if (controller?.setVolume && giveUpPremium('no sound in the hall')) return;
+      strikesRef.current += 1;
+      if (controller && strikesRef.current < 2) {
+        console.warn('[RetroMind] Spotify silent, trying another song');
+        if (specialRef.current || !tracksRef.current.length) {
+          startedRef.current = false;
+          sync();
+        } else nextSong();
+        return;
+      }
+      console.warn('[RetroMind] Spotify silent, own music takes over');
+      strikesRef.current = 0;
+      probeAtRef.current = now;
+      controller?.pause();
+      setFallback(true);
+    }, WATCH_EVERY_MS);
+    return () => window.clearInterval(timer);
+  }, [active, on, sync, nextSong, probe]);
+
   return {
     containerRef,
     /** Premium at the door: the song that will play inside, heard muffled outside. */
@@ -267,13 +398,21 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     ready,
     allowed,
     active,
-    playing,
+    /** Spotify is silent: the hall's own music plays instead (GamingApp). */
+    fallback: active && fallback,
+    /** Paused with the player's button. */
+    paused: userPaused,
+    playing: fallback ? on && !muted && !userPaused : playing,
     togglePlay,
     playNext,
     playPrevious,
     /** "Title · Artist" of the song playing, when known. */
-    songTitle: special ? `${special.name} · ${special.sub}` : trackName(song),
-    canSkip: !!song || !!special,
+    songTitle: fallback
+      ? tr('Own arcade music · Spotify is not responding', 'Eigene Hallenmusik · Spotify antwortet nicht')
+      : special
+        ? `${special.name} · ${special.sub}`
+        : trackName(song),
+    canSkip: !!song || !!special || fallback,
     status: statusRef.current,
     playUri,
     backToTheme,
