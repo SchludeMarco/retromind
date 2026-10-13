@@ -656,7 +656,9 @@ const App: React.FC = () => {
       <div aria-hidden="true" className="spotify-host">
         <div ref={spotify.containerRef} />
       </div>
-      {!showSplash && <MusicConsentBanner />}
+      {/* Asked on the welcome screen first; anyone who left that switch alone
+          gets this card once they are through the name form, not in it. */}
+      {!showSplash && verified && <MusicConsentBanner />}
 
       {(!warm || phase === 'intro' || !verified) && <Header compact={verified && phase !== 'intro'} />}
       {!warm && verified && phase !== 'intro' && (
@@ -686,6 +688,7 @@ const App: React.FC = () => {
           maxBirthDate={todayStamp()}
           onGoogleSignIn={handleGoogleSignIn}
           onVerified={handleVerified}
+          revealed={menuRevealed || !showSplash}
         />
       ) : (
         <>
@@ -800,6 +803,7 @@ const App: React.FC = () => {
               onSelectGalleryItem={selectGalleryItem}
               diaryWritten={diaryEntry.trim().length > 0}
               onOpenStage={openStage}
+              userName={user.name}
             />
           )}
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppPhase } from '../types';
 import { tr } from '../lib/i18n';
+import { BOOK_GOAL, bookPages } from './BookProgress';
 
 // The journey as free "Etappen" (Marco, 2026-10-06): once a journey has
 // begun, every station can be opened straight from the start page, in any
@@ -34,6 +35,11 @@ export const JourneyStages: React.FC<{
         : null
       : p === 'diary'
       ? diaryWritten ? tr('written', 'geschrieben') : null
+      : p === 'book'
+      ? tr(
+          `${bookPages(memoriesCount, diaryWritten)} of ${BOOK_GOAL} pages`,
+          `${bookPages(memoriesCount, diaryWritten)} von ${BOOK_GOAL} Seiten`
+        )
       : null;
 
   return (

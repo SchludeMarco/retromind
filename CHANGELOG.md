@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik-Schalter, sanfterer Einstieg, „Deine Zeit“ und Buch-Fortschritt**
+  (2026-10-13, PR #189): Die Frage nach der Musik von Spotify steht jetzt
+  als Schalter direkt auf dem Willkommensbildschirm. Wer ihn nicht anfasst,
+  wird erst nach dem Namensformular gefragt statt mittendrin. Über dem
+  Namensformular schwebt die Kaminuhr klein ein, so wirkt der Wechsel vom
+  dunklen Uhrenraum weniger abrupt. Vor dem Start der Reise zeigt die
+  Startseite dein eigenes Jahrzehnt mit Stichworten von damals und drei
+  Postkarten zum Öffnen. Und ein Balken zeigt, wie voll dein
+  Erinnerungsbuch ist: Jede beantwortete Frage ist eine Seite, das Tagebuch
+  eine weitere, zehn Seiten sind das erste Ziel.
+
 - **Wegweiser im God-of-War-Stil** (2026-10-13, PR #188): Auf dem
   Holzwegweiser zur Gaming-Zone steht „To the gaming zone“ jetzt in
   kantigen, griechisch anmutenden Großbuchstaben aus gebürstetem Metall,
