@@ -16,12 +16,14 @@
   overflow: visible;
 }
 .gaming-signpost-text {
-  font-family: Impact, 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  /* God of War style: chiseled Greek capitals in brushed metal. */
+  font-family: 'Cinzel', 'Cinzel Decorative', 'Trajan Pro', Georgia, serif;
   font-weight: 900;
-  letter-spacing: 0.05em;
-  fill: #fff1c2;
-  stroke: #2a1205;
-  stroke-width: 0.8;
+  letter-spacing: 0.08em;
+  fill: url(#gaming-sign-metal);
+  stroke: #1a0d05;
+  stroke-width: 1.6;
+  stroke-linejoin: miter;
   paint-order: stroke;
 }
 /* The board nudges towards the arcade on hover, like a gentle push. */

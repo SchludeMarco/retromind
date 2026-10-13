@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Wegweiser im God-of-War-Stil': {
+    title: 'Signpost in God of War style',
+    text: 'The wooden signpost to the gaming zone now says “To the gaming zone” in chiseled, Greek-looking capitals of brushed metal, inspired by the God of War logo. The font is freely licensed (Cinzel) and comes straight from RetroMind, not from someone else’s server.',
+  },
   'Feinschliff nach dem Grok-Test': {
     title: 'Polish after the Grok test',
     text: 'On narrow phones the top bar fits on the screen again: the buttons are a little smaller and the feedback button shows only the word there. The decades on the start page sit as six equal buttons in two tidy rows, with “your era” in small print below. Instead of a puzzling red dot, the gear now says “New” when there is something to read under “What’s new”. Orange buttons with white text are a little darker and so easier to read. And when you tap the welcome screen to hear the clock, a bouncing speaker and “the clock is running” appear, even if your phone is on silent.',

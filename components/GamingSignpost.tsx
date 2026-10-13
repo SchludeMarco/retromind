@@ -2,6 +2,7 @@ import React from 'react';
 import { withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
 import { tr } from '../lib/i18n';
+import '@fontsource/cinzel/latin-900.css';
 import './gamingSignpost.css';
 
 const GAMING_URL = 'https://retromind-gaming.vercel.app/';
@@ -12,6 +13,9 @@ const GAMING_URL = 'https://retromind-gaming.vercel.app/';
 // The gaming edition lives on its own origin, so the mute and Google choice
 // travel along as URL parameters; they are read at click time so a toggle
 // made after the page rendered still counts.
+// Lettering (Marco, 2026-10-13): chiseled Greek capitals in brushed metal,
+// reminiscent of the God of War logo. The original logo font is not free,
+// so this uses Cinzel (SIL Open Font License), self-hosted via Fontsource.
 export const GamingSignpost: React.FC = () => (
   <a
     className="gaming-signpost"
@@ -32,6 +36,12 @@ export const GamingSignpost: React.FC = () => (
           <stop offset="0" stopColor="#6b4320" />
           <stop offset="0.5" stopColor="#8d5c2e" />
           <stop offset="1" stopColor="#5a3818" />
+        </linearGradient>
+        <linearGradient id="gaming-sign-metal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#f4f1ea" />
+          <stop offset="0.45" stopColor="#c9c4ba" />
+          <stop offset="0.55" stopColor="#8e877c" />
+          <stop offset="1" stopColor="#d8d2c6" />
         </linearGradient>
       </defs>
       {/* The post, standing in a little mound of earth. */}
@@ -63,10 +73,10 @@ export const GamingSignpost: React.FC = () => (
             <circle cx={x - 0.9} cy={y - 0.9} r="1.1" fill="#bdbdbd" />
           </g>
         ))}
-        <text className="gaming-signpost-text" x="110" y="48" textAnchor="middle" fontSize="17">
+        <text className="gaming-signpost-text" x="116" y="46" textAnchor="middle" fontSize="15">
           TO THE
         </text>
-        <text className="gaming-signpost-text" x="110" y="70" textAnchor="middle" fontSize="20">
+        <text className="gaming-signpost-text" x="116" y="68" textAnchor="middle" fontSize="18">
           GAMING ZONE
         </text>
       </g>
