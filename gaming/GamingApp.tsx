@@ -10,6 +10,7 @@ import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { Entrance } from './components/Entrance';
 import { MuteButton } from './components/MuteButton';
+import { BackToZeitreise } from './components/BackToZeitreise';
 import { CartInsert } from './components/CartInsert';
 import { CoinDrop } from './components/CoinDrop';
 import { ATTRACT_AFTER_MS, AttractMode } from './components/AttractMode';
@@ -674,6 +675,7 @@ export const GamingApp: React.FC = () => {
         />
       ) : (
         <main className="hub">
+          <BackToZeitreise className="pixel-font back-hub" />
           <header className="hud pixel-font">
             <h1 className="brand rgb-split" onClick={tapLogo}>
               <img className="brand-motif" src="/gaming/motif.webp" alt="" />

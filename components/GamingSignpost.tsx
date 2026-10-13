@@ -5,7 +5,8 @@ import { tr } from '../lib/i18n';
 import '@fontsource/cinzel/latin-900.css';
 import './gamingSignpost.css';
 
-const GAMING_URL = 'https://retromind-gaming.vercel.app/';
+// ?from=zeitreise lets Gaming show a way back (gaming/lib/cameFrom.ts).
+const GAMING_URL = 'https://retromind-gaming.vercel.app/?from=zeitreise';
 
 // Wooden signpost on the Zeitreise start page (Marco, 2026-10-07): "To the
 // gaming zone", a click leads to RetroMind – Gaming. Same wood as the

@@ -216,7 +216,7 @@ export const SettingsModal: React.FC<{
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('More editions', 'Weitere Editionen')}</span>
         <a
-          href="/gaming/"
+          href="/gaming/?from=zeitreise"
           className="retro-button inline-block px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm no-underline"
         >
           {tr('🕹️ Open RetroMind – Gaming', '🕹️ RetroMind – Gaming öffnen')}

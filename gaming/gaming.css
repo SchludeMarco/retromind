@@ -3588,3 +3588,45 @@ section:first-child > .media-head {
 .arcade[data-palette='modul'] .facts-chapter summary {
   font-size: 13px;
 }
+
+/* Way back to the Zeitreise for visitors who came from there. */
+.back-zeitreise {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  text-decoration: none;
+  color: var(--bg);
+  background: var(--a3);
+}
+.back-zeitreise svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+.back-hub {
+  margin: 4px 4px 10px;
+}
+.back-door {
+  position: absolute;
+  z-index: 2;
+  top: max(12px, env(safe-area-inset-top));
+  left: 12px;
+  color: #1a1206;
+  background: #ffd23f;
+  box-shadow: 0 0 0 2px #1a1206, 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+.entering .back-door {
+  visibility: hidden;
+}
+.arcade[data-palette='modul'] .back-zeitreise {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #fff;
+  background: var(--a1);
+  box-shadow: none;
+}
