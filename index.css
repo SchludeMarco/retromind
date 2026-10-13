@@ -22,6 +22,15 @@
   --font-elegant: 'Cormorant Garamond', 'Playfair Display', serif;
 }
 
+/* "Klassisch": white text on the light amber is hard to read (3.2:1), so
+   those buttons and bubbles take the darker amber (5:1). Screen only, the
+   printed book keeps its look. */
+@media screen {
+  html:not([data-theme]) .bg-retro-amber.text-white {
+    background-color: var(--color-retro-amber-dark);
+  }
+}
+
 /* Selectable designs (Einstellungen → Design, see lib/theme.ts). Each one
    redefines the colour tokens above; "Klassisch" is the default and needs no
    block. Tailwind's white/gray/red are re-pointed too, so the many bg-white
@@ -156,13 +165,16 @@
     border-color: transparent;
     box-shadow: 0 4px 12px rgba(164, 55, 22, 0.18);
   }
-  /* Ink-black buttons become terracotta, the design's one call-to-action colour. */
-  html[data-theme="retro-warm"] .retro-button.bg-retro-ink {
-    background-color: var(--color-retro-amber);
+  /* Ink-black buttons become terracotta, the design's one call-to-action
+     colour. White text on it uses a slightly deeper terracotta than the
+     accent itself, so it stays readable (contrast 4.9:1 instead of 3.8:1). */
+  html[data-theme="retro-warm"] .retro-button.bg-retro-ink,
+  html[data-theme="retro-warm"] .bg-retro-amber.text-white {
+    background-color: #bf4b28;
   }
   html[data-theme="retro-warm"] .retro-button.bg-retro-ink:hover,
   html[data-theme="retro-warm"] .retro-button.bg-retro-amber:hover {
-    background-color: #bf4b28;
+    background-color: var(--color-retro-amber-dark);
   }
   /* Hard ink outlines soften into the sepia line colour. */
   html[data-theme="retro-warm"] .border-retro-ink {
@@ -431,6 +443,11 @@ button:not(:disabled):active {
 @keyframes popIn {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+/* The speaker on the welcome screen jumps with every clock tick. */
+@keyframes tickPulse {
+  from { transform: scale(1.6); }
+  to { transform: scale(1); }
 }
 @keyframes spin {
   from { transform: rotate(0deg); }

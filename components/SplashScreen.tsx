@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MantelClock } from './MantelClock';
 import { startTicking, playGong } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
@@ -10,6 +10,8 @@ import { tr } from '../lib/i18n';
 const WHITE_IN_MS = 180;
 const WHITE_HOLD_MS = 900;
 const FADE_MS = 3200;
+// How long the "the clock is running" note stays after the first tap.
+const HEARD_NOTE_MS = 6000;
 
 // The very first thing anyone sees, on top of the whole app (and the
 // BootOverlay dissolve reveals it, rather than the intro card underneath).
@@ -23,14 +25,36 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
   const [struck, setStruck] = useState(false);
   const [fading, setFading] = useState(false);
   const [waitingForTouch, setWaitingForTouch] = useState(false);
+  // After the tap that unlocks sound, a short note pulses with every tick, so
+  // the tap gets a visible answer even on a phone set to silent.
+  const [heard, setHeard] = useState(false);
+  const [beat, setBeat] = useState(0);
+  const wasWaiting = useRef(false);
+  const heardRef = useRef(false);
   const muted = useMuted();
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     if (struck) return;
-    return startTicking(setWaitingForTouch);
+    return startTicking(
+      (waiting) => {
+        if (wasWaiting.current && !waiting) {
+          heardRef.current = true;
+          setHeard(true);
+        }
+        wasWaiting.current = waiting;
+        setWaitingForTouch(waiting);
+      },
+      () => { if (heardRef.current) setBeat((b) => b + 1); },
+    );
   }, [struck]);
+
+  useEffect(() => {
+    if (!heard) return;
+    const t = setTimeout(() => { heardRef.current = false; setHeard(false); }, HEARD_NOTE_MS);
+    return () => clearTimeout(t);
+  }, [heard]);
 
   const handleStart = () => {
     if (struck) return;
@@ -71,10 +95,17 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
       <p
         aria-live="polite"
         className={`relative mt-6 text-sm text-[#c9ab78]/80 transition-opacity duration-500 ${
-          waitingForTouch && !muted && !struck ? 'opacity-100' : 'opacity-0'
+          (waitingForTouch || heard) && !muted && !struck ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {tr('🔊 Tap anywhere on the screen to hear the clock tick.', '🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.')}
+        {heard ? (
+          <>
+            <span key={beat} aria-hidden="true" className="inline-block animate-[tickPulse_0.3s_ease-out]">🔊</span>{' '}
+            {tr('Tick, tock … the clock is running. No sound? Turn your volume up.', 'Tick, tack … die Uhr läuft. Nichts zu hören? Stell den Ton lauter.')}
+          </>
+        ) : (
+          tr('🔊 Tap anywhere on the screen to hear the clock tick.', '🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.')
+        )}
       </p>
       {struck && (
         <div

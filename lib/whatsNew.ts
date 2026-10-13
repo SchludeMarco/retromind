@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Feinschliff nach dem Grok-Test': {
+    title: 'Polish after the Grok test',
+    text: 'On narrow phones the top bar fits on the screen again: the buttons are a little smaller and the feedback button shows only the word there. The decades on the start page sit as six equal buttons in two tidy rows, with “your era” in small print below. Instead of a puzzling red dot, the gear now says “New” when there is something to read under “What’s new”. Orange buttons with white text are a little darker and so easier to read. And when you tap the welcome screen to hear the clock, a bouncing speaker and “the clock is running” appear, even if your phone is on silent.',
+  },
   'Gaming-Edition: Eigene Pixelbilder für jedes Spiel': {
     title: 'Our own pixel pictures for every game',
     text: 'Instead of the little pixel monster, every game card now shows a whole pixel picture. The 44 games in the catalog each have a hand-drawn scene of their world, like an airship between floating islands or a country road at sunset. Real covers, famous characters and logos are deliberately left out, because they belong to the game companies. Every other game from the archive and search gets a fitting picture automatically: racing games a road, space games stars and planets, dragon games a castle and so on, a little different for every game. In the hall the card shows only the picture, because the title is already on the label.',

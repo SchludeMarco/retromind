@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Feinschliff nach dem Grok-Test** (2026-10-13, PR #187): Auf schmalen
+  Handys passt die Kopfleiste wieder ganz auf den Bildschirm, die Knöpfe
+  sind etwas kleiner und der Feedback-Knopf zeigt dort nur das Wort. Die
+  Jahrzehnte auf der Startseite stehen als sechs gleich große Knöpfe in
+  zwei ordentlichen Reihen, „deine Zeit“ klein darunter. Statt eines
+  rätselhaften roten Punkts steht am Zahnrad jetzt „Neu“, wenn es unter
+  „Was ist neu“ etwas zu lesen gibt. Orange Knöpfe mit weißer Schrift sind
+  etwas dunkler und dadurch besser lesbar. Und wer auf dem
+  Willkommensbildschirm tippt, um die Uhr zu hören, sieht einen hüpfenden
+  Lautsprecher und „die Uhr läuft“, auch wenn das Handy stumm ist.
+
 - **Gaming-Edition: Eigene Pixelbilder für jedes Spiel** (2026-10-11, PR #186):
   Statt des kleinen Pixel-Monsters zeigt jede Spielkarte jetzt ein ganzes
   Pixelbild. Die 44 Spiele im Katalog haben je eine selbst gezeichnete Szene
