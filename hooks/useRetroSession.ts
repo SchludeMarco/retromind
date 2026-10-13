@@ -5,12 +5,15 @@ import { computeFocusDecade } from '../lib/format';
 
 // Bundles the whole journey — profile, captured memories, diary, UI prefs —
 // together with its localStorage persistence so App.tsx doesn't have to.
-export function useRetroSession() {
+// `reloadedPhase` is the page that was open before a reload in this tab;
+// the journey then simply continues there without a resume offer.
+export function useRetroSession(reloadedPhase?: AppPhase | null) {
   const saved = useMemo(loadSession, []);
+  const startPhase = reloadedPhase && PHASES.includes(reloadedPhase) ? reloadedPhase : 'intro';
 
-  const [phase, setPhase] = useState<AppPhase>('intro');
+  const [phase, setPhase] = useState<AppPhase>(startPhase);
   const [resumeTarget, setResumeTarget] = useState<AppPhase | null>(
-    saved.phase && saved.phase !== 'intro' ? saved.phase : null
+    startPhase === 'intro' && saved.phase && saved.phase !== 'intro' ? saved.phase : null
   );
   const [user, setUser] = useState<UserProfile>({ ...EMPTY_USER, ...saved.user });
   const [memories, setMemories] = useState<CapturedMemory[]>(saved.memories ?? []);

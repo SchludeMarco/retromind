@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Neu laden bleibt auf der Seite** (2026-10-13, PR #202): Wenn du die
+  Seite neu lädst, landest du wieder dort, wo du gerade warst, statt auf dem
+  Willkommensbildschirm. In der Zeitreise bleibt die offene Etappe, in der
+  Gaming-Halle bleiben Halle, Reiter, Filter, Suche und ein offenes Spiel.
+  Ein neuer Tab oder ein späterer Besuch beginnt weiter am Start.
+
 - **Konten in den Einstellungen, Zahnrad schon im Startmenü** (2026-10-13,
   PR #201): Die freiwillige Anmeldung mit Google und Spotify findest du
   jetzt in den Einstellungen unter „Konten (freiwillig)“, dort kannst du dich

@@ -22,6 +22,7 @@ import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { countOpened } from '../lib/usage';
+import { readPage, writePage } from '../lib/pageMemory';
 import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
@@ -92,10 +93,24 @@ const HALL_LIGHTS = Array.from({ length: 12 }, (_, i) => ({
 // How long an Easter egg or badge note stays up.
 const TOAST_MS = 12000;
 
+// Where this tab was before a reload (hall or street, tab, filters, open game).
+const PAGE_KEY = 'retromind-gaming.page';
+type OpenPage = {
+  screen: 'power' | 'hub';
+  view: View;
+  decade: string | null;
+  year: number | null;
+  platform: string | null;
+  selected: Game | null;
+  query: string;
+  results: Game[] | null;
+};
+
 export const GamingApp: React.FC = () => {
   const scrolledDown = useScrolledDown();
   const reducedMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
-  const [screen, setScreen] = useState<'power' | 'hub'>('power');
+  const reloaded = useMemo(() => readPage<OpenPage>(PAGE_KEY) ?? {}, []);
+  const [screen, setScreen] = useState<'power' | 'hub'>(reloaded.screen === 'hub' ? 'hub' : 'power');
   // After the door the hub comes up out of the white picture.
   const [fromDoor, setFromDoor] = useState(false);
   const [toast, setToast] = useState<{ title: string; text: string; icon?: string; xbox?: boolean } | null>(null);
@@ -158,13 +173,13 @@ export const GamingApp: React.FC = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  const [view, setView] = useState<View>('catalog');
-  const [decade, setDecade] = useState<string | null>(null);
+  const [view, setView] = useState<View>(reloaded.view ?? 'catalog');
+  const [decade, setDecade] = useState<string | null>(reloaded.decade ?? null);
   // A single year inside the chosen decade narrows the filter further.
-  const [year, setYear] = useState<number | null>(null);
-  const [platform, setPlatform] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Game[] | null>(null);
+  const [year, setYear] = useState<number | null>(reloaded.year ?? null);
+  const [platform, setPlatform] = useState<string | null>(reloaded.platform ?? null);
+  const [query, setQuery] = useState(reloaded.query ?? '');
+  const [results, setResults] = useState<Game[] | null>(reloaded.results ?? null);
   const [searching, setSearching] = useState(false);
   const [searchMore, setSearchMore] = useState<{
     term: string;
@@ -176,7 +191,7 @@ export const GamingApp: React.FC = () => {
     /** The headline over the results, fixed when the search runs. */
     label: string;
   }>({ term: '', total: 0, next: null, loading: false, related: false, label: '' });
-  const [selected, setSelected] = useState<Game | null>(null);
+  const [selected, setSelected] = useState<Game | null>(reloaded.selected ?? null);
   const [guruOpen, setGuruOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
@@ -553,6 +568,20 @@ export const GamingApp: React.FC = () => {
     const btn = document.querySelector('.chill-btn');
     if (btn) btn.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
   }, [view, reducedMotion]);
+
+  // A reload keeps this page (Marco, 2026-10-13); only the search keeps its hits.
+  useEffect(() => {
+    writePage(PAGE_KEY, {
+      screen,
+      view,
+      decade,
+      year,
+      platform,
+      selected,
+      query,
+      results: view === 'search' ? results : null,
+    } satisfies OpenPage);
+  }, [screen, view, decade, year, platform, selected, query, results]);
 
   // Out of the hall again: the game closes, the music stops and the
   // entrance with the muffled bass from inside is back.

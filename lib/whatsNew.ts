@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Neu laden bleibt auf der Seite': {
+    title: 'Reloading keeps your page',
+    text: 'When you reload the page you land right where you were instead of on the welcome screen. In the time journey the open stage stays; in the gaming hall the hall, tab, filters, search and an open game stay. A new tab or a later visit still begins at the start.',
+  },
   'Konten in den Einstellungen, Zahnrad schon im Startmenü': {
     title: 'Accounts in the settings, gear on the welcome screen',
     text: 'The optional Google and Spotify sign-ins now live in the settings under “Accounts (optional)”, where you can also sign out again. The two sign-in boxes on the start page are gone. The settings gear now already sits in the top-right corner of the welcome screen with the ticking clock, in every design.',

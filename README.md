@@ -450,6 +450,11 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 
 ### Für alle Module
 
+- **Neu laden bleibt auf der Seite** ([`lib/pageMemory.ts`](lib/pageMemory.ts))
+  – beide Apps merken sich pro Browser-Tab die offene Seite (Zeitreise: Etappe
+  und ob der Willkommensbildschirm schon vorbei ist; Gaming: Halle oder Eingang,
+  Reiter, Filter, Suche, offenes Spiel). Ein Neuladen landet dort wieder; ein
+  neuer Tab oder späterer Besuch beginnt am Start.
 - **Fenster bleiben, wo man ist** ([`components/Modal.tsx`](components/Modal.tsx))
   – offene Fenster (Einstellungen, Was ist neu, Feedback und andere) behalten
   ihre Scroll-Position, auch wenn im Hintergrund die Musik zum nächsten Lied
