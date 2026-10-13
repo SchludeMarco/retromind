@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-export const Modal: React.FC<{ onClose: () => void; label: string; children: React.ReactNode }> = ({ onClose, label, children }) => {
+// `above` lifts the dialog over the welcome screen (SplashScreen, z-900).
+export const Modal: React.FC<{ onClose: () => void; label: string; above?: boolean; children: React.ReactNode }> = ({ onClose, label, above = false, children }) => {
   const ref = useRef<HTMLDivElement>(null);
   // Parents pass a fresh onClose on every render (e.g. each time the song
   // changes). Keeping it in a ref lets the setup below run only once, so the
@@ -40,7 +41,7 @@ export const Modal: React.FC<{ onClose: () => void; label: string; children: Rea
   }, []);
 
   return (
-    <div className="rm-fixed fixed inset-0 bg-black/60 z-[650] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+    <div className={`rm-fixed fixed inset-0 bg-black/60 ${above ? 'z-[1100]' : 'z-[650]'} flex items-center justify-center p-4 backdrop-blur-sm`} onClick={onClose}>
       <div
         ref={ref}
         role="dialog"

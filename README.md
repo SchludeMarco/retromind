@@ -154,13 +154,15 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   freigegeben, sonst aus der Drive-Sicherung);
   ändern lässt es sich in den Einstellungen unter „Deine Angaben“. Ohne Google
   fragt die App beim ersten Mal; danach bleiben die Angaben auf dem Gerät und
-  die Abfrage entfällt bei jedem weiteren Besuch. Der Knopf „Mit Google
-  anmelden“ steht auf der Startseite direkt unter „Zeitreise starten“ (bzw.
-  unter „Weitermachen“), in allen Designs; Googles Skript lädt erst, wenn man
-  nach dem Knopf greift.
-- **Einstellungen immer oben rechts** – das Zahnrad ⚙️ sitzt in allen Designs
-  fest oben rechts in der Ecke, bleibt beim Scrollen stehen und ist schon auf
-  dem Namensformular erreichbar (z. B. um die Sprache umzustellen).
+  die Abfrage entfällt bei jedem weiteren Besuch. „Mit Google anmelden“ und
+  „Mit Spotify anmelden“ stehen in den Einstellungen unter „Konten
+  (freiwillig)“, samt Abmelden; Googles Skript lädt erst, wenn man nach dem
+  Knopf greift.
+- **Einstellungen immer oben rechts** – das Zahnrad ⚙️ sitzt schon auf dem
+  Willkommensbildschirm oben rechts (in allen Designs), in „Klassisch“ und
+  „Nachtschicht“ danach fest oben rechts in der Ecke, auch beim Scrollen und
+  auf dem Namensformular (z. B. um die Sprache umzustellen); in „Retro Warm“
+  in der Kopfleiste.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Mit **Spotify Premium** läuft die Musik

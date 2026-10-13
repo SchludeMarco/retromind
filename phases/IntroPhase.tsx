@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { AppPhase, GalleryItem, GoogleUser, SpotifyUser } from '../types';
+import { AppPhase, GalleryItem } from '../types';
 import { DECADES_DB } from '../constants';
 import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
-import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
-import { warmUpGoogle } from '../lib/googleAuth';
-import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 import { JourneyStages } from '../components/JourneyStages';
 import { GamingSignpost } from '../components/GamingSignpost';
 import { tr } from '../lib/i18n';
@@ -13,21 +10,9 @@ import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
 import { LivingRoom } from '../components/LivingRoom';
 
-const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
-  premium: 'Spotify Premium',
-  free: 'Spotify Free',
-  open: 'Spotify Free',
-};
-
 export const IntroPhase: React.FC<{
   resumeTarget: AppPhase | null;
   memoriesCount: number;
-  googleStatus: GoogleAuthStatus;
-  googleUser: GoogleUser | null;
-  onGoogleSignIn: () => void;
-  spotifyStatus: SpotifyAuthStatus;
-  spotifyUser: SpotifyUser | null;
-  onSpotifySignIn: () => void;
   onStart: () => void;
   onResume: () => void;
   onReset: () => void;
@@ -42,8 +27,7 @@ type IntroProps = React.ComponentProps<typeof IntroPhase>;
 
 const ClassicIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount,
-  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName,
-  googleStatus, googleUser, onGoogleSignIn, ...rest
+  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName
 }) => (
   <div className="flex flex-col items-center py-6 md:py-10 text-center animate-fadeIn">
     {/* The living room comes first in every design (components/LivingRoom.tsx). */}
@@ -66,8 +50,6 @@ const ClassicIntro: React.FC<IntroProps> = ({
           {tr('Start the time travel', 'Zeitreise starten')}
         </button>
       )}
-
-      {!resumeTarget && <GoogleStartLogin warm={false} status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />}
 
       {!resumeTarget && (
         <EraSpotlight warm={false} userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
@@ -93,8 +75,6 @@ const ClassicIntro: React.FC<IntroProps> = ({
         </div>
       )}
 
-      {resumeTarget && <GoogleStartLogin warm={false} status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />}
-
       {resumeTarget && (
         <JourneyStages
           warm={false}
@@ -112,107 +92,14 @@ const ClassicIntro: React.FC<IntroProps> = ({
         )}
       </p>
 
-      <IntroExtras {...rest} />
+      <IntroExtras />
     </div>
   </div>
 );
 
-// The optional Google sign-in, right under the start button: before, it only
-// showed up at the bottom of the page (or behind the account button in Retro
-// Warm). Google's script still loads only once someone reaches for the
-// button (warmUpGoogle), unless they chose Google before (useGoogleAuth).
-const GoogleStartLogin: React.FC<{
-  warm: boolean;
-  status: GoogleAuthStatus;
-  user: GoogleUser | null;
-  onSignIn: () => void;
-}> = ({ warm, status, user, onSignIn }) => {
-  if (status === 'not_configured') return null;
-  const box = warm
-    ? 'mt-4 rounded-2xl bg-retro-cream px-4 py-3 text-sm'
-    : 'mb-8 border-2 border-retro-ink bg-white p-4 text-sm';
-  if (status === 'signed_in' && user) {
-    return (
-      <div className={box}>
-        <p className="font-bold">
-          {tr(
-            `☁️ Signed in as ${user.name} – your journey is backed up to your own Google Drive.`,
-            `☁️ Angemeldet als ${user.name} – deine Reise wird in deinem eigenen Google Drive gesichert.`
-          )}
-        </p>
-      </div>
-    );
-  }
-  return (
-    <div className={`${box} flex flex-col items-center gap-2 text-center`}>
-      <p>
-        {tr(
-          '☁️ Optional: back up your journey to your own Google Drive and continue on any device.',
-          '☁️ Freiwillig: Sichere deine Reise in deinem eigenen Google Drive und mach auf jedem Gerät weiter.'
-        )}
-      </p>
-      <button
-        onClick={onSignIn}
-        // Google's script only loads once someone reaches for this button.
-        onPointerEnter={warmUpGoogle}
-        onPointerDown={warmUpGoogle}
-        onFocus={warmUpGoogle}
-        disabled={status === 'signing_in'}
-        className={`border-2 border-retro-ink px-5 py-2 font-bold bg-white disabled:opacity-60 ${warm ? 'rounded-full' : 'retro-button'}`}
-      >
-        {status === 'signing_in'
-          ? tr('Signing in …', 'Anmelden …')
-          : status === 'error'
-          ? tr('Sign in with Google again', 'Erneut mit Google anmelden')
-          : tr('Sign in with Google', 'Mit Google anmelden')}
-      </button>
-    </div>
-  );
-};
-
-const IntroExtras: React.FC<Pick<IntroProps, 'spotifyStatus' | 'spotifyUser' | 'onSpotifySignIn'>> = ({
-  spotifyStatus, spotifyUser, onSpotifySignIn,
-}) => (
+const IntroExtras: React.FC = () => (
   <>
       <GamingSignpost />
-
-      {spotifyStatus !== 'not_configured' && (
-        <div className="mb-8 border-2 border-retro-ink bg-white p-4">
-          {spotifyStatus === 'signed_in' && spotifyUser ? (
-            <p className="font-bold">
-              🎧 {tr('Signed in as', 'Angemeldet als')} {spotifyUser.name} ({SPOTIFY_PRODUCT_LABEL[spotifyUser.product] || spotifyUser.product}).
-            </p>
-          ) : (
-            <>
-              <p className="mb-3">
-                {tr(
-                  <>
-                    Sign in with Spotify so RetroMind knows whether you have <strong>Premium</strong>. The
-                    background playlist embed works either way (see Settings) – this login is only there
-                    to get to know you as a person with your own taste in music.
-                  </>,
-                  <>
-                    Melde dich mit Spotify an, damit RetroMind weiß, ob du <strong>Premium</strong> hast. Das
-                    Hintergrund-Playlist-Embed läuft unabhängig davon (siehe Einstellungen) – dieser Login ist
-                    nur dafür da, dich als Person mit deinem eigenen Musikgeschmack zu kennen.
-                  </>
-                )}
-              </p>
-              <button
-                onClick={onSpotifySignIn}
-                disabled={spotifyStatus === 'signing_in'}
-                className="retro-button border-2 border-retro-ink px-6 py-3 font-bold bg-white disabled:opacity-60"
-              >
-                {spotifyStatus === 'signing_in'
-                  ? tr('Redirecting …', 'Weiterleitung …')
-                  : spotifyStatus === 'error'
-                  ? tr('Sign in with Spotify again', 'Erneut mit Spotify anmelden')
-                  : tr('Sign in with Spotify', 'Mit Spotify anmelden')}
-              </button>
-            </>
-          )}
-        </div>
-      )}
 
       <details className="mt-10 text-left text-sm text-retro-brown">
         <summary className="cursor-pointer font-bold uppercase tracking-widest text-xs">
@@ -248,8 +135,7 @@ const FEATURES = [
 
 const WarmIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount, onStart, onResume, onReset,
-  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName,
-  googleStatus, googleUser, onGoogleSignIn, ...rest
+  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName
 }) => {
   const decades = Object.keys(DECADES_DB);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
@@ -312,7 +198,6 @@ const WarmIntro: React.FC<IntroProps> = ({
               <p className="text-sm text-retro-brown text-center mt-2">{tr('Free · Take all the time you like', 'Kostenlos · Ganz in Ruhe, so lange du magst')}</p>
             </>
           )}
-          <GoogleStartLogin warm status={googleStatus} user={googleUser} onSignIn={onGoogleSignIn} />
         </div>
       </section>
 
@@ -385,7 +270,7 @@ const WarmIntro: React.FC<IntroProps> = ({
       )}
 
       <section className="retro-card bg-retro-paper-white p-6 md:p-8 text-center">
-        <IntroExtras {...rest} />
+        <IntroExtras />
       </section>
     </div>
   );

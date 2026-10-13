@@ -7,6 +7,16 @@ import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
+import { GoogleUser, SpotifyUser } from '../types';
+import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
+import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
+import { warmUpGoogle } from '../lib/googleAuth';
+
+const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
+  premium: 'Spotify Premium',
+  free: 'Spotify Free',
+  open: 'Spotify Free',
+};
 
 function formatBirthDate(iso: string): string {
   const [y, m, d] = iso.split('-');
@@ -23,12 +33,24 @@ export const SettingsModal: React.FC<{
   onToggleSpotify: () => void;
   spotifyAllowed: boolean;
   onOpenWhatsNew: () => void;
-  /** Shows the welcome screen (ticking clock, "Go back...") again. */
-  onBackToWelcome: () => void;
+  /** Shows the welcome screen (ticking clock, "Go back...") again; left out
+   *  while the welcome screen is already showing. */
+  onBackToWelcome?: () => void;
   hasUnseenNews: boolean;
   userName: string;
   userBirthDate: string;
-  onEditProfile: () => void;
+  /** Left out on the welcome screen, where the name form isn't reached yet. */
+  onEditProfile?: () => void;
+  googleStatus: GoogleAuthStatus;
+  googleUser: GoogleUser | null;
+  onGoogleSignIn: () => void;
+  onGoogleSignOut: () => void;
+  spotifyStatus: SpotifyAuthStatus;
+  spotifyUser: SpotifyUser | null;
+  onSpotifySignIn: () => void;
+  onSpotifySignOut: () => void;
+  /** Lifts the dialog above the welcome screen. */
+  aboveSplash?: boolean;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
@@ -37,6 +59,9 @@ export const SettingsModal: React.FC<{
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
   userName, userBirthDate, onEditProfile,
+  googleStatus, googleUser, onGoogleSignIn, onGoogleSignOut,
+  spotifyStatus, spotifyUser, onSpotifySignIn, onSpotifySignOut,
+  aboveSplash = false,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -45,7 +70,7 @@ export const SettingsModal: React.FC<{
   const onHeadingTap = useSecretAdminTaps();
 
   return (
-    <Modal onClose={onDismiss} label={tr('App settings', 'App-Einstellungen')}>
+    <Modal onClose={onDismiss} label={tr('App settings', 'App-Einstellungen')} above={aboveSplash}>
       <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
         ✕
       </button>
@@ -60,13 +85,96 @@ export const SettingsModal: React.FC<{
           {userName || tr('No name', 'Ohne Namen')}
           {userBirthDate && <>, {tr('born', 'geboren am')} {formatBirthDate(userBirthDate)}</>}
         </p>
-        <button
-          onClick={onEditProfile}
-          className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
-        >
-          ✏️ {tr('Change name and date of birth', 'Name und Geburtsdatum ändern')}
-        </button>
+        {onEditProfile && (
+          <button
+            onClick={onEditProfile}
+            className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+          >
+            ✏️ {tr('Change name and date of birth', 'Name und Geburtsdatum ändern')}
+          </button>
+        )}
       </div>
+
+      {(googleStatus !== 'not_configured' || spotifyStatus !== 'not_configured') && (
+        <div className="mt-6 pt-5 border-t border-retro-ink/20">
+          <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Accounts (optional)', 'Konten (freiwillig)')}</span>
+          {googleStatus !== 'not_configured' && (
+            <div className="mb-4">
+              {googleStatus === 'signed_in' && googleUser ? (
+                <>
+                  <p className="text-sm mb-2">
+                    {tr(
+                      `☁️ Signed in with Google as ${googleUser.name}. Your journey is also backed up to your own Google Drive.`,
+                      `☁️ Mit Google angemeldet als ${googleUser.name}. Deine Reise wird zusätzlich in deinem eigenen Google Drive gesichert.`
+                    )}
+                  </p>
+                  <button onClick={onGoogleSignOut} className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm">
+                    {tr('Sign out of Google', 'Von Google abmelden')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={onGoogleSignIn}
+                    // Google's script only loads once someone reaches for this button.
+                    onPointerEnter={warmUpGoogle}
+                    onPointerDown={warmUpGoogle}
+                    onFocus={warmUpGoogle}
+                    disabled={googleStatus === 'signing_in'}
+                    className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm disabled:opacity-60"
+                  >
+                    {googleStatus === 'signing_in'
+                      ? tr('Signing in …', 'Anmelden …')
+                      : googleStatus === 'error'
+                      ? tr('Sign in with Google again', 'Erneut mit Google anmelden')
+                      : tr('☁️ Sign in with Google', '☁️ Mit Google anmelden')}
+                  </button>
+                  <p className="text-[10px] text-retro-tan mt-2">
+                    {tr(
+                      'Backs your journey up to your own Google Drive, so you can continue on any device. Also applies to RetroMind – Gaming.',
+                      'Sichert deine Reise in deinem eigenen Google Drive, damit du auf jedem Gerät weitermachen kannst. Gilt auch für RetroMind – Gaming.'
+                    )}
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+          {spotifyStatus !== 'not_configured' && (
+            <div>
+              {spotifyStatus === 'signed_in' && spotifyUser ? (
+                <>
+                  <p className="text-sm mb-2">
+                    🎧 {tr('Signed in with Spotify as', 'Mit Spotify angemeldet als')} {spotifyUser.name} ({SPOTIFY_PRODUCT_LABEL[spotifyUser.product] || spotifyUser.product}).
+                  </p>
+                  <button onClick={onSpotifySignOut} className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm">
+                    {tr('Sign out of Spotify', 'Von Spotify abmelden')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={onSpotifySignIn}
+                    disabled={spotifyStatus === 'signing_in'}
+                    className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm disabled:opacity-60"
+                  >
+                    {spotifyStatus === 'signing_in'
+                      ? tr('Redirecting …', 'Weiterleitung …')
+                      : spotifyStatus === 'error'
+                      ? tr('Sign in with Spotify again', 'Erneut mit Spotify anmelden')
+                      : tr('🎧 Sign in with Spotify', '🎧 Mit Spotify anmelden')}
+                  </button>
+                  <p className="text-[10px] text-retro-tan mt-2">
+                    {tr(
+                      'With Spotify Premium the songs play in full instead of as 30-second previews.',
+                      'Mit Spotify Premium laufen die Songs ganz statt als 30-Sekunden-Vorschau.'
+                    )}
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Design & Atmosphere', 'Design & Atmosphäre')}</span>
@@ -236,6 +344,7 @@ export const SettingsModal: React.FC<{
         </button>
       </div>
 
+      {onBackToWelcome && (
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Welcome screen', 'Willkommensbildschirm')}</span>
         <button
@@ -245,6 +354,7 @@ export const SettingsModal: React.FC<{
           {tr('🕰️ Back to the welcome screen', '🕰️ Zurück zum Willkommensbildschirm')}
         </button>
       </div>
+      )}
 
       <p className="mt-6 pt-4 border-t border-retro-ink/20 text-xs uppercase tracking-wide text-retro-brown">
         RetroMind · Version {__APP_VERSION__}

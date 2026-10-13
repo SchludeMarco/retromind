@@ -623,10 +623,11 @@ const App: React.FC = () => {
     <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
-      {(!warm || showSplash) && <MuteToggle besideSettings={!warm && !showSplash} />}
-      {!warm && !showSplash && (
-        // Always in the top-right corner, also while scrolling and before the
-        // name form is filled in (it used to wait at the bottom right).
+      {(!warm || showSplash) && <MuteToggle besideSettings />}
+      {(!warm || showSplash) && (
+        // Always in the top-right corner: on the welcome screen in every
+        // design, and in Classic and Night Shift also while scrolling and
+        // before the name form is filled in (Retro Warm has it in its top bar).
         <button
           onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
           aria-label={unseenNews
@@ -706,11 +707,20 @@ const App: React.FC = () => {
           onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
           spotifyAllowed={spotify.allowed}
           onOpenWhatsNew={() => { playSFX('click'); setIsSettingsOpen(false); setIsWhatsNewOpen(true); setUnseenNews(false); }}
-          onBackToWelcome={() => { playSFX('click'); setIsSettingsOpen(false); setMenuRevealed(false); setShowSplash(true); }}
+          onBackToWelcome={showSplash ? undefined : () => { playSFX('click'); setIsSettingsOpen(false); setMenuRevealed(false); setShowSplash(true); }}
           hasUnseenNews={unseenNews}
           userName={user.name}
           userBirthDate={user.birthDate}
-          onEditProfile={handleEditProfile}
+          onEditProfile={showSplash || !verified ? undefined : handleEditProfile}
+          googleStatus={googleAuth.status}
+          googleUser={googleAuth.user}
+          onGoogleSignIn={handleGoogleSignIn}
+          onGoogleSignOut={handleGoogleSignOut}
+          spotifyStatus={spotifyAuth.status}
+          spotifyUser={spotifyAuth.user}
+          onSpotifySignIn={handleSpotifySignIn}
+          onSpotifySignOut={handleSpotifySignOut}
+          aboveSplash={showSplash}
           onDismiss={() => setIsSettingsOpen(false)}
           onCloseClick={closeSettingsWithSfx}
         />
@@ -718,6 +728,7 @@ const App: React.FC = () => {
 
       {isWhatsNewOpen && (
         <WhatsNewModal
+          aboveSplash={showSplash}
           onDismiss={() => setIsWhatsNewOpen(false)}
           onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
         />
@@ -797,12 +808,6 @@ const App: React.FC = () => {
             <IntroPhase
               resumeTarget={resumeTarget}
               memoriesCount={memories.length}
-              googleStatus={googleAuth.status}
-              googleUser={googleAuth.user}
-              onGoogleSignIn={handleGoogleSignIn}
-              spotifyStatus={spotifyAuth.status}
-              spotifyUser={spotifyAuth.user}
-              onSpotifySignIn={handleSpotifySignIn}
               onStart={startJourney}
               onResume={resumeJourney}
               onReset={handleResetJourney}

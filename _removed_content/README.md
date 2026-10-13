@@ -104,3 +104,6 @@ gebaut oder ausgeliefert.
   Pixel-Kacheln (ein gespiegeltes 8×8-Symbol pro Titel, entfernt am
   2026-10-11). Ersetzt durch eigene Pixel-Szenen pro Spiel in
   `gaming/lib/coverArt.ts`.
+- `IntroPhase-konten-kaesten.tsx.txt`: die Anmelde-Kästen für Google und
+  Spotify auf der Startseite der Zeitreise (entfernt am 2026-10-13). Beide
+  Anmeldungen stehen jetzt in den Einstellungen unter „Konten (freiwillig)“.
