@@ -8,8 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Gaming-Edition: Fakten & Geheimnisse zu jedem Spiel** (2026-10-13,
-  PR #PRNUM): Jede
-  Spieleseite hat einen neuen Reiter „Fakten & Geheimnisse“. Dort stehen ein
+  PR #191): Jede Spieleseite hat einen neuen Reiter „Fakten & Geheimnisse“. Dort stehen ein
   Steckbrief (wer das Spiel entwickelt, gestaltet und vertont hat, wann es
   auf welcher Plattform erschien, Reihe, Vorgänger und Nachfolger,
   Auszeichnungen, Verkaufszahlen, Alterseinstufungen), die Testwertungen von
