@@ -431,6 +431,24 @@
 .cozy-room .cozy-zzz text:nth-child(2) {
   animation-delay: 2s;
 }
+.cozy-room .cozy-spin {
+  animation: cozy-spin 0.9s linear infinite;
+}
+.cozy-room .cozy-notes {
+  animation: cozy-float 2.4s ease-out infinite;
+}
+.cozy-room .cozy-tv-switch {
+  animation: cozy-tv-switch 0.35s ease-out;
+}
+@keyframes cozy-spin {
+  0% { transform: translateX(-6px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateX(26px); opacity: 0; }
+}
+@keyframes cozy-tv-switch {
+  0% { opacity: 0.2; filter: brightness(2); }
+  100% { opacity: 1; filter: none; }
+}
 @keyframes cozy-hint {
   0%, 100% { opacity: 0.15; }
   50% { opacity: 0.95; }

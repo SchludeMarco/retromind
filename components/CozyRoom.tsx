@@ -71,7 +71,7 @@ type Box = [x: number, y: number, w: number, h: number];
 
 // Something in the room that can be touched: a button for the keyboard and
 // screen readers too, with a dashed outline on hover and keyboard focus.
-const Hot: React.FC<{
+export const Hot: React.FC<{
   on: boolean;
   label: string;
   onAct: () => void;

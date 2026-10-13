@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { StationCorner } from './components/StationCorner';
 import {
   AppPhase,
   VideoStatus,
@@ -788,6 +789,9 @@ const App: React.FC = () => {
               <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
             </>
           )}
+
+          {/* A corner of the Stube above every station (components/StationCorner.tsx). */}
+          {phase !== 'intro' && <StationCorner phase={phase} warm={warm} />}
 
           {phase === 'intro' && (
             <IntroPhase
