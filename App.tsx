@@ -13,6 +13,7 @@ import {
   getAiAvailability,
   AiAvailability,
 } from './services/geminiService';
+import { RetroTicker } from './components/RetroTicker';
 import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock, StationPicker } from './components';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
@@ -806,6 +807,7 @@ const App: React.FC = () => {
               userName={user.name}
             />
           )}
+          {phase === 'intro' && <RetroTicker warm={warm} focusDecade={focusDecade} />}
 
           {phase === 'onboarding' && (
             <OnboardingPhase

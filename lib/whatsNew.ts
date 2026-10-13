@@ -32,6 +32,14 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Laufband mit Sprüchen von damals und Grabbelkiste': {
+    title: 'A ticker of sayings from back then, and your Grabbelkiste',
+    text: 'At the bottom of the start page a ticker now runs like the news crawl on an old TV, with sayings (“Groovy!”, “Gag me with a spoon!”) and everyday things from back then (“Rewinding the cassette with a pencil”). Your own decade shows up more often. Behind each one sits a floppy disk: tap it to put the saying in your Grabbelkiste (a rummage box), tap again to take it out. The box at the start of the ticker counts along and shows everything you collected when you tap it. The ticker moves slowly, stops while your finger or the mouse is on it, and has its own pause button. In the Retro Warm design it sits right above the bottom bar, in Classic and Night Shift at the end of the start page. If you turned motion off, you swipe through it yourself.',
+  },
+  'Holzofen in der Stube': {
+    title: 'A wood stove in the living room',
+    text: 'The drawn living room now has a cast-iron wood stove with a glass door, a kettle and firewood. In the evening and at night a fire flickers inside and bathes the room in warm light; by day only the embers glow. The floor lamp has moved a little closer to the couch to make room.',
+  },
   'Gemütliche Stube': {
     title: 'A cozy living room',
     text: 'In the Retro Warm design, the time travel now feels like an evening on a warm couch. At the top of the start page sits a drawn living room: a caramel sofa with a crocheted blanket, a fringed floor lamp that glows softly, a steaming cup of tea and a cat asleep on the rug that twitches its tail now and then. Outside the window it’s the real time of day: the sun in the morning, the sunset in the evening, moon and stars at night, and in the evening the room gets dim and the lamp warmer. RetroMind also greets you by name to suit the hour (“Good evening, Marco. The lamp is on and the couch is warm.”). The background is a delicate wallpaper with warm lamplight from the corner, the cards are made of thick paper, and a wooden rail runs along the top and bottom. The texts are warmer too, like “Come on in, make yourself at home” on the name form. If you have turned off motion, the room stays still. The type stays large and easy to read.',

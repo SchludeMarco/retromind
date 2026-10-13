@@ -7,6 +7,24 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Laufband mit Sprüchen von damals und Grabbelkiste** (2026-10-13, PR #195):
+  Auf der Startseite läuft jetzt unten ein Laufband wie früher im Fernsehen,
+  mit Sprüchen („Null Bock!“, „Alles paletti!“) und Alltagsdingen von damals
+  („Die Kassette mit dem Bleistift zurückspulen“). Dein eigenes Jahrzehnt kommt
+  öfter vor. Hinter jedem Spruch sitzt eine Diskette: Ein Tipp darauf legt ihn
+  in deine Grabbelkiste, ein zweiter nimmt ihn wieder heraus. Die Kiste vorn
+  im Laufband zählt mit und zeigt beim Antippen alles, was du gesammelt hast.
+  Das Laufband läuft langsam, bleibt stehen, solange dein Finger oder die Maus
+  darauf liegt, und hat einen eigenen Pause-Knopf. Im Design Retro Warm steht
+  es fest über der unteren Leiste, in Klassisch und Nachtschicht am Ende der
+  Startseite. Wer Bewegung abgeschaltet hat, wischt stattdessen selbst durch.
+
+- **Holzofen in der Stube** (2026-10-13, PR #195): In der gezeichneten Stube
+  steht jetzt ein gusseiserner Holzofen mit Glastür, Teekessel und
+  Brennholz. Abends und nachts brennt darin ein flackerndes Feuer, das die
+  Stube in warmes Licht taucht; tagsüber glüht nur die Glut. Die Stehlampe
+  ist dafür ein Stück zur Couch gerückt.
+
 - **Gemütliche Stube** (2026-10-13, PR #194): Im Design Retro Warm fühlt sich
   die Zeitreise jetzt an wie ein Abend auf der warmen Couch. Ganz oben auf der
   Startseite sitzt eine gezeichnete Stube: Karamell-Sofa mit Häkeldecke,

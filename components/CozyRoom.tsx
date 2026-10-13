@@ -3,8 +3,8 @@ import React from 'react';
 // The "Stube" at the top of the Retro Warm start page (Marco, 2026-10-13:
 // "man soll sich direkt wie Zuhause auf der warmen Couch in der warmen Stube
 // fühlen"): a living room drawn in SVG, with a caramel couch, a crocheted
-// blanket, a floor lamp that glows, a cup of tea that steams and a cat asleep
-// on the rug. The window shows the real time of day, so in the evening the
+// blanket, a floor lamp that glows, a cup of tea that steams, a wood stove
+// that burns in the evening and a cat asleep on the rug. The window shows the real time of day, so in the evening the
 // sun sets outside and at night the moon is up. Purely decorative; the
 // gentle animations stop for people who ask for reduced motion (index.css).
 
@@ -52,6 +52,11 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
           <stop offset="0" stopColor="#ffd88a" stopOpacity="0.85" />
           <stop offset="0.45" stopColor="#ffc46b" stopOpacity="0.35" />
           <stop offset="1" stopColor="#ffb85c" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="cozy-fire-glow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#ff8a3c" stopOpacity="0.55" />
+          <stop offset="0.5" stopColor="#ff7a2a" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#ff7a2a" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="cozy-couch" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#d48a4b" />
@@ -130,16 +135,44 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
       <ellipse cx="190" cy="198" rx="128" ry="13" fill="none" stroke="#fff1dc" strokeWidth="1.2" strokeDasharray="4 5" />
       <ellipse cx="190" cy="198" rx="80" ry="7" fill="none" stroke="#c9553a" strokeWidth="1.5" />
 
-      {/* Floor lamp */}
+      {/* Wood stove (Marco, 2026-10-13): a cast-iron stove with a glass door.
+          In the evening and at night the fire burns and flickers and throws
+          its glow into the room; by day only the embers glow. */}
       <g>
-        <ellipse cx="58" cy="190" rx="16" ry="4" fill="#5e3a22" />
-        <rect x="56" y="78" width="4" height="112" fill="#6e4528" />
-        <path d="M34 50h48l10 30H24z" fill="#f2b24f" />
-        <path d="M34 50h48l10 30H24z" fill="#ffe2a4" opacity="0.45" />
-        <path d="M24 80h68" stroke="#d98b2b" strokeWidth="2" />
-        {Array.from({ length: 12 }, (_, i) => (
-          <line key={i} x1={26 + i * 5.8} y1="81" x2={26 + i * 5.8} y2="86" stroke="#d98b2b" strokeWidth="1.2" />
-        ))}
+        <rect x="27" y="0" width="9" height="122" fill="#3a302b" />
+        <rect x="25" y="70" width="13" height="4" rx="1" fill="#2b231f" />
+        <rect x="12" y="120" width="40" height="6" rx="2" fill="#2b231f" />
+        <rect x="14" y="126" width="36" height="56" rx="5" fill="#3a302b" />
+        <rect x="14" y="126" width="36" height="3" fill="#4d413a" />
+        <rect x="16" y="182" width="5" height="9" rx="1" fill="#2b231f" />
+        <rect x="43" y="182" width="5" height="9" rx="1" fill="#2b231f" />
+        <rect x="19" y="134" width="26" height="30" rx="3" fill="#1c1411" stroke="#5c4d44" strokeWidth="1.5" />
+        {/* logs */}
+        <path d="M21 160l22-5M22 156l20 6" stroke="#6b4428" strokeWidth="3.5" strokeLinecap="round" />
+        {lit ? (
+          <g className="cozy-fire">
+            <path className="cozy-flame cozy-flame-1" d="M24 159c-2-7 3-10 2-17 4 4 7 9 5 17z" fill="#e8552a" />
+            <path className="cozy-flame cozy-flame-2" d="M29 159c-3-9 4-13 3-22 5 6 8 13 5 22z" fill="#ff9a3c" />
+            <path className="cozy-flame cozy-flame-3" d="M35 159c-1-6 3-8 3-13 3 4 5 8 3 13z" fill="#ffd36b" />
+            <path className="cozy-flame cozy-flame-1" d="M31 159c-1-4 1-6 1-9 2 3 3 6 1 9z" fill="#fff1b8" />
+          </g>
+        ) : (
+          <ellipse className="cozy-ember" cx="32" cy="158" rx="9" ry="2.5" fill="#d9542a" opacity="0.7" />
+        )}
+        <rect x="19" y="134" width="26" height="30" rx="3" fill="#ffffff" opacity="0.06" />
+        <rect x="46" y="146" width="2.5" height="8" rx="1" fill="#8a7a6e" />
+        <rect x="18" y="169" width="28" height="6" rx="1.5" fill="#2b231f" />
+        {/* kettle on the stove top */}
+        <path d="M24 120c0-7 4-10 8-10s8 3 8 10z" fill="#c2532f" />
+        <rect x="30" y="107" width="4" height="3" rx="1" fill="#2b231f" />
+        <path d="M40 115l5-4" stroke="#c2532f" strokeWidth="2.2" strokeLinecap="round" />
+        {/* firewood */}
+        <g>
+          <rect x="2" y="184" width="16" height="5" rx="2.5" fill="#8a5a33" />
+          <rect x="4" y="179" width="14" height="5" rx="2.5" fill="#9c6a3e" />
+          <circle cx="3" cy="186.5" r="2.3" fill="#d9a066" />
+          <circle cx="5" cy="181.5" r="2.3" fill="#d9a066" />
+        </g>
       </g>
 
       {/* Couch */}
@@ -169,6 +202,18 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
         </g>
       </g>
 
+      {/* Floor lamp, in front of the couch's left arm */}
+      <g transform="translate(20 0)">
+        <ellipse cx="58" cy="190" rx="16" ry="4" fill="#5e3a22" />
+        <rect x="56" y="78" width="4" height="112" fill="#6e4528" />
+        <path d="M34 50h48l10 30H24z" fill="#f2b24f" />
+        <path d="M34 50h48l10 30H24z" fill="#ffe2a4" opacity="0.45" />
+        <path d="M24 80h68" stroke="#d98b2b" strokeWidth="2" />
+        {Array.from({ length: 12 }, (_, i) => (
+          <line key={i} x1={26 + i * 5.8} y1="81" x2={26 + i * 5.8} y2="86" stroke="#d98b2b" strokeWidth="1.2" />
+        ))}
+      </g>
+
       {/* Side table with a cup of tea and a book */}
       <g>
         <rect x="282" y="146" width="48" height="6" rx="2" fill="#8a5a33" />
@@ -192,16 +237,20 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
       {/* Lamplight: in the evening the room dims a little and the lamp pours
           warm light over the couch; by day it only glows softly. */}
       {lit && <rect width="400" height="220" fill="#3b1f10" opacity={time === 'night' ? 0.2 : 0.1} />}
-      <path d="M34 84L-10 220h150L82 84z" fill="#ffd27a" opacity={lit ? 0.16 : 0.06} style={{ mixBlendMode: 'screen' }} />
+      <path d="M54 84L10 220h150L102 84z" fill="#ffd27a" opacity={lit ? 0.16 : 0.06} style={{ mixBlendMode: 'screen' }} />
       <circle
         className="cozy-glow"
-        cx="58"
+        cx="78"
         cy="68"
         r={lit ? 130 : 80}
         fill="url(#cozy-glow)"
         opacity={lit ? 0.9 : 0.45}
         style={{ mixBlendMode: 'screen' }}
       />
+
+      {lit && (
+        <circle className="cozy-fire-glow" cx="32" cy="150" r="70" fill="url(#cozy-fire-glow)" style={{ mixBlendMode: 'screen' }} />
+      )}
 
       {/* The cat, curled up asleep on the rug */}
       <g className="cozy-cat">
