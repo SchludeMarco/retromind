@@ -1130,3 +1130,99 @@ html[data-theme="nachtschicht"] .splash-start:active {
   overflow: hidden;
   pointer-events: none;
 }
+
+/* "Helden deiner Jugend" (phases/HeroesSection.tsx): posters pinned to the
+   wall of a teenager's room, with a strip of tape; a Polaroid for the hero
+   page. Colours come from the theme tokens, so every design keeps its look. */
+.hero-wall {
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 46px, color-mix(in srgb, var(--color-retro-amber) 9%, transparent) 46px 48px),
+    color-mix(in srgb, var(--color-retro-paper) 55%, var(--color-retro-paper-white));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-retro-ink) 12%, transparent);
+}
+.hero-poster {
+  position: relative;
+  padding: 1.4rem 1rem 1rem;
+  min-height: 150px;
+  background: var(--color-retro-paper-white);
+  border: 1px solid color-mix(in srgb, var(--color-retro-ink) 18%, transparent);
+  box-shadow: 0 6px 14px -6px color-mix(in srgb, var(--color-retro-ink) 45%, transparent);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hero-poster::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 64px;
+  height: 20px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: color-mix(in srgb, var(--color-retro-highlight) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-retro-ink) 10%, transparent);
+}
+.hero-poster:hover,
+.hero-poster:focus-visible {
+  transform: rotate(0deg) translateY(-3px);
+  box-shadow: 0 12px 20px -8px color-mix(in srgb, var(--color-retro-ink) 55%, transparent);
+}
+.hero-poster:disabled { opacity: 0.7; }
+.hero-sheet:hover { transform: none !important; }
+.hero-polaroid {
+  width: min(220px, 70vw);
+  padding: 10px 10px 8px;
+  background: #fffdf7;
+  color: #5b4636;
+  box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2deg);
+}
+.hero-polaroid img {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  /* Shown whole and untinted: a freely licensed photo stays unchanged. */
+  object-fit: contain;
+  background: #f1e9dc;
+}
+.hero-polaroid figcaption {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.hero-badge {
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  font-size: 56px;
+  border-radius: 50%;
+  background: var(--color-retro-highlight);
+  border: 3px dashed color-mix(in srgb, var(--color-retro-amber) 60%, transparent);
+}
+.hero-facts {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) 1fr;
+  gap: 0.4rem 1rem;
+}
+.hero-facts dt { font-weight: 700; color: var(--color-retro-brown); }
+.hero-facts dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .hero-facts { grid-template-columns: 1fr; gap: 0.1rem; }
+  .hero-facts dd { margin-bottom: 0.5rem; }
+}
+.hero-chapter {
+  border-top: 1px solid color-mix(in srgb, var(--color-retro-ink) 15%, transparent);
+  padding: 0.6rem 0;
+}
+.hero-chapter > summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.3rem 0;
+}
+.hero-chapter[open] > summary { margin-bottom: 0.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-poster, .hero-poster:hover { transition: none; }
+}

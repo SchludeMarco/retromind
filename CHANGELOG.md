@@ -7,6 +7,19 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Helden deiner Jugend** (2026-10-13, PR #198): Beim Erkunden gibt es eine
+  neue Sparte „Helden deiner Jugend“. Dort hängen die Helden deines
+  Jahrzehnts wie Poster an der Kinderzimmerwand, von Michael Knight und
+  MacGyver bis Boris Becker und Nena, und jedes andere Jahrzehnt ist einen
+  Tipp entfernt. Über ein Suchfeld findest du jeden anderen Helden: Ein Name
+  reicht, aber auch eine kurze Beschreibung wie „der Typ mit dem sprechenden
+  Auto“. Die Suche läuft beim Tippen von selbst, und die KI findet heraus,
+  wen du meinst. Jeder Held bekommt eine eigene Seite mit Steckbrief
+  (Wikidata), der ganzen Geschichte aus Wikipedia in Kapiteln (deutscher oder
+  englischer Artikel) und, wo es eins unter freier Lizenz gibt, einem Foto
+  von Wikimedia Commons mit Urheber und Lizenz. Mit „Meine Erinnerung dazu“
+  wandert der Held samt persönlicher Frage ins Erinnerungsbuch.
+
 - **Die Stube in jeder Station** (2026-10-13, PR #197): Die Stube hört nicht
   mehr an der Startseite auf. Über jeder Station der Reise steht jetzt eine
   eigene Ecke davon, in allen Designs: beim Profil ein Sessel an der

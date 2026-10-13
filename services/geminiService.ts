@@ -134,3 +134,16 @@ export async function generateVeoVideo(
   }
   return { error: "timeout" };
 }
+
+export interface HeroCandidate {
+  name: string;
+  wikiTitle: string;
+  why: string;
+}
+
+/** "Heroes of your youth": turns a name or a fuzzy description into
+ *  English Wikipedia titles (checked against Wikipedia by lib/heroes.ts). */
+export async function searchHeroesAi(query: string, decade: string): Promise<HeroCandidate[]> {
+  const { candidates } = await callApi("heroSearch", { query, decade });
+  return Array.isArray(candidates) ? candidates : [];
+}

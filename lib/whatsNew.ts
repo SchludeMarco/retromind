@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Helden deiner Jugend': {
+    title: 'Heroes of your youth',
+    text: 'Exploring has a new category, “Heroes of your youth”. The heroes of your decade hang there like posters on a bedroom wall, from Michael Knight and MacGyver to He-Man and Michael Jackson, and every other decade is one tap away. A search box finds any other hero: a name is enough, but so is a short description like “the guy with the talking car”. The search runs by itself as you type, and the AI works out who you mean. Every hero gets a page of their own with a fact sheet (Wikidata), the whole story from Wikipedia in chapters (English or German article) and, where a freely licensed one exists, a photo from Wikimedia Commons with its author and license. “Add my memory” puts the hero into your memory book with a personal question.',
+  },
   'Die Stube in jeder Station': {
     title: 'The living room in every station',
     text: 'The living room no longer stops at the start page. Above every station of the journey there is now a corner of it of its own, in every design: an armchair by the coat rack for your profile, the old TV for the impressions, the record player on the sideboard for exploring, the writing desk with its green lamp for the diary, the bookshelf for the memory book, and a cake with a candle under a string of bunting for the wrap-up. The cat comes along everywhere and naps in a corner. In each corner there is something to tap, with a little sound: the TV changes channel, the record player drops the needle, the lamp switches on and off, a book slides out of the shelf, the candle gets blown out, the hat wobbles, and the cat purrs.',

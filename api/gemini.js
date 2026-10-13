@@ -291,6 +291,63 @@ export default async function handler(req, res) {
         return res.status(200).json(grounded(r));
       }
 
+      case "heroSearch": {
+        // "Heroes of your youth": a few words or a fuzzy description ("the
+        // guy with the talking car") become Wikipedia article titles. The
+        // client checks every title against Wikipedia before showing it, so
+        // a made-up name simply drops out.
+        const query = clip(payload.query, 200).trim();
+        if (!query) return res.status(400).json({ error: "no_query" });
+        const decade = clip(payload.decade, 4);
+        const r = await generate(ai, {
+          model: MODELS.chat,
+          contents: de
+            ? `Jemand sucht einen Helden oder eine Heldin seiner Kindheit und Jugend ` +
+            `(${decade ? `aufgewachsen in den ${decade}er Jahren` : "Jahrzehnt unbekannt"}). ` +
+            `Die Suche lautet: "${query}"\n\n` +
+            `Das können echte Menschen sein (Sport, Musik, Film, Fernsehen), Filmfiguren, Serienfiguren, ` +
+            `Comic- oder Zeichentrickfiguren, Spielzeugfiguren oder Bands. Die Suche kann ein Name sein oder eine ` +
+            `ungenaue Beschreibung, auch mit Fehlern. Nenne bis zu 5 passende Kandidaten, den wahrscheinlichsten ` +
+            `zuerst. Gib für jeden den exakten Titel des englischen Wikipedia-Artikels an (am besten der Artikel ` +
+            `über die Person oder Figur selbst, sonst über die Serie, den Film oder die Band) und einen kurzen Satz ` +
+            `auf Deutsch, warum er passt. Erfinde nichts.`
+            : `Someone is looking for a hero of their childhood and youth ` +
+            `(${decade ? `they grew up in the ${decade}s` : "decade unknown"}). ` +
+            `Their search: "${query}"\n\n` +
+            `Heroes can be real people (sports, music, film, TV), movie or TV characters, comic or cartoon ` +
+            `characters, toy figures or bands. The search may be a name or a vague description, possibly misspelled. ` +
+            `Name up to 5 matching candidates, the most likely first. For each, give the exact title of the English ` +
+            `Wikipedia article (preferably the article about the person or character itself, otherwise about the ` +
+            `show, film or band) and one short sentence in American English on why it fits. Don't make anything up.`,
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  wikiTitle: { type: "string" },
+                  why: { type: "string" },
+                },
+                required: ["name", "wikiTitle", "why"],
+              },
+            },
+          },
+        });
+        let list = [];
+        try {
+          list = JSON.parse(r.text || "[]");
+        } catch {
+          list = [];
+        }
+        const candidates = (Array.isArray(list) ? list : [])
+          .filter((c) => c && typeof c.wikiTitle === "string" && c.wikiTitle.trim())
+          .slice(0, 5)
+          .map((c) => ({ name: clip(c.name, 80), wikiTitle: clip(c.wikiTitle, 120), why: clip(c.why, 240) }));
+        return res.status(200).json({ candidates });
+      }
+
       case "veoStart": {
         const { prompt, imageBase64, mimeType } = payload;
         const operation = await ai.models.generateVideos({
