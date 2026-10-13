@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Konten in den Einstellungen, Zahnrad schon im Startmenü** (2026-10-13,
-  PR #PRNUM): Die freiwillige Anmeldung mit Google und Spotify findest du
+  PR #201): Die freiwillige Anmeldung mit Google und Spotify findest du
   jetzt in den Einstellungen unter „Konten (freiwillig)“, dort kannst du dich
   auch wieder abmelden. Die beiden Anmelde-Kästen auf der Startseite sind
   dafür weg. Das Zahnrad für die Einstellungen sitzt jetzt schon auf dem
