@@ -628,6 +628,24 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .splash-title { animation: none !important; transform: rotate(-2deg); }
   * { scroll-behavior: auto !important; }
 }
+/* "Your era" on the start page: its things and postcards pop in one by one. */
+.era-chip {
+  animation: popIn 0.45s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .era-chip { animation: none; }
+}
+/* The small clock on the name form swings in as the welcome screen fades. */
+.verify-clock {
+  animation: verifyClockIn 1.6s ease-out both;
+}
+@keyframes verifyClockIn {
+  from { opacity: 0; transform: translateY(-24px) scale(1.25); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .verify-clock { animation: none; }
+}
 @media print {
   .grainy-bg { display: none !important; }
   body { background: #fff !important; }

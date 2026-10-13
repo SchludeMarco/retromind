@@ -2,6 +2,8 @@ import React, { useRef } from 'react';
 import { CapturedMemory, UserProfile } from '../types';
 import { INTEREST_LABELS } from '../constants';
 import { tr, LOCALE } from '../lib/i18n';
+import { BookProgress } from '../components/BookProgress';
+import { useWarmChrome } from '../lib/theme';
 
 export const BookPhase: React.FC<{
   user: UserProfile;
@@ -16,9 +18,16 @@ export const BookPhase: React.FC<{
   onNext: () => void;
 }> = ({ user, focusDecade, memories, diaryEntry, onPrint, onExportText, onExportSession, onImportSession, onBack, onNext }) => {
   const importInputRef = useRef<HTMLInputElement | null>(null);
+  const warm = useWarmChrome();
 
   return (
     <div className="py-8 animate-fadeIn max-w-3xl mx-auto">
+      <BookProgress
+        warm={warm}
+        memoriesCount={memories.length}
+        diaryWritten={diaryEntry.trim().length > 0}
+        className="no-print mb-6"
+      />
       <div id="memory-book" className="retro-card p-6 md:p-10 bg-white">
         <div className="text-center border-b-4 border-double border-retro-ink pb-6 mb-6">
           <p className="uppercase tracking-[0.3em] text-xs font-bold text-retro-tan">RetroMind</p>

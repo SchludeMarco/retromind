@@ -3,6 +3,7 @@ import { GoogleUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { warmUpGoogle } from '../lib/googleAuth';
 import { tr } from '../lib/i18n';
+import { MantelClock } from './MantelClock';
 
 // The very first thing anyone does once past the splash: tell RetroMind their
 // name and birthday, so the right decades and questions show up. Everything
@@ -18,10 +19,12 @@ export const VerifyGate: React.FC<{
   maxBirthDate: string;
   onGoogleSignIn: () => void;
   onVerified: (name: string, birthDate: string) => void;
+  /** false while the welcome screen still covers the form */
+  revealed?: boolean;
 }> = ({
   googleStatus, googleUser, birthdayHint,
   initialName, initialBirthDate, maxBirthDate,
-  onGoogleSignIn, onVerified,
+  onGoogleSignIn, onVerified, revealed = true,
 }) => {
   const [name, setName] = useState(initialName);
   const [birthDate, setBirthDate] = useState(initialBirthDate);
@@ -52,6 +55,14 @@ export const VerifyGate: React.FC<{
   return (
     <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
       <div className="retro-card p-8 md:p-12 max-w-lg bg-retro-cream">
+        {/* The mantel clock from the welcome screen comes along, small, so
+            the dark clock room and this light form feel like one journey. */}
+        <div className="w-36 aspect-[320/220] mx-auto -mt-2 mb-3">
+          {revealed && <MantelClock className="verify-clock w-full h-full" />}
+        </div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-retro-tan mb-1">
+          {tr('The clock is wound', 'Die Uhr ist aufgezogen')}
+        </p>
         <h2 className="text-3xl mb-6">{tr('Before we get started …', 'Bevor es losgeht …')}</h2>
         <p className="text-lg mb-8 leading-relaxed">
           {tr(

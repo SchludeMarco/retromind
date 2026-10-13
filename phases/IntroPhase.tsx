@@ -8,6 +8,8 @@ import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 import { JourneyStages } from '../components/JourneyStages';
 import { GamingSignpost } from '../components/GamingSignpost';
 import { tr } from '../lib/i18n';
+import { EraSpotlight } from '../components/EraSpotlight';
+import { BookProgress } from '../components/BookProgress';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -29,13 +31,14 @@ export const IntroPhase: React.FC<{
   onSelectGalleryItem: (item: GalleryItem) => void;
   diaryWritten: boolean;
   onOpenStage: (phase: AppPhase) => void;
+  userName: string;
 }> = (props) => (useWarmChrome() ? <WarmIntro {...props} /> : <ClassicIntro {...props} />);
 
 type IntroProps = React.ComponentProps<typeof IntroPhase>;
 
 const ClassicIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount,
-  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, ...rest
+  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName, ...rest
 }) => (
   <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
     <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
@@ -50,6 +53,10 @@ const ClassicIntro: React.FC<IntroProps> = ({
         </button>
       )}
 
+      {!resumeTarget && (
+        <EraSpotlight warm={false} userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
+      )}
+
       {resumeTarget && (
         <div className="mb-8 border-2 border-retro-amber bg-retro-highlight p-4">
           <p className="font-bold mb-3">
@@ -58,6 +65,7 @@ const ClassicIntro: React.FC<IntroProps> = ({
               `Du hast eine begonnene Reise (${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}).`
             )}
           </p>
+          <BookProgress warm={false} memoriesCount={memoriesCount} diaryWritten={diaryWritten} className="mb-4" />
           <div className="flex flex-wrap gap-3 justify-center">
             <button onClick={onResume} className="retro-button bg-retro-ink text-white px-6 py-3 font-bold">
               {tr('Continue', 'Weitermachen')}
@@ -180,7 +188,7 @@ const FEATURES = [
 
 const WarmIntro: React.FC<IntroProps> = ({
   resumeTarget, memoriesCount, onStart, onResume, onReset,
-  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, ...rest
+  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName, ...rest
 }) => {
   const decades = Object.keys(DECADES_DB);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
@@ -222,6 +230,7 @@ const WarmIntro: React.FC<IntroProps> = ({
                 `Du hast eine begonnene Reise (${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}).`
               )}
             </p>
+            <BookProgress memoriesCount={memoriesCount} diaryWritten={diaryWritten} className="mb-4" />
             <div className="flex flex-wrap gap-3 justify-center">
               <button onClick={onResume} className="retro-button bg-retro-amber text-white px-8 font-bold">
                 {tr('Continue →', 'Weitermachen →')}
@@ -240,6 +249,10 @@ const WarmIntro: React.FC<IntroProps> = ({
           </>
         )}
       </section>
+
+      {!resumeTarget && (
+        <EraSpotlight warm userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
+      )}
 
       {resumeTarget && (
         <JourneyStages

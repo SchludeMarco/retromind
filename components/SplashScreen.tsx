@@ -4,6 +4,7 @@ import { startTicking, playGong } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
 import { LoudSign } from './LoudSign';
 import { tr } from '../lib/i18n';
+import { PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 
 // After the start button: the screen turns white with the gong's strike,
 // stays white for a breath, then slowly gives way to the app underneath.
@@ -32,6 +33,10 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
   const wasWaiting = useRef(false);
   const heardRef = useRef(false);
   const muted = useMuted();
+  // The music question lives here, before the journey starts, instead of
+  // popping up later in the middle of the form (MusicConsentBanner stays as
+  // the fallback for anyone who leaves the switch alone).
+  const musicAllowed = useConsent('spotify') === true;
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -107,6 +112,33 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
           tr('🔊 Tap anywhere on the screen to hear the clock tick.', '🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.')
         )}
       </p>
+      <div className="relative mt-4 flex flex-col items-center gap-1 max-w-xs">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={musicAllowed}
+          disabled={struck}
+          onClick={() => setConsent('spotify', !musicAllowed)}
+          className="flex items-center gap-3 rounded-full border border-[#c9ab78]/50 bg-black/30 pl-4 pr-2 py-2 text-sm font-semibold text-[#f1dfb8] hover:bg-black/45"
+        >
+          <span>🎵 {tr('Real hits of your decade', 'Echte Hits deines Jahrzehnts')}</span>
+          <span
+            aria-hidden="true"
+            className={`relative w-11 h-6 rounded-full transition-colors ${musicAllowed ? 'bg-[#bf4b28]' : 'bg-[#5a4630]'}`}
+          >
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[#f7ecd6] transition-transform ${musicAllowed ? 'translate-x-5' : ''}`} />
+          </span>
+        </button>
+        <p className="text-xs leading-snug text-[#c9ab78]/80">
+          {tr(
+            'The music comes from Spotify. Only once you switch it on does Spotify get your IP address and may set cookies.',
+            'Die Musik kommt von Spotify. Erst wenn du sie einschaltest, bekommt Spotify deine IP-Adresse und kann Cookies setzen.'
+          )}{' '}
+          <a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="underline">
+            {tr('Privacy', 'Datenschutz')}
+          </a>
+        </p>
+      </div>
       {struck && (
         <div
           aria-hidden="true"

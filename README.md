@@ -174,6 +174,20 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   auch ohne Ton sieht, dass der Tipp angekommen ist. In
   den Einstellungen führt „Zurück zum Willkommensbildschirm“ jederzeit wieder
   dorthin; die Musik pausiert so lange und spielt danach weiter.
+  Unter dem Knopf sitzt ein Schalter „Echte Hits deines Jahrzehnts“: Hier
+  wird die Musik von Spotify erlaubt, mit kurzem Datenschutz-Hinweis. Wer ihn
+  nicht anfasst, wird erst nach dem Namensformular gefragt, nicht mittendrin.
+- **Sanfter Übergang zum Namensformular** – die Kaminuhr vom
+  Willkommensbildschirm schwebt klein über dem Formular ein („Die Uhr ist
+  aufgezogen“), damit dunkler Uhrenraum und helles Formular zusammengehören.
+- **„Deine Zeit“ auf der Startseite** – solange die Reise noch nicht
+  begonnen hat, zeigt die Startseite das eigene Jahrzehnt: Titel, sechs
+  Stichworte von damals und drei Postkarten zum Öffnen
+  ([`components/EraSpotlight.tsx`](components/EraSpotlight.tsx)).
+- **Fortschritt des Erinnerungsbuchs** – jede beantwortete Frage ist eine
+  Seite, das Tagebuch eine weitere; ein Balken zeigt „x von 10 Seiten“ auf der
+  Startseite, in der Etappe „Erinnerungsbuch“ und über dem Buch selbst
+  ([`components/BookProgress.tsx`](components/BookProgress.tsx)).
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
   und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
   Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
@@ -586,11 +600,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Könnte
 
-- **Aus dem Grok-Test (2026-10-13), noch offen:** sanfterer Übergang von der
-  Uhr zum Namensformular, Musik-Frage früher stellen (z. B. als Schalter auf
-  dem Willkommensbildschirm statt mitten im Formular), nach der Anmeldung
-  eine kurze Vorschau der Jahrzehnte mit mehr „Wow“, und eine sichtbare
-  Fortschrittsanzeige fürs Erinnerungsbuch.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
