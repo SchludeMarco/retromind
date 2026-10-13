@@ -105,7 +105,12 @@ export function playlistTracks(playlistId: string): Promise<string[]> {
         for (const [id, name] of Object.entries(names)) if (typeof name === 'string') trackNames.set(id, name);
         return Array.isArray(d?.tracks) ? d.tracks.filter((t: unknown) => typeof t === 'string') : [];
       })
-      .catch(() => []);
+      .catch(() => [])
+      .then((tracks: string[]) => {
+        // Nothing came back (server or Spotify hiccup): ask again next time.
+        if (!tracks.length) trackLists.delete(playlistId);
+        return tracks;
+      });
     trackLists.set(playlistId, list);
   }
   return list;

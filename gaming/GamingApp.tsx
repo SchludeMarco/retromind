@@ -278,11 +278,33 @@ export const GamingApp: React.FC = () => {
   useEffect(() => {
     if (!selected && spotifyRef.current.special?.auto) spotifyRef.current.backToTheme();
   }, [selected]);
+  // When Spotify stays silent, the own tunes stand in (useHallSpotify's
+  // watchdog), so the hall is never quiet (Marco, 2026-10-13).
+  const ownMusic = !spotify.active || (spotify.fallback && !spotify.paused);
   useEffect(() => {
     chip.track = state.track;
-    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying && !spotify.active);
+    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying && !introRunning && ownMusic);
     return () => chip.stopMusic();
-  }, [screen, state.music, state.track, videoPlaying, spotify.active]);
+  }, [screen, state.music, state.track, videoPlaying, introRunning, ownMusic]);
+  // Phones suspend the sound when the screen locks, a call comes in or the
+  // app goes to the background; the entrance's wake-up listeners are gone in
+  // the hall, so the sound is woken here again on return and on every tap.
+  useEffect(() => {
+    if (screen !== 'hub') return;
+    const wake = () => chip.unlock();
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') wake();
+    };
+    const events = ['pointerdown', 'touchend', 'keydown', 'click'];
+    events.forEach((e) => window.addEventListener(e, wake, true));
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', wake);
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, wake, true));
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', wake);
+    };
+  }, [screen]);
 
   // Ask the server once whether the AI key is configured.
   useEffect(() => {
@@ -1108,7 +1130,7 @@ export const GamingApp: React.FC = () => {
               title={spotify.songTitle}
               source={tr('Arcade music · \'80s heavy metal', 'Hallenmusik · 80er Heavy Metal')}
               playing={spotify.playing}
-              ready={spotify.ready}
+              ready={spotify.ready || spotify.fallback}
               canSkip={spotify.canSkip}
               onPrev={() => {
                 chip.play('blip');

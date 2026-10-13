@@ -58,6 +58,8 @@ const AMBIENT_LEVEL = 0.2;
 // The song's clip through the wall filter (it has less low end than the
 // recording made for it).
 const DOOR_SONG_LEVEL = 0.35;
+// Longest the metal intro may hold the hall's music back (the recording runs ~27 s).
+const INTRO_MAX_S = 60;
 
 class ChipSound {
   private ctx: AudioContext | null = null;
@@ -439,6 +441,14 @@ class ChipSound {
     });
     this.intro = intro;
     intro.start();
+    // If the phone suspends the sound mid-intro (screen lock, call), the
+    // recording never reports its end and the hall would stay silent: after
+    // INTRO_MAX_S the intro hands over in any case (Marco, 2026-10-13).
+    window.setTimeout(() => {
+      if (this.intro !== intro) return;
+      this.stopIntro();
+      onEnd();
+    }, INTRO_MAX_S * 1000);
     return true;
   }
 

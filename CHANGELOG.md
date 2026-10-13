@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Hallenmusik hört nie mehr auf** (2026-10-13, PR #193): In der
+  Gaming-Halle konnte die Musik plötzlich verstummen, etwa wenn Spotify hing,
+  ein Werbeblocker Spotify ausbremste, der Browser den nächsten Song nicht
+  starten ließ oder das Handy den Ton beim Sperren des Bildschirms schlafen
+  legte. Jetzt passt ein Wächter auf: Bleibt Spotify ein paar Sekunden still,
+  kommt erst ein anderer Song, und klappt auch das nicht, spielt sofort die
+  eigene Hallenmusik weiter. Alle zwei Minuten (oder wenn du im Musik-Player
+  auf Weiter tippst) versucht es die Halle wieder mit Spotify. Hängt das
+  Metal-Intro, geht es spätestens nach einer Minute weiter, und nach dem
+  Entsperren wacht der Ton von selbst wieder auf. Deine eigene Pause, der
+  Stummschalter und „Musik aus“ gelten weiterhin.
+
 - **Zurück zur Zeitreise** (2026-10-13, PR #192): Wer über den Wegweiser
   oder die Einstellungen der Zeitreise in die Gaming-Edition kommt, sieht dort
   jetzt oben links einen gut sichtbaren Knopf „Zurück zu RetroMind“, vor der

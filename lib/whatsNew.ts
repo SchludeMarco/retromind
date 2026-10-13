@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Hallenmusik hört nie mehr auf': {
+    title: 'The arcade music never stops',
+    text: 'The music in the gaming hall could suddenly go quiet, for example when Spotify hung, an ad blocker slowed Spotify down, the browser didn’t let the next song start, or the phone put the sound to sleep when the screen locked. Now a watchdog keeps an eye on it: if Spotify stays silent for a few seconds, another song comes first, and if that doesn’t work either, the hall’s own music keeps playing right away. Every two minutes (or when you tap Next in the music player) the hall tries Spotify again. If the metal intro hangs, it moves on after a minute at the latest, and the sound wakes up by itself after you unlock your phone. Your own pause, the mute switch and “Music off” still count.',
+  },
   'Zurück zur Zeitreise': {
     title: 'Back to the time travel',
     text: 'If you come to the gaming edition through the signpost or the settings of the time travel, you now see a clearly visible “Back to RetroMind” button in the top left, at the door and in the hall. It stays for your whole visit, even after a reload, and takes your sound and Google settings back with you.',
