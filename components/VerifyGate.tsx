@@ -63,11 +63,11 @@ export const VerifyGate: React.FC<{
         <p className="text-xs font-semibold uppercase tracking-widest text-retro-tan mb-1">
           {tr('The clock is wound', 'Die Uhr ist aufgezogen')}
         </p>
-        <h2 className="text-3xl mb-6">{tr('Before we get started …', 'Bevor es losgeht …')}</h2>
+        <h2 className="text-3xl mb-6">{tr('Come on in, make yourself at home', 'Komm rein, mach es dir gemütlich')}</h2>
         <p className="text-lg mb-8 leading-relaxed">
           {tr(
-            'RetroMind adapts to your age so the right decades and questions show up. Your details stay on this device.',
-            'RetroMind richtet sich nach deinem Alter, damit die richtigen Jahrzehnte und Fragen erscheinen. Deine Angaben bleiben auf diesem Gerät.'
+            'Tell us your name and your birthday, and we’ll pick out the decades and questions that are yours. Your details stay with you, on this device.',
+            'Verrätst du uns deinen Namen und deinen Geburtstag? Dann suchen wir die Jahrzehnte und Fragen heraus, die zu dir gehören. Deine Angaben bleiben bei dir, auf diesem Gerät.'
           )}
         </p>
 

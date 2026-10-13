@@ -91,7 +91,7 @@
   html[data-theme="retro-warm"] {
     --color-retro-ink: #231c16;
     --color-retro-brown: #67584e;
-    --color-retro-tan: #7a655a;
+    --color-retro-tan: #6e5a50;
     --color-retro-amber: #d95d39;
     --color-retro-amber-dark: #a43716;
     --color-retro-paper: #f7f3e9;
@@ -225,6 +225,103 @@
   }
   html[data-theme="retro-warm"] .rm-modal {
     border-radius: 1.5rem;
+  }
+
+  /* "Gemütliche Stube" (Marco, 2026-10-13): the page is a living-room wall.
+     Faint 70s wallpaper stripes with little dots, and a floor lamp in the
+     top left corner that pours warm light over everything. Both stay very
+     light, so text on the background keeps its contrast (≥ 4.5:1). */
+  html[data-theme="retro-warm"] body {
+    background-color: #f6eddd;
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(196, 140, 84, 0.13) 1.6px, transparent 2.2px),
+      linear-gradient(90deg, rgba(214, 170, 116, 0.07) 50%, transparent 50%);
+    background-size: 36px 36px, 36px 36px;
+  }
+  html[data-theme="retro-warm"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70vmax 55vmax at 8% 0%, rgba(255, 200, 120, 0.32), transparent 65%),
+      radial-gradient(ellipse 60vmax 40vmax at 100% 100%, rgba(217, 93, 57, 0.08), transparent 70%);
+  }
+  /* Cards are thick, slightly fibrous paper, lit warmly from above. */
+  html[data-theme="retro-warm"] .retro-card {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .38 0 0 0 0 .2 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 3px 10px rgba(120, 70, 30, 0.08), 0 1px 2px rgba(120, 70, 30, 0.06);
+  }
+  /* A wooden picture rail under the top bar and a sideboard edge above
+     the bottom navigation. */
+  html[data-theme="retro-warm"] .rm-wood-rail {
+    height: 4px;
+    background: linear-gradient(180deg, #c48a57, #9a6038);
+    box-shadow: 0 1px 3px rgba(90, 50, 20, 0.18);
+  }
+  html[data-theme="retro-warm"] .rm-header-rule {
+    height: 5px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, transparent, #b5672f 20%, #d95d39 50%, #b5672f 80%, transparent);
+  }
+  html[data-theme="retro-warm"] .cozy-frame {
+    box-shadow: 0 0 0 4px #fff8ec, 0 0 0 5px #e6cfae, 0 6px 18px rgba(120, 70, 30, 0.15);
+  }
+}
+
+/* The living room (components/CozyRoom.tsx) breathes a little: the lamp
+   glows, the tea steams, the cat's tail twitches in its sleep. */
+.cozy-room .cozy-glow {
+  animation: cozy-glow 5s ease-in-out infinite alternate;
+}
+.cozy-room .cozy-steam {
+  animation: cozy-steam 3.6s ease-out infinite;
+}
+.cozy-room .cozy-steam-2 {
+  animation-delay: 1.8s;
+}
+.cozy-room .cozy-tail {
+  transform-origin: 198px 196px;
+  transform-box: view-box;
+  animation: cozy-tail 7s ease-in-out infinite;
+}
+.cozy-room .cozy-cat-body {
+  transform-origin: 182px 200px;
+  transform-box: view-box;
+  animation: cozy-breathe 3.2s ease-in-out infinite;
+}
+.cozy-room .cozy-star {
+  animation: cozy-twinkle 2.8s ease-in-out infinite alternate;
+}
+.cozy-room .cozy-star:nth-child(2n) {
+  animation-delay: 1.3s;
+}
+@keyframes cozy-glow {
+  from { opacity: 0.75; }
+  to { opacity: 1; }
+}
+@keyframes cozy-steam {
+  0% { transform: translateY(4px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-8px); opacity: 0; }
+}
+@keyframes cozy-tail {
+  0%, 80%, 100% { transform: rotate(0deg); }
+  86% { transform: rotate(-8deg); }
+  92% { transform: rotate(4deg); }
+}
+@keyframes cozy-breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.06); }
+}
+@keyframes cozy-twinkle {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cozy-room * {
+    animation: none !important;
   }
 }
 

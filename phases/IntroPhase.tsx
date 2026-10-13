@@ -10,6 +10,7 @@ import { GamingSignpost } from '../components/GamingSignpost';
 import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
+import { CozyRoom, DayTime, dayTime } from '../components/CozyRoom';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -178,12 +179,29 @@ const IntroExtras: React.FC<Pick<IntroProps, 'googleUser' | 'spotifyStatus' | 's
   </>
 );
 
+// A greeting that knows the time of day, like someone at home who looks up
+// when you come in.
+function cozyGreeting(time: DayTime, userName: string): { title: string; line: string } {
+  const name = userName.trim();
+  const n = name ? `, ${name}` : '';
+  switch (time) {
+    case 'morning':
+      return { title: tr(`Good morning${n}`, `Guten Morgen${n}`), line: tr('The coffee is fresh, have a seat.', 'Der Kaffee ist frisch, setz dich zu uns.') };
+    case 'day':
+      return { title: tr(`How lovely you’re here${n}`, `Schön, dass du da bist${n}`), line: tr('Make yourself at home, the tea is steeping.', 'Mach es dir gemütlich, der Tee zieht schon.') };
+    case 'evening':
+      return { title: tr(`Good evening${n}`, `Guten Abend${n}`), line: tr('The lamp is on and the couch is warm.', 'Die Lampe brennt und die Couch ist warm.') };
+    default:
+      return { title: tr(`Still up${n}?`, `Noch wach${n}?`), line: tr('Snuggle in, the lamp is still on for you.', 'Kuschel dich ein, die Lampe brennt noch für dich.') };
+  }
+}
+
 // "Retro Warm" start page, after the Google Stitch mock-up: welcome card with
 // what the journey offers, a decade overview and a strip of archive finds.
 const FEATURES = [
   { icon: '✨', label: tr('6 decades, from the ’60s to today', '6 Jahrzehnte, von den 60ern bis heute') },
-  { icon: '📻', label: tr('Pop-culture treasures to remember', 'Popkultur-Schätze zum Erinnern') },
-  { icon: '📖', label: tr('Your very own memory book', 'Dein eigenes Erinnerungsbuch') },
+  { icon: '📻', label: tr('Songs, toys and TV nights from back then', 'Lieder, Spielzeug und Fernsehabende von damals') },
+  { icon: '📖', label: tr('Your very own memory book to keep', 'Dein eigenes Erinnerungsbuch zum Behalten') },
 ];
 
 const WarmIntro: React.FC<IntroProps> = ({
@@ -191,6 +209,8 @@ const WarmIntro: React.FC<IntroProps> = ({
   focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName, ...rest
 }) => {
   const decades = Object.keys(DECADES_DB);
+  const time = dayTime();
+  const greeting = cozyGreeting(time, userName);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
   const shown = DECADES_DB[shownDecade];
   const finds = Object.values(DECADES_DB)
@@ -199,55 +219,57 @@ const WarmIntro: React.FC<IntroProps> = ({
     .slice(0, 6);
   return (
     <div className="max-w-2xl mx-auto space-y-6 pb-4 animate-fadeIn">
-      <section className="retro-card bg-retro-paper-white p-6 md:p-8">
-        <div className="flex items-center gap-3 mb-4">
-          <span aria-hidden="true" className="w-12 h-12 rounded-xl bg-[#ffddaf] flex items-center justify-center text-2xl">🕰️</span>
-          <div>
-            <span className="block text-xs font-semibold uppercase tracking-wider text-retro-amber-dark">{tr('Memory journey', 'Erinnerungsreise')}</span>
-            <h2 className="text-2xl md:text-3xl m-0">{tr('Welcome, time traveler', 'Willkommen, Zeitreisende:r')}</h2>
-          </div>
+      <section className="retro-card bg-retro-paper-white p-4 md:p-6">
+        {/* The living room everyone sits down in first (components/CozyRoom.tsx). */}
+        <div className="cozy-frame rounded-xl overflow-hidden mb-5">
+          <CozyRoom time={time} />
         </div>
-        <p className="text-lg leading-relaxed mb-5">
-          {tr(
-            'Dive into the decades of your childhood and youth. Answer personal questions, rediscover cult classics and keep your favorite moments in a memory book that lasts.',
-            'Tauche ein in die Jahrzehnte deiner Kindheit und Jugend. Beantworte persönliche Fragen, entdecke Kult-Erinnerungen und halte deine schönsten Momente in einem bleibenden Erinnerungsbuch fest.'
-          )}
-        </p>
-        <ul className="space-y-2 mb-6">
-          {FEATURES.map((f) => (
-            <li key={f.label} className="flex items-center gap-3 rounded-xl bg-retro-cream px-4 py-3 text-sm font-medium">
-              <span aria-hidden="true" className="text-lg">{f.icon}</span>
-              {f.label}
-            </li>
-          ))}
-        </ul>
+        <div className="px-2">
+          <span className="block text-xs font-semibold uppercase tracking-wider text-retro-amber-dark">{tr('Memory journey', 'Erinnerungsreise')}</span>
+          <h2 className="text-2xl md:text-3xl mt-1 mb-1">{greeting.title}</h2>
+          <p className="text-lg italic text-retro-brown mb-4">{greeting.line}</p>
+          <p className="text-lg leading-relaxed mb-5">
+            {tr(
+              'Grab a blanket, lean back and leaf through the decades of your childhood and youth with us. We’ll chat about the old days, find long-lost favorite things again and keep your loveliest moments in a memory book.',
+              'Hol dir eine Decke, lehn dich zurück und blättere mit uns durch die Jahrzehnte deiner Kindheit und Jugend. Wir plaudern über damals, finden liebgewonnene Dinge wieder und halten deine schönsten Momente in einem Erinnerungsbuch fest.'
+            )}
+          </p>
+          <ul className="space-y-2 mb-6">
+            {FEATURES.map((f) => (
+              <li key={f.label} className="flex items-center gap-3 rounded-xl bg-retro-cream px-4 py-3 text-sm font-medium">
+                <span aria-hidden="true" className="text-lg">{f.icon}</span>
+                {f.label}
+              </li>
+            ))}
+          </ul>
 
-        {resumeTarget ? (
-          <div className="rounded-2xl bg-retro-highlight p-4 text-center">
-            <p className="font-semibold mb-3">
-              {tr(
-                `You have a journey in progress (${memoriesCount} memor${memoriesCount === 1 ? 'y' : 'ies'}).`,
-                `Du hast eine begonnene Reise (${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}).`
-              )}
-            </p>
-            <BookProgress memoriesCount={memoriesCount} diaryWritten={diaryWritten} className="mb-4" />
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button onClick={onResume} className="retro-button bg-retro-amber text-white px-8 font-bold">
-                {tr('Continue →', 'Weitermachen →')}
-              </button>
-              <button onClick={onReset} className="px-6 py-3 border-2 border-retro-ink font-semibold bg-white">
-                {tr('Start over', 'Neu beginnen')}
-              </button>
+          {resumeTarget ? (
+            <div className="rounded-2xl bg-retro-highlight p-4 text-center">
+              <p className="font-semibold mb-3">
+                {tr(
+                  `Your journey is waiting for you, right where you left it (${memoriesCount} memor${memoriesCount === 1 ? 'y' : 'ies'}).`,
+                  `Deine Reise wartet schon auf dich, genau da, wo du aufgehört hast (${memoriesCount} Erinnerung${memoriesCount === 1 ? '' : 'en'}).`
+                )}
+              </p>
+              <BookProgress memoriesCount={memoriesCount} diaryWritten={diaryWritten} className="mb-4" />
+              <div className="flex flex-wrap gap-3 justify-center">
+                <button onClick={onResume} className="retro-button bg-retro-amber text-white px-8 font-bold">
+                  {tr('Continue →', 'Weitermachen →')}
+                </button>
+                <button onClick={onReset} className="px-6 py-3 border-2 border-retro-ink font-semibold bg-white">
+                  {tr('Start over', 'Neu beginnen')}
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <>
-            <button onClick={onStart} className="retro-button bg-retro-amber text-white w-full py-4 text-xl font-bold">
-              {tr('Start the time travel →', 'Zeitreise starten →')}
-            </button>
-            <p className="text-xs text-retro-brown text-center mt-2">{tr('Free · No experience needed', 'Kostenfrei · Keine Vorkenntnisse nötig')}</p>
-          </>
-        )}
+          ) : (
+            <>
+              <button onClick={onStart} className="retro-button bg-retro-amber text-white w-full py-4 text-xl font-bold">
+                {tr('Start the time travel →', 'Zeitreise starten →')}
+              </button>
+              <p className="text-sm text-retro-brown text-center mt-2">{tr('Free · Take all the time you like', 'Kostenlos · Ganz in Ruhe, so lange du magst')}</p>
+            </>
+          )}
+        </div>
       </section>
 
       {!resumeTarget && (
@@ -297,7 +319,7 @@ const WarmIntro: React.FC<IntroProps> = ({
       </section>
 
       <p className="rounded-2xl bg-[#eee0d6]/60 px-4 py-3 text-sm text-center">
-        {tr('Large print · Easy to use · Pause anytime', 'Große Schrift · Einfach zu bedienen · Jederzeit pausierbar')}
+        {tr('Large print · Simple to use · Take a break whenever you like', 'Große Schrift · Ganz einfach · Pause machen, wann immer du magst')}
       </p>
 
       {finds.length > 0 && (

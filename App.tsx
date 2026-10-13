@@ -915,6 +915,7 @@ const App: React.FC = () => {
         </>
       )}
       <footer className="no-print relative z-10 mt-12 text-center text-xs text-retro-tan">
+        {warm && <p className="text-sm text-retro-brown mb-2">{tr('Made with ♥ for everyone who loves to look back', 'Mit ♥ gemacht für alle, die gern zurückdenken')}</p>}
         <a href={PRIVACY_URL} className="underline">{tr('Privacy', 'Datenschutz')}</a>
         {' · '}
         <a href={IMPRINT_URL} className="underline">{tr('Legal notice', 'Impressum')}</a>

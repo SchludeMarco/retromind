@@ -18,11 +18,11 @@ export const THEMES = [
     id: 'retro-warm',
     name: 'Retro Warm',
     description: tr(
-      'Caramel and terracotta, large type, calm and bright. Designed with Google Stitch.',
-      'Karamell und Terrakotta, große Schrift, ruhig und hell. Entworfen mit Google Stitch.'
+      'A cozy living room: warm lamplight, caramel and terracotta, large type.',
+      'Eine gemütliche Stube: warmes Lampenlicht, Karamell und Terrakotta, große Schrift.'
     ),
-    swatches: ['#f7f3e9', '#d95d39', '#e8a838'],
-    browserColor: '#f7f3e9',
+    swatches: ['#f6eddd', '#d95d39', '#e8a838'],
+    browserColor: '#f6eddd',
   },
   {
     id: 'klassisch',
