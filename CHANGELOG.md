@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Musik-Schalter, sanfterer Einstieg, „Deine Zeit“ und Buch-Fortschritt**
-  (2026-10-13, PR #188): Die Frage nach der Musik von Spotify steht jetzt
+  (2026-10-13, PR #189): Die Frage nach der Musik von Spotify steht jetzt
   als Schalter direkt auf dem Willkommensbildschirm. Wer ihn nicht anfasst,
   wird erst nach dem Namensformular gefragt statt mittendrin. Über dem
   Namensformular schwebt die Kaminuhr klein ein, so wirkt der Wechsel vom
