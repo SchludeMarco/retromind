@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Echtes Wetter im Stubenfenster** (2026-10-13, PR #195): Unter der
+  gezeichneten Stube kannst du jetzt „Dein echtes Wetter im Fenster zeigen“
+  einschalten. Dann regnet es im Fenster, wenn es bei dir regnet, es schneit
+  (mit Schnee auf dem Fensterbrett und weißen Hügeln), bei Gewitter blitzt es,
+  bei Nebel wird es trüb und Wolken ziehen vorbei. Dafür nimmst du deinen
+  ungefähren Standort oder gibst deinen Ort ein. Der Ort wird auf etwa 10 km
+  gerundet, bleibt auf deinem Gerät, und das Wetter holt unser Server beim
+  freien Wetterdienst Open-Meteo. Ohne Einschalten bleibt das Fenster wie
+  bisher, und „Ausschalten“ löscht den Ort wieder. Die Datenschutzerklärung
+  ist ergänzt.
+
 - **Laufband mit Sprüchen von damals und Grabbelkiste** (2026-10-13, PR #195):
   Auf der Startseite läuft jetzt unten ein Laufband wie früher im Fernsehen,
   mit Sprüchen („Null Bock!“, „Alles paletti!“) und Alltagsdingen von damals

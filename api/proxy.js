@@ -14,6 +14,9 @@ const ALLOWED_HOSTS = [
   /^www\.transparenttextures\.com$/,
   // Wikidata's query service: games released on today's date (Gaming).
   /^query\.wikidata\.org$/,
+  // Open-Meteo: the weather in the living-room window (Zeitreise, only after
+  // the visitor switches it on) and the place search for it.
+  /^(api|geocoding-api)\.open-meteo\.com$/,
 ];
 
 const ALLOWED_TYPES = /^(image\/|audio\/|application\/json|application\/problem\+json|application\/sparql-results\+json)/;
@@ -58,12 +61,16 @@ export default async function handler(req, res) {
 
   const isJson = type.startsWith("application/");
   res.setHeader("Content-Type", type);
+  // Weather changes; everything else here hardly ever does.
+  const isWeather = /open-meteo\.com$/.test(target.hostname);
   res.setHeader(
     "Cache-Control",
     upstream.ok
-      ? isJson
-        ? "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
-        : "public, max-age=604800, s-maxage=2592000, immutable"
+      ? isWeather
+        ? "public, max-age=600, s-maxage=900"
+        : isJson
+          ? "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+          : "public, max-age=604800, s-maxage=2592000, immutable"
       : "public, s-maxage=300"
   );
   res.setHeader("X-Content-Type-Options", "nosniff");

@@ -42,8 +42,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Stehlampe, dampfender Tee, schlafende Katze), deren Fenster die echte
   Tageszeit zeigt, dazu eine Begrüßung mit Namen passend zur Uhrzeit,
   Tapeten-Hintergrund mit warmem Lampenlicht, Papierkarten und Holzleisten.
-  Ein Holzofen brennt abends und nachts, tagsüber glüht nur die Glut
-  ([`components/CozyRoom.tsx`](components/CozyRoom.tsx)).
+  Ein Holzofen brennt abends und nachts, tagsüber glüht nur die Glut. Auf
+  Wunsch zeigt das Fenster das echte Wetter (Regen, Schnee, Gewitter, Nebel,
+  Wolken) über Open-Meteo, mit Standort oder eingegebenem Ort, nur nach
+  Einschalten ([`components/CozyRoom.tsx`](components/CozyRoom.tsx),
+  [`lib/weather.ts`](lib/weather.ts)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette

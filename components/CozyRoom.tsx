@@ -1,12 +1,15 @@
 import React from 'react';
+import type { WeatherKind } from '../lib/weather';
 
 // The "Stube" at the top of the Retro Warm start page (Marco, 2026-10-13:
 // "man soll sich direkt wie Zuhause auf der warmen Couch in der warmen Stube
 // fühlen"): a living room drawn in SVG, with a caramel couch, a crocheted
 // blanket, a floor lamp that glows, a cup of tea that steams, a wood stove
-// that burns in the evening and a cat asleep on the rug. The window shows the real time of day, so in the evening the
-// sun sets outside and at night the moon is up. Purely decorative; the
-// gentle animations stop for people who ask for reduced motion (index.css).
+// that burns in the evening and a cat asleep on the rug. The window shows the
+// real time of day, so in the evening the sun sets outside and at night the
+// moon is up; with the real weather switched on (lib/weather.ts) it also
+// rains, snows, storms or gets foggy out there. Purely decorative; the gentle
+// animations stop for people who ask for reduced motion (index.css).
 
 export type DayTime = 'morning' | 'day' | 'evening' | 'night';
 
@@ -27,9 +30,42 @@ const SKY: Record<DayTime, [string, string]> = {
 // The granny squares of the blanket over the armrest.
 const GRANNY = ['#d95d39', '#e8a838', '#4b7b72', '#f3e1c4', '#a43716', '#e8a838', '#4b7b72', '#d95d39', '#f3e1c4'];
 
-export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ time = dayTime(), className = '' }) => {
+// What the window shows when the real weather is switched on (lib/weather.ts).
+const RAIN = Array.from({ length: 16 }, (_, i) => ({ x: 270 + i * 4.6, y: 40 + ((i * 37) % 70), d: -((i * 0.17) % 0.7) }));
+const SNOW = Array.from({ length: 18 }, (_, i) => ({ x: 271 + ((i * 23) % 68), y: 42 + ((i * 29) % 70), d: -((i * 0.53) % 4), r: 1 + (i % 3) * 0.4 }));
+
+const WindowWeather: React.FC<{ kind: WeatherKind; lit: boolean }> = ({ kind, lit }) => (
+  <g clipPath="url(#cozy-glass)">
+    {kind === 'fog' && <rect x="268" y="40" width="72" height="74" fill="#f2efe9" opacity="0.65" />}
+    {(kind === 'rain' || kind === 'storm') && <rect x="268" y="40" width="72" height="74" fill="#4f5666" opacity={lit ? 0.35 : 0.45} />}
+    {kind === 'snow' && <rect x="268" y="40" width="72" height="74" fill="#dfe5ec" opacity={lit ? 0.15 : 0.35} />}
+    {kind !== 'fog' && (
+      <g className="cozy-clouds" fill={kind === 'clouds' ? '#ffffff' : '#9aa2ae'} opacity={kind === 'clouds' ? 0.85 : 0.9}>
+        <path d="M272 58a7 7 0 0 1 12-5 6 6 0 0 1 11 2 5 5 0 0 1 1 10h-22a4 4 0 0 1-2-7z" />
+        <path d="M306 50a6 6 0 0 1 10-4 5 5 0 0 1 10 2 4 4 0 0 1 1 8h-19a3.5 3.5 0 0 1-2-6z" />
+      </g>
+    )}
+    {(kind === 'rain' || kind === 'storm') &&
+      RAIN.map((r, i) => (
+        <line key={i} className="cozy-rain" x1={r.x} y1={r.y} x2={r.x - 2} y2={r.y + 7} stroke="#dfe8f2" strokeWidth="1" strokeLinecap="round" style={{ animationDelay: `${r.d}s` }} />
+      ))}
+    {kind === 'snow' &&
+      SNOW.map((f, i) => (
+        <circle key={i} className="cozy-snow" cx={f.x} cy={f.y} r={f.r} fill="#ffffff" style={{ animationDelay: `${f.d}s` }} />
+      ))}
+    {kind === 'storm' && <rect className="cozy-lightning" x="268" y="40" width="72" height="74" fill="#ffffff" opacity="0" />}
+  </g>
+);
+
+export const CozyRoom: React.FC<{ time?: DayTime; weather?: WeatherKind | null; className?: string }> = ({
+  time = dayTime(),
+  weather = null,
+  className = '',
+}) => {
   const [skyTop, skyBottom] = SKY[time];
   const lit = time === 'evening' || time === 'night';
+  // Rain, snow and fog hide the sun and the moon; clouds only drift past.
+  const overcast = weather === 'rain' || weather === 'snow' || weather === 'fog' || weather === 'storm';
   return (
     <svg
       viewBox="0 0 400 220"
@@ -44,6 +80,9 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
           <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
           <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
         </pattern>
+        <clipPath id="cozy-glass">
+          <rect x="268" y="40" width="72" height="74" />
+        </clipPath>
         <linearGradient id="cozy-sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={skyTop} />
           <stop offset="1" stopColor={skyBottom} />
@@ -85,28 +124,34 @@ export const CozyRoom: React.FC<{ time?: DayTime; className?: string }> = ({ tim
       <g>
         <rect x="262" y="34" width="84" height="86" rx="3" fill="#fff4e2" />
         <rect x="268" y="40" width="72" height="74" fill="url(#cozy-sky)" />
-        {time === 'morning' && <circle cx="292" cy="98" r="10" fill="#ffd36b" />}
-        {time === 'day' && (
+        {!overcast && (
           <>
-            <circle cx="320" cy="58" r="9" fill="#ffe08a" />
-            <path d="M278 80a6 6 0 0 1 11-3 5 5 0 0 1 9 3z" fill="#ffffff" opacity="0.9" />
-          </>
-        )}
-        {time === 'evening' && <circle cx="304" cy="112" r="13" fill="#ffb347" />}
-        {time === 'night' && (
-          <>
-            <circle cx="318" cy="58" r="8" fill="#fff3c4" />
-            <circle cx="322" cy="55" r="7" fill="#2a2a55" />
-            {[[280, 52], [296, 66], [330, 86], [286, 92], [310, 76]].map(([x, y]) => (
-              <circle key={`${x}-${y}`} className="cozy-star" cx={x} cy={y} r="1.1" fill="#fff8dc" />
-            ))}
+          {time === 'morning' && <circle cx="292" cy="98" r="10" fill="#ffd36b" />}
+          {time === 'day' && (
+            <>
+              <circle cx="320" cy="58" r="9" fill="#ffe08a" />
+              <path d="M278 80a6 6 0 0 1 11-3 5 5 0 0 1 9 3z" fill="#ffffff" opacity="0.9" />
+            </>
+          )}
+          {time === 'evening' && <circle cx="304" cy="112" r="13" fill="#ffb347" />}
+          {time === 'night' && (
+            <>
+              <circle cx="318" cy="58" r="8" fill="#fff3c4" />
+              <circle cx="322" cy="55" r="7" fill="#2a2a55" />
+              {[[280, 52], [296, 66], [330, 86], [286, 92], [310, 76]].map(([x, y]) => (
+                <circle key={`${x}-${y}`} className="cozy-star" cx={x} cy={y} r="1.1" fill="#fff8dc" />
+              ))}
+            </>
+          )}
           </>
         )}
         {/* far hills */}
-        <path d="M268 106q18-10 36-2t36-4v14h-72z" fill={lit ? '#3d3555' : '#9cc49a'} opacity="0.85" />
+        <path d="M268 106q18-10 36-2t36-4v14h-72z" fill={weather === 'snow' ? '#f4f6f8' : lit ? '#3d3555' : '#9cc49a'} opacity="0.85" />
+        {weather && weather !== 'clear' && <WindowWeather kind={weather} lit={lit} />}
         <rect x="302.5" y="40" width="3" height="74" fill="#fff4e2" />
         <rect x="268" y="75" width="72" height="3" fill="#fff4e2" />
         <rect x="256" y="118" width="96" height="6" rx="2" fill="#e9d2b0" />
+        {weather === 'snow' && <path d="M258 118c6-4 14-3 22-2s20-3 30-1 22 1 30 3z" fill="#ffffff" />}
         {/* curtains, tied back */}
         <path d="M250 28h22c-2 30 6 52 2 70-3 14-12 20-20 22-6-28 2-60-4-92z" fill="#c2532f" />
         <path d="M358 28h-22c2 30-6 52-2 70 3 14 12 20 20 22 6-28-2-60 4-92z" fill="#c2532f" />

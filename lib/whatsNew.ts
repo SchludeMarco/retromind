@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Echtes Wetter im Stubenfenster': {
+    title: 'Real weather in the living-room window',
+    text: 'Below the drawn living room you can now switch on “Show your real weather in the window”. Then it rains in the window when it rains where you are, it snows (with snow on the windowsill and white hills), lightning flashes in a thunderstorm, fog makes it hazy and clouds drift by. You either use your rough location or type in your town. The place is rounded to about 10 km and stays on your device, and our server gets the weather from the free weather service Open-Meteo. If you don’t switch it on, the window stays as before, and “Turn off” deletes the place again. The privacy policy has been updated.',
+  },
   'Laufband mit Sprüchen von damals und Grabbelkiste': {
     title: 'A ticker of sayings from back then, and your Grabbelkiste',
     text: 'At the bottom of the start page a ticker now runs like the news crawl on an old TV, with sayings (“Groovy!”, “Gag me with a spoon!”) and everyday things from back then (“Rewinding the cassette with a pencil”). Your own decade shows up more often. Behind each one sits a floppy disk: tap it to put the saying in your Grabbelkiste (a rummage box), tap again to take it out. The box at the start of the ticker counts along and shows everything you collected when you tap it. The ticker moves slowly, stops while your finger or the mouse is on it, and has its own pause button. In the Retro Warm design it sits right above the bottom bar, in Classic and Night Shift at the end of the start page. If you turned motion off, you swipe through it yourself.',

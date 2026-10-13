@@ -310,6 +310,18 @@
 .cozy-room .cozy-ember {
   animation: cozy-glow 3s ease-in-out infinite alternate;
 }
+.cozy-room .cozy-rain {
+  animation: cozy-rain 0.7s linear infinite;
+}
+.cozy-room .cozy-snow {
+  animation: cozy-snow 4s linear infinite;
+}
+.cozy-room .cozy-clouds {
+  animation: cozy-clouds 18s ease-in-out infinite alternate;
+}
+.cozy-room .cozy-lightning {
+  animation: cozy-lightning 7s linear infinite;
+}
 .cozy-room .cozy-star {
   animation: cozy-twinkle 2.8s ease-in-out infinite alternate;
 }
@@ -330,6 +342,23 @@
   45% { opacity: 1; }
   70% { opacity: 0.8; }
   100% { opacity: 0.95; }
+}
+@keyframes cozy-rain {
+  from { transform: translate(4px, -40px); }
+  to { transform: translate(-6px, 40px); }
+}
+@keyframes cozy-snow {
+  0% { transform: translate(0, -40px); }
+  50% { transform: translate(3px, 0); }
+  100% { transform: translate(-1px, 40px); }
+}
+@keyframes cozy-clouds {
+  from { transform: translateX(-4px); }
+  to { transform: translateX(6px); }
+}
+@keyframes cozy-lightning {
+  0%, 90%, 93%, 100% { opacity: 0; }
+  91%, 94% { opacity: 0.75; }
 }
 @keyframes cozy-steam {
   0% { transform: translateY(4px); opacity: 0; }
