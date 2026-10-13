@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Die Stube in jeder Station** (2026-10-13, PR #197): Die Stube hört nicht
+  mehr an der Startseite auf. Über jeder Station der Reise steht jetzt eine
+  eigene Ecke davon, in allen Designs: beim Profil ein Sessel an der
+  Garderobe, bei den Eindrücken der alte Fernseher, beim Erkunden der
+  Plattenspieler auf der Anrichte, beim Tagebuch der Schreibtisch mit
+  grüner Lampe, beim Erinnerungsbuch das Bücherregal und zum Abschluss ein
+  Kuchen mit Kerze unter einer Wimpelkette. Die Katze ist überall mit dabei
+  und schläft in einer Ecke. In jeder Ecke lässt sich etwas antippen, mit
+  kleinem Geräusch: Der Fernseher schaltet um, der Plattenspieler legt die
+  Nadel auf, die Lampe geht an und aus, ein Buch rutscht aus dem Regal, die
+  Kerze wird ausgepustet, der Hut wackelt, und die Katze schnurrt.
+
 - **Die Stube zum Anfassen, in jedem Design** (2026-10-13, PR #196): Die
   gezeichnete Stube steht jetzt oben auf der Startseite in allen Designs,
   auch in Klassisch und Nachtschicht (bisher gab es sie nur in Retro Warm).

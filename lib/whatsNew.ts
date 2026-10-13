@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^Dokumentation\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die Stube in jeder Station': {
+    title: 'The living room in every station',
+    text: 'The living room no longer stops at the start page. Above every station of the journey there is now a corner of it of its own, in every design: an armchair by the coat rack for your profile, the old TV for the impressions, the record player on the sideboard for exploring, the writing desk with its green lamp for the diary, the bookshelf for the memory book, and a cake with a candle under a string of bunting for the wrap-up. The cat comes along everywhere and naps in a corner. In each corner there is something to tap, with a little sound: the TV changes channel, the record player drops the needle, the lamp switches on and off, a book slides out of the shelf, the candle gets blown out, the hat wobbles, and the cat purrs.',
+  },
   'Die Stube zum Anfassen, in jedem Design': {
     title: 'A living room you can touch, in every design',
     text: 'The drawn living room now sits at the top of the start page in every design, Classic and Night Shift too (before, only Retro Warm had it). And everything in it can be tapped: the old tube TV with its test pattern in the corner starts the time travel (or continues it), the floor lamp clicks on and off, the wood stove can be lit and left to go out, the cat wakes up when you stroke it, purrs and sends up little hearts, and the window opens the real weather. Once you have started a journey, the picture on the wall takes you to your decades and the stack of books to your memory book. Every touch makes a little sound, and on a phone you feel a short buzz in your hand. While the stove burns, you can hear it crackle and pop softly (only with sound on). The potted plant has moved to the windowsill.',

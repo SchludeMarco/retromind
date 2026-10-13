@@ -52,6 +52,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`components/LivingRoom.tsx`](components/LivingRoom.tsx),
   [`components/CozyRoom.tsx`](components/CozyRoom.tsx),
   [`lib/roomSounds.ts`](lib/roomSounds.ts), [`lib/weather.ts`](lib/weather.ts)).
+- **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
+  eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
+  Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum
+  Antippen ([`components/StationCorner.tsx`](components/StationCorner.tsx)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
@@ -650,10 +654,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 - **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
   eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.
-
-- **Mehr Stube auf den anderen Seiten:** Kleine Stuben-Details auch in den
-  Reise-Stationen, etwa ein Fernseher bei den Eindrücken, ein Plattenspieler
-  bei der Musik oder ein Sessel neben dem Tagebuch.
 
 - **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
   dort stehen unter CC BY 3.0 und passen perfekt zu „Fakten & Geheimnisse“
