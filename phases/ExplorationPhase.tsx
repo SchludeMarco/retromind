@@ -4,6 +4,7 @@ import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
 import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
+import { HeroesSection } from './HeroesSection';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
   music: { icon: '🎵', label: tr('Music', 'Musik') },
@@ -74,7 +75,7 @@ export const ExplorationPhase: React.FC<{
   const warm = useWarmChrome();
   // The journey split into "Sparten" (Marco, 2026-10-06): a calm overview
   // of tiles, and only the one tapped opens, when the mood strikes.
-  type Sparte = BuzzwordCategory | 'lab';
+  type Sparte = BuzzwordCategory | 'lab' | 'heroes';
   const [sparte, setSparte] = useState<Sparte | null>(uploadedImage ? 'lab' : null);
   const open = (next: Sparte | null) => {
     setSparte(next);
@@ -126,6 +127,11 @@ export const ExplorationPhase: React.FC<{
             </button>
           );
         })}
+        <button onClick={() => open('heroes')} className={tileClass}>
+          <span aria-hidden="true" className="text-3xl mb-1">🦸</span>
+          <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Heroes of your youth', 'Helden deiner Jugend')}</span>
+          <span className="text-sm text-retro-brown">{tr('Find them and read their whole story', 'Finden und ihre ganze Geschichte lesen')}</span>
+        </button>
         <button onClick={() => open('lab')} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📷</span>
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Photo Lab', 'Foto-Labor')}</span>
@@ -331,7 +337,10 @@ export const ExplorationPhase: React.FC<{
         {lab}
       </div>
     )}
-    {sparte !== null && sparte !== 'lab' && sparteView(sparte)}
+    {sparte === 'heroes' && (
+      <HeroesSection aiOff={aiOff} focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
+    )}
+    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparteView(sparte)}
 
     <div className="flex flex-wrap justify-center gap-4 pt-6">
       <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">

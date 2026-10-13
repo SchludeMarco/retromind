@@ -56,6 +56,18 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
   Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum
   Antippen ([`components/StationCorner.tsx`](components/StationCorner.tsx)).
+- **Helden deiner Jugend** – eine Sparte beim Erkunden: die Helden jedes
+  Jahrzehnts als Poster an der Wand (deutsche und amerikanische Auswahl),
+  dazu ein Omni-Suchfeld, das beim Tippen von selbst sucht und neben Namen
+  auch Beschreibungen versteht („der Typ mit dem sprechenden Auto“; Gemini
+  findet die passenden Wikipedia-Artikel, jeder wird gegen Wikipedia
+  geprüft). Jeder Held hat eine eigene Seite mit Steckbrief aus Wikidata
+  (CC0), dem ganzen Wikipedia-Artikel in Kapiteln (CC BY-SA, deutsch oder
+  englisch) und einem Foto nur von Wikimedia Commons unter freier Lizenz,
+  immer mit Quelle, Urheber und Lizenz; alles über `/api/proxy`. „Meine
+  Erinnerung dazu“ öffnet eine persönliche Frage fürs Erinnerungsbuch
+  ([`phases/HeroesSection.tsx`](phases/HeroesSection.tsx),
+  [`lib/heroes.ts`](lib/heroes.ts)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
@@ -651,6 +663,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
+  Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden
+  („Wer gehörte noch dazu?“) angezeigt werden.
 
 - **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
   eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.
