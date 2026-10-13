@@ -93,6 +93,9 @@ export function fetchSummary(enTitle: string): Promise<WikiSummary | null> {
  * Logos and icons are SVGs on Wikipedia, so skipping SVG drops most clutter.
  * The lead image is left out: for games it is the publisher's box art, which
  * the app replaces with its own pixel tile (components/PixelCover.tsx).
+ * Only files from Wikimedia Commons are kept: everything there is freely
+ * licensed, while files stored on Wikipedia itself are usually screenshots
+ * used under "fair use", which we may not pass on.
  */
 export async function fetchImages(enTitle: string, max = 8): Promise<WikiImage[]> {
   const data = await getJson(`${rest('en')}/page/media-list/${enc(enTitle)}`);
@@ -102,12 +105,14 @@ export async function fetchImages(enTitle: string, max = 8): Promise<WikiImage[]
     .map((it) => {
       const best = (it.srcset ?? []).slice(-1)[0]?.src ?? '';
       return {
+        commons: best.includes('/wikipedia/commons/'),
         src: viaProxy(best.startsWith('//') ? `https:${best}` : best),
         caption: (it.caption?.text ?? '').trim(),
-        filePage: `https://en.wikipedia.org/wiki/${enc(it.title ?? '')}`,
+        filePage: `https://commons.wikimedia.org/wiki/${enc(it.title ?? '')}`,
       };
     })
-    .filter((img) => img.src)
+    .filter((img) => img.src && img.commons)
+    .map(({ commons, ...img }) => img)
     .slice(0, max);
 }
 

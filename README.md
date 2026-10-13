@@ -265,7 +265,9 @@ Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
 Hunderten Spielen füllt; die Plattformen (mit Hersteller-Regal und Foto für
 die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
 [`gaming/data/platforms.ts`](gaming/data/platforms.ts). Dazu Suche
-nach beliebigen Spielen, Wikipedia-Texte und -Screenshots live (über `api/proxy.js`),
+nach beliebigen Spielen, Wikipedia-Texte und frei lizenzierte Bilder von
+Wikimedia Commons live (über `api/proxy.js`; Screenshots, die Wikipedia nur
+als „Fair Use“ zeigt, bleiben draußen),
 kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
 (`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
 Longplays, GameFAQs, MobyGames, Kultboy und Handbüchern im Internet Archive.
@@ -274,7 +276,20 @@ Fernsehspots des Spiels von YouTube, der Reiter „Zeitschriften & heute“ such
 auf Knopfdruck im Web nach den Testwertungen von damals (Power Play, ASM,
 Amiga Joker, Video Games, Mega Fun, Man!ac, EGM …), legalen Wegen, das Spiel
 heute zu spielen, und Level-Passwörtern, immer mit Quellen
-(`gamePress` in `api/gemini.js`). Auf jeder Spieleseite
+(`gamePress` in `api/gemini.js`). Der Reiter „Fakten & Geheimnisse“
+([`gaming/components/GameFacts.tsx`](gaming/components/GameFacts.tsx),
+[`gaming/lib/facts.ts`](gaming/lib/facts.ts)) sammelt nur Material, das wir
+zeigen und weitergeben dürfen, jeweils mit Quelle, Lizenz und Link zu den
+Autor:innen: einen Steckbrief aus Wikidata (CC0: Entwickler, Designer,
+Komponist, Engine, Erscheinungsdaten je Plattform, Reihe, Vorgänger und
+Nachfolger, Auszeichnungen, Verkaufszahlen, USK/PEGI/ESRB) mit den
+Testwertungen von damals, den ganzen Wikipedia-Artikel in Kapiteln
+(CC BY-SA 4.0, deutsch oder englisch umschaltbar; Entwicklung, Musik,
+Kontroversen, Versionen und Ähnliches sind mit ★ markiert und stehen oben),
+und direkte Links in die Spieledatenbanken, die Wikidata kennt (The Cutting
+Room Floor für herausgeschnittene und versteckte Inhalte, MobyGames, Kultboy,
+Lemon64, Hall of Light, VGMdb …). Alles läuft über
+`api/proxy.js`, der Browser hat keinen Kontakt zu den Quellen. Auf jeder Spieleseite
 startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
 Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
 mit `YOUTUBE_API_KEY`). Gesucht wird mit Titel und Erscheinungsjahr, Videos
@@ -593,15 +608,16 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
 - **Mehr Spiele im kuratierten Gaming-Katalog** mit eigenen Tipps.
-- **Screenshots auf der Spieleseite prüfen:** Der Reiter „Screenshots“ zeigt
-  Bilder aus dem Wikipedia-Artikel; viele davon sind wie die Cover nicht frei
-  lizenziert. Besser nur frei lizenzierte Bilder von Wikimedia Commons zeigen
-  oder den Reiter durch Videos ersetzen.
 - **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
   Rücksprache).
 
 ### Könnte
 
+- **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
+  dort stehen unter CC BY 3.0 und passen perfekt zu „Fakten & Geheimnisse“
+  (unbenutzte Level, Debug-Menüs, Botschaften der Entwickler). Der Server von
+  tcrf.net lässt unseren Abruf aber nicht durch; dafür bräuchte es eine
+  Freigabe der Betreiber. Bis dahin gibt es nur den Link.
 
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
