@@ -41,8 +41,19 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   der Startseite eine gezeichnete Stube (Couch mit Häkeldecke, leuchtende
   Stehlampe, dampfender Tee, schlafende Katze), deren Fenster die echte
   Tageszeit zeigt, dazu eine Begrüßung mit Namen passend zur Uhrzeit,
-  Tapeten-Hintergrund mit warmem Lampenlicht, Papierkarten und Holzleisten
-  ([`components/CozyRoom.tsx`](components/CozyRoom.tsx)).
+  Tapeten-Hintergrund mit warmem Lampenlicht, Papierkarten und Holzleisten.
+  Ein Holzofen brennt abends und nachts, tagsüber glüht nur die Glut. Auf
+  Wunsch zeigt das Fenster das echte Wetter (Regen, Schnee, Gewitter, Nebel,
+  Wolken) über Open-Meteo, mit Standort oder eingegebenem Ort, nur nach
+  Einschalten ([`components/CozyRoom.tsx`](components/CozyRoom.tsx),
+  [`lib/weather.ts`](lib/weather.ts)).
+- **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
+  Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
+  amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
+  dahinter legt sie in die **Grabbelkiste**, die vorn im Laufband zählt und
+  alles Gesammelte zeigt. Langsam, mit Pause-Knopf, hält bei Berührung an
+  ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
+  [`lib/tickerItems.ts`](lib/tickerItems.ts)).
 - **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
   mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
 - **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
@@ -630,6 +641,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Rücksprache).
 
 ### Könnte
+
+- **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
+  eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.
 
 - **Mehr Stube auf den anderen Seiten:** Kleine Stuben-Details auch in den
   Reise-Stationen, etwa ein Fernseher bei den Eindrücken, ein Plattenspieler

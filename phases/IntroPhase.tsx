@@ -11,6 +11,8 @@ import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
 import { CozyRoom, DayTime, dayTime } from '../components/CozyRoom';
+import { WeatherSwitch } from '../components/WeatherSwitch';
+import { useWindowWeather } from '../lib/weather';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -210,6 +212,7 @@ const WarmIntro: React.FC<IntroProps> = ({
 }) => {
   const decades = Object.keys(DECADES_DB);
   const time = dayTime();
+  const weather = useWindowWeather();
   const greeting = cozyGreeting(time, userName);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
   const shown = DECADES_DB[shownDecade];
@@ -222,8 +225,9 @@ const WarmIntro: React.FC<IntroProps> = ({
       <section className="retro-card bg-retro-paper-white p-4 md:p-6">
         {/* The living room everyone sits down in first (components/CozyRoom.tsx). */}
         <div className="cozy-frame rounded-xl overflow-hidden mb-5">
-          <CozyRoom time={time} />
+          <CozyRoom time={time} weather={weather} />
         </div>
+        <WeatherSwitch />
         <div className="px-2">
           <span className="block text-xs font-semibold uppercase tracking-wider text-retro-amber-dark">{tr('Memory journey', 'Erinnerungsreise')}</span>
           <h2 className="text-2xl md:text-3xl mt-1 mb-1">{greeting.title}</h2>
