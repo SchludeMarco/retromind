@@ -1,4 +1,5 @@
 import { isMuted } from './mute';
+import { xmasSoundsOn } from './season';
 
 // Christmas sounds (Marco, 2026-10-14: "Während der Weihnachtszeit sollten
 // viele kleine blinkende Lichter leuchten und ein entsprechender Ton
@@ -12,7 +13,7 @@ import { isMuted } from './mute';
 let ctx: AudioContext | null = null;
 
 function audio(): AudioContext | null {
-  if (isMuted()) return null;
+  if (isMuted() || !xmasSoundsOn()) return null;
   try {
     if (!ctx || ctx.state === 'closed') {
       const AC = window.AudioContext || (window as any).webkitAudioContext;
@@ -89,7 +90,7 @@ export function playJingle() {
 
 /** Santa's deep "Ho ho ho" in the browser's own voice. */
 export function playHoHoHo() {
-  if (isMuted()) return;
+  if (isMuted() || !xmasSoundsOn()) return;
   const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
   // Never over the time machine's announcer.
   if (!synth || synth.speaking) return;

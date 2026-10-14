@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Mehr Weihnachtslichter und Weihnachtsklänge': {
     title: 'More Christmas lights and Christmas sounds',
-    text: 'During the Christmas season, lots of small colorful lights now twinkle behind the pages, and the fairy lights along the top have almost twice as many bulbs, each blinking at its own pace. Every minute or two a short, quiet jingle sounds, with sleigh bells and the first notes of “Jingle Bells”, and every third time Santa adds a “Ho ho ho”. The first jingle only comes a while after your first tap and swells in gently. With the sound off everything stays quiet, and “Christmas look: off” turns the lights and sounds off.',
+    text: 'During the Christmas season, lots of small colorful lights now twinkle behind the pages, and the fairy lights along the top have almost twice as many bulbs, each blinking at its own pace. Every minute or two a short, quiet jingle sounds, with sleigh bells and the first notes of “Jingle Bells”, and every third time Santa adds a “Ho ho ho”. The first jingle only comes a while after your first tap and swells in gently. With the sound off everything stays quiet. In the settings you can switch off just the jingles (“Christmas jingles and Ho ho ho”), and “Christmas look: Off” turns off everything Christmassy: lights, snow, sounds, Christmas songs, the advent calendar and the Christmas bakery.',
   },
   'Adventskalender mit 24 Türchen': {
     title: 'An advent calendar with 24 doors',

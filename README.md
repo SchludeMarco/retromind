@@ -88,7 +88,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   blinkende Lichter und Schnee hinter den Seiten, Weihnachtsrot als Akzent,
   und im Radio laufen Weihnachtslieder (Spotify „Christmas Hits“). Alle ein
   bis zwei Minuten klingt leise ein Schlittenglocken-Jingle, jedes dritte
-  Mal mit „Ho ho ho“ (stumm bei ausgeschaltetem Ton,
+  Mal mit „Ho ho ho“ (stumm bei ausgeschaltetem Ton, einzeln abschaltbar,
   [`lib/xmasSounds.ts`](lib/xmasSounds.ts)). In den Einstellungen „Weihnachtslook“:
   Automatisch, jetzt an oder aus
   ([`lib/season.ts`](lib/season.ts),

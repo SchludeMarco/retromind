@@ -15,8 +15,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   und den ersten Tönen von „Jingle Bells“; jedes dritte Mal sagt der
   Weihnachtsmann dazu „Ho ho ho“. Das erste Jingle kommt erst eine Weile
   nach dem ersten Tippen und schwillt sanft an. Bei ausgeschaltetem Ton
-  bleibt alles still, und mit „Weihnachtslook: aus“ verschwinden Lichter
-  und Klänge.
+  bleibt alles still. In den Einstellungen lassen sich die Glöckchen mit
+  „Weihnachtsglöckchen und Ho ho ho“ einzeln abstellen, und
+  „Weihnachtslook: Aus“ schaltet alles Weihnachtliche ab: Lichter, Schnee,
+  Klänge, Weihnachtslieder, Adventskalender und Weihnachtsbäckerei.
 
 - **Adventskalender mit 24 Türchen** (2026-10-14, PR #212): In der
   Adventszeit gibt es beim Erkunden eine Kachel „Adventskalender“, ab dem
