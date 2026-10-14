@@ -25,7 +25,7 @@ const SEEN_KEY = 'retromind.whatsnew.seen';
 const MODULES = ['Zeitreise', 'Gaming-Edition'];
 
 // Entries that only concern the repository, not the app people use.
-const HIDDEN_TITLES = /^Dokumentation\b/;
+const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 
 // English versions of the newest entries, keyed by the German bold title
 // exactly as it stands in CHANGELOG.md. CHANGELOG.md stays German; entries
@@ -300,6 +300,94 @@ const EN: Record<string, { title: string; text: string }> = {
     title: 'Gaming: hall music fades in slowly',
     text: 'The self-generated music in RetroMind - Gaming (the metal intro after walking in and the chiptune tracks) now starts quietly and gets louder over about 6 seconds, also when you switch it back on. The Spotify music still starts at normal volume, because Spotify’s embedded player offers no volume control.',
   },
+  'Zeitreise: Überschrift nicht mehr über offenen Fenstern': {
+    title: 'The headline no longer shows over open windows',
+    text: 'The “RetroMind” lettering used to shine through the settings, feedback and other windows. Open windows now sit cleanly on top.',
+  },
+  'Zeitreise: Knopf zurück zur Startseite': {
+    title: 'A button back to the start page',
+    text: 'A house icon at the bottom center takes you back to the start from every page of the journey, without losing your progress.',
+  },
+  'Zeitreise: Feedback geben': {
+    title: 'Send feedback',
+    text: 'The settings have a “Send feedback” button for praise, criticism, suggestions and wishes. The message reaches Marco by email.',
+  },
+  'Zeitreise: Nostalgie-Radio entfernt': {
+    title: 'Nostalgia radio removed',
+    text: 'The self-generated background music in the settings is gone. Picking a decade now only steers the real hits from Spotify.',
+  },
+  'Zeitreise: Ticken auf dem Willkommensbildschirm, wieder entfernt': {
+    title: 'Ticking on the welcome screen, taken out again',
+    text: 'A soft ticking of the clock was added, but it did not play reliably and got in the way of the music starting. So it was taken out again (it later came back, improved).',
+  },
+  'Zeitreise: Anmeldung beim Öffnen': {
+    title: 'Sign-in on opening',
+    text: 'Before the journey a check asked for a Google sign-in (without Google a small form). Name and date of birth came from the Google profile. Later the sign-in became optional again.',
+  },
+  'Zeitreise: Willkommensbildschirm mit Kaminuhr': {
+    title: 'Welcome screen with a mantel clock',
+    text: 'Before the app, “Welcome to RetroMind” appears with the line “The ticket to your past”. Behind it, large and seen at an angle from above, stands an old wooden mantel clock whose hands move slowly. The screen is dark and mysterious, the title is set in an ornate font, glows and floats gently. Pressing “Let’s go!” sets off a shower of sparks, then the screen slowly fades into the app.',
+  },
+  'Zeitreise: Hinweis zum Spotify-Login': {
+    title: 'A note about the Spotify login',
+    text: 'Next to the Spotify player a note explains that Spotify has its own sign-in. Without it the player only plays 30-second previews, even if you are signed in with Google.',
+  },
+  'Zeitreise: Einstellungen und Google-Knopf erst ganz unten': {
+    title: 'Settings and Google button at the very bottom',
+    text: 'The gear and the Google button sit in the two bottom corners and only appear once you scroll to the end of the page.',
+  },
+  'Zeitreise: „Weitermachen“ gleich oben': {
+    title: '“Continue” right at the top',
+    text: 'When you come back, you see “Continue” and “Start over” right under the heading instead of far down the page.',
+  },
+  'Zeitreise: Google-Anmeldung klappt am Handy beim ersten Tipp': {
+    title: 'Google sign-in works on the first tap on phones',
+    text: 'Google’s sign-in window now opens right away; before, the phone swallowed the first tap.',
+  },
+  'Zeitreise: ruhige Melodie zum Start': {
+    title: 'A calm melody at the start',
+    text: 'Instead of a steady droning tone, a short, calm melody plays in a loop, in a different key for every decade.',
+  },
+  'Zeitreise: klare Überschrift mit rotem R und M': {
+    title: 'A crisp headline with a red R and M',
+    text: '“RetroMind” is no longer blurry, and the R and M are red.',
+  },
+  'Zeitreise: Versionsnummer in den Einstellungen': {
+    title: 'Version number in the settings',
+    text: 'At the bottom of the settings you can read which version is running, in an easy-to-read size.',
+  },
+  'Zeitreise: Einstellungen mit Zahnrad': {
+    title: 'Settings behind a gear',
+    text: 'A gear opens the settings with font size and music (play, decade, volume). The separate music button is gone.',
+  },
+  'Zeitreise: Musik von Anfang an': {
+    title: 'Music from the start',
+    text: 'Calm background music starts in a loop when you open the app. If the browser blocks the sound, it says “Tap to start”. The music is made inside the app instead of being loaded from another site that sometimes stayed silent.',
+  },
+  'Zeitreise: Startknopf direkt unter der Überschrift': {
+    title: 'Start button right under the heading',
+    text: '“Start time travel” now sits right at the top of the start page.',
+  },
+  'Zeitreise: Röhrenbildschirm-Look für die ganze App': {
+    title: 'A tube-TV look for the whole app',
+    text: 'Fine stripes and a light haze like on an old TV lie over the whole app, flickering now and then.',
+  },
+  'Zeitreise: Radio-Player als kleiner runder Knopf': {
+    title: 'The radio player as a small round button',
+    text: 'The music player starts as a round button at the bottom right and opens and closes when you tap it.',
+  },
+  'Zeitreise: Fotos wie alte Abzüge': {
+    title: 'Photos like old prints',
+    text: 'All pictures look slightly faded and sepia-toned and flicker now and then like on an old screen. The printed book stays clear.',
+  },
+  'Zeitreise: Start mit Pixel-Effekt und „Welcome“': {
+    title: 'A pixel effect and “Welcome” at the start',
+    text: 'When the app opens, a black grid dissolves square by square to a deep tone. Then a deep, slow voice says “Welcome”.',
+  },
+  'Zeitreise: jeder Knopf reagiert': {
+    title: 'Every button responds',
+    text: 'Small buttons like Close or Later now also give visible and audible feedback when pressed.',
+  },
 };
 
 const cleanText = (s: string) =>
@@ -354,8 +442,12 @@ export const parseChangelog = (md: string): WhatsNewSection[] => {
 
   const flush = () => {
     if (current && entry) {
-      const parsed = parseEntry(entry.join('\n'), index++);
-      if (parsed) current.entries.push(parsed);
+      // hidden entries take no index, so the newest visible id stays stable
+      const parsed = parseEntry(entry.join('\n'), index);
+      if (parsed) {
+        current.entries.push(parsed);
+        index++;
+      }
     }
     entry = null;
   };
