@@ -18,7 +18,7 @@ import { RetroTicker } from './components/RetroTicker';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { MusicMini } from './components/MusicMini';
 import { YearWelcome } from './components/YearWelcome';
-import { announceYear } from './lib/robotVoice';
+import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
@@ -517,6 +517,8 @@ const App: React.FC = () => {
   // after the ticket), and every switch of the decade. A reload of an open
   // page is no journey.
   const sawSplashRef = useRef(showSplash);
+  // The start of the app says "Welcome back"; a decade switch the year.
+  const startTravelRef = useRef(false);
   const landedRef = useRef(false);
   useEffect(() => {
     if (showSplash) {
@@ -526,6 +528,7 @@ const App: React.FC = () => {
     }
     if (!verified || landedRef.current || !sawSplashRef.current) return;
     landedRef.current = true;
+    startTravelRef.current = true;
     setTravel((n) => n + 1);
   }, [showSplash, verified]);
   const decadeSeenRef = useRef(manualDecade);
@@ -535,9 +538,12 @@ const App: React.FC = () => {
     if (verified) setTravel((n) => n + 1);
   }, [manualDecade, verified]);
   useEffect(() => {
-    if (!travel || !travelYear) return;
+    if (!travel) return;
+    const atStart = startTravelRef.current;
+    startTravelRef.current = false;
+    if (!atStart && !travelYear) return;
     // After the gong of the arrival / while the iris opens.
-    const t = window.setTimeout(() => announceYear(travelYear), 900);
+    const t = window.setTimeout(() => (atStart ? announceWelcomeBack() : announceYear(travelYear!)), 900);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [travel]);

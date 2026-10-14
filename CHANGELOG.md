@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zum Start nur „Welcome back“** (2026-10-14, PR #208): Kommst du durch
+  die Zeitmaschine in die App, sagt die Roboterstimme nur noch „Welcome
+  back“ (auf Deutsch „Willkommen zurück“). Die alte dunkle Stimme, die nach
+  dem Aufwachen der App „Welcome“ sagte, ist weg. „Welcome to the year …“
+  sagt die Stimme nur noch, wenn du in den Einstellungen das Jahrzehnt
+  wechselst; über jedem Halt steht der Satz weiterhin groß.
+
 - **„Welcome to the year …“: Roboterstimme und Video aus deinem Jahr**
   (2026-10-14, PR #207): Nach jeder Reise mit der Zeitmaschine sagt eine
   Roboterstimme nach einem kurzen Piepen „Welcome to the year 1975“ (auf
