@@ -7,6 +7,19 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ankunft mit Wow: Zeitanzeige, Blitz und dein Jahr** (2026-10-14,
+  PR #209): Kommst du durch die Zeitmaschine in der App an, läuft jetzt
+  eine kurze Show. Eine Zeitanzeige wie im Kino zeigt grün die Gegenwart
+  und rot das Ziel; die roten Ziffern rasen ratternd von heute zurück bis
+  zu deinem Geburtstag. Dann rastet sie ein: ein greller Blitz, zwei
+  Druckwellen, ein tiefer Schlag mit hellem Akkord, und dein Geburtsjahr
+  erscheint riesig und leuchtend mit „Welcome back“ und dem Titel des
+  Jahrzehnts, während Dinge dieser Zeit (Discokugel, Kassette, Joystick …)
+  aus der Mitte fliegen. In diesem Moment sagt die Roboterstimme „Welcome
+  back“. Nach ein paar Sekunden blendet die Show aus; ein Tipp überspringt
+  sie. Ohne Animationen (Systemeinstellung „Bewegung reduzieren“) gibt es
+  nur die Stimme.
+
 - **Zum Start nur „Welcome back“** (2026-10-14, PR #208): Kommst du durch
   die Zeitmaschine in die App, sagt die Roboterstimme nur noch „Welcome
   back“ (auf Deutsch „Willkommen zurück“). Die alte dunkle Stimme, die nach
