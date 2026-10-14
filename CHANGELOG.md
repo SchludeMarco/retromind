@@ -7,6 +7,19 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Mehr Weihnachtslichter und Weihnachtsklänge** (2026-10-14, PR #213): In
+  der Weihnachtszeit blinken jetzt viele kleine bunte Lichter hinter den
+  Seiten, und die Lichterkette oben hat fast doppelt so viele Lämpchen, die
+  jedes in seinem eigenen Takt blinken. Ab und zu, etwa alle ein bis zwei
+  Minuten, klingt leise ein kurzes Glöckchen-Jingle mit Schlittenglocken
+  und den ersten Tönen von „Jingle Bells“; jedes dritte Mal sagt der
+  Weihnachtsmann dazu „Ho ho ho“. Das erste Jingle kommt erst eine Weile
+  nach dem ersten Tippen und schwillt sanft an. Bei ausgeschaltetem Ton
+  bleibt alles still. In den Einstellungen lassen sich die Glöckchen mit
+  „Weihnachtsglöckchen und Ho ho ho“ einzeln abstellen, und
+  „Weihnachtslook: Aus“ schaltet alles Weihnachtliche ab: Lichter, Schnee,
+  Klänge, Weihnachtslieder, Adventskalender und Weihnachtsbäckerei.
+
 - **Adventskalender mit 24 Türchen** (2026-10-14, PR #212): In der
   Adventszeit gibt es beim Erkunden eine Kachel „Adventskalender“, ab dem
   1. Dezember. Jeden Tag geht ein Türchen mehr auf, bis zum großen

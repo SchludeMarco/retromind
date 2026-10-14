@@ -83,3 +83,38 @@ export function useXmasMode(): XmasMode {
 export function useChristmas(): boolean {
   return useSyncExternalStore(subscribe, active, () => false);
 }
+
+// Marco, 2026-10-14: "In den Einstellungen sollte außerdem ermöglicht werden
+// das Weihnachts Zeug abzustellen". "Christmas look: off" turns everything
+// off; this switch silences only the jingles and "Ho ho ho".
+const SOUND_KEY = 'retromind.xmas.sounds';
+
+function readSounds(): boolean {
+  try {
+    return localStorage.getItem(SOUND_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
+
+let sounds = readSounds();
+
+/** Whether the Christmas jingles may play (when the look is on and the sound isn't muted). */
+export function xmasSoundsOn(): boolean {
+  return sounds;
+}
+
+export function setXmasSounds(on: boolean) {
+  sounds = on;
+  try {
+    if (on) localStorage.removeItem(SOUND_KEY);
+    else localStorage.setItem(SOUND_KEY, 'off');
+  } catch {
+    /* not saved, still applies for this visit */
+  }
+  listeners.forEach((l) => l());
+}
+
+export function useXmasSounds(): boolean {
+  return useSyncExternalStore(subscribe, () => sounds, () => true);
+}

@@ -7,7 +7,7 @@ import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
-import { setXmasMode, useXmasMode, XmasMode } from '../lib/season';
+import { setXmasMode, setXmasSounds, useXmasMode, useXmasSounds, XmasMode } from '../lib/season';
 
 const XMAS_OPTIONS: { id: XmasMode; label: string }[] = [
   { id: 'auto', label: tr('Automatic (Nov 1 to Jan 6)', 'Automatisch (1. Nov. bis 6. Jan.)') },
@@ -74,6 +74,7 @@ export const SettingsModal: React.FC<{
   const info = DECADES_DB[currentDecade];
   const muted = useMuted();
   const xmasMode = useXmasMode();
+  const xmasSounds = useXmasSounds();
   const theme = useTheme();
   const onHeadingTap = useSecretAdminTaps();
 
@@ -252,10 +253,14 @@ export const SettingsModal: React.FC<{
         </div>
         <p className="text-[10px] text-retro-tan mt-2">
           {tr(
-            'Fairy lights, snow, Christmas songs on the radio and Grandma’s Christmas bakery in the cookbook. Automatic means November 1 to January 6.',
-            'Lichterkette, Schnee, Weihnachtslieder im Radio und Omas Weihnachtsbäckerei im Kochbuch. Automatisch heißt vom 1. November bis 6. Januar.'
+            'Fairy lights, snow, Christmas songs on the radio, jingles, the advent calendar and Grandma’s Christmas bakery in the cookbook. Automatic means November 1 to January 6; Off turns all of it off.',
+            'Lichterkette, Schnee, Weihnachtslieder im Radio, Glöckchen, Adventskalender und Omas Weihnachtsbäckerei im Kochbuch. Automatisch heißt vom 1. November bis 6. Januar; Aus schaltet alles ab.'
           )}
         </p>
+        <label className="mt-3 flex items-center gap-2 text-sm font-bold cursor-pointer">
+          <input type="checkbox" checked={xmasSounds} onChange={(e) => setXmasSounds(e.target.checked)} className="w-4 h-4 accent-retro-ink" />
+          {tr('Christmas jingles and “Ho ho ho”', 'Weihnachtsglöckchen und „Ho ho ho“')}
+        </label>
       </div>
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
