@@ -24,9 +24,11 @@ removed from that list.
 
 The Gaming edition has its own `gaming/README.md` (Gaming features go under
 "Was die Gaming-Edition kann", Gaming ideas under its "Ideen und offene
-Punkte"). `gaming/CHANGELOG.md` is generated: after adding entries to
-`CHANGELOG.md`, run `npm run changelog:gaming` and commit the result. Never
-edit `gaming/CHANGELOG.md` by hand.
+Punkte"). `gaming/CHANGELOG.md` is generated: after every push to master that changes
+`CHANGELOG.md`, the GitHub Action `.github/workflows/gaming-changelog.yml`
+regenerates and commits it (Vercel skips that commit via `ignoreCommand`).
+Running `npm run changelog:gaming` in the PR as well is fine. Never edit
+`gaming/CHANGELOG.md` by hand.
 
 ## Languages
 

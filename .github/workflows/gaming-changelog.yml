@@ -1,0 +1,40 @@
+# Keeps gaming/CHANGELOG.md in step with CHANGELOG.md: after every push to
+# master that touches CHANGELOG.md, it regenerates the Gaming changelog and
+# commits it if anything changed. vercel.json's ignoreCommand skips the
+# Vercel build for that commit, so it costs no deployment.
+name: Gaming changelog
+
+on:
+  push:
+    branches: [master]
+    paths: [CHANGELOG.md, scripts/gaming-changelog.mjs]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gaming-changelog
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/gaming-changelog.mjs
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- gaming/CHANGELOG.md; then
+            echo "gaming/CHANGELOG.md is up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gaming/CHANGELOG.md
+          git commit -m "gaming/CHANGELOG.md: update from CHANGELOG.md"
+          git pull --rebase origin master
+          git push origin HEAD:master

@@ -1,8 +1,9 @@
 // Writes gaming/CHANGELOG.md from the main CHANGELOG.md, so the Gaming
 // edition has its own changelog without a second list to keep by hand.
 // An entry counts as Gaming when it names the edition, the hall or one of
-// its parts, or applies to both apps. Run `npm run changelog:gaming` after
-// adding entries to CHANGELOG.md.
+// its parts, or applies to both apps. GitHub runs this after every push to
+// master that changes CHANGELOG.md (.github/workflows/gaming-changelog.yml);
+// `npm run changelog:gaming` does the same locally.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const GAMING =
@@ -16,9 +17,10 @@ const out = [
   '# Changelog: RetroMind – Gaming',
   '',
   'Alle Änderungen an der Gaming-Edition (https://retromind-gaming.vercel.app),',
-  'die neueste oben. Diese Datei wird mit `npm run changelog:gaming` aus der',
-  '[CHANGELOG.md](../CHANGELOG.md) im Hauptordner erzeugt, die alle Änderungen',
-  'an beiden Apps enthält. Bitte nicht von Hand bearbeiten.',
+  'die neueste oben. Diese Datei entsteht automatisch aus der',
+  '[CHANGELOG.md](../CHANGELOG.md) im Hauptordner, die alle Änderungen an',
+  'beiden Apps enthält: Nach jeder Änderung dort baut GitHub sie neu. Bitte',
+  'nicht von Hand bearbeiten.',
 ];
 
 let section = null;

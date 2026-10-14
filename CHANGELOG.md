@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Entwicklung: Gaming-CHANGELOG aktualisiert sich von selbst**
+  (2026-10-14, PR #204): Nach jeder Änderung an der CHANGELOG.md erzeugt
+  GitHub die Gaming-CHANGELOG automatisch neu und speichert sie. Dieser
+  Schritt löst keinen eigenen Vercel-Build aus.
+
 - **Dokumentation: README und CHANGELOG für beide Apps vervollständigt**
   (2026-10-14, PR #203): Die Gaming-Edition hat jetzt eine eigene
   [README](gaming/README.md) mit allen Funktionen und Ideen und eine eigene

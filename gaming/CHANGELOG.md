@@ -1,9 +1,10 @@
 # Changelog: RetroMind – Gaming
 
 Alle Änderungen an der Gaming-Edition (https://retromind-gaming.vercel.app),
-die neueste oben. Diese Datei wird mit `npm run changelog:gaming` aus der
-[CHANGELOG.md](../CHANGELOG.md) im Hauptordner erzeugt, die alle Änderungen
-an beiden Apps enthält. Bitte nicht von Hand bearbeiten.
+die neueste oben. Diese Datei entsteht automatisch aus der
+[CHANGELOG.md](../CHANGELOG.md) im Hauptordner, die alle Änderungen an
+beiden Apps enthält: Nach jeder Änderung dort baut GitHub sie neu. Bitte
+nicht von Hand bearbeiten.
 
 ## Unreleased
 
