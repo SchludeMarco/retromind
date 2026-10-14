@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Wegweiser mit gelbem Leuchtband': {
+    title: 'Signpost wrapped in a yellow light strip',
+    text: 'A yellow light strip is now wound around the “To the gaming zone” signpost, running in front of the board and behind it. Little lights keep chasing along it and the strip glows softly. The red frame is no longer bright but matte and dusty. If you have turned off motion, the strip glows without moving.',
+  },
   'Rot umrandeter Wegweiser': {
     title: 'Signpost with a red frame',
     text: 'The “To the gaming zone” signpost on the time travel start page now has a bold red frame along its torn edge, with a soft red glow behind it that slowly pulses. That way it catches your eye on every background. If you have turned off motion, the glow stays still.',

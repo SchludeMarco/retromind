@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Wegweiser mit gelbem Leuchtband** (2026-10-14, PR #219): Um den
+  Wegweiser „To the gaming zone“ ist jetzt ein gelbes Leuchtband gewickelt,
+  das mal vor und mal hinter dem Brett verläuft. Kleine Lichter laufen
+  ständig daran entlang, und das Band glimmt leicht. Der rote Rahmen ist
+  nicht mehr knallig, sondern matt und staubig. Wer Bewegung ausgeschaltet
+  hat, sieht das Band ruhig leuchten.
 - **Rot umrandeter Wegweiser** (2026-10-14, PR #218): Der Wegweiser „To the
   gaming zone“ auf der Startseite der Zeitreise hat jetzt einen kräftigen
   roten Rahmen entlang der zerfetzten Kante, dahinter glüht er sanft rot und

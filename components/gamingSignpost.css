@@ -31,12 +31,19 @@
 .gaming-signpost-face {
   fill: url(#gaming-sign-metal);
 }
-/* Red frame glow (GamingSignpost.tsx), breathing slowly so the eye finds it. */
-.gaming-signpost-glow {
-  animation: gamingSignpostGlow 2.4s ease-in-out infinite;
+/* Yellow light strip (GamingSignpost.tsx): lights chase around the board
+   and the whole band breathes a little. */
+.gaming-signpost-chase {
+  animation: gamingSignpostChase 1.2s linear infinite;
 }
-@keyframes gamingSignpostGlow {
-  0%, 100% { opacity: 0.55; }
+.gaming-signpost-strip {
+  animation: gamingSignpostStrip 2.4s ease-in-out infinite;
+}
+@keyframes gamingSignpostChase {
+  to { stroke-dashoffset: -12.2; }
+}
+@keyframes gamingSignpostStrip {
+  0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }
 }
 /* The board nudges towards the arcade on hover, like a gentle push. */
@@ -59,7 +66,8 @@
 @media (prefers-reduced-motion: reduce) {
   .gaming-signpost:hover .gaming-signpost-board,
   .gaming-signpost:focus-visible .gaming-signpost-board,
-  .gaming-signpost-glow {
+  .gaming-signpost-chase,
+  .gaming-signpost-strip {
     animation: none;
   }
 }
