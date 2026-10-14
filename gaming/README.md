@@ -10,7 +10,7 @@ Hintergründen, Tipps, alten Testwertungen, Videos, Minispielen, Quests und
 Musik wie damals.
 
 Alle Änderungen an dieser Edition stehen in der
-[CHANGELOG.md](CHANGELOG.md) (erzeugt aus der gemeinsamen
+[CHANGELOG.md](CHANGELOG.md) (automatisch erzeugt aus der gemeinsamen
 [CHANGELOG.md](../CHANGELOG.md) beider Apps).
 
 ## Wofür es RetroMind – Gaming gibt

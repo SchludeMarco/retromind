@@ -487,10 +487,12 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   unten unter „Ideen und offene Punkte“; Umgesetztes wird dort gestrichen.
 - **[gaming/README.md](gaming/README.md):** dasselbe für die Gaming-Edition
   (Funktionen und Ideen der Gaming-Edition stehen dort, nicht hier).
-- **[gaming/CHANGELOG.md](gaming/CHANGELOG.md):** wird mit
-  `npm run changelog:gaming` aus der CHANGELOG.md erzeugt
-  ([`scripts/gaming-changelog.mjs`](scripts/gaming-changelog.mjs)); nach
-  jedem neuen Eintrag ausführen, nicht von Hand bearbeiten.
+- **[gaming/CHANGELOG.md](gaming/CHANGELOG.md):** wird automatisch aus der
+  CHANGELOG.md erzeugt: Nach jeder Änderung auf `master` baut GitHub sie neu
+  und speichert sie ([`.github/workflows/gaming-changelog.yml`](.github/workflows/gaming-changelog.yml),
+  [`scripts/gaming-changelog.mjs`](scripts/gaming-changelog.mjs)); dieser
+  Schritt kostet keinen Vercel-Build. Von Hand geht es mit
+  `npm run changelog:gaming`. Nicht von Hand bearbeiten.
 - **[feedback.md](feedback.md):** Feedback aus der App landet hier
   automatisch. Unter „To Do“ in dieser README erscheint es erst, wenn Marco
   über den Link in der Feedback-Mail zustimmt. Erledigte To Dos werden

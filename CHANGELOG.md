@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Entwicklung: Gaming-CHANGELOG aktualisiert sich von selbst**
+  (2026-10-14, PR #204): Nach jeder Änderung an der CHANGELOG.md erzeugt
+  GitHub die Gaming-CHANGELOG automatisch neu und speichert sie. Dieser
+  Schritt löst keinen eigenen Vercel-Build aus. Außerdem hat jetzt jede
+  bisherige Änderung ein Datum, auch die ersten Versionen 1.0.0 bis 2.0.1
+  vom 2. September 2026 und die beiden Änderungen ohne eigenen Eintrag
+  (Aufräumen am 2. September, CLAUDE.md in PR #15).
+
 - **Dokumentation: README und CHANGELOG für beide Apps vervollständigt**
   (2026-10-14, PR #203): Die Gaming-Edition hat jetzt eine eigene
   [README](gaming/README.md) mit allen Funktionen und Ideen und eine eigene
@@ -1244,6 +1252,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 - **Zeitreise: Startknopf direkt unter der Überschrift** (2026-09-03, PR #18):
   „Zeitreise starten“ steht gleich oben auf der Startseite.
 
+- **Entwicklung: Regeln für Claude im Repo** (2026-09-03, PR #15): Die
+  neue CLAUDE.md legt fest, dass fertige, grüne Pull Requests direkt
+  zusammengeführt werden.
+
 - **Zeitreise: Röhrenbildschirm-Look für die ganze App** (2026-09-03,
   PR #14): Über der ganzen App liegen feine Streifen und ein leichter
   Schleier wie auf einem alten Fernseher, der ab und zu flackert.
@@ -1276,16 +1288,20 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   #5): Die Gestaltung wird beim Bauen erzeugt statt im Browser, die Farben
   stehen an einer Stelle, der Code ist in kleinere Teile aufgeteilt.
 
+- **Entwicklung: Code aufgeräumt, Live-Adresse in der README** (2026-09-02):
+  Die Anzeige-Bausteine liegen in einer eigenen Datei, und die README nennt
+  die Adresse retromind.vercel.app.
+
 - **Zeitreise: jeder Knopf reagiert** (2026-09-02, PR #2): Auch kleine
   Knöpfe wie Schließen oder Später geben beim Drücken sichtbar und hörbar
   Rückmeldung.
 
-## 2.0.1
+## 2.0.1 (2026-09-02)
 
 - **Favicon ergänzt** (2026-09-02, PR #1): Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
   Favicon (bisher 404 im Browser, kein Wiedererkennungsmerkmal im Tab).
 
-## 2.0.0
+## 2.0.0 (2026-09-02)
 
 Großer Ausbau: aus dem Prototyp wird ein rundes Produkt. **Breaking:** die App
 braucht jetzt die serverseitige Env-Var `GEMINI_API_KEY` (Vercel Functions).
@@ -1329,7 +1345,7 @@ braucht jetzt die serverseitige Env-Var `GEMINI_API_KEY` (Vercel Functions).
 - Datenschutz-Hinweis im Intro; Upload mit Größen-/Typprüfung + Downscaling.
 - Veo-Download läuft über den Proxy (kein Key in der URL, echter Datei-Download).
 
-## 1.1.0
+## 1.1.0 (2026-09-02)
 
 Fix-Durchlauf nach Code-Review des AI-Studio-Exports.
 
@@ -1355,7 +1371,7 @@ Fix-Durchlauf nach Code-Review des AI-Studio-Exports.
 - Aufräumen: tote Imports entfernt, `.gitattributes` (LF), `.gitignore` deckt
   jetzt `.env`/`.env.*` ab.
 
-## 1.0.0
+## 1.0.0 (2026-09-02)
 
 Erster Commit: RetroMind als eigenständiges Repo. React 19 + Vite 6,
 ursprünglich in Google AI Studio prototypisiert. README/LICENSE/.env.example
