@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook': {
     title: 'Christmas time: Grandma’s Christmas bakery and a Christmas look',
-    text: 'From November 1 to January 6, Grandma’s Cookbook opens its Christmas bakery as the first ribbon: vanilla crescents, cinnamon stars, spritz cookies, coconut macaroons, baked apples and a kids’ Christmas punch. Before that, the ribbon shows how many days are left. During that time the whole time journey wears a Christmas look too: glowing fairy lights along the top, softly falling snow behind the pages and Christmas red as the accent color, in all three designs. In the settings you can switch the “Christmas look” on early or turn it off.',
+    text: 'From November 1 to January 6, Grandma’s Cookbook opens its Christmas bakery as the first ribbon: vanilla crescents, cinnamon stars, spritz cookies, coconut macaroons, baked apples and a kids’ Christmas punch. Before that, the ribbon shows how many days are left. During that time the whole time journey wears a Christmas look too: glowing fairy lights along the top, softly falling snow behind the pages and Christmas red as the accent color, in all three designs. The radio then plays Christmas songs on its own (Spotify’s “Christmas Hits” instead of the decade’s music), and the player says “Christmas songs”. In the settings you can switch the “Christmas look” on early or turn it off.',
   },
   'Omas Kochbuch: Leckereien von damals zum Nachkochen': {
     title: 'Grandma’s Cookbook: treats from back then to cook at home',

@@ -14,7 +14,9 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Vorher zeigt das Lesezeichen, wie viele Tage es noch dauert. In dieser
   Zeit trägt auch die ganze Zeitreise Weihnachtslook: eine leuchtende
   Lichterkette am oberen Rand, leise fallender Schnee hinter den Seiten
-  und Weihnachtsrot als Akzentfarbe, in allen drei Designs. In den
+  und Weihnachtsrot als Akzentfarbe, in allen drei Designs. Im Radio
+  laufen dann automatisch Weihnachtslieder (Spotifys „Christmas Hits“ statt
+  der Musik des Jahrzehnts); der Player zeigt „Weihnachtslieder“. In den
   Einstellungen lässt sich der Weihnachtslook unter „Weihnachtslook“ schon
   vorher einschalten oder ganz ausschalten.
 

@@ -252,8 +252,8 @@ export const SettingsModal: React.FC<{
         </div>
         <p className="text-[10px] text-retro-tan mt-2">
           {tr(
-            'Fairy lights, snow and Grandma’s Christmas bakery in the cookbook. Automatic means November 1 to January 6.',
-            'Lichterkette, Schnee und Omas Weihnachtsbäckerei im Kochbuch. Automatisch heißt vom 1. November bis 6. Januar.'
+            'Fairy lights, snow, Christmas songs on the radio and Grandma’s Christmas bakery in the cookbook. Automatic means November 1 to January 6.',
+            'Lichterkette, Schnee, Weihnachtslieder im Radio und Omas Weihnachtsbäckerei im Kochbuch. Automatisch heißt vom 1. November bis 6. Januar.'
           )}
         </p>
       </div>
