@@ -2192,3 +2192,144 @@ html[data-theme="nachtschicht"] .splash-start:active {
 @media (prefers-reduced-motion: reduce) {
   .rm-arrival-show { display: none; }
 }
+
+/* ------------------------------------------------------------------
+   Omas Kochbuch (phases/CookbookSection.tsx): a worn recipe book with
+   ribbons for the decades and recipe cards on lined paper. Shape and
+   depth come from the design tokens, so it wears every design.
+   ------------------------------------------------------------------ */
+.cookbook-ribbons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rm-space-2);
+  padding: 0 var(--rm-space-4);
+}
+.cookbook-ribbon {
+  min-height: 44px;
+  padding: 0.6rem 1rem 0.9rem;
+  font-weight: 700;
+  color: var(--color-retro-ink);
+  background: var(--color-retro-highlight);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-bottom: 0;
+  border-radius: min(var(--rm-radius-card), 0.6rem) min(var(--rm-radius-card), 0.6rem) 0 0;
+  transform: translateY(4px);
+  transition: transform 0.15s ease;
+}
+.cookbook-ribbon:hover { transform: translateY(0); }
+.cookbook-ribbon.is-active {
+  background: var(--rm-accent);
+  border-color: var(--rm-accent);
+  color: var(--color-retro-paper-white);
+  transform: translateY(0);
+}
+.cookbook-paper,
+.cookbook-page {
+  padding: var(--rm-space-6);
+  background-color: var(--color-retro-paper-white);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    color-mix(in srgb, var(--color-retro-tan) 18%, transparent) 31px,
+    color-mix(in srgb, var(--color-retro-tan) 18%, transparent) 32px
+  );
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-card);
+}
+@media (min-width: 640px) {
+  .cookbook-paper,
+  .cookbook-page { padding: var(--rm-space-8); }
+}
+.cookbook-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-1);
+  min-height: 132px;
+  padding: var(--rm-space-4) var(--rm-space-4) var(--rm-space-4) var(--rm-space-6);
+  background: var(--color-retro-cream-light);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-left: 4px solid var(--rm-accent);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+  box-shadow: var(--rm-shadow-float);
+  transition: transform 0.15s ease;
+}
+.cookbook-card:hover { transform: rotate(-0.6deg) translateY(-2px); }
+.cookbook-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-retro-ink);
+}
+.cookbook-story {
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: var(--color-retro-brown);
+  max-width: 62ch;
+}
+.cookbook-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rm-space-3);
+  min-height: 32px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.cookbook-item input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  accent-color: var(--rm-accent);
+}
+.cookbook-item.is-done span {
+  text-decoration: line-through;
+  color: var(--color-retro-tan);
+}
+.cookbook-steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-4);
+}
+.cookbook-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.75rem;
+  line-height: 1.6;
+}
+.cookbook-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--color-retro-paper-white);
+  background: var(--rm-accent);
+  border-radius: 9999px;
+}
+.cookbook-tip {
+  padding: var(--rm-space-4);
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  background: var(--color-retro-highlight);
+  border-left: 4px solid var(--rm-accent);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+  transform: rotate(-0.4deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cookbook-ribbon,
+  .cookbook-card { transition: none; }
+  .cookbook-card:hover,
+  .cookbook-tip { transform: none; }
+}

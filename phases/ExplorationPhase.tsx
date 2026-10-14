@@ -5,6 +5,7 @@ import { useMuted } from '../lib/mute';
 import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
 import { HeroesSection } from './HeroesSection';
+import { CookbookSection } from './CookbookSection';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
@@ -15,13 +16,15 @@ const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
   food: { icon: '🍬', label: tr('Snacks & Food', 'Naschen & Essen') },
 };
 
-// The "Sparten" of the Explore stop: the five kinds of things, the heroes and the photo lab.
-export type Sparte = BuzzwordCategory | 'lab' | 'heroes';
+// The "Sparten" of the Explore stop: the five kinds of things, the heroes,
+// Grandma's cookbook and the photo lab.
+export type Sparte = BuzzwordCategory | 'lab' | 'heroes' | 'cookbook';
 
 /** The name of a Sparte, for the breadcrumb in the journey bar. */
 export function sparteLabel(s: Sparte): string {
   if (s === 'lab') return tr('Photo Lab', 'Foto-Labor');
   if (s === 'heroes') return tr('Heroes of your youth', 'Helden deiner Jugend');
+  if (s === 'cookbook') return tr('Grandma’s Cookbook', 'Omas Kochbuch');
   return CATEGORY[s].label;
 }
 
@@ -144,6 +147,11 @@ export const ExplorationPhase: React.FC<{
           <span aria-hidden="true" className="text-3xl mb-1">🦸</span>
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Heroes of your youth', 'Helden deiner Jugend')}</span>
           <span className="text-sm text-retro-brown">{tr('Find them and read their whole story', 'Finden und ihre ganze Geschichte lesen')}</span>
+        </button>
+        <button onClick={() => open('cookbook')} className={tileClass}>
+          <span aria-hidden="true" className="text-3xl mb-1">📖</span>
+          <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Grandma’s Cookbook', 'Omas Kochbuch')}</span>
+          <span className="text-sm text-retro-brown">{tr('Treats from back then to cook at home', 'Leckereien von damals zum Nachkochen')}</span>
         </button>
         <button onClick={() => open('lab')} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📷</span>
@@ -353,7 +361,10 @@ export const ExplorationPhase: React.FC<{
     {sparte === 'heroes' && (
       <HeroesSection aiOff={aiOff} focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
     )}
-    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparteView(sparte)}
+    {sparte === 'cookbook' && (
+      <CookbookSection focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
+    )}
+    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparteView(sparte)}
 
     <PhaseNav back={{ to: 'induction', onClick: onBack }} next={{ to: 'diary', onClick: onNext }} />
   </div>
