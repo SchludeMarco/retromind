@@ -17,6 +17,12 @@ import './musicDock.css';
 // places the button between its own ones through `className`. One look for
 // both apps, see musicDock.css.
 
+// The top-left mini player (components/MusicMini) opens this panel too.
+const OPEN_EVENT = 'rm-music-dock-open';
+export function openMusicDock() {
+  window.dispatchEvent(new Event(OPEN_EVENT));
+}
+
 export interface MusicDockProps {
   /** "Title · Artist" of the song playing, when known. */
   title: string | null;
@@ -304,6 +310,13 @@ export const MusicDock: React.FC<MusicDockProps> = ({
     setOpen(next);
     onOpenChange?.(next);
   };
+
+  useEffect(() => {
+    const onOpen = () => toggle(true);
+    window.addEventListener(OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_EVENT, onOpen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!open) return;

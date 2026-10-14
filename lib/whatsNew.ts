@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Musiksteuerung oben links, Feedback ganz unten': {
+    title: 'Music controls top left, feedback at the bottom',
+    text: 'At the top left of the time journey you now find back, play/pause and next as proper buttons, with the song that is playing in readable print next to them. Tap the title to open the full music controls. The tiny “Now playing” line in the corner is gone. The red Feedback button now sits at the bottom left under the accounts with “Sign out”: in Retro Warm in the accounts panel behind the person button, in the other designs once you scroll all the way down. In Retro Warm the accounts panel now sits above the bottom bar instead of half behind it.',
+  },
   'Spotify Premium auf dem Handy: ganze Songs über deine Spotify-App': {
     title: 'Spotify Premium on your phone: full songs through your Spotify app',
     text: 'Signed in to the time journey with Spotify Premium, the music on your phone now plays full songs instead of 30-second previews. It plays in your own Spotify app on the phone; RetroMind only tells it which song comes next, and pause, next and back control it. The music player shows the device it plays on. If RetroMind can’t find the Spotify app, open it for a moment and tap “Try again” in the music player; until then you hear previews as before. If you were signed in already, sign in to Spotify once more (RetroMind needs one more permission). When you leave RetroMind, the music in the Spotify app stops.',
