@@ -31,6 +31,14 @@
 .gaming-signpost-face {
   fill: url(#gaming-sign-metal);
 }
+/* Red frame glow (GamingSignpost.tsx), breathing slowly so the eye finds it. */
+.gaming-signpost-glow {
+  animation: gamingSignpostGlow 2.4s ease-in-out infinite;
+}
+@keyframes gamingSignpostGlow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
 /* The board nudges towards the arcade on hover, like a gentle push. */
 .gaming-signpost:hover .gaming-signpost-board,
 .gaming-signpost:focus-visible .gaming-signpost-board {
@@ -50,7 +58,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .gaming-signpost:hover .gaming-signpost-board,
-  .gaming-signpost:focus-visible .gaming-signpost-board {
+  .gaming-signpost:focus-visible .gaming-signpost-board,
+  .gaming-signpost-glow {
     animation: none;
   }
 }

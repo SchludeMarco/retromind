@@ -158,7 +158,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   danach heißt „Pack deinen Koffer“.
 - **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
   ein ramponierter Holzwegweiser „To the gaming zone“ (Schnitte, Brandspuren,
-  abgeplatzte Kontur) in Metall-Großbuchstaben im Stil von God of War
+  abgeplatzte Kontur, roter leuchtender Rahmen) in Metall-Großbuchstaben im Stil von God of War
   (freie Schrift Cinzel), ein Klick führt zu RetroMind –
   Gaming und nimmt Ton- und Google-Einstellung mit
   ([`components/GamingSignpost.tsx`](components/GamingSignpost.tsx)).

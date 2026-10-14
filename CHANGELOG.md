@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Rot umrandeter Wegweiser** (2026-10-14, PR #218): Der Wegweiser „To the
+  gaming zone“ auf der Startseite der Zeitreise hat jetzt einen kräftigen
+  roten Rahmen entlang der zerfetzten Kante, dahinter glüht er sanft rot und
+  pulsiert langsam. So fällt er auf jedem Hintergrund sofort ins Auge. Wer
+  Bewegung ausgeschaltet hat, sieht das Leuchten ruhig, ohne Pulsieren.
 - **Kartenspiele in der Chill-Ecke: Video-Poker, Blackjack und Solitär**
   (2026-10-14, PR #217): In der Gaming-Halle liegen jetzt drei
   Kartenspiele. Beim Video-Poker („Jacks or Better“ wie an den

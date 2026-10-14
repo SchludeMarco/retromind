@@ -20,6 +20,9 @@ const GAMING_URL = 'https://retromind-gaming.vercel.app/?from=zeitreise';
 // Battle-worn (Marco, 2026-10-13): torn board edges, blade cuts, scorch marks
 // and a cracked outline around the letters. The outline is eroded by a fixed
 // noise pattern (seeded), so it looks the same on every visit.
+// Red frame (Marco, 2026-10-14: "auffälliger, sowas wie rote Umrandung"): a
+// bright red rim follows the torn board edge, with a softly pulsing red glow
+// behind it, so the sign stands out on every design's background.
 const BOARD = 'M10 25 L40 23 L44 27.5 L49 23 L120 24 L125 20.5 L131 25 L186 23 L203 36 L199.5 39.5 L222 52 L196 72 L191 69 L186 80 L151 79 L145 83.5 L139.5 79 L71 80 L65 76.5 L59 81 L13 79 L9 71 L13 66.5 L7 58 L10 46 L5.5 38.5 Z';
 const LETTER_LINES: Array<[string, number, number]> = [
   ['TO THE', 46, 15],
@@ -74,6 +77,10 @@ export const GamingSignpost: React.FC = () => (
           <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  9 0 0 0 -3.9" result="mask" />
           <feComposite in="SourceGraphic" in2="mask" operator="in" />
         </filter>
+        {/* Soft red halo around the board. */}
+        <filter id="gaming-sign-glow" x="-20%" y="-40%" width="140%" height="180%">
+          <feGaussianBlur stdDeviation="5" />
+        </filter>
         {/* Slightly rough, chipped metal faces. */}
         <filter id="gaming-sign-chipped" x="-5%" y="-30%" width="110%" height="160%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise" />
@@ -88,6 +95,9 @@ export const GamingSignpost: React.FC = () => (
       <path d="M22 143 q24 -9 48 0" fill="#4a3018" />
       {/* The arrow board, pointing right, a little crooked. */}
       <g className="gaming-signpost-board" transform="rotate(-4 46 52)">
+        {/* Red frame: glow, then a solid red rim peeking out past the dark edge. */}
+        <path className="gaming-signpost-glow" d={BOARD} fill="none" stroke="#ff2a1a" strokeWidth="10" filter="url(#gaming-sign-glow)" />
+        <path d={BOARD} fill="none" stroke="#e01414" strokeWidth="9" strokeLinejoin="miter" />
         <path d={BOARD} fill="url(#gaming-sign-board)" stroke="#3b2410" strokeWidth="2.2" strokeLinejoin="miter" />
         <g clipPath="url(#gaming-sign-clip)">
           <path

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Rot umrandeter Wegweiser': {
+    title: 'Signpost with a red frame',
+    text: 'The “To the gaming zone” signpost on the time travel start page now has a bold red frame along its torn edge, with a soft red glow behind it that slowly pulses. That way it catches your eye on every background. If you have turned off motion, the glow stays still.',
+  },
   'Kartenspiele in der Chill-Ecke: Video-Poker, Blackjack und Solitär': {
     title: 'Card games in the chill corner: video poker, blackjack and solitaire',
     text: 'The gaming hall now has three card games. In video poker (“Jacks or Better” like the poker machines of old) you bet 1 to 5 credits, get five cards, tap the ones you want to hold and draw once; a pair of jacks or better pays, and with the full bet the royal flush pays 4000. In blackjack you play against the dealer: hit, stand or double down, the dealer stands on 17 and a blackjack pays 3 to 2. A session lasts 20 hands (poker) or 10 hands (blackjack) with 100 play credits, and you only ever play for play money; whatever is left at the end goes on the high score table. In solitaire (like on every old Windows PC) you build each suit from ace to king: tap a card, then tap where it goes, or tap it twice and it finds the best place on its own. Undo always works, and once everything is face up, one button sends all the cards home. Your best time counts. The cards are a pixel deck of their own with a back in your design’s color, click softly as they are dealt and work with touch, mouse and keyboard.',
