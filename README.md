@@ -8,7 +8,9 @@ stellt persönliche Erinnerungsfragen, **sammelt die Antworten** und fasst sie
 zu einem exportierbaren **Erinnerungs-Buch** zusammen. Die Gaming-Edition
 macht dasselbe für Videospiele von den 1970ern bis heute.
 
-Alle Änderungen an der App stehen in der [CHANGELOG.md](CHANGELOG.md).
+Alle Änderungen an beiden Apps stehen in der [CHANGELOG.md](CHANGELOG.md).
+Die Gaming-Edition hat zusätzlich eine eigene [README](gaming/README.md) und
+[CHANGELOG](gaming/CHANGELOG.md).
 
 ## Wofür es RetroMind gibt
 
@@ -139,6 +141,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   links in kleiner Schrift, welcher Song gerade spielt (auch in der
   Gaming-Halle). Ein Tipp darauf öffnet ebenfalls die Musiksteuerung.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
+- **Perspektivwechsel** – nach einer gespeicherten Erinnerung lässt sich eine
+  Frage erzeugen, die denselben Moment aus Sicht einer anderen Person von
+  damals erzählen lässt (Freund:in, Geschwister, Elternteil); die Antwort
+  landet als eigene Erinnerung im Buch (`perspectiveQuestion` in
+  [`api/gemini.js`](api/gemini.js)).
 - **Erinnerungs-Buch** – formatierte Zusammenfassung aller Erinnerungen + freier
   Notiz. Export als **PDF (Druckdialog)**, **Textdatei** oder **`.json`-Sitzung**;
   `.json` lässt sich auf einem anderen Gerät wieder laden.
@@ -236,6 +243,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Seite, das Tagebuch eine weitere; ein Balken zeigt „x von 10 Seiten“ auf der
   Startseite, in der Etappe „Erinnerungsbuch“ und über dem Buch selbst
   ([`components/BookProgress.tsx`](components/BookProgress.tsx)).
+- **Aufwachen wie aus einer Zeitkapsel** – beim Öffnen löst sich ein
+  schwarzes Pixelraster Kästchen für Kästchen auf, dazu ein tiefer Ton und
+  eine tiefe, langsame Stimme, die „Welcome“ sagt
+  ([`components/BootOverlay.tsx`](components/BootOverlay.tsx)). Über der
+  ganzen App liegt (außer in Retro Warm) ein Röhrenbildschirm-Look mit
+  Streifen und gelegentlichem Flackern, Fotos wirken wie verblasste Abzüge.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
   und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
   Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
@@ -262,191 +275,16 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Edition „RetroMind – Gaming“ (`/gaming/`)
 
-Eigene Seite im selben Projekt: vergessene Videospiele von den 1970ern bis heute wiederentdecken.
-Die „Urzeit“ der 70er (Pong, Breakout, Combat, Space Invaders, Asteroids, Galaxian) steht als eigenes Jahrzehnt im Katalog.
-Am Eingang (vor der Tür) kann man sich freiwillig mit Google (Savegame und Coins
-in Google Drive) und mit Spotify (Hallenmusik) anmelden, beides geht auch später
-in den Einstellungen ([`gaming/components/Entrance.tsx`](gaming/components/Entrance.tsx)).
-Wer aus der Zeitreise kommt (Wegweiser oder Einstellungen, Parameter
-`?from=zeitreise`), sieht vor der Tür und oben in der Halle den Knopf „Zurück
-zu RetroMind“; er gilt für den ganzen Besuch im Tab
-([`gaming/lib/cameFrom.ts`](gaming/lib/cameFrom.ts),
-[`gaming/components/BackToZeitreise.tsx`](gaming/components/BackToZeitreise.tsx)).
-Oben in der Halle stehen nur die Suche und „Insert Coin“, darunter eine
-wischbare Zeile mit den Jahrzehnten (70er bis 2020er) und der Konsolenwahl;
-nach Wahl eines Jahrzehnts kommt eine zweite Zeile mit den einzelnen Jahren.
-Die Bereiche (Katalog, Kisten, Stash, Trophäen, Chillen, Quests) liegen in
-allen Designs in der Leiste unten, Musik, Soundeffekte und Farben in den
-Einstellungen. Die Kopfleiste zeigt Coins, einen Punktestand (SCORE) und wie
-viele der Perlen du entdeckt hast. Jede Spielkarte zeigt ein eigenes Pixelbild
-statt eines Covers (die gehören den Spielefirmen): Die 44 Katalogspiele haben
-je eine selbst gezeichnete Szene ihrer Spielwelt und Stimmung, ohne bekannte
-Figuren, Logos oder Cover-Aufbau; alle anderen Spiele aus dem Archiv und der
-Suche bekommen eine automatisch gebaute Szene (Weltraum, Rennstrecke, Burg,
-Fußballplatz, Stadt bei Nacht, Meer …), deren Thema aus dem Titel geraten wird
-und die pro Spiel anders aussieht
-([`gaming/lib/coverArt.ts`](gaming/lib/coverArt.ts),
-[`gaming/components/PixelCover.tsx`](gaming/components/PixelCover.tsx)). Die
-Bilder stehen auf den Karten, mit Titel und Jahr auch auf der Spieleseite, dem
-Modul und im Attract Mode; am Handy liegen zwei Karten
-nebeneinander. Titel und Knöpfe bleiben in Pixelschrift, Beschreibungen
-stehen wie in einem Handbuch in gut lesbarer Schrift und enden mit ganzen
-Sätzen. Am Handy rüttelt es kurz beim Münzeinwurf, beim Öffnen der Tür, bei
-Erfolgen und gekauften Preisen (Android; schaltet sich mit den Soundeffekten
-ab, `gaming/lib/chiptune.ts`). „Insert Coin“ geht auch von Hand: die Münze
-neben dem Knopf in den Schlitz ziehen (`gaming/components/CoinDrop.tsx`).
-Unter der Suche steht jeden Tag „Heute vor X Jahren“: ein bekanntes Spiel,
-das an diesem Datum erschienen ist, aus Wikidata über `api/proxy.js`
-([`gaming/lib/onThisDay.ts`](gaming/lib/onThisDay.ts)). Tippst du eine Karte an,
-schwebt das Modul heran und wird in den Schacht der Konsole gedrückt (es
-steckt danach sichtbar drin) mit einem satten Rums und einem Klick beim
-Einrasten (`chip.insert` in `gaming/lib/chiptune.ts`), die Lampe geht an, der Fernseher
-schaltet sich mit einem weißen Strich ein und die Spieleseite „bootet“ (`gaming/components/CartInsert.tsx`); auf
-der Spieleseite blätterst du per Wischen oder mit ◄ ► zum nächsten Spiel der
-Liste. Erfolge erscheinen wie auf der Konsole als runde Pokal-Leiste unten mit
-weichem „Plopp“. Hinter dem Katalog blinken die Lichter der Automaten, und
-nach einer Minute ohne Eingabe startet wie bei alten Automaten der Attract
-Mode: die Pixelbilder laufen durch, INSERT COIN blinkt
-(`gaming/components/AttractMode.tsx`). Neben dem Stash gibt es das Regal
-„Hatte ich damals“ für die Spiele (Knopf auf der Spieleseite) und Konsolen,
-die man als Kind wirklich hatte; es kommt mit ins Google-Backup.
-Kuratierter Katalog ([`gaming/data/games.ts`](gaming/data/games.ts)) plus ein
-Live-Archiv ([`gaming/lib/archive.ts`](gaming/lib/archive.ts)), das jeden Filter
-über die Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit
-Hunderten Spielen füllt; die Plattformen (mit Hersteller-Regal und Foto für
-die Konsolenauswahl in `gaming/components/ConsolePicker.tsx`) stehen in
-[`gaming/data/platforms.ts`](gaming/data/platforms.ts). Dazu Suche
-nach beliebigen Spielen, Wikipedia-Texte und frei lizenzierte Bilder von
-Wikimedia Commons live (über `api/proxy.js`; Screenshots, die Wikipedia nur
-als „Fair Use“ zeigt, bleiben draußen),
-kuratierte Tipps, ein KI-Guide mit Google-Websuche und Quellenangaben
-(`gameGuide` in `api/gemini.js`), der „Retro-Guru“-Chat und Links zu
-Longplays, GameFAQs, MobyGames, Kultboy und Handbüchern im Internet Archive.
-Der Reiter „Musik & TV-Werbung“ zeigt den Soundtrack und die alten
-Fernsehspots des Spiels von YouTube, der Reiter „Zeitschriften & heute“ sucht
-auf Knopfdruck im Web nach den Testwertungen von damals (Power Play, ASM,
-Amiga Joker, Video Games, Mega Fun, Man!ac, EGM …), legalen Wegen, das Spiel
-heute zu spielen, und Level-Passwörtern, immer mit Quellen
-(`gamePress` in `api/gemini.js`). Der Reiter „Fakten & Geheimnisse“
-([`gaming/components/GameFacts.tsx`](gaming/components/GameFacts.tsx),
-[`gaming/lib/facts.ts`](gaming/lib/facts.ts)) sammelt nur Material, das wir
-zeigen und weitergeben dürfen, jeweils mit Quelle, Lizenz und Link zu den
-Autor:innen: einen Steckbrief aus Wikidata (CC0: Entwickler, Designer,
-Komponist, Engine, Erscheinungsdaten je Plattform, Reihe, Vorgänger und
-Nachfolger, Auszeichnungen, Verkaufszahlen, USK/PEGI/ESRB) mit den
-Testwertungen von damals, den ganzen Wikipedia-Artikel in Kapiteln
-(CC BY-SA 4.0, deutsch oder englisch umschaltbar; Entwicklung, Musik,
-Kontroversen, Versionen und Ähnliches sind mit ★ markiert und stehen oben),
-und direkte Links in die Spieledatenbanken, die Wikidata kennt (The Cutting
-Room Floor für herausgeschnittene und versteckte Inhalte, MobyGames, Kultboy,
-Lemon64, Hall of Light, VGMdb …). Alles läuft über
-`api/proxy.js`, der Browser hat keinen Kontakt zu den Quellen. Auf jeder Spieleseite
-startet automatisch das beliebteste YouTube-Video zum Spiel (stumm, wenn der
-Ton aus ist), weitere stehen im Reiter „Videos“ (`api/youtube.js`, optional
-mit `YOUTUBE_API_KEY`). Gesucht wird mit Titel und Erscheinungsjahr, Videos
-zu Nachfolgern („Fallout 4“ bei Fallout von 1997) fliegen raus
-(`gaming/lib/youtube.ts`). Zum Start ein Eingang: eine verranzte Spielhalle
-im Regen mit Sticker-Tür „ENTRANCE“ (Marcos Bild, `public/gaming/arcade-entrance.webp`),
-deren Neonschild „ARCADE“ Buchstabe für Buchstabe angeht, jede Sekunde einer
-mehr, bis alle sechs leuchten; eine Sekunde später ist alles aus und es
-beginnt von vorne (`public/gaming/arcade-sign-0…5.webp`). Dazu hörst
-du leise, gedämpft durch die Wand, den Bass und die Drums der Metal-Musik aus
-der Halle
-(`gaming/lib/street.ts`, `gaming/components/Entrance.tsx`; der Browser spielt
-den Ton ab der ersten Berührung). Ein Tipp auf die Tür im Bild (mit blinkendem Neonrahmen) öffnet sie mit langem Knarzen (das Warnschild „Extreme loud!“ steht mittig darunter), beim
-Zugehen wird ein Fiepen der Automaten immer lauter, das Logo leuchtet aus dem Eingang,
-das Bild wird weiß und der Katalog erscheint, begleitet von einem
-80er-Heavy-Metal-Intro mit zwei verzerrten Gitarren links und rechts, Bass,
-Solo, Schlagzeug und Hall. Es wird vorab in einem kleinen „Studio“
-(`gaming/lib/metalBand.ts`, aufgenommen mit `node scripts/render-metal.mjs`)
-als Datei aufgenommen (`public/gaming/audio/`), damit es auch am Handy
-sauber klingt (`gaming/lib/metal.ts`). Hast du
-Spotify erlaubt, läuft in der Halle nach dem Intro echter Heavy Metal der
-80er von Spotify (Playlist „The 100 Best Metal Songs of 80s“, über denselben
-Spotify-Player wie die Zeitreise, [`gaming/lib/useHallSpotify.ts`](gaming/lib/useHallSpotify.ts)), Lied für Lied in zufälliger Reihenfolge.
-Bist du in Gaming mit Spotify Premium angemeldet, hörst du vor der Tür schon
-den Song, der drinnen läuft, dumpf und bassig wie durch die Wand, und drinnen
-spielt Spotify genau diesen Song; das Intro entfällt dann. Weil sich Spotifys
-Player nicht filtern lässt, läuft draußen der 30-Sekunden-Ausschnitt des Songs
-in Schleife durch einen Tiefpass (`api/spotify-preview.js` holt ihn über unseren
-Server bei Spotify, sonst bei Deezer; [`gaming/lib/street.ts`](gaming/lib/street.ts)).
-Gibt es keinen Ausschnitt, läuft draußen die gedämpfte Hallen-Aufnahme.
-Unten in der Mitte, zwischen „Nach oben“ und dem Guru, öffnet dasselbe
-schwarz-blaue Metall-Symbol wie in der Zeitreise die Musiksteuerung (Song,
-Zurück, Play/Pause, Weiter, Ton an/aus), nur mit einem Blitz statt einer Note.
-Läuft Musik, leuchtet es gelb.
-Beim ersten Besuch fragt die Halle einmal nach („Metal erlauben“ oder „Lieber
-Chiptune“); in den Einstellungen unter „Hallenmusik“ lässt sich jederzeit
-zwischen Spotify-Metal und den Chiptune-Stücken wechseln. Die Musik folgt dem
-gemeinsamen Stummschalter, pausiert bei YouTube-Videos und im Hintergrund. Verstummen
-darf sie sonst nie: Ein Wächter in `useHallSpotify` merkt, wenn Spotifys Uhr
-ein paar Sekunden stillsteht (Player lädt nicht, Song hängt, Werbeblocker,
-Browser blockt den Start), probiert einen anderen Song und lässt danach die
-eigene Chiptune-Hallenmusik weiterspielen, bis Spotify wieder läuft (neuer
-Versuch alle zwei Minuten oder mit Weiter im Player). Ein hängendes Intro gibt
-nach spätestens einer Minute ab, und der Ton wacht nach dem Entsperren des
-Handys wieder auf. Drinnen liegt
-hinter dem Katalog Marcos Bild vom Innenraum der Spielhalle
-(`public/gaming/arcade-innen.webp`). Hinter Knöpfen und Karten des Katalogs wandert ganz klein,
-halb durchsichtig und langsam ein Pac-Man mit Geist kreuz und quer zu zufälligen
-Punkten und frisst die Punktereihe auf dem Weg
-(`gaming/components/PacmanWander.tsx`; nicht antippbar, abgeschaltet bei
-„Bewegung reduzieren“). Dazu
-CRT-Effekte, synthetisierte Chiptune-Musik (abschaltbar per Lautsprecher-Knopf;
-sie und das Metal-Intro beginnen leise und werden über etwa 6 Sekunden lauter),
-Erfolge, Sammlung, Konami-Code
-und Gamepad-Steuerung. Alle Texte und der Retro-Guru sprechen Gamer-Slang von
-den 80ern bis heute („Welches Game, Digga?“, „Epic Fail“, „GG“, „no cap“). Lässt sich als eigenständige App installieren
-(Manifest, Icons und Service Worker in `public/gaming/`); die Zeitreise
-verlinkt auf der Startseite (Wegweiser „To the gaming zone“) und in den Einstellungen dorthin.
-Das Profil (Sammlung, Erfolge, Highscore, Vorlieben) liegt im `localStorage`;
-über das Zahnrad oben rechts (Einstellungen) sichert es ein optionaler
-Google-Login zusätzlich als `retromind-gaming.json` im privaten
-Drive-`appDataFolder`, führt die Stände mehrerer Geräte zusammen und übernimmt
-beim Anmelden die Vorlieben des Kontos ([`gaming/lib/useCloudSync.ts`](gaming/lib/useCloudSync.ts)).
-Eigene Adresse: das Vercel-Projekt `retromind-gaming` baut dasselbe Repo mit
-`RETROMIND_EDITION=gaming`, wodurch `scripts/edition.mjs` die Gaming-Seite
-unter `/` ausliefert (braucht dort ebenfalls `GEMINI_API_KEY`, für die
-Cloud-Sicherung außerdem `VITE_GOOGLE_CLIENT_ID` und die Domain als erlaubten
-JavaScript-Ursprung im Google-OAuth-Client).
-
-**Design wählbar** – in den Gaming-Einstellungen unter „Bildschirm“: „Arcade“ (Standard, dunkler Pixel-Look mit
-Neonfarben), „Modul“ (mit Google Stitch entworfen: helles Konsolen-Plastik,
-weiße Modul-Karten mit Griffrillen in der Konsolenfarbe, rote Tasten, gut
-lesbare Schrift und eine Navigation unten mit Katalog, Kisten, Stash, Trophäen
-und Chillen), dazu die Pixel-Looks „Handheld“ und „Bernstein“. Das Design-System liegt in
-[`docs/stitch/gaming/DESIGN.md`](docs/stitch/gaming/DESIGN.md), die Regeln in
-`gaming/gaming.css` (Abschnitt „Design Modul“).
-**Club verlassen** – oben in der Kopfleiste, links neben Ton und Zahnrad, führt ein Tür-Knopf aus der Halle zurück auf die Straße vor die Tür; ein offenes Spiel schließt sich, die Musik von drinnen ist wieder nur dumpf durch die Wand zu hören.
-
-**Feedback** – roter Knopf mit Briefsymbol und Aufschrift „Feedback“ in der Kopfleiste, unter Ton und Zahnrad. Läuft über dieselbe `/api/feedback` der
-Zeitreise (von `retromind-gaming.vercel.app` aus per CORS an
-`retromind.vercel.app`) und ist in Mail und `feedback.md` mit „(Gaming)“
-markiert.
-**Chill-Ecke** – über „Chillen“ in der Leiste unten: die
-Minispiele erscheinen oben in der Halle, zum Entspannen und per Touch spielbar: Pixel-Memory, Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung), Blockstapler im Tetris-Stil, Flipper, Pac-Mampf (eigenes Labyrinthspiel im Stil von Pac-Man, per Wischen oder Pfeiltasten), Breakout, Snake, die Weltraum-Invasion im Stil von Space Invaders und das Quiz „Erkennst du das Spiel?“ (kurze Beschreibung mit geschwärztem Namen, Plattform und Jahr, vier Titel, jede richtige Antwort bringt einen Coin, bis zu fünf am Tag). Nach einer guten Runde in den Punkte-Spielen trägst du wie am Automaten drei Buchstaben in die Highscore-Tafel ein; die Top 10 sind für alle Spieler gemeinsam (`api/highscores.js`, im selben Upstash-Redis wie die Statistik), ohne Datenbank bleibt die Tafel auf dem Gerät
-([`gaming/components/MiniGames.tsx`](gaming/components/MiniGames.tsx), die größeren Spiele in
-[`gaming/components/minigames/`](gaming/components/minigames/)). Töne
-kommen vom Chiptune-Chip und folgen dem gemeinsamen Stummschalter, die
-Bestwerte liegen im `localStorage`, das erste geschaffte Spiel bringt den
-Erfolg „Chillmodus“.
-**Quests und Preis-Tresen** – „Quests“ in der Leiste unten: jeden Tag drei kleine Aufgaben in der Halle (z. B. Games entdecken,
-Münze einwerfen, ein Minispiel schaffen, den Guru fragen) und eine größere
-pro Woche. Jede geschaffte Quest bringt Coins, die man am Preis-Tresen
-gegen zusätzliche Designs (Vaporwave, Virtual Boy) und Hallen-Musik
-(Weltraum, Bosskampf) eintauscht ([`gaming/lib/quests.ts`](gaming/lib/quests.ts),
-[`gaming/components/QuestBoard.tsx`](gaming/components/QuestBoard.tsx)).
-Der Coin-Stand steht immer oben in der Kopfleiste (ein Tipp darauf öffnet die
-Quests). Coins und Gekauftes liegen im Profil und kommen mit dem Google-Backup mit.
-**Easter Eggs** – zehn Geheimnisse in der Halle (alte Cheats wie IDDQD, Rosebud
-oder XYZZY in der Suche, der Konami-Code, Pac-Man fangen, aufs Logo klopfen,
-den Guru nach dem Sinn des Lebens fragen, nachts vorbeischauen …). Jedes
-gefundene Ei bringt einmal Coins; die Meldung dazu bleibt 12 Sekunden stehen
-und lässt sich mit dem „×“ früher schließen. Die Liste mit Tipps steht im Reiter
-„Quests“ ([`gaming/lib/eggs.ts`](gaming/lib/eggs.ts)). Am Preis-Tresen gibt es
-dafür zusätzlich das Party-Logo in Regenbogenfarben. Ohne Google-Anmeldung
-zeigt die App deutlich, dass die Coins nur auf diesem Gerät gespeichert sind.
-Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
+Die Gaming-Edition (https://retromind-gaming.vercel.app) hat eine eigene
+**[README](gaming/README.md)** mit allen Funktionen und offenen Ideen und eine
+eigene **[CHANGELOG](gaming/CHANGELOG.md)**. Kurz: eine verranzte Spielhalle im
+Regen mit Neonschild und Metal durch die Wand, drinnen ein Katalog vergessener
+Spiele von den 1970ern bis heute (44 handverlesene plus Hunderte aus dem
+Wikipedia-Archiv, 36 Konsolen), eigene Pixelbilder statt Cover, Spieleseiten
+mit KI-Guide, Videos, alten Testwertungen und „Fakten & Geheimnisse“, ein
+Retro-Guru im Gamer-Slang, Chill-Ecke mit Minispielen und Highscore-Tafel,
+Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
+`http://localhost:3000/gaming/`.
 
 ### Für alle Module
 
@@ -528,6 +366,10 @@ Lokal: `npm run dev`, dann `http://localhost:3000/gaming/`.
 Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function)  ──▶  Google Gemini / Veo
                           ──fetch──▶  /api/video    (Vercel Function)  ──▶  Veo-Download (streamt)
                           ──fetch──▶  /api/feedback (Vercel Function)  ──▶  Resend (E-Mail) + GitHub (feedback.md)
+                          ──fetch──▶  /api/proxy    (Vercel Function)  ──▶  Wikipedia, Wikidata, Commons, Open-Meteo …
+                          ──fetch──▶  /api/spotify-tracks, /api/spotify-preview ──▶  Spotify (Titellisten, Ausschnitte; Deezer als Ersatz)
+                          ──fetch──▶  /api/youtube  (Vercel Function)  ──▶  YouTube-Suche (Gaming)
+                          ──fetch──▶  /api/highscores, /api/stats, /api/admin ──▶  Upstash Redis (Highscores, anonyme Zählung)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
                           ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
                           ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
@@ -561,6 +403,13 @@ keine Playlists.
 - Web Speech API (Diktat), `window.print()` (PDF), `localStorage` (Sitzung)
 - **Google Identity Services** (Login + OAuth-Token) · **Google Drive API**
   (`appDataFolder`) für die optionale, dezentrale Sitzungs-Sicherung
+- **Spotify** (iFrame-Embed, Web API, Web Playback SDK) · **YouTube** (Gaming)
+- **Wikipedia, Wikidata, Wikimedia Commons** über den eigenen Proxy ·
+  **Open-Meteo** (Wetter im Stubenfenster)
+- **Upstash Redis** (Vercel Marketplace) für Highscores und anonyme Zählung ·
+  **Resend** für Feedback-Mails
+- Web Audio (selbst erzeugte Klänge, Chiptune, Metal-Aufnahmen) · PWA
+  (Gaming installierbar)
 
 ## Lokal ausführen
 
@@ -583,6 +432,7 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | `npm run dev:full`  | `vercel dev` – Frontend **und** `/api`  |
 | `npm run build`     | Produktions-Build nach `dist/`          |
 | `npm run typecheck` | `tsc --noEmit`                          |
+| `npm run changelog:gaming` | erzeugt `gaming/CHANGELOG.md` aus der `CHANGELOG.md` |
 
 ## Deployment (Vercel)
 
@@ -635,6 +485,12 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   Eintrag (neueste oben, unter „Unreleased“).
 - **README.md:** Neue Funktionen kommen unter „Was RetroMind kann“, neue Ideen
   unten unter „Ideen und offene Punkte“; Umgesetztes wird dort gestrichen.
+- **[gaming/README.md](gaming/README.md):** dasselbe für die Gaming-Edition
+  (Funktionen und Ideen der Gaming-Edition stehen dort, nicht hier).
+- **[gaming/CHANGELOG.md](gaming/CHANGELOG.md):** wird mit
+  `npm run changelog:gaming` aus der CHANGELOG.md erzeugt
+  ([`scripts/gaming-changelog.mjs`](scripts/gaming-changelog.mjs)); nach
+  jedem neuen Eintrag ausführen, nicht von Hand bearbeiten.
 - **[feedback.md](feedback.md):** Feedback aus der App landet hier
   automatisch. Unter „To Do“ in dieser README erscheint es erst, wenn Marco
   über den Link in der Feedback-Mail zustimmt. Erledigte To Dos werden
@@ -662,23 +518,25 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
   Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
   datenschutzfreundlicher; danach die Datenschutzerklärung prüfen.
+- **Feedback-Token erneuern bis 2026-11-02:** Der GitHub-Token
+  `FEEDBACK_GITHUB_TOKEN` in Vercel läuft dann ab. Ohne ihn landet Feedback
+  nicht mehr in `feedback.md`, und der „Als To Do übernehmen“-Link geht nicht.
 
 ### Sollte
 
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
-- **Weitere Gaming-Stitch-Screens umsetzen:** Trophäen-Schrank mit Fortschrittsbalken und Seltenheit, Spieleseite mit
-  großem Screenshot oben und „Frag den Game-Guru“-Leiste (Entwurf in
-  `docs/stitch/gaming/`).
 - **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
   Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
   Gaming-Edition kann das schon).
-- **Mehr Spiele im kuratierten Gaming-Katalog** mit eigenen Tipps.
 - **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
   Rücksprache).
 
 ### Könnte
+
+Ideen nur für die Gaming-Edition stehen in deren
+[README](gaming/README.md#ideen-und-offene-punkte).
 
 - **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden
@@ -687,27 +545,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 - **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
   eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.
 
-- **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
-  dort stehen unter CC BY 3.0 und passen perfekt zu „Fakten & Geheimnisse“
-  (unbenutzte Level, Debug-Menüs, Botschaften der Entwickler). Der Server von
-  tcrf.net lässt unseren Abruf aber nicht durch; dafür bräuchte es eine
-  Freigabe der Betreiber. Bis dahin gibt es nur den Link.
-
 - **Jahrzehnt 2020er (und 1950er) in der Zeitreise:** Wer nach etwa 2012
   geboren ist, hatte seine Grundschulzeit in den 2020ern, wer vor etwa 1952
   geboren ist, in den 1950ern. Beide starten bisher beim nächstgelegenen
   Jahrzehnt; eigene Inhalte dafür würden passen.
 
-- **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
-  wie die Katalogspiele ein eigenes, von Hand gezeichnetes Pixelbild bekommen
-  statt der automatischen Szene.
-- **Mehr Easter Eggs** in der Halle, z. B. in Spieleseiten oder Minispielen.
-- **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle
-  (Poster, Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
-  vergessenes Spiel als Geheimtipp aufdeckt.
-
-- **Mehr Minispiele in der Chill-Ecke** (z. B. Solitär), Sudoku in mehreren Schwierigkeitsstufen und die Bestwerte mit in
-  die Cloud-Sicherung nehmen.
 - **Weitere Editionen** nach dem Vorbild der Gaming-Edition, z. B. Musik,
   Film & Fernsehen oder Spielzeug, mit gemeinsamem Stummschalter und
   gemeinsamer Anmeldung.

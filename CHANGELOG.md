@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Dokumentation: README und CHANGELOG für beide Apps vervollständigt**
+  (2026-10-14, PR #203): Die Gaming-Edition hat jetzt eine eigene
+  [README](gaming/README.md) mit allen Funktionen und Ideen und eine eigene
+  [CHANGELOG](gaming/CHANGELOG.md), die `npm run changelog:gaming` aus dieser
+  Datei erzeugt. Hier fehlten bisher die ersten Änderungen vom September
+  (PR #1 bis #52) und PR #182; sie sind nachgetragen, und die Einträge von
+  PR #53 bis #73 haben Datum und PR-Nummer bekommen. Die Haupt-README
+  beschreibt jetzt die Zeitreise und alles Gemeinsame.
+
 - **Neu laden bleibt auf der Seite** (2026-10-13, PR #202): Wenn du die
   Seite neu lädst, landest du wieder dort, wo du gerade warst, statt auf dem
   Willkommensbildschirm. In der Zeitreise bleibt die offene Etappe, in der
@@ -75,6 +84,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   kleines Geräusch, und auf dem Handy summt es kurz in der Hand. Solange der
   Ofen brennt, hört man ihn leise knistern und knacken (nur mit Ton an).
   Die Topfpflanze ist aufs Fensterbrett umgezogen.
+
 - **Mehr zu jedem Spruch im Laufband** (2026-10-13, PR #196): Ein Tipp auf
   einen Spruch im Laufband öffnet eine Karte mit mehr dazu, zum Beispiel
   woher „Ich hab fertig!“ kommt oder warum 1973 alle auf der Autobahn
@@ -227,6 +237,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Zeitreise und Gaming-Edition steht jetzt eine Postanschrift (c/o Block
   Services in Fellbach), wie es das Gesetz verlangt. Marcos Privatadresse
   bleibt dabei privat.
+
+- **Entwicklung: automatische Prüfung bei jedem Pull Request**
+  (2026-10-09, PR #182): Vor jedem Zusammenführen prüft GitHub, ob die App
+  fehlerfrei baut.
 
 - **Neues Eingangsbild ohne fremde Logos** (2026-10-09, PR #180, #181): Vor
   der Spielhalle hängt Marcos neues Bild. Statt Nintendo-, SEGA- und
@@ -999,107 +1013,107 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Klick-Geräusche, Spotify und Videos. Die Gaming-Edition und jedes spätere
   Modul nutzen denselben Schalter.
 
-- **Gaming-Edition: Musik lauter, Stummschalter:** Die Musik (Titel und Hub)
+- **Gaming-Edition: Musik lauter, Stummschalter** (2026-10-03, PR #73): Die Musik (Titel und Hub)
   ist etwa dreimal so laut, ein Limiter verhindert Übersteuern. Ein
   Lautsprecher-Knopf schaltet die ganze App stumm: schon auf dem
   Einschalt-Bildschirm, oben rechts neben dem Zahnrad und in den
   Einstellungen. Die Wahl bleibt auf dem Gerät gespeichert.
 
-- **Gaming-Edition: C64-Musik auf dem Titelbildschirm:** Bei „PRESS START“
+- **Gaming-Edition: C64-Musik auf dem Titelbildschirm** (2026-10-02, PR #71, #72): Bei „PRESS START“
   läuft jetzt eine eigene Melodie im Stil des Commodore-64-SID-Chips
   (Pulswellen-Lead mit Pulsbreiten-Sweep und Vibrato, quietschender
   Filter-Bass, schnelle Akkord-Arpeggios, Rausch-Drums; `gaming/lib/sid.ts`).
   Sie folgt der Musik-Einstellung und endet mit START.
 
-- **Gaming-Edition: Einstellungen oben rechts mit Anmeldung:** Ein kleines
+- **Gaming-Edition: Einstellungen oben rechts mit Anmeldung** (2026-10-02, PR #70): Ein kleines
   Zahnrad oben rechts öffnet die Einstellungen mit Google-Anmeldung, Ton und
   Bildschirmfarbe (ersetzt den „☁ CLOUD“-Knopf). Nach der Anmeldung werden
   Highscore, Sammlung, Erfolge und jetzt auch die Vorlieben (Musik, SFX,
   Bildschirmfarbe) aus dem Konto geladen; oben steht dann der Spielername.
 
-- **Gaming-Edition: echter Dieselmotor beim Einschalten:** Statt des
+- **Gaming-Edition: echter Dieselmotor beim Einschalten** (2026-10-02, PR #69): Statt des
   synthetischen Motors läuft jetzt eine echte, lizenzfreie Aufnahme
   (Anlasser, Anspringen, Hochdrehen; von Marco ausgesucht), auf die
   Logo-Fahrt zugeschnitten und vor dem „Bling“ ausgeblendet
   (`public/gaming/diesel-start.mp3`, 34 KB).
 
 - **Gaming-Edition: Diesel startet erst, wenn der Ton wirklich läuft, plus
-  Ton-Diagnose:** Der Motor wird erst eingeplant, wenn das Audio des Geräts
+  Ton-Diagnose** (2026-10-02, PR #68): Der Motor wird erst eingeplant, wenn das Audio des Geräts
   bereit ist. Mit `?ton` an der Adresse zeigt der Startbildschirm unten an,
   was Audio, Diesel und Bling auf dem Gerät tatsächlich gemacht haben.
 
-- **Gaming-Edition: Diesel auch am Handy hörbar:** Der Motor lag fast nur im
+- **Gaming-Edition: Diesel auch am Handy hörbar** (2026-10-02, PR #67): Der Motor lag fast nur im
   Tiefbass, den Handylautsprecher nicht wiedergeben. Jetzt klackert und
   brummt er im hörbaren Bereich und ist deutlich lauter.
 
-- **Gaming-Edition: Dieselmotor beim Einschalten:** Während das Logo nach
+- **Gaming-Edition: Dieselmotor beim Einschalten** (2026-10-02, PR #66): Während das Logo nach
   unten fährt, orgelt ein Anlasser, der Diesel springt an und tuckert im
   Leerlauf, bis das „Bling“ ertönt (per Web Audio synthetisiert).
 
-- **Zeitreise: RetroMind-Logo auf der Startseite:** Marcos 8-Bit-Logo steht
+- **Zeitreise: RetroMind-Logo auf der Startseite** (2026-10-02, PR #65): Marcos 8-Bit-Logo steht
   jetzt über der Begrüßung.
 
-- **Gaming-Edition: neues 8-Bit-Logo:** Marcos Logo („RETROMIND /GAMING“ mit
+- **Gaming-Edition: neues 8-Bit-Logo** (2026-10-02, PR #64): Marcos Logo („RETROMIND /GAMING“ mit
   Glühbirne, Gehirn und Joystick) steht auf dem Titelbildschirm; das Motiv
   ohne Schrift erscheint beim Einschalten, oben in der Kopfzeile sowie als
   App-Icon und Favicon.
 
-- **Gaming-Edition: Power-Knopf zeigt das Symbol überall:** Statt des
+- **Gaming-Edition: Power-Knopf zeigt das Symbol überall** (2026-10-02, PR #63): Statt des
   Zeichens ⏻, das viele Handy-Schriften nicht kennen (Kasten mit X), ist das
   Power-Symbol jetzt gezeichnet.
 
-- **Gaming-Edition: optionale Cloud-Sicherung:** Der neue Knopf „☁ Cloud“
+- **Gaming-Edition: optionale Cloud-Sicherung** (2026-10-02, PR #62): Der neue Knopf „☁ Cloud“
   sichert das Profil (Sammlung, Erfolge, Highscore) nach einem Google-Login
   zusätzlich im eigenen Google Drive, nach demselben Prinzip wie die
   Zeitreise. Ohne Login bleibt alles lokal. Auf einem zweiten Gerät werden
   beide Stände zusammengeführt.
 
-- **Zeitreise: Google-Login nicht mehr Pflicht:** Name und Geburtsdatum lassen
+- **Zeitreise: Google-Login nicht mehr Pflicht** (2026-10-02, PR #61): Name und Geburtsdatum lassen
   sich zum Start direkt eingeben und bleiben auf dem Gerät. „Mit Google
   anmelden“ ist darunter ein optionales Angebot, um die Reise zusätzlich im
   eigenen Google Drive zu sichern und auf anderen Geräten weiterzumachen.
 
-- **Gaming-Edition: Suchfeld im Konsolen-Regal:** Oben im Regal filtert ein
+- **Gaming-Edition: Suchfeld im Konsolen-Regal** (2026-10-02, PR #60): Oben im Regal filtert ein
   Suchfeld die Konsolen schon beim Tippen, auch mit Spitznamen wie „PS2“,
   „N64“, „GBA“ oder „Genesis“. Es bleibt beim Scrollen sichtbar; Enter wählt
   die Konsole, wenn nur noch eine übrig ist.
 
-- **Gaming-Edition: Konsolen-Regal statt Wischleiste:** Ein Knopf „Konsole
+- **Gaming-Edition: Konsolen-Regal statt Wischleiste** (2026-10-02, PR #59): Ein Knopf „Konsole
   wählen“ öffnet ein Regal mit Fotos aller 36 Systeme (Wikimedia Commons),
   nach Hersteller sortiert: Nintendo, Sega, Sony, Microsoft, Heimcomputer &
   PC sowie Atari, Arcade & Exoten. Antippen filtert, ✕ hebt den Filter auf.
 
-- **Gaming-Edition: Suche zeigt zuerst Spiele mit dem Begriff im Titel:**
-  „Metroid“ liefert jetzt die 19 Metroid-Spiele statt Spielen, die Metroid
+- **Gaming-Edition: Suche zeigt zuerst Spiele mit dem Begriff im Titel**
+  (2026-10-02, PR #58): „Metroid“ liefert jetzt die 19 Metroid-Spiele statt Spielen, die Metroid
   nur im Artikel erwähnen. Diese lassen sich danach mit „Verwandte Spiele
   zeigen“ nachladen und sind als solche gekennzeichnet.
 
-- **Gaming-Edition: Suche findet alle Spiele einer Reihe:** Die Suche liefert
+- **Gaming-Edition: Suche findet alle Spiele einer Reihe** (2026-10-02, PR #57): Die Suche liefert
   statt 8 gemischter Artikel jetzt alle Wikipedia-Artikel mit Spiele-Infobox
   (z. B. 287 Treffer zu „Metroid“, die Hauptspiele zuerst), 48 pro Seite mit
   „Mehr Treffer laden“, und zeigt Plattform und Jahr auf jedem Modul. Serien-
   und Figurenartikel fallen dadurch heraus.
 
-- **Gaming-Edition: volle Regale statt weniger Spiele pro Filter:** Jeder
+- **Gaming-Edition: volle Regale statt weniger Spiele pro Filter** (2026-10-02, PR #56): Jeder
   Filter (Jahrzehnt, Plattform oder beides) lädt jetzt zusätzlich zu den
   handverlesenen Spielen alle passenden Spiele aus den Wikipedia-Kategorien,
   48 pro Seite mit „Mehr Spiele laden“ (z. B. Game Boy: über 500, 90er: über
   7.000). Die Plattform-Liste wächst von 16 auf 36 Systeme, von Atari 2600 bis
   Switch; auf dem Handy ist sie eine wischbare Zeile.
 
-- **Eigene Adresse für die Gaming-Edition:** Neues Vercel-Projekt
+- **Eigene Adresse für die Gaming-Edition** (2026-10-02, PR #55): Neues Vercel-Projekt
   `retromind-gaming` aus demselben Repo. Es setzt `RETROMIND_EDITION=gaming`,
   und der neue Build-Schritt `scripts/edition.mjs` legt dann die
   Gaming-Seite als Startseite ab. Das Haupt-Projekt bleibt unverändert.
 
-- **Gaming-Edition als eigenständige App + Link aus RetroMind:** Die
+- **Gaming-Edition als eigenständige App + Link aus RetroMind** (2026-10-02, PR #54): Die
   Startseite der Zeitreise und die Einstellungen verlinken jetzt auf
   „RetroMind – Gaming“. Die Gaming-Edition ist als eigene App installierbar
   (Web-App-Manifest, Icons, Service Worker mit Scope `/gaming/`, Network-first
   mit Offline-Fallback) und bietet im Hub einen „Als App“-Button, wo der
   Browser das unterstützt.
 
-- **Neue Edition „RetroMind – Gaming“ (`/gaming/`):** Eigene Seite im selben
+- **Neue Edition „RetroMind – Gaming“ (`/gaming/`)** (2026-10-02, PR #53): Eigene Seite im selben
   Repo, die vergessene und unterschätzte Videospiele von den 1980ern bis heute wiederentdecken lässt.
   Kuratierter Katalog mit 38 Spielen von 1987 bis 2023 als Modul-Regal (Filter nach Jahrzehnt
   und Plattform), „Insert Coin“-Zufallsfund, Suche nach beliebigen Spielen
@@ -1115,7 +1129,41 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Konami-Code, Steuerung per Pfeiltasten und Gamepad. Alles lokal im
   Browser gespeichert (`retromind.gaming.v1`).
 
-- **Spotify-Login (Authorization Code + PKCE):** „Mit Spotify anmelden“ neben
+- **Zeitreise: Überschrift nicht mehr über offenen Fenstern** (2026-09-05,
+  PR #52): Der Schriftzug „RetroMind“ schien durch Einstellungen, Feedback
+  und andere Fenster hindurch. Jetzt liegen offene Fenster sauber darüber.
+
+- **Zeitreise: Knopf zurück zur Startseite** (2026-09-05, PR #51): Unten in
+  der Mitte sitzt ein Haus-Symbol. Es führt auf jeder Seite der Reise zurück
+  zum Start, ohne dass der Fortschritt verloren geht.
+
+- **Zeitreise: Feedback geben** (2026-09-05, PR #50): In den Einstellungen
+  gibt es einen Knopf „Feedback geben“ für Lob, Kritik, Vorschläge und
+  Wünsche. Die Nachricht kommt per E-Mail bei Marco an.
+
+- **Zeitreise: Nostalgie-Radio entfernt** (2026-09-05, PR #49): Die selbst
+  erzeugte Hintergrundmusik in den Einstellungen ist weg. Die Wahl des
+  Jahrzehnts steuert jetzt nur noch die echten Hits von Spotify.
+
+- **Zeitreise: Ticken auf dem Willkommensbildschirm, wieder entfernt**
+  (2026-09-05, PR #46, #47, #48): Ein leises Ticken der Uhr kam dazu, spielte
+  aber nicht zuverlässig und störte den Musikstart. Es wurde deshalb wieder
+  herausgenommen (später kam es verbessert zurück).
+
+- **Zeitreise: Anmeldung beim Öffnen** (2026-09-05, PR #45): Vor der Reise
+  stand eine Abfrage, die Google-Anmeldung verlangte (ohne Google ein
+  kleines Formular). Name und Geburtsdatum kamen aus dem Google-Profil.
+  Später wurde die Anmeldung wieder freiwillig.
+
+- **Zeitreise: Willkommensbildschirm mit Kaminuhr** (2026-09-05, PR #37 bis
+  #44): Vor der App erscheint „Welcome to RetroMind“ mit dem Satz „The ticket
+  to your past“. Dahinter steht groß und schräg von oben gesehen eine alte
+  hölzerne Kaminuhr, deren Zeiger langsam laufen. Der Bildschirm ist dunkel
+  und geheimnisvoll, der Titel steht in verschnörkelter Schrift, glüht und
+  schwebt leicht. Ein Druck auf „Let's go!“ lässt Funken sprühen, dann geht
+  der Bildschirm langsam in die App über.
+
+- **Spotify-Login (Authorization Code + PKCE)** (2026-09-04, PR #36): „Mit Spotify anmelden“ neben
   dem bestehenden Google-Login – komplett clientseitig, kein eigener
   Auth-Server, kein Client-Secret. Holt nur Name und Premium-/Free-Status ab
   (`GET /v1/me`, Scopes `user-read-private`/`user-read-email`); beeinflusst
@@ -1127,14 +1175,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Dateien: `lib/spotifyAuth.ts`, `hooks/useSpotifyAuth.ts`,
   `components/SpotifyAuthControl.tsx`, `components/AccountControls.tsx`
   (gemeinsamer Container für Google- und Spotify-Pille).
-- **Geschlecht + Lieblingsmusiker:innen im Onboarding:** Das bisher ungenutzte
+
+- **Geschlecht + Lieblingsmusiker:innen im Onboarding** (2026-09-04, PR #36): Das bisher ungenutzte
   `gender`-Feld im Profil hat jetzt ein echtes (optionales) Auswahlfeld;
   dazu ein neues optionales Freitext-Feld `favoriteArtists` für
   Lieblingsmusiker:innen/-bands. Beide rein selbst angegeben – weder Google
   noch Spotify liefern Alter oder Geschlecht an Drittanbieter-Apps, deshalb
   bleibt das ehrlich als Selbstauskunft gekennzeichnet statt als
   „Verifizierung“ verkauft.
-- **Echte Hits pro Dekade (Spotify-Embed), jetzt automatisch:** Sobald die
+
+- **Echte Hits pro Dekade (Spotify-Embed), jetzt automatisch** (2026-09-03, PR #33, #35): Sobald die
   Nutzer:in einmal irgendwo klickt/tippt, startet automatisch im Hintergrund
   Spotifys offizielle „All Out …“-Playlist der gewählten Dekade (neuer Hook
   `hooks/useSpotifyBackground.ts`, Wrapper um Spotifys iFrame-API in
@@ -1146,12 +1196,63 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Spotifys eigener Lautstärke und lässt sich in den Einstellungen nur
   pausieren/fortsetzen, nicht leiser stellen. Neues optionales Feld
   `spotifyPlaylistId` in `constants.ts`/`types.ts`.
-- **Perspektivwechsel bei Erinnerungs-Fragen:** Nach dem Speichern einer
+
+- **Zeitreise: Hinweis zum Spotify-Login** (2026-09-03, PR #34): Neben dem
+  Spotify-Player steht, dass Spotify eine eigene Anmeldung hat. Ohne sie
+  spielt der Player nur 30-Sekunden-Ausschnitte, auch wenn man mit Google
+  angemeldet ist.
+
+- **Perspektivwechsel bei Erinnerungs-Fragen** (2026-09-03, PR #32): Nach dem Speichern einer
   Erinnerung im Buzzword-Modal lässt sich zusätzlich eine Frage generieren,
   die denselben Moment aus Sicht einer anderen Person von damals (Freund:in,
   Geschwister, Elternteil) neu erzählen lässt – als eigene Erinnerung
   gespeichert. Neue Server-Aktion `perspectiveQuestion` in `api/gemini.js`.
-- **Google-Login + dezentrale Sicherung:** „Mit Google anmelden“ (Google
+
+- **Zeitreise: Einstellungen und Google-Knopf erst ganz unten** (2026-09-03,
+  PR #28 bis #31): Das Zahnrad und der Google-Knopf sitzen unten in den
+  beiden Ecken und erscheinen erst, wenn man bis ans Seitenende scrollt.
+
+- **Zeitreise: „Weitermachen“ gleich oben** (2026-09-03, PR #27): Wer
+  zurückkommt, sieht „Weitermachen“ und „Neu beginnen“ direkt unter der
+  Überschrift statt erst weit unten.
+
+- **Zeitreise: Google-Anmeldung klappt am Handy beim ersten Tipp**
+  (2026-09-03, PR #25): Googles Anmeldefenster öffnet sich jetzt sofort,
+  vorher schluckte das Handy den ersten Tipp.
+
+- **Zeitreise: ruhige Melodie zum Start** (2026-09-03, PR #24): Statt eines
+  gleichbleibenden Brummtons spielt eine kurze, ruhige Melodie in Schleife,
+  für jedes Jahrzehnt in einer anderen Tonart.
+
+- **Zeitreise: klare Überschrift mit rotem R und M** (2026-09-03, PR #23):
+  „RetroMind“ ist nicht mehr verschwommen, R und M sind rot.
+
+- **Zeitreise: Versionsnummer in den Einstellungen** (2026-09-03, PR #22,
+  #26): Unten in den Einstellungen steht, welche Version gerade läuft, gut
+  lesbar.
+
+- **Zeitreise: Einstellungen mit Zahnrad** (2026-09-03, PR #20, #21): Ein
+  Zahnrad öffnet die Einstellungen mit Schriftgröße und Musik (Abspielen,
+  Jahrzehnt, Lautstärke). Der eigene Musik-Knopf ist dafür weg.
+
+- **Zeitreise: Musik von Anfang an** (2026-09-03, PR #16, #17, #19): Beim
+  Öffnen startet ruhige Hintergrundmusik in Schleife. Blockiert der Browser
+  den Ton, steht da „Zum Starten tippen“. Die Musik wird in der App selbst
+  erzeugt, statt sie von einer fremden Seite zu laden, die manchmal
+  stumm blieb.
+
+- **Zeitreise: Startknopf direkt unter der Überschrift** (2026-09-03, PR #18):
+  „Zeitreise starten“ steht gleich oben auf der Startseite.
+
+- **Zeitreise: Röhrenbildschirm-Look für die ganze App** (2026-09-03,
+  PR #14): Über der ganzen App liegen feine Streifen und ein leichter
+  Schleier wie auf einem alten Fernseher, der ab und zu flackert.
+
+- **Zeitreise: Radio-Player als kleiner runder Knopf** (2026-09-03, PR #11,
+  #13): Der Musik-Player ist zuerst nur ein runder Knopf unten rechts und
+  klappt beim Antippen auf und wieder zu.
+
+- **Google-Login + dezentrale Sicherung** (2026-09-03, PR #12): „Mit Google anmelden“ (Google
   Identity Services) sichert die Reise zusätzlich zu `localStorage` im
   privaten `appDataFolder` des eigenen Google Drive der Nutzer:in – keine
   zentrale Datenbank, jede Person behält ihre Erinnerungen in ihrem eigenen
@@ -1162,9 +1263,26 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Neue Dateien: `lib/googleAuth.ts`, `services/googleDriveService.ts`,
   `hooks/useGoogleAuth.ts`, `components/GoogleAuthControl.tsx`.
 
+- **Zeitreise: Fotos wie alte Abzüge** (2026-09-03, PR #8): Alle Bilder
+  wirken leicht verblasst und sepiafarben und flackern ab und zu wie auf
+  einem alten Bildschirm. Das gedruckte Buch bleibt klar.
+
+- **Zeitreise: Start mit Pixel-Effekt und „Welcome“** (2026-09-03): Beim
+  Öffnen löst sich ein schwarzes Raster Kästchen für Kästchen auf, dazu
+  erklingt ein tiefer Ton. Danach sagt eine tiefe, langsame Stimme
+  „Welcome“.
+
+- **Entwicklung: schnellere App durch eigenen Build** (2026-09-03, PR #4,
+  #5): Die Gestaltung wird beim Bauen erzeugt statt im Browser, die Farben
+  stehen an einer Stelle, der Code ist in kleinere Teile aufgeteilt.
+
+- **Zeitreise: jeder Knopf reagiert** (2026-09-02, PR #2): Auch kleine
+  Knöpfe wie Schließen oder Später geben beim Drücken sichtbar und hörbar
+  Rückmeldung.
+
 ## 2.0.1
 
-- **Favicon ergänzt:** Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
+- **Favicon ergänzt** (2026-09-02, PR #1): Tab-Icon (🕰️) als Inline-SVG-Data-URI statt fehlendem
   Favicon (bisher 404 im Browser, kein Wiedererkennungsmerkmal im Tab).
 
 ## 2.0.0

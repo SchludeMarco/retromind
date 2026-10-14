@@ -22,6 +22,12 @@ and PR number). In the same PR, update `README.md`: new features go under
 bottom (sorted into Muss / Sollte / Könnte), and ideas that got built are
 removed from that list.
 
+The Gaming edition has its own `gaming/README.md` (Gaming features go under
+"Was die Gaming-Edition kann", Gaming ideas under its "Ideen und offene
+Punkte"). `gaming/CHANGELOG.md` is generated: after adding entries to
+`CHANGELOG.md`, run `npm run changelog:gaming` and commit the result. Never
+edit `gaming/CHANGELOG.md` by hand.
+
 ## Languages
 
 The app UI is American English by default, German selectable (`lib/i18n.ts`).
