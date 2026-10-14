@@ -84,9 +84,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [`lib/recipes.ts`](lib/recipes.ts)).
 - **Weihnachtszeit** – vom 1. November bis 6. Januar öffnet in Omas
   Kochbuch die Weihnachtsbäckerei (Plätzchen, Bratäpfel, Kinderpunsch), und
-  die Zeitreise trägt Weihnachtslook: Lichterkette oben, Schnee hinter den
-  Seiten, Weihnachtsrot als Akzent, und im Radio laufen Weihnachtslieder
-  (Spotify „Christmas Hits“). In den Einstellungen „Weihnachtslook“:
+  die Zeitreise trägt Weihnachtslook: Lichterkette oben, viele kleine
+  blinkende Lichter und Schnee hinter den Seiten, Weihnachtsrot als Akzent,
+  und im Radio laufen Weihnachtslieder (Spotify „Christmas Hits“). Alle ein
+  bis zwei Minuten klingt leise ein Schlittenglocken-Jingle, jedes dritte
+  Mal mit „Ho ho ho“ (stumm bei ausgeschaltetem Ton,
+  [`lib/xmasSounds.ts`](lib/xmasSounds.ts)). In den Einstellungen „Weihnachtslook“:
   Automatisch, jetzt an oder aus
   ([`lib/season.ts`](lib/season.ts),
   [`components/ChristmasDeco.tsx`](components/ChristmasDeco.tsx)).

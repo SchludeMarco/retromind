@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Mehr Weihnachtslichter und Weihnachtsklänge': {
+    title: 'More Christmas lights and Christmas sounds',
+    text: 'During the Christmas season, lots of small colorful lights now twinkle behind the pages, and the fairy lights along the top have almost twice as many bulbs, each blinking at its own pace. Every minute or two a short, quiet jingle sounds, with sleigh bells and the first notes of “Jingle Bells”, and every third time Santa adds a “Ho ho ho”. The first jingle only comes a while after your first tap and swells in gently. With the sound off everything stays quiet, and “Christmas look: off” turns the lights and sounds off.',
+  },
   'Adventskalender mit 24 Türchen': {
     title: 'An advent calendar with 24 doors',
     text: 'From December 1, Explore has an “Advent calendar” tile. Each day one more door opens, all the way to the big door 24. Behind each one something special is waiting: a Christmas song that plays on the radio with one tap (from “Last Christmas” to “White Christmas”), a recipe from Grandma’s Christmas bakery, a little story about Christmas back then or a question for your memory book. Knock too early and you learn how many days the door still needs. Opened doors stay open, and from January 1 to 6 all of them are open. With “Christmas look: on” in the settings you can peek behind all the doors ahead of time.',

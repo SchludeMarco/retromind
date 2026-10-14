@@ -2498,6 +2498,26 @@ html[data-season="xmas"][data-theme="nachtschicht"] {
   animation: xmasTwinkle 1.8s ease-in-out infinite alternate;
 }
 .xmas-bulbs span:nth-child(odd) { margin-top: 5px; }
+/* Phones: every other bulb, so they don't crowd. */
+@media (max-width: 639px) {
+  .xmas-bulbs span:nth-child(4n + 2),
+  .xmas-bulbs span:nth-child(4n + 3) { display: none; }
+}
+.xmas-sparks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.xmas-sparks span {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 1px currentColor;
+  animation: xmasBlink ease-in-out infinite;
+}
+@keyframes xmasBlink {
+  0%, 100% { opacity: 0.2; transform: scale(0.7); }
+  50% { opacity: 0.95; transform: scale(1.15); }
+}
 @keyframes xmasTwinkle {
   from { opacity: 1; filter: brightness(1.2); }
   to { opacity: 0.45; filter: brightness(0.8); }
@@ -2518,7 +2538,8 @@ html[data-season="xmas"][data-theme="nachtschicht"] {
   .xmas-snow span:nth-child(3n) { top: 20%; }
   .xmas-snow span:nth-child(3n + 1) { top: 55%; }
   .xmas-snow span:nth-child(3n + 2) { top: 85%; }
-  .xmas-bulbs span { animation: none; }
+  .xmas-bulbs span,
+  .xmas-sparks span { animation: none; }
 }
 @media print {
   .xmas-deco,
