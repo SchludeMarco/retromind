@@ -3403,6 +3403,309 @@ section:first-child > .media-head {
   margin: 0 auto;
 }
 
+/* Card games (video poker, blackjack, solitaire): one deck drawn in HTML.
+   The face stays paper white with red and black in every palette; sizes
+   follow the card's own width (container units), so the same card works
+   five across in poker and seven across in solitaire. */
+.mini-dialog.wide {
+  width: min(600px, 100%);
+}
+.pcard {
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #1b1b2f;
+  border-radius: 7%/5%;
+  background: #fbfaf2;
+  color: #1b1b2f;
+  font: 700 16px/1 'Plus Jakarta Sans', system-ui, sans-serif;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+button.pcard {
+  cursor: pointer;
+}
+.pcard.red {
+  color: #d01c2a;
+}
+.pcard .pc-corner {
+  position: absolute;
+  top: 5%;
+  left: 7%;
+  font-size: 26cqw;
+  line-height: 0.95;
+  text-align: center;
+  letter-spacing: -0.04em;
+}
+.pcard .pc-pip {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 22%;
+  font-size: 50cqw;
+  line-height: 1;
+}
+.pcard.back {
+  border: 2px solid #fbfaf2;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 4px, rgba(255, 255, 255, 0.22) 4px 6px),
+    repeating-linear-gradient(-45deg, transparent 0 4px, rgba(0, 0, 0, 0.18) 4px 6px),
+    var(--a1);
+  box-shadow: inset 0 0 0 3px var(--a1), inset 0 0 0 4px rgba(255, 255, 255, 0.6), 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.pcard.ghost {
+  background: rgba(0, 0, 0, 0.18);
+  border: 2px dashed var(--dim);
+  box-shadow: none;
+}
+.pcard.ghost.recycle::after {
+  content: '↻';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 50cqw;
+  color: var(--dim);
+}
+.pcard.ghost.found::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 50cqw;
+  color: var(--dim);
+  opacity: 0.6;
+}
+.pcard.suit-S::after { content: '♠'; }
+.pcard.suit-H::after { content: '♥'; }
+.pcard.suit-D::after { content: '♦'; }
+.pcard.suit-C::after { content: '♣'; }
+.pcard.sel {
+  outline: 3px solid var(--a3);
+  outline-offset: 0;
+  transform: translateY(-4%);
+  z-index: 1;
+}
+.pcard.held {
+  outline: 3px solid var(--ok);
+  transform: translateY(-6%);
+}
+.pcard.dim {
+  filter: grayscale(0.6) brightness(0.75);
+}
+.pcard:focus-visible {
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+  z-index: 2;
+}
+.pcard.deal {
+  animation: pcard-in 0.28s ease-out both;
+}
+@keyframes pcard-in {
+  from {
+    transform: translateY(-30%) rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcard.deal {
+    animation: none;
+  }
+  .pcard.sel,
+  .pcard.held {
+    transform: none;
+  }
+}
+.vp-bet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.vp-bet .px-btn {
+  min-width: 44px;
+  padding: 10px 0;
+}
+.vp-bet .px-btn.on {
+  background: var(--a3);
+  color: var(--bg);
+}
+
+/* Video poker */
+.vp-table {
+  width: min(100%, 420px);
+  margin: 0 auto 14px;
+  border-collapse: collapse;
+  font-size: 10px;
+  color: var(--a3);
+  background: var(--bg2);
+  border: 2px solid var(--a2);
+}
+.vp-table th,
+.vp-table td {
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: normal;
+}
+.vp-table td {
+  text-align: right;
+}
+.vp-table tr.hit {
+  background: var(--a1);
+  color: #fff;
+}
+.vp-hand {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: min(100%, 440px);
+  margin: 0 auto;
+}
+.vp-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-top: 6%;
+}
+.vp-hold {
+  font-size: 9px;
+  color: var(--ok);
+  visibility: hidden;
+}
+.vp-hold.on {
+  visibility: visible;
+}
+.vp-controls,
+.bj-controls,
+.sol-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.vp-hint {
+  margin: 0;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+/* Blackjack: the green felt of the casino table. */
+.bj-table {
+  padding: 14px 12px;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 40%, #1f7a46, #0d4a2a 75%);
+  border: 4px solid #6b3f1d;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+.bj-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bj-label {
+  font-size: 10px;
+  color: #f4e9c8;
+}
+.bj-label b {
+  color: #ffd23f;
+  font-weight: normal;
+}
+.bj-cards {
+  display: flex;
+  min-height: 0;
+}
+.bj-cards .pcard {
+  width: min(20%, 78px);
+  flex: none;
+}
+.bj-cards .pcard + .pcard {
+  margin-left: max(-9%, -34px);
+}
+.bj-outcome {
+  min-height: 1.6em;
+  margin: 12px 0;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+  color: #f4e9c8;
+}
+.bj-outcome.up {
+  color: #7dff9b;
+}
+.bj-outcome.down {
+  color: #ff9a9a;
+}
+.bj-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: min(100%, 440px);
+}
+.bj-actions .px-btn.big {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: clamp(9px, 2.6vw, 12px);
+}
+
+/* Solitaire */
+.sol {
+  width: min(100%, 540px);
+  margin: 0 auto;
+}
+.sol-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: clamp(3px, 1.2vw, 8px);
+}
+.sol-tab {
+  margin-top: 12px;
+  min-height: 46vh;
+  align-items: start;
+}
+.sol-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* Cards in a column overlap: face-down ones show a thin edge, face-up ones
+   their corner. Margins in % follow the column's width, so this scales. */
+.sol-col .pcard + .pcard {
+  margin-top: -118%;
+}
+.sol-col .pcard.up + .pcard.up,
+.sol-col .pcard.back + .pcard.up {
+  margin-top: -100%;
+}
+/* Rank and suit side by side, so the narrow visible strip shows both. */
+.sol .pcard .pc-corner {
+  top: 4%;
+  left: 6%;
+  font-size: 30cqw;
+  white-space: nowrap;
+}
+.sol .pcard .pc-corner br {
+  display: none;
+}
+.sol-controls {
+  flex-direction: row;
+  justify-content: center;
+}
+
 /* "Today X years ago" in the hall. */
 .day-game {
   display: flex;

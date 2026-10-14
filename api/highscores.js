@@ -12,7 +12,7 @@ import { readJsonBody } from "./_admin.js";
 
 // Highest believable score per game, so a typo in a hand-made request
 // cannot take the table over for good.
-const GAMES = { blocks: 999_999, pinball: 999_999, pacman: 999_999, senso: 200, breakout: 999_999, snake: 9_999, invaders: 999_999 };
+const GAMES = { blocks: 999_999, pinball: 999_999, pacman: 999_999, senso: 200, breakout: 999_999, snake: 9_999, invaders: 999_999, poker: 99_999, blackjack: 9_999 };
 const KEEP = 50;
 const SHOW = 10;
 

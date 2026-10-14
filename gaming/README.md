@@ -177,6 +177,12 @@ zeigen dürfen.
   Quiz „Erkennst du das Spiel?“ (bis zu fünf Coins am Tag)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
+- **Kartenspiele** – Video-Poker („Jacks or Better“, 20 Hände), Blackjack
+  (10 Hände, Bank bleibt ab 17 stehen) und Solitär (Klondike, eine Karte
+  ziehen, unbegrenztes Zurück, automatisches Ablegen am Ende). Gespielt wird
+  nur um Spielgeld; Poker und Blackjack kommen auf die Highscore-Tafel,
+  Solitär zählt die Bestzeit. Ein gemeinsames HTML-Kartendeck ohne Bilder
+  ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
   Buchstaben ein; die Top 10 gelten für alle Spieler (`api/highscores.js`,
   Upstash Redis; ohne Datenbank bleibt die Tafel auf dem Gerät).
@@ -314,5 +320,7 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle (Poster,
   Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
   vergessenes Spiel als Geheimtipp aufdeckt.
-- **Mehr Minispiele in der Chill-Ecke** (z. B. Solitär), Sudoku in mehreren
+- **Mehr Minispiele in der Chill-Ecke**, Sudoku in mehreren
   Schwierigkeitsstufen und die Bestwerte mit in die Cloud-Sicherung nehmen.
+- **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,
+  Teilen beim Blackjack, Solitär mit drei Karten ziehen oder Spider.
