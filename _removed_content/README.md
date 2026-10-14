@@ -123,3 +123,8 @@ gebaut oder ausgeliefert.
   Aufwachen der App „Welcome“ sagte (entfernt am 2026-10-14). Zum Start
   sagt jetzt nur noch die Roboterstimme der Zeitmaschine „Welcome back“
   (`lib/robotVoice.ts`).
+- `sfx-mixkit-mp3.ts.txt`: die drei Klick-, Übergangs- und Erfolgsgeräusche
+  der Zeitreise als mp3-Dateien von mixkit.co (entfernt am 2026-10-14). Sie
+  wurden bei jedem Tippen neu geladen und kamen oft zu spät oder gar nicht.
+  Ersetzt durch selbst erzeugte Klänge in `lib/uiSounds.ts`, die sofort
+  erklingen.

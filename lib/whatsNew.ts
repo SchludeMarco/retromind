@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die Zeitreise reagiert auf jede Berührung': {
+    title: 'The time travel answers every touch',
+    text: 'Every button, card and link now responds at once: a soft wooden “tock” like the key of an old typewriter, a short buzz on your phone, a ring of light spreading from your finger and a little spring-back. When you move to another stop, a page audibly turns, the new stop slides in from the side the journey is heading and a band of light sweeps across the screen. Cards and sections drift into place one after another as you scroll. Windows open with a small “blop”, and when you save a memory a music-box chime sounds and stars and hearts burst where you tapped. Even when you do nothing, the page is alive: dust dances in the light (fireflies in Night Shift), the travel clock’s seconds hand keeps ticking, and after a while without a tap the button to the next stop gently breathes so you know where to go. The sounds are short and quiet, come without delay (they are no longer downloaded each time) and stay silent with the sound off. If you prefer less motion, you only get the sounds and a calm glow.',
+  },
   'Keine Musik mehr über dem Jahresvideo': {
     title: 'No more music over the year’s video',
     text: 'At the start, the Spotify music kept playing over the video from your year, so the video was hard to follow. Now the video starts once the arrival show is over, and the music stays quiet while it runs. Hide the video and the music plays on.',

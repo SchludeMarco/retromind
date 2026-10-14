@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../types';
-import { SFX } from '../lib/sfx';
+import type { UiSound } from '../lib/uiSounds';
 import { sendChatMessage } from '../services/geminiService';
 import { tr } from '../lib/i18n';
 
 export const ChatBot: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  playSFX: (t: keyof typeof SFX) => void;
+  playSFX: (t: UiSound) => void;
   disabled: boolean;
 }> = ({ isOpen, onClose, playSFX, disabled }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);

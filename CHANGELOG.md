@@ -7,6 +7,25 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Die Zeitreise reagiert auf jede Berührung** (2026-10-14, PR #216):
+  Jeder Knopf, jede Karte und jeder Link antwortet jetzt sofort: ein leises
+  Holz-„Tock“ wie von einer alten Schreibmaschinentaste, ein kurzes Summen
+  auf dem Handy, ein Lichtring, der sich vom Finger aus ausbreitet, und ein
+  kleines Nachfedern. Beim Wechsel zu einem anderen Halt blättert hörbar
+  eine Seite um, der neue Halt gleitet von der Seite herein, in die die
+  Reise geht, und ein Lichtstreif zieht über den Bildschirm. Karten und
+  Abschnitte schweben beim Scrollen nacheinander an ihren Platz. Fenster
+  öffnen sich mit einem kleinen „Plopp“, und wenn du eine Erinnerung
+  speicherst, klingt ein Spieluhr-Glöckchen und Sterne und Herzen sprühen
+  dort, wo du getippt hast. Auch wenn du gerade nichts tust, lebt die
+  Seite: Staub tanzt im Licht (in Nachtschicht Glühwürmchen), der
+  Sekundenzeiger der Reiseuhr tickt weiter, und nach einer Weile ohne
+  Tippen atmet der Knopf zum nächsten Halt sanft, damit du weißt, wie es
+  weitergeht. Die Klänge sind kurz und leise, kommen ohne Verzögerung (sie
+  werden nicht mehr jedes Mal aus dem Netz geladen) und schweigen bei
+  ausgeschaltetem Ton. Wer weniger Bewegung eingestellt hat, bekommt nur
+  die Klänge und ein ruhiges Aufleuchten.
+
 - **Keine Musik mehr über dem Jahresvideo** (2026-10-14, PR #215): Beim
   Start lief die Spotify-Musik über dem Video aus deinem Jahr weiter, so
   dass man das Video kaum verstand. Jetzt startet das Video erst, wenn die

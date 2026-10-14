@@ -40,6 +40,10 @@ export const JourneyClock: React.FC<{ index: number; className?: string }> = ({ 
       <g className="rm-jc-hand" style={{ transform: `rotate(${handAngle}deg)` }}>
         <line x1="24" y1="24" x2="24" y2="12" strokeWidth="2.4" strokeLinecap="round" />
       </g>
+      {/* The seconds hand ticks on, so the time machine always seems alive. */}
+      <g className="rm-jc-second">
+        <line x1="24" y1="27" x2="24" y2="8.5" strokeWidth="0.9" strokeLinecap="round" />
+      </g>
       <circle cx="24" cy="24" r="2.2" className="rm-jc-pin" />
     </svg>
   );

@@ -145,7 +145,7 @@ export const VerifyGate: React.FC<{
           </div>
           <div className="rm-ticket-stub">
             <span className="splash-start-tilt relative inline-block">
-              <button type="submit" disabled={rewinding} className="splash-start rm-gate-start relative">
+              <button type="submit" disabled={rewinding} className="splash-start rm-gate-start relative" data-quiet>
                 {rewinding ? tr('Turning back …', 'Die Uhr dreht zurück …') : tr('Set the clock', 'Uhr zurückdrehen')}
               </button>
             </span>
