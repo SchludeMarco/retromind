@@ -10,7 +10,7 @@ type List = { en: string[]; de: string[] };
 
 export interface Recipe {
   id: string;
-  /** Key of DECADES_DB: '1960' … '2010'. */
+  /** Key of DECADES_DB: '1960' … '2010', or 'xmas' for the Christmas bakery. */
   decade: string;
   icon: string;
   title: Text;
@@ -377,6 +377,180 @@ export const RECIPES: Recipe[] = [
     question: {
       en: 'What was your go-to breakfast in the 2010s?',
       de: 'Was war dein liebstes Frühstück in den 2010ern?',
+    },
+  },
+];
+
+// The Christmas bakery: open from November 1 to January 6 (lib/season.ts).
+export const XMAS = 'xmas';
+
+export const XMAS_RECIPES: Recipe[] = [
+  {
+    id: 'vanillekipferl',
+    decade: XMAS,
+    icon: '🌙',
+    title: { en: 'Vanilla Crescent Cookies', de: 'Vanillekipferl' },
+    story: {
+      en: 'Little crescents, so tender they crumble if you just look at them. Grandma rolled them in vanilla sugar while they were still warm, and the whole house smelled of Christmas.',
+      de: 'Kleine Hörnchen, so zart, dass sie zerbröseln, wenn man sie nur ansieht. Oma wälzte sie noch warm in Vanillezucker, und das ganze Haus duftete nach Weihnachten.',
+    },
+    serves: { en: 'about 50 cookies', de: 'etwa 50 Stück' },
+    time: { en: '40 minutes + 1 hour chilling', de: '40 Minuten + 1 Stunde Kühlzeit' },
+    ingredients: {
+      en: ['2¼ cups (280 g) flour', '1 cup (100 g) ground almonds', '⅓ cup (70 g) sugar', '¾ cup + 2 tbsp (200 g) cold butter', '2 egg yolks', 'seeds of 1 vanilla bean (or 1 tsp vanilla extract)', 'For rolling: ½ cup (60 g) powdered sugar mixed with 2 tbsp vanilla sugar'],
+      de: ['280 g Mehl', '100 g gemahlene Mandeln', '70 g Zucker', '200 g kalte Butter', '2 Eigelb', 'Mark einer Vanilleschote', 'Zum Wälzen: 60 g Puderzucker und 2 Päckchen Vanillezucker'],
+    },
+    steps: {
+      en: ['Knead flour, almonds, sugar, butter in pieces, yolks and vanilla quickly into a smooth dough.', 'Shape it into rolls, wrap them and chill for 1 hour.', 'Heat the oven to 350 °F (175 °C). Cut small pieces, roll them into finger-thick logs with tapered ends and bend them into crescents.', 'Bake for 10 to 12 minutes; they should stay pale.', 'Let them cool for 2 minutes, then carefully roll them in the vanilla sugar while still warm.'],
+      de: ['Mehl, Mandeln, Zucker, Butter in Stückchen, Eigelb und Vanillemark rasch zu einem glatten Teig verkneten.', 'Zu Rollen formen, einwickeln und 1 Stunde kühlen.', 'Den Ofen auf 175 °C Ober-/Unterhitze vorheizen. Kleine Stücke abschneiden, zu fingerdicken Würstchen mit dünnen Enden rollen und zu Hörnchen biegen.', '10 bis 12 Minuten backen; sie sollen hell bleiben.', '2 Minuten abkühlen lassen, dann noch warm vorsichtig im Vanillezucker wälzen.'],
+    },
+    tip: {
+      en: 'Cold hands, cold dough. If it gets soft, back in the fridge with it.',
+      de: 'Kalte Hände, kalter Teig. Wird er weich, ab damit zurück in den Kühlschrank.',
+    },
+    question: {
+      en: 'Who baked Christmas cookies with you, and which ones did you love most?',
+      de: 'Wer hat mit dir Plätzchen gebacken, und welche mochtest du am liebsten?',
+    },
+  },
+  {
+    id: 'zimtsterne',
+    decade: XMAS,
+    icon: '⭐',
+    title: { en: 'Cinnamon Stars', de: 'Zimtsterne' },
+    story: {
+      en: 'Chewy almond stars with a snow-white top. Cutting them out was fiddly, so Grandma did the cutting and the children did the glaze.',
+      de: 'Saftige Mandelsterne mit schneeweißem Guss. Das Ausstechen war eine Fummelei, also stach Oma aus, und die Kinder durften bestreichen.',
+    },
+    serves: { en: 'about 40 stars', de: 'etwa 40 Sterne' },
+    time: { en: '1 hour + 30 minutes chilling', de: '1 Stunde + 30 Minuten Kühlzeit' },
+    ingredients: {
+      en: ['3 egg whites', '2 cups (250 g) powdered sugar', '3½ cups (350 g) ground almonds', '2 tsp ground cinnamon', 'a pinch of salt'],
+      de: ['3 Eiweiß', '250 g Puderzucker', '350 g gemahlene Mandeln', '2 TL Zimt', '1 Prise Salz'],
+    },
+    steps: {
+      en: ['Beat the egg whites with the salt until stiff, then slowly beat in the powdered sugar until thick and glossy.', 'Set aside 4 tablespoons of it for the glaze.', 'Fold the almonds and cinnamon into the rest and chill the dough for 30 minutes.', 'Roll it out ⅓ inch thick between two sheets of plastic wrap and cut out stars. Brush them thinly with the glaze.', 'Bake at 300 °F (150 °C) for 10 to 12 minutes. The glaze must stay white; the stars firm up as they cool.'],
+      de: ['Das Eiweiß mit dem Salz steif schlagen, dann den Puderzucker nach und nach unterschlagen, bis die Masse dick und glänzend ist.', '4 Esslöffel davon für den Guss beiseitestellen.', 'Mandeln und Zimt unter den Rest heben und den Teig 30 Minuten kühlen.', 'Zwischen zwei Lagen Frischhaltefolie etwa 1 cm dick ausrollen und Sterne ausstechen. Dünn mit dem Guss bestreichen.', 'Bei 150 °C Ober-/Unterhitze 10 bis 12 Minuten backen. Der Guss muss weiß bleiben; beim Abkühlen werden die Sterne fester.'],
+    },
+    tip: {
+      en: 'Dip the cutter in water now and then, so the dough doesn’t stick.',
+      de: 'Den Ausstecher immer wieder in Wasser tauchen, dann klebt nichts.',
+    },
+    question: {
+      en: 'What did the kitchen smell like at Christmas when you were little?',
+      de: 'Wie hat die Küche an Weihnachten gerochen, als du klein warst?',
+    },
+  },
+  {
+    id: 'spritzgebaeck',
+    decade: XMAS,
+    icon: '🍪',
+    title: { en: 'Butter Spritz Cookies', de: 'Spritzgebäck' },
+    story: {
+      en: 'Grandma screwed the old meat grinder onto the table, put on the star disc and turned the crank, and the dough came out in long ribbons. The ends got dipped in chocolate.',
+      de: 'Oma schraubte den alten Fleischwolf an den Tisch, setzte die Sternscheibe auf und drehte die Kurbel, und der Teig kam in langen Bändern heraus. Die Enden kamen in Schokolade.',
+    },
+    serves: { en: 'about 60 cookies', de: 'etwa 60 Stück' },
+    time: { en: '45 minutes', de: '45 Minuten' },
+    ingredients: {
+      en: ['1 cup + 2 tbsp (250 g) soft butter', '⅔ cup (125 g) sugar', '1 tsp vanilla extract', 'a pinch of salt', '1 egg', '3 cups (375 g) flour', '1 cup (100 g) ground almonds', '3½ oz (100 g) dark chocolate for dipping'],
+      de: ['250 g weiche Butter', '125 g Zucker', '1 Päckchen Vanillezucker', '1 Prise Salz', '1 Ei', '375 g Mehl', '100 g gemahlene Mandeln', '100 g Zartbitterschokolade zum Eintauchen'],
+    },
+    steps: {
+      en: ['Heat the oven to 350 °F (180 °C) and line baking sheets with parchment.', 'Beat butter, sugar, vanilla and salt until fluffy, then beat in the egg.', 'Knead in flour and almonds.', 'Pipe the dough through a cookie press or a piping bag with a large star tip as S shapes, rings or sticks.', 'Bake for 10 to 12 minutes until golden at the edges. Once cool, dip the ends in melted chocolate.'],
+      de: ['Den Ofen auf 180 °C Ober-/Unterhitze vorheizen und Bleche mit Backpapier auslegen.', 'Butter, Zucker, Vanillezucker und Salz schaumig rühren, dann das Ei unterrühren.', 'Mehl und Mandeln unterkneten.', 'Den Teig durch den Fleischwolf mit Spritzgebäck-Aufsatz oder einen Spritzbeutel mit großer Sterntülle als S, Ringe oder Stangen aufs Blech bringen.', '10 bis 12 Minuten backen, bis die Ränder goldgelb sind. Abgekühlt die Enden in geschmolzene Schokolade tauchen.'],
+    },
+    tip: {
+      en: 'If the dough is too firm for the press, knead it briefly with warm hands.',
+      de: 'Ist der Teig zu fest für den Fleischwolf, kurz mit warmen Händen durchkneten.',
+    },
+    question: {
+      en: 'Which kitchen gadget at Grandma’s do you still remember?',
+      de: 'An welches Küchengerät bei Oma erinnerst du dich noch?',
+    },
+  },
+  {
+    id: 'kokosmakronen',
+    decade: XMAS,
+    icon: '🥥',
+    title: { en: 'Coconut Macaroons', de: 'Kokosmakronen' },
+    story: {
+      en: 'The perfect use for egg whites left over from the crescent cookies: little coconut mountains on wafers, crisp outside and soft inside.',
+      de: 'Die beste Verwendung für das Eiweiß, das von den Kipferln übrig blieb: kleine Kokosberge auf Oblaten, außen knusprig und innen weich.',
+    },
+    serves: { en: 'about 30 macaroons', de: 'etwa 30 Stück' },
+    time: { en: '15 minutes + 20 minutes baking', de: '15 Minuten + 20 Minuten Backzeit' },
+    ingredients: {
+      en: ['2 egg whites', '½ cup (100 g) sugar', 'a pinch of salt', '2½ cups (200 g) unsweetened shredded coconut', '30 small round baking wafers (optional)'],
+      de: ['2 Eiweiß', '100 g Zucker', '1 Prise Salz', '200 g Kokosraspel', '30 kleine runde Backoblaten'],
+    },
+    steps: {
+      en: ['Heat the oven to 300 °F (150 °C) and line a baking sheet with parchment.', 'Beat the egg whites with the salt until stiff, then beat in the sugar until glossy.', 'Fold in the coconut.', 'Place small mounds on the wafers or straight on the parchment, using two teaspoons.', 'Bake for 15 to 20 minutes, until the tips are lightly golden.'],
+      de: ['Den Ofen auf 150 °C Ober-/Unterhitze vorheizen und ein Blech mit Backpapier auslegen.', 'Das Eiweiß mit dem Salz steif schlagen, dann den Zucker einrieseln lassen und weiterschlagen, bis es glänzt.', 'Die Kokosraspel unterheben.', 'Mit zwei Teelöffeln kleine Häufchen auf die Oblaten setzen.', '15 bis 20 Minuten backen, bis die Spitzen leicht goldbraun sind.'],
+    },
+    tip: {
+      en: 'Store them in a tin with a slice of apple and they stay soft inside.',
+      de: 'In der Dose mit einer Apfelscheibe bleiben sie innen schön weich.',
+    },
+    question: {
+      en: 'Where were the Christmas cookie tins hidden at your house?',
+      de: 'Wo waren bei euch die Plätzchendosen versteckt?',
+    },
+  },
+  {
+    id: 'bratapfel',
+    decade: XMAS,
+    icon: '🍎',
+    title: { en: 'Baked Apples', de: 'Bratäpfel' },
+    story: {
+      en: 'On cold Advent evenings the apples sizzled in the oven, filled with nuts, raisins and cinnamon. With warm vanilla sauce, nothing was cozier.',
+      de: 'An kalten Adventsabenden brutzelten die Äpfel im Ofen, gefüllt mit Nüssen, Rosinen und Zimt. Mit warmer Vanillesoße war nichts gemütlicher.',
+    },
+    serves: { en: '4 apples', de: '4 Äpfel' },
+    time: { en: '15 minutes + 30 minutes baking', de: '15 Minuten + 30 Minuten Backzeit' },
+    ingredients: {
+      en: ['4 tart baking apples', '⅓ cup chopped walnuts or almonds', '3 tbsp raisins', '2 tbsp honey or brown sugar', '½ tsp ground cinnamon', '1½ tbsp butter', 'vanilla sauce to serve'],
+      de: ['4 säuerliche Äpfel (z. B. Boskop)', '40 g gehackte Walnüsse oder Mandeln', '30 g Rosinen', '2 EL Honig oder brauner Zucker', '½ TL Zimt', '20 g Butter', 'Vanillesoße zum Servieren'],
+    },
+    steps: {
+      en: ['Heat the oven to 350 °F (180 °C) and butter a baking dish.', 'Core the apples with an apple corer and widen the hole a little.', 'Mix nuts, raisins, honey and cinnamon and fill the apples with it.', 'Put a flake of butter on each apple and set them in the dish.', 'Bake for 25 to 30 minutes, until soft and the skin bursts a little. Serve with warm vanilla sauce.'],
+      de: ['Den Ofen auf 180 °C Ober-/Unterhitze vorheizen und eine Auflaufform fetten.', 'Die Äpfel mit einem Apfelausstecher entkernen und das Loch etwas erweitern.', 'Nüsse, Rosinen, Honig und Zimt mischen und die Äpfel damit füllen.', 'Auf jeden Apfel ein Butterflöckchen setzen und in die Form stellen.', '25 bis 30 Minuten backen, bis sie weich sind und die Schale etwas aufplatzt. Mit warmer Vanillesoße servieren.'],
+    },
+    tip: {
+      en: 'A little marzipan in the filling makes them even better.',
+      de: 'Ein bisschen Marzipan in der Füllung macht sie noch feiner.',
+    },
+    question: {
+      en: 'What was a cozy Advent evening like at your house?',
+      de: 'Wie sah bei euch ein gemütlicher Adventsabend aus?',
+    },
+  },
+  {
+    id: 'kinderpunsch',
+    decade: XMAS,
+    icon: '☕',
+    title: { en: 'Kids’ Christmas Punch', de: 'Kinderpunsch' },
+    story: {
+      en: 'While the grown-ups had mulled wine at the Christmas market, the children got their own steaming mug, with orange slices and a whole cinnamon stick.',
+      de: 'Während die Großen auf dem Weihnachtsmarkt Glühwein tranken, bekamen die Kinder ihren eigenen dampfenden Becher, mit Orangenscheiben und einer ganzen Zimtstange.',
+    },
+    serves: { en: '6 mugs', de: '6 Becher' },
+    time: { en: '25 minutes', de: '25 Minuten' },
+    ingredients: {
+      en: ['2 cups hot fruit tea (hibiscus or berry)', '2 cups red grape juice', '1 cup orange juice', '1 orange, sliced', '2 cinnamon sticks', '4 whole cloves', '1 star anise', '1–2 tbsp honey'],
+      de: ['500 ml Früchtetee', '500 ml roter Traubensaft', '250 ml Orangensaft', '1 Orange in Scheiben', '2 Zimtstangen', '4 Gewürznelken', '1 Sternanis', '1–2 EL Honig'],
+    },
+    steps: {
+      en: ['Brew the tea.', 'Put tea, grape juice and orange juice in a pot with the spices and orange slices.', 'Heat gently, without boiling, and let it steep for 15 minutes.', 'Sweeten with honey, pour through a sieve into mugs and add a fresh orange slice to each.'],
+      de: ['Den Tee aufbrühen.', 'Tee, Traubensaft und Orangensaft mit den Gewürzen und Orangenscheiben in einen Topf geben.', 'Langsam erhitzen, nicht kochen, und 15 Minuten ziehen lassen.', 'Mit Honig süßen, durch ein Sieb in Becher gießen und je eine frische Orangenscheibe dazugeben.'],
+    },
+    tip: {
+      en: 'Don’t let it boil, or the spices turn bitter.',
+      de: 'Nicht kochen lassen, sonst werden die Gewürze bitter.',
+    },
+    question: {
+      en: 'Which Christmas market or Christmas tradition do you remember from childhood?',
+      de: 'An welchen Weihnachtsmarkt oder welchen Weihnachtsbrauch aus deiner Kindheit erinnerst du dich?',
     },
   },
 ];

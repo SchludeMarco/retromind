@@ -82,6 +82,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (US-Maße) und Deutsch
   ([`phases/CookbookSection.tsx`](phases/CookbookSection.tsx),
   [`lib/recipes.ts`](lib/recipes.ts)).
+- **Weihnachtszeit** – vom 1. November bis 6. Januar öffnet in Omas
+  Kochbuch die Weihnachtsbäckerei (Plätzchen, Bratäpfel, Kinderpunsch), und
+  die Zeitreise trägt Weihnachtslook: Lichterkette oben, Schnee hinter den
+  Seiten, Weihnachtsrot als Akzent. In den Einstellungen „Weihnachtslook“:
+  Automatisch, jetzt an oder aus
+  ([`lib/season.ts`](lib/season.ts),
+  [`components/ChristmasDeco.tsx`](components/ChristmasDeco.tsx)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
@@ -643,6 +650,8 @@ Ideen nur für die Gaming-Edition stehen in deren
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden
   („Wer gehörte noch dazu?“) angezeigt werden.
 
+- **Weihnachten in der Stube:** In der Weihnachtszeit könnte die Stube
+  einen Christbaum, einen Adventskranz und Schnee vor dem Fenster bekommen.
 - **Mehr Rezepte in Omas Kochbuch:** Eigene Rezepte der Familie
   hinzufügen (mit Foto aus dem Memory-Labor) und ins Erinnerungsbuch
   übernehmen; das Kochbuch könnte auch als Ecke in der Stube auftauchen.

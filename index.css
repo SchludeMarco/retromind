@@ -2428,3 +2428,99 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .rm-era-note { animation: none; }
   .cozy-era-notes { opacity: 0; }
 }
+
+/* ------------------------------------------------------------------
+   Christmas look (lib/season.ts, components/ChristmasDeco.tsx): from
+   November 1 to January 6, or when switched on in the settings. Fairy
+   lights along the top, soft snow behind the pages, a Christmas red as
+   the accent of every design.
+   ------------------------------------------------------------------ */
+html[data-season="xmas"] {
+  --rm-accent: #b3261e;
+}
+html[data-season="xmas"][data-theme="nachtschicht"] {
+  --rm-accent: #e2574c;
+}
+.xmas-deco {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.xmas-snow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.xmas-snow span {
+  position: absolute;
+  top: -12px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 3px rgb(120 140 170 / 0.6);
+  opacity: 0.85;
+  animation: xmasSnow linear infinite;
+}
+@keyframes xmasSnow {
+  to { transform: translate(var(--drift, 0), 105vh); }
+}
+.xmas-garland {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1200;
+}
+.xmas-lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  z-index: 70;
+}
+.xmas-bulbs {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  z-index: 70;
+}
+.xmas-bulbs span {
+  width: 7px;
+  height: 11px;
+  border-radius: 45% 45% 50% 50%;
+  box-shadow: 0 0 8px currentColor;
+  animation: xmasTwinkle 1.8s ease-in-out infinite alternate;
+}
+.xmas-bulbs span:nth-child(odd) { margin-top: 5px; }
+@keyframes xmasTwinkle {
+  from { opacity: 1; filter: brightness(1.2); }
+  to { opacity: 0.45; filter: brightness(0.8); }
+}
+.cookbook-ribbon.is-xmas:not(.is-active) {
+  background: color-mix(in srgb, #b3261e 12%, var(--color-retro-highlight));
+}
+.cookbook-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rm-space-3);
+  padding: var(--rm-space-8) var(--rm-space-4);
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .xmas-snow span { animation: none; top: auto; }
+  .xmas-snow span:nth-child(3n) { top: 20%; }
+  .xmas-snow span:nth-child(3n + 1) { top: 55%; }
+  .xmas-snow span:nth-child(3n + 2) { top: 85%; }
+  .xmas-bulbs span { animation: none; }
+}
+@media print {
+  .xmas-deco,
+  .xmas-garland { display: none; }
+}

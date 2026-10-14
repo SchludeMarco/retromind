@@ -6,6 +6,7 @@ import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
 import { HeroesSection } from './HeroesSection';
 import { CookbookSection } from './CookbookSection';
+import { useChristmas } from '../lib/season';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
@@ -92,6 +93,7 @@ export const ExplorationPhase: React.FC<{
 }) => {
   const muted = useMuted();
   const warm = useWarmChrome();
+  const christmas = useChristmas();
   // The journey split into "Sparten" (Marco, 2026-10-06): a calm overview
   // of tiles, and only the one tapped opens, when the mood strikes.
   const sparte = openSparte;
@@ -152,6 +154,7 @@ export const ExplorationPhase: React.FC<{
           <span aria-hidden="true" className="text-3xl mb-1">📖</span>
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Grandma’s Cookbook', 'Omas Kochbuch')}</span>
           <span className="text-sm text-retro-brown">{tr('Treats from back then to cook at home', 'Leckereien von damals zum Nachkochen')}</span>
+          {christmas && <span className="text-xs font-semibold text-retro-amber-dark">{tr('🎄 Christmas bakery open', '🎄 Weihnachtsbäckerei geöffnet')}</span>}
         </button>
         <button onClick={() => open('lab')} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📷</span>

@@ -15,6 +15,7 @@ import {
   AiAvailability,
 } from './services/geminiService';
 import { RetroTicker } from './components/RetroTicker';
+import { ChristmasDeco } from './components/ChristmasDeco';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { MusicMini } from './components/MusicMini';
 import { YearWelcome } from './components/YearWelcome';
@@ -739,6 +740,7 @@ const App: React.FC = () => {
     <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
+      <ChristmasDeco />
       {(!warm || showSplash || !verified) && <MuteToggle besideSettings />}
       {(!warm || showSplash || !verified) && (
         // Always in the top-right corner: on the welcome screen in every

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook': {
+    title: 'Christmas time: Grandma’s Christmas bakery and a Christmas look',
+    text: 'From November 1 to January 6, Grandma’s Cookbook opens its Christmas bakery as the first ribbon: vanilla crescents, cinnamon stars, spritz cookies, coconut macaroons, baked apples and a kids’ Christmas punch. Before that, the ribbon shows how many days are left. During that time the whole time journey wears a Christmas look too: glowing fairy lights along the top, softly falling snow behind the pages and Christmas red as the accent color, in all three designs. In the settings you can switch the “Christmas look” on early or turn it off.',
+  },
   'Omas Kochbuch: Leckereien von damals zum Nachkochen': {
     title: 'Grandma’s Cookbook: treats from back then to cook at home',
     text: 'Explore has a new category, “Grandma’s Cookbook”. It opens a recipe book with ribbons for the decades from the ’60s to the 2010s, your own era first. Every decade has two treats, from Hawaiian toast and chocolate biscuit cake to the cheese hedgehog, spaghetti ice cream, cheesecake crumble, muffins and cake pops. Each recipe comes with Grandma’s little story, ingredients you can tick off while you cook, the steps, Grandma’s tip and “Remember: who made this for you?” for your memory book.',

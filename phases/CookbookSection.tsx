@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Recipe, RECIPES, recipeDecades, t } from '../lib/recipes';
+import { Recipe, RECIPES, recipeDecades, t, XMAS, XMAS_RECIPES } from '../lib/recipes';
 import { tr } from '../lib/i18n';
+import { daysUntilChristmasTime, useChristmas } from '../lib/season';
 
 // "Omas Kochbuch" in Erkunden (Marco, 2026-10-14): treats from back then as
 // recipes (lib/recipes.ts). It looks like a worn recipe book: ribbons for the
 // decades (your own first), recipe cards on lined paper, and one recipe open
-// with ingredients you can tick off while you cook.
+// with ingredients you can tick off while you cook. From November 1 the
+// Christmas bakery opens as the first ribbon (lib/season.ts); before that
+// its ribbon shows how many days are left.
 
-const decadeLabel = (d: string) => tr(`${d}s`, `${d}er`);
+const decadeLabel = (d: string) => (d === XMAS ? tr('🎄 Christmas', '🎄 Weihnachten') : tr(`${d}s`, `${d}er`));
+const ALL = [...RECIPES, ...XMAS_RECIPES];
 
 const RecipePage: React.FC<{
   recipe: Recipe;
@@ -84,10 +88,12 @@ export const CookbookSection: React.FC<{
   onRemember: (wordId: string, term: string, knowledge: string, decade: string, fallbackQuestion: string) => void;
   backButton: React.ReactNode;
 }> = ({ focusDecade, isAnswered, onRemember, backButton }) => {
-  const decades = recipeDecades(focusDecade);
-  const [decade, setDecade] = useState(decades[0]);
+  const christmas = useChristmas();
+  const decades = christmas ? [XMAS, ...recipeDecades(focusDecade)] : [...recipeDecades(focusDecade), XMAS];
+  const [picked, setDecade] = useState<string | null>(null);
+  const decade = picked ?? decades[0];
   const [openId, setOpenId] = useState<string | null>(null);
-  const open = RECIPES.find((r) => r.id === openId) ?? null;
+  const open = ALL.find((r) => r.id === openId) ?? null;
   const show = (id: string | null) => {
     setOpenId(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -100,14 +106,16 @@ export const CookbookSection: React.FC<{
         <RecipePage
           recipe={open}
           remembered={isAnswered(id)}
-          onRemember={() => onRemember(id, t(open.title), t(open.story), open.decade, t(open.question))}
+          onRemember={() => onRemember(id, t(open.title), t(open.story), open.decade === XMAS ? focusDecade : open.decade, t(open.question))}
           onBack={() => show(null)}
         />
       </div>
     );
   }
 
-  const recipes = RECIPES.filter((r) => r.decade === decade);
+  const recipes = ALL.filter((r) => r.decade === decade);
+  const bakeryClosed = decade === XMAS && !christmas;
+  const days = daysUntilChristmasTime();
   return (
     <div className="space-y-8">
       <header className="space-y-5">
@@ -134,7 +142,7 @@ export const CookbookSection: React.FC<{
               role="tab"
               aria-selected={d === decade}
               onClick={() => setDecade(d)}
-              className={`cookbook-ribbon ${d === decade ? 'is-active' : ''}`}
+              className={`cookbook-ribbon ${d === decade ? 'is-active' : ''} ${d === XMAS ? 'is-xmas' : ''}`}
             >
               {decadeLabel(d)}
               {d === focusDecade && <span className="sr-only">{tr(' (your era)', ' (deine Zeit)')}</span>}
@@ -144,6 +152,26 @@ export const CookbookSection: React.FC<{
         </div>
         <div className="cookbook-paper" role="tabpanel">
           {decade === focusDecade && <p className="rm-eyebrow mb-4">{tr('★ Your era', '★ Deine Zeit')}</p>}
+          {decade === XMAS && !bakeryClosed && (
+            <p className="cookbook-story mb-5">
+              {tr(
+                'Grandma’s Christmas bakery is open: cookies, sweets and something warm to drink, until January 6.',
+                'Omas Weihnachtsbäckerei hat geöffnet: Plätzchen, Süßes und etwas Warmes zum Trinken, bis zum 6. Januar.'
+              )}
+            </p>
+          )}
+          {bakeryClosed ? (
+            <div className="cookbook-closed">
+              <span aria-hidden="true" className="text-5xl">🔒🍪</span>
+              <p className="cookbook-card-title">{tr('The Christmas bakery opens on November 1', 'Die Weihnachtsbäckerei öffnet am 1. November')}</p>
+              <p className="text-retro-brown">
+                {tr(
+                  `Only ${days} more day${days === 1 ? '' : 's'}. Then Grandma takes out her cookie tins: vanilla crescents, cinnamon stars, spritz cookies and more.`,
+                  `Nur noch ${days} Tag${days === 1 ? '' : 'e'}. Dann holt Oma ihre Plätzchendosen hervor: Vanillekipferl, Zimtsterne, Spritzgebäck und mehr.`
+                )}
+              </p>
+            </div>
+          ) : (
           <div className="grid gap-5 sm:grid-cols-2">
             {recipes.map((r) => (
               <button key={r.id} onClick={() => show(r.id)} className="cookbook-card text-left">
@@ -156,6 +184,7 @@ export const CookbookSection: React.FC<{
               </button>
             ))}
           </div>
+          )}
         </div>
       </div>
     </div>
