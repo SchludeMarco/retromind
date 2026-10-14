@@ -75,10 +75,35 @@ export function createSpotifyEmbedController(
   element: HTMLElement,
   uri: string
 ): Promise<SpotifyEmbedController> {
+  // Spotify replaces the element it is given with its iframe. Handing it the
+  // host itself left a detached host behind, and the next player built on it
+  // (after a Spotify login came or went, or the Spotify app wasn't found)
+  // never appeared: the music hung on "Loading" (Marco, 2026-10-14). So each
+  // player gets its own box inside the host, and destroy() removes that box
+  // (only its own: an older player shut down late leaves a newer one alone).
   return loadSpotifyIframeApi().then(
     (IFrameAPI) =>
-      new Promise((resolve) => {
-        IFrameAPI.createController(element, { uri }, resolve);
+      new Promise((resolve, reject) => {
+        const box = document.createElement('div');
+        const slot = document.createElement('div');
+        box.appendChild(slot);
+        element.appendChild(box);
+        try {
+          IFrameAPI.createController(slot, { uri }, (controller) => {
+            const destroy = controller.destroy.bind(controller);
+            controller.destroy = () => {
+              try {
+                destroy();
+              } finally {
+                box.remove();
+              }
+            };
+            resolve(controller);
+          });
+        } catch (e) {
+          box.remove();
+          reject(e);
+        }
       })
   );
 }

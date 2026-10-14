@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik hängt nicht mehr bei „Lädt …“** (2026-10-14, PR #214): Wurde der
+  Spotify-Player neu aufgebaut (etwa weil dein Spotify-Login nach dem Start
+  dazukam oder die Spotify-App auf dem Handy nicht gefunden wurde), blieb
+  die Musik in der Zeitreise und in der Gaming-Halle bei „Playlist wird
+  geladen“ stehen. Jetzt startet der neue Player wie gewohnt.
+
 - **Mehr Weihnachtslichter und Weihnachtsklänge** (2026-10-14, PR #213): In
   der Weihnachtszeit blinken jetzt viele kleine bunte Lichter hinter den
   Seiten, und die Lichterkette oben hat fast doppelt so viele Lämpchen, die

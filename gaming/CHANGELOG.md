@@ -8,6 +8,12 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Musik hängt nicht mehr bei „Lädt …“** (2026-10-14, PR #214): Wurde der
+  Spotify-Player neu aufgebaut (etwa weil dein Spotify-Login nach dem Start
+  dazukam oder die Spotify-App auf dem Handy nicht gefunden wurde), blieb
+  die Musik in der Zeitreise und in der Gaming-Halle bei „Playlist wird
+  geladen“ stehen. Jetzt startet der neue Player wie gewohnt.
+
 - **Neu laden bleibt auf der Seite** (2026-10-13, PR #202): Wenn du die
   Seite neu lädst, landest du wieder dort, wo du gerade warst, statt auf dem
   Willkommensbildschirm. In der Zeitreise bleibt die offene Etappe, in der
