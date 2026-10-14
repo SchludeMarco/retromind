@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Roter Faden: eine Zeitreise vom Willkommen bis zum Buch': {
+    title: 'One thread: a time travel from the welcome to the book',
+    text: 'The time journey now feels like one journey instead of separate pages. Pressing “Go back...” lets the time machine pull you in: the words and the clock spiral into the dial, rings of light rush to the centre, everything turns to light, and the light opens like an iris. The clock’s ticks race faster and faster, a hum and a rush of air swell, and the gong strikes as you arrive. You then enter your name and birthday on a ticket to your past, in the same dark clock room, instead of a bright form; “Set the clock” sends the hands racing backwards and opens the room onto the living room. Above every stop, in all designs, the same journey bar shows a little clock whose hand points to where you are (“Stop 4 of 7”, with “Explore › Music” when exploring), every stop to tap and the way back; while reading, a slim bar with arrows stays at the top. Every stop ends with “Next stop: …”, and every stop has one name everywhere (“Time Travel” and “Impressions” became “Your era”, the profile is now “Pack your suitcase”). One design system for spacing, edges, shadows, buttons and headings applies to all three designs. In Classic the tube haze is a little sharper, so text is easier to read.',
+  },
   'Neu laden bleibt auf der Seite': {
     title: 'Reloading keeps your page',
     text: 'When you reload the page you land right where you were instead of on the welcome screen. In the time journey the open stage stays; in the gaming hall the hall, tab, filters, search and an open game stay. A new tab or a later visit still begins at the start.',

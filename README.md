@@ -78,8 +78,38 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   kommt. Langsam, mit Pause-Knopf, hält bei Berührung an
   ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
   [`lib/tickerItems.ts`](lib/tickerItems.ts)).
-- **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
-  mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
+- **Geführte Reise in 7 Halten** – `intro → onboarding → induction → exploration → diary → book → finish`
+  (Zuhause, Dein Profil, Deine Zeit, Erkunden, Tagebuch, Erinnerungsbuch,
+  Ankunft). Jeder Halt heißt überall gleich
+  ([`lib/stations.ts`](lib/stations.ts)) und endet mit einem großen Knopf
+  „Nächster Halt: …“ und einem leisen Weg zurück
+  ([`components/PhaseNav.tsx`](components/PhaseNav.tsx)).
+- **Roter Faden: die Uhr führt durch die Reise** – vom Willkommensbildschirm
+  bis zum Erinnerungsbuch ist die Kaminuhr das Leitbild, Stube, Fernseher
+  und Buch begleiten sie nur. Über jedem Halt steht in allen Designs die
+  Reiseleiste: eine kleine Uhr, deren Zeiger auf den aktuellen Halt zeigt,
+  „Halt 4 von 7“ mit Namen, beim Erkunden mit Brotkrumen („Erkunden ›
+  Musik“), die sieben Halte zum Antippen und der Weg zurück. Beim Lesen
+  bleibt oben eine schmale Pille mit Uhr, Halt und Pfeilen zurück und
+  weiter stehen ([`components/JourneyBar.tsx`](components/JourneyBar.tsx)).
+  Ein gemeinsames Design-System (Abstände, Kanten, Schatten, Knöpfe,
+  Überschriften) beschreibt [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md).
+- **Die Zeitmaschine saugt dich ein** – ein Druck auf „Go back...“ zieht
+  Schrift, Knopf und Uhr in einer Spirale ins Zifferblatt, Lichtringe rasen
+  zur Mitte, ein heller Kern wächst, bis alles Licht ist, und dann öffnet
+  sich das Licht von der Mitte her wie eine Blende. Dazu rasen die Ticks der
+  Uhr immer schneller zu einem Surren, ein Brummen steigt auf und eiert immer
+  schneller, ein Luftsog schwillt an, und bei der Ankunft schlägt der Gong.
+  Alles beginnt leise und wird lauter, nie ein Knall, und bleibt still, wenn
+  der Ton aus ist ([`lib/clockSounds.ts`](lib/clockSounds.ts) `playWarp`).
+- **Fahrkarte in die Vergangenheit** – Name und Geburtstag trägt man nicht in
+  ein helles Formular ein, sondern im selben dunklen Uhrenzimmer wie der
+  Willkommensbildschirm („In der Zeitmaschine – Wohin geht die Reise?“) auf
+  eine Papier-Fahrkarte mit Abriss. „Uhr zurückdrehen“ lässt die Zeiger
+  rückwärts rasen, die Ticks werden langsamer bis zu einem kleinen Glöckchen,
+  und das Uhrenzimmer öffnet sich wie eine Blende auf die Stube
+  ([`components/VerifyGate.tsx`](components/VerifyGate.tsx)). Das Profil
+  danach heißt „Pack deinen Koffer“.
 - **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
   ein ramponierter Holzwegweiser „To the gaming zone“ (Schnitte, Brandspuren,
   abgeplatzte Kontur) in Metall-Großbuchstaben im Stil von God of War
@@ -89,13 +119,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Etappen frei wählen** – sobald eine Reise begonnen ist, zeigt die Startseite
   „Deine Etappen“: Profil, Eindrücke, Erkunden, Tagebuch, Erinnerungsbuch und
   Abschluss als Kacheln, jede jederzeit antippbar, die zuletzt besuchte markiert
-  ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Im Design
-  Retro Warm sind auch die Stationen in „Station x von 7“ antippbar.
-- **Stationen-Auswahl unter dem Logo** – in den Designs Klassisch und
-  Nachtschicht steht während der Reise unter dem kleinen Logo eine schmale
-  Leiste „Station x von 7: …“. Erst ein Tipp darauf klappt alle sieben
-  Stationen auf, ein weiterer Tipp springt direkt dorthin
-  ([`components/StationPicker.tsx`](components/StationPicker.tsx)).
+  ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Auch in
+  der Reiseleiste ist jeder Halt antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
   Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
@@ -220,8 +245,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   letzten Blick.
 - **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
   Kaminuhr, die laut und zweimal pro Sekunde tickt. Der „Go back...“-Knopf trägt den Look des
-  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf schlägt einen großen Gong, der
-  Bildschirm wird weiß und geht langsam in die App über. Alles synthetisiert
+  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf startet die
+  Zeitmaschine (siehe oben), bei der Ankunft schlägt ein großer Gong. Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab dem ersten
   Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones);
@@ -232,9 +257,6 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Unter dem Knopf sitzt ein Schalter „Echte Hits deines Jahrzehnts“: Hier
   wird die Musik von Spotify erlaubt, mit kurzem Datenschutz-Hinweis. Wer ihn
   nicht anfasst, wird erst nach dem Namensformular gefragt, nicht mittendrin.
-- **Sanfter Übergang zum Namensformular** – die Kaminuhr vom
-  Willkommensbildschirm schwebt klein über dem Formular ein („Die Uhr ist
-  aufgezogen“), damit dunkler Uhrenraum und helles Formular zusammengehören.
 - **„Deine Zeit“ auf der Startseite** – solange die Reise noch nicht
   begonnen hat, zeigt die Startseite das eigene Jahrzehnt: Titel, sechs
   Stichworte von damals und drei Postkarten zum Öffnen
@@ -258,7 +280,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
     Tonband-Schalter, Feedback, Einstellungen und Konten, untere Navigation (Start,
-    Zeitreise, Musik-Symbol, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
+    Deine Zeit, Musik-Symbol, Erkunden, Erinnerung),
     Startseite mit Jahrzehnt-Überblick (sechs gleich große Knöpfe in zwei
     Reihen, auf dem Handy drei pro Reihe) und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).
@@ -526,6 +548,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Sollte
 
+- **Design-System auf die übrigen Bildschirme übertragen:** Die Halte der
+  Reise, die Reiseleiste und die Fahrkarte nutzen es schon
+  ([`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)); Einstellungen, die
+  Fenster (Erinnerungsfrage, Postkarten, Feedback), die Startseite und die
+  Helden-Seiten haben noch eigene Knopf- und Kartenstile.
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
@@ -539,6 +566,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
+
+- **Jeder Wechsel zwischen den Halten als kleine Zeitreise:** Der Zeiger der
+  Reiseuhr springt sichtbar weiter, ein kurzes Ticken und eine kleine Blende,
+  damit auch „Nächster Halt“ sich wie Weiterreisen anfühlt.
 
 - **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden

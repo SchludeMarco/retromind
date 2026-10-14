@@ -15,11 +15,12 @@ import {
   AiAvailability,
 } from './services/geminiService';
 import { RetroTicker } from './components/RetroTicker';
-import { ProgressBar, Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock, StationPicker } from './components';
+import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
-import { WarmTopBar, WarmBottomNav, WarmJourneyStepper, Icon, NewBadge } from './components/WarmChrome';
+import { WarmTopBar, WarmBottomNav, Icon, NewBadge } from './components/WarmChrome';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -31,6 +32,7 @@ import {
   GalleryDetailModal,
   BuzzwordModal,
 } from './phases';
+import { Sparte, sparteLabel } from './phases/ExplorationPhase';
 import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
@@ -38,7 +40,7 @@ import { useGoogleAuth } from './hooks/useGoogleAuth';
 import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
-import { PHASES, INTEREST_TO_CATEGORY } from './lib/session';
+import { INTEREST_TO_CATEGORY } from './lib/session';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 import { toggleMuted, useMuted } from './lib/mute';
 import { DECADES_DB, INTEREST_LABELS } from './constants';
@@ -99,6 +101,11 @@ const App: React.FC = () => {
   // Gates every phase behind name + birthday. Not stored itself: it is set
   // again on each load as soon as both are known (see the effect below).
   const [verified, setVerified] = useState(false);
+  // The dark room opening onto the app right after the ticket (see render).
+  const [arrival, setArrival] = useState(false);
+  // The open "Sparte" on the Explore stop, lifted here so the journey bar
+  // can show it as a breadcrumb ("Explore › Music").
+  const [exploreSparte, setExploreSparte] = useState<Sparte | null>(null);
   // Set once the person asks to change name/birthday, so the Google shortcut
   // below doesn't skip the form they just opened.
   const [profileEditRequested, setProfileEditRequested] = useState(false);
@@ -123,7 +130,6 @@ const App: React.FC = () => {
     () => new Set(user.interests.map((i) => INTEREST_TO_CATEGORY[i]).filter(Boolean) as BuzzwordCategory[]),
     [user.interests]
   );
-  const phaseIndex = PHASES.indexOf(phase) + 1;
 
   // --- effects ---
   useEffect(() => {
@@ -499,9 +505,9 @@ const App: React.FC = () => {
 
   // --- verification ---
   const handleVerified = (name: string, birthDate: string) => {
-    playSFX('success');
     setUser((prev) => ({ ...prev, name, birthDate }));
     setVerified(true);
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrival(true);
   };
 
   // Once name and birthday are known (saved on this device, from a Drive
@@ -634,8 +640,8 @@ const App: React.FC = () => {
     <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
       <BootOverlay />
       <CrtOverlay />
-      {(!warm || showSplash) && <MuteToggle besideSettings />}
-      {(!warm || showSplash) && (
+      {(!warm || showSplash || !verified) && <MuteToggle besideSettings />}
+      {(!warm || showSplash || !verified) && (
         // Always in the top-right corner: on the welcome screen in every
         // design, and in Classic and Night Shift also while scrolling and
         // before the name form is filled in (Retro Warm has it in its top bar).
@@ -661,7 +667,7 @@ const App: React.FC = () => {
           <span>Feedback</span>
         </button>
       )}
-      {warm && !showSplash && (
+      {warm && !showSplash && verified && (
         <WarmTopBar
           phase={phase}
           showAccount={verified}
@@ -689,13 +695,20 @@ const App: React.FC = () => {
           gets this card once they are through the name form, not in it. */}
       {!showSplash && verified && <MusicConsentBanner />}
 
-      {(!warm || phase === 'intro' || !verified) && <Header compact={verified && phase !== 'intro'} />}
-      {!warm && verified && phase !== 'intro' && (
-        <StationPicker phase={phase} onSelect={(p) => { if (p === 'intro') goHome(); else goTo(p); }} />
+      {verified && (!warm || phase === 'intro') && <Header compact={phase !== 'intro'} />}
+      {/* Coming out of the time machine: the dark clock room opens from the
+          middle onto the app (after "Set the clock" on the ticket). */}
+      {arrival && (
+        <div
+          aria-hidden="true"
+          className="rm-iris-dark rm-night-room rm-iris-open"
+          style={{ animationDuration: '2400ms', animationTimingFunction: 'cubic-bezier(0.45, 0, 0.25, 1)' }}
+          onAnimationEnd={() => setArrival(false)}
+        />
       )}
 
       {toast && (
-        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[70] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
+        <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[95] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
         </div>
       )}
@@ -786,7 +799,14 @@ const App: React.FC = () => {
               }}
             />
           )}
-          {warm && phase !== 'intro' && <WarmJourneyStepper phase={phase} onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }} />}
+          {phase !== 'intro' && (
+            <JourneyBar
+              phase={phase}
+              warm={warm}
+              crumb={phase === 'exploration' && exploreSparte ? { label: sparteLabel(exploreSparte), onUp: () => { playSFX('click'); setExploreSparte(null); window.scrollTo({ top: 0, behavior: 'smooth' }); } } : undefined}
+              onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }}
+            />
+          )}
           {!warm && musicDock}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 
@@ -837,6 +857,7 @@ const App: React.FC = () => {
               onUserChange={setUser}
               onToggleInterest={toggleInterest}
               onSubmit={handleOnboarding}
+              onBack={goHome}
             />
           )}
 
@@ -846,6 +867,7 @@ const App: React.FC = () => {
               birthDate={user.birthDate}
               onSelectGalleryItem={selectGalleryItem}
               onContinue={() => goTo('exploration')}
+              onBack={() => goTo('onboarding')}
             />
           )}
 
@@ -868,6 +890,8 @@ const App: React.FC = () => {
               memoriesCount={memories.length}
               isAnswered={isAnswered}
               onOpenBuzzword={openBuzzword}
+              sparte={exploreSparte}
+              onSparteChange={setExploreSparte}
               onBack={() => goTo('induction')}
               onNext={() => goTo('diary')}
             />
@@ -935,7 +959,6 @@ const App: React.FC = () => {
             />
           )}
 
-          {!warm && <ProgressBar current={phaseIndex} total={PHASES.length} />}
         </>
       )}
       <footer className="no-print relative z-10 mt-12 text-center text-xs text-retro-tan">

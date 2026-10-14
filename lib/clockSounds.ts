@@ -91,8 +91,8 @@ function softClipCurve(): Float32Array {
 // short knock of the wooden case and a ring of the metal. "Tick" sits a
 // little higher than "tock". Kept in the mids (roughly 700 Hz to 3 kHz),
 // because phone and laptop speakers hardly play anything lower.
-export function playBeat(c: BaseAudioContext, high: boolean, dest: AudioNode = c.destination) {
-  const now = c.currentTime;
+export function playBeat(c: BaseAudioContext, high: boolean, dest: AudioNode = c.destination, at = c.currentTime) {
+  const now = at;
   const out = c.createGain();
   out.gain.value = TICK_GAIN;
   // Gentle tape-style saturation: makes the tick louder without ever
@@ -283,4 +283,187 @@ export function buildGong(c: BaseAudioContext, dest: AudioNode): GainNode {
   wash.start(now);
 
   return master;
+}
+
+// --- The time machine (Marco, 2026-10-14: "wenn man den Start-Schalter
+// drückt, soll man das Gefühl haben, dass einen eine Zeitmaschine einsaugt") ---
+//
+// The press winds the clock up: its ticks race faster and faster into a
+// whirr, a rising, wobbling hum and a swelling rush of air pull you in, and
+// at the very end the gong strikes as you come out on the other side. It
+// all starts quietly and grows (a crescendo, never a blast) and stays in the
+// mids for phone speakers, like the clock and the gong.
+
+/** How long the pull lasts before the arrival (the gong, the white light). */
+export const WARP_SECONDS = 2.3;
+
+/** Wires one time-machine pull into `dest`, starting now; returns its master gain. */
+export function buildWarp(c: BaseAudioContext, dest: AudioNode): GainNode {
+  const now = c.currentTime;
+  const end = now + WARP_SECONDS;
+
+  const master = c.createGain();
+  master.gain.value = 1;
+  const limiter = c.createDynamicsCompressor();
+  limiter.threshold.value = -9;
+  limiter.knee.value = 6;
+  limiter.ratio.value = 12;
+  limiter.attack.value = 0.003;
+  limiter.release.value = 0.25;
+  const trim = c.createGain();
+  trim.gain.value = 0.85;
+  master.connect(limiter).connect(trim).connect(dest);
+
+  // The clock races: every tick comes a little sooner than the last.
+  const ticks = c.createGain();
+  ticks.gain.setValueAtTime(0.3, now);
+  ticks.gain.linearRampToValueAtTime(0.7, end - 0.4);
+  ticks.connect(master);
+  let t = now;
+  let gap = 0.24;
+  let high = true;
+  while (t < end - 0.35) {
+    playBeat(c, high, ticks, t);
+    high = !high;
+    t += gap;
+    gap = Math.max(0.028, gap * 0.84);
+  }
+
+  // A rush of air, its colour rising from a low hush to a bright hiss.
+  const air = c.createBufferSource();
+  air.buffer = noiseBuffer(c, WARP_SECONDS + 0.4);
+  const airBand = c.createBiquadFilter();
+  airBand.type = 'bandpass';
+  airBand.Q.value = 1.3;
+  airBand.frequency.setValueAtTime(260, now);
+  airBand.frequency.exponentialRampToValueAtTime(2600, end);
+  const airGain = c.createGain();
+  airGain.gain.setValueAtTime(0.0001, now);
+  airGain.gain.exponentialRampToValueAtTime(1.8, end - 0.08);
+  airGain.gain.exponentialRampToValueAtTime(0.0001, end + 0.25);
+  air.connect(airBand).connect(airGain).connect(master);
+  air.start(now);
+  air.stop(end + 0.35);
+
+  // The machine's hum: two voices sliding up two octaves, wobbling faster
+  // and faster like something spinning up.
+  const hum = c.createGain();
+  hum.gain.setValueAtTime(0.0001, now);
+  hum.gain.exponentialRampToValueAtTime(0.45, end - 0.1);
+  hum.gain.exponentialRampToValueAtTime(0.0001, end + 0.2);
+  const wobble = c.createGain();
+  wobble.gain.value = 0.6;
+  const lfo = c.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.setValueAtTime(3, now);
+  lfo.frequency.exponentialRampToValueAtTime(22, end);
+  const lfoDepth = c.createGain();
+  lfoDepth.gain.value = 0.4;
+  lfo.connect(lfoDepth).connect(wobble.gain);
+  hum.connect(wobble).connect(master);
+  [
+    { type: 'triangle' as OscillatorType, from: 196, to: 784, amp: 1 },
+    { type: 'triangle' as OscillatorType, from: 199, to: 796, amp: 0.8 },
+    { type: 'sine' as OscillatorType, from: 392, to: 1568, amp: 0.35 },
+  ].forEach((v) => {
+    const osc = c.createOscillator();
+    osc.type = v.type;
+    osc.frequency.setValueAtTime(v.from, now);
+    osc.frequency.exponentialRampToValueAtTime(v.to, end);
+    const g = c.createGain();
+    g.gain.value = v.amp;
+    osc.connect(g).connect(hum);
+    osc.start(now);
+    osc.stop(end + 0.3);
+  });
+  lfo.start(now);
+  lfo.stop(end + 0.3);
+
+  return master;
+}
+
+/**
+ * The start button's sound: the time machine pulls you in, and the gong
+ * strikes as you arrive (after WARP_SECONDS). The welcome screen's bus may
+ * still be rising from silence (lib/startupFade) when someone presses start
+ * early; the pull lifts it to at least a gentle level, since this sound is
+ * one the visitor asked for, and it still swells up from quiet.
+ */
+export function playWarp() {
+  if (isMuted()) return;
+  const c = audioContext();
+  if (!c) return;
+  c.resume().catch(() => {});
+  if (bus) {
+    const now = c.currentTime;
+    const level = bus.gain.value;
+    if (level < 0.7) {
+      bus.gain.cancelScheduledValues(now);
+      bus.gain.setValueAtTime(level, now);
+      bus.gain.linearRampToValueAtTime(0.7, now + 1.2);
+      bus.gain.linearRampToValueAtTime(1, now + 6);
+    }
+  }
+  const master = buildWarp(c, bus ?? c.destination);
+  const unsubscribe = subscribeMuted(() => {
+    if (!isMuted()) return;
+    const t = c.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(0, t + 0.15);
+  });
+  window.setTimeout(() => {
+    unsubscribe();
+    master.disconnect();
+  }, (WARP_SECONDS + 1) * 1000);
+  window.setTimeout(playGong, WARP_SECONDS * 1000);
+}
+
+/** How long the clock takes to turn back on the name form. */
+export const REWIND_SECONDS = 1.4;
+
+/**
+ * "Set the clock" on the name form: the hands run backwards, the ticks
+ * rattle down from a whirr to a stop, and a soft chime marks the arrival.
+ */
+export function buildRewind(c: BaseAudioContext, dest: AudioNode): GainNode {
+  const now = c.currentTime;
+  const end = now + REWIND_SECONDS;
+  const master = c.createGain();
+  master.gain.value = 0.8;
+  master.connect(dest);
+  let t = now;
+  let gap = 0.03;
+  let high = false;
+  while (t < end - 0.2) {
+    playBeat(c, high, master, t);
+    high = !high;
+    t += gap;
+    gap = Math.min(0.2, gap * 1.13);
+  }
+  // A small bell at the arrival, high and short.
+  [1046, 1568, 2093].forEach((f, i) => {
+    const osc = c.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = f;
+    const g = c.createGain();
+    const at = end - 0.05;
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.linearRampToValueAtTime([0.35, 0.18, 0.08][i], at + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + 1.6);
+    osc.connect(g).connect(master);
+    osc.start(now);
+    osc.stop(at + 1.7);
+  });
+  return master;
+}
+
+export function playRewind() {
+  if (isMuted()) return;
+  const c = audioContext();
+  if (!c) return;
+  c.resume().catch(() => {});
+  const master = buildRewind(c, bus ?? c.destination);
+  window.setTimeout(() => master.disconnect(), (REWIND_SECONDS + 2) * 1000);
 }

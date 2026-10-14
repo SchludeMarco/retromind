@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppPhase } from '../types';
 import { tr } from '../lib/i18n';
+import { STATION_NAME } from '../lib/stations';
 import { BOOK_GOAL, bookPages } from './BookProgress';
 
 // The journey as free "Etappen" (Marco, 2026-10-06): once a journey has
@@ -10,12 +11,12 @@ import { BOOK_GOAL, bookPages } from './BookProgress';
 export type Stage = { phase: AppPhase; icon: string; label: string; text: string };
 
 export const STAGES: Stage[] = [
-  { phase: 'onboarding', icon: '🙋', label: tr('Your Profile', 'Dein Profil'), text: tr('Name, interests and favorite music', 'Name, Interessen und Lieblingsmusik') },
-  { phase: 'induction', icon: '🎞️', label: tr('Impressions', 'Eindrücke'), text: tr('Pictures and sounds of your time', 'Bilder und Klänge deiner Zeit') },
-  { phase: 'exploration', icon: '🧭', label: tr('Explore', 'Erkunden'), text: tr('Categories to browse and remember', 'Sparten zum Stöbern und Erinnern') },
-  { phase: 'diary', icon: '✍️', label: tr('Diary', 'Tagebuch'), text: tr('Your thoughts in your own words', 'Deine Gedanken in eigenen Worten') },
-  { phase: 'book', icon: '📖', label: tr('Memory Book', 'Erinnerungsbuch'), text: tr('Everything collected, to read and print', 'Alles gesammelt, zum Lesen und Drucken') },
-  { phase: 'finish', icon: '🏁', label: tr('Wrap-Up', 'Abschluss'), text: tr('Bring the journey to a festive close', 'Die Reise feierlich beenden') },
+  { phase: 'onboarding', icon: '🙋', label: STATION_NAME.onboarding, text: tr('Name, interests and favorite music', 'Name, Interessen und Lieblingsmusik') },
+  { phase: 'induction', icon: '🎞️', label: STATION_NAME.induction, text: tr('Pictures and sounds of your time', 'Bilder und Klänge deiner Zeit') },
+  { phase: 'exploration', icon: '🧭', label: STATION_NAME.exploration, text: tr('Categories to browse and remember', 'Sparten zum Stöbern und Erinnern') },
+  { phase: 'diary', icon: '✍️', label: STATION_NAME.diary, text: tr('Your thoughts in your own words', 'Deine Gedanken in eigenen Worten') },
+  { phase: 'book', icon: '📖', label: STATION_NAME.book, text: tr('Everything collected, to read and print', 'Alles gesammelt, zum Lesen und Drucken') },
+  { phase: 'finish', icon: '🏁', label: STATION_NAME.finish, text: tr('Bring the journey to a festive close', 'Die Reise feierlich beenden') },
 ];
 
 export const JourneyStages: React.FC<{

@@ -107,3 +107,15 @@ gebaut oder ausgeliefert.
 - `IntroPhase-konten-kaesten.tsx.txt`: die Anmelde-Kästen für Google und
   Spotify auf der Startseite der Zeitreise (entfernt am 2026-10-13). Beide
   Anmeldungen stehen jetzt in den Einstellungen unter „Konten (freiwillig)“.
+- `StationPicker-stationswahl.tsx.txt`, `ProgressBar-fortschrittslinie.tsx.txt`
+  und `WarmJourneyStepper-stationen.tsx.txt`: die drei verschiedenen
+  Fortschrittsanzeigen der Zeitreise (aufklappbare Stationswahl in Klassisch
+  und Nachtschicht, dünne Linie am unteren Rand, Stationsleiste in Retro
+  Warm; entfernt am 2026-10-14). Ersetzt durch die eine Reiseleiste mit Uhr
+  in `components/JourneyBar.tsx`, in allen Designs gleich.
+- `VerifyGate-helles-formular.tsx.txt`: das helle Formular für Name und
+  Geburtstag (entfernt am 2026-10-14). Jetzt eine Fahrkarte in die
+  Vergangenheit im dunklen Uhrenzimmer.
+- `SplashScreen-gong-weiss.tsx.txt`: der Willkommensbildschirm mit Gong und
+  weißer Blende beim Start (ersetzt am 2026-10-14 durch den Sog der
+  Zeitmaschine, der Gong schlägt jetzt bei der Ankunft).

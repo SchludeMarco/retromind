@@ -7,6 +7,29 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Roter Faden: eine Zeitreise vom Willkommen bis zum Buch**
+  (2026-10-14, PR #205): Die Zeitreise fühlt sich jetzt wie eine Reise an,
+  nicht wie lauter einzelne Seiten. Ein Druck auf „Go back...“ lässt dich von
+  der Zeitmaschine einsaugen: Schrift und Uhr drehen sich in einer Spirale
+  ins Zifferblatt, Lichtringe rasen zur Mitte, alles wird Licht, und das
+  Licht öffnet sich wie eine Blende. Dazu rasen die Ticks immer schneller,
+  ein Brummen und ein Luftsog schwellen an, und bei der Ankunft schlägt der
+  Gong. Name und Geburtstag trägst du danach im selben dunklen Uhrenzimmer
+  auf eine Fahrkarte in die Vergangenheit ein, statt in ein helles Formular;
+  „Uhr zurückdrehen“ lässt die Zeiger rückwärts rasen und öffnet das Zimmer
+  auf die Stube. Über jedem Halt steht in allen Designs dieselbe Reiseleiste
+  mit einer kleinen Uhr, deren Zeiger zeigt, wo du bist („Halt 4 von 7“,
+  beim Erkunden mit „Erkunden › Musik“), alle Halte zum Antippen und dem
+  Weg zurück; beim Lesen bleibt oben eine schmale Leiste mit Pfeilen. Jeder
+  Halt endet mit „Nächster Halt: …“, und jeder Halt heißt überall gleich
+  (aus „Zeitreise“ und „Eindrücke“ wurde „Deine Zeit“, das Profil heißt
+  „Pack deinen Koffer“). Ein gemeinsames Design-System für Abstände, Kanten,
+  Schatten, Knöpfe und Überschriften gilt für alle drei Designs. Im Design
+  Klassisch ist der Röhren-Schleier etwas schärfer, damit Text besser lesbar
+  ist. Die alte Stationswahl, die Fortschrittslinie, die Retro-Warm-Leiste,
+  das helle Formular und der weiße Gong-Übergang liegen in
+  `_removed_content/`.
+
 - **Entwicklung: Gaming-CHANGELOG aktualisiert sich von selbst**
   (2026-10-14, PR #204): Nach jeder Änderung an der CHANGELOG.md erzeugt
   GitHub die Gaming-CHANGELOG automatisch neu und speichert sie. Dieser

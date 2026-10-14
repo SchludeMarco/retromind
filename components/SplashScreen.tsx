@@ -1,16 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MantelClock } from './MantelClock';
-import { startTicking, playGong } from '../lib/clockSounds';
+import { startTicking, playWarp, WARP_SECONDS } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
 import { LoudSign } from './LoudSign';
 import { tr } from '../lib/i18n';
 import { PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 
-// After the start button: the screen turns white with the gong's strike,
-// stays white for a breath, then slowly gives way to the app underneath.
-const WHITE_IN_MS = 180;
-const WHITE_HOLD_MS = 900;
-const FADE_MS = 3200;
+// After the start button the time machine pulls you in (Marco, 2026-10-14):
+// everything spirals into the clock's face while rings rush towards its
+// centre (WARP_MS), a bright light swallows the screen as the gong strikes
+// (FLASH_MS), and the light opens from the middle like an iris onto what
+// lies on the other side, the time machine's ticket or the living room
+// (IRIS_MS). The sound to it is lib/clockSounds playWarp.
+const WARP_MS = WARP_SECONDS * 1000;
+const FLASH_MS = 320;
+const IRIS_MS = 1700;
+// Without motion: a calm fade through the light instead.
+const CALM_WARP_MS = 500;
 // How long the "the clock is running" note stays after the first tap.
 const HEARD_NOTE_MS = 6000;
 
@@ -24,7 +30,8 @@ const HEARD_NOTE_MS = 6000;
 // begins there), onStart once the splash is gone.
 export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void }> = ({ onStart, onReveal }) => {
   const [struck, setStruck] = useState(false);
-  const [fading, setFading] = useState(false);
+  // 'warp' while being pulled in, 'flash' in the light, 'iris' while it opens.
+  const [stage, setStage] = useState<'idle' | 'warp' | 'flash' | 'iris'>('idle');
   const [waitingForTouch, setWaitingForTouch] = useState(false);
   // After the tap that unlocks sound, a short note pulses with every tick, so
   // the tap gets a visible answer even on a phone set to silent.
@@ -64,25 +71,39 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
   const handleStart = () => {
     if (struck) return;
     setStruck(true);
-    playGong();
+    setStage('warp');
+    playWarp();
+    const warp = reduceMotion ? CALM_WARP_MS : WARP_MS;
+    setTimeout(() => setStage('flash'), warp);
     setTimeout(() => {
-      setFading(true);
+      setStage('iris');
       onReveal?.();
-      setTimeout(onStart, FADE_MS);
-    }, WHITE_IN_MS + WHITE_HOLD_MS);
+    }, warp + FLASH_MS);
+    setTimeout(onStart, warp + FLASH_MS + IRIS_MS);
   };
 
   return (
     <div
-      className={`fixed inset-0 z-[900] flex flex-col items-center justify-center text-center px-6 bg-[radial-gradient(ellipse_at_center,_#241708_0%,_#120b05_55%,_#040302_100%)] ${
+      className={`splash-screen fixed inset-0 z-[900] overflow-hidden ${stage === 'iris' ? '' : 'rm-night-room'} ${
         struck ? 'pointer-events-none' : 'animate-fadeIn'
-      }`}
-      style={fading ? { animation: `fadeOut ${FADE_MS}ms ease-in-out forwards` } : undefined}
+      } ${stage === 'warp' && !reduceMotion ? 'is-warping' : ''}`}
     >
+      {stage !== 'iris' && (
+      <>
       <div className="grainy-bg" />
       <div className="mantel-clock-wrapper absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-60 pointer-events-none">
-        <MantelClock className="w-full h-full" />
+        <MantelClock className="w-full h-full" rewinding={stage === 'warp'} />
       </div>
+      {stage === 'warp' && !reduceMotion && (
+        <div aria-hidden="true" className="splash-vortex">
+          <div className="splash-swirl" />
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <span key={i} className="splash-ring" style={{ animationDelay: `${i * 0.16}s` }} />
+          ))}
+          <div className="splash-core" />
+        </div>
+      )}
+      <div className="splash-content relative h-full flex flex-col items-center justify-center text-center px-6">
       <h1 className="splash-title relative font-display text-5xl md:text-7xl font-bold text-retro-paper tracking-wide mb-6">
         Welcome to <span className="text-red-600">R</span>etro<span className="text-red-600">M</span>ind
       </h1>
@@ -139,11 +160,18 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
           </a>
         </p>
       </div>
-      {struck && (
+      </div>
+      </>
+      )}
+      {(stage === 'flash' || stage === 'iris' || (stage === 'warp' && reduceMotion)) && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 pointer-events-none"
-          style={{ background: '#fff', animation: `splashWhiteIn ${reduceMotion ? 400 : WHITE_IN_MS}ms ease-out forwards` }}
+          className={`rm-time-light fixed inset-0 pointer-events-none ${stage === 'iris' ? 'rm-iris-open' : ''}`}
+          style={
+            stage === 'iris'
+              ? { animationDuration: `${IRIS_MS}ms` }
+              : { animation: `splashWhiteIn ${reduceMotion ? CALM_WARP_MS : FLASH_MS}ms ease-out forwards` }
+          }
         />
       )}
     </div>

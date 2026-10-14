@@ -4,6 +4,7 @@ import { INTEREST_LABELS } from '../constants';
 import { tr, LOCALE } from '../lib/i18n';
 import { BookProgress } from '../components/BookProgress';
 import { useWarmChrome } from '../lib/theme';
+import { PhaseNav } from '../components/PhaseNav';
 
 export const BookPhase: React.FC<{
   user: UserProfile;
@@ -84,14 +85,7 @@ export const BookPhase: React.FC<{
         </button>
         <input ref={importInputRef} type="file" accept="application/json" className="hidden" onChange={onImportSession} />
       </div>
-      <div className="no-print flex flex-wrap gap-3 justify-center mt-3">
-        <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white text-sm">
-          {tr('← Back', '← Zurück')}
-        </button>
-        <button onClick={onNext} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white text-sm">
-          {tr('Finish the journey', 'Reise abschließen')}
-        </button>
-      </div>
+      <PhaseNav back={{ to: 'diary', onClick: onBack }} next={{ to: 'finish', onClick: onNext }} />
     </div>
   );
 };
