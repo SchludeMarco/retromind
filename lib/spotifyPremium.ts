@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { getMusicVolume, onMusicVolume, setMusicVolume } from './musicVolume';
 import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyEmbed';
+import { connectOff, createConnectController } from './spotifyConnect';
 
 // Spotify's own browser player (Web Playback SDK) for visitors signed in with
 // Spotify Premium (Marco, 2026-10-07: "Die Musik sollte langsam immer lauter
@@ -24,6 +25,8 @@ type TokenSource = () => Promise<string | null>;
 // a Premium account with the "streaming" permission is signed in.
 
 let tokenSource: TokenSource | null = null;
+// The permissions the login granted (the Spotify-app player needs one more).
+let tokenScope = '';
 const listeners = new Set<() => void>();
 // The browser player failed on this device (no sound came, Spotify refused
 // to play there): the embed takes over for the rest of the visit.
@@ -45,9 +48,10 @@ export function giveUpPremium(reason: string): boolean {
   return true;
 }
 
-export function setPremiumTokenSource(source: TokenSource | null) {
-  if (source === tokenSource) return;
+export function setPremiumTokenSource(source: TokenSource | null, scope = '') {
+  if (source === tokenSource && scope === tokenScope) return;
   tokenSource = source;
+  tokenScope = scope;
   listeners.forEach((l) => l());
 }
 
@@ -62,6 +66,20 @@ export function usePremiumPlayback(): boolean {
   );
 }
 
+/**
+ * true while a Premium login can play through the visitor's Spotify app
+ * (lib/spotifyConnect): phones and tablets, where the browser player can't.
+ */
+export function useConnectPlayback(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => !!tokenSource && !sdkSupported()
+  );
+}
+
 // Spotify supports the Web Playback SDK only in desktop browsers: on
 // iPhone/iPad it doesn't start, and on Android it connects but stays silent
 // (Marco, 2026-10-07: no music on his Android in the gaming hall).
@@ -72,13 +90,25 @@ function sdkSupported(): boolean {
   return !iOS && !/Android/i.test(ua);
 }
 
-/** The Premium browser player when available, otherwise the embed. */
-export async function createSpotifyController(host: HTMLElement, uri: string): Promise<SpotifyEmbedController> {
+/**
+ * The Premium browser player when available, otherwise the embed. With
+ * `connect` (the Zeitreise), phones with a Premium login play through the
+ * visitor's Spotify app instead (lib/spotifyConnect) when it is there.
+ */
+export async function createSpotifyController(
+  host: HTMLElement,
+  uri: string,
+  options: { connect?: boolean } = {}
+): Promise<SpotifyEmbedController> {
   const source = tokenSource;
   if (source && sdkSupported() && !broken) {
     const premium = await createPremiumController(source, uri);
     if (premium) return premium;
   }
+  if (options.connect && source && !sdkSupported()) {
+    const app = await createConnectController(source, tokenScope, uri);
+    if (app) return app;
+  } else if (options.connect) connectOff();
   return createSpotifyEmbedController(host, uri);
 }
 

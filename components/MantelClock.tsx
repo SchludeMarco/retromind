@@ -34,12 +34,14 @@ const ticks = Array.from({ length: 60 }, (_, i) => {
 // Purely decorative background watermark (aria-hidden). Hands start at the
 // classic "ten past ten" pose and then drift on, slowly and not to real
 // time — this is meant to feel a little uncanny, not tell the hour.
-export const MantelClock: React.FC<{ className?: string }> = ({ className }) => {
+// `rewinding` makes the hands race backwards (the time machine at work, see
+// .mc-rewinding in index.css).
+export const MantelClock: React.FC<{ className?: string; rewinding?: boolean }> = ({ className, rewinding = false }) => {
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
-    <svg aria-hidden="true" viewBox="0 0 320 220" className={className}>
+    <svg aria-hidden="true" viewBox="0 0 320 220" className={`${className ?? ''}${rewinding ? ' mc-rewinding' : ''}`}>
       <defs>
         <linearGradient id="mc-wood" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#3a2414" />
@@ -124,6 +126,7 @@ export const MantelClock: React.FC<{ className?: string }> = ({ className }) => 
 
       {/* hands: start at "ten past ten", then drift on slowly and
           continuously — not tracking real time on purpose */}
+      <g className="mc-hand mc-hour">
       <g transform={`translate(${FACE_CX} ${FACE_CY})`}>
         <g>
           {!reduceMotion && (
@@ -132,6 +135,8 @@ export const MantelClock: React.FC<{ className?: string }> = ({ className }) => 
           <line x1="0" y1="0" x2="0" y2="-45" transform="rotate(-60)" stroke="#e8d9a8" strokeWidth="4" strokeLinecap="round" />
         </g>
       </g>
+      </g>
+      <g className="mc-hand mc-minute">
       <g transform={`translate(${FACE_CX} ${FACE_CY})`}>
         <g>
           {!reduceMotion && (
@@ -139,6 +144,7 @@ export const MantelClock: React.FC<{ className?: string }> = ({ className }) => 
           )}
           <line x1="0" y1="0" x2="0" y2="-62" transform="rotate(60)" stroke="#e8d9a8" strokeWidth="3" strokeLinecap="round" />
         </g>
+      </g>
       </g>
       <circle cx={FACE_CX} cy={FACE_CY} r="4" fill="#caa869" stroke="#5a4520" strokeWidth="0.5" />
 

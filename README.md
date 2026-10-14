@@ -78,8 +78,38 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   kommt. Langsam, mit Pause-Knopf, hält bei Berührung an
   ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
   [`lib/tickerItems.ts`](lib/tickerItems.ts)).
-- **Geführte Reise in 7 Phasen** – `intro → onboarding → induction → exploration → diary → book → finish`
-  mit Fortschrittsanzeige und freier Navigation zwischen den Phasen.
+- **Geführte Reise in 7 Halten** – `intro → onboarding → induction → exploration → diary → book → finish`
+  (Zuhause, Dein Profil, Deine Zeit, Erkunden, Tagebuch, Erinnerungsbuch,
+  Ankunft). Jeder Halt heißt überall gleich
+  ([`lib/stations.ts`](lib/stations.ts)) und endet mit einem großen Knopf
+  „Nächster Halt: …“ und einem leisen Weg zurück
+  ([`components/PhaseNav.tsx`](components/PhaseNav.tsx)).
+- **Roter Faden: die Uhr führt durch die Reise** – vom Willkommensbildschirm
+  bis zum Erinnerungsbuch ist die Kaminuhr das Leitbild, Stube, Fernseher
+  und Buch begleiten sie nur. Über jedem Halt steht in allen Designs die
+  Reiseleiste: eine kleine Uhr, deren Zeiger auf den aktuellen Halt zeigt,
+  „Halt 4 von 7“ mit Namen, beim Erkunden mit Brotkrumen („Erkunden ›
+  Musik“), die sieben Halte zum Antippen und der Weg zurück. Beim Lesen
+  bleibt oben eine schmale Pille mit Uhr, Halt und Pfeilen zurück und
+  weiter stehen ([`components/JourneyBar.tsx`](components/JourneyBar.tsx)).
+  Ein gemeinsames Design-System (Abstände, Kanten, Schatten, Knöpfe,
+  Überschriften) beschreibt [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md).
+- **Die Zeitmaschine saugt dich ein** – ein Druck auf „Go back...“ zieht
+  Schrift, Knopf und Uhr in einer Spirale ins Zifferblatt, Lichtringe rasen
+  zur Mitte, ein heller Kern wächst, bis alles Licht ist, und dann öffnet
+  sich das Licht von der Mitte her wie eine Blende. Dazu rasen die Ticks der
+  Uhr immer schneller zu einem Surren, ein Brummen steigt auf und eiert immer
+  schneller, ein Luftsog schwillt an, und bei der Ankunft schlägt der Gong.
+  Alles beginnt leise und wird lauter, nie ein Knall, und bleibt still, wenn
+  der Ton aus ist ([`lib/clockSounds.ts`](lib/clockSounds.ts) `playWarp`).
+- **Fahrkarte in die Vergangenheit** – Name und Geburtstag trägt man nicht in
+  ein helles Formular ein, sondern im selben dunklen Uhrenzimmer wie der
+  Willkommensbildschirm („In der Zeitmaschine – Wohin geht die Reise?“) auf
+  eine Papier-Fahrkarte mit Abriss. „Uhr zurückdrehen“ lässt die Zeiger
+  rückwärts rasen, die Ticks werden langsamer bis zu einem kleinen Glöckchen,
+  und das Uhrenzimmer öffnet sich wie eine Blende auf die Stube
+  ([`components/VerifyGate.tsx`](components/VerifyGate.tsx)). Das Profil
+  danach heißt „Pack deinen Koffer“.
 - **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
   ein ramponierter Holzwegweiser „To the gaming zone“ (Schnitte, Brandspuren,
   abgeplatzte Kontur) in Metall-Großbuchstaben im Stil von God of War
@@ -89,13 +119,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Etappen frei wählen** – sobald eine Reise begonnen ist, zeigt die Startseite
   „Deine Etappen“: Profil, Eindrücke, Erkunden, Tagebuch, Erinnerungsbuch und
   Abschluss als Kacheln, jede jederzeit antippbar, die zuletzt besuchte markiert
-  ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Im Design
-  Retro Warm sind auch die Stationen in „Station x von 7“ antippbar.
-- **Stationen-Auswahl unter dem Logo** – in den Designs Klassisch und
-  Nachtschicht steht während der Reise unter dem kleinen Logo eine schmale
-  Leiste „Station x von 7: …“. Erst ein Tipp darauf klappt alle sieben
-  Stationen auf, ein weiterer Tipp springt direkt dorthin
-  ([`components/StationPicker.tsx`](components/StationPicker.tsx)).
+  ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Auch in
+  der Reiseleiste ist jeder Halt antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
   Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
@@ -129,6 +154,16 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Playlist, ohne sie fängt sie wie früher oben an) – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
+  Mit Spotify-Login kommen die Songs aus den eigenen Jahren: Für die Jahre
+  des Jahrzehnts, in denen man 6 bis 19 war, sucht die App je eine
+  „Hits <Jahr>“-Playlist und mischt ihre Songs; der Player zeigt dann
+  „Hits von 1983–1989“ ([`lib/youthMusic.ts`](lib/youthMusic.ts)). Ohne
+  Login bleibt es bei der Dekaden-Playlist. Ganze Songs statt
+  30-Sekunden-Ausschnitten gibt es mit Spotify Premium: am Computer über
+  Spotifys Browser-Player, auf dem Handy über die eigene Spotify-App
+  (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
+  Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
+  außer man ist im selben Browser bei Spotify angemeldet.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten rechts
@@ -176,9 +211,18 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Zeitreise und Gaming-Halle) über Spotifys eigenen Browser-Player
   ([`lib/spotifyPremium.ts`](lib/spotifyPremium.ts), Web Playback SDK): ganze
   Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
-  6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf Handy und Tablet (iPhone, iPad, Android)
-  oder wenn Spotifys Player nicht startet, bleibt es beim eingebetteten
-  Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
+  6 Sekunden langsam lauter. Auf Handy und Tablet (iPhone, iPad, Android),
+  wo Spotify seinen Browser-Player nicht unterstützt, spielt die Zeitreise
+  mit Premium über die **eigene Spotify-App** (Spotify Connect,
+  [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts)): ganze Songs, die App
+  spielt sie, RetroMind steuert Song, Pause, Weiter und Zurück und fragt alle
+  2 Sekunden ab, was läuft. Findet sie keine Spotify-App (sie muss offen
+  oder kurz vorher offen gewesen sein), zeigt der Musik-Player „Öffne kurz
+  die Spotify-App … Nochmal versuchen“; Logins von vor dieser Funktion
+  bitten einmal um eine neue Anmeldung (Erlaubnis
+  `user-read-playback-state`). Beim Verlassen der Seite hält die App an.
+  Ohne Premium, ohne Anmeldung oder wenn Spotifys Player nicht startet,
+  bleibt es beim eingebetteten Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
   das Abspielen ab oder es bleibt still), übernimmt nach spätestens etwa
   10 Sekunden von selbst der eingebettete Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
   „Hallenmusik“. Ohne konfigurierte Spotify-Client-ID bleibt der Button
@@ -220,8 +264,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   letzten Blick.
 - **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
   Kaminuhr, die laut und zweimal pro Sekunde tickt. Der „Go back...“-Knopf trägt den Look des
-  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf schlägt einen großen Gong, der
-  Bildschirm wird weiß und geht langsam in die App über. Alles synthetisiert
+  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf startet die
+  Zeitmaschine (siehe oben), bei der Ankunft schlägt ein großer Gong. Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab dem ersten
   Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones);
@@ -232,9 +276,6 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Unter dem Knopf sitzt ein Schalter „Echte Hits deines Jahrzehnts“: Hier
   wird die Musik von Spotify erlaubt, mit kurzem Datenschutz-Hinweis. Wer ihn
   nicht anfasst, wird erst nach dem Namensformular gefragt, nicht mittendrin.
-- **Sanfter Übergang zum Namensformular** – die Kaminuhr vom
-  Willkommensbildschirm schwebt klein über dem Formular ein („Die Uhr ist
-  aufgezogen“), damit dunkler Uhrenraum und helles Formular zusammengehören.
 - **„Deine Zeit“ auf der Startseite** – solange die Reise noch nicht
   begonnen hat, zeigt die Startseite das eigene Jahrzehnt: Titel, sechs
   Stichworte von damals und drei Postkarten zum Öffnen
@@ -258,7 +299,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
     Tonband-Schalter, Feedback, Einstellungen und Konten, untere Navigation (Start,
-    Zeitreise, Musik-Symbol, Erkunden, Erinnerung), Reise-Fortschritt „Station x von 7“,
+    Deine Zeit, Musik-Symbol, Erkunden, Erinnerung),
     Startseite mit Jahrzehnt-Überblick (sechs gleich große Knöpfe in zwei
     Reihen, auf dem Handy drei pro Reihe) und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).
@@ -392,8 +433,10 @@ Code + PKCE (kein Client-Secret nötig, dafür ein voller Seiten-Redirect zu
 Popup-/Silent-Renewal-API anbietet). Der Access-Token bleibt im Speicher; nur
 der Refresh-Token landet in `localStorage`, sonst könnte man nach einem Reload
 nicht ohne erneuten Consent-Screen angemeldet bleiben. Abgefragt werden nur
-Name, E-Mail und Premium-/Free-Status (`GET /v1/me`) – keine Höraktivität,
-keine Playlists.
+Name, E-Mail und Premium-/Free-Status (`GET /v1/me`), keine Playlists. Nur
+mit Premium auf dem Handy fragt die Zeitreise zusätzlich ab, welche
+Spotify-Geräte es gibt und was gerade läuft (`user-read-playback-state`), um
+die Musik über die Spotify-App zu spielen; gespeichert wird davon nichts.
 
 ## Tech-Stack
 
@@ -477,7 +520,9 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 - **Spotify-Einblenden nur mit Premium:** Der eingebettete Spotify-Player
   bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
   Premium-Anmeldung am Computer: auf Handy und Tablet (iPhone, iPad, Android)
-  unterstützt Spotify seinen Browser-Player nicht.
+  unterstützt Spotify seinen Browser-Player nicht. Dort spielt die Zeitreise
+  ganze Songs über die Spotify-App, deren Lautstärke aber die des Handys ist.
+  Die Gaming-Halle nutzt die Spotify-App noch nicht.
 
 ## Pflege dieses Repos
 
@@ -526,6 +571,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Sollte
 
+- **Design-System auf die übrigen Bildschirme übertragen:** Die Halte der
+  Reise, die Reiseleiste und die Fahrkarte nutzen es schon
+  ([`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)); Einstellungen, die
+  Fenster (Erinnerungsfrage, Postkarten, Feedback), die Startseite und die
+  Helden-Seiten haben noch eigene Knopf- und Kartenstile.
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
@@ -539,6 +589,10 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
+
+- **Jeder Wechsel zwischen den Halten als kleine Zeitreise:** Der Zeiger der
+  Reiseuhr springt sichtbar weiter, ein kurzes Ticken und eine kleine Blende,
+  damit auch „Nächster Halt“ sich wie Weiterreisen anfühlt.
 
 - **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden

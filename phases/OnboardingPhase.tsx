@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import { INTEREST_LABELS, GENDER_LABELS } from '../constants';
 import { tr } from '../lib/i18n';
+import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
 // Stored values stay German (ids, see lib/session.ts INTEREST_TO_CATEGORY);
 // only the labels are translated.
@@ -13,7 +14,8 @@ export const OnboardingPhase: React.FC<{
   onUserChange: (user: UserProfile) => void;
   onToggleInterest: (interest: string) => void;
   onSubmit: (e: React.FormEvent) => void;
-}> = ({ user, onUserChange, onToggleInterest, onSubmit }) => {
+  onBack: () => void;
+}> = ({ user, onUserChange, onToggleInterest, onSubmit, onBack }) => {
   const [artistDraft, setArtistDraft] = useState('');
 
   const addArtist = () => {
@@ -32,7 +34,14 @@ export const OnboardingPhase: React.FC<{
   return (
   <div className="py-8 animate-fadeIn">
     <div className="retro-card p-6 md:p-12 bg-retro-cream">
-      <h2 className="text-3xl mb-8 border-b-2 border-retro-ink pb-2">{tr('Tell us more about yourself', 'Erzähl uns mehr von dir')}, {user.name || tr('time traveler', 'Zeitreisende:r')}</h2>
+      <StopHeader
+        eyebrow={tr('Before we set off', 'Vor der Abfahrt')}
+        title={tr(`Pack your suitcase, ${user.name || 'time traveler'}`, `Pack deinen Koffer, ${user.name || 'Zeitreisende:r'}`)}
+        lead={tr(
+          'What you take along makes the questions on the way more personal. Everything here is optional.',
+          'Was du mitnimmst, macht die Fragen unterwegs persönlicher. Alles hier ist freiwillig.'
+        )}
+      />
       <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div>
@@ -115,11 +124,11 @@ export const OnboardingPhase: React.FC<{
             )}
           </div>
         </div>
-        <div className="md:col-span-2 text-right pt-2">
-          <button type="submit" className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-            {tr('Next', 'Weiter')}
-          </button>
-        </div>
+        <PhaseNav
+          className="md:col-span-2 !mt-2"
+          back={{ to: 'intro', onClick: onBack }}
+          next={{ to: 'induction', onClick: () => {}, type: 'submit' }}
+        />
       </form>
     </div>
   </div>

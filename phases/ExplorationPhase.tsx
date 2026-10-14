@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
 import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
 import { HeroesSection } from './HeroesSection';
+import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
   music: { icon: '🎵', label: tr('Music', 'Musik') },
@@ -13,6 +14,16 @@ const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
   lifestyle: { icon: '👗', label: tr('Everyday Life & Fashion', 'Alltag & Mode') },
   food: { icon: '🍬', label: tr('Snacks & Food', 'Naschen & Essen') },
 };
+
+// The "Sparten" of the Explore stop: the five kinds of things, the heroes and the photo lab.
+export type Sparte = BuzzwordCategory | 'lab' | 'heroes';
+
+/** The name of a Sparte, for the breadcrumb in the journey bar. */
+export function sparteLabel(s: Sparte): string {
+  if (s === 'lab') return tr('Photo Lab', 'Foto-Labor');
+  if (s === 'heroes') return tr('Heroes of your youth', 'Helden deiner Jugend');
+  return CATEGORY[s].label;
+}
 
 const AiNotice: React.FC<{ aiOff: boolean }> = ({ aiOff }) =>
   aiOff ? (
@@ -48,6 +59,9 @@ export const ExplorationPhase: React.FC<{
   memoriesCount: number;
   isAnswered: (id: string) => boolean;
   onOpenBuzzword: (wordId: string, term: string, knowledge: string, decade: string, fallbackQuestion: string) => void;
+  /** The open Sparte (null: the tile overview), kept in App.tsx. */
+  sparte: Sparte | null;
+  onSparteChange: (s: Sparte | null) => void;
   onBack: () => void;
   onNext: () => void;
 }> = ({
@@ -68,6 +82,8 @@ export const ExplorationPhase: React.FC<{
   memoriesCount,
   isAnswered,
   onOpenBuzzword,
+  sparte: openSparte,
+  onSparteChange,
   onBack,
   onNext,
 }) => {
@@ -75,10 +91,9 @@ export const ExplorationPhase: React.FC<{
   const warm = useWarmChrome();
   // The journey split into "Sparten" (Marco, 2026-10-06): a calm overview
   // of tiles, and only the one tapped opens, when the mood strikes.
-  type Sparte = BuzzwordCategory | 'lab' | 'heroes';
-  const [sparte, setSparte] = useState<Sparte | null>(uploadedImage ? 'lab' : null);
+  const sparte = openSparte;
   const open = (next: Sparte | null) => {
-    setSparte(next);
+    onSparteChange(next);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -101,15 +116,13 @@ export const ExplorationPhase: React.FC<{
 
   const overview = (
     <div className="space-y-8">
-      <header className="space-y-3">
-        <h2 className="text-3xl md:text-4xl">{tr('What are you in the mood for?', 'Worauf hast du Lust?')}</h2>
-        <p className="text-retro-brown leading-relaxed max-w-prose">
-          {tr(
-            'Pick a category. Inside you’ll find things from your era and the decades around it.',
-            'Such dir eine Sparte aus. Darin findest du Dinge aus deiner Zeit und den Jahrzehnten drumherum.'
-          )}
-        </p>
-      </header>
+      <StopHeader
+        title={tr('What are you in the mood for?', 'Worauf hast du Lust?')}
+        lead={tr(
+          'Pick a category. Inside you’ll find things from your era and the decades around it.',
+          'Such dir eine Sparte aus. Darin findest du Dinge aus deiner Zeit und den Jahrzehnten drumherum.'
+        )}
+      />
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((cat) => {
           const words = allWords.filter((w) => w.category === cat);
@@ -342,14 +355,7 @@ export const ExplorationPhase: React.FC<{
     )}
     {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparteView(sparte)}
 
-    <div className="flex flex-wrap justify-center gap-4 pt-6">
-      <button onClick={onBack} className="px-6 py-3 border-2 border-retro-ink font-bold bg-white">
-        {tr('← Back to the impressions', '← Zu den Impressionen')}
-      </button>
-      <button onClick={onNext} className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-        {tr('On to the diary', 'Weiter zum Tagebuch')} ({memoriesCount})
-      </button>
-    </div>
+    <PhaseNav back={{ to: 'induction', onClick: onBack }} next={{ to: 'diary', onClick: onNext }} />
   </div>
 );
 };

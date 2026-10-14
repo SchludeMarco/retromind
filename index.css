@@ -668,6 +668,355 @@ html[data-ticker] .rm-back-to-top {
   }
 }
 
+/* ------------------------------------------------------------------
+   RetroMind design system (docs/DESIGN-SYSTEM.md, Marco 2026-10-14:
+   "ein klares Design-System … auf allen Screens konsistent").
+   One set of tokens for shape, depth and spacing; every design fills them
+   with its own character (Classic: ink outlines and hard shadows, Retro
+   Warm: soft rounded paper, Night Shift: ink outlines with a tube glow).
+   Colours stay the --color-retro-* tokens above.
+   ------------------------------------------------------------------ */
+:root {
+  --rm-radius-card: 0px;
+  --rm-radius-control: 0px;
+  --rm-border-w: 2px;
+  --rm-border-color: var(--color-retro-ink);
+  --rm-shadow-card: 8px 8px 0 var(--rm-shadow, var(--color-retro-ink));
+  --rm-shadow-float: 4px 4px 0 var(--rm-shadow, var(--color-retro-ink));
+  --rm-space-1: 0.25rem;
+  --rm-space-2: 0.5rem;
+  --rm-space-3: 0.75rem;
+  --rm-space-4: 1rem;
+  --rm-space-6: 1.5rem;
+  --rm-space-8: 2rem;
+  --rm-space-12: 3rem;
+  --rm-accent: var(--color-retro-amber-dark);
+}
+@media screen {
+  html[data-theme="retro-warm"] {
+    --rm-radius-card: 1rem;
+    --rm-radius-control: 9999px;
+    --rm-border-w: 1px;
+    --rm-border-color: var(--rm-line);
+    --rm-shadow-card: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 3px 10px rgba(120, 70, 30, 0.08), 0 1px 2px rgba(120, 70, 30, 0.06);
+    --rm-shadow-float: 0 6px 18px rgba(120, 70, 30, 0.16);
+  }
+  html[data-theme="nachtschicht"] {
+    --rm-shadow-card: 8px 8px 0 #000, 0 0 22px rgba(245, 158, 11, 0.08);
+    --rm-shadow-float: 4px 4px 0 #000, 0 0 16px rgba(245, 158, 11, 0.12);
+  }
+}
+/* Type: a small label above, one clear title, a calm lead. */
+.rm-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-retro-tan);
+  line-height: 1.3;
+}
+.rm-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 5.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.rm-lead {
+  color: var(--color-retro-brown);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+/* The stop's header (components/StopHeader): label, title, lead. */
+.rm-stop-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-2);
+  margin-bottom: var(--rm-space-8);
+}
+.rm-stop-header.is-center {
+  align-items: center;
+  text-align: center;
+}
+/* Buttons: one primary per screen (the next step), quiet secondaries. */
+.rm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rm-space-2);
+  min-height: 48px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 700;
+  border-radius: var(--rm-radius-control);
+}
+.rm-btn-secondary {
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  background: var(--color-retro-paper-white);
+  color: var(--color-retro-ink);
+}
+.rm-btn-secondary:hover {
+  background: var(--color-retro-highlight);
+}
+/* "Next stop" at the end of every stop (components/PhaseNav). */
+.rm-phase-nav {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rm-space-4);
+  margin-top: var(--rm-space-12);
+  padding-top: var(--rm-space-6);
+  border-top: 1px dashed color-mix(in srgb, var(--color-retro-ink) 25%, transparent);
+}
+.rm-phase-nav.is-solo {
+  justify-content: center;
+}
+.rm-next {
+  flex-direction: column;
+  gap: 0;
+  padding: 0.7rem 2rem;
+  line-height: 1.25;
+}
+.rm-next-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.rm-next-label {
+  font-size: 1.15rem;
+}
+@media (max-width: 479px) {
+  .rm-phase-nav > * {
+    flex: 1 1 100%;
+  }
+}
+
+/* The journey bar (components/JourneyBar). */
+.rm-journey {
+  position: relative;
+  z-index: 1;
+  padding: var(--rm-space-4);
+  background: var(--color-retro-paper-white);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-float);
+}
+.rm-journey-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.rm-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rm-crumbs li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.rm-crumb-link {
+  color: var(--rm-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+}
+.rm-crumb-sep {
+  color: var(--color-retro-tan);
+}
+.rm-journey-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 0 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-control);
+  background: var(--color-retro-cream);
+  color: var(--color-retro-ink);
+  flex-shrink: 0;
+}
+.rm-journey-back:hover {
+  background: var(--color-retro-highlight);
+}
+.rm-journey-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin: var(--rm-space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* The track behind the stops, filled up to the current one. */
+.rm-journey-line::before,
+.rm-journey-line::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: calc(100% / 14);
+  height: 3px;
+  border-radius: 9999px;
+}
+.rm-journey-line::before {
+  right: calc(100% / 14);
+  background: color-mix(in srgb, var(--color-retro-ink) 15%, transparent);
+}
+.rm-journey-line::after {
+  width: calc(100% / 7 * 6 * var(--rm-progress, 0));
+  background: var(--rm-accent);
+}
+.rm-stop {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 44px;
+}
+.rm-stop-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 2px solid var(--rm-border-color);
+  background: var(--color-retro-paper-white);
+  color: var(--color-retro-tan);
+}
+.rm-stop.is-done .rm-stop-dot {
+  background: var(--rm-accent);
+  border-color: var(--rm-accent);
+  color: var(--color-retro-paper-white);
+}
+.rm-stop.is-now .rm-stop-dot {
+  background: var(--color-retro-amber);
+  border-color: var(--color-retro-amber);
+  color: var(--color-retro-paper-white);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-retro-amber) 30%, transparent);
+  transform: scale(1.12);
+}
+.rm-stop-label {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--color-retro-brown);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rm-stop.is-now .rm-stop-label {
+  overflow: visible;
+  font-weight: 700;
+  color: var(--color-retro-ink);
+}
+@media (max-width: 479px) {
+  .rm-stop:not(.is-now) .rm-stop-label {
+    visibility: hidden;
+  }
+}
+/* Classic and Night Shift: white text on the light amber is too weak. */
+html:not([data-theme="retro-warm"]) .rm-stop.is-now .rm-stop-dot {
+  background: var(--color-retro-amber-dark);
+  border-color: var(--color-retro-amber-dark);
+}
+html[data-theme="nachtschicht"] .rm-stop.is-done .rm-stop-dot,
+html[data-theme="nachtschicht"] .rm-stop.is-now .rm-stop-dot {
+  color: #17100b;
+}
+/* The little clock on the bar: brass rim, paper face, the hand on the stop. */
+.rm-jc-rim { fill: #c9a25a; stroke: #6b4f22; stroke-width: 1; }
+.rm-jc-face { fill: #fffaf0; stroke: #8a6a3f; stroke-width: 0.6; }
+.rm-jc-done { fill: var(--rm-accent); }
+.rm-jc-now { fill: #d95d39; }
+.rm-jc-todo { fill: #cbb89a; }
+.rm-jc-hand { transform-origin: 24px 24px; transition: transform 0.9s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.rm-jc-hand line { stroke: #2c1810; }
+.rm-jc-pin { fill: #2c1810; }
+html[data-theme="nachtschicht"] .rm-jc-face { fill: #2b1e14; }
+html[data-theme="nachtschicht"] .rm-jc-hand line { stroke: #f3e3c3; }
+html[data-theme="nachtschicht"] .rm-jc-pin { fill: #f3e3c3; }
+/* The slim pill at the top while scrolling. */
+.rm-journey-mini {
+  position: fixed;
+  left: 50%;
+  top: 3.6rem;
+  z-index: 55;
+  width: min(30rem, calc(100vw - 1.5rem));
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: color-mix(in srgb, var(--color-retro-paper-white) 94%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: 9999px;
+  box-shadow: var(--rm-shadow-float);
+  transform: translate(-50%, -140%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.rm-journey-mini.is-warm {
+  top: calc(4rem + 10px);
+}
+.rm-journey-mini.is-shown {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.rm-mini-arrow {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--color-retro-ink);
+}
+.rm-mini-arrow:hover:not(:disabled) {
+  background: var(--color-retro-highlight);
+}
+.rm-mini-arrow:disabled {
+  opacity: 0.25;
+}
+.rm-mini-mid {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-retro-ink);
+}
+.rm-mini-count {
+  color: var(--color-retro-tan);
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-journey-mini, .rm-jc-hand { transition: none; }
+}
+
 /* Larger base size for readability; the in-app A/A+/A++ control scales from here. */
 html {
   font-size: 18px;
@@ -708,8 +1057,8 @@ h1, h2, h3, .retro-serif {
     ),
     radial-gradient(ellipse at center, transparent 45%, rgba(44, 24, 16, 0.34) 100%);
   mix-blend-mode: multiply;
-  -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
-  backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+  backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   animation: crt-flicker 6.5s ease-in-out infinite;
 }
 @keyframes crt-flicker {
@@ -717,24 +1066,24 @@ h1, h2, h3, .retro-serif {
     opacity: 1;
     transform: translateY(0);
     filter: none;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
-    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   }
   44.7% {
     opacity: 0.62;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.4) contrast(1.25) brightness(1.55);
-    backdrop-filter: blur(1.2px) saturate(0.4) contrast(1.25) brightness(1.55);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.4) contrast(1.25) brightness(1.55);
+    backdrop-filter: blur(0.5px) saturate(0.4) contrast(1.25) brightness(1.55);
   }
   45.4% {
     opacity: 1;
     transform: translateY(3px);
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
-    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   }
   92.3% {
     opacity: 0.5;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.5) contrast(1.3) brightness(1.5);
-    backdrop-filter: blur(1.2px) saturate(0.5) contrast(1.3) brightness(1.5);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.5) contrast(1.3) brightness(1.5);
+    backdrop-filter: blur(0.5px) saturate(0.5) contrast(1.3) brightness(1.5);
   }
   92.6% {
     opacity: 1;
@@ -754,18 +1103,18 @@ h1, h2, h3, .retro-serif {
     opacity: 1;
     transform: translateY(0);
     filter: none;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
-    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   }
   97%, 97.15% {
     opacity: 0.55;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
-    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
+    backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1.8);
   }
   97.3% {
     opacity: 1;
-    -webkit-backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
-    backdrop-filter: blur(1.2px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    -webkit-backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
+    backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   }
 }
 .retro-card {
@@ -1055,6 +1404,267 @@ html[data-theme="nachtschicht"] .splash-start:active {
 @keyframes splashWhiteIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* The dark clock room: the welcome screen and the time machine's ticket
+   (components/VerifyGate.tsx) share it, so the two feel like one place. */
+.rm-night-room {
+  background: radial-gradient(ellipse at center, #241708 0%, #120b05 55%, #040302 100%);
+}
+
+/* The time machine (Marco, 2026-10-14): pressing start pulls everything
+   into the clock's face. The words and the clock spiral inwards, rings of
+   light rush towards the centre, a swirl turns faster and faster, and a
+   bright core grows until it fills the screen (components/SplashScreen). */
+.splash-screen.is-warping .splash-content {
+  transform-origin: 50% 50%;
+  animation: splashSuck 2.3s cubic-bezier(0.55, 0, 0.85, 0.3) forwards;
+}
+@keyframes splashSuck {
+  0% { transform: none; filter: none; opacity: 1; }
+  12% { transform: scale(1.04) rotate(-4deg); filter: none; opacity: 1; }
+  100% { transform: scale(0.02) rotate(720deg); filter: blur(5px); opacity: 0.15; }
+}
+.splash-screen.is-warping .mantel-clock-wrapper {
+  animation: clockSuck 2.3s cubic-bezier(0.5, 0, 0.9, 0.4) forwards;
+}
+@keyframes clockSuck {
+  0% { transform: translate(-50%, -50%) perspective(1000px) rotateX(32deg) rotateY(-16deg); opacity: 0.6; }
+  20% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) perspective(1000px) rotateX(0deg) rotateY(0deg) rotate(-540deg) scale(0.04); opacity: 1; }
+}
+.splash-vortex {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.splash-swirl {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 170vmax;
+  height: 170vmax;
+  margin: -85vmax 0 0 -85vmax;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(4, 3, 2, 0) 0%, rgba(4, 3, 2, 0) 18%, rgba(4, 3, 2, 0.85) 62%),
+    repeating-conic-gradient(from 0deg, rgba(232, 168, 56, 0) 0deg 11deg, rgba(232, 168, 56, 0.22) 13deg 16deg, rgba(232, 168, 56, 0) 18deg 24deg);
+  animation: splashSwirl 2.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+@keyframes splashSwirl {
+  0% { transform: rotate(0deg) scale(1.3); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: rotate(-1260deg) scale(0.6); opacity: 1; }
+}
+.splash-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  margin: -75vmax 0 0 -75vmax;
+  border-radius: 50%;
+  border: 3px solid rgba(240, 196, 120, 0.7);
+  box-shadow: 0 0 24px rgba(232, 168, 56, 0.55), inset 0 0 24px rgba(232, 168, 56, 0.4);
+  opacity: 0;
+  animation: splashRing 0.95s cubic-bezier(0.5, 0, 1, 1) infinite;
+}
+@keyframes splashRing {
+  0% { transform: scale(1); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: scale(0.02); opacity: 0.2; }
+}
+.splash-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40vmax;
+  height: 40vmax;
+  margin: -20vmax 0 0 -20vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffaf0 0%, #ffe4a8 30%, rgba(232, 168, 56, 0.55) 55%, rgba(232, 168, 56, 0) 72%);
+  transform: scale(0);
+  animation: splashCore 2.3s cubic-bezier(0.7, 0, 1, 0.6) forwards;
+}
+@keyframes splashCore {
+  0%, 50% { transform: scale(0); }
+  100% { transform: scale(4.5); }
+}
+/* The light everyone comes out of: warm white, not paper white. */
+.rm-time-light {
+  background: #fff7e8;
+}
+/* An iris opening from the middle of the screen. Where a browser can't
+   animate the hole (no @property), the light still fades away. */
+@property --rm-iris {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+.rm-iris-open {
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--rm-iris), #000 calc(var(--rm-iris) + 90px));
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--rm-iris), #000 calc(var(--rm-iris) + 90px));
+  animation-name: rmIrisOpen;
+  animation-duration: 1.6s;
+  animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+  animation-fill-mode: forwards;
+}
+@keyframes rmIrisOpen {
+  0% { --rm-iris: 0px; opacity: 1; }
+  75% { opacity: 1; }
+  100% { --rm-iris: 110vmax; opacity: 0; }
+}
+/* The arrival after the ticket: the dark clock room opens the same way. */
+.rm-iris-dark {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  pointer-events: none;
+}
+/* The ticket to your past (components/VerifyGate.tsx), in the dark clock
+   room in every design: a warm paper ticket with notched sides and a
+   perforated stub, its colours fixed like the welcome screen's. The button
+   on the stub is the welcome screen's start button (.splash-start), so it
+   wears the chosen design. */
+.rm-gate {
+  color: #f1dfb8;
+}
+.rm-gate-eyebrow {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c9ab78;
+}
+.rm-gate-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 2.75rem);
+  line-height: 1.1;
+  margin: 0.4rem 0 0.9rem;
+  color: #f7ecd6;
+  text-shadow: 0 0 22px rgba(217, 119, 6, 0.45);
+}
+.rm-gate-lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e4cfa6;
+  margin-bottom: 1.75rem;
+}
+.rm-ticket {
+  position: relative;
+  background: #f6e8c8;
+  color: #2c1810;
+  border-radius: 0.6rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 171, 120, 0.6) inset;
+  -webkit-mask:
+    radial-gradient(circle 0.85rem at 0 calc(100% - 5.25rem), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 0.85rem at 100% calc(100% - 5.25rem), transparent 98%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 0.85rem at 0 calc(100% - 5.25rem), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 0.85rem at 100% calc(100% - 5.25rem), transparent 98%, #000) right / 51% 100% no-repeat;
+  transform: rotate(-1deg);
+  transition: transform 0.4s ease;
+}
+.rm-ticket.is-stamped {
+  transform: rotate(0deg) scale(0.98);
+}
+.rm-ticket-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem 0.7rem;
+  border-bottom: 2px solid #2c1810;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a3a1a;
+}
+.rm-ticket-body {
+  padding: 1.1rem 1.25rem 1.4rem;
+}
+.rm-ticket-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5b4636;
+  margin-bottom: 0.3rem;
+}
+.rm-ticket-input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  font-size: 1.05rem;
+  color: #2c1810;
+  background: #fffaf0;
+  border: 2px solid #2c1810;
+  border-radius: 0.4rem;
+  color-scheme: light;
+}
+.rm-ticket-input:focus {
+  outline: 3px solid #d97706;
+  outline-offset: 1px;
+}
+.rm-ticket-note {
+  padding: 0.6rem;
+  border: 1px dashed #8a6a3f;
+  border-radius: 0.4rem;
+}
+.rm-ticket-stub {
+  height: 5.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 2px dashed rgba(44, 24, 16, 0.55);
+  margin: 0 0.9rem;
+}
+.rm-gate-start {
+  font-size: 1.2rem !important;
+  padding: 0.8rem 2.2rem !important;
+}
+.rm-gate-cloud {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(201, 171, 120, 0.4);
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  color: #e4cfa6;
+}
+.rm-gate-secondary {
+  min-height: 44px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  border: 1.5px solid #c9ab78;
+  color: #f7ecd6;
+  font-weight: 700;
+  background: transparent;
+}
+.rm-gate-secondary:hover {
+  background: rgba(201, 171, 120, 0.15);
+}
+.rm-gate-secondary:disabled {
+  opacity: 0.6;
+}
+
+/* The clock's hands race backwards while the time machine runs. */
+.mc-hand {
+  transform-box: view-box;
+  transform-origin: 135px 110px;
+}
+.mc-rewinding .mc-minute {
+  animation: mcRewind 0.35s linear infinite;
+}
+.mc-rewinding .mc-hour {
+  animation: mcRewind 2.1s linear infinite;
+}
+@keyframes mcRewind {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-rewinding .mc-hand { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

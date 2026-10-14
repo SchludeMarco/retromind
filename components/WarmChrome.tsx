@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppPhase } from '../types';
-import { PHASES } from '../lib/session';
+import { STATION_NAME } from '../lib/stations';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { tr } from '../lib/i18n';
 
@@ -110,25 +110,8 @@ export const NewBadge: React.FC = () => (
   </span>
 );
 
-export const PHASE_LABEL: Record<AppPhase, string> = {
-  intro: 'Start',
-  onboarding: tr('Your Profile', 'Dein Profil'),
-  induction: tr('Time Travel', 'Zeitreise'),
-  exploration: tr('Explore', 'Erkunden'),
-  diary: tr('Diary', 'Tagebuch'),
-  book: tr('Memory Book', 'Erinnerungsbuch'),
-  finish: tr('Done', 'Geschafft'),
-};
-
-const STEP_LABEL: Record<AppPhase, string> = {
-  intro: 'Start',
-  onboarding: tr('Profile', 'Profil'),
-  induction: tr('Impressions', 'Eindrücke'),
-  exploration: tr('Explore', 'Erkunden'),
-  diary: tr('Diary', 'Tagebuch'),
-  book: tr('Book', 'Buch'),
-  finish: tr('End', 'Ende'),
-};
+// The stop names live in lib/stations.ts (one name per stop everywhere).
+export const PHASE_LABEL = STATION_NAME;
 
 export const WarmTopBar: React.FC<{
   phase: AppPhase;
@@ -198,9 +181,9 @@ export const WarmTopBar: React.FC<{
 type NavTarget = 'intro' | 'induction' | 'exploration' | 'book';
 
 const NAV: { target: NavTarget; label: string; icon: IconName; phases: AppPhase[] }[] = [
-  { target: 'intro', label: 'Start', icon: 'start', phases: ['intro', 'onboarding'] },
-  { target: 'induction', label: tr('Time Travel', 'Zeitreise'), icon: 'journey', phases: ['induction'] },
-  { target: 'exploration', label: tr('Explore', 'Erkunden'), icon: 'explore', phases: ['exploration'] },
+  { target: 'intro', label: STATION_NAME.intro, icon: 'start', phases: ['intro', 'onboarding'] },
+  { target: 'induction', label: STATION_NAME.induction, icon: 'journey', phases: ['induction'] },
+  { target: 'exploration', label: STATION_NAME.exploration, icon: 'explore', phases: ['exploration'] },
   { target: 'book', label: tr('Memories', 'Erinnerung'), icon: 'book', phases: ['diary', 'book', 'finish'] },
 ];
 
@@ -236,53 +219,3 @@ export const WarmBottomNav: React.FC<{ phase: AppPhase; onNavigate: (target: Nav
     </div>
   </nav>
 );
-
-// Every station is a button, so the journey can be walked in any order.
-export const WarmJourneyStepper: React.FC<{ phase: AppPhase; onSelect: (p: AppPhase) => void }> = ({ phase, onSelect }) => {
-  const index = PHASES.indexOf(phase);
-  const percent = Math.round((index / (PHASES.length - 1)) * 100);
-  return (
-    <section aria-label={tr('Journey progress', 'Fortschritt der Reise')} className="rounded-2xl bg-retro-highlight/70 p-4 md:p-5 mt-4">
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <p className="font-semibold leading-snug">
-          {tr(`Stop ${index + 1} of ${PHASES.length}`, `Station ${index + 1} von ${PHASES.length}`)}: {PHASE_LABEL[phase]}
-        </p>
-        <p className="text-sm text-retro-brown whitespace-nowrap">{tr(`${percent}% done`, `${percent} % geschafft`)}</p>
-      </div>
-      <div className="h-1.5 rounded-full bg-[#e6dac8] overflow-hidden mb-4">
-        <div className="h-full bg-retro-amber-dark rounded-full transition-all duration-500" style={{ width: `${percent}%` }} />
-      </div>
-      <ol className="grid grid-cols-7 gap-1">
-        {PHASES.map((p, i) => {
-          const done = i < index;
-          const current = i === index;
-          return (
-            <li key={p}>
-              <button
-                onClick={() => onSelect(p)}
-                aria-current={current ? 'step' : undefined}
-                aria-label={tr(`Stop ${i + 1}: ${PHASE_LABEL[p]}`, `Station ${i + 1}: ${PHASE_LABEL[p]}`)}
-                className="w-full flex flex-col items-center gap-1 text-center"
-              >
-              <span
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                  done
-                    ? 'bg-retro-amber-dark text-white'
-                    : current
-                    ? 'bg-retro-amber text-white ring-4 ring-[#e8a838]/60'
-                    : 'bg-[#eee0d6] text-retro-tan'
-                }`}
-              >
-                {done ? <Icon name="check" className="w-4 h-4" /> : i + 1}
-              </span>
-              <span className={`hidden sm:block text-[11px] leading-tight ${current ? 'font-bold text-retro-amber-dark' : 'text-retro-brown'}`}>
-                {STEP_LABEL[p]}
-              </span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
-    </section>
-  );
-};

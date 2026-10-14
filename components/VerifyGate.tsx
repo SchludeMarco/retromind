@@ -4,9 +4,15 @@ import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { warmUpGoogle } from '../lib/googleAuth';
 import { tr } from '../lib/i18n';
 import { MantelClock } from './MantelClock';
+import { playRewind, REWIND_SECONDS } from '../lib/clockSounds';
 
 // The very first thing anyone does once past the splash: tell RetroMind their
-// name and birthday, so the right decades and questions show up. Everything
+// name and birthday, so the right decades and questions show up. Since
+// 2026-10-14 (Marco: "die Form soll sich wie Teil der Zeitreise anfühlen")
+// this is no web form on a light page any more: you come out of the welcome
+// screen's light inside the time machine, in the same dark clock room, and
+// fill in a ticket to your past. "Set the clock" turns the hands back, and
+// the room opens onto the app (the iris in App.tsx). Everything
 // stays on this device (localStorage). Signing in with Google is optional: it
 // prefills the form and backs the journey up to the person's own Google Drive,
 // so it can be picked up again on another device.
@@ -46,98 +52,119 @@ export const VerifyGate: React.FC<{
     if (initialBirthDate) setBirthDate((d) => d || initialBirthDate);
   }, [initialBirthDate]);
 
+  const [rewinding, setRewinding] = useState(false);
+  const reduceMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !birthDate) return;
-    onVerified(name.trim(), birthDate);
+    if (rewinding || !name.trim() || !birthDate) return;
+    if (reduceMotion) {
+      onVerified(name.trim(), birthDate);
+      return;
+    }
+    setRewinding(true);
+    playRewind();
+    window.setTimeout(() => onVerified(name.trim(), birthDate), REWIND_SECONDS * 1000);
   };
 
+  const year = birthDate ? birthDate.slice(0, 4) : '';
+
   return (
-    <div className="flex flex-col items-center py-10 text-center animate-fadeIn">
-      <div className="retro-card p-8 md:p-12 max-w-lg bg-retro-cream">
-        {/* The mantel clock from the welcome screen comes along, small, so
-            the dark clock room and this light form feel like one journey. */}
-        <div className="w-36 aspect-[320/220] mx-auto -mt-2 mb-3">
-          {revealed && <MantelClock className="verify-clock w-full h-full" />}
+    <div className="rm-gate rm-night-room fixed inset-0 z-[80] overflow-y-auto text-center">
+      <div className="grainy-bg" />
+      <div className="relative max-w-md mx-auto px-5 pt-20 pb-16 flex flex-col items-center">
+        {/* The mantel clock from the welcome screen, now close up. */}
+        <div className="w-52 aspect-[320/220] -mb-2">
+          {revealed && <MantelClock className={`w-full h-full ${rewinding ? '' : 'verify-clock'}`} rewinding={rewinding} />}
         </div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-retro-tan mb-1">
-          {tr('The clock is wound', 'Die Uhr ist aufgezogen')}
-        </p>
-        <h2 className="text-3xl mb-6">{tr('Come on in, make yourself at home', 'Komm rein, mach es dir gemütlich')}</h2>
-        <p className="text-lg mb-8 leading-relaxed">
+        <p className="rm-gate-eyebrow">{tr('Inside the time machine', 'In der Zeitmaschine')}</p>
+        <h2 className="rm-gate-title">{tr('Where shall we travel?', 'Wohin geht die Reise?')}</h2>
+        <p className="rm-gate-lead">
           {tr(
-            'Tell us your name and your birthday, and we’ll pick out the decades and questions that are yours. Your details stay with you, on this device.',
-            'Verrätst du uns deinen Namen und deinen Geburtstag? Dann suchen wir die Jahrzehnte und Fragen heraus, die zu dir gehören. Deine Angaben bleiben bei dir, auf diesem Gerät.'
+            'Your name and your birthday set the clock. It takes you to the decades of your childhood and youth. Your details stay with you, on this device.',
+            'Dein Name und dein Geburtstag stellen die Uhr. Sie bringt dich in die Jahrzehnte deiner Kindheit und Jugend. Deine Angaben bleiben bei dir, auf diesem Gerät.'
           )}
         </p>
 
-        <form onSubmit={handleSubmit} className="text-left space-y-4">
-          {googleStatus === 'signed_in' && googleUser && (
-            <div className="flex items-center gap-3 border-2 border-retro-ink bg-white p-3">
-              {googleUser.picture && (
-                <img
-                  src={googleUser.picture}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  className="w-10 h-10 rounded-full border border-retro-ink shrink-0"
-                />
-              )}
-              <p className="font-bold text-sm">
-                {tr(
-                  `☁️ Signed in as ${googleUser.name}: your journey is also backed up to your Google Drive.`,
-                  `☁️ Angemeldet als ${googleUser.name}: deine Reise wird zusätzlich in deinem Google Drive gesichert.`
+        <form onSubmit={handleSubmit} className={`rm-ticket w-full text-left ${rewinding ? 'is-stamped' : ''}`}>
+          <div className="rm-ticket-head">
+            <span>{tr('Ticket to your past', 'Fahrkarte in deine Vergangenheit')}</span>
+            <span aria-hidden="true">Nº {year || '····'}</span>
+          </div>
+          <div className="rm-ticket-body space-y-4">
+            {googleStatus === 'signed_in' && googleUser && (
+              <div className="flex items-center gap-3 rm-ticket-note">
+                {googleUser.picture && (
+                  <img
+                    src={googleUser.picture}
+                    alt=""
+                    referrerPolicy="no-referrer"
+                    className="w-9 h-9 rounded-full shrink-0"
+                  />
                 )}
-              </p>
-            </div>
-          )}
-          <div>
-            <label htmlFor="rm-verify-name" className="block text-sm font-bold uppercase mb-1">Name</label>
-            <input
-              id="rm-verify-name"
-              required
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border-2 border-retro-ink p-3 bg-white"
-              placeholder={tr('What should we call you?', 'Wie wirst du genannt?')}
-            />
-          </div>
-          <div>
-            <label htmlFor="rm-verify-birth" className="block text-sm font-bold uppercase mb-1">{tr('Date of birth', 'Geburtsdatum')}</label>
-            <input
-              id="rm-verify-birth"
-              required
-              type="date"
-              min="1930-01-01"
-              max={maxBirthDate}
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full border-2 border-retro-ink p-3 bg-white"
-            />
-            {birthdayHint && birthDate === birthdayHint && (
-              <p className="text-xs text-retro-brown mt-1">{tr('Taken from your Google account – adjust if needed.', 'Aus deinem Google-Konto übernommen – bei Bedarf anpassen.')}</p>
+                <p className="text-sm font-semibold">
+                  {tr(
+                    `☁️ Signed in as ${googleUser.name}: your journey is also backed up to your Google Drive.`,
+                    `☁️ Angemeldet als ${googleUser.name}: deine Reise wird zusätzlich in deinem Google Drive gesichert.`
+                  )}
+                </p>
+              </div>
             )}
+            <div>
+              <label htmlFor="rm-verify-name" className="rm-ticket-label">{tr('Traveler', 'Reisende:r')}</label>
+              <input
+                id="rm-verify-name"
+                required
+                type="text"
+                autoComplete="given-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="rm-ticket-input"
+                placeholder={tr('What should we call you?', 'Wie wirst du genannt?')}
+              />
+            </div>
+            <div>
+              <label htmlFor="rm-verify-birth" className="rm-ticket-label">
+                {tr('Departure: the day you were born', 'Abfahrt: dein Geburtstag')}
+              </label>
+              <input
+                id="rm-verify-birth"
+                required
+                type="date"
+                min="1930-01-01"
+                max={maxBirthDate}
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="rm-ticket-input"
+              />
+              {birthdayHint && birthDate === birthdayHint && (
+                <p className="text-xs mt-1 opacity-80">{tr('Taken from your Google account – adjust if needed.', 'Aus deinem Google-Konto übernommen – bei Bedarf anpassen.')}</p>
+              )}
+            </div>
           </div>
-          <div className="text-right pt-2">
-            <button type="submit" className="retro-button bg-retro-ink text-white px-10 py-4 font-bold">
-              {tr('Continue', 'Weiter')}
-            </button>
+          <div className="rm-ticket-stub">
+            <span className="splash-start-tilt relative inline-block">
+              <button type="submit" disabled={rewinding} className="splash-start rm-gate-start relative">
+                {rewinding ? tr('Turning back …', 'Die Uhr dreht zurück …') : tr('Set the clock', 'Uhr zurückdrehen')}
+              </button>
+            </span>
           </div>
         </form>
 
         {googleStatus !== 'not_configured' && googleStatus !== 'signed_in' && (
-          <div className="mt-8 pt-6 border-t-2 border-dashed border-retro-ink text-left">
+          <div className="rm-gate-cloud mt-8 text-left w-full">
             <p className="text-sm leading-relaxed mb-3">
               {tr(
                 <>
                   <strong>☁️ Optional: back up to the cloud.</strong> Signed in with Google, your journey is also
-                  saved to your own Google Drive, so you can pick up on any device. You can also do this later via
-                  “Sign in with Google” in the settings (⚙️).
+                  saved to your own Google Drive, so you can pick up on any device. You can also do this later in
+                  the settings (⚙️).
                 </>,
                 <>
                   <strong>☁️ Optional: in der Cloud sichern.</strong> Mit Google angemeldet wird deine Reise zusätzlich
                   in deinem eigenen Google Drive gespeichert, damit du auf jedem Gerät weitermachen kannst. Das geht
-                  auch später noch über „Mit Google anmelden“ in den Einstellungen (⚙️).
+                  auch später noch in den Einstellungen (⚙️).
                 </>
               )}
             </p>
@@ -148,7 +175,7 @@ export const VerifyGate: React.FC<{
               onPointerDown={warmUpGoogle}
               onFocus={warmUpGoogle}
               disabled={googleStatus === 'signing_in'}
-              className="retro-button bg-retro-amber text-white px-6 py-3 font-bold hover:bg-retro-amber-dark disabled:opacity-60"
+              className="rm-gate-secondary"
             >
               {googleStatus === 'signing_in'
                 ? tr('Signing in …', 'Anmelden …')

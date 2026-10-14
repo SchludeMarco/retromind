@@ -12,11 +12,13 @@ import {
   SpotifyEmbedController,
 } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
-import { createSpotifyController, usePremiumPlayback } from '../lib/spotifyPremium';
+import { createSpotifyController, useConnectPlayback, usePremiumPlayback } from '../lib/spotifyPremium';
+import { useConnectAttempt } from '../lib/spotifyConnect';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
 import { useConsent } from '../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../lib/musicStatus';
-import { SpotifyHit } from '../lib/spotifyApi';
+import { SpotifyHit, useSpotifyApi } from '../lib/spotifyApi';
+import { youthPool } from '../lib/youthMusic';
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
@@ -39,12 +41,17 @@ import { SpotifyHit } from '../lib/spotifyApi';
 // (components/SpotifyBar, 2026-10-06): next = another random song, back =
 // the song heard before.
 
-export function useSpotifyBackground(currentDecade: string, enabled = true) {
+// Signed in with Spotify, the songs come from "hits of <year>" playlists of
+// the years the visitor grew up in (lib/youthMusic), not only from the
+// decade's one playlist; `youthLabel` then names those years.
+export function useSpotifyBackground(currentDecade: string, enabled = true, birthYear: number | null = null) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const unlockedRef = useRef(false);
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const playingRef = useRef(false);
+  playingRef.current = isPlaying;
   const muted = useMuted();
   const startedRef = useRef(false);
   // Paused with the player's own button: coming back from the background
@@ -53,6 +60,10 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   const allowed = useConsent('spotify') === true;
   // Signed in with Premium: Spotify's own player, which fades in.
   const premium = usePremiumPlayback();
+  // On phones Premium plays through the visitor's Spotify app instead
+  // (lib/spotifyConnect); "Try again" in the music panel builds it anew.
+  const connect = useConnectPlayback();
+  const connectAttempt = useConnectAttempt();
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
   const decadeRef = useRef(currentDecade);
@@ -74,6 +85,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
   // search pick from the player, or (auto) the song to a music word that is
   // open. null: the decade's own music.
   const [special, setSpecial] = useState<(SpotifyHit & { auto: boolean }) | null>(null);
+  const signedIn = useSpotifyApi();
+  // "Hits von 1983–1989" while the songs come from the person's years.
+  const [youthLabel, setYouthLabel] = useState<string | null>(null);
+  // Song pools per decade from those years (lib/youthMusic).
+  const youthRef = useRef<Record<string, string[]>>({});
   const specialRef = useRef(special);
   specialRef.current = special;
   // First playback uses play(); afterwards resume() continues the track.
@@ -92,7 +108,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     const playlistId = DECADES_DB[decadeRef.current]?.spotifyPlaylistId;
     if (!controller || !playlistId) return;
     setSpecial(null);
-    const id = randomTrack(tracksRef.current[playlistId] ?? []);
+    const id = randomTrack(youthRef.current[decadeRef.current] ?? tracksRef.current[playlistId] ?? []);
     if (id) rememberSong(historyRef.current, id);
     setSong(id);
     shuffleRef.current = !!id;
@@ -190,7 +206,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
         setSong(id);
         shuffleRef.current = !!id;
         heardRef.current = false;
-        return createSpotifyController(host, id ? trackUri(id) : playlistUri(playlistId));
+        return createSpotifyController(host, id ? trackUri(id) : playlistUri(playlistId), { connect: true });
       })
       .then((controller) => {
         if (cancelled) {
@@ -211,7 +227,10 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
           const position = Number(data.position) || 0;
           if (position > 1000) heardRef.current = true;
           const single = shuffleRef.current || specialRef.current?.kind === 'track';
-          if (single && songEnded(data, heardRef.current)) playDecade();
+          // A song paused with the player's button is not over, even if
+          // Spotify reports it back at 0 (Marco, 2026-10-14: pause had no
+          // effect because a new song started right away).
+          if (single && !userPausedRef.current && songEnded(data, heardRef.current)) playDecade();
         });
         start();
       });
@@ -222,10 +241,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
       setIsReady(false);
       setIsPlaying(false);
     };
-    // Only consent (or a Premium login coming or going) recreates the
-    // controller — decade switches are handled by the effect below via loadUri.
+    // Only consent (or a Premium login coming or going, or the Spotify app
+    // being found or lost) recreates the controller — decade switches are
+    // handled by the effect below via loadUri.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowed, premium]);
+  }, [allowed, premium, connect, connectAttempt]);
 
   useEffect(() => {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
@@ -237,6 +257,26 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
       if (switching && decadeRef.current === currentDecade && !specialRef.current) playDecade();
     });
   }, [currentDecade, allowed, playDecade]);
+
+  // The person's own years, once signed in: their songs take over from the
+  // next song on (the one playing keeps going).
+  useEffect(() => {
+    if (!allowed || !signedIn) {
+      youthRef.current = {};
+      setYouthLabel(null);
+      return;
+    }
+    let live = true;
+    youthPool(currentDecade, birthYear).then((pool) => {
+      if (!live) return;
+      if (pool) youthRef.current[currentDecade] = pool.tracks;
+      else delete youthRef.current[currentDecade];
+      setYouthLabel(pool ? pool.label : null);
+    });
+    return () => {
+      live = false;
+    };
+  }, [allowed, signedIn, currentDecade, birthYear]);
 
   useEffect(() => {
     const unlock = () => {
@@ -278,6 +318,13 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     if (isPlaying) {
       userPausedRef.current = true;
       controller.pause();
+      // Show it at once; Spotify's own report can lag behind.
+      setIsPlaying(false);
+      // Some players swallow a pause that comes right after a start: if the
+      // song still runs a moment later, pause again.
+      window.setTimeout(() => {
+        if (userPausedRef.current && controllerRef.current === controller && playingRef.current) controller.pause();
+      }, 1200);
       return;
     }
     userPausedRef.current = false;
@@ -298,6 +345,8 @@ export function useSpotifyBackground(currentDecade: string, enabled = true) {
     playPrevious,
     /** "Title · Artist" of the song playing, when known. */
     songTitle: special ? `${special.name} · ${special.sub}` : trackName(song),
+    /** "Hits von 1983–1989" while the songs come from the person's own years. */
+    youthLabel,
     /** A single random song plays, so next/back can switch songs. */
     canSkip: !!song || !!special,
     status: statusRef.current,
