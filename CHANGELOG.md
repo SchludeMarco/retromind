@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Adventskalender mit 24 Türchen** (2026-10-14, PR #212): In der
+  Weihnachtszeit gibt es beim Erkunden eine Kachel „Adventskalender“. Ab
+  dem 1. Dezember geht jeden Tag ein Türchen mehr auf, bis zum großen
+  Türchen 24. Hinter jedem wartet etwas Besonderes: ein Weihnachtslied, das
+  mit einem Tipp im Radio läuft (von „Last Christmas“ bis „White
+  Christmas“), ein Rezept aus Omas Weihnachtsbäckerei, eine kleine
+  Geschichte von Weihnachten damals oder eine Frage fürs Erinnerungsbuch.
+  Wer zu früh klopft, erfährt, in wie vielen Tagen das Türchen aufgeht.
+  Geöffnete Türchen bleiben offen; vom 1. bis 6. Januar sind alle offen.
+  Mit „Weihnachtslook: an“ in den Einstellungen kann man schon vorher
+  hinter alle Türchen schauen.
+
 - **Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook**
   (2026-10-14, PR #211): Vom 1. November bis zum 6. Januar öffnet in Omas
   Kochbuch die Weihnachtsbäckerei als erstes Lesezeichen: Vanillekipferl,

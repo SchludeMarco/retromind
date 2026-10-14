@@ -87,12 +87,14 @@ export const CookbookSection: React.FC<{
   isAnswered: (id: string) => boolean;
   onRemember: (wordId: string, term: string, knowledge: string, decade: string, fallbackQuestion: string) => void;
   backButton: React.ReactNode;
-}> = ({ focusDecade, isAnswered, onRemember, backButton }) => {
+  /** A recipe to open right away (from a door of the advent calendar). */
+  initialRecipe?: string | null;
+}> = ({ focusDecade, isAnswered, onRemember, backButton, initialRecipe = null }) => {
   const christmas = useChristmas();
   const decades = christmas ? [XMAS, ...recipeDecades(focusDecade)] : [...recipeDecades(focusDecade), XMAS];
   const [picked, setDecade] = useState<string | null>(null);
   const decade = picked ?? decades[0];
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(initialRecipe);
   const open = ALL.find((r) => r.id === openId) ?? null;
   const show = (id: string | null) => {
     setOpenId(id);

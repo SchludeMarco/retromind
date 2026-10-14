@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
@@ -6,6 +6,8 @@ import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
 import { HeroesSection } from './HeroesSection';
 import { CookbookSection } from './CookbookSection';
+import { AdventSection } from './AdventSection';
+import type { SpotifyHit } from '../lib/spotifyApi';
 import { useChristmas } from '../lib/season';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
@@ -19,13 +21,14 @@ const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
 
 // The "Sparten" of the Explore stop: the five kinds of things, the heroes,
 // Grandma's cookbook and the photo lab.
-export type Sparte = BuzzwordCategory | 'lab' | 'heroes' | 'cookbook';
+export type Sparte = BuzzwordCategory | 'lab' | 'heroes' | 'cookbook' | 'advent';
 
 /** The name of a Sparte, for the breadcrumb in the journey bar. */
 export function sparteLabel(s: Sparte): string {
   if (s === 'lab') return tr('Photo Lab', 'Foto-Labor');
   if (s === 'heroes') return tr('Heroes of your youth', 'Helden deiner Jugend');
   if (s === 'cookbook') return tr('Grandma’s Cookbook', 'Omas Kochbuch');
+  if (s === 'advent') return tr('Advent calendar', 'Adventskalender');
   return CATEGORY[s].label;
 }
 
@@ -66,6 +69,8 @@ export const ExplorationPhase: React.FC<{
   /** The open Sparte (null: the tile overview), kept in App.tsx. */
   sparte: Sparte | null;
   onSparteChange: (s: Sparte | null) => void;
+  /** Plays a song on the radio (null while the music isn't allowed). */
+  onPlaySong?: (hit: SpotifyHit) => void;
   onBack: () => void;
   onNext: () => void;
 }> = ({
@@ -88,12 +93,15 @@ export const ExplorationPhase: React.FC<{
   onOpenBuzzword,
   sparte: openSparte,
   onSparteChange,
+  onPlaySong,
   onBack,
   onNext,
 }) => {
   const muted = useMuted();
   const warm = useWarmChrome();
   const christmas = useChristmas();
+  // A recipe the advent calendar asked to open in the cookbook.
+  const [recipeToOpen, setRecipeToOpen] = useState<string | null>(null);
   // The journey split into "Sparten" (Marco, 2026-10-06): a calm overview
   // of tiles, and only the one tapped opens, when the mood strikes.
   const sparte = openSparte;
@@ -150,7 +158,14 @@ export const ExplorationPhase: React.FC<{
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Heroes of your youth', 'Helden deiner Jugend')}</span>
           <span className="text-sm text-retro-brown">{tr('Find them and read their whole story', 'Finden und ihre ganze Geschichte lesen')}</span>
         </button>
-        <button onClick={() => open('cookbook')} className={tileClass}>
+        {christmas && (
+          <button onClick={() => open('advent')} className={`${tileClass} advent-tile`}>
+            <span aria-hidden="true" className="text-3xl mb-1">🗓️</span>
+            <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Advent calendar', 'Adventskalender')}</span>
+            <span className="text-sm text-retro-brown">{tr('A new door every day in December', 'Jeden Tag im Dezember ein neues Türchen')}</span>
+          </button>
+        )}
+        <button onClick={() => { setRecipeToOpen(null); open('cookbook'); }} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📖</span>
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Grandma’s Cookbook', 'Omas Kochbuch')}</span>
           <span className="text-sm text-retro-brown">{tr('Treats from back then to cook at home', 'Leckereien von damals zum Nachkochen')}</span>
@@ -365,9 +380,22 @@ export const ExplorationPhase: React.FC<{
       <HeroesSection aiOff={aiOff} focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
     )}
     {sparte === 'cookbook' && (
-      <CookbookSection focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
+      <CookbookSection key={recipeToOpen ?? 'book'} focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} initialRecipe={recipeToOpen} />
     )}
-    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparteView(sparte)}
+    {sparte === 'advent' && (
+      <AdventSection
+        focusDecade={focusDecade}
+        isAnswered={isAnswered}
+        onRemember={onOpenBuzzword}
+        onRecipe={(id) => {
+          setRecipeToOpen(id);
+          open('cookbook');
+        }}
+        onPlaySong={onPlaySong}
+        backButton={backButton}
+      />
+    )}
+    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparte !== 'advent' && sparteView(sparte)}
 
     <PhaseNav back={{ to: 'induction', onClick: onBack }} next={{ to: 'diary', onClick: onNext }} />
   </div>

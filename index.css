@@ -2524,3 +2524,96 @@ html[data-season="xmas"][data-theme="nachtschicht"] {
   .xmas-deco,
   .xmas-garland { display: none; }
 }
+
+/* ------------------------------------------------------------------
+   Advent calendar (phases/AdventSection.tsx): 24 scattered paper doors
+   on a dark green board; a door that may open glows softly, an open one
+   shows its picture. Shape and depth from the design tokens.
+   ------------------------------------------------------------------ */
+.advent-calendar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: var(--rm-space-3);
+  padding: var(--rm-space-4);
+  background:
+    radial-gradient(circle at 20% 15%, rgb(255 255 255 / 0.12) 0 2px, transparent 3px) 0 0 / 46px 46px,
+    radial-gradient(circle at 70% 60%, rgb(255 255 255 / 0.1) 0 1.5px, transparent 2.5px) 0 0 / 38px 38px,
+    linear-gradient(160deg, #24513a, #173a29);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-card);
+}
+@media (min-width: 640px) {
+  .advent-calendar { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--rm-space-4); padding: var(--rm-space-6); }
+}
+.advent-door {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 56px;
+  perspective: 600px;
+}
+.advent-door.is-big { grid-column: span 2; aspect-ratio: auto; }
+.advent-door-inside,
+.advent-door-front {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: min(var(--rm-radius-card), 0.5rem);
+}
+.advent-door-inside {
+  font-size: 1.9rem;
+  background: #0f2a1d;
+  box-shadow: inset 0 2px 8px rgb(0 0 0 / 0.5);
+}
+.advent-door-front {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #7a1f17;
+  background: linear-gradient(145deg, #fff8e7, #f1dfb8);
+  border: 2px dashed rgb(122 31 23 / 0.35);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
+  backface-visibility: hidden;
+}
+.advent-door.is-big .advent-door-front { font-size: 2.2rem; }
+.advent-door.is-ready .advent-door-front {
+  box-shadow: 0 0 0 3px #f2b630, 0 0 18px rgb(242 182 48 / 0.7);
+  animation: adventGlow 1.6s ease-in-out infinite alternate;
+}
+@keyframes adventGlow { to { box-shadow: 0 0 0 3px #f2b630, 0 0 6px rgb(242 182 48 / 0.3); } }
+.advent-door.is-open .advent-door-front {
+  transform: rotateY(-105deg);
+  pointer-events: none;
+}
+.advent-door.is-shown .advent-door-inside { box-shadow: inset 0 0 0 3px #f2b630; }
+.advent-surprise {
+  display: flex;
+  gap: var(--rm-space-4);
+  align-items: flex-start;
+  padding: var(--rm-space-6);
+  background: var(--color-retro-paper-white);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-left: 6px solid var(--rm-accent);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-card);
+  animation: adventPop 0.45s ease-out both;
+}
+@keyframes adventPop { from { opacity: 0; transform: scale(0.96) translateY(6px); } }
+.advent-surprise-icon { font-size: 2.75rem; line-height: 1; flex-shrink: 0; }
+@media (max-width: 639px) {
+  .advent-surprise { flex-direction: column; gap: var(--rm-space-2); padding: var(--rm-space-4); }
+}
+.advent-hint {
+  text-align: center;
+  font-weight: 700;
+  color: var(--rm-accent);
+}
+.advent-tile { border-color: var(--rm-accent) !important; }
+@media (prefers-reduced-motion: reduce) {
+  .advent-door-front { transition: none; }
+  .advent-door.is-ready .advent-door-front,
+  .advent-surprise { animation: none; }
+}

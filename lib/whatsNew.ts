@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Adventskalender mit 24 Türchen': {
+    title: 'An advent calendar with 24 doors',
+    text: 'During the Christmas season, Explore has an “Advent calendar” tile. From December 1 one more door opens each day, all the way to the big door 24. Behind each one something special is waiting: a Christmas song that plays on the radio with one tap (from “Last Christmas” to “White Christmas”), a recipe from Grandma’s Christmas bakery, a little story about Christmas back then or a question for your memory book. Knock too early and you learn how many days the door still needs. Opened doors stay open, and from January 1 to 6 all of them are open. With “Christmas look: on” in the settings you can peek behind all the doors ahead of time.',
+  },
   'Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook': {
     title: 'Christmas time: Grandma’s Christmas bakery and a Christmas look',
     text: 'From November 1 to January 6, Grandma’s Cookbook opens its Christmas bakery as the first ribbon: vanilla crescents, cinnamon stars, spritz cookies, coconut macaroons, baked apples and a kids’ Christmas punch. Before that, the ribbon shows how many days are left. During that time the whole time journey wears a Christmas look too: glowing fairy lights along the top, softly falling snow behind the pages and Christmas red as the accent color, in all three designs. The radio then plays Christmas songs on its own (Spotify’s “Christmas Hits” instead of the decade’s music), and the player says “Christmas songs”. In the settings you can switch the “Christmas look” on early or turn it off.',

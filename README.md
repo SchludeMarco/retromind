@@ -90,6 +90,15 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Automatisch, jetzt an oder aus
   ([`lib/season.ts`](lib/season.ts),
   [`components/ChristmasDeco.tsx`](components/ChristmasDeco.tsx)).
+- **Adventskalender** – in der Weihnachtszeit eine Kachel beim Erkunden:
+  24 verstreute Türchen auf grünem Grund, ab dem 1. Dezember geht jeden Tag
+  eins mehr auf (bis 6. Januar bleiben alle offen). Dahinter ein
+  Weihnachtslied fürs Radio, ein Rezept aus Omas Weihnachtsbäckerei, eine
+  Geschichte von Weihnachten damals oder eine Frage fürs Erinnerungsbuch.
+  Geöffnete Türchen merkt sich das Gerät; mit „Weihnachtslook: an“ gibt es
+  vor Dezember eine Vorschau mit allen Türchen
+  ([`phases/AdventSection.tsx`](phases/AdventSection.tsx),
+  [`lib/advent.ts`](lib/advent.ts)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
@@ -656,6 +665,8 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Mehr Rezepte in Omas Kochbuch:** Eigene Rezepte der Familie
   hinzufügen (mit Foto aus dem Memory-Labor) und ins Erinnerungsbuch
   übernehmen; das Kochbuch könnte auch als Ecke in der Stube auftauchen.
+- **Adventskalender jedes Jahr neu:** Für jedes Jahr eine andere Füllung
+  der 24 Türchen, damit es im nächsten Dezember wieder Überraschungen gibt.
 
 - **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
   eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.

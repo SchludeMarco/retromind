@@ -998,6 +998,7 @@ const App: React.FC = () => {
               onOpenBuzzword={openBuzzword}
               sparte={exploreSparte}
               onSparteChange={setExploreSparte}
+              onPlaySong={spotify.allowed ? (hit) => { playSFX('click'); spotify.playUri(hit); } : undefined}
               onBack={() => goTo('induction')}
               onNext={() => goTo('diary')}
             />
