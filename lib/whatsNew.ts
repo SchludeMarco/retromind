@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  '„Welcome to the year …“: Roboterstimme und Video aus deinem Jahr': {
+    title: '“Welcome to the year …”: a robot voice and a video from your year',
+    text: 'After every journey with the time machine, a robot voice says “Welcome to the year 1975” after a short beep. The year is your birth year or the decade you picked in the settings. Above every stop it says “Welcome to the year …” in large print, so you know where you are. Below it, after every journey, a year-in-review video from that year starts on its own from YouTube; you can hide it. YouTube only loads once you allow it (also in the settings under “Videos”). While the video plays, the Spotify music pauses. With the sound off, the voice stays quiet.',
+  },
   'Musiksteuerung oben links, Feedback ganz unten': {
     title: 'Music controls top left, feedback at the bottom',
     text: 'At the top left of the time journey you now find back, play/pause and next as proper buttons, with the song that is playing in readable print next to them. Tap the title to open the full music controls. The tiny “Now playing” line in the corner is gone. The red Feedback button now sits at the bottom left under the accounts with “Sign out”: in Retro Warm in the accounts panel behind the person button, in the other designs once you scroll all the way down. In Retro Warm the accounts panel now sits above the bottom bar instead of half behind it.',

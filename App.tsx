@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StationCorner } from './components/StationCorner';
 import {
   AppPhase,
@@ -17,6 +17,8 @@ import {
 import { RetroTicker } from './components/RetroTicker';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { MusicMini } from './components/MusicMini';
+import { YearWelcome } from './components/YearWelcome';
+import { announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
@@ -80,6 +82,11 @@ const App: React.FC = () => {
   const [menuRevealed, setMenuRevealed] = useState(false);
   const birthYear = /^\d{4}/.test(user.birthDate) ? Number(user.birthDate.slice(0, 4)) : null;
   const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, birthYear);
+  // Where the time machine has put you: the chosen decade, else your birth
+  // year (the ticket's departure). Every journey bumps `travel`: the robot
+  // voice says "Welcome to the year …" and YearWelcome opens its video.
+  const travelYear = manualDecade ? Number(manualDecade) : birthYear;
+  const [travel, setTravel] = useState(0);
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
@@ -505,6 +512,57 @@ const App: React.FC = () => {
     window.print();
   };
 
+  // --- time travel announcements (lib/robotVoice, components/YearWelcome) ---
+  // A journey: leaving the welcome screen's time machine (straight in, or
+  // after the ticket), and every switch of the decade. A reload of an open
+  // page is no journey.
+  const sawSplashRef = useRef(showSplash);
+  const landedRef = useRef(false);
+  useEffect(() => {
+    if (showSplash) {
+      sawSplashRef.current = true;
+      landedRef.current = false;
+      return;
+    }
+    if (!verified || landedRef.current || !sawSplashRef.current) return;
+    landedRef.current = true;
+    setTravel((n) => n + 1);
+  }, [showSplash, verified]);
+  const decadeSeenRef = useRef(manualDecade);
+  useEffect(() => {
+    if (decadeSeenRef.current === manualDecade) return;
+    decadeSeenRef.current = manualDecade;
+    if (verified) setTravel((n) => n + 1);
+  }, [manualDecade, verified]);
+  useEffect(() => {
+    if (!travel || !travelYear) return;
+    // After the gong of the arrival / while the iris opens.
+    const t = window.setTimeout(() => announceYear(travelYear), 900);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [travel]);
+  // The year's video and the Spotify music don't play at the same time.
+  const pausedForVideoRef = useRef(false);
+  const musicRef = useRef(spotify);
+  musicRef.current = spotify;
+  const [videoOn, setVideoOn] = useState(false);
+  const handleYearVideo = useCallback((on: boolean) => {
+    setVideoOn(on);
+    if (on) return;
+    const sp = musicRef.current;
+    if (pausedForVideoRef.current) {
+      pausedForVideoRef.current = false;
+      if (!sp.isPlaying) sp.togglePlay();
+    }
+  }, []);
+  // Pause once per video, also when the music only starts after it.
+  useEffect(() => {
+    if (!videoOn || !spotify.isPlaying || pausedForVideoRef.current) return;
+    pausedForVideoRef.current = true;
+    spotify.togglePlay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoOn, spotify.isPlaying]);
+
   // --- verification ---
   const handleVerified = (name: string, birthDate: string) => {
     setUser((prev) => ({ ...prev, name, birthDate }));
@@ -820,6 +878,7 @@ const App: React.FC = () => {
               onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }}
             />
           )}
+          {travelYear && <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />}
           {!warm && musicDock}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 

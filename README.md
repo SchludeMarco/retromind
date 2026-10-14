@@ -164,6 +164,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
   Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
   außer man ist im selben Browser bei Spotify angemeldet.
+  Nach jeder Reise (Start durch die Zeitmaschine, Wechsel des Jahrzehnts)
+  sagt eine **Roboterstimme** „Welcome to the year 1975“ bzw. „Willkommen im
+  Jahr 1975“ ([`lib/robotVoice.ts`](lib/robotVoice.ts), Sprachausgabe des
+  Browsers, tief und langsam, still bei ausgeschaltetem Ton). Über jedem
+  Halt steht der Satz groß, darunter startet ein **Jahresrückblick-Video**
+  aus diesem Jahr von YouTube ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
+  über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen
+  unter „Videos“; die Spotify-Musik pausiert solange).
   **Oben links** steht immer die Musiksteuerung
   ([`components/MusicMini.tsx`](components/MusicMini.tsx)): Zurück,
   Play/Pause und Weiter als richtige Knöpfe und daneben gut lesbar, was
@@ -595,6 +603,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
+
+- **Echte Roboterstimme und ausgesuchte Jahresvideos:** Statt der
+  Sprachausgabe des Browsers (klingt je nach Gerät anders) eine einmal
+  aufgenommene Roboterstimme für jedes Jahr, und statt des ersten
+  Suchtreffers von YouTube ein von Hand ausgesuchtes Video pro Jahr.
 
 - **Jeder Wechsel zwischen den Halten als kleine Zeitreise:** Der Zeiger der
   Reiseuhr springt sichtbar weiter, ein kurzes Ticken und eine kleine Blende,

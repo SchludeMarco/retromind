@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Welcome to the year …“: Roboterstimme und Video aus deinem Jahr**
+  (2026-10-14, PR #207): Nach jeder Reise mit der Zeitmaschine sagt eine
+  Roboterstimme nach einem kurzen Piepen „Welcome to the year 1975“ (auf
+  Deutsch „Willkommen im Jahr 1975“). Das Jahr ist dein Geburtsjahr oder
+  das Jahrzehnt, das du in den Einstellungen gewählt hast. Über jedem Halt
+  steht groß „Welcome to the year …“, damit du weißt, wo du gerade bist.
+  Darunter startet nach jeder Reise von selbst ein Jahresrückblick-Video aus
+  diesem Jahr von YouTube; es lässt sich ausblenden. YouTube lädt erst, wenn
+  du es erlaubst (auch in den Einstellungen unter „Videos“). Solange das
+  Video läuft, pausiert die Spotify-Musik. Bei ausgeschaltetem Ton bleibt
+  die Stimme still.
+
 - **Musiksteuerung oben links, Feedback ganz unten** (2026-10-14, PR #206):
   Oben links stehen in der Zeitreise jetzt Zurück, Play/Pause und Weiter
   als richtige Knöpfe, daneben gut lesbar der Song, der gerade läuft. Ein

@@ -1816,6 +1816,71 @@ html[data-theme="nachtschicht"] .splash-start:active {
   color: var(--color-retro-brown);
 }
 
+/* "Welcome to the year 1975" above every stop, with the year's video
+   (components/YearWelcome). */
+.rm-year {
+  margin-top: var(--rm-space-4, 1rem);
+  padding: var(--rm-space-4, 1rem);
+  background: var(--color-retro-paper-white);
+  border: var(--rm-border-w, 2px) solid var(--rm-border-color, var(--color-retro-ink));
+  border-radius: var(--rm-radius-card, 0);
+  box-shadow: var(--rm-shadow-float);
+}
+.rm-year-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.rm-year-title {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-serif, serif);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  line-height: 1.1;
+  color: var(--color-retro-ink);
+}
+.rm-year-toggle {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 1rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+.rm-year-video {
+  position: relative;
+  margin-top: 0.75rem;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: calc(var(--rm-radius-card, 0px) / 2);
+  overflow: hidden;
+}
+.rm-year-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.rm-year-ask {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  font-size: 0.95rem;
+  color: var(--color-retro-brown);
+}
+.rm-year-ask .rm-btn {
+  min-height: 48px;
+  padding: 0 1.25rem;
+  font-weight: 700;
+}
+.rm-year-note {
+  margin-top: 0.75rem;
+  color: var(--color-retro-brown);
+}
+
 /* The hidden Spotify player (hooks/useSpotifyBackground). Spotify replaces
    the inner element with its iframe, so this wrapper does the hiding. */
 .spotify-host {
