@@ -96,6 +96,7 @@ export const Hot: React.FC<{
     <g
       className="cozy-hot"
       role="button"
+      data-quiet
       tabIndex={0}
       aria-label={label}
       onClick={act}

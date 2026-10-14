@@ -112,7 +112,7 @@ export const SplashScreen: React.FC<{ onStart: () => void; onReveal?: () => void
       </p>
       <div className="splash-start-row relative">
         <span className="splash-start-tilt relative inline-block">
-          <button onClick={handleStart} disabled={struck} className="splash-start relative">
+          <button onClick={handleStart} disabled={struck} className="splash-start relative" data-quiet>
             Go back...
           </button>
         </span>

@@ -15,6 +15,7 @@ import {
   AiAvailability,
 } from './services/geminiService';
 import { RetroTicker } from './components/RetroTicker';
+import { AmbientLife } from './components/AmbientLife';
 import { ChristmasDeco } from './components/ChristmasDeco';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { MusicMini } from './components/MusicMini';
@@ -46,7 +47,8 @@ import { useGoogleAuth } from './hooks/useGoogleAuth';
 import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
-import { INTEREST_TO_CATEGORY } from './lib/session';
+import { INTEREST_TO_CATEGORY, PHASES } from './lib/session';
+import { installMicroFx } from './lib/microFx';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
 import { toggleMuted, useMuted } from './lib/mute';
 import { DECADES_DB, INTEREST_LABELS } from './constants';
@@ -75,7 +77,19 @@ const App: React.FC = () => {
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
-  const { sfxRef, playSFX } = useAudioPlayer();
+  const { playSFX } = useAudioPlayer();
+  // Every tap, card and page answers with a little sound and motion (lib/microFx).
+  useEffect(installMicroFx, []);
+  // Which way the journey went, so the next stop slides in from the right
+  // side (onwards) or the left (back), with a sweep of light across the screen.
+  const stage = useRef({ phase, dir: 'onward' as 'onward' | 'back', moves: 0 });
+  if (stage.current.phase !== phase) {
+    stage.current = {
+      phase,
+      dir: PHASES.indexOf(phase) >= PHASES.indexOf(stage.current.phase) ? 'onward' : 'back',
+      moves: stage.current.moves + 1,
+    };
+  }
   // The welcome screen sits on top of everything on each fresh visit (a reload
   // keeps the page that was open); music waits until it is gone.
   const [showSplash, setShowSplash] = useState(!reloaded?.splashDone);
@@ -236,8 +250,14 @@ const App: React.FC = () => {
     document.documentElement.style.fontSize = ['18px', '20px', '23px'][fontScale - 1] || '18px';
   }, [fontScale]);
 
+  // A page of the album turns with every change of stop (not on load).
+  const firstPhase = useRef(true);
   useEffect(() => {
-    if (phase !== 'intro') playSFX('transition');
+    if (firstPhase.current) {
+      firstPhase.current = false;
+      return;
+    }
+    playSFX('transition');
   }, [phase, playSFX]);
 
   useEffect(() => {
@@ -748,6 +768,7 @@ const App: React.FC = () => {
       <BootOverlay />
       <CrtOverlay />
       <ChristmasDeco />
+      {verified && !showSplash && <AmbientLife />}
       {(!warm || showSplash || !verified) && <MuteToggle besideSettings />}
       {(!warm || showSplash || !verified) && (
         // Always in the top-right corner: on the welcome screen in every
@@ -778,7 +799,6 @@ const App: React.FC = () => {
         />
       )}
       {showSplash && <SplashScreen onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
-      <audio ref={sfxRef} />
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from
@@ -945,6 +965,8 @@ const App: React.FC = () => {
             </>
           )}
 
+          {stage.current.moves > 0 && <div key={`sheen-${stage.current.moves}`} aria-hidden="true" className={`rm-stop-sheen is-${stage.current.dir}`} />}
+          <div id="rm-stage" key={phase} className={`rm-stage is-${stage.current.dir}`}>
           {/* A corner of the Stube above every station (components/StationCorner.tsx). */}
           {phase !== 'intro' && <StationCorner phase={phase} warm={warm} />}
 
@@ -962,7 +984,6 @@ const App: React.FC = () => {
               userName={user.name}
             />
           )}
-          {phase === 'intro' && <RetroTicker warm={warm} focusDecade={focusDecade} />}
 
           {phase === 'onboarding' && (
             <OnboardingPhase
@@ -1044,6 +1065,8 @@ const App: React.FC = () => {
               onRestart={handleResetJourney}
             />
           )}
+          </div>
+          {phase === 'intro' && <RetroTicker warm={warm} focusDecade={focusDecade} />}
 
           {selectedGalleryItem && (
             <GalleryDetailModal

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { playPop } from '../lib/uiSounds';
 
 // `above` lifts the dialog over the welcome screen (SplashScreen, z-900).
 export const Modal: React.FC<{ onClose: () => void; label: string; above?: boolean; children: React.ReactNode }> = ({ onClose, label, above = false, children }) => {
@@ -31,9 +32,12 @@ export const Modal: React.FC<{ onClose: () => void; label: string; above?: boole
       }
     };
     document.addEventListener('keydown', onKey);
+    // The window opens with a small "blop", just after the tap that opened it.
+    const pop = window.setTimeout(playPop, 60);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
+      window.clearTimeout(pop);
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
       previouslyFocused?.focus?.();

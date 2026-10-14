@@ -2638,3 +2638,204 @@ html[data-season="xmas"][data-theme="nachtschicht"] {
   .advent-door.is-ready .advent-door-front,
   .advent-surprise { animation: none; }
 }
+
+/* ------------------------------------------------------------------
+   Life in the Zeitreise (Marco, 2026-10-14: "Es passiert wirklich nichts
+   … wo sind die Animationen und die Sounds?"). lib/microFx.ts answers
+   every tap, reveals the content and notices when nothing happens;
+   App.tsx turns the page between stops; components/AmbientLife.tsx lets
+   dust drift in the light. Movement uses the separate `translate` /
+   `scale` properties, so it never fights an element's own `transform`.
+   ------------------------------------------------------------------ */
+
+/* Tap: a ring of light spreading from the finger. */
+.rm-ripple {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: none;
+  border-radius: 9999px;
+  translate: -50% -50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--rm-accent) 55%, transparent) 0%, color-mix(in srgb, var(--rm-accent) 28%, transparent) 45%, transparent 70%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rm-accent) 50%, transparent);
+  animation: rmRipple 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.rm-ripple.is-calm {
+  animation: rmRippleCalm 0.35s ease-out forwards;
+}
+@keyframes rmRipple {
+  from { scale: 0.2; opacity: 1; }
+  to { scale: 1.25; opacity: 0; }
+}
+@keyframes rmRippleCalm {
+  from { opacity: 0.8; }
+  to { opacity: 0; }
+}
+/* …and the thing tapped springs back with a little "boing". */
+.rm-sprung {
+  animation: rmSprung 0.42s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes rmSprung {
+  0% { scale: 0.94; }
+  45% { scale: 1.04; }
+  100% { scale: 1; }
+}
+/* Cards that can be tapped lean towards the mouse a little more. */
+@media (hover: hover) {
+  button.retro-card:hover, a.retro-card:hover, .retro-card[role="button"]:hover {
+    scale: 1.015;
+  }
+  .rm-btn:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+}
+
+/* Reveal: content drifts up into place as it scrolls into view. */
+.rm-rv {
+  opacity: 0;
+}
+.rm-rv-in {
+  animation: rmReveal 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) var(--rm-rv-delay, 0ms) both;
+}
+@keyframes rmReveal {
+  from { opacity: 0; translate: 0 18px; scale: 0.985; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+/* A new stop slides in from the side the journey is going to (onwards from
+   the right, back from the left) while a band of light sweeps across. */
+.rm-stage {
+  animation: rmStageOnward 0.55s cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+}
+.rm-stage.is-back {
+  animation-name: rmStageBack;
+}
+@keyframes rmStageOnward {
+  from { opacity: 0; translate: 36px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes rmStageBack {
+  from { opacity: 0; translate: -36px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+.rm-stop-sheen {
+  position: fixed;
+  inset: 0;
+  z-index: 640;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 236, 196, 0.55) 48%, rgba(255, 250, 235, 0.75) 50%, rgba(255, 236, 196, 0.55) 52%, transparent 70%);
+  background-size: 300% 100%;
+  mix-blend-mode: soft-light;
+  animation: rmSheenOnward 0.75s ease-out forwards;
+}
+.rm-stop-sheen.is-back {
+  animation-name: rmSheenBack;
+}
+@keyframes rmSheenOnward {
+  from { background-position: 100% 0; opacity: 1; }
+  to { background-position: 0% 0; opacity: 0; }
+}
+@keyframes rmSheenBack {
+  from { background-position: 0% 0; opacity: 1; }
+  to { background-position: 100% 0; opacity: 0; }
+}
+
+/* Idle: when nothing has been touched for a while, the next step breathes. */
+.rm-idle .rm-phase-nav .rm-next,
+.rm-idle .rm-cta-breathe {
+  animation: rmBreathe 2.6s ease-in-out infinite;
+}
+@keyframes rmBreathe {
+  0%, 100% { scale: 1; box-shadow: 0 4px 12px color-mix(in srgb, var(--rm-accent) 18%, transparent); }
+  50% { scale: 1.035; box-shadow: 0 0 0 6px color-mix(in srgb, var(--rm-accent) 16%, transparent), 0 8px 22px color-mix(in srgb, var(--rm-accent) 30%, transparent); }
+}
+
+/* The journey bar's clock: its seconds hand ticks on, its stop glows. */
+.rm-jc-second {
+  transform-origin: 24px 24px;
+  animation: rmSecondHand 60s steps(60) infinite;
+}
+.rm-jc-second line { stroke: #c0392b; }
+@keyframes rmSecondHand {
+  to { transform: rotate(360deg); }
+}
+.rm-jc-now {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rmStopGlow 2.4s ease-in-out infinite;
+}
+@keyframes rmStopGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* A memory saved: stars and hearts burst from where the finger was. */
+.rm-burst {
+  position: fixed;
+  z-index: 2000;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.rm-burst span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  color: var(--rm-accent);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  animation: rmBurst 1.1s cubic-bezier(0.15, 0.7, 0.3, 1) both;
+}
+.rm-burst span:nth-child(3n) { color: #e0a526; }
+.rm-burst span:nth-child(3n + 1) { color: #d95d39; }
+@keyframes rmBurst {
+  0% { transform: translate(0, 0) scale(0.3) rotate(0deg); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) + 40px)) scale(1) rotate(var(--rot)); opacity: 0; }
+}
+
+/* Dust in the light (components/AmbientLife). */
+.rm-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.rm-ambient span {
+  position: absolute;
+  bottom: -12px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 214, 140, 0.95), rgba(255, 190, 110, 0) 70%);
+  animation-name: rmDrift, rmTwinkle;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+html[data-theme="klassisch"] .rm-ambient span {
+  background: radial-gradient(circle, rgba(120, 90, 50, 0.55), rgba(120, 90, 50, 0) 70%);
+}
+html[data-theme="nachtschicht"] .rm-ambient span {
+  background: radial-gradient(circle, rgba(255, 196, 90, 1), rgba(255, 160, 60, 0) 70%);
+  box-shadow: 0 0 8px 2px rgba(255, 180, 80, 0.35);
+}
+@keyframes rmDrift {
+  0% { translate: 0 0; }
+  25% { translate: var(--sway) -27vh; }
+  50% { translate: 0 -54vh; }
+  75% { translate: calc(var(--sway) * -0.6) -81vh; }
+  100% { translate: 0 -112vh; }
+}
+@keyframes rmTwinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.95; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-sprung, .rm-rv-in, .rm-stage, .rm-jc-second, .rm-jc-now,
+  .rm-idle .rm-phase-nav .rm-next, .rm-idle .rm-cta-breathe { animation: none !important; }
+  .rm-rv { opacity: 1; }
+  .rm-stop-sheen, .rm-ambient, .rm-burst { display: none; }
+}
+@media print {
+  .rm-ambient, .rm-stop-sheen, .rm-ripple, .rm-burst { display: none !important; }
+  .rm-rv { opacity: 1 !important; }
+}

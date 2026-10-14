@@ -39,6 +39,20 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 ### Zeitreise
 
+- **Antwortet auf jede Berührung** – jeder Knopf, jede Karte und jeder Link
+  gibt sofort ein leises Holz-„Tock“, ein kurzes Summen auf dem Handy, einen
+  Lichtring vom Finger aus und ein kleines Nachfedern. Zwischen den Halten
+  blättert hörbar eine Seite um, der neue Halt gleitet von der Seite herein,
+  in die die Reise geht, und ein Lichtstreif zieht vorbei. Inhalte schweben
+  beim Scrollen nacheinander herein, Fenster öffnen sich mit einem „Plopp“,
+  gespeicherte Erinnerungen werden mit Spieluhr-Glöckchen und Sternen und
+  Herzen gefeiert. Im Hintergrund tanzt Staub im Licht (Glühwürmchen in
+  Nachtschicht), der Sekundenzeiger der Reiseuhr tickt, und nach einer Weile
+  ohne Tippen atmet der Knopf zum nächsten Halt. Alle Klänge sind selbst
+  erzeugt, kurz und leise; bei weniger Bewegung bleibt nur ein ruhiges
+  Aufleuchten ([`lib/microFx.ts`](lib/microFx.ts),
+  [`lib/uiSounds.ts`](lib/uiSounds.ts),
+  [`components/AmbientLife.tsx`](components/AmbientLife.tsx)).
 - **Gemütliche Stube zum Anfassen** – oben auf der Startseite, in allen
   Designs, eine gezeichnete Stube (Couch mit Häkeldecke, Stehlampe,
   dampfender Tee, Holzofen, schlafende Katze, Röhrenfernseher), deren
@@ -655,9 +669,8 @@ Ideen nur für die Gaming-Edition stehen in deren
   deutschen Jahrescharts sein (z. B. 1989 „Looking for Freedom“), sobald die
   Liste geprüft ist.
 
-- **Jeder Wechsel zwischen den Halten als kleine Zeitreise:** Der Zeiger der
-  Reiseuhr springt sichtbar weiter, ein kurzes Ticken und eine kleine Blende,
-  damit auch „Nächster Halt“ sich wie Weiterreisen anfühlt.
+- **Mehr Leben in den Fenstern:** Postkarten, die sich beim Öffnen umdrehen,
+  und Erinnerungsfragen, deren Text wie auf einer Schreibmaschine erscheint.
 
 - **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden

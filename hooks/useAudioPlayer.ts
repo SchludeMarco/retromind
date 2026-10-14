@@ -1,18 +1,15 @@
-import { useCallback, useRef } from 'react';
-import { SFX } from '../lib/sfx';
-import { isMuted } from '../lib/mute';
+import { useCallback } from 'react';
+import { playUiSound, UiSound } from '../lib/uiSounds';
+import { celebrate } from '../lib/microFx';
 
-// Owns the click/success UI sound effects.
+// The app's UI sounds: a tap, a page turning between stops, a little chime
+// when something worked (lib/uiSounds). A success also sends up a small
+// burst of stars and hearts where the finger was (lib/microFx).
 export function useAudioPlayer() {
-  const sfxRef = useRef<HTMLAudioElement | null>(null);
-
-  const playSFX = useCallback((type: keyof typeof SFX) => {
-    if (!sfxRef.current || isMuted()) return;
-    sfxRef.current.src = SFX[type];
-    sfxRef.current.volume = 0.4;
-    sfxRef.current.currentTime = 0;
-    sfxRef.current.play().catch(() => {});
+  const playSFX = useCallback((type: UiSound) => {
+    playUiSound(type);
+    if (type === 'success') celebrate();
   }, []);
 
-  return { sfxRef, playSFX };
+  return { playSFX };
 }
