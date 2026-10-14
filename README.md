@@ -90,9 +90,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Automatisch, jetzt an oder aus
   ([`lib/season.ts`](lib/season.ts),
   [`components/ChristmasDeco.tsx`](components/ChristmasDeco.tsx)).
-- **Adventskalender** – in der Weihnachtszeit eine Kachel beim Erkunden:
-  24 verstreute Türchen auf grünem Grund, ab dem 1. Dezember geht jeden Tag
-  eins mehr auf (bis 6. Januar bleiben alle offen). Dahinter ein
+- **Adventskalender** – ab dem 1. Dezember eine Kachel beim Erkunden:
+  24 verstreute Türchen auf grünem Grund, jeden Tag geht eins mehr auf
+  (bis 6. Januar bleiben alle offen, danach verschwindet die Kachel). Dahinter ein
   Weihnachtslied fürs Radio, ein Rezept aus Omas Weihnachtsbäckerei, eine
   Geschichte von Weihnachten damals oder eine Frage fürs Erinnerungsbuch.
   Geöffnete Türchen merkt sich das Gerät; mit „Weihnachtslook: an“ gibt es

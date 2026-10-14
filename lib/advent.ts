@@ -154,6 +154,16 @@ export const ADVENT_DOORS: AdventDoor[] = [
 export const DOOR_ORDER = [13, 7, 22, 2, 18, 10, 5, 24, 15, 1, 20, 8, 11, 3, 17, 23, 6, 14, 19, 9, 4, 21, 12, 16];
 
 /** Showing every door early: the Christmas look switched on outside Advent. */
+/** December 1 to January 6: the calendar is out (Marco: "startet dann erst ab dem 01.12"). */
+export function isAdventTime(d = new Date()): boolean {
+  return d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 6);
+}
+
+/** Whether the calendar tile shows: in advent time, or as a preview with the Christmas look switched on. */
+export function showAdvent(d = new Date()): boolean {
+  return isAdventTime(d) || isPreview(d);
+}
+
 export function isPreview(d = new Date()): boolean {
   return getXmasMode() === 'on' && !(d.getMonth() === 11 || (d.getMonth() === 0 && d.getDate() <= 6));
 }

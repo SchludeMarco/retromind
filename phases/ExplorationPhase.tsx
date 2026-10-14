@@ -9,6 +9,7 @@ import { CookbookSection } from './CookbookSection';
 import { AdventSection } from './AdventSection';
 import type { SpotifyHit } from '../lib/spotifyApi';
 import { useChristmas } from '../lib/season';
+import { showAdvent } from '../lib/advent';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
@@ -158,7 +159,7 @@ export const ExplorationPhase: React.FC<{
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Heroes of your youth', 'Helden deiner Jugend')}</span>
           <span className="text-sm text-retro-brown">{tr('Find them and read their whole story', 'Finden und ihre ganze Geschichte lesen')}</span>
         </button>
-        {christmas && (
+        {christmas && showAdvent() && (
           <button onClick={() => open('advent')} className={`${tileClass} advent-tile`}>
             <span aria-hidden="true" className="text-3xl mb-1">🗓️</span>
             <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Advent calendar', 'Adventskalender')}</span>

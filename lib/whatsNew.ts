@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Adventskalender mit 24 Türchen': {
     title: 'An advent calendar with 24 doors',
-    text: 'During the Christmas season, Explore has an “Advent calendar” tile. From December 1 one more door opens each day, all the way to the big door 24. Behind each one something special is waiting: a Christmas song that plays on the radio with one tap (from “Last Christmas” to “White Christmas”), a recipe from Grandma’s Christmas bakery, a little story about Christmas back then or a question for your memory book. Knock too early and you learn how many days the door still needs. Opened doors stay open, and from January 1 to 6 all of them are open. With “Christmas look: on” in the settings you can peek behind all the doors ahead of time.',
+    text: 'From December 1, Explore has an “Advent calendar” tile. Each day one more door opens, all the way to the big door 24. Behind each one something special is waiting: a Christmas song that plays on the radio with one tap (from “Last Christmas” to “White Christmas”), a recipe from Grandma’s Christmas bakery, a little story about Christmas back then or a question for your memory book. Knock too early and you learn how many days the door still needs. Opened doors stay open, and from January 1 to 6 all of them are open. With “Christmas look: on” in the settings you can peek behind all the doors ahead of time.',
   },
   'Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook': {
     title: 'Christmas time: Grandma’s Christmas bakery and a Christmas look',

@@ -8,8 +8,8 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Adventskalender mit 24 Türchen** (2026-10-14, PR #212): In der
-  Weihnachtszeit gibt es beim Erkunden eine Kachel „Adventskalender“. Ab
-  dem 1. Dezember geht jeden Tag ein Türchen mehr auf, bis zum großen
+  Adventszeit gibt es beim Erkunden eine Kachel „Adventskalender“, ab dem
+  1. Dezember. Jeden Tag geht ein Türchen mehr auf, bis zum großen
   Türchen 24. Hinter jedem wartet etwas Besonderes: ein Weihnachtslied, das
   mit einem Tipp im Radio läuft (von „Last Christmas“ bis „White
   Christmas“), ein Rezept aus Omas Weihnachtsbäckerei, eine kleine
