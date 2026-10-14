@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Dokumentation: README und CHANGELOG für beide Apps vervollständigt**
-  (2026-10-14): Die Gaming-Edition hat jetzt eine eigene
+  (2026-10-14, PR #203): Die Gaming-Edition hat jetzt eine eigene
   [README](gaming/README.md) mit allen Funktionen und Ideen und eine eigene
   [CHANGELOG](gaming/CHANGELOG.md), die `npm run changelog:gaming` aus dieser
   Datei erzeugt. Hier fehlten bisher die ersten Änderungen vom September
