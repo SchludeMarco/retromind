@@ -106,7 +106,10 @@ export function useSpotifyAuth() {
   // from before that permission existed simply keep the normal player.
   useEffect(() => {
     const streaming = /\bstreaming\b/.test(tokenRef.current?.scope ?? '');
-    setPremiumTokenSource(status === 'signed_in' && user?.product === 'premium' && streaming ? getFreshAccessToken : null);
+    setPremiumTokenSource(
+      status === 'signed_in' && user?.product === 'premium' && streaming ? getFreshAccessToken : null,
+      tokenRef.current?.scope ?? ''
+    );
     // Search and music to the topic work with any login (lib/spotifyApi).
     setSpotifyApiToken(status === 'signed_in' ? getFreshAccessToken : null);
   }, [status, user, getFreshAccessToken]);

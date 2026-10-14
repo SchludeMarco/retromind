@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spotify Premium auf dem Handy: ganze Songs über deine Spotify-App': {
+    title: 'Spotify Premium on your phone: full songs through your Spotify app',
+    text: 'Signed in to the time journey with Spotify Premium, the music on your phone now plays full songs instead of 30-second previews. It plays in your own Spotify app on the phone; RetroMind only tells it which song comes next, and pause, next and back control it. The music player shows the device it plays on. If RetroMind can’t find the Spotify app, open it for a moment and tap “Try again” in the music player; until then you hear previews as before. If you were signed in already, sign in to Spotify once more (RetroMind needs one more permission). When you leave RetroMind, the music in the Spotify app stops.',
+  },
   'Pause hält die Musik an, Hits aus deinen Jahren': {
     title: 'Pause stops the music, hits from your own years',
     text: 'The pause button in the music player now really stops the music. Before, Spotify could report a paused song as finished, and a new one started right away. Signed in with Spotify, the songs now also come from your own years: for every year of the decade in which you were 6 to 19, RetroMind looks for a hits playlist of that year and mixes the songs. The player then shows, for example, “Hits of 1983–1989”. Without a login the decade’s playlist plays as before.',

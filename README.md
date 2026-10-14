@@ -159,9 +159,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   „Hits <Jahr>“-Playlist und mischt ihre Songs; der Player zeigt dann
   „Hits von 1983–1989“ ([`lib/youthMusic.ts`](lib/youthMusic.ts)). Ohne
   Login bleibt es bei der Dekaden-Playlist. Ganze Songs statt
-  30-Sekunden-Ausschnitten gibt es nur mit Spotify-Login (Premium am
-  Computer) oder wenn man im selben Browser bei Spotify angemeldet ist;
-  Spotify spielt im eingebetteten Player sonst nur Ausschnitte.
+  30-Sekunden-Ausschnitten gibt es mit Spotify Premium: am Computer über
+  Spotifys Browser-Player, auf dem Handy über die eigene Spotify-App
+  (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
+  Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
+  außer man ist im selben Browser bei Spotify angemeldet.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten rechts
@@ -209,9 +211,18 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Zeitreise und Gaming-Halle) über Spotifys eigenen Browser-Player
   ([`lib/spotifyPremium.ts`](lib/spotifyPremium.ts), Web Playback SDK): ganze
   Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
-  6 Sekunden langsam lauter. Ohne Premium, ohne Anmeldung, auf Handy und Tablet (iPhone, iPad, Android)
-  oder wenn Spotifys Player nicht startet, bleibt es beim eingebetteten
-  Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
+  6 Sekunden langsam lauter. Auf Handy und Tablet (iPhone, iPad, Android),
+  wo Spotify seinen Browser-Player nicht unterstützt, spielt die Zeitreise
+  mit Premium über die **eigene Spotify-App** (Spotify Connect,
+  [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts)): ganze Songs, die App
+  spielt sie, RetroMind steuert Song, Pause, Weiter und Zurück und fragt alle
+  2 Sekunden ab, was läuft. Findet sie keine Spotify-App (sie muss offen
+  oder kurz vorher offen gewesen sein), zeigt der Musik-Player „Öffne kurz
+  die Spotify-App … Nochmal versuchen“; Logins von vor dieser Funktion
+  bitten einmal um eine neue Anmeldung (Erlaubnis
+  `user-read-playback-state`). Beim Verlassen der Seite hält die App an.
+  Ohne Premium, ohne Anmeldung oder wenn Spotifys Player nicht startet,
+  bleibt es beim eingebetteten Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
   das Abspielen ab oder es bleibt still), übernimmt nach spätestens etwa
   10 Sekunden von selbst der eingebettete Player. In der Gaming-Edition liegt die Anmeldung in den Einstellungen unter
   „Hallenmusik“. Ohne konfigurierte Spotify-Client-ID bleibt der Button
@@ -422,8 +433,10 @@ Code + PKCE (kein Client-Secret nötig, dafür ein voller Seiten-Redirect zu
 Popup-/Silent-Renewal-API anbietet). Der Access-Token bleibt im Speicher; nur
 der Refresh-Token landet in `localStorage`, sonst könnte man nach einem Reload
 nicht ohne erneuten Consent-Screen angemeldet bleiben. Abgefragt werden nur
-Name, E-Mail und Premium-/Free-Status (`GET /v1/me`) – keine Höraktivität,
-keine Playlists.
+Name, E-Mail und Premium-/Free-Status (`GET /v1/me`), keine Playlists. Nur
+mit Premium auf dem Handy fragt die Zeitreise zusätzlich ab, welche
+Spotify-Geräte es gibt und was gerade läuft (`user-read-playback-state`), um
+die Musik über die Spotify-App zu spielen; gespeichert wird davon nichts.
 
 ## Tech-Stack
 
@@ -507,7 +520,9 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 - **Spotify-Einblenden nur mit Premium:** Der eingebettete Spotify-Player
   bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
   Premium-Anmeldung am Computer: auf Handy und Tablet (iPhone, iPad, Android)
-  unterstützt Spotify seinen Browser-Player nicht.
+  unterstützt Spotify seinen Browser-Player nicht. Dort spielt die Zeitreise
+  ganze Songs über die Spotify-App, deren Lautstärke aber die des Handys ist.
+  Die Gaming-Halle nutzt die Spotify-App noch nicht.
 
 ## Pflege dieses Repos
 

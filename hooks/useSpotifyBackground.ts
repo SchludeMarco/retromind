@@ -12,7 +12,8 @@ import {
   SpotifyEmbedController,
 } from '../lib/spotifyEmbed';
 import { DECADES_DB } from '../constants';
-import { createSpotifyController, usePremiumPlayback } from '../lib/spotifyPremium';
+import { createSpotifyController, useConnectPlayback, usePremiumPlayback } from '../lib/spotifyPremium';
+import { useConnectAttempt } from '../lib/spotifyConnect';
 import { isMuted, setMuted, useMuted } from '../lib/mute';
 import { useConsent } from '../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../lib/musicStatus';
@@ -59,6 +60,10 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
   const allowed = useConsent('spotify') === true;
   // Signed in with Premium: Spotify's own player, which fades in.
   const premium = usePremiumPlayback();
+  // On phones Premium plays through the visitor's Spotify app instead
+  // (lib/spotifyConnect); "Try again" in the music panel builds it anew.
+  const connect = useConnectPlayback();
+  const connectAttempt = useConnectAttempt();
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
   const decadeRef = useRef(currentDecade);
@@ -201,7 +206,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
         setSong(id);
         shuffleRef.current = !!id;
         heardRef.current = false;
-        return createSpotifyController(host, id ? trackUri(id) : playlistUri(playlistId));
+        return createSpotifyController(host, id ? trackUri(id) : playlistUri(playlistId), { connect: true });
       })
       .then((controller) => {
         if (cancelled) {
@@ -236,10 +241,11 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
       setIsReady(false);
       setIsPlaying(false);
     };
-    // Only consent (or a Premium login coming or going) recreates the
-    // controller — decade switches are handled by the effect below via loadUri.
+    // Only consent (or a Premium login coming or going, or the Spotify app
+    // being found or lost) recreates the controller — decade switches are
+    // handled by the effect below via loadUri.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowed, premium]);
+  }, [allowed, premium, connect, connectAttempt]);
 
   useEffect(() => {
     const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;

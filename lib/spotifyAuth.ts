@@ -13,7 +13,9 @@ const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 // streaming + user-modify-playback-state: Spotify's browser player for
 // Premium accounts (lib/spotifyPremium), which fades the music in.
-const SCOPES = 'user-read-private user-read-email streaming user-modify-playback-state';
+// user-read-playback-state: on phones the Zeitreise plays through the
+// visitor's own Spotify app and has to see what it plays (lib/spotifyConnect).
+const SCOPES = 'user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state';
 const VERIFIER_KEY = 'retromind.spotify.verifier';
 const STATE_KEY = 'retromind.spotify.state';
 const REFRESH_TOKEN_KEY = 'retromind.spotify.refresh_token';

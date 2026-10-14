@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify Premium auf dem Handy: ganze Songs über deine Spotify-App**
+  (2026-10-14, PR #205): Bist du in der Zeitreise mit Spotify Premium
+  angemeldet, spielt die Musik auf dem Handy jetzt ganze Songs statt
+  30-Sekunden-Ausschnitten. Sie läuft dabei in deiner eigenen Spotify-App
+  auf dem Handy; RetroMind sagt ihr nur, welcher Song kommt, und Pause,
+  Weiter und Zurück steuern sie. Der Musik-Player zeigt, auf welchem Gerät
+  sie läuft. Findet RetroMind die Spotify-App nicht, öffnest du sie kurz und
+  tippst im Musik-Player auf „Nochmal versuchen“; bis dahin laufen wie
+  bisher Ausschnitte. Wer schon angemeldet war, meldet sich dafür einmal neu
+  bei Spotify an (RetroMind braucht eine Erlaubnis mehr). Verlässt du
+  RetroMind, hält die Musik in der Spotify-App an.
+
 - **Pause hält die Musik an, Hits aus deinen Jahren** (2026-10-14,
   PR #205): Der Pause-Knopf im Musik-Player hält die Musik jetzt wirklich
   an. Vorher konnte Spotify einen pausierten Song als „zu Ende“ melden, und

@@ -5,6 +5,8 @@ import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
 import { setMusicVolume, useMusicVolume } from '../lib/musicVolume';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import { tr } from '../lib/i18n';
+import { retryConnect, useConnectState } from '../lib/spotifyConnect';
+import { beginSpotifyLogin } from '../lib/spotifyAuth';
 import './musicDock.css';
 
 // The music controls (Marco, 2026-10-06): tucked away behind a small
@@ -221,6 +223,50 @@ const Volume: React.FC<{ extras?: MusicDockExtras; ownMusic: boolean }> = ({ ext
   );
 };
 
+// Spotify Premium on a phone plays through the visitor's own Spotify app
+// (lib/spotifyConnect, Zeitreise only). Says where the music plays, or what
+// to do when the app isn't found or the login is from before.
+const ConnectNote: React.FC = () => {
+  const { state, device } = useConnectState();
+  if (state === 'off') return null;
+  if (state === 'app')
+    return (
+      <p className="music-dock-volume-note">
+        {tr(
+          `Full songs with your Premium, playing in your Spotify app${device ? ` (${device})` : ''}. Use your phone’s volume buttons.`,
+          `Ganze Songs mit deinem Premium, sie laufen in deiner Spotify-App${device ? ` (${device})` : ''}. Lauter und leiser geht mit den Tasten deines Handys.`
+        )}
+      </p>
+    );
+  if (state === 'login')
+    return (
+      <div className="music-dock-volume-note">
+        <p>
+          {tr(
+            'For full songs through your Spotify app, sign in with Spotify once more (RetroMind needs one more permission).',
+            'Für ganze Songs über deine Spotify-App melde dich noch einmal bei Spotify an (RetroMind braucht eine Erlaubnis mehr).'
+          )}
+        </p>
+        <button type="button" className="music-dock-mute" onClick={() => beginSpotifyLogin().catch(() => undefined)}>
+          {tr('Sign in with Spotify again', 'Neu bei Spotify anmelden')}
+        </button>
+      </div>
+    );
+  return (
+    <div className="music-dock-volume-note">
+      <p>
+        {tr(
+          'For full songs, open the Spotify app on your phone for a moment, come back and tap “Try again”. Until then you hear short previews.',
+          'Für ganze Songs öffne kurz die Spotify-App auf deinem Handy, komm zurück und tippe auf „Nochmal versuchen“. Bis dahin hörst du kurze Ausschnitte.'
+        )}
+      </p>
+      <button type="button" className="music-dock-mute" onClick={retryConnect}>
+        {tr('Try again', 'Nochmal versuchen')}
+      </button>
+    </div>
+  );
+};
+
 const NOTE = 'M9 3v10.6A3.5 3.5 0 1 0 11 17V8h6V3z';
 const BOLT = 'M13 2L4 14h6l-1 8 9-12h-6z';
 const PREV = 'M6 5h2v14H6zM20 5v14L9 12z';
@@ -251,6 +297,8 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   // The Premium player says what really plays (also inside an album).
   const live = useMusicStatus(extras?.status).track;
   const shownTitle = live ? `${live.name} · ${live.artists}` : title;
+  // Playing in the Spotify app: its volume is the phone's, no slider.
+  const inApp = useConnectState().state === 'app';
   const [open, setOpen] = useState(false);
   const toggle = (next: boolean) => {
     setOpen(next);
@@ -341,7 +389,8 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 <Svg d={NEXT} />
               </button>
             </div>
-            <Volume extras={extras} ownMusic={ownMusic} />
+            <ConnectNote />
+            {!inApp && <Volume extras={extras} ownMusic={ownMusic} />}
             {extras && <Extras extras={extras} onPicked={() => undefined} />}
             {onToggleMute && (
               <button type="button" className="music-dock-mute" onClick={onToggleMute} aria-pressed={!!muted}>

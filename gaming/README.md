@@ -299,6 +299,10 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 
 ### Könnte
 
+- **Ganze Songs in der Halle auf dem Handy:** Wie die Zeitreise könnte die
+  Halle mit Spotify Premium auf dem Handy über die eigene Spotify-App
+  spielen (`lib/spotifyConnect.ts`); dafür bräuchte die Tür-Musik mit ihrem
+  gedämpften Klang einen anderen Weg, denn die App lässt sich nicht dämpfen.
 - **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
   dort stehen unter CC BY 3.0 und passen zu „Fakten & Geheimnisse“
   (unbenutzte Level, Debug-Menüs, Botschaften der Entwickler). Der Server von
