@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Keine Musik mehr über dem Jahresvideo': {
+    title: 'No more music over the year’s video',
+    text: 'At the start, the Spotify music kept playing over the video from your year, so the video was hard to follow. Now the video starts once the arrival show is over, and the music stays quiet while it runs. Hide the video and the music plays on.',
+  },
   'Musik hängt nicht mehr bei „Lädt …“': {
     title: 'Music no longer hangs on “Loading …”',
     text: 'When the Spotify player was set up again (for example because your Spotify login arrived after the start, or the Spotify app on your phone wasn’t found), the music in the time travel and in the gaming hall got stuck on “Loading playlist”. Now the new player starts as usual.',

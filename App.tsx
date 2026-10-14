@@ -533,6 +533,9 @@ const App: React.FC = () => {
     if (!verified || landedRef.current || !sawSplashRef.current) return;
     landedRef.current = true;
     startTravelRef.current = true;
+    // Decided together with the journey, so the year's video already knows
+    // it has to wait for the show.
+    if (birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrivalShow(true);
     setTravel((n) => n + 1);
   }, [showSplash, verified]);
   const decadeSeenRef = useRef(manualDecade);
@@ -548,10 +551,7 @@ const App: React.FC = () => {
     if (!atStart && !travelYear) return;
     // The start gets its show (components/ArrivalShow), which speaks at its
     // lock-in; without motion, the voice alone.
-    if (atStart && birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setArrivalShow(true);
-      return;
-    }
+    if (atStart && birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     // After the gong of the arrival / while the iris opens.
     const t = window.setTimeout(() => (atStart ? announceWelcomeBack() : announceYear(travelYear!)), 900);
     return () => window.clearTimeout(t);
@@ -562,22 +562,29 @@ const App: React.FC = () => {
   useEffect(() => {
     setRoomEra(verified && !showSplash && !arrivalShow ? currentAudioDecade || null : null);
   }, [verified, showSplash, arrivalShow, currentAudioDecade]);
-  // The year's video (and the arrival show's hit fanfare) and the Spotify
-  // music don't play at the same time.
+  // The year's video, the arrival show's hit fanfare and the Spotify music
+  // don't play at the same time. Each of the two reports itself on and off;
+  // the music only comes back once neither plays any more (Marco,
+  // 2026-10-14: at the start the music played over the video, because the
+  // end of the fanfare brought it back while the video was running).
   const pausedForVideoRef = useRef(false);
   const musicRef = useRef(spotify);
   musicRef.current = spotify;
-  const [videoOn, setVideoOn] = useState(false);
-  const handleYearVideo = useCallback((on: boolean) => {
-    setVideoOn(on);
-    if (on) return;
-    const sp = musicRef.current;
-    if (pausedForVideoRef.current) {
+  const [quietFor, setQuietFor] = useState<{ video: boolean; fanfare: boolean }>({ video: false, fanfare: false });
+  const videoOn = quietFor.video || quietFor.fanfare;
+  const handleYearVideo = useCallback((on: boolean) => setQuietFor((q) => (q.video === on ? q : { ...q, video: on })), []);
+  const handleFanfare = useCallback((on: boolean) => setQuietFor((q) => (q.fanfare === on ? q : { ...q, fanfare: on })), []);
+  // A moment's grace: when the show ends, the year's video comes right after.
+  useEffect(() => {
+    if (videoOn || !pausedForVideoRef.current) return;
+    const t = window.setTimeout(() => {
       pausedForVideoRef.current = false;
+      const sp = musicRef.current;
       if (!sp.isPlaying) sp.togglePlay();
-    }
-  }, []);
-  // Pause once per video, also when the music only starts after it.
+    }, 1500);
+    return () => window.clearTimeout(t);
+  }, [videoOn]);
+  // Pause once while they play, also when the music only starts after them.
   useEffect(() => {
     if (!videoOn || !spotify.isPlaying || pausedForVideoRef.current) return;
     pausedForVideoRef.current = true;
@@ -807,7 +814,7 @@ const App: React.FC = () => {
           onLock={announceWelcomeBack}
           onDone={() => setArrivalShow(false)}
           memories={memories}
-          onMusic={handleYearVideo}
+          onMusic={handleFanfare}
         />
       )}
       {toast && (
@@ -912,7 +919,7 @@ const App: React.FC = () => {
               onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }}
             />
           )}
-          {travelYear && <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />}
+          {travelYear && <YearWelcome year={travelYear} travel={travel} hold={arrivalShow} onPlayingChange={handleYearVideo} />}
           {!warm && musicDock}
           <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
 

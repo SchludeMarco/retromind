@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Keine Musik mehr über dem Jahresvideo** (2026-10-14, PR #215): Beim
+  Start lief die Spotify-Musik über dem Video aus deinem Jahr weiter, so
+  dass man das Video kaum verstand. Jetzt startet das Video erst, wenn die
+  Ankunfts-Show vorbei ist, und die Musik bleibt still, solange es läuft.
+  Blendest du das Video aus, spielt die Musik weiter.
+
 - **Musik hängt nicht mehr bei „Lädt …“** (2026-10-14, PR #214): Wurde der
   Spotify-Player neu aufgebaut (etwa weil dein Spotify-Login nach dem Start
   dazukam oder die Spotify-App auf dem Handy nicht gefunden wurde), blieb

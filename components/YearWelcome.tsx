@@ -77,20 +77,27 @@ export const YearWelcome: React.FC<{
   year: number;
   /** Changes on every journey: opens and starts the video again. */
   travel: number;
+  /** While true (the arrival show runs over the app), the video waits. */
+  hold?: boolean;
   /** A video is on screen (App pauses the Spotify music meanwhile). */
   onPlayingChange?: (playing: boolean) => void;
-}> = ({ year, travel, onPlayingChange }) => {
+}> = ({ year, travel, hold = false, onPlayingChange }) => {
   const allowed = useConsent('youtube') === true;
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState<Video | null | undefined>(undefined);
 
   const change = (next: boolean) => setOpen(next);
 
-  // Every journey opens the video of the new year.
+  // Every journey opens the video of the new year, once the arrival show
+  // is over (not underneath it, mixed with its fanfare).
+  const openedFor = useRef(0);
   useEffect(() => {
-    if (travel > 0) change(true);
+    if (travel > 0 && !hold && openedFor.current !== travel) {
+      openedFor.current = travel;
+      change(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [travel]);
+  }, [travel, hold]);
 
   useEffect(() => {
     if (!allowed || !open) return;
