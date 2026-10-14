@@ -54,6 +54,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`components/LivingRoom.tsx`](components/LivingRoom.tsx),
   [`components/CozyRoom.tsx`](components/CozyRoom.tsx),
   [`lib/roomSounds.ts`](lib/roomSounds.ts), [`lib/weather.ts`](lib/weather.ts)).
+  Nach der Landung ist die Stube **im Stil deines Jahrzehnts eingerichtet**
+  (Tapete, Couch, Kissen, Vorhänge und ein Radio der Zeit auf der
+  Fensterbank, je nach Jahrzehnt), auch in den Stuben-Ecken
+  ([`lib/roomEra.ts`](lib/roomEra.ts), [`components/EraDecor.tsx`](components/EraDecor.tsx)).
 - **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
   eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
   Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum
@@ -176,8 +180,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   **Ankunfts-Show** ([`components/ArrivalShow.tsx`](components/ArrivalShow.tsx)):
   eine Zeitanzeige (Gegenwart grün, Ziel rot) rattert von heute zurück bis
   zum Geburtstag, rastet mit Blitz, Druckwellen und Schlag ein, dann steht
-  das Geburtsjahr riesig da, Dinge des Jahrzehnts fliegen heraus; ein Tipp
-  überspringt sie. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
+  das Geburtsjahr riesig da mit dem, wofür das Jahr steht („1989 … das Jahr
+  des Mauerfalls“, [`lib/yearFacts.ts`](lib/yearFacts.ts)), Dinge des
+  Jahrzehnts und die eigenen Fotos und Begriffe fliegen heraus, und ein paar
+  Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
+  `/api/spotify-preview`) klingen als Fanfare; ein Tipp überspringt sie. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
   back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
   sagt sie „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
   Sprachausgabe des Browsers, tief und langsam, still bei ausgeschaltetem
@@ -622,6 +629,11 @@ Ideen nur für die Gaming-Edition stehen in deren
   Sprachausgabe des Browsers (klingt je nach Gerät anders) eine einmal
   aufgenommene Roboterstimme für jedes Jahr, und statt des ersten
   Suchtreffers von YouTube ein von Hand ausgesuchtes Video pro Jahr.
+
+- **Deutsche Nummer-1-Hits:** Die Fanfare der Ankunfts-Show nimmt die Nr. 1
+  der US-Jahrescharts; für die deutsche Sprache könnte es die Nr. 1 der
+  deutschen Jahrescharts sein (z. B. 1989 „Looking for Freedom“), sobald die
+  Liste geprüft ist.
 
 - **Jeder Wechsel zwischen den Halten als kleine Zeitreise:** Der Zeiger der
   Reiseuhr springt sichtbar weiter, ein kurzes Ticken und eine kleine Blende,

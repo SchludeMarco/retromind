@@ -27,6 +27,11 @@ let ctx: AudioContext | null = null;
 // silence over the first seconds the page really sounds (lib/startupFade).
 let bus: GainNode | null = null;
 
+/** The page's sound context, unlocked by the start button's tap (phones only play sound after one). */
+export function sharedAudioContext(): AudioContext | null {
+  return audioContext();
+}
+
 function audioContext(): AudioContext | null {
   if (ctx && ctx.state !== 'closed') return ctx;
   try {

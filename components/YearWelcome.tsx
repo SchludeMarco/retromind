@@ -3,6 +3,7 @@ import { useMuted } from '../lib/mute';
 import { PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 import { isGerman, tr } from '../lib/i18n';
 import { yearPhrase } from '../lib/robotVoice';
+import { yearOf } from '../lib/yearFacts';
 
 // "Welcome to the year 1975" above every stop, so you always know where the
 // time machine has put you (Marco, 2026-10-14: "der entsprechende Text
@@ -107,6 +108,7 @@ export const YearWelcome: React.FC<{
         <div className="min-w-0">
           <p className="rm-eyebrow">{tr('The time machine has landed', 'Die Zeitmaschine ist gelandet')}</p>
           <h2 className="rm-year-title">{yearPhrase(year)}</h2>
+          {yearOf(year) && <p className="rm-year-of">… {yearOf(year)}</p>}
         </div>
         <button type="button" className="rm-btn rm-btn-secondary rm-year-toggle" onClick={() => change(!open)} aria-expanded={open}>
           {open ? tr('Hide video', 'Video ausblenden') : tr(`▶ Video from ${year}`, `▶ Video aus ${year}`)}

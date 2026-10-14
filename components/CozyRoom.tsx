@@ -3,6 +3,8 @@ import type { WeatherKind } from '../lib/weather';
 import { useMuted } from '../lib/mute';
 import { tr } from '../lib/i18n';
 import { playClick, playCrackle, playPurr, playTvOn, setFireSound, tapFeel } from '../lib/roomSounds';
+import { eraStyle, justFurnished, useRoomEra } from '../lib/roomEra';
+import { EraRadio, EraWallpaper } from './EraDecor';
 
 // The "Stube" at the top of the Retro Warm start page (Marco, 2026-10-13:
 // "man soll sich direkt wie Zuhause auf der warmen Couch in der warmen Stube
@@ -20,6 +22,10 @@ import { playClick, playCrackle, playPurr, playTvOn, setFireSound, tapFeel } fro
 // cat purrs, the window opens the real weather, and the picture and the
 // books lead to the journey's stations. Each touch gives a little sound
 // (lib/roomSounds.ts) and, on phones that can, a short buzz.
+//
+// After the landing the room is furnished in the style of your decade
+// (lib/roomEra.ts): wallpaper, couch, cushions, curtains and a radio of the
+// time on the window sill, moving in with a little animation.
 
 export type DayTime = 'morning' | 'day' | 'evening' | 'night';
 
@@ -135,6 +141,17 @@ export const CozyRoom: React.FC<{
   const [wobble, setWobble] = useState<'' | 'picture' | 'books'>('');
   const timers = useRef<number[]>([]);
   const muted = useMuted();
+  const style = eraStyle(useRoomEra());
+  const [furnishing, setFurnishing] = useState(() => justFurnished());
+  useEffect(() => {
+    if (!style) return;
+    if (justFurnished()) setFurnishing(true);
+    const t = window.setTimeout(() => setFurnishing(false), 2200);
+    return () => window.clearTimeout(t);
+  }, [style]);
+  const couch = style?.couch ?? ['#d48a4b', '#b5672f', '#b5672f', '#c97b3f', '#a8602c'];
+  const cushions = style?.cushions ?? ['#4b7b72', '#34645c', '#f3e1c4', '#e8a838'];
+  const curtain = style?.curtain ?? ['#c2532f', '#a43716'];
   const later = (fn: () => void, ms: number) => {
     timers.current.push(window.setTimeout(fn, ms));
   };
@@ -182,18 +199,22 @@ export const CozyRoom: React.FC<{
   return (
     <svg
       viewBox="0 0 400 220"
-      className={`cozy-room block w-full h-auto ${interactive ? 'is-interactive' : ''} ${className}`}
+      className={`cozy-room block w-full h-auto ${interactive ? 'is-interactive' : ''} ${furnishing ? 'is-furnishing' : ''} ${className}`}
       {...(interactive
         ? { role: 'group', 'aria-label': tr('The living room. Everything in it can be tapped.', 'Die Stube. Alles darin kann man antippen.') }
         : { 'aria-hidden': true, focusable: 'false' })}
     >
       <defs>
-        <pattern id="cozy-wallpaper" width="24" height="24" patternUnits="userSpaceOnUse">
-          <rect width="24" height="24" fill="#f2dcbc" />
-          <rect width="12" height="24" fill="#efd5b2" />
-          <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
-          <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
-        </pattern>
+        {style ? (
+          <EraWallpaper id="cozy-wallpaper" wall={style.wall} />
+        ) : (
+          <pattern id="cozy-wallpaper" width="24" height="24" patternUnits="userSpaceOnUse">
+            <rect width="24" height="24" fill="#f2dcbc" />
+            <rect width="12" height="24" fill="#efd5b2" />
+            <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
+            <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
+          </pattern>
+        )}
         <clipPath id="cozy-screen">
           <rect x="344" y="123" width="36" height="30" rx="7" />
         </clipPath>
@@ -219,8 +240,8 @@ export const CozyRoom: React.FC<{
           <stop offset="1" stopColor="#cfe6ff" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="cozy-couch" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d48a4b" />
-          <stop offset="1" stopColor="#b5672f" />
+          <stop offset="0" stopColor={couch[0]} />
+          <stop offset="1" stopColor={couch[1]} />
         </linearGradient>
         <linearGradient id="cozy-floor" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#a8693e" />
@@ -229,7 +250,7 @@ export const CozyRoom: React.FC<{
       </defs>
 
       {/* Wall and floor */}
-      <rect width="400" height="168" fill="url(#cozy-wallpaper)" />
+      <rect className="cozy-era-wall" width="400" height="168" fill="url(#cozy-wallpaper)" />
       <rect y="24" width="400" height="3" fill="#c9965f" opacity="0.6" />
       <rect y="166" width="400" height="54" fill="url(#cozy-floor)" />
       {[178, 192, 207].map((y) => (
@@ -279,9 +300,9 @@ export const CozyRoom: React.FC<{
         <rect x="256" y="118" width="96" height="6" rx="2" fill="#e9d2b0" />
         {weather === 'snow' && <path d="M258 118c6-4 14-3 22-2s20-3 30-1 22 1 30 3z" fill="#ffffff" />}
         {/* curtains, tied back */}
-        <path d="M250 28h22c-2 30 6 52 2 70-3 14-12 20-20 22-6-28 2-60-4-92z" fill="#c2532f" />
-        <path d="M358 28h-22c2 30-6 52-2 70 3 14 12 20 20 22 6-28-2-60 4-92z" fill="#c2532f" />
-        <path d="M258 34c2 24-2 50 0 78M350 34c-2 24 2 50 0 78" stroke="#a43716" strokeWidth="1.4" fill="none" opacity="0.6" />
+        <path d="M250 28h22c-2 30 6 52 2 70-3 14-12 20-20 22-6-28 2-60-4-92z" fill={curtain[0]} />
+        <path d="M358 28h-22c2 30-6 52-2 70 3 14 12 20 20 22 6-28-2-60 4-92z" fill={curtain[0]} />
+        <path d="M258 34c2 24-2 50 0 78M350 34c-2 24 2 50 0 78" stroke={curtain[1]} strokeWidth="1.4" fill="none" opacity="0.6" />
         <rect x="246" y="24" width="116" height="5" rx="2.5" fill="#8a5a33" />
         <circle cx="246" cy="26.5" r="4" fill="#8a5a33" />
         <circle cx="362" cy="26.5" r="4" fill="#8a5a33" />
@@ -289,6 +310,8 @@ export const CozyRoom: React.FC<{
         <path d="M264 109h12l-1.6 9h-8.8z" fill="#c2532f" />
         <path d="M270 109c-1-7-6-10-9-11 3 4 4.5 7 5 11M270 109c.5-8 4-13 8-15-2 5-3.5 10-4 15M270 109c0-6-1-12-.5-17 1.5 5 2 11 1.5 17" fill="#5f8f6a" />
       </Hot>
+
+      {style && <EraRadio kind={style.radio} x={316} y={118} />}
 
       {/* Pictures on the wall */}
       <Hot
@@ -362,20 +385,20 @@ export const CozyRoom: React.FC<{
       </Hot>
 
       {/* Couch */}
-      <g>
+      <g className="cozy-era-couch">
         <rect x="92" y="104" width="160" height="56" rx="18" fill="url(#cozy-couch)" />
-        <path d="M120 112v40M172 112v40M224 112v40" stroke="#b5672f" strokeWidth="1.6" opacity="0.7" />
-        <rect x="96" y="140" width="152" height="30" rx="10" fill="#c97b3f" />
-        <path d="M172 142v26" stroke="#a8602c" strokeWidth="1.6" />
-        <rect x="82" y="122" width="26" height="54" rx="12" fill="#b5672f" />
-        <rect x="236" y="122" width="26" height="54" rx="12" fill="#b5672f" />
+        <path d="M120 112v40M172 112v40M224 112v40" stroke={couch[1]} strokeWidth="1.6" opacity="0.7" />
+        <rect x="96" y="140" width="152" height="30" rx="10" fill={couch[3]} />
+        <path d="M172 142v26" stroke={couch[4]} strokeWidth="1.6" />
+        <rect x="82" y="122" width="26" height="54" rx="12" fill={couch[2]} />
+        <rect x="236" y="122" width="26" height="54" rx="12" fill={couch[2]} />
         <rect x="92" y="176" width="5" height="10" rx="1.5" fill="#5e3a22" />
         <rect x="247" y="176" width="5" height="10" rx="1.5" fill="#5e3a22" />
         {/* cushions */}
-        <rect x="108" y="116" width="34" height="30" rx="9" fill="#4b7b72" transform="rotate(-8 125 131)" />
-        <circle cx="125" cy="131" r="2.4" fill="#34645c" />
-        <rect x="146" y="118" width="32" height="28" rx="9" fill="#f3e1c4" transform="rotate(5 162 132)" />
-        <path d="M150 127h24M150 132h24M150 137h24" stroke="#e8a838" strokeWidth="2" transform="rotate(5 162 132)" />
+        <rect x="108" y="116" width="34" height="30" rx="9" fill={cushions[0]} transform="rotate(-8 125 131)" />
+        <circle cx="125" cy="131" r="2.4" fill={cushions[1]} />
+        <rect x="146" y="118" width="32" height="28" rx="9" fill={cushions[2]} transform="rotate(5 162 132)" />
+        <path d="M150 127h24M150 132h24M150 137h24" stroke={cushions[3]} strokeWidth="2" transform="rotate(5 162 132)" />
         {/* crocheted blanket over the right armrest */}
         <g transform="translate(212 116) rotate(6)">
           {GRANNY.map((c, i) => (

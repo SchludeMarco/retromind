@@ -17,6 +17,22 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   Schritte, Omas Tipp und „Erinnern: Wer hat das für dich gemacht?“ fürs
   Erinnerungsbuch.
 
+- **Dein Jahr, deine Erinnerungen, dein Hit und deine Stube** (2026-10-14,
+  PR #210): Unter der riesigen Jahreszahl der Ankunfts-Show steht jetzt,
+  wofür dein Jahr steht, zum Beispiel „1989 … das Jahr des Mauerfalls“
+  (für jedes Jahr von 1945 bis 2024 von Hand ausgesucht); derselbe Satz
+  steht auch unter „Willkommen im Jahr …“ über jedem Halt. Beim Einrasten
+  klingen ein paar Sekunden des Nummer-1-Hits deines Jahres als Fanfare
+  (die Nr. 1 der US-Jahrescharts, mit Titel und Interpret eingeblendet);
+  die Spotify-Musik pausiert so lange. Mit den Dingen des Jahrzehnts
+  fliegen jetzt auch deine eigenen Erinnerungen aus der Mitte: deine Fotos
+  und die Begriffe, die du schon gesammelt hast. Und nach der Landung ist
+  die Stube im Stil deines Jahrzehnts eingerichtet: passende Tapete,
+  Couch, Kissen und Vorhänge, dazu ein Radio der Zeit auf der Fensterbank
+  (Röhrenradio, Kofferradio, Ghettoblaster, CD-Radio, iPod-Dock,
+  Bluetooth-Box, smarter Lautsprecher); die Einrichtung zieht mit einer
+  kleinen Animation ein, auch in den Stuben-Ecken der Stationen.
+
 - **Ankunft mit Wow: Zeitanzeige, Blitz und dein Jahr** (2026-10-14,
   PR #209): Kommst du durch die Zeitmaschine in der App an, läuft jetzt
   eine kurze Show. Eine Zeitanzeige wie im Kino zeigt grün die Gegenwart

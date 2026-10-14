@@ -1841,6 +1841,13 @@ html[data-theme="nachtschicht"] .splash-start:active {
   line-height: 1.1;
   color: var(--color-retro-ink);
 }
+.rm-year-of {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--color-retro-brown, currentColor);
+}
 .rm-year-toggle {
   flex-shrink: 0;
   min-height: 44px;
@@ -2142,6 +2149,42 @@ html[data-theme="nachtschicht"] .splash-start:active {
   70% { opacity: 1; }
   100% { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a) + 200deg)) scale(1.3); opacity: 0; }
 }
+.rm-arrival-burst span.is-term {
+  width: auto;
+  max-width: 46vw;
+  margin: -0.8em 0 0 -3em;
+  padding: 0.35em 0.8em;
+  border-radius: 999px;
+  font: 800 clamp(13px, 3.4vmin, 18px)/1.2 'Plus Jakarta Sans', system-ui, sans-serif;
+  white-space: nowrap;
+  color: #2b1a10;
+  background: #ffe6a8;
+  box-shadow: 0 0 0 2px #fff6e0, 0 6px 18px rgb(0 0 0 / 0.45);
+  animation-name: rmBurstFlat;
+  animation-duration: 3.4s;
+}
+.rm-arrival-burst span.is-photo {
+  margin: -36px 0 0 -36px;
+  animation-name: rmBurstFlat;
+  animation-duration: 3.4s;
+}
+/* Own memories stay upright so they can be read and seen. */
+@keyframes rmBurstFlat {
+  0% { transform: rotate(var(--a)) translateX(0) rotate(calc(-1 * var(--a))) scale(0.2); opacity: 0; }
+  12% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))) scale(1.1); opacity: 0; }
+}
+.rm-arrival-burst span.is-photo img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 4px solid #fff6e0;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.5);
+  transform: rotate(-4deg);
+}
 .rm-arrival-year {
   position: absolute;
   inset: 0;
@@ -2182,6 +2225,19 @@ html[data-theme="nachtschicht"] .splash-start:active {
   color: #fff;
   opacity: 0.92;
 }
+.rm-arrival-hit {
+  margin-top: 0.7em;
+  max-width: 90vw;
+  padding: 0.4em 1em;
+  border-radius: 999px;
+  font: 600 clamp(13px, 3.6vw, 17px)/1.3 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #fff;
+  background: rgb(0 0 0 / 0.45);
+  box-shadow: 0 0 0 1px rgb(255 220 150 / 0.5);
+  animation: rmHitIn 500ms ease-out both;
+}
+.rm-arrival-hit b { color: #ffd36b; }
+@keyframes rmHitIn { from { opacity: 0; transform: translateY(8px); } }
 .rm-arrival-skip {
   position: absolute;
   bottom: calc(18px + env(safe-area-inset-bottom));
@@ -2332,4 +2388,39 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .cookbook-card { transition: none; }
   .cookbook-card:hover,
   .cookbook-tip { transform: none; }
+
+/* The Stube furnished in your decade (lib/roomEra.ts, components/EraDecor.tsx) */
+.rm-era-note {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-retro-brown, currentColor);
+  animation: rmEraNote 700ms ease-out both;
+}
+@keyframes rmEraNote { from { opacity: 0; transform: translateY(-4px); } }
+.cozy-era-notes { animation: cozyEraNote 3.2s ease-in-out infinite; opacity: 0; }
+@keyframes cozyEraNote {
+  0% { opacity: 0; transform: translate(0, 4px); }
+  30% { opacity: 0.8; }
+  70% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(3px, -8px); }
+}
+.cozy-room.is-furnishing .cozy-era-wall { animation: cozyEraWall 1.2s ease-out both; }
+@keyframes cozyEraWall { from { opacity: 0.15; } }
+.cozy-room.is-furnishing .cozy-era-couch {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: cozyEraPop 900ms cubic-bezier(0.2, 1.5, 0.4, 1) 250ms both;
+}
+.cozy-room.is-furnishing .cozy-era-radio > g:first-child {
+  animation: cozyEraDrop 700ms cubic-bezier(0.3, 1.6, 0.5, 1) 700ms both;
+}
+@keyframes cozyEraPop { from { transform: scale(0.6); opacity: 0; } }
+@keyframes cozyEraDrop { from { transform: translateY(-40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .cozy-era-notes,
+  .cozy-room.is-furnishing .cozy-era-wall,
+  .cozy-room.is-furnishing .cozy-era-couch,
+  .cozy-room.is-furnishing .cozy-era-radio > g:first-child,
+  .rm-era-note { animation: none; }
+  .cozy-era-notes { opacity: 0; }
 }

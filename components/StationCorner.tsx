@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AppPhase } from '../types';
 import { tr } from '../lib/i18n';
 import { Hot } from './CozyRoom';
+import { eraStyle, useRoomEra } from '../lib/roomEra';
+import { EraWallpaper } from './EraDecor';
 import { playClick, playCrackle, playPurr, playTvOn } from '../lib/roomSounds';
 
 // A corner of the Stube at the top of every station of the journey (Marco,
@@ -13,28 +15,36 @@ import { playClick, playCrackle, playPurr, playTvOn } from '../lib/roomSounds';
 // writing desk for the diary, the bookshelf for the memory book and a cake
 // with a candle for the wrap-up. One thing in each corner can be touched,
 // with a little sound (lib/roomSounds.ts); so can the cat. Animations stop
-// for reduced motion (index.css, .cozy-room).
+// for reduced motion (index.css, .cozy-room). After the landing, wallpaper
+// and armchair follow the decade's style like the Stube (lib/roomEra.ts).
 
 type Scene = Exclude<AppPhase, 'intro'>;
 
 const WALL_H = 88;
 
-const Room: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const Room: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const style = eraStyle(useRoomEra());
+  const chair = style?.couch ?? ['#d48a4b', '#b5672f'];
+  return (
   <>
     <defs>
-      <pattern id="corner-wallpaper" width="24" height="24" patternUnits="userSpaceOnUse">
-        <rect width="24" height="24" fill="#f2dcbc" />
-        <rect width="12" height="24" fill="#efd5b2" />
-        <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
-        <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
-      </pattern>
+      {style ? (
+        <EraWallpaper id="corner-wallpaper" wall={style.wall} />
+      ) : (
+        <pattern id="corner-wallpaper" width="24" height="24" patternUnits="userSpaceOnUse">
+          <rect width="24" height="24" fill="#f2dcbc" />
+          <rect width="12" height="24" fill="#efd5b2" />
+          <circle cx="18" cy="6" r="1.6" fill="#e2b98a" />
+          <circle cx="6" cy="18" r="1.6" fill="#e9c79c" />
+        </pattern>
+      )}
       <linearGradient id="corner-floor" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#a8693e" />
         <stop offset="1" stopColor="#8c5430" />
       </linearGradient>
       <linearGradient id="corner-chair" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#d48a4b" />
-        <stop offset="1" stopColor="#b5672f" />
+        <stop offset="0" stopColor={chair[0]} />
+        <stop offset="1" stopColor={chair[1]} />
       </linearGradient>
       <radialGradient id="corner-glow" cx="0.5" cy="0.5" r="0.5">
         <stop offset="0" stopColor="#ffd88a" stopOpacity="0.8" />
@@ -55,7 +65,8 @@ const Room: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <rect y={WALL_H - 6} width="400" height="1.5" fill="#a46a43" />
     {children}
   </>
-);
+  );
+};
 
 /** The cat, asleep in the corner; it purrs and sends up a heart when stroked. */
 const Cat: React.FC<{ x: number }> = ({ x }) => {
@@ -104,6 +115,7 @@ const Cat: React.FC<{ x: number }> = ({ x }) => {
 // Profile: an armchair waiting for you, with a coat rack by the door.
 const Armchair: React.FC = () => {
   const [hat, setHat] = useState(0);
+  const chair = eraStyle(useRoomEra())?.couch ?? ['#d48a4b', '#b5672f', '#b5672f', '#c97b3f'];
   return (
     <>
       <Hot
@@ -128,10 +140,10 @@ const Armchair: React.FC = () => {
       </Hot>
       <g>
         <rect x="160" y="30" width="80" height="54" rx="16" fill="url(#corner-chair)" />
-        <path d="M200 36v40" stroke="#b5672f" strokeWidth="1.6" opacity="0.7" />
-        <rect x="154" y="72" width="92" height="22" rx="8" fill="#c97b3f" />
-        <rect x="144" y="56" width="22" height="44" rx="10" fill="#b5672f" />
-        <rect x="234" y="56" width="22" height="44" rx="10" fill="#b5672f" />
+        <path d="M200 36v40" stroke={chair[1]} strokeWidth="1.6" opacity="0.7" />
+        <rect x="154" y="72" width="92" height="22" rx="8" fill={chair[3]} />
+        <rect x="144" y="56" width="22" height="44" rx="10" fill={chair[2]} />
+        <rect x="234" y="56" width="22" height="44" rx="10" fill={chair[2]} />
         <rect x="150" y="98" width="5" height="8" rx="1.5" fill="#5e3a22" />
         <rect x="245" y="98" width="5" height="8" rx="1.5" fill="#5e3a22" />
         <rect x="186" y="48" width="30" height="26" rx="8" fill="#f3e1c4" transform="rotate(-6 201 61)" />
