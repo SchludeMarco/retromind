@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Omas Kochbuch: Leckereien von damals zum Nachkochen': {
+    title: 'Grandma’s Cookbook: treats from back then to cook at home',
+    text: 'Explore has a new category, “Grandma’s Cookbook”. It opens a recipe book with ribbons for the decades from the ’60s to the 2010s, your own era first. Every decade has two treats, from Hawaiian toast and chocolate biscuit cake to the cheese hedgehog, spaghetti ice cream, cheesecake crumble, muffins and cake pops. Each recipe comes with Grandma’s little story, ingredients you can tick off while you cook, the steps, Grandma’s tip and “Remember: who made this for you?” for your memory book.',
+  },
   'Ankunft mit Wow: Zeitanzeige, Blitz und dein Jahr': {
     title: 'An arrival with a wow: time circuits, a flash and your year',
     text: 'Coming out of the time machine into the app, a short show now plays. Time circuits like in the movies show the present in green and the destination in red; the red digits race, rattling, from today back to your birthday. Then they lock in: a bright flash, two shockwaves, a deep boom with a bright chord, and your birth year appears huge and glowing with “Welcome back” and the decade’s title, while things of that time (disco ball, cassette, joystick …) fly out of the middle. At that moment the robot voice says “Welcome back”. After a few seconds the show fades; a tap skips it. With reduced motion turned on in your system settings there is only the voice.',

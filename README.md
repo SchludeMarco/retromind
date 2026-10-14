@@ -70,6 +70,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Erinnerung dazu“ öffnet eine persönliche Frage fürs Erinnerungsbuch
   ([`phases/HeroesSection.tsx`](phases/HeroesSection.tsx),
   [`lib/heroes.ts`](lib/heroes.ts)).
+- **Omas Kochbuch** – eine Sparte beim Erkunden: Leckereien von damals als
+  Rezepte, zwei pro Jahrzehnt (60er bis 2010er, die eigene Zeit zuerst),
+  in einem Rezeptbuch mit Lesezeichen und Karteikarten. Jedes Rezept hat
+  Omas Geschichte, Zutaten zum Abhaken, Schritte, Omas Tipp und eine Frage
+  fürs Erinnerungsbuch. Alle Texte sind selbst geschrieben, auf Englisch
+  (US-Maße) und Deutsch
+  ([`phases/CookbookSection.tsx`](phases/CookbookSection.tsx),
+  [`lib/recipes.ts`](lib/recipes.ts)).
 - **Laufband mit Sprüchen von damals** – unten auf der Startseite laufen
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
@@ -622,6 +630,10 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Helden-Seite mit mehr Material:** Zu einem Helden könnten passende
   Musik (Spotify), freie Videos von Wikimedia Commons und verwandte Helden
   („Wer gehörte noch dazu?“) angezeigt werden.
+
+- **Mehr Rezepte in Omas Kochbuch:** Eigene Rezepte der Familie
+  hinzufügen (mit Foto aus dem Memory-Labor) und ins Erinnerungsbuch
+  übernehmen; das Kochbuch könnte auch als Ecke in der Stube auftauchen.
 
 - **Grabbelkiste im Erinnerungsbuch:** Die gesammelten Sprüche könnten als
   eigene Seite ins Erinnerungsbuch und mit ins Google-Drive-Backup.

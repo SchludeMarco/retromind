@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Omas Kochbuch: Leckereien von damals zum Nachkochen** (2026-10-14,
+  PR #211): Beim Erkunden gibt es eine neue Sparte „Omas Kochbuch“. Sie
+  öffnet ein Rezeptbuch mit Lesezeichen für die Jahrzehnte von den 60ern
+  bis zu den 2010ern, deine eigene Zeit zuerst. Zu jedem Jahrzehnt gibt es
+  zwei Leckereien, vom Toast Hawaii und Kalten Hund über Käseigel und
+  Spaghetti-Eis bis zu Zupfkuchen, Muffins und Cake Pops. Jedes Rezept hat
+  Omas kleine Geschichte dazu, Zutaten zum Abhaken beim Kochen, die
+  Schritte, Omas Tipp und „Erinnern: Wer hat das für dich gemacht?“ fürs
+  Erinnerungsbuch.
+
 - **Ankunft mit Wow: Zeitanzeige, Blitz und dein Jahr** (2026-10-14,
   PR #209): Kommst du durch die Zeitmaschine in der App an, läuft jetzt
   eine kurze Show. Eine Zeitanzeige wie im Kino zeigt grün die Gegenwart
