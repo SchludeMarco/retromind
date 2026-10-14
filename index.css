@@ -2388,6 +2388,7 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .cookbook-card { transition: none; }
   .cookbook-card:hover,
   .cookbook-tip { transform: none; }
+}
 
 /* The Stube furnished in your decade (lib/roomEra.ts, components/EraDecor.tsx) */
 .rm-era-note {
