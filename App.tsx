@@ -19,6 +19,7 @@ import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOve
 import { MusicMini } from './components/MusicMini';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
+import { setRoomEra } from './lib/roomEra';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
@@ -555,7 +556,13 @@ const App: React.FC = () => {
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [travel]);
-  // The year's video and the Spotify music don't play at the same time.
+  // After the landing (once the arrival show is over) the Stube is furnished
+  // in the style of the decade you're in (lib/roomEra.ts).
+  useEffect(() => {
+    setRoomEra(verified && !showSplash && !arrivalShow ? currentAudioDecade || null : null);
+  }, [verified, showSplash, arrivalShow, currentAudioDecade]);
+  // The year's video (and the arrival show's hit fanfare) and the Spotify
+  // music don't play at the same time.
   const pausedForVideoRef = useRef(false);
   const musicRef = useRef(spotify);
   musicRef.current = spotify;
@@ -797,6 +804,8 @@ const App: React.FC = () => {
           decade={String(Math.min(2020, Math.max(1960, Math.floor(birthYear / 10) * 10)))}
           onLock={announceWelcomeBack}
           onDone={() => setArrivalShow(false)}
+          memories={memories}
+          onMusic={handleYearVideo}
         />
       )}
       {toast && (
