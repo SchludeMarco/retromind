@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Musik hängt nicht mehr bei „Lädt …“': {
+    title: 'Music no longer hangs on “Loading …”',
+    text: 'When the Spotify player was set up again (for example because your Spotify login arrived after the start, or the Spotify app on your phone wasn’t found), the music in the time travel and in the gaming hall got stuck on “Loading playlist”. Now the new player starts as usual.',
+  },
   'Mehr Weihnachtslichter und Weihnachtsklänge': {
     title: 'More Christmas lights and Christmas sounds',
     text: 'During the Christmas season, lots of small colorful lights now twinkle behind the pages, and the fairy lights along the top have almost twice as many bulbs, each blinking at its own pace. Every minute or two a short, quiet jingle sounds, with sleigh bells and the first notes of “Jingle Bells”, and every third time Santa adds a “Ho ho ho”. The first jingle only comes a while after your first tap and swells in gently. With the sound off everything stays quiet. In the settings you can switch off just the jingles (“Christmas jingles and Ho ho ho”), and “Christmas look: Off” turns off everything Christmassy: lights, snow, sounds, Christmas songs, the advent calendar and the Christmas bakery.',
