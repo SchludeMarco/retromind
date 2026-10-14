@@ -1729,6 +1729,93 @@ html[data-theme="nachtschicht"] .splash-start:active {
   }
 }
 
+/* The music controls top left (components/MusicMini): back, play/pause,
+   next and the song. In the Retro Warm top bar it fills the space left of
+   the buttons; in Klassisch and Nachtschicht it floats in the top-left
+   corner, leaving room for the speaker and the gear on the right. */
+.rm-music-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  color: var(--color-retro-ink);
+}
+.rm-music-mini.is-float {
+  padding: 3px 10px 3px 4px;
+  background: var(--color-retro-cream);
+  border: var(--rm-border-w, 2px) solid var(--rm-border-color, var(--color-retro-ink));
+  border-radius: 9999px;
+  box-shadow: var(--rm-shadow-float);
+}
+.rm-music-mini-corner {
+  max-width: calc(100vw - 9.5rem);
+}
+@media (min-width: 768px) {
+  .rm-music-mini-corner {
+    left: 2.5rem;
+    max-width: 26rem;
+  }
+}
+.rm-music-mini > button:not(.rm-music-mini-title) {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.rm-music-mini > button:not(.rm-music-mini-title):hover:not(:disabled),
+.rm-music-mini > button:focus-visible {
+  background: var(--color-retro-highlight);
+  outline: none;
+}
+.rm-music-mini > button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.rm-music-mini > .rm-music-mini-play {
+  width: 38px;
+  height: 38px;
+  color: var(--color-retro-paper-white, #fff);
+  background: var(--rm-accent, var(--color-retro-ink));
+}
+.rm-music-mini > .rm-music-mini-play:hover:not(:disabled) {
+  background: var(--color-retro-ink);
+}
+.rm-music-mini-title {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 4px;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.rm-music-mini-title .fit-marquee {
+  width: 100%;
+  font-weight: 700;
+}
+.rm-music-mini-label {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-retro-brown);
+}
+
 /* The hidden Spotify player (hooks/useSpotifyBackground). Spotify replaces
    the inner element with its iframe, so this wrapper does the hiding. */
 .spotify-host {

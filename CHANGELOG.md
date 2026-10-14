@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musiksteuerung oben links, Feedback ganz unten** (2026-10-14, PR #206):
+  Oben links stehen in der Zeitreise jetzt Zurück, Play/Pause und Weiter
+  als richtige Knöpfe, daneben gut lesbar der Song, der gerade läuft. Ein
+  Tipp auf den Titel öffnet die ganze Musiksteuerung. Die winzige
+  „Läuft gerade“-Zeile oben links ist dafür weg. Der rote Feedback-Knopf
+  steht jetzt ganz unten links unter den Konten mit „Abmelden“: in „Retro
+  Warm“ im Konten-Fenster hinter dem Personen-Knopf, in den anderen
+  Designs, sobald du ganz nach unten scrollst. In „Retro Warm“ liegt das
+  Konten-Fenster jetzt über der unteren Leiste statt halb dahinter.
+
 - **Spotify Premium auf dem Handy: ganze Songs über deine Spotify-App**
   (2026-10-14, PR #205): Bist du in der Zeitreise mit Spotify Premium
   angemeldet, spielt die Musik auf dem Handy jetzt ganze Songs statt

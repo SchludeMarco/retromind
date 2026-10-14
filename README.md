@@ -164,6 +164,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
   Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
   außer man ist im selben Browser bei Spotify angemeldet.
+  **Oben links** steht immer die Musiksteuerung
+  ([`components/MusicMini.tsx`](components/MusicMini.tsx)): Zurück,
+  Play/Pause und Weiter als richtige Knöpfe und daneben gut lesbar, was
+  läuft; ein Tipp auf den Titel öffnet die ganze Musiksteuerung (in „Retro
+  Warm“ in der Kopfleiste, in den anderen Designs als Schild in der Ecke).
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten rechts
@@ -246,9 +251,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
 - **Feedback-Button** – ein roter Knopf mit Briefsymbol und der Aufschrift
-  „Feedback“ direkt auf der Startseite oben (im Design „Retro Warm“ in der
-  Kopfleiste, in den anderen Designs oben rechts neben dem Lautsprecher, am
-  Handy oben links, jeweils schon vor der Anmeldung)
+  „Feedback“ ganz unten links unter den Konten mit „Abmelden“ (im Design
+  „Retro Warm“ im Konten-Fenster hinter dem Personen-Knopf oben rechts, in
+  den anderen Designs, sobald man ganz nach unten scrollt). Darüber
   kann jede Nutzer:in Lob, Tadel, Vorschläge oder Wünsche zur App hinterlassen; die Nachricht kommt per E-Mail
   an die Betreiber:in an (optional: eigene E-Mail-Adresse für eine Antwort).
   Zusätzlich wird jedes Feedback (ohne E-Mail-Adresse) in
@@ -298,7 +303,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
     [`docs/stitch/DESIGN.md`](docs/stitch/DESIGN.md)): Pergament und
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
     Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
-    Tonband-Schalter, Feedback, Einstellungen und Konten, untere Navigation (Start,
+    Musiksteuerung (Zurück, Play/Pause, Weiter und der laufende Song),
+    Tonband-Schalter, Einstellungen und Konten, untere Navigation (Start,
     Deine Zeit, Musik-Symbol, Erkunden, Erinnerung),
     Startseite mit Jahrzehnt-Überblick (sechs gleich große Knöpfe in zwei
     Reihen, auf dem Handy drei pro Reihe) und Archiv-Fundstücken, „Erkunden“ als

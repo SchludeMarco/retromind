@@ -16,6 +16,7 @@ import {
 } from './services/geminiService';
 import { RetroTicker } from './components/RetroTicker';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { MusicMini } from './components/MusicMini';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
@@ -605,8 +606,26 @@ const App: React.FC = () => {
     `Music of the ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}s`,
     `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`
   );
+  // Back / play / next and the song, top left (components/MusicMini).
+  const musicMini = spotify.allowed
+    ? (variant: 'bar' | 'float') => (
+        <MusicMini
+          variant={variant}
+          title={spotify.songTitle}
+          source={decadeMusicName}
+          playing={spotify.isPlaying}
+          ready={spotify.isReady}
+          canSkip={spotify.canSkip}
+          onPrev={() => { playSFX('click'); spotify.playPrevious(); }}
+          onToggle={() => { playSFX('click'); spotify.togglePlay(); }}
+          onNext={() => { playSFX('click'); spotify.playNext(); }}
+          status={spotify.status}
+        />
+      )
+    : null;
   const musicDock = spotify.allowed ? (
     <MusicDock
+      ticker={false}
       className={
         warm
           ? ''
@@ -658,16 +677,7 @@ const App: React.FC = () => {
           {unseenNews && <NewBadge />}
         </button>
       )}
-      {!warm && !showSplash && (
-        <button
-          onClick={() => { playSFX('click'); setIsFeedbackOpen(true); }}
-          title={tr('Send feedback', 'Feedback geben')}
-          className="rm-fixed fixed top-3 left-4 sm:left-auto sm:right-28 md:right-[8.5rem] z-[1000] h-10 px-3 rounded-full bg-[#c62828] text-white border-2 border-retro-ink retro-button flex items-center gap-1.5 text-sm font-bold hover:bg-[#a51f1f]"
-        >
-          <span aria-hidden="true">✉️</span>
-          <span>Feedback</span>
-        </button>
-      )}
+      {!warm && !showSplash && verified && musicMini && <div className="rm-fixed fixed top-3 left-4 z-[1000] rm-music-mini-corner">{musicMini('float')}</div>}
       {warm && !showSplash && verified && (
         <WarmTopBar
           phase={phase}
@@ -675,7 +685,7 @@ const App: React.FC = () => {
           hasUnseenNews={unseenNews}
           accountOpen={isAccountOpen}
           onOpenSettings={() => { playSFX('click'); setIsSettingsOpen(true); }}
-          onOpenFeedback={() => { playSFX('click'); setIsFeedbackOpen(true); }}
+          music={musicMini?.('bar')}
           onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
         />
       )}
@@ -783,7 +793,9 @@ const App: React.FC = () => {
             spotifyUser={spotifyAuth.user}
             onSpotifySignIn={handleSpotifySignIn}
             onSpotifySignOut={handleSpotifySignOut}
+            onFeedback={() => { playSFX('click'); setIsFeedbackOpen(true); }}
             visible={warm ? isAccountOpen : showBottomControls}
+            raised={warm}
           />
 
           {warm && (

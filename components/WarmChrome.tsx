@@ -119,18 +119,29 @@ export const WarmTopBar: React.FC<{
   hasUnseenNews: boolean;
   accountOpen: boolean;
   onOpenSettings: () => void;
-  onOpenFeedback: () => void;
   onToggleAccount: () => void;
-}> = ({ phase, showAccount, hasUnseenNews, accountOpen, onOpenSettings, onOpenFeedback, onToggleAccount }) => {
+  /** The music controls (MusicMini), left in the bar instead of the name. */
+  music?: React.ReactNode;
+}> = ({ phase, showAccount, hasUnseenNews, accountOpen, onOpenSettings, onToggleAccount, music }) => {
   const muted = useMuted();
   return (
     <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8 h-16 flex items-center gap-1.5 sm:gap-3">
-        <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-8 sm:w-9 h-auto flex-shrink-0" />
-        <div className="leading-tight min-w-0 flex-grow overflow-hidden max-[479px]:invisible">
-          <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
-          <span className="block text-xs text-retro-brown truncate">{PHASE_LABEL[phase]}</span>
-        </div>
+        <img
+          src="/retromind-logo-header.webp"
+          alt=""
+          width={640}
+          height={756}
+          className={`w-8 sm:w-9 h-auto flex-shrink-0 ${music ? 'max-sm:hidden' : ''}`}
+        />
+        {music ? (
+          <div className="min-w-0 flex-grow">{music}</div>
+        ) : (
+          <div className="leading-tight min-w-0 flex-grow overflow-hidden max-[479px]:invisible">
+            <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
+            <span className="block text-xs text-retro-brown truncate">{PHASE_LABEL[phase]}</span>
+          </div>
+        )}
         <button
           onClick={toggleMuted}
           aria-pressed={muted}
@@ -141,15 +152,6 @@ export const WarmTopBar: React.FC<{
         >
           <Icon name="wave" className="w-5 h-5" />
           <span className="hidden sm:inline">{muted ? tr('Sound off', 'Ton aus') : tr('Tape on', 'Tonband')}</span>
-        </button>
-        <button
-          onClick={onOpenFeedback}
-          title={tr('Give feedback', 'Feedback geben')}
-          className="h-9 sm:h-10 px-3 rounded-full flex items-center gap-1 sm:gap-1.5 text-sm font-bold bg-[#c62828] text-white shadow-sm hover:bg-[#a51f1f] flex-shrink-0"
-        >
-          {/* Narrow phones keep the word, which testers look for, and drop the envelope. */}
-          <Icon name="mail" className="w-5 h-5 max-[399px]:hidden" />
-          <span>Feedback</span>
         </button>
         <button
           onClick={onOpenSettings}
