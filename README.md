@@ -164,8 +164,13 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
   Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
   außer man ist im selben Browser bei Spotify angemeldet.
-  Kommt man durch die Zeitmaschine in die App, sagt eine **Roboterstimme**
-  nur „Welcome back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
+  Kommt man durch die Zeitmaschine in die App, läuft eine kurze
+  **Ankunfts-Show** ([`components/ArrivalShow.tsx`](components/ArrivalShow.tsx)):
+  eine Zeitanzeige (Gegenwart grün, Ziel rot) rattert von heute zurück bis
+  zum Geburtstag, rastet mit Blitz, Druckwellen und Schlag ein, dann steht
+  das Geburtsjahr riesig da, Dinge des Jahrzehnts fliegen heraus; ein Tipp
+  überspringt sie. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
+  back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
   sagt sie „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
   Sprachausgabe des Browsers, tief und langsam, still bei ausgeschaltetem
   Ton). Über jedem

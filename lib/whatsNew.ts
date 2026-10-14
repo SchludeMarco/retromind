@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Ankunft mit Wow: Zeitanzeige, Blitz und dein Jahr': {
+    title: 'An arrival with a wow: time circuits, a flash and your year',
+    text: 'Coming out of the time machine into the app, a short show now plays. Time circuits like in the movies show the present in green and the destination in red; the red digits race, rattling, from today back to your birthday. Then they lock in: a bright flash, two shockwaves, a deep boom with a bright chord, and your birth year appears huge and glowing with “Welcome back” and the decade’s title, while things of that time (disco ball, cassette, joystick …) fly out of the middle. At that moment the robot voice says “Welcome back”. After a few seconds the show fades; a tap skips it. With reduced motion turned on in your system settings there is only the voice.',
+  },
   'Zum Start nur „Welcome back“': {
     title: 'Only “Welcome back” at the start',
     text: 'Coming into the app through the time machine, the robot voice now only says “Welcome back”. The old dark voice that said “Welcome” after the app woke up is gone. The voice says “Welcome to the year …” only when you switch the decade in the settings; the sentence still stands in large print above every stop.',

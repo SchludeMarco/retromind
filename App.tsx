@@ -18,6 +18,7 @@ import { RetroTicker } from './components/RetroTicker';
 import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { MusicMini } from './components/MusicMini';
 import { YearWelcome } from './components/YearWelcome';
+import { ArrivalShow } from './components/ArrivalShow';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
@@ -87,6 +88,7 @@ const App: React.FC = () => {
   // voice says "Welcome to the year …" and YearWelcome opens its video.
   const travelYear = manualDecade ? Number(manualDecade) : birthYear;
   const [travel, setTravel] = useState(0);
+  const [arrivalShow, setArrivalShow] = useState(false);
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
@@ -542,6 +544,12 @@ const App: React.FC = () => {
     const atStart = startTravelRef.current;
     startTravelRef.current = false;
     if (!atStart && !travelYear) return;
+    // The start gets its show (components/ArrivalShow), which speaks at its
+    // lock-in; without motion, the voice alone.
+    if (atStart && birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setArrivalShow(true);
+      return;
+    }
     // After the gong of the arrival / while the iris opens.
     const t = window.setTimeout(() => (atStart ? announceWelcomeBack() : announceYear(travelYear!)), 900);
     return () => window.clearTimeout(t);
@@ -782,6 +790,15 @@ const App: React.FC = () => {
         />
       )}
 
+      {arrivalShow && birthYear && (
+        <ArrivalShow
+          birthDate={user.birthDate}
+          year={birthYear}
+          decade={String(Math.min(2020, Math.max(1960, Math.floor(birthYear / 10) * 10)))}
+          onLock={announceWelcomeBack}
+          onDone={() => setArrivalShow(false)}
+        />
+      )}
       {toast && (
         <div className="rm-fixed fixed top-16 left-1/2 -translate-x-1/2 z-[95] bg-retro-ink text-white px-5 py-2 font-bold text-sm shadow-lg animate-fadeIn">
           {toast}
