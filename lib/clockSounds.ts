@@ -1,4 +1,5 @@
 import { isMuted, subscribeMuted } from './mute';
+import { unlockSpeech } from './robotVoice';
 import { riseFromSilence, whenRunning } from './startupFade';
 
 // Sounds of the welcome screen (components/SplashScreen.tsx): the mantel
@@ -390,6 +391,9 @@ export function buildWarp(c: BaseAudioContext, dest: AudioNode): GainNode {
  * one the visitor asked for, and it still swells up from quiet.
  */
 export function playWarp() {
+  // The robot voice announces the year after the journey (lib/robotVoice);
+  // phones only let it speak if speech was started inside this press.
+  unlockSpeech();
   if (isMuted()) return;
   const c = audioContext();
   if (!c) return;
@@ -460,6 +464,7 @@ export function buildRewind(c: BaseAudioContext, dest: AudioNode): GainNode {
 }
 
 export function playRewind() {
+  unlockSpeech();
   if (isMuted()) return;
   const c = audioContext();
   if (!c) return;

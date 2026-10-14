@@ -4,7 +4,7 @@ import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
-import { IMPRINT_URL, PRIVACY_URL, setConsent } from '../lib/privacy';
+import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
 import { GoogleUser, SpotifyUser } from '../types';
@@ -321,6 +321,8 @@ export const SettingsModal: React.FC<{
         </div>
       )}
 
+      <YouTubeChoice />
+
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('More editions', 'Weitere Editionen')}</span>
         <a
@@ -378,5 +380,29 @@ export const SettingsModal: React.FC<{
         </p>
       </div>
     </Modal>
+  );
+};
+
+// The videos of the year above every stop (components/YearWelcome) come from
+// YouTube, which only loads once allowed; here that choice can be changed.
+const YouTubeChoice: React.FC = () => {
+  const allowed = useConsent('youtube') === true;
+  return (
+    <div className="mt-6 pt-5 border-t border-retro-ink/20">
+      <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Videos', 'Videos')}</span>
+      <button
+        onClick={() => setConsent('youtube', !allowed)}
+        aria-pressed={allowed}
+        className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+      >
+        {allowed ? tr('Stop loading YouTube', 'YouTube nicht mehr laden') : tr('▶ Allow videos from YouTube', '▶ Videos von YouTube erlauben')}
+      </button>
+      <p className="text-[10px] text-retro-tan mt-2">
+        {tr(
+          'After every journey a video from that year plays under “Welcome to the year …”. YouTube only loads after you say OK; data such as your IP address then goes to Google.',
+          'Nach jeder Reise läuft unter „Willkommen im Jahr …“ ein Video aus diesem Jahr. YouTube lädt erst nach deinem OK; dabei gehen Daten wie deine IP-Adresse an Google.'
+        )}
+      </p>
+    </div>
   );
 };
