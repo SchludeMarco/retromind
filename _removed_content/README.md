@@ -119,3 +119,7 @@ gebaut oder ausgeliefert.
 - `SplashScreen-gong-weiss.tsx.txt`: der Willkommensbildschirm mit Gong und
   weißer Blende beim Start (ersetzt am 2026-10-14 durch den Sog der
   Zeitmaschine, der Gong schlägt jetzt bei der Ankunft).
+- `BootOverlay-welcome-stimme.tsx.txt`: die dunkle Stimme, die nach dem
+  Aufwachen der App „Welcome“ sagte (entfernt am 2026-10-14). Zum Start
+  sagt jetzt nur noch die Roboterstimme der Zeitmaschine „Welcome back“
+  (`lib/robotVoice.ts`).

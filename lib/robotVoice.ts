@@ -57,6 +57,19 @@ export function yearPhrase(year: number): string {
 
 /** "Welcome to the year 1975" in a robot voice (silent when muted). */
 export function announceYear(year: number) {
+  announce(yearPhrase(year));
+}
+
+/**
+ * At the start of the app, out of the time machine, the voice only says
+ * "Welcome back" (Marco, 2026-10-14: "Die Roboterstimme am Anfang der App
+ * soll sagen welcome back und mehr nicht").
+ */
+export function announceWelcomeBack() {
+  announce(tr('Welcome back', 'Willkommen zurück'));
+}
+
+function announce(text: string) {
   if (isMuted()) return;
   const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
   beep();
@@ -68,7 +81,7 @@ export function announceYear(year: number) {
     done = true;
     try {
       synth.cancel();
-      const u = new SpeechSynthesisUtterance(yearPhrase(year));
+      const u = new SpeechSynthesisUtterance(text);
       u.lang = lang === 'de' ? 'de-DE' : 'en-US';
       u.pitch = 0.1;
       u.rate = 0.82;

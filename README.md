@@ -164,10 +164,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
   Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
   außer man ist im selben Browser bei Spotify angemeldet.
-  Nach jeder Reise (Start durch die Zeitmaschine, Wechsel des Jahrzehnts)
-  sagt eine **Roboterstimme** „Welcome to the year 1975“ bzw. „Willkommen im
-  Jahr 1975“ ([`lib/robotVoice.ts`](lib/robotVoice.ts), Sprachausgabe des
-  Browsers, tief und langsam, still bei ausgeschaltetem Ton). Über jedem
+  Kommt man durch die Zeitmaschine in die App, sagt eine **Roboterstimme**
+  nur „Welcome back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
+  sagt sie „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
+  Sprachausgabe des Browsers, tief und langsam, still bei ausgeschaltetem
+  Ton). Über jedem
   Halt steht der Satz groß, darunter startet ein **Jahresrückblick-Video**
   aus diesem Jahr von YouTube ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
   über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen

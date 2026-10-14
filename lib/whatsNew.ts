@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zum Start nur „Welcome back“': {
+    title: 'Only “Welcome back” at the start',
+    text: 'Coming into the app through the time machine, the robot voice now only says “Welcome back”. The old dark voice that said “Welcome” after the app woke up is gone. The voice says “Welcome to the year …” only when you switch the decade in the settings; the sentence still stands in large print above every stop.',
+  },
   '„Welcome to the year …“: Roboterstimme und Video aus deinem Jahr': {
     title: '“Welcome to the year …”: a robot voice and a video from your year',
     text: 'After every journey with the time machine, a robot voice says “Welcome to the year 1975” after a short beep. The year is your birth year or the decade you picked in the settings. Above every stop it says “Welcome to the year …” in large print, so you know where you are. Below it, after every journey, a year-in-review video from that year starts on its own from YouTube; you can hide it. YouTube only loads once you allow it (also in the settings under “Videos”). While the video plays, the Spotify music pauses. With the sound off, the voice stays quiet.',
