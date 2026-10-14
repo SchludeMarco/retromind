@@ -9,11 +9,15 @@ import { Breakout, breakoutBest } from './minigames/Breakout';
 import { Snake, snakeBest } from './minigames/Snake';
 import { Invaders, invadersBest } from './minigames/Invaders';
 import { Quiz, quizBest } from './minigames/Quiz';
+import { VideoPoker, pokerBest } from './minigames/VideoPoker';
+import { Blackjack, blackjackBest } from './minigames/Blackjack';
+import { Solitaire, solitaireBest } from './minigames/Solitaire';
 import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
-// blocks, pinball and Pac-Mampf have their own files in ./minigames. Everything works by
+// blocks, pinball, Pac-Mampf and the card games (video poker, blackjack,
+// solitaire, sharing the deck in ./minigames/cards) have their own files in ./minigames. Everything works by
 // touch, mouse and keyboard, and sounds go through the chip (which follows
 // lib/mute).
 
@@ -110,6 +114,39 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
     icon: '🛸',
     text: tr('Rows of aliens march down: shoot them before they land, like Space Invaders in 1978. Drag to move, tap to fire.', 'Reihen von Aliens marschieren herab: abschießen, bevor sie landen, wie Space Invaders 1978. Ziehen zum Bewegen, tippen zum Schießen.'),
     best: invadersBest,
+  },
+  {
+    id: 'poker',
+    title: tr('VIDEO POKER', 'VIDEO-POKER'),
+    statKey: 'VIDEO-POKER',
+    icon: '🃏',
+    text: tr(
+      'Five cards, keep the good ones, draw once: “Jacks or Better” like the poker machines of old. 20 hands, 100 play credits, no real money.',
+      'Fünf Karten, die guten halten, einmal ziehen: „Jacks or Better“ wie an den Poker-Automaten von früher. 20 Hände, 100 Spiel-Credits, kein echtes Geld.'
+    ),
+    best: pokerBest,
+  },
+  {
+    id: 'blackjack',
+    title: 'BLACKJACK',
+    statKey: 'BLACKJACK',
+    icon: '♠️',
+    text: tr(
+      'Get closer to 21 than the dealer without going over. Hit, stand or double down. 10 hands, 100 play chips, no real money.',
+      'Näher an 21 als die Bank, ohne drüber zu kommen (17 und 4). Karte, halten oder verdoppeln. 10 Hände, 100 Spiel-Chips, kein echtes Geld.'
+    ),
+    best: blackjackBest,
+  },
+  {
+    id: 'solitaire',
+    title: tr('SOLITAIRE', 'SOLITÄR'),
+    statKey: 'SOLITÄR',
+    icon: '♥️',
+    text: tr(
+      'The card game from every old Windows PC: build each suit from ace to king. Tap to pick up, tap to drop, undo whenever you like.',
+      'Das Kartenspiel von jedem alten Windows-PC: jede Farbe vom Ass bis zum König ablegen. Antippen zum Nehmen, antippen zum Ablegen, Zurück geht immer.'
+    ),
+    best: solitaireBest,
   },
 ];
 
@@ -427,7 +464,7 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="dialog mini-dialog" role="dialog" aria-modal="true" aria-label={game.title} onClick={(e) => e.stopPropagation()}>
+      <div className={`dialog mini-dialog${id === 'solitaire' ? ' wide' : ''}`} role="dialog" aria-modal="true" aria-label={game.title} onClick={(e) => e.stopPropagation()}>
         <h2 className="pixel-font">
           {game.icon} {game.title}
         </h2>
@@ -452,6 +489,12 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <Snake onWin={onWin} />
         ) : id === 'invaders' ? (
           <Invaders onWin={onWin} />
+        ) : id === 'poker' ? (
+          <VideoPoker onWin={onWin} />
+        ) : id === 'blackjack' ? (
+          <Blackjack onWin={onWin} />
+        ) : id === 'solitaire' ? (
+          <Solitaire onWin={onWin} />
         ) : id === 'quiz' ? (
           <Quiz onWin={onWin} onEarn={onEarn} />
         ) : (

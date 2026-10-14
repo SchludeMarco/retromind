@@ -2,7 +2,7 @@
 // by everyone. This device keeps its own table too, which shows when the
 // server has none (offline, or no database configured).
 
-export type BoardGame = 'blocks' | 'pinball' | 'pacman' | 'senso' | 'breakout' | 'snake' | 'invaders';
+export type BoardGame = 'blocks' | 'pinball' | 'pacman' | 'senso' | 'breakout' | 'snake' | 'invaders' | 'poker' | 'blackjack';
 export interface Entry {
   name: string;
   score: number;

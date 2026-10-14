@@ -7,6 +7,25 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Kartenspiele in der Chill-Ecke: Video-Poker, Blackjack und Solitär**
+  (2026-10-14, PR #217): In der Gaming-Halle liegen jetzt drei
+  Kartenspiele. Beim Video-Poker („Jacks or Better“ wie an den
+  Poker-Automaten von früher) setzt du 1 bis 5 Credits, bekommst fünf
+  Karten, tippst die an, die du halten willst, und ziehst einmal nach; ab
+  einem Paar Buben zahlt die Gewinntabelle, und mit vollem Einsatz bringt
+  der Royal Flush 4000. Beim Blackjack spielst du gegen die Bank: Karte,
+  halten oder verdoppeln, die Bank bleibt ab 17 stehen, ein Blackjack zahlt
+  3 zu 2. Eine Runde dauert 20 Hände (Poker) bzw. 10 Hände (Blackjack) mit
+  100 Spiel-Credits, gespielt wird nur um Spielgeld; was am Ende übrig ist,
+  kommt auf die Highscore-Tafel. Beim Solitär (wie auf jedem alten
+  Windows-PC) legst du jede Farbe vom Ass bis zum König ab: Karte antippen,
+  dann das Ziel antippen, oder zweimal tippen, dann geht sie von selbst an
+  den besten Platz. „Zurück“ geht immer, und sobald alles aufgedeckt ist,
+  fliegen die Karten auf Knopfdruck von allein nach Hause; gezählt wird die
+  Bestzeit. Die Karten sind ein eigenes Pixel-Deck mit Rückseite in der
+  Farbe deines Designs, klicken beim Austeilen leise und funktionieren mit
+  Touch, Maus und Tastatur.
+
 - **Die Zeitreise reagiert auf jede Berührung** (2026-10-14, PR #216):
   Jeder Knopf, jede Karte und jeder Link antwortet jetzt sofort: ein leises
   Holz-„Tock“ wie von einer alten Schreibmaschinentaste, ein kurzes Summen
