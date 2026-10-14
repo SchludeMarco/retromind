@@ -4,6 +4,7 @@ import { tr } from '../lib/i18n';
 import { CozyRoom, DayTime, dayTime } from './CozyRoom';
 import { WeatherSwitch } from './WeatherSwitch';
 import { useWindowWeather } from '../lib/weather';
+import { eraShort, useRoomEra } from '../lib/roomEra';
 
 // The Stube at the top of the start page, in every design (Marco,
 // 2026-10-13: "das gemütliche Wohnzimmer fehlt immer noch ganz. Ich dachte
@@ -40,6 +41,7 @@ export const LivingRoom: React.FC<{
   const weather = useWindowWeather();
   const greeting = cozyGreeting(time, userName);
   const [weatherAsk, setWeatherAsk] = useState(0);
+  const era = useRoomEra();
   return (
     <section aria-label={tr('Your living room', 'Deine Stube')} className={warm ? '' : 'w-full max-w-2xl mx-auto mb-6 text-center'}>
       <div className={`cozy-frame rounded-xl overflow-hidden mb-4 ${warm ? '' : 'border-4 border-retro-ink'}`}>
@@ -57,6 +59,11 @@ export const LivingRoom: React.FC<{
           }}
         />
       </div>
+      {era && (
+        <p key={era} className="rm-era-note text-center mb-2 px-2">
+          {tr(`🛋️ Furnished like the ${eraShort(era)}s: wallpaper, couch and radio of your decade`, `🛋️ Eingerichtet wie in den ${eraShort(era)}ern: Tapete, Couch und Radio deines Jahrzehnts`)}
+        </p>
+      )}
       <p className="text-sm text-retro-brown text-center mb-3 px-2 leading-snug">
         {resuming
           ? tr(

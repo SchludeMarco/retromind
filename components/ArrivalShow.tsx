@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { isMuted } from '../lib/mute';
 import { isGerman, tr } from '../lib/i18n';
 import { DECADES_DB } from '../constants';
+import { sharedAudioContext } from '../lib/clockSounds';
+import { hitClipUrl, hitOf, yearOf } from '../lib/yearFacts';
+import type { CapturedMemory } from '../types';
 
 // The "wow" of arriving (Marco, 2026-10-14: "Wenn man in der App angekommen
 // ist, ist das wirklich etwas sehr langweilig, ich erwarte da einen
@@ -14,12 +17,21 @@ import { DECADES_DB } from '../constants';
 //    glowing digits with the decade's title, while things of that decade
 //    (cassette, joystick, disco ball …) burst out of the middle;
 // 3. the show fades and leaves the app with "Welcome to the year …".
+// Since Marco's second wish list (2026-10-14): under the year it says what the
+// year stands for ("1989 … the year of the fall of the Berlin Wall",
+// lib/yearFacts), the visitor's own memories (photos and terms they already
+// collected) fly out with the decade's things, and a few seconds of that
+// year's No. 1 hit ring out as the fanfare (the Spotify music pauses for it).
 // Tapping anywhere skips it. Without motion (prefers-reduced-motion) it
 // isn't shown. Sounds are Web Audio, quiet at first and off when muted.
 
 const RACE_MS = 1900;
 const HOLD_MS = 2600;
+// With the hit playing, the year stays a little longer.
+const HIT_HOLD_MS = 4600;
 const FADE_MS = 700;
+// The clip starts a moment in, past any fade-in of the preview.
+const HIT_OFFSET_S = 2;
 
 const ERA_THINGS: Record<string, string[]> = {
   '1960': ['🚀', '📺', '🌼', '🎸', '🛵', '📻', '☮️', '🎞️'],
@@ -41,18 +53,13 @@ interface Stamp {
   year: number;
 }
 
-let ctx: AudioContext | null = null;
+// The page's sound context, unlocked by the tap on the start button, so
+// phones let the show sound too.
 function audio(): AudioContext | null {
   if (isMuted()) return null;
-  try {
-    const AC = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AC) return null;
-    ctx = ctx ?? new AC();
-    ctx.resume().catch(() => {});
-    return ctx;
-  } catch {
-    return null;
-  }
+  const c = sharedAudioContext();
+  c?.resume().catch(() => {});
+  return c;
 }
 
 /** One click of the racing counter. */
@@ -72,8 +79,8 @@ function tick(level: number) {
   o.stop(t + 0.04);
 }
 
-/** The lock-in: a deep boom under a bright shimmer. */
-function boom() {
+/** The lock-in: a deep boom under a bright shimmer (the chord only without the hit). */
+function boom(chord = true) {
   const c = audio();
   if (!c) return;
   const t = c.currentTime;
@@ -89,6 +96,7 @@ function boom() {
   low.connect(out);
   low.start(t);
   low.stop(t + 2.4);
+  if (!chord) return;
   // A bright major chord that rings out, the "arrived" feeling.
   [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
     const o = c.createOscillator();
@@ -134,7 +142,11 @@ export const ArrivalShow: React.FC<{
   /** Called at the lock-in (the voice speaks then). */
   onLock: () => void;
   onDone: () => void;
-}> = ({ birthDate, year, decade, onLock, onDone }) => {
+  /** The visitor's collected memories: their photos and terms fly along. */
+  memories?: CapturedMemory[];
+  /** The hit's fanfare starts (true) or is over (false). */
+  onMusic?: (on: boolean) => void;
+}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic }) => {
   const now = new Date();
   const present: Stamp = { month: now.getMonth(), day: now.getDate(), year: now.getFullYear() };
   const [, m, d] = birthDate.split('-').map(Number);
@@ -145,6 +157,88 @@ export const ArrivalShow: React.FC<{
   onLockRef.current = onLock;
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
+  const onMusicRef = useRef(onMusic);
+  onMusicRef.current = onMusic;
+
+  // The No. 1 hit of the year, loaded while the dials race.
+  const hit = hitOf(year);
+  const [hitOn, setHitOn] = useState(false);
+  const hitBuffer = useRef<AudioBuffer | null>(null);
+  const hitPlay = useRef<{ gain: GainNode; src: AudioBufferSourceNode } | null>(null);
+  const lockedAt = useRef(0);
+  const holdRef = useRef(HOLD_MS);
+
+  const startHit = () => {
+    const c = audio();
+    const buf = hitBuffer.current;
+    if (!c || !buf || hitPlay.current || !lockedAt.current) return;
+    const left = (holdRef.current + FADE_MS - (performance.now() - lockedAt.current)) / 1000;
+    if (left < 1.5) return;
+    const t = c.currentTime;
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.9, t + 0.25);
+    gain.gain.setValueAtTime(0.9, t + left - 1);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + left);
+    gain.connect(c.destination);
+    const src = c.createBufferSource();
+    src.buffer = buf;
+    src.connect(gain);
+    src.start(t, Math.min(HIT_OFFSET_S, Math.max(0, buf.duration - left)));
+    src.stop(t + left + 0.05);
+    hitPlay.current = { gain, src };
+    setHitOn(true);
+    onMusicRef.current?.(true);
+  };
+  const startHitRef = useRef(startHit);
+  startHitRef.current = startHit;
+
+  useEffect(() => {
+    if (!hit || isMuted()) return;
+    let live = true;
+    fetch(hitClipUrl(hit))
+      .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject()))
+      .then((data) => {
+        const c = audio();
+        if (!c || !live) return null;
+        // Older Safari only knows the callback form.
+        return new Promise<AudioBuffer>((resolve, reject) => c.decodeAudioData(data, resolve, reject));
+      })
+      .then((buf) => {
+        if (!buf || !live) return;
+        hitBuffer.current = buf;
+        startHitRef.current();
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+      // Skipped or over: the fanfare fades out instead of breaking off.
+      const p = hitPlay.current;
+      if (p) {
+        try {
+          const c = p.gain.context;
+          const t = c.currentTime;
+          p.gain.gain.cancelScheduledValues(t);
+          p.gain.gain.setValueAtTime(Math.max(0.0001, p.gain.gain.value), t);
+          p.gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+          p.src.stop(t + 0.55);
+        } catch {
+          /* already stopped */
+        }
+        onMusicRef.current?.(false);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const lockIn = () => {
+    lockedAt.current = performance.now();
+    holdRef.current = hitBuffer.current ? HIT_HOLD_MS : HOLD_MS;
+    setPhase('locked');
+    boom(!hitBuffer.current);
+    onLockRef.current();
+    startHit();
+  };
 
   useEffect(() => {
     const started = performance.now();
@@ -165,11 +259,7 @@ export const ArrivalShow: React.FC<{
           : target
       );
       if (p < 1) raf = requestAnimationFrame(step);
-      else {
-        setPhase('locked');
-        boom();
-        onLockRef.current();
-      }
+      else lockIn();
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
@@ -178,7 +268,7 @@ export const ArrivalShow: React.FC<{
 
   useEffect(() => {
     if (phase === 'locked') {
-      const t = window.setTimeout(() => setPhase('fade'), HOLD_MS);
+      const t = window.setTimeout(() => setPhase('fade'), holdRef.current);
       return () => window.clearTimeout(t);
     }
     if (phase === 'fade') {
@@ -190,14 +280,37 @@ export const ArrivalShow: React.FC<{
   const skip = () => {
     if (phase === 'race') {
       setShown(target);
-      setPhase('locked');
-      boom();
-      onLockRef.current();
+      lockIn();
     } else onDoneRef.current();
   };
 
   const things = ERA_THINGS[decade] ?? ERA_THINGS['1980'];
+  const line = yearOf(year);
   const title = DECADES_DB[decade]?.title;
+  // What flies out: the visitor's own photos and terms among the decade's things.
+  const burst = useMemo(() => {
+    const photos = memories.filter((m) => m.photo).slice(0, 6).map((m) => ({ photo: m.photo!, term: m.term }));
+    const terms = [...new Set(memories.filter((m) => !m.photo && m.term).map((m) => m.term.trim()))]
+      .slice(0, 8)
+      .map((t) => (t.length > 22 ? `${t.slice(0, 21)}…` : t));
+    const own: ({ photo: string; term: string } | string)[] = [];
+    for (let i = 0; own.length < photos.length + terms.length; i++) {
+      if (photos[i]) own.push(photos[i]);
+      if (terms[i]) own.push(terms[i]);
+    }
+    // Spread the own things evenly around the circle.
+    const items: ({ kind: 'thing'; text: string } | { kind: 'term'; text: string } | { kind: 'photo'; src: string; alt: string })[] = [];
+    const step = own.length ? 24 / own.length : 0;
+    let next = 0;
+    for (let i = 0; i < 24; i++) {
+      if (next < own.length && i >= Math.round(next * step)) {
+        const o = own[next++];
+        items.push(typeof o === 'string' ? { kind: 'term', text: o } : { kind: 'photo', src: o.photo, alt: o.term });
+      } else items.push({ kind: 'thing', text: things[i % things.length] });
+    }
+    return items;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -217,23 +330,31 @@ export const ArrivalShow: React.FC<{
           <div className="rm-arrival-wave" aria-hidden="true" />
           <div className="rm-arrival-wave is-late" aria-hidden="true" />
           <div className="rm-arrival-burst" aria-hidden="true">
-            {Array.from({ length: 24 }, (_, i) => (
+            {burst.map((item, i) => (
               <span
                 key={i}
+                className={item.kind === 'thing' ? '' : `is-${item.kind}`}
                 style={{
                   ['--a' as string]: `${(i / 24) * 360 + (i % 2) * 7}deg`,
-                  ['--r' as string]: `${32 + (i % 3) * 14}vmax`,
+                  // Own memories fly a little slower and not as far, so they can be seen.
+                  ['--r' as string]: item.kind === 'thing' ? `${32 + (i % 3) * 14}vmax` : `${26 + (i % 3) * 6}vmax`,
                   ['--d' as string]: `${(i % 5) * 60}ms`,
                 }}
               >
-                {things[i % things.length]}
+                {item.kind === 'photo' ? <img src={item.src} alt="" /> : item.text}
               </span>
             ))}
           </div>
           <div className="rm-arrival-year">
             <p className="rm-arrival-eyebrow">{tr('Welcome back', 'Willkommen zurück')}</p>
             <p className="rm-arrival-digits">{year}</p>
-            {title && <p className="rm-arrival-title">{title}</p>}
+            {line ? <p className="rm-arrival-title">… {line}</p> : title && <p className="rm-arrival-title">{title}</p>}
+            {hitOn && hit && (
+              <p className="rm-arrival-hit">
+                ♪ {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
+                <b>{hit.title}</b> · {hit.artist}
+              </p>
+            )}
           </div>
         </>
       )}
