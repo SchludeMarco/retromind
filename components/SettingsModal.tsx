@@ -7,6 +7,13 @@ import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
+import { setXmasMode, useXmasMode, XmasMode } from '../lib/season';
+
+const XMAS_OPTIONS: { id: XmasMode; label: string }[] = [
+  { id: 'auto', label: tr('Automatic (Nov 1 to Jan 6)', 'Automatisch (1. Nov. bis 6. Jan.)') },
+  { id: 'on', label: tr('On now', 'Jetzt an') },
+  { id: 'off', label: tr('Off', 'Aus') },
+];
 import { GoogleUser, SpotifyUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
@@ -66,6 +73,7 @@ export const SettingsModal: React.FC<{
 }) => {
   const info = DECADES_DB[currentDecade];
   const muted = useMuted();
+  const xmasMode = useXmasMode();
   const theme = useTheme();
   const onHeadingTap = useSecretAdminTaps();
 
@@ -223,6 +231,31 @@ export const SettingsModal: React.FC<{
           ))}
         </div>
         <p className="text-[10px] text-retro-tan mt-2">{tr('The page reloads once and remembers your choice in this browser.', 'Die Seite lädt einmal neu und merkt sich deine Wahl in diesem Browser.')}</p>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Christmas look', 'Weihnachtslook')}</span>
+        <div role="radiogroup" aria-label={tr('Christmas look', 'Weihnachtslook')} className="grid gap-2">
+          {XMAS_OPTIONS.map((o) => (
+            <button
+              key={o.id}
+              role="radio"
+              aria-checked={xmasMode === o.id}
+              onClick={() => setXmasMode(o.id)}
+              className={`retro-button px-3 py-2 border-2 border-retro-ink text-left font-bold text-sm ${
+                xmasMode === o.id ? 'bg-retro-highlight' : 'bg-white'
+              }`}
+            >
+              {xmasMode === o.id ? '● ' : ''}{o.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-retro-tan mt-2">
+          {tr(
+            'Fairy lights, snow, Christmas songs on the radio and Grandma’s Christmas bakery in the cookbook. Automatic means November 1 to January 6.',
+            'Lichterkette, Schnee, Weihnachtslieder im Radio und Omas Weihnachtsbäckerei im Kochbuch. Automatisch heißt vom 1. November bis 6. Januar.'
+          )}
+        </p>
       </div>
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">

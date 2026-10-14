@@ -2249,6 +2249,150 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .rm-arrival-show { display: none; }
 }
 
+/* ------------------------------------------------------------------
+   Omas Kochbuch (phases/CookbookSection.tsx): a worn recipe book with
+   ribbons for the decades and recipe cards on lined paper. Shape and
+   depth come from the design tokens, so it wears every design.
+   ------------------------------------------------------------------ */
+.cookbook-ribbons {
+  display: flex;
+  gap: var(--rm-space-2);
+  padding: 4px var(--rm-space-4) 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cookbook-ribbons::-webkit-scrollbar { display: none; }
+.cookbook-ribbon {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0.6rem 1rem 0.9rem;
+  font-weight: 700;
+  color: var(--color-retro-ink);
+  background: var(--color-retro-highlight);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-bottom: 0;
+  border-radius: min(var(--rm-radius-card), 0.6rem) min(var(--rm-radius-card), 0.6rem) 0 0;
+  transform: translateY(4px);
+  transition: transform 0.15s ease;
+}
+.cookbook-ribbon:hover { transform: translateY(0); }
+.cookbook-ribbon.is-active {
+  background: var(--rm-accent);
+  border-color: var(--rm-accent);
+  color: var(--color-retro-paper-white);
+  transform: translateY(0);
+}
+.cookbook-paper,
+.cookbook-page {
+  padding: var(--rm-space-6);
+  background-color: var(--color-retro-paper-white);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    color-mix(in srgb, var(--color-retro-tan) 18%, transparent) 31px,
+    color-mix(in srgb, var(--color-retro-tan) 18%, transparent) 32px
+  );
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-card);
+  box-shadow: var(--rm-shadow-card);
+}
+@media (min-width: 640px) {
+  .cookbook-paper,
+  .cookbook-page { padding: var(--rm-space-8); }
+}
+.cookbook-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-1);
+  min-height: 132px;
+  padding: var(--rm-space-4) var(--rm-space-4) var(--rm-space-4) var(--rm-space-6);
+  background: var(--color-retro-cream-light);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-left: 4px solid var(--rm-accent);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+  box-shadow: var(--rm-shadow-float);
+  transition: transform 0.15s ease;
+}
+.cookbook-card:hover { transform: rotate(-0.6deg) translateY(-2px); }
+.cookbook-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-retro-ink);
+}
+.cookbook-story {
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: var(--color-retro-brown);
+  max-width: 62ch;
+}
+.cookbook-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rm-space-3);
+  min-height: 32px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.cookbook-item input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  accent-color: var(--rm-accent);
+}
+.cookbook-item.is-done span {
+  text-decoration: line-through;
+  color: var(--color-retro-tan);
+}
+.cookbook-steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-4);
+}
+.cookbook-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.75rem;
+  line-height: 1.6;
+}
+.cookbook-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--color-retro-paper-white);
+  background: var(--rm-accent);
+  border-radius: 9999px;
+}
+.cookbook-tip {
+  padding: var(--rm-space-4);
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  background: var(--color-retro-highlight);
+  border-left: 4px solid var(--rm-accent);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+  transform: rotate(-0.4deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cookbook-ribbon,
+  .cookbook-card { transition: none; }
+  .cookbook-card:hover,
+  .cookbook-tip { transform: none; }
+}
+
 /* The Stube furnished in your decade (lib/roomEra.ts, components/EraDecor.tsx) */
 .rm-era-note {
   font-size: 0.85rem;
@@ -2283,4 +2427,100 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .cozy-room.is-furnishing .cozy-era-radio > g:first-child,
   .rm-era-note { animation: none; }
   .cozy-era-notes { opacity: 0; }
+}
+
+/* ------------------------------------------------------------------
+   Christmas look (lib/season.ts, components/ChristmasDeco.tsx): from
+   November 1 to January 6, or when switched on in the settings. Fairy
+   lights along the top, soft snow behind the pages, a Christmas red as
+   the accent of every design.
+   ------------------------------------------------------------------ */
+html[data-season="xmas"] {
+  --rm-accent: #b3261e;
+}
+html[data-season="xmas"][data-theme="nachtschicht"] {
+  --rm-accent: #e2574c;
+}
+.xmas-deco {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.xmas-snow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.xmas-snow span {
+  position: absolute;
+  top: -12px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 3px rgb(120 140 170 / 0.6);
+  opacity: 0.85;
+  animation: xmasSnow linear infinite;
+}
+@keyframes xmasSnow {
+  to { transform: translate(var(--drift, 0), 105vh); }
+}
+.xmas-garland {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1200;
+}
+.xmas-lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  z-index: 70;
+}
+.xmas-bulbs {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  z-index: 70;
+}
+.xmas-bulbs span {
+  width: 7px;
+  height: 11px;
+  border-radius: 45% 45% 50% 50%;
+  box-shadow: 0 0 8px currentColor;
+  animation: xmasTwinkle 1.8s ease-in-out infinite alternate;
+}
+.xmas-bulbs span:nth-child(odd) { margin-top: 5px; }
+@keyframes xmasTwinkle {
+  from { opacity: 1; filter: brightness(1.2); }
+  to { opacity: 0.45; filter: brightness(0.8); }
+}
+.cookbook-ribbon.is-xmas:not(.is-active) {
+  background: color-mix(in srgb, #b3261e 12%, var(--color-retro-highlight));
+}
+.cookbook-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rm-space-3);
+  padding: var(--rm-space-8) var(--rm-space-4);
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .xmas-snow span { animation: none; top: auto; }
+  .xmas-snow span:nth-child(3n) { top: 20%; }
+  .xmas-snow span:nth-child(3n + 1) { top: 55%; }
+  .xmas-snow span:nth-child(3n + 2) { top: 85%; }
+  .xmas-bulbs span { animation: none; }
+}
+@media print {
+  .xmas-deco,
+  .xmas-garland { display: none; }
 }

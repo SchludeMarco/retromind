@@ -7,6 +7,29 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Weihnachtszeit: Omas Weihnachtsbäckerei und Weihnachtslook**
+  (2026-10-14, PR #211): Vom 1. November bis zum 6. Januar öffnet in Omas
+  Kochbuch die Weihnachtsbäckerei als erstes Lesezeichen: Vanillekipferl,
+  Zimtsterne, Spritzgebäck, Kokosmakronen, Bratäpfel und Kinderpunsch.
+  Vorher zeigt das Lesezeichen, wie viele Tage es noch dauert. In dieser
+  Zeit trägt auch die ganze Zeitreise Weihnachtslook: eine leuchtende
+  Lichterkette am oberen Rand, leise fallender Schnee hinter den Seiten
+  und Weihnachtsrot als Akzentfarbe, in allen drei Designs. Im Radio
+  laufen dann automatisch Weihnachtslieder (Spotifys „Christmas Hits“ statt
+  der Musik des Jahrzehnts); der Player zeigt „Weihnachtslieder“. In den
+  Einstellungen lässt sich der Weihnachtslook unter „Weihnachtslook“ schon
+  vorher einschalten oder ganz ausschalten.
+
+- **Omas Kochbuch: Leckereien von damals zum Nachkochen** (2026-10-14,
+  PR #211): Beim Erkunden gibt es eine neue Sparte „Omas Kochbuch“. Sie
+  öffnet ein Rezeptbuch mit Lesezeichen für die Jahrzehnte von den 60ern
+  bis zu den 2010ern, deine eigene Zeit zuerst. Zu jedem Jahrzehnt gibt es
+  zwei Leckereien, vom Toast Hawaii und Kalten Hund über Käseigel und
+  Spaghetti-Eis bis zu Zupfkuchen, Muffins und Cake Pops. Jedes Rezept hat
+  Omas kleine Geschichte dazu, Zutaten zum Abhaken beim Kochen, die
+  Schritte, Omas Tipp und „Erinnern: Wer hat das für dich gemacht?“ fürs
+  Erinnerungsbuch.
+
 - **Dein Jahr, deine Erinnerungen, dein Hit und deine Stube** (2026-10-14,
   PR #210): Unter der riesigen Jahreszahl der Ankunfts-Show steht jetzt,
   wofür dein Jahr steht, zum Beispiel „1989 … das Jahr des Mauerfalls“

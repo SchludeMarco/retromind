@@ -19,6 +19,15 @@ import { useConsent } from '../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../lib/musicStatus';
 import { SpotifyHit, useSpotifyApi } from '../lib/spotifyApi';
 import { youthPool } from '../lib/youthMusic';
+import { useChristmas } from '../lib/season';
+import { tr } from '../lib/i18n';
+
+// In the Christmas season (lib/season.ts, Marco 2026-10-14: "im Radio soll
+// automatisch Weihnachtsmusik laufen") the radio plays Spotify's editorial
+// "Christmas Hits" instead of the decade's playlist.
+const XMAS_MUSIC = 'xmas';
+const XMAS_PLAYLIST = '37i9dQZF1DX0Yxoavh5qJV';
+const playlistOf = (key: string): string | undefined => (key === XMAS_MUSIC ? XMAS_PLAYLIST : DECADES_DB[key]?.spotifyPlaylistId);
 
 // Auto-plays the current decade's official Spotify playlist in the
 // background, starting the moment the visitor's first tap/click/keypress
@@ -44,7 +53,9 @@ import { youthPool } from '../lib/youthMusic';
 // Signed in with Spotify, the songs come from "hits of <year>" playlists of
 // the years the visitor grew up in (lib/youthMusic), not only from the
 // decade's one playlist; `youthLabel` then names those years.
-export function useSpotifyBackground(currentDecade: string, enabled = true, birthYear: number | null = null) {
+export function useSpotifyBackground(decade: string, enabled = true, birthYear: number | null = null) {
+  const christmas = useChristmas();
+  const currentDecade = christmas ? XMAS_MUSIC : decade;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const unlockedRef = useRef(false);
@@ -105,7 +116,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
   // ends), or its whole playlist when there is no track list.
   const playDecade = useCallback(() => {
     const controller = controllerRef.current;
-    const playlistId = DECADES_DB[decadeRef.current]?.spotifyPlaylistId;
+    const playlistId = playlistOf(decadeRef.current);
     if (!controller || !playlistId) return;
     setSpecial(null);
     const id = randomTrack(youthRef.current[decadeRef.current] ?? tracksRef.current[playlistId] ?? []);
@@ -190,7 +201,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
   // loadUri below. Withdrawing consent removes the player again.
   useEffect(() => {
     if (!allowed || !containerRef.current) return;
-    const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
+    const playlistId = playlistOf(currentDecade);
     if (!playlistId) return;
     let cancelled = false;
     const host = containerRef.current;
@@ -199,7 +210,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
       .then((tracks) => {
         if (tracks.length) tracksRef.current[playlistId] = tracks;
         // The visitor may have switched decades in the meantime.
-        const id = DECADES_DB[decadeRef.current]?.spotifyPlaylistId === playlistId ? randomTrack(tracks) : null;
+        const id = playlistOf(decadeRef.current) === playlistId ? randomTrack(tracks) : null;
         if (id) rememberSong(historyRef.current, id);
         // A new player (e.g. the embed taking over) starts with the own music.
         setSpecial(null);
@@ -248,7 +259,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
   }, [allowed, premium, connect, connectAttempt]);
 
   useEffect(() => {
-    const playlistId = DECADES_DB[currentDecade]?.spotifyPlaylistId;
+    const playlistId = playlistOf(currentDecade);
     if (!allowed || !playlistId) return;
     const switching = !!controllerRef.current;
     playlistTracksWithin(playlistId, 3000).then((tracks) => {
@@ -261,7 +272,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
   // The person's own years, once signed in: their songs take over from the
   // next song on (the one playing keeps going).
   useEffect(() => {
-    if (!allowed || !signedIn) {
+    if (!allowed || !signedIn || currentDecade === XMAS_MUSIC) {
       youthRef.current = {};
       setYouthLabel(null);
       return;
@@ -346,7 +357,7 @@ export function useSpotifyBackground(currentDecade: string, enabled = true, birt
     /** "Title · Artist" of the song playing, when known. */
     songTitle: special ? `${special.name} · ${special.sub}` : trackName(song),
     /** "Hits von 1983–1989" while the songs come from the person's own years. */
-    youthLabel,
+    youthLabel: christmas ? tr('Christmas songs', 'Weihnachtslieder') : youthLabel,
     /** A single random song plays, so next/back can switch songs. */
     canSkip: !!song || !!special,
     status: statusRef.current,
