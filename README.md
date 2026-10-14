@@ -154,6 +154,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Playlist, ohne sie fängt sie wie früher oben an) – streamt direkt von
   Spotify (wird nie von uns gehostet) und in Spotifys eigener, von uns nicht
   regelbarer Lautstärke, da die Embed-API dafür keine Schnittstelle bietet.
+  Mit Spotify-Login kommen die Songs aus den eigenen Jahren: Für die Jahre
+  des Jahrzehnts, in denen man 6 bis 19 war, sucht die App je eine
+  „Hits <Jahr>“-Playlist und mischt ihre Songs; der Player zeigt dann
+  „Hits von 1983–1989“ ([`lib/youthMusic.ts`](lib/youthMusic.ts)). Ohne
+  Login bleibt es bei der Dekaden-Playlist. Ganze Songs statt
+  30-Sekunden-Ausschnitten gibt es nur mit Spotify-Login (Premium am
+  Computer) oder wenn man im selben Browser bei Spotify angemeldet ist;
+  Spotify spielt im eingebetteten Player sonst nur Ausschnitte.
   Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
   mitten in der unteren Leiste, in den anderen Designs ganz unten rechts

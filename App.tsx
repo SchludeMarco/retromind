@@ -77,7 +77,8 @@ const App: React.FC = () => {
   // after the splash is fully gone (the browser only allows audio shortly
   // after the start button press).
   const [menuRevealed, setMenuRevealed] = useState(false);
-  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash);
+  const birthYear = /^\d{4}/.test(user.birthDate) ? Number(user.birthDate.slice(0, 4)) : null;
+  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, birthYear);
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
@@ -600,7 +601,7 @@ const App: React.FC = () => {
   // the screen. Retro Warm: in the middle of the bottom navigation; the other
   // designs: in the bottom row left of the settings button, and like it only
   // once the page is scrolled to the bottom (index.css .rm-music-knob).
-  const decadeMusicName = tr(
+  const decadeMusicName = spotify.youthLabel ?? tr(
     `Music of the ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}s`,
     `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`
   );

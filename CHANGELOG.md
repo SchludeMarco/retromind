@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Pause hält die Musik an, Hits aus deinen Jahren** (2026-10-14,
+  PR #205): Der Pause-Knopf im Musik-Player hält die Musik jetzt wirklich
+  an. Vorher konnte Spotify einen pausierten Song als „zu Ende“ melden, und
+  sofort startete ein neuer. Mit Spotify-Login kommen die Songs außerdem
+  aus deinen eigenen Jahren: Für jedes Jahr des Jahrzehnts, in dem du 6
+  bis 19 warst, sucht RetroMind eine „Hits“-Playlist dieses Jahres und
+  mischt die Songs. Der Player zeigt dann zum Beispiel „Hits von
+  1983–1989“. Ohne Login läuft wie bisher die Playlist des Jahrzehnts.
+
 - **Roter Faden: eine Zeitreise vom Willkommen bis zum Buch**
   (2026-10-14, PR #205): Die Zeitreise fühlt sich jetzt wie eine Reise an,
   nicht wie lauter einzelne Seiten. Ein Druck auf „Go back...“ lässt dich von

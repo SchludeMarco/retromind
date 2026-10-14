@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Pause hält die Musik an, Hits aus deinen Jahren': {
+    title: 'Pause stops the music, hits from your own years',
+    text: 'The pause button in the music player now really stops the music. Before, Spotify could report a paused song as finished, and a new one started right away. Signed in with Spotify, the songs now also come from your own years: for every year of the decade in which you were 6 to 19, RetroMind looks for a hits playlist of that year and mixes the songs. The player then shows, for example, “Hits of 1983–1989”. Without a login the decade’s playlist plays as before.',
+  },
   'Roter Faden: eine Zeitreise vom Willkommen bis zum Buch': {
     title: 'One thread: a time travel from the welcome to the book',
     text: 'The time journey now feels like one journey instead of separate pages. Pressing “Go back...” lets the time machine pull you in: the words and the clock spiral into the dial, rings of light rush to the centre, everything turns to light, and the light opens like an iris. The clock’s ticks race faster and faster, a hum and a rush of air swell, and the gong strikes as you arrive. You then enter your name and birthday on a ticket to your past, in the same dark clock room, instead of a bright form; “Set the clock” sends the hands racing backwards and opens the room onto the living room. Above every stop, in all designs, the same journey bar shows a little clock whose hand points to where you are (“Stop 4 of 7”, with “Explore › Music” when exploring), every stop to tap and the way back; while reading, a slim bar with arrows stays at the top. Every stop ends with “Next stop: …”, and every stop has one name everywhere (“Time Travel” and “Impressions” became “Your era”, the profile is now “Pack your suitcase”). One design system for spacing, edges, shadows, buttons and headings applies to all three designs. In Classic the tube haze is a little sharper, so text is easier to read.',

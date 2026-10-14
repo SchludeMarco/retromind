@@ -88,6 +88,14 @@ export async function searchSpotify(query: string): Promise<SpotifyHit[]> {
   return [...tracks, ...artists, ...albums];
 }
 
+/** Ids and names of public playlists for a search (signed-in visitors only). */
+export async function searchPlaylists(query: string, limit = 10): Promise<{ id: string; name: string }[]> {
+  const data = await get(`/search?type=playlist&limit=${limit}&q=${encodeURIComponent(query)}`);
+  return (data?.playlists?.items ?? [])
+    .filter((p: any) => p && typeof p.id === 'string' && typeof p.name === 'string')
+    .map((p: any) => ({ id: p.id as string, name: p.name as string }));
+}
+
 const words = (s: string) =>
   s
     .toLowerCase()
