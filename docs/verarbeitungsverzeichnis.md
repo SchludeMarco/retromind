@@ -2,7 +2,7 @@
 
 Verantwortlicher: Marco Schlude, Anschrift und Kontakt siehe
 [Impressum](../public/impressum.html). Kein Datenschutzbeauftragter
-(nicht erforderlich). Stand: 15. Oktober 2026.
+(nicht erforderlich). Stand: 15. Oktober 2026 (Gästeliste ergänzt).
 
 Gilt für RetroMind – Zeitreise (retromind.vercel.app) und RetroMind – Gaming
 (retromind-gaming.vercel.app). Bei jeder neuen Datenverarbeitung hier eine
@@ -29,6 +29,7 @@ nur durch Marco.
 | 8 | Nutzungsstatistik | Wissen, wie stark RetroMind genutzt wird | Tagesbezogener Einweg-Hash aus IP und User-Agent (nicht gespeichert), Geräteart, geöffnetes Jahrzehnt/Spiel | Art. 6 (1) f | Upstash Inc. (Server in der EU, SCC) | Zufallswert max. 2 Tage; danach nur Zahlen ohne Personenbezug |
 | 9 | Highscore-Tafel | Bestenliste | Drei frei gewählte Zeichen, Punktzahl, Spiel | Art. 6 (1) a | Upstash Inc. (EU) | beste 50 pro Spiel; Löschung auf Wunsch |
 | 10 | Feedback | Rückmeldungen beantworten | Nachricht, Kategorie, freiwillig E-Mail | Art. 6 (1) a | Resend Inc. (USA, SCC), Gmail (Google), GitHub Inc. (USA, öffentlich, ohne E-Mail) | Mail bis erledigt; `feedback.md` bis Löschwunsch |
+| 12 | Zugang nur für Gäste (`middleware.js`, `/gate.html`) | RetroMind privat halten | Eingeladene: E-Mail-Adresse (Gästeliste), Cookie `rm_guest` mit E-Mail, Zeitpunkt, Signatur | Art. 6 (1) f und b, § 25 (2) Nr. 2 TDDDG | Google (Anmeldung, USA, DPF), Upstash Inc. (EU) | Cookie 30 Tage ab letzter Prüfung; Gästeliste bis Austragung |
 | 11 | Adminbereich | Zahlen und Feedback ansehen | Marcos Google-Konto (Prüfung des Tokens) | Art. 6 (1) f | Google (Token-Prüfung) | keine Speicherung |
 
 Löschkonzept: Nutzerdaten liegen im Browser und werden über „Alle meine Daten

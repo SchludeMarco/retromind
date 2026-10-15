@@ -18,7 +18,9 @@
 
   <h2>In short</h2>
   <ul>
-    <li>No tracking, no third-party analytics tools, no ads, no cookies set by RetroMind itself. The only thing counted
+    <li>RetroMind is a private offer for invited guests only. For this you sign in once with Google, and RetroMind
+      sets a single, technically necessary cookie (see section 14).</li>
+    <li>No tracking, no third-party analytics tools, no ads. The only thing counted
       is, anonymously, how often the apps are opened (see section 10).</li>
     <li>Your journey, your profile and your settings stay in your browser on your device.</li>
     <li>Fonts are hosted on our own server. Our server fetches pictures, sounds and text from Wikipedia/Wikimedia
@@ -214,7 +216,25 @@
     builds no profiles about you. Coins and prizes in the Gaming edition can neither be bought nor cashed out.
   </p>
 
-  <h2>14. Your rights</h2>
+  <h2>14. Access for invited guests only</h2>
+  <p>
+    RetroMind is not a public offer; it only opens for people the operator invited. On your first visit you sign in
+    with your Google account on the guest page; only when you point at or tap the button does your browser load
+    Google’s sign-in script for this. Google only tells us your email address. Our server checks whether it is on the
+    guest list. The guest list holds the email addresses of invited guests and is stored in the Upstash database
+    (servers in the EU, see section 10); only the operator adds addresses.
+  </p>
+  <p>
+    If you are on the list, RetroMind sets the cookie <code>rm_guest</code>. It contains your email address, the time
+    of the check and a signature so nobody can forge it, and scripts cannot read it. It is valid for 30 days and, when
+    you visit, is checked against the guest list at most once a day and then renewed. This cookie is strictly
+    necessary so that only guests can open RetroMind (Section 25(2) No. 2 TDDDG). The legal basis for the check is our
+    legitimate interest in keeping RetroMind private (Art. 6(1)(f) GDPR), and for the guest list the invitation you
+    accepted (Art. 6(1)(b) GDPR). If you no longer want to be a guest, a message is enough and your address is removed
+    from the list. This page, the legal notice and the guest page can be opened without signing in.
+  </p>
+
+  <h2>15. Your rights</h2>
   <p>You have the right to</p>
   <ul>
     <li>access the data stored about you (Art. 15 GDPR), in RetroMind directly via “Download my data” in the

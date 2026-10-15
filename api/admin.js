@@ -7,6 +7,12 @@
 //                              which triggers no Vercel build)
 // GET  ?view=live            → which commit each domain serves vs. master
 // GET  ?view=version         → public: the commit of this deployment
+// GET  ?view=gate            → public: Google client id for /gate.html
+// POST {action:"guestLogin", token} → public: Google token of an invited
+//                              guest → signed cookie (see api/_guests.js)
+// POST {action:"guestLogout"} → public: removes that cookie
+// GET  ?view=guests          → the guest list
+// POST {action:"guestAdd"|"guestRemove", email} → change the guest list
 
 import {
   FEEDBACK_PATH,
@@ -21,6 +27,19 @@ import {
   updateFile,
 } from "./_feedbackStore.js";
 import { cors, isAdmin, readJsonBody } from "./_admin.js";
+import {
+  ADMIN_EMAIL,
+  addGuest,
+  clearCookie,
+  googleEmail,
+  guestsConfigured,
+  isGuest,
+  listGuests,
+  makeCookie,
+  normalizeEmail,
+  removeGuest,
+  validEmail,
+} from "./_guests.js";
 
 const REPO = process.env.FEEDBACK_GITHUB_REPO || "SchludeMarco/retromind";
 const BRANCH = process.env.FEEDBACK_GITHUB_BRANCH || "master";
@@ -54,9 +73,9 @@ async function feedbackList(res) {
   return res.status(200).json({ configured: true, entries });
 }
 
-async function feedbackAction(req, res) {
+async function feedbackAction(body, res) {
   if (!storeConfigured()) return res.status(503).json({ error: "not_configured" });
-  const { action, id } = await readJsonBody(req);
+  const { action, id } = body;
   if (typeof id !== "string" || !/^fb-[\w-]+$/.test(id)) return res.status(400).json({ error: "bad_id" });
   const { content } = await readFile(FEEDBACK_PATH);
   const entry = findEntry(content, id);
@@ -78,6 +97,22 @@ async function feedbackAction(req, res) {
     return res.status(200).json({ status: "erledigt" });
   }
   return res.status(400).json({ error: "bad_action" });
+}
+
+// A guest signs in with Google on /gate.html; invited addresses get the cookie
+// that middleware.js asks for.
+async function guestLogin(body, res) {
+  if (!guestsConfigured()) return res.status(503).json({ error: "not_configured" });
+  try {
+    const email = await googleEmail(String(body.token || ""));
+    if (!email) return res.status(401).json({ error: "bad_token" });
+    if (!(await isGuest(email))) return res.status(403).json({ error: "not_invited", email });
+    res.setHeader("Set-Cookie", await makeCookie(email));
+    return res.status(200).json({ ok: true, email });
+  } catch (err) {
+    console.error("guest login failed", err);
+    return res.status(502).json({ error: "upstream" });
+  }
 }
 
 async function liveCheck(res) {
@@ -125,11 +160,34 @@ export default async function handler(req, res) {
   if (req.method === "GET" && view === "version") {
     return res.status(200).json({ sha: process.env.VERCEL_GIT_COMMIT_SHA || null });
   }
+  if (req.method === "GET" && view === "gate") {
+    return res.status(200).json({
+      clientId: process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || null,
+      configured: guestsConfigured(),
+    });
+  }
+  const body = req.method === "POST" ? await readJsonBody(req) : {};
+  if (req.method === "POST" && body.action === "guestLogin") return guestLogin(body, res);
+  if (req.method === "POST" && body.action === "guestLogout") {
+    res.setHeader("Set-Cookie", clearCookie());
+    return res.status(200).json({ ok: true });
+  }
   if (!(await isAdmin(req))) return res.status(403).json({ error: "forbidden" });
 
   try {
+    if (req.method === "GET" && view === "guests") {
+      if (!guestsConfigured()) return res.status(200).json({ configured: false, guests: [], admin: ADMIN_EMAIL });
+      return res.status(200).json({ configured: true, guests: await listGuests(), admin: ADMIN_EMAIL });
+    }
+    if (req.method === "POST" && (body.action === "guestAdd" || body.action === "guestRemove")) {
+      const email = normalizeEmail(body.email);
+      if (!validEmail(email)) return res.status(400).json({ error: "bad_email" });
+      if (body.action === "guestAdd") await addGuest(email);
+      else await removeGuest(email);
+      return res.status(200).json({ guests: await listGuests() });
+    }
     if (req.method === "GET" && view === "feedback") return await feedbackList(res);
-    if (req.method === "POST") return await feedbackAction(req, res);
+    if (req.method === "POST") return await feedbackAction(body, res);
     if (req.method === "GET" && view === "live") return await liveCheck(res);
   } catch (err) {
     console.error("admin failed", err);
