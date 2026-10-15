@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { isMuted } from '../lib/mute';
+import { getConsent } from '../lib/privacy';
 import { isGerman, tr } from '../lib/i18n';
 import { DECADES_DB } from '../constants';
 import { sharedAudioContext } from '../lib/clockSounds';
@@ -194,7 +195,9 @@ export const ArrivalShow: React.FC<{
   startHitRef.current = startHit;
 
   useEffect(() => {
-    if (!hit || isMuted()) return;
+    // The clip is a piece of someone else's recording, so like the Spotify
+    // music it only plays once the visitor allowed music (lib/privacy).
+    if (!hit || isMuted() || getConsent('spotify') !== true) return;
     let live = true;
     fetch(hitClipUrl(hit))
       .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject()))

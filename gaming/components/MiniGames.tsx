@@ -42,7 +42,7 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
   },
   {
     id: 'senso',
-    title: tr('SIMON', 'SENSO'),
+    title: tr('COLOR ECHO', 'FARBECHO'),
     statKey: 'SENSO',
     icon: '🔴',
     text: tr('Listen to the tune and tap it back. Every round adds a note.', 'Melodie anhören und nachtippen. Jede Runde kommt ein Ton dazu.'),
@@ -93,7 +93,7 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
   },
   {
     id: 'breakout',
-    title: 'BREAKOUT',
+    title: tr('BRICK BASH', 'MAUERBRECHER'),
     statKey: 'BREAKOUT',
     icon: '🏓',
     text: tr('Bounce the ball into the wall of bricks, like the 1976 arcade classic. Drag to move the paddle.', 'Den Ball in die Steinmauer schmettern, wie beim Automaten-Klassiker von 1976. Ziehen bewegt den Schläger.'),

@@ -8,6 +8,22 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Mehr Datenschutz: Meine Daten, KI-Hinweise und eigene Figuren**
+  (2026-10-15, PR #220): In den Einstellungen beider Apps gibt es jetzt
+  „Deine Daten“ bzw. „Meine Daten“: Ein Knopf lädt alles, was RetroMind in
+  deinem Browser gespeichert hat, als Datei herunter, ein anderer löscht
+  alles davon. Der Nostalgie-Begleiter und der Retro-Guru sagen jetzt
+  gleich, dass sie eine KI (Google Gemini) sind, und KI-Videos sind als
+  „KI-generiert“ markiert. Die KI-Funktionen gibt es nach Googles Regeln
+  erst ab 18; in der Zeitreise bleiben sie aus, wenn das Geburtsdatum unter
+  18 ergibt. Der kurze Hit-Ausschnitt bei der Ankunft in einem Jahr spielt
+  nur noch, wenn du Musik erlaubt hast. In der Gaming-Halle heißen zwei
+  Minispiele jetzt Mauerbrecher und Farbecho, statt des Pac-Man läuft ein
+  eigener Mampf-Roboter mit einem Käfer durch die Halle, und auf der
+  Highscore-Tafel werden beleidigende Kürzel zu „XXX“. Die
+  Datenschutzerklärung ist auf dem neuen Stand (YouTube-Videos in der
+  Zeitreise, Kinder und Jugendliche, Daten herunterladen und löschen).
+
 - **Kartenspiele in der Chill-Ecke: Video-Poker, Blackjack und Solitär**
   (2026-10-14, PR #217): In der Gaming-Halle liegen jetzt drei
   Kartenspiele. Beim Video-Poker („Jacks or Better“ wie an den

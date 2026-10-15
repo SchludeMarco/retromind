@@ -31,9 +31,9 @@ export const EGGS: Egg[] = [
   },
   {
     id: 'pacman',
-    title: 'Waka Waka',
+    title: tr('Chomp Chomp', 'Mampf Mampf'),
     hint: tr('Somebody around here is gobbling up dots. Catch him!', 'Irgendwer futtert hier Punkte. Schnapp ihn dir!'),
-    text: tr('Caught Pac-Man. The ghost is jealous.', 'Pac-Man erwischt. Der Geist ist neidisch.'),
+    text: tr('Caught the muncher robot. The bug is jealous.', 'Den Mampf-Roboter erwischt. Der Käfer ist neidisch.'),
     reward: 20,
   },
   {

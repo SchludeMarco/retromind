@@ -499,10 +499,19 @@ const App: React.FC = () => {
       mime
     );
     if (result.url) {
-      setVideoStatus({ status: 'done', url: result.url, message: tr('Done – your photo is moving.', 'Fertig – dein Foto bewegt sich.') });
+      setVideoStatus({
+        status: 'done',
+        url: result.url,
+        message: tr(
+          'Done – your photo is moving. This video was made by an AI (Google Veo).',
+          'Fertig – dein Foto bewegt sich. Dieses Video hat eine KI erzeugt (Google Veo).'
+        ),
+      });
     } else {
       const msg =
-        result.error === 'not_configured'
+        result.error === 'under_18'
+          ? tr('The AI features (Google Gemini) are only for people aged 18 and over.', 'Die KI-Funktionen (Google Gemini) gibt es erst ab 18 Jahren.')
+          : result.error === 'not_configured'
           ? tr('Video generation isn’t turned on in this demo.', 'Video-Generierung ist in diesem Demo nicht aktiv.')
           : result.error === 'timeout'
           ? tr('That took too long. Please try again later.', 'Die Generierung hat zu lange gedauert. Versuch es später noch einmal.')

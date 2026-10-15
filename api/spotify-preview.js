@@ -89,6 +89,8 @@ export default async function handler(req, res) {
   if (body.length > MAX_BYTES) return res.status(413).json({ error: "too_large" });
 
   res.setHeader("Content-Type", type);
-  res.setHeader("Cache-Control", "public, s-maxage=86400, stale-while-revalidate=604800");
+  // Only the visitor's own browser may keep the clip; our CDN stores no copy
+  // of someone else's recording.
+  res.setHeader("Cache-Control", "private, max-age=86400");
   return res.status(200).send(body);
 }

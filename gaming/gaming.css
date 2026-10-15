@@ -2507,7 +2507,7 @@ a {
   transform: translateX(-50%) scale(0.94);
 }
 
-/* --- Pac-Man wandering through the hall (components/PacmanWander.tsx): a
+/* --- Muncher robot wandering through the hall (components/MuncherWander.tsx): a
    see-through canvas between the hall picture and the hub, so he runs
    underneath every button, card and popup (Marco, 2026-10-08); taps go
    through it. --- */

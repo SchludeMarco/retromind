@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", upstream.headers.get("content-type") || "video/mp4");
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="retromind-erinnerung.mp4"'
+      'attachment; filename="retromind-ki-video.mp4"'
     );
     const buf = Buffer.from(await upstream.arrayBuffer());
     res.status(200).send(buf);

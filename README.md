@@ -442,9 +442,17 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
   Bilder, Vorschaubilder und Klänge von fremden Servern holt
   [`api/proxy.js`](api/proxy.js) (nur erlaubte Adressen, Vercel-CDN-Cache), der
-  Browser spricht nie direkt mit ihnen. Spotify (Zeitreise und Gaming-Halle) und YouTube (Gaming)
+  Browser spricht nie direkt mit ihnen. Spotify (Zeitreise und Gaming-Halle) und YouTube (beide)
   laden erst nach Zustimmung, widerrufbar in den Einstellungen; Googles
   Anmelde-Skript lädt erst, wenn jemand zum Anmelde-Knopf greift.
+  In den Einstellungen beider Apps lädt „Meine Daten herunterladen“ alles,
+  was RetroMind im Browser gespeichert hat, als Datei herunter, und „Alle
+  meine Daten löschen“ entfernt es ([`lib/myData.ts`](lib/myData.ts)).
+  Chat-Begleiter, Retro-Guru und KI-Videos sind als KI gekennzeichnet (AI
+  Act); weil Google die Gemini-API erst ab 18 erlaubt, bleibt die KI in der
+  Zeitreise aus, wenn das Geburtsdatum unter 18 ergibt. Der Hit-Ausschnitt
+  bei der Ankunft spielt nur nach „Musik erlauben“. Welche Daten wohin
+  gehen, steht im [Verzeichnis der Verarbeitungstätigkeiten](docs/verarbeitungsverzeichnis.md).
   [Datenschutzerklärung](public/datenschutz.html) und
   [Impressum](public/impressum.html) liegen als statische Seiten unter
   `/datenschutz.html` und `/impressum.html` auf beiden Domains und sind in der
@@ -631,10 +639,20 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 ### Muss
 
-- **Gemini-Tarif prüfen:** Im kostenlosen Tarif der Gemini-API darf Google
-  Eingaben zur Verbesserung seiner Produkte nutzen. Für persönliche
-  Erinnerungen und Fotos ist ein Projekt mit aktivem Billing (bezahlter Tarif)
-  datenschutzfreundlicher; danach die Datenschutzerklärung prüfen.
+- **Gemini-Tarif prüfen, für beide Schlüssel:** Google erlaubt Apps mit
+  Nutzern in der EU nur die bezahlte Gemini-API, und im kostenlosen Tarif
+  trainiert Google mit den Eingaben (auch Fotos). Zeitreise und Gaming haben
+  in Vercel verschiedene `GEMINI_API_KEY`; in AI Studio prüfen, dass beide zu
+  einem Projekt mit Abrechnung gehören.
+- **YouTube-API-Schlüssel eintragen:** Ohne `YOUTUBE_API_KEY` liest
+  `api/youtube.js` die YouTube-Suchseite aus, was YouTubes Bedingungen
+  verbieten. Schlüssel für die YouTube Data API v3 anlegen und in beiden
+  Vercel-Projekten eintragen; danach den Notweg entfernen.
+- **Musik-Ausschnitte über den eigenen Server klären:** `api/spotify-preview.js`
+  holt 30-Sekunden-Clips bei Spotify/Deezer und spielt sie über unseren
+  Server aus (Tür der Gaming-Halle, Ankunft in der Zeitreise). Das ist
+  urheberrechtlich das größte offene Risiko; sicherer wäre, Ausschnitte nur
+  über den offiziellen Spotify-Player zu spielen.
 - **Feedback-Token erneuern bis 2026-11-02:** Der GitHub-Token
   `FEEDBACK_GITHUB_TOKEN` in Vercel läuft dann ab. Ohne ihn landet Feedback
   nicht mehr in `feedback.md`, und der „Als To Do übernehmen“-Link geht nicht.

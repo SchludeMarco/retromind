@@ -128,3 +128,7 @@ gebaut oder ausgeliefert.
   wurden bei jedem Tippen neu geladen und kamen oft zu spät oder gar nicht.
   Ersetzt durch selbst erzeugte Klänge in `lib/uiSounds.ts`, die sofort
   erklingen.
+- `PacmanWander.tsx.txt`: der kleine Pac-Man mit Geist, der durch die
+  Gaming-Halle lief (entfernt am 2026-10-15 nach dem Rechtscheck, denn Pac-Man
+  und die Geister gehören Bandai Namco). Ersetzt durch einen eigenen
+  Mampf-Roboter mit Käfer in `gaming/components/MuncherWander.tsx`.

@@ -5,6 +5,7 @@ import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
+import { deleteMyData, downloadMyData } from '../lib/myData';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
 import { setXmasMode, setXmasSounds, useXmasMode, useXmasSounds, XmasMode } from '../lib/season';
@@ -403,8 +404,8 @@ export const SettingsModal: React.FC<{
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Privacy', 'Datenschutz')}</span>
         <p className="text-xs leading-relaxed">
           {tr(
-            'Your journey stays in this browser. RetroMind fetches pictures and sounds from other sites through its own server, and Spotify only loads with your OK.',
-            'Deine Reise bleibt in diesem Browser. Bilder und Klänge von anderen Seiten holt RetroMind über den eigenen Server, Spotify lädt nur mit deinem OK.'
+            'Your journey stays in this browser. RetroMind fetches pictures and sounds from other sites through its own server, and Spotify and YouTube only load with your OK.',
+            'Deine Reise bleibt in diesem Browser. Bilder und Klänge von anderen Seiten holt RetroMind über den eigenen Server, Spotify und YouTube laden nur mit deinem OK.'
           )}
         </p>
         <p className="text-xs mt-2">
@@ -415,6 +416,27 @@ export const SettingsModal: React.FC<{
           <a href={IMPRINT_URL} target="_blank" rel="noreferrer" className="underline font-bold text-retro-amber-dark">
             {tr('Legal Notice', 'Impressum')}
           </a>
+        </p>
+        <span className="block text-xs uppercase font-bold text-retro-brown mt-4 mb-2">{tr('Your data', 'Deine Daten')}</span>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => downloadMyData('zeitreise')}
+            className="retro-button px-3 py-1.5 border-2 border-retro-ink bg-white font-bold text-xs"
+          >
+            {tr('⬇ Download my data', '⬇ Meine Daten herunterladen')}
+          </button>
+          <button
+            onClick={() => deleteMyData()}
+            className="retro-button px-3 py-1.5 border-2 border-retro-ink bg-white font-bold text-xs"
+          >
+            {tr('✕ Delete all my data', '✕ Alle meine Daten löschen')}
+          </button>
+        </div>
+        <p className="text-[10px] text-retro-tan mt-2">
+          {tr(
+            'Everything RetroMind knows about you is stored in this browser. The file contains all of it; deleting removes all of it from this device.',
+            'Alles, was RetroMind über dich weiß, liegt in diesem Browser. Die Datei enthält alles davon; Löschen entfernt alles von diesem Gerät.'
+          )}
         </p>
       </div>
     </Modal>
