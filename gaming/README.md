@@ -236,7 +236,9 @@ zeigen dürfen.
 
 ### Datenschutz
 
-Kein Tracking, eingebaute Schriften. Der Retro-Guru sagt, dass er eine KI
+Wie die Zeitreise öffnet sich die Gaming-Edition nur für eingeladene Gäste
+(Google-Anmeldung auf der Gästeseite, Liste im Adminbereich unter „Gäste“, siehe
+Haupt-README). Kein Tracking, eingebaute Schriften. Der Retro-Guru sagt, dass er eine KI
 ist (Google Gemini, nach Googles Regeln ab 18), und die Highscore-Tafel macht
 aus beleidigenden Kürzeln „XXX“. Wikipedia, Wikidata, Commons und andere
 Quellen holt [`api/proxy.js`](../api/proxy.js), der Browser spricht nie direkt

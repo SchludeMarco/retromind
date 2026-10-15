@@ -458,6 +458,19 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   `/datenschutz.html` und `/impressum.html` auf beiden Domains und sind in der
   Fußzeile und in den Einstellungen verlinkt.
 
+- **Nur für eingeladene Gäste** ([`middleware.js`](middleware.js),
+  [`public/gate.html`](public/gate.html), [`api/_guests.js`](api/_guests.js))
+  – beide Domains sind ein privates Angebot (Marco, 2026-10-15: kostenlos und
+  ohne öffentliches Impressum). Ohne das signierte Cookie `rm_guest` leitet
+  die Vercel-Middleware Seiten auf die Gästeseite um und beantwortet API-Aufrufe
+  mit 401. Auf der Gästeseite meldet man sich mit Google an; `api/admin.js`
+  prüft die Adresse gegen die Gästeliste (Upstash-Set `rm:guests`, Marco ist
+  immer drin) und setzt das Cookie (30 Tage, höchstens täglich neu geprüft).
+  Marco pflegt die Liste im Adminbereich unter „Gäste“. Offen bleiben die
+  Rechtsseiten, `/api/admin` und der Freigabe-Link aus der Feedback-Mail;
+  Vorschau-Deployments sind ausgenommen. Ohne Upstash-Datenbank bleibt die
+  App offen.
+
 - **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
   [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter
   `/admin/` auf beiden Domains, bewusst nirgends in den Apps verlinkt. Marco
@@ -471,9 +484,10 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   aus IP, Browser und einem Tageswert, der nach zwei Tagen gelöscht wird, landet
   in einem HyperLogLog-Zähler in Upstash Redis (kostenlos über den Vercel
   Marketplace). Ohne verbundene Datenbank zählt nichts, die App läuft normal.
-  Drei Reiter: **Nutzung** (dazu Geräte Handy/Tablet/Computer, Anteil der als
+  Vier Reiter: **Nutzung** (dazu Geräte Handy/Tablet/Computer, Anteil der als
   App installierten Starts und die beliebtesten Jahrzehnte, Spiele und
-  Minispiele, diesen Monat und insgesamt), **Feedback** (alle Einträge aus
+  Minispiele, diesen Monat und insgesamt), **Gäste** (wer RetroMind öffnen
+  darf: einladen und entfernen), **Feedback** (alle Einträge aus
   `feedback.md`, mit „Als To Do übernehmen“ und „Erledigt“, siehe
   [`api/admin.js`](api/admin.js)) und **Live-Check** (welchen Commit
   beide Domains ausliefern, verglichen mit `master`, mit Link zum Redeploy in

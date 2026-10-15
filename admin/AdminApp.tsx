@@ -10,7 +10,7 @@ import { LOCALE, isGerman, tr } from '../lib/i18n';
 // nothing to anyone else.
 
 type AppId = 'zeitreise' | 'gaming';
-type Tab = 'usage' | 'feedback' | 'live';
+type Tab = 'usage' | 'guests' | 'feedback' | 'live';
 interface Day {
   day: string;
   starts: number;
@@ -63,6 +63,7 @@ const TOP_LABELS: Record<string, string> = {
 const RANGES = [7, 30, 90];
 const TABS: { id: Tab; label: string }[] = [
   { id: 'usage', label: tr('Usage', 'Nutzung') },
+  { id: 'guests', label: tr('Guests', 'Gäste') },
   { id: 'feedback', label: 'Feedback' },
   { id: 'live', label: tr('Live check', 'Live-Check') },
 ];
@@ -163,6 +164,7 @@ export const AdminApp: React.FC = () => {
             ))}
           </nav>
           {tab === 'usage' && <UsageTab api={api} isAdmin={isAdminUser(auth.user)} />}
+          {tab === 'guests' && <GuestsTab api={api} />}
           {tab === 'feedback' && <FeedbackTab api={api} />}
           {tab === 'live' && <LiveTab api={api} />}
         </>
@@ -511,6 +513,108 @@ const FeedbackTab: React.FC<{ api: Api }> = ({ api }) => {
           '„Als To Do übernehmen“ schreibt den Punkt in die README. Das löst wie jede Code-Änderung neue Builds in Vercel aus. „Erledigt“ ändert nur feedback.md und kostet keinen Build.'
         )}
       </p>
+    </>
+  );
+};
+
+// ---------------------------------------------------------------- Gäste
+
+// "Nur für Eingeladene": who may open RetroMind (middleware.js, api/_guests.js).
+// The list lives in the shared database, so it applies to both domains.
+const GuestsTab: React.FC<{ api: Api }> = ({ api }) => {
+  type Guests = { configured: boolean; guests: string[]; admin: string };
+  const [load, setLoad] = useState<Load<Guests>>({ state: 'loading' });
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  const fetchGuests = useCallback(async () => {
+    setLoad({ state: 'loading' });
+    setLoad(await api<Guests>('/api/admin?view=guests'));
+  }, [api]);
+  useEffect(() => {
+    fetchGuests();
+  }, [fetchGuests]);
+
+  const change = async (action: 'guestAdd' | 'guestRemove', who: string) => {
+    if (action === 'guestRemove' && !window.confirm(tr(`Remove ${who} from the guest list?`, `${who} von der Gästeliste nehmen?`))) return;
+    setBusy(true);
+    setFailed(false);
+    const result = await api<{ guests: string[] }>('/api/admin', { method: 'POST', body: JSON.stringify({ action, email: who }) });
+    setBusy(false);
+    if (result.state !== 'ready') return setFailed(true);
+    if (action === 'guestAdd') setEmail('');
+    setLoad((prev) => (prev.state === 'ready' ? { state: 'ready', data: { ...prev.data, guests: result.data.guests } } : prev));
+  };
+
+  if (load.state !== 'ready') return <Problem load={load} onRetry={fetchGuests} />;
+  if (!load.data.configured)
+    return (
+      <section className="card">
+        <p>
+          {tr(
+            'The guest list needs the Upstash database (see Usage). Until it is connected, RetroMind stays open for everyone.',
+            'Die Gästeliste braucht die Upstash-Datenbank (siehe Nutzung). Solange sie fehlt, ist RetroMind für alle offen.'
+          )}
+        </p>
+      </section>
+    );
+  const { guests, admin } = load.data;
+  return (
+    <>
+      <section className="card">
+        <p>
+          {tr(
+            'RetroMind only opens for these Google accounts (both domains). Guests sign in once with Google and stay in for 30 days after their last visit. Removing someone takes effect within a day.',
+            'RetroMind öffnet sich nur für diese Google-Konten (beide Domains). Gäste melden sich einmal mit Google an und bleiben bis 30 Tage nach ihrem letzten Besuch drin. Wer von der Liste fliegt, ist spätestens nach einem Tag draußen.'
+          )}
+        </p>
+        <form
+          className="actions"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (email.trim()) change('guestAdd', email.trim());
+          }}
+        >
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={tr('name@gmail.com', 'name@gmail.com')}
+            aria-label={tr('Google address of the guest', 'Google-Adresse des Gasts')}
+            style={{ flex: 1, minWidth: 0, padding: '8px 10px', font: 'inherit', borderRadius: 8, border: '1px solid currentColor', background: 'transparent', color: 'inherit' }}
+          />
+          <button className="btn small" type="submit" disabled={busy}>
+            {tr('Invite', 'Einladen')}
+          </button>
+        </form>
+        {failed && <p className="note">{tr('That didn’t work. Please check the address and try again.', 'Hat nicht geklappt. Bitte Adresse prüfen und noch einmal versuchen.')}</p>}
+      </section>
+      <section className="card">
+        <p className="eyebrow">{tr(`${guests.length + 1} with access`, `${guests.length + 1} mit Zugang`)}</p>
+        <ul className="guest-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          <li style={{ padding: '6px 0' }}>
+            {admin} <span className="note">· {tr('you, always', 'du, immer')}</span>
+          </li>
+          {guests
+            .filter((g) => g !== admin)
+            .map((g) => (
+              <li key={g} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '6px 0' }}>
+                <span style={{ overflowWrap: 'anywhere' }}>{g}</span>
+                <button className="btn small" disabled={busy} onClick={() => change('guestRemove', g)}>
+                  {tr('Remove', 'Entfernen')}
+                </button>
+              </li>
+            ))}
+        </ul>
+        <p className="note">
+          {tr(
+            'Send your guests the link to RetroMind; they land on the guest page and sign in with exactly this Google address.',
+            'Schick deinen Gästen einfach den Link zu RetroMind; sie landen auf der Gästeseite und melden sich mit genau dieser Google-Adresse an.'
+          )}
+        </p>
+      </section>
     </>
   );
 };

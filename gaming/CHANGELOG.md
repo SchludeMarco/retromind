@@ -8,6 +8,14 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **RetroMind nur noch für eingeladene Gäste** (2026-10-15, PR #221):
+  Zeitreise und Gaming-Edition sind jetzt ein privates Angebot. Wer
+  RetroMind öffnet, landet zuerst auf einer Gästeseite und meldet sich
+  einmal mit Google an. Hereinkommen nur Adressen, die Marco im Adminbereich
+  unter „Gäste“ eingeladen hat; danach bleibt man 30 Tage nach dem letzten
+  Besuch angemeldet. Datenschutzerklärung und Impressum bleiben für alle
+  erreichbar, die Datenschutzerklärung erklärt das neue Cookie.
+
 - **Mehr Datenschutz: Meine Daten, KI-Hinweise und eigene Figuren**
   (2026-10-15, PR #220): In den Einstellungen beider Apps gibt es jetzt
   „Deine Daten“ bzw. „Meine Daten“: Ein Knopf lädt alles, was RetroMind in

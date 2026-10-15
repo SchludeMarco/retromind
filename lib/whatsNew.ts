@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'RetroMind nur noch für eingeladene Gäste': {
+    title: 'RetroMind is now for invited guests only',
+    text: 'Time Travel and the Gaming edition are now a private offer. Anyone opening RetroMind first lands on a guest page and signs in once with Google. Only addresses Marco invited in the admin area under “Guests” get in; after that you stay signed in until 30 days after your last visit. The privacy policy and legal notice stay open to everyone, and the privacy policy explains the new cookie.',
+  },
   'Mehr Datenschutz: Meine Daten, KI-Hinweise und eigene Figuren': {
     title: 'More privacy: your data, AI labels and figures of our own',
     text: 'The settings of both apps now have “Your data” / “My data”: one button downloads everything RetroMind stored in your browser as a file, another deletes all of it. The Nostalgia Buddy and the Retro Guru now say right away that they are an AI (Google Gemini), and AI videos are labeled “AI-generated”. Under Google’s rules the AI features are for ages 18 and over; in Time Travel they stay off when the date of birth makes you younger than 18. The short hit clip when you arrive in a year now only plays if you allowed music. In the gaming hall two mini-games are now called Brick Bash and Color Echo, a muncher robot of our own and a little bug wander through the hall instead of Pac-Man, and rude initials on the high score board become “XXX”. The privacy policy is up to date (YouTube videos in Time Travel, children and teenagers, downloading and deleting your data).',
