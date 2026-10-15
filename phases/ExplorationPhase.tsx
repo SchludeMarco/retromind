@@ -353,6 +353,7 @@ export const ExplorationPhase: React.FC<{
               {videoStatus.url && (
                 <div className="mt-3">
                   <video src={videoStatus.url} controls muted={muted} className="w-full border-2 border-white" />
+                  <p className="text-[10px] mt-1 opacity-90">{tr('AI-generated video (Google Veo)', 'KI-generiertes Video (Google Veo)')}</p>
                   <a href={videoStatus.url} className="text-xs underline mt-2 block font-bold text-orange-200">
                     {tr('Download video', 'Video herunterladen')}
                   </a>

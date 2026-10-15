@@ -14,7 +14,7 @@ import { BackToZeitreise } from './components/BackToZeitreise';
 import { CartInsert } from './components/CartInsert';
 import { CoinDrop } from './components/CoinDrop';
 import { ATTRACT_AFTER_MS, AttractMode } from './components/AttractMode';
-import { PacmanWander } from './components/PacmanWander';
+import { MuncherWander } from './components/MuncherWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { ConsolePicker } from './components/ConsolePicker';
@@ -708,7 +708,7 @@ export const GamingApp: React.FC = () => {
           </div>
         </div>
       )}
-      {screen === 'hub' && <PacmanWander onCatch={() => findEgg('pacman')} />}
+      {screen === 'hub' && <MuncherWander onCatch={() => findEgg('pacman')} />}
 
       {screen === 'power' ? (
         <Entrance

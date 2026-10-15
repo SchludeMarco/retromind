@@ -71,7 +71,7 @@ export const GuruChat: React.FC<{ onClose: () => void; onAsk?: (text: string) =>
   return (
     <div className="guru" role="dialog" aria-label={tr('Retro Guru', 'Retro-Guru')}>
       <div className="guru-head pixel-font">
-        <span>{tr('☻ RETRO GURU', '☻ RETRO-GURU')}</span>
+        <span>{tr('☻ RETRO GURU · AI', '☻ RETRO-GURU · KI')}</span>
         <button onClick={onClose} aria-label={tr('Close Guru', 'Guru schließen')}>
           ✕
         </button>
@@ -80,8 +80,8 @@ export const GuruChat: React.FC<{ onClose: () => void; onAsk?: (text: string) =>
         {messages.length === 0 && (
           <p className="dim">
             {tr(
-              'Yo, Player 1! Ask me about a game you only half remember (“the one with the possum and the rocket pack …”), about cheats, or how you can still play it today.',
-              'Yo, Player 1! Frag mich nach einem Game, an das du dich nur halb erinnerst („das mit dem Opossum und dem Raketenrucksack …“), nach Cheats oder wie du es heute noch zocken kannst.'
+              'Yo, Player 1! Ask me about a game you only half remember (“the one with the possum and the rocket pack …”), about cheats, or how you can still play it today. I’m an AI (Google Gemini), so I can be wrong, and AI is only for players aged 18 and over.',
+              'Yo, Player 1! Frag mich nach einem Game, an das du dich nur halb erinnerst („das mit dem Opossum und dem Raketenrucksack …“), nach Cheats oder wie du es heute noch zocken kannst. Ich bin eine KI (Google Gemini), kann mich also irren, und KI gibt es erst ab 18.'
             )}
           </p>
         )}

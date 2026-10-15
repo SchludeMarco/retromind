@@ -90,9 +90,10 @@ zeigen dürfen.
   YouTube-Videos und wenn die App im Hintergrund liegt.
 - **Atmosphäre** – Marcos Bild vom Innenraum der Spielhalle hinter dem
   Katalog (`public/gaming/arcade-innen.webp`), blinkende Automatenlichter,
-  CRT-Effekte, ein kleiner halb durchsichtiger Pac-Man mit Geist, der unter den
-  Knöpfen kreuz und quer läuft und Punkte frisst
-  ([`components/PacmanWander.tsx`](components/PacmanWander.tsx), aus bei
+  CRT-Effekte, ein kleiner halb durchsichtiger Mampf-Roboter mit einem Käfer
+  hinterher, der unter den Knöpfen kreuz und quer läuft und Punkte frisst
+  ([`components/MuncherWander.tsx`](components/MuncherWander.tsx), eigene
+  Figuren statt Pac-Man, aus bei
   „Bewegung reduzieren“). Nach einer Minute ohne Eingabe startet der Attract
   Mode wie bei alten Automaten
   ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
@@ -172,8 +173,8 @@ zeigen dürfen.
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
 - **Chill-Ecke** – Minispiele per Touch und Tastatur: Pixel-Memory,
-  Schiebepuzzle, Senso, Sudoku (immer neue Rätsel mit genau einer Lösung),
-  Blockstapler, Flipper, Pac-Mampf, Breakout, Snake, Weltraum-Invasion und das
+  Schiebepuzzle, Farbecho, Sudoku (immer neue Rätsel mit genau einer Lösung),
+  Blockstapler, Flipper, Pac-Mampf, Mauerbrecher, Snake, Weltraum-Invasion und das
   Quiz „Erkennst du das Spiel?“ (bis zu fünf Coins am Tag)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
@@ -192,7 +193,7 @@ zeigen dürfen.
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
 - **Easter Eggs** – zehn Geheimnisse (IDDQD, Rosebud oder XYZZY in der Suche,
-  Konami-Code, Pac-Man fangen, aufs Logo klopfen, den Guru nach dem Sinn des
+  Konami-Code, den Mampf-Roboter fangen, aufs Logo klopfen, den Guru nach dem Sinn des
   Lebens fragen, nachts vorbeischauen …), jedes bringt einmal Coins; die Liste
   mit Tipps steht unter „Quests“ ([`lib/eggs.ts`](lib/eggs.ts)).
 - **Erfolge, Sammlung und Stash** – Erfolge erscheinen als runde Pokal-Leiste
@@ -213,6 +214,9 @@ zeigen dürfen.
   Stummschalter.
 - **Sprache** – amerikanisches Englisch als Standard, Deutsch wählbar; auch
   Guru und KI-Guide antworten in der gewählten Sprache.
+- **Meine Daten** – unter „Datenschutz“ lädt „Meine Daten“ alles, was die
+  App im Browser gespeichert hat, als Datei herunter, „Alles löschen“ entfernt
+  es von diesem Gerät ([`lib/myData.ts`](../lib/myData.ts)).
 - **Profil und Cloud-Sicherung** – Sammlung, Erfolge, Highscore, Coins und
   Vorlieben liegen im `localStorage`. Mit Google-Login sichert die App sie
   zusätzlich als `retromind-gaming.json` im privaten Drive-`appDataFolder` und
@@ -232,7 +236,9 @@ zeigen dürfen.
 
 ### Datenschutz
 
-Kein Tracking, eingebaute Schriften. Wikipedia, Wikidata, Commons und andere
+Kein Tracking, eingebaute Schriften. Der Retro-Guru sagt, dass er eine KI
+ist (Google Gemini, nach Googles Regeln ab 18), und die Highscore-Tafel macht
+aus beleidigenden Kürzeln „XXX“. Wikipedia, Wikidata, Commons und andere
 Quellen holt [`api/proxy.js`](../api/proxy.js), der Browser spricht nie direkt
 mit ihnen. Spotify und YouTube laden erst nach Zustimmung (widerrufbar in den
 Einstellungen). Datenschutzerklärung und Impressum liegen auch auf dieser

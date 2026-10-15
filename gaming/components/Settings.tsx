@@ -6,6 +6,7 @@ import { setMusicVolume, useMusicVolume } from '../../lib/musicVolume';
 import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
+import { deleteMyData, downloadMyData } from '../../lib/myData';
 import { warmUpGoogle } from '../../lib/googleAuth';
 import { useSecretAdminTaps } from '../../lib/admin';
 import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
@@ -285,6 +286,20 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
             <a href={IMPRINT_URL} target="_blank" rel="noreferrer">
               {tr('Legal notice', 'Impressum')}
             </a>
+          </p>
+          <div className="settings-row">
+            <button className="px-btn" onClick={() => downloadMyData('gaming')} data-nav>
+              {tr('⬇ MY DATA', '⬇ MEINE DATEN')}
+            </button>
+            <button className="px-btn" onClick={() => deleteMyData()} data-nav>
+              {tr('✕ DELETE ALL', '✕ ALLES LÖSCHEN')}
+            </button>
+          </div>
+          <p className="dim">
+            {tr(
+              'Your savegame and settings live in this browser. “My data” downloads all of it as a file, “Delete all” removes all of it from this device.',
+              'Savegame und Einstellungen liegen in diesem Browser. „Meine Daten“ lädt alles als Datei herunter, „Alles löschen“ entfernt alles von diesem Gerät.'
+            )}
           </p>
         </section>
 

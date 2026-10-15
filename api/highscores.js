@@ -35,6 +35,14 @@ async function redis(commands) {
 
 const key = (game) => `rm:hs:${game}`;
 
+// Three-letter words nobody should see on a public board (English and
+// German swear words and Nazi codes).
+const BLOCKED = new Set([
+  "ASS", "FUK", "FUC", "FCK", "FKU", "CUM", "DIK", "DIC", "COC", "COK", "KKK", "NIG", "NGR", "FAG", "SEX",
+  "TIT", "PIS", "PUS", "WTF", "NSU", "SS1", "HH1", "AH1", "SAU", "ARS", "FIK", "FOT", "NAZ", "HJ1",
+  "SH1", "SKH", "H88", "J88", "A88", "S88", "N88", "C18", "K18", "S18",
+]);
+
 // Members are "NAME:random" so the same initials can appear more than once.
 function parse(flat) {
   const out = [];
@@ -60,7 +68,9 @@ export default async function handler(req, res) {
       res.setHeader("Allow", "GET, POST");
       return res.status(405).end();
     }
-    const name = String(body.name || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
+    let name = String(body.name || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
+    // Everyone sees the board, so rude or hateful initials become "XXX".
+    if (BLOCKED.has(name)) name = "XXX";
     const score = Math.floor(Number(body.score));
     if (name.length !== 3 || !(score > 0) || score > GAMES[game]) return res.status(400).json({ error: "bad_entry" });
     const member = `${name}:${Math.random().toString(36).slice(2, 8)}`;

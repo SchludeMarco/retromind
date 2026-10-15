@@ -1,5 +1,6 @@
 import { ChatMessage } from "../types";
 import { LANG, tr } from "../lib/i18n";
+import { loadSession } from "../lib/session";
 
 // Thin client for the /api/gemini serverless proxy. The API key lives on the
 // server only; this module never sees it.
@@ -10,7 +11,35 @@ interface ApiError extends Error {
   code?: string;
 }
 
+/** Age in years from the birthday the visitor gave (null when unknown). */
+function ageOf(birthDate: string | undefined): number | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(birthDate || "");
+  if (!m) return null;
+  const now = new Date();
+  let age = now.getFullYear() - Number(m[1]);
+  const month = now.getMonth() + 1;
+  if (month < Number(m[2]) || (month === Number(m[2]) && now.getDate() < Number(m[3]))) age--;
+  return age;
+}
+
+// Google's Gemini API terms only allow people aged 18 and over. The Zeitreise
+// knows the birthday, so for younger visitors the AI simply stays off.
+export function aiTooYoung(): boolean {
+  const age = ageOf(loadSession().user?.birthDate);
+  return age !== null && age < 18;
+}
+
 async function callApi(action: string, payload?: unknown): Promise<any> {
+  if (aiTooYoung()) {
+    const err = new Error(
+      tr(
+        "The AI features (Google Gemini) are only for people aged 18 and over.",
+        "Die KI-Funktionen (Google Gemini) gibt es erst ab 18 Jahren."
+      )
+    ) as ApiError;
+    err.code = "under_18";
+    throw err;
+  }
   const res = await fetch("/api/gemini", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -80,6 +109,7 @@ export async function analyzeMemoryImage(
     const { text } = await callApi("analyzeImage", { imageBase64, mimeType });
     return (text as string) || tr("Sorry, I couldn't describe this picture.", "Ich konnte dieses Bild leider nicht beschreiben.");
   } catch (e) {
+    if ((e as ApiError).code === "under_18") return (e as Error).message;
     if ((e as ApiError).code === "not_configured") {
       return tr(
         "Photo analysis isn't active in this demo (no server key).",
@@ -100,7 +130,7 @@ export async function sendChatMessage(history: ChatMessage[]): Promise<string> {
 
 export interface VeoResult {
   url?: string;
-  error?: "not_configured" | "timeout" | "failed";
+  error?: "not_configured" | "timeout" | "failed" | "under_18";
 }
 
 // Starts a Veo generation and polls until it is done (or ~10 min pass).
@@ -113,7 +143,8 @@ export async function generateVeoVideo(
   try {
     started = await callApi("veoStart", { prompt, imageBase64, mimeType });
   } catch (e) {
-    return { error: (e as ApiError).code === "not_configured" ? "not_configured" : "failed" };
+    const code = (e as ApiError).code;
+    return { error: code === "not_configured" || code === "under_18" ? code : "failed" };
   }
 
   let operation = started.operation;

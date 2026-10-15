@@ -31,8 +31,12 @@ export const ChatBot: React.FC<{
       // Full history goes to the server each turn, so the model keeps context.
       const reply = await sendChatMessage(next);
       setMessages((m) => [...m, { role: 'model', text: reply || '…' }]);
-    } catch {
-      setMessages((m) => [...m, { role: 'model', text: tr('Sorry, the connection is acting up right now.', 'Entschuldige, die Verbindung klemmt gerade.') }]);
+    } catch (e) {
+      const text =
+        (e as { code?: string })?.code === 'under_18'
+          ? (e as Error).message
+          : tr('Sorry, the connection is acting up right now.', 'Entschuldige, die Verbindung klemmt gerade.');
+      setMessages((m) => [...m, { role: 'model', text }]);
     } finally {
       setIsTyping(false);
     }
@@ -43,7 +47,10 @@ export const ChatBot: React.FC<{
   return (
     <div className="rm-chat-panel rm-fixed fixed bottom-36 left-4 md:left-10 z-50 w-80 max-w-[90vw] h-96 retro-card bg-retro-cream flex flex-col animate-fadeIn overflow-hidden">
       <div className="bg-retro-ink text-white p-3 flex justify-between items-center">
-        <span className="font-bold text-sm">{tr('Nostalgia Buddy', 'Nostalgie-Begleiter')}</span>
+        <span className="font-bold text-sm">
+          {tr('Nostalgia Buddy', 'Nostalgie-Begleiter')}
+          <span className="font-normal text-[10px] opacity-80"> · {tr('AI (Google Gemini)', 'KI (Google Gemini)')}</span>
+        </span>
         <button onClick={onClose} aria-label={tr('Close chat', 'Chat schließen')} className="text-lg leading-none px-1">
           ✕
         </button>
@@ -57,7 +64,7 @@ export const ChatBot: React.FC<{
             )}
           </p>
         ) : messages.length === 0 ? (
-          <p className="text-xs text-retro-brown">{tr('Ask me anything about “back then” – or just start telling.', 'Frag mich etwas über „damals" – oder erzähl einfach los.')}</p>
+          <p className="text-xs text-retro-brown">{tr('I’m an AI (Google Gemini). Ask me anything about “back then” – or just start telling. AI answers can be wrong.', 'Ich bin eine KI (Google Gemini). Frag mich etwas über „damals" – oder erzähl einfach los. KI-Antworten können falsch sein.')}</p>
         ) : (
           messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
