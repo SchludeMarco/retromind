@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Einmal anmelden, überall drin** (2026-10-16, PR #223): Die
+  Google-Anmeldung an der Gästetür gilt jetzt auch als Google-Anmeldung in
+  der Zeitreise und der Gaming-Edition, du musst dich drinnen nicht noch
+  einmal anmelden. Wechselst du über den Wegweiser oder „Zurück zu
+  RetroMind“ zwischen den beiden Editionen, nimmst du Gästezugang und
+  Google-Anmeldung mit und landest nicht noch einmal an der Tür.
+
 - **Spotify Premium auf dem Handy: ganze Songs auch in der Gaming-Halle**
   (2026-10-16, PR #222): Wer mit Spotify Premium angemeldet ist, hört in
   der Gaming-Halle auf dem Handy jetzt ganze Songs statt 30-Sekunden-

@@ -11,6 +11,8 @@
 // POST {action:"guestLogin", token} → public: Google token of an invited
 //                              guest → signed cookie (see api/_guests.js)
 // POST {action:"guestLogout"} → public: removes that cookie
+// GET  ?view=handoff&to=URL  → public: link to the other domain; a signed-in
+//                              guest gets a one-time code along (api/_guests.js)
 // GET  ?view=guests          → the guest list
 // POST {action:"guestAdd"|"guestRemove", email} → change the guest list
 
@@ -30,13 +32,17 @@ import { cors, isAdmin, readJsonBody } from "./_admin.js";
 import {
   ADMIN_EMAIL,
   addGuest,
+  HANDOFF_ORIGINS,
+  HANDOFF_PARAM,
   clearCookie,
+  createHandoff,
   googleEmail,
   guestsConfigured,
   isGuest,
   listGuests,
   makeCookie,
   normalizeEmail,
+  readCookie,
   removeGuest,
   validEmail,
 } from "./_guests.js";
@@ -115,6 +121,27 @@ async function guestLogin(body, res) {
   }
 }
 
+// A link to the other edition: guests carry their access along (see
+// createHandoff); everyone else simply lands at the other door.
+async function handoff(req, res) {
+  let target;
+  try {
+    target = new URL(String(req.query?.to || ""));
+  } catch {
+    return res.status(400).json({ error: "bad_target" });
+  }
+  if (!HANDOFF_ORIGINS.includes(target.origin)) return res.status(400).json({ error: "bad_target" });
+  target.searchParams.delete(HANDOFF_PARAM);
+  try {
+    const guest = guestsConfigured() ? await readCookie(req.headers.cookie) : null;
+    if (guest) target.searchParams.set(HANDOFF_PARAM, await createHandoff(guest.email));
+  } catch (err) {
+    console.error("handoff failed", err);
+  }
+  res.setHeader("Location", target.toString());
+  return res.status(302).end();
+}
+
 async function liveCheck(res) {
   const master = await github(`commits/${BRANCH}`);
   const domains = await Promise.all(
@@ -166,6 +193,7 @@ export default async function handler(req, res) {
       configured: guestsConfigured(),
     });
   }
+  if (req.method === "GET" && view === "handoff") return handoff(req, res);
   const body = req.method === "POST" ? await readJsonBody(req) : {};
   if (req.method === "POST" && body.action === "guestLogin") return guestLogin(body, res);
   if (req.method === "POST" && body.action === "guestLogout") {

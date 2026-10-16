@@ -39,7 +39,10 @@
   // The door of RetroMind for invited guests (middleware.js sends everyone
   // without the guest cookie here). Google's sign-in script only loads when
   // the button is tapped; the server checks the address against Marco's
-  // guest list (api/admin.js, action guestLogin) and sets the cookie.
+  // guest list (api/admin.js, action guestLogin) and sets the cookie. The same
+  // sign-in also counts as the Google sign-in inside the apps (Drive backup,
+  // profile): it asks for the same permissions as lib/googleAuth.ts and leaves
+  // the session where lib/googleLogin.ts looks for it.
   (function () {
     var lang = null;
     try { lang = localStorage.getItem('retromind.lang'); } catch (e) {}
@@ -86,7 +89,33 @@
       });
     };
 
-    var done = function (token) {
+    // Same keys and permissions as lib/googleLogin.ts and lib/googleAuth.ts.
+    var SCOPES = 'openid email profile https://www.googleapis.com/auth/drive.appdata ' +
+      'https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read';
+    var optedIn = false;
+    try { optedIn = localStorage.getItem('retromind.google') === '1'; } catch (e) {}
+
+    var keepSession = function (resp) {
+      return fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: 'Bearer ' + resp.access_token }
+      })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d) return;
+          var session = {
+            token: { accessToken: resp.access_token, expiresAt: Date.now() + (Number(resp.expires_in) || 3600) * 1000 },
+            user: { id: d.sub, name: d.name || d.email, email: d.email, picture: d.picture || '' }
+          };
+          try {
+            localStorage.setItem('retromind.google', '1');
+            localStorage.setItem('retromind.google.session', JSON.stringify(session));
+          } catch (e) {}
+        })
+        .catch(function () {});
+    };
+
+    var done = function (resp) {
+      var token = resp.access_token;
       say(t('Checking the guest list …', 'Gästeliste wird geprüft …'));
       fetch('/api/admin', {
         method: 'POST',
@@ -98,7 +127,7 @@
           btn.disabled = false;
           if (res.status === 200) {
             say(t('Welcome! Opening RetroMind …', 'Willkommen! RetroMind öffnet sich …'));
-            location.replace(target);
+            keepSession(resp).then(function () { location.replace(target); });
           } else if (res.data.error === 'not_invited') {
             say(t(
               res.data.email + ' is not on the guest list yet. Ask Marco for an invitation.',
@@ -121,9 +150,9 @@
         if (tokenClient) return;
         tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: clientId,
-          scope: 'openid email',
+          scope: SCOPES,
           callback: function (resp) {
-            if (resp && resp.access_token) done(resp.access_token);
+            if (resp && resp.access_token) done(resp);
             else { btn.disabled = false; say(t('Sign-in was cancelled.', 'Anmeldung abgebrochen.'), true); }
           },
           error_callback: function () { btn.disabled = false; say(t('Sign-in was cancelled.', 'Anmeldung abgebrochen.'), true); }
@@ -142,7 +171,7 @@
       if (tokenClient) {
         btn.disabled = true;
         say('');
-        tokenClient.requestAccessToken();
+        tokenClient.requestAccessToken({ prompt: optedIn ? '' : 'consent' });
         return;
       }
       btn.disabled = true;

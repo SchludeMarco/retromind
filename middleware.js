@@ -5,10 +5,20 @@
 // itself, the legal pages, the admin API (it checks Google itself; the gate
 // signs in through it) and the approve link in the feedback mail. The guest
 // list is checked again at most once a day, so removing someone takes effect
-// within a day. Preview deployments are left alone (Vercel protects those).
+// within a day. Links between the two domains carry a guest's access along
+// as a one-time code (takeHandoff). Preview deployments are left alone (Vercel protects those).
 
 import { next } from "@vercel/functions";
-import { RECHECK_AFTER, clearCookie, guestsConfigured, isGuest, makeCookie, readCookie } from "./api/_guests.js";
+import {
+  HANDOFF_PARAM,
+  RECHECK_AFTER,
+  clearCookie,
+  guestsConfigured,
+  isGuest,
+  makeCookie,
+  readCookie,
+  redeemHandoff,
+} from "./api/_guests.js";
 
 const OPEN = [
   /^\/gate\.html$/,
@@ -45,11 +55,28 @@ function deny(request, url) {
   });
 }
 
+// Coming from the other edition with a one-time code (api/admin.js ?view=handoff):
+// the guest gets this domain's cookie and the same address without the code.
+async function takeHandoff(url) {
+  const code = url.searchParams.get(HANDOFF_PARAM);
+  const clean = new URL(url);
+  clean.searchParams.delete(HANDOFF_PARAM);
+  const headers = { Location: clean.toString(), "Cache-Control": "no-store" };
+  try {
+    const email = await redeemHandoff(code);
+    if (email && (await isGuest(email))) headers["Set-Cookie"] = await makeCookie(email);
+  } catch {
+    // Database hiccup: the guest just meets the door once more.
+  }
+  return new Response(null, { status: 302, headers });
+}
+
 export default async function middleware(request) {
   if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") return next();
   // Without the database the gate can't work; rather stay open than lock everyone out.
   if (!guestsConfigured()) return next();
   const url = new URL(request.url);
+  if (url.searchParams.has(HANDOFF_PARAM)) return takeHandoff(url);
   if (OPEN.some((re) => re.test(url.pathname))) return next();
 
   const guest = await readCookie(request.headers.get("cookie"));
