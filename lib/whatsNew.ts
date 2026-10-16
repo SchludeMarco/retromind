@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Echte Spiele-Cover sind zurück': {
+    title: 'Real game covers are back',
+    text: 'In the Gaming edition the game cards, the game page and the cartridge slot show each game’s real cover again. That’s possible because RetroMind is now only open to family and close friends. If there is no cover, or while it loads, you see the pixel picture as before.',
+  },
   'Einmal anmelden, überall drin': {
     title: 'Sign in once, you’re in everywhere',
     text: 'Signing in with Google at the guest door now also counts as your Google sign-in inside Time Travel and the Gaming edition, so you don’t have to sign in again inside. When you switch between the two editions via the signpost or “Back to RetroMind”, your guest access and Google sign-in come along and you don’t meet the door again.',

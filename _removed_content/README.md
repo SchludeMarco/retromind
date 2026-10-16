@@ -96,7 +96,9 @@ gebaut oder ausgeliefert.
 - `gaming-covers-wikipedia.ts.txt`: das Laden der Spiele-Cover aus den
   Wikipedia-Artikeln (früher `gaming/lib/covers.ts`, entfernt am 2026-10-09,
   weil die Cover den Spielefirmen gehören). Ersetzt durch eigene
-  Pixel-Kacheln in `gaming/components/PixelCover.tsx`.
+  Pixel-Kacheln in `gaming/components/PixelCover.tsx`. Seit 2026-10-16
+  wieder in Gebrauch als `gaming/lib/covers.ts`, weil RetroMind nur noch für
+  Verwandte und enge Bekannte offen ist.
 - `Quiz-cover-ausschnitt.tsx.txt`: das Quiz „Erkennst du das Spiel?“ mit
   Cover-Ausschnitt (entfernt am 2026-10-09). Das Quiz zeigt jetzt eine kurze
   Beschreibung mit geschwärztem Namen.
