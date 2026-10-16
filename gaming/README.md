@@ -5,7 +5,7 @@ https://retromind.vercel.app/gaming/
 
 RetroMind – Gaming ist die Spiele-Edition von [RetroMind](../README.md). Statt
 durch die eigene Kindheit führt sie durch eine verranzte Spielhalle voller
-vergessener Videospiele von den 1970ern bis heute: mit eigenen Pixelbildern,
+vergessener Videospiele von den 1970ern bis heute: mit echten Covern,
 Hintergründen, Tipps, alten Testwertungen, Videos, Minispielen, Quests und
 Musik wie damals.
 
@@ -128,11 +128,17 @@ zeigen dürfen.
 - **Heute vor X Jahren** – unter der Suche jeden Tag ein bekanntes Spiel, das
   an diesem Datum erschienen ist, aus Wikidata
   ([`lib/onThisDay.ts`](lib/onThisDay.ts)).
-- **Eigene Pixelbilder statt Cover** – Cover gehören den Spielefirmen. Die 44
-  Katalogspiele haben je eine selbst gezeichnete Szene ihrer Spielwelt, ohne
-  bekannte Figuren oder Logos; alle anderen bekommen eine automatisch gebaute
-  Szene (Weltraum, Rennstrecke, Burg, Fußballplatz …), deren Thema aus dem
-  Titel geraten wird ([`lib/coverArt.ts`](lib/coverArt.ts),
+- **Echte Cover, Pixelbilder als Ersatz** – seit 2026-10-16 zeigen die Karten
+  wieder das echte Cover aus dem Wikipedia-Artikel des Spiels
+  ([`lib/covers.ts`](lib/covers.ts)). Das ist nur erlaubt, solange RetroMind
+  ein privates Angebot für Marcos Verwandte und enge Bekannte hinter der
+  Gästetür bleibt (Cover gehören den Spielefirmen); wird RetroMind wieder
+  öffentlich, schaltet `REAL_COVERS = false` sie ab. Darunter liegen immer
+  eigene Pixelbilder, die sichtbar sind, solange ein Cover lädt oder keins
+  existiert: Die 44 Katalogspiele haben je eine selbst gezeichnete Szene ihrer
+  Spielwelt, alle anderen eine automatisch gebaute (Weltraum, Rennstrecke,
+  Burg, Fußballplatz …), deren Thema aus dem Titel geraten wird
+  ([`lib/coverArt.ts`](lib/coverArt.ts),
   [`components/PixelCover.tsx`](components/PixelCover.tsx)). Am Handy liegen
   zwei Karten nebeneinander.
 
@@ -293,8 +299,8 @@ Alle Variablen erklärt die [Haupt-README](../README.md#deployment-vercel).
 
 - **Spotifys eingebetteter Player** lässt sich nicht leiser stellen und nicht
   einblenden; das geht nur mit Premium am Computer.
-- **Bilder** sind eigene Pixelszenen oder frei lizenziert; echte Cover und
-  Screenshots zeigen wir aus Lizenzgründen nicht.
+- **Bilder**: Echte Cover nur, solange RetroMind privat bleibt (siehe oben);
+  Screenshots und alles andere sind eigene Pixelszenen oder frei lizenziert.
 - **The Cutting Room Floor** lässt unseren Abruf nicht durch, deshalb gibt es
   dort nur einen Link.
 

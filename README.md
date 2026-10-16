@@ -391,7 +391,7 @@ Die Gaming-Edition (https://retromind-gaming.vercel.app) hat eine eigene
 eigene **[CHANGELOG](gaming/CHANGELOG.md)**. Kurz: eine verranzte Spielhalle im
 Regen mit Neonschild und Metal durch die Wand, drinnen ein Katalog vergessener
 Spiele von den 1970ern bis heute (44 handverlesene plus Hunderte aus dem
-Wikipedia-Archiv, 36 Konsolen), eigene Pixelbilder statt Cover, Spieleseiten
+Wikipedia-Archiv, 36 Konsolen), echte Cover (nur im privaten Gästekreis, sonst eigene Pixelbilder), Spieleseiten
 mit KI-Guide, Videos, alten Testwertungen und „Fakten & Geheimnisse“, ein
 Retro-Guru im Gamer-Slang, Chill-Ecke mit Minispielen und Highscore-Tafel,
 Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann

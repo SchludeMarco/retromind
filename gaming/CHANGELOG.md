@@ -8,6 +8,12 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Echte Spiele-Cover sind zurück** (2026-10-16, PR #224): In der
+  Gaming-Edition zeigen die Spielkarten, die Spieleseite und der
+  Modulschacht wieder das echte Cover jedes Spiels. Das geht, weil RetroMind
+  jetzt nur noch für Verwandte und enge Bekannte offen ist. Gibt es kein
+  Cover oder lädt es noch, siehst du wie bisher das eigene Pixelbild.
+
 - **Einmal anmelden, überall drin** (2026-10-16, PR #223): Die
   Google-Anmeldung an der Gästetür gilt jetzt auch als Google-Anmeldung in
   der Zeitreise und der Gaming-Edition, du musst dich drinnen nicht noch
