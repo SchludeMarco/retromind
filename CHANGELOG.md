@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Rote Blinklichter am Gaming-Wegweiser** (2026-10-16, PR #225): Oben auf
+  dem Pfosten des Wegweisers „To the gaming zone“ sitzen jetzt zwei rote
+  Warnlampen wie am Bahnübergang, die abwechselnd blinken. So übersieht
+  niemand mehr, dass es nebenan die Gaming-Edition gibt. Wer in den
+  Systemeinstellungen weniger Bewegung gewählt hat, sieht sie ruhig leuchten.
 - **Echte Spiele-Cover sind zurück** (2026-10-16, PR #224): In der
   Gaming-Edition zeigen die Spielkarten, die Spieleseite und der
   Modulschacht wieder das echte Cover jedes Spiels. Das geht, weil RetroMind

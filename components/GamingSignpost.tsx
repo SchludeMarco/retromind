@@ -26,6 +26,9 @@ const GAMING_URL = 'https://retromind-gaming.vercel.app/?from=zeitreise';
 // Light strip (Marco, 2026-10-14: "von einem animierten gelben Leuchtband
 // umwickelt"): a yellow LED band winds around the board edge, dipping in
 // front of it and out again, with lights chasing along it.
+// Warning lights (Marco, 2026-10-16: "rote blinkende Lichter, damit man die
+// andere App nicht übersieht"): two red lamps like at a level crossing sit on
+// a crossbar on top of the post and blink in turn.
 const BOARD = 'M10 25 L40 23 L44 27.5 L49 23 L120 24 L125 20.5 L131 25 L186 23 L203 36 L199.5 39.5 L222 52 L196 72 L191 69 L186 80 L151 79 L145 83.5 L139.5 79 L71 80 L65 76.5 L59 81 L13 79 L9 71 L13 66.5 L7 58 L10 46 L5.5 38.5 Z';
 // A smooth stand-in for the torn board edge (the real edge is too jagged to
 // wind a band around), rounded with Chaikin's corner cutting.
@@ -83,6 +86,12 @@ const LETTER_LINES: Array<[string, number, number]> = [
   ['GAMING ZONE', 68, 18],
 ];
 
+// The two red lamps on the crossbar above the post (cx, delay class).
+const LAMPS: Array<[number, string]> = [
+  [20, 'gaming-signpost-lamp-a'],
+  [72, 'gaming-signpost-lamp-b'],
+];
+
 const StripLayer: React.FC<{ d: string; dim?: boolean }> = ({ d, dim }) => (
   <g className="gaming-signpost-strip" pointerEvents="none" opacity={dim ? 0.75 : 1}>
     <path d={d} fill="none" stroke="#ffd21a" strokeWidth="6" opacity="0.55" filter="url(#gaming-sign-strip-glow)" />
@@ -101,7 +110,7 @@ export const GamingSignpost: React.FC = () => (
     }}
     aria-label={tr('To the gaming zone – to RetroMind Gaming', 'To the gaming zone – zu RetroMind Gaming')}
   >
-    <svg viewBox="0 0 230 150" aria-hidden="true">
+    <svg viewBox="0 -22 230 172" aria-hidden="true">
       <defs>
         <linearGradient id="gaming-sign-board" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#c08a4e" />
@@ -152,6 +161,15 @@ export const GamingSignpost: React.FC = () => (
           <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -1.5" result="mask" />
           <feComposite in="SourceGraphic" in2="mask" operator="in" />
         </filter>
+        <radialGradient id="gaming-sign-lamp" cx="0.4" cy="0.35" r="0.7">
+          <stop offset="0" stopColor="#ffd2c8" />
+          <stop offset="0.35" stopColor="#ff3b24" />
+          <stop offset="1" stopColor="#a10f05" />
+        </radialGradient>
+        {/* Red halo of a lit warning lamp. */}
+        <filter id="gaming-sign-lamp-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
         {/* Yellow halo of the light strip. */}
         <filter id="gaming-sign-strip-glow" x="-20%" y="-40%" width="140%" height="180%">
           <feGaussianBlur stdDeviation="2.6" />
@@ -166,7 +184,20 @@ export const GamingSignpost: React.FC = () => (
       </defs>
       {/* The post, standing in a little mound of earth. */}
       <ellipse cx="46" cy="144" rx="24" ry="5" fill="#2a1a0c" opacity="0.6" />
-      <path d="M40 14 h12 v122 l-6 8 l-6 -8z" fill="url(#gaming-sign-post)" stroke="#3b2410" strokeWidth="1.5" />
+      <path d="M40 -4 h12 v140 l-6 8 l-6 -8z" fill="url(#gaming-sign-post)" stroke="#3b2410" strokeWidth="1.5" />
+      {/* Red warning lights on a crossbar on top of the post, blinking in turn. */}
+      <g className="gaming-signpost-lamps" pointerEvents="none">
+        <rect x="12" y="-3" width="68" height="6" rx="2" fill="#1f1f1f" stroke="#0a0a0a" strokeWidth="1" />
+        {LAMPS.map(([cx, cls]) => (
+          <g key={cx} className={cls}>
+            <circle cx={cx} cy="0" r="14" fill="#141414" stroke="#050505" strokeWidth="1" />
+            <path d={`M${cx - 14} -1 a14 14 0 0 1 28 0 l-3.5 -4 a10.5 10.5 0 0 0 -21 0 z`} fill="#0a0a0a" />
+            <circle className="gaming-signpost-lamp-halo" cx={cx} cy="1" r="17" fill="#ff2a12" filter="url(#gaming-sign-lamp-glow)" />
+            <circle className="gaming-signpost-lamp-off" cx={cx} cy="1" r="10" fill="#4a0c06" />
+            <circle className="gaming-signpost-lamp-on" cx={cx} cy="1" r="10" fill="url(#gaming-sign-lamp)" />
+          </g>
+        ))}
+      </g>
       <path d="M22 143 q24 -9 48 0" fill="#4a3018" />
       {/* The arrow board, pointing right, a little crooked. */}
       <g className="gaming-signpost-board" transform="rotate(-4 46 52)">

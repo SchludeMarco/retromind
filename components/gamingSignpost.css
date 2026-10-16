@@ -46,6 +46,23 @@
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }
 }
+/* Red warning lamps on top of the post (GamingSignpost.tsx): they blink in
+   turn like at a level crossing, about once a second each. */
+.gaming-signpost-lamp-on,
+.gaming-signpost-lamp-halo {
+  animation: gamingSignpostLamp 1.1s steps(1, end) infinite;
+}
+.gaming-signpost-lamp-b .gaming-signpost-lamp-on,
+.gaming-signpost-lamp-b .gaming-signpost-lamp-halo {
+  animation-delay: -0.55s;
+}
+.gaming-signpost-lamp-halo {
+  opacity: 0.85;
+}
+@keyframes gamingSignpostLamp {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
 /* The board nudges towards the arcade on hover, like a gentle push. */
 .gaming-signpost:hover .gaming-signpost-board,
 .gaming-signpost:focus-visible .gaming-signpost-board {
@@ -67,7 +84,9 @@
   .gaming-signpost:hover .gaming-signpost-board,
   .gaming-signpost:focus-visible .gaming-signpost-board,
   .gaming-signpost-chase,
-  .gaming-signpost-strip {
+  .gaming-signpost-strip,
+  .gaming-signpost-lamp-on,
+  .gaming-signpost-lamp-halo {
     animation: none;
   }
 }
