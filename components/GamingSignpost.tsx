@@ -1,19 +1,13 @@
 import React from 'react';
-import { withMuteParam } from '../lib/mute';
-import { withGoogleParam } from '../lib/googleLogin';
+import { gamingHref } from '../lib/gamingLink';
 import { tr } from '../lib/i18n';
 import '@fontsource/cinzel/latin-900.css';
 import './gamingSignpost.css';
 
-// ?from=zeitreise lets Gaming show a way back (gaming/lib/cameFrom.ts).
-const GAMING_URL = 'https://retromind-gaming.vercel.app/?from=zeitreise';
-
 // Wooden signpost on the Zeitreise start page (Marco, 2026-10-07): "To the
 // gaming zone", a click leads to RetroMind – Gaming. Same wood as the
 // "Warning, extreme loud!" sign (LoudSign.tsx), but with an arrow board.
-// The gaming edition lives on its own origin, so the mute and Google choice
-// travel along as URL parameters; they are read at click time so a toggle
-// made after the page rendered still counts.
+// The link and its parameters come from lib/gamingLink.ts.
 // Lettering (Marco, 2026-10-13): chiseled Greek capitals in brushed metal,
 // reminiscent of the God of War logo. The original logo font is not free,
 // so this uses Cinzel (SIL Open Font License), self-hosted via Fontsource.
@@ -104,9 +98,9 @@ const StripLayer: React.FC<{ d: string; dim?: boolean }> = ({ d, dim }) => (
 export const GamingSignpost: React.FC = () => (
   <a
     className="gaming-signpost"
-    href={withGoogleParam(withMuteParam(GAMING_URL))}
+    href={gamingHref()}
     onClick={(e) => {
-      e.currentTarget.href = withGoogleParam(withMuteParam(GAMING_URL));
+      e.currentTarget.href = gamingHref();
     }}
     aria-label={tr('To the gaming zone – to RetroMind Gaming', 'To the gaming zone – zu RetroMind Gaming')}
   >

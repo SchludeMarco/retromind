@@ -56,13 +56,16 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [`components/AmbientLife.tsx`](components/AmbientLife.tsx)).
 - **Gemütliche Stube zum Anfassen** – oben auf der Startseite, in allen
   Designs, eine gezeichnete Stube (Couch mit Häkeldecke, Stehlampe,
-  dampfender Tee, Holzofen, schlafende Katze, Röhrenfernseher), deren
+  dampfender Tee, Holzofen, schlafende Katze, Röhrenfernseher und in der
+  Ecke ein leuchtender Spielautomat unter einem Neonschild „GAMING“), deren
   Fenster die echte Tageszeit zeigt, dazu eine Begrüßung mit Namen passend
   zur Uhrzeit. Alles darin lässt sich antippen, mit kleinen Geräuschen und
   kurzem Summen auf dem Handy: Der Fernseher startet oder setzt die Reise
   fort, Lampe und Ofen gehen an und aus (der brennende Ofen knistert hörbar),
   die Katze schnurrt, das Fenster schaltet das echte Wetter ein, Bild und
-  Bücher führen zu Erkunden und Erinnerungsbuch. Retro Warm hat dazu
+  Bücher führen zu Erkunden und Erinnerungsbuch, und der Spielautomat
+  (Invader auf dem Bildschirm, blinkende Münzschlitze) fährt hoch und führt
+  in RetroMind – Gaming. Retro Warm hat dazu
   Tapeten-Hintergrund, Papierkarten und Holzleisten. Auf Wunsch zeigt das
   Fenster das echte Wetter (Regen, Schnee, Gewitter, Nebel, Wolken) über
   Open-Meteo, mit Standort oder eingegebenem Ort, nur nach Einschalten
@@ -157,14 +160,20 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   und das Uhrenzimmer öffnet sich wie eine Blende auf die Stube
   ([`components/VerifyGate.tsx`](components/VerifyGate.tsx)). Das Profil
   danach heißt „Pack deinen Koffer“.
-- **Wegweiser zur Gaming-Zone** – auf der Startseite steht in allen Designs
-  ein ramponierter Holzwegweiser „To the gaming zone“ (Schnitte, Brandspuren,
-  abgeplatzte Kontur, staubiger roter Rahmen, umwickelt von einem gelben
-  Leuchtband mit Lauflichtern, oben auf dem Pfosten zwei rote Warnlampen wie
-  am Bahnübergang, die abwechselnd blinken) in Metall-Großbuchstaben im Stil von God of War
-  (freie Schrift Cinzel), ein Klick führt zu RetroMind –
-  Gaming und nimmt Ton- und Google-Einstellung mit
-  ([`components/GamingSignpost.tsx`](components/GamingSignpost.tsx)).
+- **Gaming-Karte „Die Spielhalle nebenan“** – direkt unter „Zeitreise
+  starten“ (bei begonnener Reise unter den Etappen) zeigt eine dunkle
+  Neon-Karte in allen Designs das Foto vom Eingang der Spielhalle, ein paar
+  Zeilen dazu, was RetroMind – Gaming alles bietet, und darin den Wegweiser
+  zur Gaming-Zone ([`components/GamingTeaser.tsx`](components/GamingTeaser.tsx)).
+  Der Wegweiser ist ein ramponierter Holzwegweiser „To the gaming zone“
+  (Schnitte, Brandspuren, abgeplatzte Kontur, staubiger roter Rahmen,
+  umwickelt von einem gelben Leuchtband mit Lauflichtern, oben auf dem
+  Pfosten zwei rote Warnlampen wie am Bahnübergang, die abwechselnd blinken)
+  in Metall-Großbuchstaben im Stil von God of War (freie Schrift Cinzel).
+  Karte, Wegweiser und Spielautomat führen zu RetroMind – Gaming und nehmen
+  Ton- und Google-Einstellung mit
+  ([`components/GamingSignpost.tsx`](components/GamingSignpost.tsx),
+  [`lib/gamingLink.ts`](lib/gamingLink.ts)).
 - **Etappen frei wählen** – sobald eine Reise begonnen ist, zeigt die Startseite
   „Deine Etappen“: Profil, Eindrücke, Erkunden, Tagebuch, Erinnerungsbuch und
   Abschluss als Kacheln, jede jederzeit antippbar, die zuletzt besuchte markiert
@@ -699,6 +708,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
 
+- **Weg in die Spielhalle während der Reise:** Bisher führen Stube,
+  Gaming-Karte und Wegweiser nur auf der Startseite zu RetroMind – Gaming.
+  Ein fünfter Reiter „Spielhalle“ in der unteren Leiste von Retro Warm und
+  ein Joystick-Symbol neben dem Zahnrad in Klassisch und Nachtschicht
+  wären von jeder Station aus einen Tipp entfernt.
 - **Echte Roboterstimme und ausgesuchte Jahresvideos:** Statt der
   Sprachausgabe des Browsers (klingt je nach Gerät anders) eine einmal
   aufgenommene Roboterstimme für jedes Jahr, und statt des ersten

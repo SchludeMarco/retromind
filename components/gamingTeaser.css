@@ -1,0 +1,84 @@
+/* Gaming card on the start page (GamingTeaser.tsx): a dark arcade panel with
+   neon edges, the same in every design. Cream on near-black is about 15:1,
+   the pink kicker about 6:1. */
+.gaming-teaser {
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #1d1430 0%, #120d1d 60%, #0c0a14 100%);
+  color: #fbeed7;
+  text-align: left;
+  box-shadow:
+    0 0 0 2px #ff3ea5,
+    0 0 18px rgba(255, 62, 165, 0.45),
+    0 0 36px rgba(47, 214, 255, 0.18);
+}
+.gaming-teaser-photo {
+  display: block;
+  height: 11rem;
+  line-height: 0;
+}
+.gaming-teaser-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+.gaming-teaser-body {
+  padding: 1.1rem 1.1rem 0.4rem;
+}
+.gaming-teaser-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ff7ac8;
+}
+.gaming-teaser .gaming-teaser-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  color: #fff6e6;
+  text-shadow: 0 0 10px rgba(255, 62, 165, 0.55);
+}
+.gaming-teaser-text {
+  margin: 0 0 0.8rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: #f3e3cc;
+}
+.gaming-teaser-perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+.gaming-teaser-perks li {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(47, 214, 255, 0.55);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e6fbff;
+  background: rgba(47, 214, 255, 0.08);
+}
+.gaming-teaser .gaming-signpost {
+  width: clamp(180px, 58vw, 230px);
+  margin: 0.9rem auto 0.6rem;
+}
+@media (min-width: 640px) {
+  .gaming-teaser {
+    grid-template-columns: 38% 1fr;
+  }
+  .gaming-teaser-photo {
+    height: auto;
+    min-height: 100%;
+  }
+  .gaming-teaser-body {
+    padding: 1.4rem 1.4rem 0.4rem;
+  }
+}
