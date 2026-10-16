@@ -225,8 +225,11 @@
   <p>
     RetroMind ist kein öffentliches Angebot, sondern öffnet sich nur für Menschen, die der Betreiber eingeladen hat.
     Beim ersten Besuch meldest du dich auf der Gästeseite mit deinem Google-Konto an; erst wenn du auf die
-    Schaltfläche zeigst oder tippst, lädt dein Browser dafür das Anmelde-Skript von Google. Google teilt uns dabei
-    nur deine E-Mail-Adresse mit. Unser Server prüft, ob sie auf der Gästeliste steht. Die Gästeliste enthält die
+    Schaltfläche zeigst oder tippst, lädt dein Browser dafür das Anmelde-Skript von Google. Unser Server prüft, ob
+    deine E-Mail-Adresse auf der Gästeliste steht. Dieselbe Anmeldung gilt auch als Google-Anmeldung in der Zeitreise
+    und der Gaming-Edition (Abschnitt 5): Google fragt dabei gleich nach den dort beschriebenen Berechtigungen
+    (Sicherung im eigenen Drive, Profil, freiwillig Geburtstag und Geschlecht), die du im Fenster von Google
+    abwählen kannst, und das Anmelde-Token bleibt wie dort beschrieben höchstens eine Stunde in deinem Browser. Die Gästeliste enthält die
     E-Mail-Adressen der eingeladenen Gäste und liegt in der Upstash-Datenbank (Server in der EU, siehe Abschnitt 10);
     eingetragen werden Adressen nur durch den Betreiber.
   </p>
@@ -239,6 +242,15 @@
     (Art. 6 Abs. 1 lit. f DSGVO), und für die Gästeliste die Einladung, die du angenommen hast (Art. 6 Abs. 1 lit. b
     DSGVO). Wenn du nicht mehr Gast sein möchtest, genügt eine Nachricht; dann wird deine Adresse von der Liste
     gelöscht. Diese Seite, das Impressum und die Gästeseite sind ohne Anmeldung erreichbar.
+  </p>
+  <p>
+    Zeitreise und Gaming-Edition liegen auf zwei Adressen, die keine Cookies teilen. Folgst du als Gast einem Link
+    von der einen zur anderen, legt unser Server deine E-Mail-Adresse für höchstens zwei Minuten unter einem
+    zufälligen Einmal-Code in der Upstash-Datenbank ab; die andere Adresse löst den Code ein, setzt ihr eigenes
+    Cookie <code>rm_guest</code> und der Code ist danach gelöscht. Bist du mit Google angemeldet, nimmt der Link
+    außerdem dein Anmelde-Token mit, und zwar im Teil der Adresse hinter dem #, der nie an einen Server geschickt
+    wird; die andere Edition speichert es in deinem Browser und entfernt es sofort aus der Adresse. So musst du dich
+    nur einmal anmelden.
   </p>
 
   <h2>15. Deine Rechte</h2>

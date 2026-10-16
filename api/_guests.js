@@ -96,3 +96,27 @@ export async function googleEmail(token) {
   if (info.aud !== clientId || String(info.email_verified) !== "true" || !(Number(info.expires_in) > 0)) return null;
   return normalizeEmail(info.email);
 }
+
+// ---- handoff between the two domains (Zeitreise ⇄ Gaming)
+// Cookies don't cross domains, so a link to the other edition goes through
+// /api/admin?view=handoff: for a signed-in guest it parks the address under a
+// random one-time code in the shared database (2 minutes) and adds the code to
+// the link; middleware.js on the other domain redeems it and sets that
+// domain's own cookie, so the guest doesn't sign in at its door again.
+
+export const HANDOFF_PARAM = "rm_handoff";
+export const HANDOFF_ORIGINS = ["https://retromind.vercel.app", "https://retromind-gaming.vercel.app"];
+const HANDOFF_TTL = 120;
+
+export async function createHandoff(email) {
+  const bytes = crypto.getRandomValues(new Uint8Array(24));
+  const code = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  await redis(["SET", `rm:handoff:${code}`, normalizeEmail(email), "EX", HANDOFF_TTL]);
+  return code;
+}
+
+/** The address behind a one-time code (the code is used up), else null. */
+export async function redeemHandoff(code) {
+  if (!/^[0-9a-f]{48}$/.test(String(code || ""))) return null;
+  return (await redis(["GETDEL", `rm:handoff:${code}`])) || null;
+}

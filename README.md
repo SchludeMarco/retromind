@@ -469,7 +469,12 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   Marco pflegt die Liste im Adminbereich unter „Gäste“. Offen bleiben die
   Rechtsseiten, `/api/admin` und der Freigabe-Link aus der Feedback-Mail;
   Vorschau-Deployments sind ausgenommen. Ohne Upstash-Datenbank bleibt die
-  App offen.
+  App offen. Die Anmeldung an der Tür fragt nach denselben Google-Rechten wie
+  die App und legt die Sitzung dort ab, wo [`lib/googleLogin.ts`](lib/googleLogin.ts)
+  sie sucht, also ist man drinnen gleich mit Google angemeldet. Links zwischen
+  den Domains (`withGoogleParam`) laufen über `/api/admin?view=handoff`: ein
+  Einmal-Code (2 Minuten, Upstash) bringt den Gästezugang mit, die
+  Google-Sitzung reist im `#`-Teil der Adresse.
 
 - **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
   [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter

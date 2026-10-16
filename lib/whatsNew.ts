@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Einmal anmelden, überall drin': {
+    title: 'Sign in once, you’re in everywhere',
+    text: 'Signing in with Google at the guest door now also counts as your Google sign-in inside Time Travel and the Gaming edition, so you don’t have to sign in again inside. When you switch between the two editions via the signpost or “Back to RetroMind”, your guest access and Google sign-in come along and you don’t meet the door again.',
+  },
   'Spotify Premium auf dem Handy: ganze Songs auch in der Gaming-Halle': {
     title: 'Spotify Premium on your phone: full songs in the gaming hall too',
     text: 'Signed in with Spotify Premium, the gaming hall on your phone now plays full songs instead of 30-second previews, just like the time journey. The music plays in your own Spotify app; RetroMind only tells it which song comes next. If RetroMind can’t find the app, open it for a moment and tap “Try again” in the music player. In front of the door you still hear a muffled clip of the song, and inside it plays in full.',
