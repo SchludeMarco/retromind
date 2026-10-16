@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Rote Blinklichter am Gaming-Wegweiser': {
+    title: 'Red flashing lights on the gaming signpost',
+    text: 'Two red warning lamps like at a level crossing now sit on top of the “To the gaming zone” signpost and flash in turn, so nobody misses that the Gaming edition is right next door. If you chose reduced motion in your system settings, they glow steadily instead.',
+  },
   'Echte Spiele-Cover sind zurück': {
     title: 'Real game covers are back',
     text: 'In the Gaming edition the game cards, the game page and the cartridge slot show each game’s real cover again. That’s possible because RetroMind is now only open to family and close friends. If there is no cover, or while it loads, you see the pixel picture as before.',
