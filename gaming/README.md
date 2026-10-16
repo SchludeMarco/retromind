@@ -73,7 +73,9 @@ zeigen dürfen.
 - **Hallenmusik** – mit Spotify-Erlaubnis echter 80er-Metal von Spotify
   (Playlist „The 100 Best Metal Songs of 80s“) in zufälliger Reihenfolge, mit
   Premium über Spotifys Browser-Player und langsamem Einblenden
-  ([`lib/useHallSpotify.ts`](lib/useHallSpotify.ts)); sonst eigene
+  ([`lib/useHallSpotify.ts`](lib/useHallSpotify.ts)), auf dem Handy mit
+  Premium als ganze Songs über die eigene Spotify-App (Spotify Connect,
+  [`lib/spotifyConnect.ts`](../lib/spotifyConnect.ts)); sonst eigene
   Chiptune-Stücke ([`lib/chiptune.ts`](lib/chiptune.ts)). Beim ersten Besuch
   fragt die Halle einmal („Metal erlauben“ oder „Lieber Chiptune“), in den
   Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln.
@@ -313,10 +315,6 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 
 ### Könnte
 
-- **Ganze Songs in der Halle auf dem Handy:** Wie die Zeitreise könnte die
-  Halle mit Spotify Premium auf dem Handy über die eigene Spotify-App
-  spielen (`lib/spotifyConnect.ts`); dafür bräuchte die Tür-Musik mit ihrem
-  gedämpften Klang einen anderen Weg, denn die App lässt sich nicht dämpfen.
 - **Versteckte Inhalte von The Cutting Room Floor direkt zeigen:** Die Texte
   dort stehen unter CC BY 3.0 und passen zu „Fakten & Geheimnisse“
   (unbenutzte Level, Debug-Menüs, Botschaften der Entwickler). Der Server von

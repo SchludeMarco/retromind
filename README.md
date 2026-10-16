@@ -281,8 +281,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`lib/spotifyPremium.ts`](lib/spotifyPremium.ts), Web Playback SDK): ganze
   Songs, und die Musik wird beim Start und beim Fortsetzen über etwa
   6 Sekunden langsam lauter. Auf Handy und Tablet (iPhone, iPad, Android),
-  wo Spotify seinen Browser-Player nicht unterstützt, spielt die Zeitreise
-  mit Premium über die **eigene Spotify-App** (Spotify Connect,
+  wo Spotify seinen Browser-Player nicht unterstützt, spielen Zeitreise und
+  Gaming-Halle mit Premium über die **eigene Spotify-App** (Spotify Connect,
   [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts)): ganze Songs, die App
   spielt sie, RetroMind steuert Song, Pause, Weiter und Zurück und fragt alle
   2 Sekunden ab, was läuft. Findet sie keine Spotify-App (sie muss offen

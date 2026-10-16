@@ -92,7 +92,7 @@ function sdkSupported(): boolean {
 
 /**
  * The Premium browser player when available, otherwise the embed. With
- * `connect` (the Zeitreise), phones with a Premium login play through the
+ * `connect` (Zeitreise and gaming hall), phones with a Premium login play through the
  * visitor's Spotify app instead (lib/spotifyConnect) when it is there.
  */
 export async function createSpotifyController(
