@@ -5,7 +5,8 @@ https://retromind.vercel.app/gaming/
 
 RetroMind – Gaming ist die Spiele-Edition von [RetroMind](../README.md). Statt
 durch die eigene Kindheit führt sie durch eine verranzte Spielhalle voller
-vergessener Videospiele von den 1970ern bis heute: mit echten Covern,
+vergessener Videospiele ab 1970 – nach oben offen, aktuell mit Einträgen
+bis 2026, und es kommt laufend neues Material dazu: mit echten Covern,
 Hintergründen, Tipps, alten Testwertungen, Videos, Minispielen, Quests und
 Musik wie damals.
 
