@@ -6,7 +6,8 @@ RetroMind ist eine interaktive, KI-gestützte Reise durch die eigene
 Vergangenheit. Die App führt Jahrzehnt für Jahrzehnt (1960–2010) zurück,
 stellt persönliche Erinnerungsfragen, **sammelt die Antworten** und fasst sie
 zu einem exportierbaren **Erinnerungs-Buch** zusammen. Die Gaming-Edition
-macht dasselbe für Videospiele von den 1970ern bis heute.
+macht dasselbe für Videospiele ab 1970 – nach oben offen, aktuell mit
+Einträgen bis 2026, und es kommt laufend neues Material dazu.
 
 Alle Änderungen an beiden Apps stehen in der [CHANGELOG.md](CHANGELOG.md).
 Die Gaming-Edition hat zusätzlich eine eigene [README](gaming/README.md) und
