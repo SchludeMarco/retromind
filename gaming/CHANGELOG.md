@@ -8,6 +8,16 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Die Spielhalle nebenan ist nicht mehr zu übersehen** (2026-10-16,
+  PR #227): In der Stube steht jetzt in der Ecke ein leuchtender
+  Spielautomat unter einem Neonschild „GAMING“, mit Invader auf dem
+  Bildschirm und blinkenden Münzschlitzen. Ein Tipp darauf, und du stehst in
+  RetroMind – Gaming. Direkt unter „Zeitreise starten“ zeigt außerdem eine
+  neue Karte „Die Spielhalle nebenan“ mit Foto vom Eingang, was dich in der
+  Gaming-Edition erwartet; der Wegweiser „To the gaming zone“ steht jetzt
+  dort statt ganz unten auf der Seite. Nebenbei reagieren die Dinge in der
+  Stube am Computer zuverlässiger auf Mausklicks.
+
 - **Echte Spiele-Cover sind zurück** (2026-10-16, PR #224): In der
   Gaming-Edition zeigen die Spielkarten, die Spieleseite und der
   Modulschacht wieder das echte Cover jedes Spiels. Das geht, weil RetroMind

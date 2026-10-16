@@ -382,6 +382,11 @@
    focus, a little press when tapped, and the TV gently calls for a tap. */
 .cozy-room.is-interactive .cozy-hot {
   cursor: pointer;
+  /* The tap "boing" (.rm-sprung) scales around the thing itself, not the
+     room's corner, so a press near the right edge doesn't slide away from
+     under the mouse before the click lands. */
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -439,6 +444,38 @@
 }
 .cozy-room .cozy-tv-switch {
   animation: cozy-tv-switch 0.35s ease-out;
+}
+/* The arcade machine in the Stube (CozyRoom.tsx): the invader marches, the
+   neon sign hums and flickers, the coin slots blink in turn. */
+.cozy-room .cozy-arcade-invader {
+  animation: cozy-arcade-march 1.6s steps(4) infinite alternate;
+}
+.cozy-room .cozy-arcade-neon {
+  animation: cozy-arcade-neon 4s steps(1) infinite;
+}
+.cozy-room .cozy-arcade-coin {
+  animation: cozy-arcade-coin 1s steps(1) infinite;
+}
+.cozy-room .cozy-arcade-coin-2 {
+  animation-delay: -0.5s;
+}
+.cozy-room .cozy-arcade-coin-text {
+  animation: cozy-arcade-coin 1.4s steps(1) infinite;
+}
+@keyframes cozy-arcade-march {
+  0% { transform: translateX(-4px); }
+  100% { transform: translateX(4px); }
+}
+@keyframes cozy-arcade-neon {
+  0%, 100% { opacity: 1; }
+  71% { opacity: 0.35; }
+  73% { opacity: 1; }
+  76% { opacity: 0.5; }
+  78% { opacity: 1; }
+}
+@keyframes cozy-arcade-coin {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
 }
 @keyframes cozy-spin {
   0% { transform: translateX(-6px); opacity: 0; }

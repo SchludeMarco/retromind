@@ -5,6 +5,7 @@ import { CozyRoom, DayTime, dayTime } from './CozyRoom';
 import { WeatherSwitch } from './WeatherSwitch';
 import { useWindowWeather } from '../lib/weather';
 import { eraShort, useRoomEra } from '../lib/roomEra';
+import { gamingHref } from '../lib/gamingLink';
 
 // The Stube at the top of the start page, in every design (Marco,
 // 2026-10-13: "das gemütliche Wohnzimmer fehlt immer noch ganz. Ich dachte
@@ -56,6 +57,7 @@ export const LivingRoom: React.FC<{
             // The stations exist once a journey has begun.
             onPicture: resuming ? () => onOpenStage('exploration') : undefined,
             onBooks: resuming ? () => onOpenStage('book') : undefined,
+            onArcade: () => window.location.assign(gamingHref()),
           }}
         />
       </div>
@@ -67,12 +69,12 @@ export const LivingRoom: React.FC<{
       <p className="text-sm text-retro-brown text-center mb-3 px-2 leading-snug">
         {resuming
           ? tr(
-              '👆 Everything here can be touched: the TV takes you back to your journey, the picture to your decades, the books to your memory book. Lamp, stove, cat and window do something too.',
-              '👆 Hier kannst du alles antippen: Der Fernseher bringt dich zurück zu deiner Reise, das Bild zu deinen Jahrzehnten, die Bücher zu deinem Erinnerungsbuch. Auch Lampe, Ofen, Katze und Fenster tun etwas.'
+              '👆 Everything here can be touched: the TV takes you back to your journey, the picture to your decades, the books to your memory book, and the arcade machine to the arcade next door. Lamp, stove, cat and window do something too.',
+              '👆 Hier kannst du alles antippen: Der Fernseher bringt dich zurück zu deiner Reise, das Bild zu deinen Jahrzehnten, die Bücher zu deinem Erinnerungsbuch und der Spielautomat in die Spielhalle nebenan. Auch Lampe, Ofen, Katze und Fenster tun etwas.'
             )
           : tr(
-              '👆 Everything here can be touched: tap the TV and the time travel begins. Lamp, stove, cat and window do something too.',
-              '👆 Hier kannst du alles antippen: Tippe auf den Fernseher, und die Zeitreise geht los. Auch Lampe, Ofen, Katze und Fenster tun etwas.'
+              '👆 Everything here can be touched: tap the TV and the time travel begins, tap the arcade machine and you’re in the arcade next door. Lamp, stove, cat and window do something too.',
+              '👆 Hier kannst du alles antippen: Tippe auf den Fernseher, und die Zeitreise geht los, tippe auf den Spielautomaten, und du stehst in der Spielhalle nebenan. Auch Lampe, Ofen, Katze und Fenster tun etwas.'
             )}
       </p>
       <WeatherSwitch openSignal={weatherAsk} />

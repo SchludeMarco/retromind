@@ -5,6 +5,7 @@ import { tr } from '../lib/i18n';
 import { playClick, playCrackle, playPurr, playTvOn, setFireSound, tapFeel } from '../lib/roomSounds';
 import { eraStyle, justFurnished, useRoomEra } from '../lib/roomEra';
 import { EraRadio, EraWallpaper } from './EraDecor';
+import '@fontsource/press-start-2p/latin-400.css';
 
 // The "Stube" at the top of the Retro Warm start page (Marco, 2026-10-13:
 // "man soll sich direkt wie Zuhause auf der warmen Couch in der warmen Stube
@@ -121,6 +122,8 @@ export interface RoomActions {
   onWindow?: () => void;
   onPicture?: () => void;
   onBooks?: () => void;
+  /** The arcade machine in the corner: off to RetroMind – Gaming. */
+  onArcade?: () => void;
 }
 
 export const CozyRoom: React.FC<{
@@ -139,6 +142,7 @@ export const CozyRoom: React.FC<{
   const [fireOn, setFireOn] = useState(evening);
   const [petted, setPetted] = useState(0);
   const [tvOn, setTvOn] = useState(false);
+  const [arcadeOn, setArcadeOn] = useState(false);
   const [wobble, setWobble] = useState<'' | 'picture' | 'books'>('');
   const timers = useRef<number[]>([]);
   const muted = useMuted();
@@ -174,6 +178,12 @@ export const CozyRoom: React.FC<{
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     later(() => actions.onTv?.(), reduce ? 150 : 900);
   };
+  const tapArcade = () => {
+    playTvOn();
+    setArcadeOn(true);
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    later(() => actions.onArcade?.(), reduce ? 150 : 900);
+  };
   const tapLamp = () => {
     playClick();
     setLampOn((v) => !v);
@@ -199,7 +209,7 @@ export const CozyRoom: React.FC<{
   const overcast = weather === 'rain' || weather === 'snow' || weather === 'fog' || weather === 'storm';
   return (
     <svg
-      viewBox="0 0 400 220"
+      viewBox="0 0 452 220"
       className={`cozy-room block w-full h-auto ${interactive ? 'is-interactive' : ''} ${furnishing ? 'is-furnishing' : ''} ${className}`}
       {...(interactive
         ? { role: 'group', 'aria-label': tr('The living room. Everything in it can be tapped.', 'Die Stube. Alles darin kann man antippen.') }
@@ -236,6 +246,18 @@ export const CozyRoom: React.FC<{
           <stop offset="0.5" stopColor="#ff7a2a" stopOpacity="0.18" />
           <stop offset="1" stopColor="#ff7a2a" stopOpacity="0" />
         </radialGradient>
+        <radialGradient id="cozy-arcade-glow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#ff4fb0" stopOpacity="0.55" />
+          <stop offset="0.5" stopColor="#7a5cff" stopOpacity="0.2" />
+          <stop offset="1" stopColor="#2fd6ff" stopOpacity="0" />
+        </radialGradient>
+        <filter id="cozy-neon" x="-30%" y="-60%" width="160%" height="220%">
+          <feGaussianBlur stdDeviation="1.4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         <radialGradient id="cozy-tv-glow" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#cfe6ff" stopOpacity="0.6" />
           <stop offset="1" stopColor="#cfe6ff" stopOpacity="0" />
@@ -251,17 +273,17 @@ export const CozyRoom: React.FC<{
       </defs>
 
       {/* Wall and floor */}
-      <rect className="cozy-era-wall" width="400" height="168" fill="url(#cozy-wallpaper)" />
-      <rect y="24" width="400" height="3" fill="#c9965f" opacity="0.6" />
-      <rect y="166" width="400" height="54" fill="url(#cozy-floor)" />
+      <rect className="cozy-era-wall" width="452" height="168" fill="url(#cozy-wallpaper)" />
+      <rect y="24" width="452" height="3" fill="#c9965f" opacity="0.6" />
+      <rect y="166" width="452" height="54" fill="url(#cozy-floor)" />
       {[178, 192, 207].map((y) => (
-        <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="#7a4626" strokeWidth="0.8" opacity="0.5" />
+        <line key={y} x1="0" y1={y} x2="452" y2={y} stroke="#7a4626" strokeWidth="0.8" opacity="0.5" />
       ))}
-      {[40, 130, 220, 310, 85, 175, 265, 355].map((x, i) => (
-        <line key={x} x1={x} y1={i < 4 ? 166 : 178} x2={x} y2={i < 4 ? 178 : 192} stroke="#7a4626" strokeWidth="0.8" opacity="0.4" />
+      {[40, 130, 220, 310, 400, 85, 175, 265, 355, 445].map((x, i) => (
+        <line key={x} x1={x} y1={i < 5 ? 166 : 178} x2={x} y2={i < 5 ? 178 : 192} stroke="#7a4626" strokeWidth="0.8" opacity="0.4" />
       ))}
-      <rect y="160" width="400" height="7" fill="#7f4a29" />
-      <rect y="160" width="400" height="1.5" fill="#a46a43" />
+      <rect y="160" width="452" height="7" fill="#7f4a29" />
+      <rect y="160" width="452" height="1.5" fill="#a46a43" />
 
       {/* Window with the real time of day outside */}
       <Hot
@@ -506,7 +528,7 @@ export const CozyRoom: React.FC<{
       {/* Lamplight: in the evening the room dims a little and the lamp pours
           warm light over the couch; by day it only glows softly. */}
       <g pointerEvents="none">
-        {dark > 0 && <rect width="400" height="220" fill="#3b1f10" opacity={dark} />}
+        {dark > 0 && <rect width="452" height="220" fill="#3b1f10" opacity={dark} />}
         {lampOn && (
           <>
             <path d="M54 84L10 220h150L102 84z" fill="#ffd27a" opacity={lit ? 0.16 : 0.06} style={{ mixBlendMode: 'screen' }} />
@@ -526,6 +548,74 @@ export const CozyRoom: React.FC<{
         )}
         {tvOn && <circle cx="362" cy="138" r="60" fill="url(#cozy-tv-glow)" style={{ mixBlendMode: 'screen' }} />}
       </g>
+
+      {/* The arcade machine in the corner (Marco, 2026-10-16: the big gaming
+          edition was too easy to miss): a neon "GAMING" sign on the wall and
+          an upright cabinet with a little invader on its screen. It glows
+          through the evening dimming, and a tap powers it up and leads to
+          RetroMind – Gaming next door. */}
+      {actions.onArcade && (
+        <Hot
+          on={interactive}
+          label={tr('Arcade machine: off to RetroMind – Gaming', 'Spielautomat: ab zu RetroMind – Gaming')}
+          onAct={tapArcade}
+          box={[398, 30, 52, 162]}
+          hint
+        >
+          <g className="cozy-arcade">
+            <circle cx="425" cy="98" r="52" fill="url(#cozy-arcade-glow)" style={{ mixBlendMode: 'screen' }} pointerEvents="none" />
+            <ellipse cx="425" cy="192" rx="30" ry="5" fill="#ff4fb0" opacity="0.35" />
+            <rect x="398" y="33" width="54" height="17" rx="2.5" fill="#1a0f24" stroke="#ff3ea5" strokeWidth="0.8" />
+            <text
+              className="cozy-arcade-neon"
+              x="425"
+              y="45.5"
+              textAnchor="middle"
+              fontSize="8"
+              fontFamily="'Press Start 2P', monospace"
+              fill="#ff6ac6"
+              filter="url(#cozy-neon)"
+            >
+              GAMING
+            </text>
+            {/* cabinet */}
+            <path d="M404 60h42v130h-42z" fill="#231636" />
+            <rect x="404" y="60" width="3" height="130" fill="#ff3ea5" />
+            <rect x="443" y="60" width="3" height="130" fill="#2fd6ff" />
+            <rect x="403" y="56" width="44" height="17" rx="2" fill="#ffd23f" />
+            <rect x="403" y="56" width="44" height="3" rx="1.5" fill="#fff3b0" />
+            <text x="425" y="68.5" textAnchor="middle" fontSize="6.4" fontFamily="'Press Start 2P', monospace" fill="#3a1650">
+              PLAY
+            </text>
+            <rect x="407" y="76" width="36" height="36" rx="2" fill="#0b0a12" />
+            <rect x="410" y="79" width="30" height="29" rx="2.5" fill="#0a1d2a" />
+            <g className="cozy-arcade-invader" fill="#5ff0ff">
+              <path d="M419 85h2v1h-2zM429 85h2v1h-2zM420 86h2v1h-2zM428 86h2v1h-2zM419 87h12v1h-12zM418 88h3v1h-3zM423 88h4v1h-4zM429 88h3v1h-3zM416 89h18v1h-18zM416 90h2v1h-2zM419 90h12v1h-12zM432 90h2v1h-2zM416 91h1v2h-1zM419 91h1v1h-1zM430 91h1v1h-1zM433 91h1v2h-1zM421 92h3v1h-3zM426 92h3v1h-3z" />
+            </g>
+            <path d="M423 101h4v1.5h1.5v2h-7v-2h1.5z" fill="#ffd23f" />
+            <text className="cozy-arcade-coin-text" x="425" y="98" textAnchor="middle" fontSize="2.9" fontFamily="'Press Start 2P', monospace" fill="#ff7ac8">
+              INSERT COIN
+            </text>
+            {arcadeOn && <rect className="cozy-tv-on" x="410" y="79" width="30" height="29" fill="#f6fbff" />}
+            {/* control panel with joystick and buttons */}
+            <path d="M400 113h50l-4 13h-42z" fill="#3b2a5c" />
+            <path d="M400 113h50l-.6 2h-48.8z" fill="#5a4486" />
+            <path d="M413 117v-9" stroke="#1a1424" strokeWidth="1.8" strokeLinecap="round" />
+            <circle cx="413" cy="107" r="3.2" fill="#e0302a" />
+            <circle cx="412" cy="106" r="1" fill="#ff9a8a" />
+            <circle cx="426" cy="118.5" r="2.4" fill="#2fd6ff" />
+            <circle cx="433" cy="118.5" r="2.4" fill="#ff3ea5" />
+            <circle cx="440" cy="118.5" r="2.4" fill="#ffd23f" />
+            {/* coin door with two blinking coin slots */}
+            <rect x="413" y="136" width="24" height="30" rx="1.5" fill="#17101f" stroke="#4a3a6a" strokeWidth="1" />
+            <rect className="cozy-arcade-coin" x="417" y="141" width="5" height="8" rx="1" fill="#ff3b30" />
+            <rect className="cozy-arcade-coin cozy-arcade-coin-2" x="428" y="141" width="5" height="8" rx="1" fill="#ff3b30" />
+            <rect x="419" y="143" width="1" height="4" fill="#3a0a08" />
+            <rect x="430" y="143" width="1" height="4" fill="#3a0a08" />
+            <rect x="404" y="182" width="42" height="8" fill="#140e1c" />
+          </g>
+        </Hot>
+      )}
 
       {/* The cat, curled up asleep on the rug; it purrs when stroked. */}
       <Hot

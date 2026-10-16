@@ -4,7 +4,7 @@ import { DECADES_DB } from '../constants';
 import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
 import { JourneyStages } from '../components/JourneyStages';
-import { GamingSignpost } from '../components/GamingSignpost';
+import { GamingTeaser } from '../components/GamingTeaser';
 import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
@@ -51,6 +51,8 @@ const ClassicIntro: React.FC<IntroProps> = ({
         </button>
       )}
 
+      {!resumeTarget && <GamingTeaser className="mb-8" />}
+
       {!resumeTarget && (
         <EraSpotlight warm={false} userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
       )}
@@ -85,6 +87,8 @@ const ClassicIntro: React.FC<IntroProps> = ({
         />
       )}
 
+      {resumeTarget && <GamingTeaser className="mb-8" />}
+
       <p className="text-lg mb-8 leading-relaxed">
         {tr(
           'Open the treasure chest of your childhood. RetroMind takes you back decade by decade, asks you personal questions and gathers your answers into a memory book.',
@@ -97,11 +101,10 @@ const ClassicIntro: React.FC<IntroProps> = ({
   </div>
 );
 
+// The gaming signpost moved up into the gaming card (components/GamingTeaser.tsx).
 const IntroExtras: React.FC = () => (
   <>
-      <GamingSignpost />
-
-      <details className="mt-10 text-left text-sm text-retro-brown">
+      <details className="mt-2 text-left text-sm text-retro-brown">
         <summary className="cursor-pointer font-bold uppercase tracking-widest text-xs">
           {tr('How RetroMind handles your data', 'Wie RetroMind mit deinen Daten umgeht')}
         </summary>
@@ -200,6 +203,8 @@ const WarmIntro: React.FC<IntroProps> = ({
           )}
         </div>
       </section>
+
+      <GamingTeaser />
 
       {!resumeTarget && (
         <EraSpotlight warm userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />

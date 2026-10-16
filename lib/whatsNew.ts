@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die Spielhalle nebenan ist nicht mehr zu übersehen': {
+    title: 'You can’t miss the arcade next door anymore',
+    text: 'A glowing arcade machine now stands in the corner of the living room under a neon “GAMING” sign, with an invader on its screen and blinking coin slots. Tap it and you’re in RetroMind – Gaming. Right under “Start the time travel” a new card “The arcade next door” also shows a photo of the entrance and what waits for you in the Gaming edition; the “To the gaming zone” signpost now stands there instead of at the very bottom of the page. On computers the things in the living room also react to mouse clicks more reliably.',
+  },
   'Rote Blinklichter am Gaming-Wegweiser': {
     title: 'Red flashing lights on the gaming signpost',
     text: 'Two red warning lamps like at a level crossing now sit on top of the “To the gaming zone” signpost and flash in turn, so nobody misses that the Gaming edition is right next door. If you chose reduced motion in your system settings, they glow steadily instead.',
