@@ -8,6 +8,14 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Spiele in der Gaming-Edition nach Jahr sortiert** (2026-10-16, PR #228):
+  In der Halle stehen die Spiele jetzt nach Erscheinungsjahr geordnet, das
+  älteste zuerst. Das gilt für den Katalog mit allen Filtern, für die
+  Spiele aus dem Wikipedia-Archiv und für deine Sammlung („Mein Stash“ und
+  „Hatte ich damals“). Spiele ohne bekanntes Jahr stehen am Ende. Lädst du mit
+  „Gib mir mehr“ weitere Archivspiele nach, sortieren sie sich an der
+  passenden Stelle ein. Die Suche zeigt weiterhin die besten Treffer zuerst.
+
 - **Die Spielhalle nebenan ist nicht mehr zu übersehen** (2026-10-16,
   PR #227): In der Stube steht jetzt in der Ecke ein leuchtender
   Spielautomat unter einem Neonschild „GAMING“, mit Invader auf dem

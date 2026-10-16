@@ -114,6 +114,9 @@ zeigen dürfen.
   Wikipedia-Kategorien („Game Boy games“, „1991 video games“ …) mit Hunderten
   Spielen gefüllt, 48 pro Seite mit „Mehr Spiele laden“
   ([`lib/archive.ts`](lib/archive.ts)).
+- **Nach Jahr sortiert** – Katalog, Archivspiele und die Sammlung stehen
+  nach Erscheinungsjahr, das älteste zuerst; Spiele ohne bekanntes Jahr am
+  Ende. Nur die Suche bleibt nach Treffergenauigkeit sortiert.
 - **Filter** – eine wischbare Zeile mit den Jahrzehnten (70er bis 2020er),
   nach Wahl eines Jahrzehnts eine zweite Zeile mit den einzelnen Jahren.
 - **Konsolen-Regal** – 36 Systeme von Atari 2600 bis Switch mit Fotos von

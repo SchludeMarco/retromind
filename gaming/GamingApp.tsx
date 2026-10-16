@@ -608,16 +608,20 @@ export const GamingApp: React.FC = () => {
   };
 
   const score = scoreOf(state);
-  const shown: Game[] =
-    view === 'catalog'
-      ? [...catalog, ...archiveShown]
-      : view === 'collection'
-        ? shelf === 'hadback'
-          ? hadBackGames
-          : collection
-        : view === 'search'
-          ? results ?? []
-          : [];
+  // Shelves list games oldest first; games without a known year go last.
+  // Search results keep their relevance order.
+  const byYear = (list: Game[]) => [...list].sort((a, b) => (a.year || 9999) - (b.year || 9999));
+  const shown: Game[] = useMemo(
+    () =>
+      view === 'catalog'
+        ? byYear([...catalog, ...archiveShown])
+        : view === 'collection'
+          ? byYear(shelf === 'hadback' ? hadBackGames : collection)
+          : view === 'search'
+            ? results ?? []
+            : [],
+    [view, catalog, archiveShown, shelf, hadBackGames, collection, results]
+  );
 
   // Swiping on the game page flips through the cards the way they are shown,
   // like browsing a shelf.

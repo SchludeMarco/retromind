@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spiele in der Gaming-Edition nach Jahr sortiert': {
+    title: 'Games in the Gaming edition sorted by year',
+    text: 'In the gaming hall the games are now ordered by release year, oldest first. That goes for the catalog with every filter, for the games from the Wikipedia archive and for your collection (“My stash” and “Had it back then”). Games without a known year come last. When you load more archive games with “Gimme more”, they slot in at the right place. Search still shows the best matches first.',
+  },
   'Die Spielhalle nebenan ist nicht mehr zu übersehen': {
     title: 'You can’t miss the arcade next door anymore',
     text: 'A glowing arcade machine now stands in the corner of the living room under a neon “GAMING” sign, with an invader on its screen and blinking coin slots. Tap it and you’re in RetroMind – Gaming. Right under “Start the time travel” a new card “The arcade next door” also shows a photo of the entrance and what waits for you in the Gaming edition; the “To the gaming zone” signpost now stands there instead of at the very bottom of the page. On computers the things in the living room also react to mouse clicks more reliably.',
