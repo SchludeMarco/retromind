@@ -230,7 +230,7 @@ const Volume: React.FC<{ extras?: MusicDockExtras; ownMusic: boolean }> = ({ ext
 };
 
 // Spotify Premium on a phone plays through the visitor's own Spotify app
-// (lib/spotifyConnect, Zeitreise only). Says where the music plays, or what
+// (lib/spotifyConnect, Zeitreise and gaming hall). Says where the music plays, or what
 // to do when the app isn't found or the login is from before.
 const ConnectNote: React.FC = () => {
   const { state, device } = useConnectState();

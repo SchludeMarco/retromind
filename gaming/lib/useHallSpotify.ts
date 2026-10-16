@@ -11,7 +11,8 @@ import {
   trackName,
   trackUri,
 } from '../../lib/spotifyEmbed';
-import { createSpotifyController, giveUpPremium, usePremiumPlayback } from '../../lib/spotifyPremium';
+import { createSpotifyController, giveUpPremium, useConnectPlayback, usePremiumPlayback } from '../../lib/spotifyPremium';
+import { useConnectAttempt } from '../../lib/spotifyConnect';
 import { isMuted, setMuted, useMuted } from '../../lib/mute';
 import { useConsent } from '../../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../../lib/musicStatus';
@@ -66,6 +67,12 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   const allowed = useConsent('spotify') === true;
   // Signed in with Premium: Spotify's own player, which fades in.
   const premium = usePremiumPlayback();
+  // On phones Premium plays full songs through the visitor's Spotify app
+  // (lib/spotifyConnect, Marco 2026-10-16: "mit Spotify Premium sollten die
+  // Songs doch komplett abgespielt werden"); the embed only has previews
+  // there. "Try again" in the music panel builds the player anew.
+  const connect = useConnectPlayback();
+  const connectAttempt = useConnectAttempt();
   const doorMusic = premium || premiumAccount;
   const atDoor = outside && doorMusic;
   const on = enabled;
@@ -272,7 +279,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
         // A new player (e.g. the embed taking over) starts with the own music.
         setSpecial(null);
         setSong(first);
-        return createSpotifyController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID));
+        return createSpotifyController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID), { connect: true });
       })
       .then((controller) => {
         if (cancelled) {
@@ -320,7 +327,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       setReady(false);
       setPlaying(false);
     };
-  }, [allowed, wanted, premium, sync, nextSong]);
+  }, [allowed, wanted, premium, connect, connectAttempt, sync, nextSong]);
 
   useEffect(() => {
     const unlock = () => {

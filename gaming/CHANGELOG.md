@@ -8,6 +8,15 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Spotify Premium auf dem Handy: ganze Songs auch in der Gaming-Halle**
+  (2026-10-16, PR #222): Wer mit Spotify Premium angemeldet ist, hört in
+  der Gaming-Halle auf dem Handy jetzt ganze Songs statt 30-Sekunden-
+  Ausschnitten, wie schon in der Zeitreise. Die Musik läuft in deiner
+  eigenen Spotify-App, RetroMind sagt ihr nur, welcher Song kommt. Findet
+  RetroMind die App nicht, öffne sie kurz und tippe im Musik-Player auf
+  „Nochmal versuchen“. Vor der Tür bleibt es beim gedämpften Ausschnitt des
+  Songs, drinnen läuft er dann ganz.
+
 - **RetroMind nur noch für eingeladene Gäste** (2026-10-15, PR #221):
   Zeitreise und Gaming-Edition sind jetzt ein privates Angebot. Wer
   RetroMind öffnet, landet zuerst auf einer Gästeseite und meldet sich

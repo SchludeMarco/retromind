@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spotify Premium auf dem Handy: ganze Songs auch in der Gaming-Halle': {
+    title: 'Spotify Premium on your phone: full songs in the gaming hall too',
+    text: 'Signed in with Spotify Premium, the gaming hall on your phone now plays full songs instead of 30-second previews, just like the time journey. The music plays in your own Spotify app; RetroMind only tells it which song comes next. If RetroMind can’t find the app, open it for a moment and tap “Try again” in the music player. In front of the door you still hear a muffled clip of the song, and inside it plays in full.',
+  },
   'RetroMind nur noch für eingeladene Gäste': {
     title: 'RetroMind is now for invited guests only',
     text: 'Time Travel and the Gaming edition are now a private offer. Anyone opening RetroMind first lands on a guest page and signs in once with Google. Only addresses Marco invited in the admin area under “Guests” get in; after that you stay signed in until 30 days after your last visit. The privacy policy and legal notice stay open to everyone, and the privacy policy explains the new cookie.',
