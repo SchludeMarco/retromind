@@ -470,8 +470,11 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   (dann lädt die Seite neu und bleibt, wo sie war). Jeder Schlüssel trägt die
   Zeit seiner letzten Änderung, der neuere gewinnt. Trifft ein Gerät zum
   ersten Mal auf einen anderen Cloud-Stand, fragt es einmal (Cloud empfohlen).
-  Nicht abgeglichen werden Anmelde-Tokens, die Spotify/YouTube-Zustimmung und
-  Zwischenspeicher. Die alten Sicherungen `retromind-session.json` und
+  Auch die Anmeldungen gelten in beiden Apps: die Spotify-Anmeldung
+  (Refresh-Token) gleicht sich wie jeder Schlüssel ab, die Google-Anmeldung
+  reist mit jedem Link zwischen den Apps (sie kann nicht aus der Cloud kommen,
+  weil man für die Cloud angemeldet sein muss). Nicht abgeglichen werden der
+  Google-Token selbst, die Spotify/YouTube-Zustimmung und Zwischenspeicher. Die alten Sicherungen `retromind-session.json` und
   `retromind-gaming.json` werden beim ersten Abgleich übernommen.
 - **Datenschutz (DSGVO)** ([`lib/privacy.ts`](lib/privacy.ts)) – kein Tracking.
   Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
@@ -563,7 +566,8 @@ Der **Spotify-Login läuft ebenfalls komplett clientseitig**, über Authorizatio
 Code + PKCE (kein Client-Secret nötig, dafür ein voller Seiten-Redirect zu
 `accounts.spotify.com` und zurück, da Spotify anders als Google keine
 Popup-/Silent-Renewal-API anbietet). Der Access-Token bleibt im Speicher; nur
-der Refresh-Token landet in `localStorage`, sonst könnte man nach einem Reload
+der Refresh-Token landet in `localStorage` (und gleicht sich zwischen den Apps
+und über das eigene Drive ab, siehe „Eine App, immer synchron“), sonst könnte man nach einem Reload
 nicht ohne erneuten Consent-Screen angemeldet bleiben. Abgefragt werden nur
 Name, E-Mail und Premium-/Free-Status (`GET /v1/me`), keine Playlists. Nur
 mit Premium auf dem Handy fragt die Zeitreise zusätzlich ab, welche

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spotify-Anmeldung gilt in beiden Apps': {
+    title: 'Your Spotify sign-in counts in both apps',
+    text: 'If you are signed in with Spotify in Time Travel or in the Gaming edition, you now are in the other app too, and signing out counts for both. Signed in with Google, your Spotify sign-in also applies on all your devices. Every switch between the apps takes your Google sign-in along; after an hour, though, Google wants another tap on “Sign in”, which then also counts for the other app at the next switch.',
+  },
   'Zeitreise und Gaming sind jetzt eine App': {
     title: 'Time Travel and Gaming are now one app',
     text: 'Everything RetroMind remembers is the same in both apps: language, volume, journey, profile, save game, coins, high-score initials and settings. When you follow a link from Time Travel into the arcade or back, the link takes your data along, even without signing in. Signed in with Google, all your devices stay in sync too: every change reaches your Google Drive within a second or two, and each app fetches the latest data when it opens and when you come back to it. If the cloud already holds different data than your device, RetroMind asks once which should count (recommended: the cloud). Sign-ins and privacy choices stay on each device; the privacy policy explains this.',

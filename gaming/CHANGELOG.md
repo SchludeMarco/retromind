@@ -8,6 +8,14 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Spotify-Anmeldung gilt in beiden Apps** (2026-10-17, PR #233): Bist du
+  in der Zeitreise oder in der Gaming-Edition mit Spotify angemeldet, bist du
+  es jetzt auch in der anderen App, und meldest du dich ab, gilt auch das für
+  beide. Mit Google-Anmeldung gilt die Spotify-Anmeldung außerdem auf all
+  deinen Geräten. Die Google-Anmeldung nimmt jeder Wechsel zwischen den Apps
+  mit; nach einer Stunde will Google allerdings wieder einen Tipp auf
+  „Anmelden“, der dann beim nächsten Wechsel auch für die andere App gilt.
+
 - **Dein eigenes Kürzel wie am Flipper** (2026-10-17, PR #231): In den
   Einstellungen beider Apps gibst du jetzt dein eigenes Kürzel aus drei
   Zeichen ein, wie früher auf den Highscore-Tafeln am Flipper, zum Beispiel

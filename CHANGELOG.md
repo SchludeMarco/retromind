@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Anmeldung gilt in beiden Apps** (2026-10-17, PR #233): Bist du
+  in der Zeitreise oder in der Gaming-Edition mit Spotify angemeldet, bist du
+  es jetzt auch in der anderen App, und meldest du dich ab, gilt auch das für
+  beide. Mit Google-Anmeldung gilt die Spotify-Anmeldung außerdem auf all
+  deinen Geräten. Die Google-Anmeldung nimmt jeder Wechsel zwischen den Apps
+  mit; nach einer Stunde will Google allerdings wieder einen Tipp auf
+  „Anmelden“, der dann beim nächsten Wechsel auch für die andere App gilt.
 - **Zeitreise und Gaming sind jetzt eine App** (2026-10-17, PR #232): Alles,
   was RetroMind sich merkt, ist in beiden Apps gleich: Sprache, Lautstärke,
   Reise, Profil, Savegame, Coins, Highscore-Kürzel und Einstellungen. Wechselst
