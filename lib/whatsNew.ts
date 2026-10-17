@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zwei neue Spiele für die Retro-Konsole': {
+    title: 'Two new games for the retro console',
+    text: 'The Gaming edition’s chill corner now has four free games. New are “µCity” for the Game Boy Color, where you build your own city like in SimCity, and “Thwaite” for the NES, where you defend villages against incoming missiles like in Missile Command. Both are free software whose makers explicitly allow sharing them.',
+  },
   'Die Retro-Konsole: alte Spiele direkt im Browser spielen': {
     title: 'The retro console: play old games right in your browser',
     text: 'The Gaming edition’s chill corner now has an emulator that recreates real old consoles. Two free games whose makers allow sharing them start with one tap: “Tobu Tobu Girl” for the Game Boy and the memory game “Concentration Room” for the NES. Under “Your own module” you can also load a game file from your device, for NES, SNES, Game Boy, Game Boy Advance, Mega Drive, Master System, Game Gear, Atari 2600 and PC Engine; on the game pages of these systems the button is called “Play with your own file”. RetroMind provides no commercial games, and your file stays on your device. Play with keyboard, gamepad or touch buttons on your phone; saves stay in your browser. The delete button under “My data” removes them too, and the privacy policy explains this.',

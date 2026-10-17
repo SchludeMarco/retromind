@@ -190,9 +190,11 @@ zeigen dürfen.
   [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS) (GPL 3.0), den wir
   beim Build von npm holen und selbst ausliefern (`scripts/emulator.mjs`,
   Spielseite `public/emulator/play.html`), damit keine Besucherdaten an Dritte
-  gehen. Sofort spielbar sind zwei freie Homebrew-Spiele, deren Macher das
-  Weitergeben erlauben: „Tobu Tobu Girl“ (Game Boy, MIT / CC BY 4.0) und
-  „Concentration Room“ (NES, GPL 3.0), Lizenzen in
+  gehen. Sofort spielbar sind vier freie Homebrew-Spiele, deren Macher das
+  Weitergeben erlauben: „Tobu Tobu Girl“ (Game Boy, MIT / CC BY 4.0),
+  „Concentration Room“ und „Thwaite“ (NES, GPL 3.0) sowie „µCity“ (Game Boy
+  Color, GPL 3.0 / CC BY-SA 4.0; µCity und Thwaite unverändert aus ihrem
+  Quellcode gebaut, Stand in der Lizenzdatei), Lizenzen in
   `public/emulator/roms/LICENSES.txt`. Dazu „Dein eigenes Modul“: eine
   Spieldatei vom eigenen Gerät für NES, SNES, Game Boy / Color, Game Boy
   Advance, Mega Drive / Master System / Game Gear, Atari 2600 und PC Engine.
@@ -356,7 +358,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   vergessenes Spiel als Geheimtipp aufdeckt.
 - **Mehr Konsolen für die Retro-Konsole:** C64, Amiga, MS-DOS oder
   PlayStation (brauchen größere Emulator-Bausteine oder BIOS-Dateien, die wir
-  nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz.
+  nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz,
+  vor allem für den Mega Drive. Die Sammlung „retrobrews“ scheidet aus: Ihre
+  Spiele sind nur für diese Sammlung freigegeben.
 - **Mehr Minispiele in der Chill-Ecke**, Sudoku in mehreren
   Schwierigkeitsstufen und die Bestwerte mit in die Cloud-Sicherung nehmen.
 - **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,

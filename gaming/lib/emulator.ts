@@ -79,6 +79,36 @@ export const FREE_GAMES: FreeGame[] = [
       'Memory auf dem NES: zwei Karten umdrehen, Pärchen finden, allein oder gegen Freund oder Computer.'
     ),
   },
+  {
+    id: 'ucity',
+    title: 'µCity',
+    year: 2017,
+    platform: 'Game Boy Color',
+    core: 'gambatte',
+    rom: 'ucity.gbc',
+    by: 'Antonio Niño Díaz',
+    licence: 'GPL 3.0 / CC BY-SA 4.0',
+    source: 'https://github.com/AntonioND/ucity',
+    text: tr(
+      'Build your own city like in SimCity: roads, homes, power plants, taxes and disasters, all on the Game Boy Color.',
+      'Bau deine eigene Stadt wie in SimCity: Straßen, Wohnhäuser, Kraftwerke, Steuern und Katastrophen, alles auf dem Game Boy Color.'
+    ),
+  },
+  {
+    id: 'thwaite',
+    title: 'Thwaite',
+    year: 2011,
+    platform: 'NES',
+    core: 'fceumm',
+    rom: 'thwaite.nes',
+    by: 'Damian Yerrick',
+    licence: 'GPL 3.0',
+    source: 'https://github.com/pinobatch/thwaite-nes',
+    text: tr(
+      'Defend the villages against incoming missiles, in the spirit of Missile Command. Aim the crosshair and fire.',
+      'Verteidige die Dörfer gegen anfliegende Raketen, ganz im Stil von Missile Command. Fadenkreuz ausrichten und abfeuern.'
+    ),
+  },
 ];
 
 /** What to play: one of the free games, or a file from the player's device. */
