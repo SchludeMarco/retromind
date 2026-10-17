@@ -21,6 +21,9 @@ import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { EmulatorCorner } from './components/EmulatorCorner';
+import { EmulatorDialog } from './components/EmulatorDialog';
+import { EmuLaunch } from './lib/emulator';
 import { countOpened } from '../lib/usage';
 import { readPage, writePage } from '../lib/pageMemory';
 import { useCloudSync } from './lib/useCloudSync';
@@ -195,6 +198,8 @@ export const GamingApp: React.FC = () => {
   const [guruOpen, setGuruOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
+  const [emu, setEmu] = useState<EmuLaunch | null>(null);
+  const [emuRunning, setEmuRunning] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
   const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
@@ -242,7 +247,9 @@ export const GamingApp: React.FC = () => {
   }, [state.palette]);
   // A new pick in the settings restarts the hub music with that tune.
   // A YouTube video on a game page pauses the music until it stops.
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoOn, setVideoPlaying] = useState(false);
+  // The hall music also rests while the emulator plays.
+  const videoPlaying = videoOn || emuRunning;
   // In the hall the 80s metal playlist from Spotify plays instead of the
   // chiptune tunes, once Spotify is allowed (useHallSpotify).
   // Optional Spotify login: with Premium the hall music fades in
@@ -648,6 +655,12 @@ export const GamingApp: React.FC = () => {
       alive = false;
     };
   }, [screen]);
+  const play = (launch: EmuLaunch) => {
+    chip.play('select');
+    countOpened('gaming', 'minigame', `EMULATOR: ${'rom' in launch ? launch.title : 'eigene Datei'}`);
+    setEmu(launch);
+  };
+
   const openDayGame = () => {
     if (!dayGame) return;
     const title = dayGame.wiki.replace(/ \((\d{4} )?video game\)$/i, '');
@@ -667,7 +680,7 @@ export const GamingApp: React.FC = () => {
 
   // Attract mode: a minute without input in the hall and the covers run by.
   const [attract, setAttract] = useState(false);
-  const attractAllowed = screen === 'hub' && !selected && !inserting && !miniGame && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
+  const attractAllowed = screen === 'hub' && !selected && !inserting && !miniGame && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
   useEffect(() => {
     if (!attractAllowed || reducedMotion) return;
     let id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
@@ -865,6 +878,7 @@ export const GamingApp: React.FC = () => {
           {/* The mini games: one of the sections in the dock. */}
           {view === 'chill' && (
             <div className="chill-panel">
+              <EmulatorCorner onPlay={play} />
               <MiniGameCorner
                 onPick={(id) => {
                   chip.play('select');
@@ -1289,6 +1303,19 @@ export const GamingApp: React.FC = () => {
           onClose={closeDetail}
           aiAvailable={aiAvailable}
           onVideoChange={setVideoPlaying}
+          onPlay={play}
+        />
+      )}
+
+      {emu && (
+        <EmulatorDialog
+          key={'rom' in emu ? emu.rom : emu.file.name}
+          launch={emu}
+          onRunning={setEmuRunning}
+          onClose={() => {
+            chip.play('back');
+            setEmu(null);
+          }}
         />
       )}
 
@@ -1307,7 +1334,7 @@ export const GamingApp: React.FC = () => {
         </div>
       )}
 
-      {screen === 'hub' && state.music && state.musicSource === 'spotify' && <SpotifyAsk />}
+      {screen === 'hub' && !emu && state.music && state.musicSource === 'spotify' && <SpotifyAsk />}
 
       {fromDoor && <div className="white-in" aria-hidden="true" onAnimationEnd={() => setFromDoor(false)} />}
       <div className="crt-glass" aria-hidden="true" />

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>RetroMind – Emulator</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  #game { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="game"></div>
+<script>
+  // The player page for the Gaming edition's emulator (gaming/components/
+  // EmulatorDialog.tsx opens it in a frame). EmulatorJS and its cores come
+  // from our own domain (scripts/emulator.mjs). It plays either one of the
+  // freely licensed games in ./roms (?rom=) or a file the player picked on
+  // their own device, which the app hands over by postMessage: that file is
+  // never uploaded anywhere. Saves stay in this browser.
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var core = q.get('core') || '';
+    var rom = q.get('rom') || '';
+    var de = q.get('lang') === 'de';
+    if (!/^[a-zA-Z0-9_]+$/.test(core)) return;
+
+    function start(url, name) {
+      window.EJS_player = '#game';
+      window.EJS_core = core;
+      window.EJS_gameUrl = url;
+      window.EJS_gameName = name;
+      window.EJS_pathtodata = '/emulator/data/';
+      window.EJS_language = de ? 'de-GER' : 'en-US';
+      window.EJS_disableAutoLang = false;
+      window.EJS_color = '#ff2bd6';
+      window.EJS_backgroundColor = '#07071a';
+      window.EJS_startButtonName = de ? 'Spiel starten' : 'Start game';
+      var s = document.createElement('script');
+      s.src = '/emulator/data/loader.js';
+      document.body.appendChild(s);
+    }
+
+    if (rom) {
+      // Only our own files, never an address from outside.
+      if (/^[a-z0-9-]+\.(gb|gbc|nes)$/.test(rom)) start('/emulator/roms/' + rom, rom.replace(/\.[a-z]+$/, ''));
+      return;
+    }
+    window.addEventListener('message', function onFile(e) {
+      if (e.origin !== location.origin || !e.data || e.data.type !== 'rm-rom' || !(e.data.file instanceof File)) return;
+      window.removeEventListener('message', onFile);
+      start(e.data.file, String(e.data.name || 'game').slice(0, 80));
+    });
+    parent.postMessage({ type: 'rm-emulator-ready' }, location.origin);
+  })();
+</script>
+</body>
+</html>

@@ -33,8 +33,10 @@ const OPEN = [
 
 export const config = {
   // Built JavaScript and CSS hold no personal data and stay out of the check,
-  // which saves middleware calls; the pages that load them are checked.
-  matcher: ["/((?!assets/).*)"],
+  // which saves middleware calls; the pages that load them are checked. The
+  // same goes for the emulator (public GPL software and free homebrew games,
+  // several files per game start).
+  matcher: ["/((?!assets/|emulator/).*)"],
 };
 
 const isPage = (request) =>

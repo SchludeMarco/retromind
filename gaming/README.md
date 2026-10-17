@@ -184,6 +184,23 @@ zeigen dürfen.
 - **Retro-Guru** – ein Chat, der in Gamer-Slang von den 80ern bis heute
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
+- **Die Retro-Konsole** – echte alte Konsolen im Browser, oben in der
+  Chill-Ecke ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
+  [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
+  [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS) (GPL 3.0), den wir
+  beim Build von npm holen und selbst ausliefern (`scripts/emulator.mjs`,
+  Spielseite `public/emulator/play.html`), damit keine Besucherdaten an Dritte
+  gehen. Sofort spielbar sind zwei freie Homebrew-Spiele, deren Macher das
+  Weitergeben erlauben: „Tobu Tobu Girl“ (Game Boy, MIT / CC BY 4.0) und
+  „Concentration Room“ (NES, GPL 3.0), Lizenzen in
+  `public/emulator/roms/LICENSES.txt`. Dazu „Dein eigenes Modul“: eine
+  Spieldatei vom eigenen Gerät für NES, SNES, Game Boy / Color, Game Boy
+  Advance, Mega Drive / Master System / Game Gear, Atari 2600 und PC Engine.
+  Auf den Spieleseiten dieser Systeme gibt es dafür „Mit eigener Datei
+  spielen“. **Rechtliche Linie:** RetroMind hostet und verlinkt keine
+  kommerziellen Spieldateien; eine eigene Datei bleibt auf dem Gerät.
+  Tastatur, Gamepad und auf dem Handy Touch-Knöpfe; Spielstände bleiben im
+  Browser.
 - **Chill-Ecke** – Minispiele per Touch und Tastatur: Pixel-Memory,
   Schiebepuzzle, Farbecho, Sudoku (immer neue Rätsel mit genau einer Lösung),
   Blockstapler, Flipper, Pac-Mampf, Mauerbrecher, Snake, Weltraum-Invasion und das
@@ -337,6 +354,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle (Poster,
   Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
   vergessenes Spiel als Geheimtipp aufdeckt.
+- **Mehr Konsolen für die Retro-Konsole:** C64, Amiga, MS-DOS oder
+  PlayStation (brauchen größere Emulator-Bausteine oder BIOS-Dateien, die wir
+  nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz.
 - **Mehr Minispiele in der Chill-Ecke**, Sudoku in mehreren
   Schwierigkeitsstufen und die Bestwerte mit in die Cloud-Sicherung nehmen.
 - **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,

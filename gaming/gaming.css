@@ -2047,6 +2047,75 @@ a {
   }
 }
 
+/* --- Die Retro-Konsole: the emulator (components/EmulatorCorner, EmulatorDialog) --- */
+.emu-corner {
+  margin-bottom: 22px;
+}
+.emu-corner h3 {
+  margin: 0 0 8px;
+  color: var(--a3);
+  font-size: 13px;
+}
+.emu-own select {
+  font: inherit;
+  max-width: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  border: 2px solid var(--a2);
+  padding: 2px 4px;
+}
+.emu-credits,
+.emu-note {
+  font-size: 15px;
+  margin: 8px 0 0;
+}
+.emu-dialog {
+  width: min(820px, 100%);
+  padding: 14px;
+}
+.emu-screen {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: calc(92vh - 150px);
+  margin-top: 8px;
+  border: 0;
+  background: #000;
+}
+.emu-keys {
+  font-size: 15px;
+  margin: 8px 0 0;
+}
+/* Phones: the whole screen, so the touch buttons EmulatorJS draws over the
+   picture leave room for the game. */
+@media (max-width: 700px), (max-height: 560px) {
+  .overlay:has(> .emu-dialog) {
+    padding: 0;
+  }
+  .emu-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    padding: 8px;
+    border-width: 0;
+  }
+  .emu-dialog h2 {
+    font-size: 12px;
+    padding-right: 48px;
+  }
+  .emu-screen {
+    flex: 1;
+    aspect-ratio: auto;
+    max-height: none;
+    min-height: 0;
+  }
+  .emu-keys {
+    display: none;
+  }
+}
+
 /* --- Chill-Ecke: calm mini games --- */
 .chill-panel {
   flex: 1 1 100%;

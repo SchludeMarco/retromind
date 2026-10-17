@@ -8,6 +8,20 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Die Retro-Konsole: alte Spiele direkt im Browser spielen** (2026-10-17,
+  PR #229): In der Chill-Ecke der Gaming-Edition steht jetzt ein Emulator,
+  der echte alte Konsolen nachbaut. Zwei freie Spiele, deren Macher das
+  Weitergeben erlauben, starten mit einem Tipp: „Tobu Tobu Girl“ für den
+  Game Boy und das Memory „Concentration Room“ für das NES. Unter „Dein
+  eigenes Modul“ kannst du außerdem eine Spieldatei von deinem Gerät laden,
+  für NES, SNES, Game Boy, Game Boy Advance, Mega Drive, Master System,
+  Game Gear, Atari 2600 und PC Engine; auf den Spieleseiten dieser Systeme
+  heißt der Knopf „Mit eigener Datei spielen“. RetroMind stellt keine
+  kommerziellen Spiele bereit, und deine Datei bleibt auf deinem Gerät.
+  Gespielt wird mit Tastatur, Gamepad oder auf dem Handy mit Touch-Knöpfen,
+  Spielstände bleiben in deinem Browser. Der Lösch-Knopf unter „Meine
+  Daten“ entfernt auch sie, und die Datenschutzerklärung erklärt das.
+
 - **Spiele in der Gaming-Edition nach Jahr sortiert** (2026-10-16, PR #228):
   In der Halle stehen die Spiele jetzt nach Erscheinungsjahr geordnet, das
   älteste zuerst. Das gilt für den Katalog mit allen Filtern, für die
