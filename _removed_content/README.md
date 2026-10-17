@@ -134,3 +134,12 @@ gebaut oder ausgeliefert.
   Gaming-Halle lief (entfernt am 2026-10-15 nach dem Rechtscheck, denn Pac-Man
   und die Geister gehören Bandai Namco). Ersetzt durch einen eigenen
   Mampf-Roboter mit Käfer in `gaming/components/MuncherWander.tsx`.
+- `HighscoreBoard-textfeld-kuerzel.tsx.txt`: das einfache Textfeld für die
+  drei Buchstaben an den Highscore-Tafeln der Gaming-Minispiele, samt CSS
+  (ersetzt am 2026-10-17 durch die Kürzel-Eingabe im Automaten-Stil mit
+  ▲/▼ je Zeichen, `components/InitialsPicker.tsx`).
+- `InitialsCloudAsk-kuerzel-cloud.tsx.txt`: die eigene Cloud-Abfrage fürs
+  Kürzel („Soll hier auch MAR gelten?“) samt `hooks/useInitialsCloud.ts`
+  und CSS (entfernt am 2026-10-17, PR #232: das Kürzel gleicht sich jetzt
+  wie alle Daten über `lib/sync.ts` ab, mit der einen gemeinsamen Frage
+  beim ersten Abgleich).

@@ -36,6 +36,10 @@ const EN: Record<string, { title: string; text: string }> = {
     title: 'Time Travel and Gaming are now one app',
     text: 'Everything RetroMind remembers is the same in both apps: language, volume, journey, profile, save game, coins, high-score initials and settings. When you follow a link from Time Travel into the arcade or back, the link takes your data along, even without signing in. Signed in with Google, all your devices stay in sync too: every change reaches your Google Drive within a second or two, and each app fetches the latest data when it opens and when you come back to it. If the cloud already holds different data than your device, RetroMind asks once which should count (recommended: the cloud). Sign-ins and privacy choices stay on each device; the privacy policy explains this.',
   },
+  'Dein eigenes Kürzel wie am Flipper': {
+    title: 'Your own initials, like on a pinball machine',
+    text: 'In the settings of both apps you can now enter your own three-character initials, like on the old pinball high score tables, for example LIQ or MAR. Set each character with ▲ and ▼ or simply type it. In the Gaming edition they are already filled in at every high score table, which now has the same arcade-style entry. Your initials stay on your device; with Google sign-in they are also kept in your Google account, so they apply on all your devices and in both apps. If your account holds different initials than your device, RetroMind asks whether to take the ones from your account; if you say no, yours stay and you aren’t asked again for those initials.',
+  },
   'Zwei neue Spiele für die Retro-Konsole': {
     title: 'Two new games for the retro console',
     text: 'The Gaming edition’s chill corner now has four free games. New are “µCity” for the Game Boy Color, where you build your own city like in SimCity, and “Thwaite” for the NES, where you defend villages against incoming missiles like in Missile Command. Both are free software whose makers explicitly allow sharing them.',

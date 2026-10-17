@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
@@ -11,6 +11,9 @@ import { warmUpGoogle } from '../../lib/googleAuth';
 import { useSecretAdminTaps } from '../../lib/admin';
 import { SpotifyAuth } from '../../hooks/useSpotifyAuth';
 import { LANG, LANGUAGES, setLang, tr } from '../../lib/i18n';
+import { setInitials, useInitials } from '../../lib/initials';
+import { InitialsPicker } from '../../components/InitialsPicker';
+import { chip } from '../lib/chiptune';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -46,6 +49,16 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
   const youtube = useConsent('youtube') === true;
   const onHeadingTap = useSecretAdminTaps();
   const spotify = useConsent('spotify') === true;
+  const initials = useInitials();
+  const [tag, setTag] = useState(initials || 'AAA');
+  const saveTag = () => {
+    chip.play('powerup');
+    setInitials(tag);
+  };
+  // The tag can also arrive from the cloud while this is open.
+  useEffect(() => {
+    if (initials) setTag(initials);
+  }, [initials]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -115,6 +128,27 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
               </p>
             </>
           )}
+        </section>
+
+        <section>
+          <h3 className="pixel-font">{tr('YOUR INITIALS', 'DEIN KÜRZEL')}</h3>
+          <div className="settings-row settings-initials">
+            <InitialsPicker value={tag} onChange={setTag} onEnter={saveTag} />
+            <button className="px-btn" onClick={saveTag} disabled={tag === initials} data-nav>
+              {tag === initials ? tr('✓ SAVED', '✓ GESPEICHERT') : tr('SAVE', 'SPEICHERN')}
+            </button>
+          </div>
+          <p className="dim">
+            {signedIn
+              ? tr(
+                  'Three characters, like on the old pinball high score tables. They show up on every high score table and are also kept in your Google account, so they follow you to other devices and to the RetroMind journey.',
+                  'Drei Zeichen, wie früher auf den Highscore-Tafeln am Flipper. Sie stehen bei jedem Highscore und liegen auch in deinem Google-Konto, so gelten sie auf anderen Geräten und in der RetroMind-Zeitreise.'
+                )
+              : tr(
+                  'Three characters, like on the old pinball high score tables. They show up on every high score table and stay on this device. Sign in with Google to take them to other devices.',
+                  'Drei Zeichen, wie früher auf den Highscore-Tafeln am Flipper. Sie stehen bei jedem Highscore und bleiben auf diesem Gerät. Mit Google-Anmeldung nimmst du sie auf andere Geräte mit.'
+                )}
+          </p>
         </section>
 
         <section>

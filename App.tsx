@@ -823,6 +823,7 @@ const App: React.FC = () => {
         />
       )}
 
+
       {isWhatsNewOpen && (
         <WhatsNewModal
           aboveSplash={showSplash}

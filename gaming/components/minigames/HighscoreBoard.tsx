@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BoardGame, Entry, fetchBoard, lastInitials, qualifies, submitScore } from '../../lib/highscores';
 import { chip } from '../../lib/chiptune';
 import { tr } from '../../../lib/i18n';
+import { InitialsPicker } from '../../../components/InitialsPicker';
 
 // The arcade ritual after a good game: enter three initials, then the top ten.
 export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ game, score }) => {
@@ -21,8 +22,8 @@ export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ g
     };
   }, [game, score]);
 
-  const save = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const save = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (name.length !== 3) return chip.play('error');
     chip.play('powerup');
     setEntering(false);
@@ -35,18 +36,7 @@ export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ g
       {entering ? (
         <form className="hs-enter" onSubmit={save}>
           <p className="pixel-font blink">{tr('ENTER YOUR INITIALS', 'TRAG DICH EIN')}</p>
-          <input
-            className="hs-initials pixel-font"
-            value={name}
-            onChange={(e) => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3))}
-            maxLength={3}
-            autoFocus
-            autoCapitalize="characters"
-            autoComplete="off"
-            spellCheck={false}
-            aria-label={tr('Three initials', 'Drei Buchstaben')}
-            onFocus={(e) => e.currentTarget.select()}
-          />
+          <InitialsPicker value={name} onChange={setName} onEnter={() => save()} autoFocus />
           <button className="px-btn big" type="submit" data-nav>
             OK
           </button>

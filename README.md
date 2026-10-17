@@ -411,6 +411,15 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 
 ### Für alle Module
 
+- **Dein Kürzel** ([`lib/initials.ts`](lib/initials.ts),
+  [`components/InitialsPicker.tsx`](components/InitialsPicker.tsx)) – in den
+  Einstellungen beider Apps gibt man ein eigenes Kürzel aus drei Zeichen
+  (A–Z, 0–9) ein, wie auf den Highscore-Tafeln alter Flipper: je Zeichen mit
+  ▲/▼ oder getippt. Gaming trägt es an jeder Highscore-Tafel schon ein. Es
+  gleicht sich wie alle Daten ab (siehe „Eine App, immer synchron“) und gilt
+  so in beiden Apps und mit Google-Anmeldung auf allen Geräten. Die frühere
+  eigene Datei `retromind-initials.json` wird beim ersten Abgleich übernommen
+  und gelöscht.
 - **Neu laden bleibt auf der Seite** ([`lib/pageMemory.ts`](lib/pageMemory.ts))
   – beide Apps merken sich pro Browser-Tab die offene Seite (Zeitreise: Etappe
   und ob der Willkommensbildschirm schon vorbei ist; Gaming: Halle oder Eingang,

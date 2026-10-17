@@ -1,4 +1,4 @@
-import { loadDriveJson, loadSessionFromDrive, saveDriveJson } from '../services/googleDriveService';
+import { deleteDriveFile, loadDriveJson, loadSessionFromDrive, saveDriveJson } from '../services/googleDriveService';
 import { loadGoogleSession, onGoogleSessionChange } from './googleLogin';
 import { addHandoffPart, b64urlToBytes, bytesToB64url, takeHandoff } from './handoff';
 
@@ -42,7 +42,6 @@ const DEVICE_ONLY = new Set([
   'retromind.weather.now',
   'retromind.gaming.cloud',
   'retromind.gaming.fromZeitreise',
-  'retromind.initials.keptLocal',
   'retromind.page',
   'retromind-gaming.page',
 ]);
@@ -252,6 +251,9 @@ function newerHere(remote: Record<string, Entry>): Record<string, Entry> | null 
 
 // --- the cloud ---------------------------------------------------------------
 
+/** The initials' own file from before this module (PR #231); taken over once, then deleted. */
+const LEGACY_INITIALS = 'retromind-initials.json';
+
 /** Before this file existed each app kept its own backup; those count as old cloud values. */
 async function legacyKeys(token: string): Promise<Record<string, Entry>> {
   const keys: Record<string, Entry> = {};
@@ -260,6 +262,12 @@ async function legacyKeys(token: string): Promise<Record<string, Entry>> {
     if (session) keys['retromind.session.v2'] = { v: JSON.stringify(session), t: 1 };
   } catch {
     /* no old journey backup */
+  }
+  try {
+    const tag = await loadDriveJson<{ version: number; initials: string }>(token, LEGACY_INITIALS);
+    if (tag?.version === 1 && tag.initials) keys['retromind.initials'] = { v: String(tag.initials), t: 1 };
+  } catch {
+    /* no old initials file */
   }
   try {
     const gaming = await loadDriveJson<{ version: number; state: unknown }>(token, 'retromind-gaming.json');
@@ -306,6 +314,7 @@ function syncCloud(): Promise<string[]> {
       const applied = takeNewer(remote);
       const upload = newerHere(remote) ?? (file ? null : remote);
       if (upload) await saveDriveJson(token, FILE, { version: 1, updatedAt: Date.now(), keys: upload } satisfies CloudFile);
+      if (!file) await deleteDriveFile(token, LEGACY_INITIALS).catch(() => {});
       setStatus('saved');
       return applied;
     } catch {
@@ -410,6 +419,8 @@ export async function bootSync(which: SyncApp): Promise<void> {
   try {
     readMeta();
     install();
+    // The initials' old "keep mine" answer (PR #231); the shared question replaces it.
+    put('retromind.initials.keptLocal', null);
   } catch {
     return;
   }

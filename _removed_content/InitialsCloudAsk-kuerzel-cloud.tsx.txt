@@ -1,0 +1,242 @@
+// Removed 2026-10-17 (PR #232): replaced by the shared sync (lib/sync.ts).
+
+// --- components/InitialsPicker.tsx: InitialsCloudAsk ---
+
+/**
+ * The question after a Google sign-in when the account holds a different
+ * tag than this device: the cloud tag wins, but only with a yes.
+ */
+export const InitialsCloudAsk: React.FC<{
+  conflict: InitialsConflict;
+  onTakeCloud: () => void;
+  onKeepLocal: () => void;
+}> = ({ conflict, onTakeCloud, onKeepLocal }) => (
+  <div className="initials-ask-backdrop">
+    <div className="initials-ask" role="alertdialog" aria-modal="true" aria-labelledby="initials-ask-title">
+      <p id="initials-ask-title" className="initials-ask-title">
+        {tr('YOUR INITIALS', 'DEIN KÜRZEL')}
+      </p>
+      <p>
+        {tr(
+          `Your Google account has the initials ${conflict.cloud}, this device has ${conflict.local}. Use ${conflict.cloud} here too?`,
+          `In deinem Google-Konto steht das Kürzel ${conflict.cloud}, auf diesem Gerät ${conflict.local}. Soll hier auch ${conflict.cloud} gelten?`
+        )}
+      </p>
+      <div className="initials-ask-tags" aria-hidden="true">
+        <span>
+          <small>GOOGLE</small>
+          {conflict.cloud}
+        </span>
+        <span>
+          <small>{tr('THIS DEVICE', 'DIESES GERÄT')}</small>
+          {conflict.local}
+        </span>
+      </div>
+      <div className="initials-ask-buttons">
+        <button type="button" className="initials-ask-yes" onClick={onTakeCloud} autoFocus data-nav>
+          {tr(`Yes, use ${conflict.cloud}`, `Ja, ${conflict.cloud} nehmen`)}
+        </button>
+        <button type="button" onClick={onKeepLocal} data-nav>
+          {tr(`No, keep ${conflict.local}`, `Nein, ${conflict.local} behalten`)}
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// --- components/initialsPicker.css ---
+
+/* The cloud-or-device question after a Google sign-in. */
+.initials-ask-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+}
+.initials-ask {
+  max-width: 380px;
+  width: 100%;
+  padding: 20px;
+  color: #fff;
+  background: #111;
+  border: 3px solid #ffb000;
+  border-radius: 6px;
+  box-shadow: 0 0 18px rgba(255, 176, 0, 0.4);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.initials-ask p {
+  margin: 0 0 12px;
+}
+.initials-ask-title {
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 13px;
+  color: #ffb000;
+}
+.initials-ask-tags {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 14px;
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 18px;
+  color: #ffb000;
+}
+.initials-ask-tags span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.initials-ask-tags small {
+  font-size: 8px;
+  color: #bbb;
+}
+.initials-ask-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.initials-ask-buttons button {
+  flex: 1 1 140px;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: bold;
+  color: #fff;
+  background: transparent;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.initials-ask-buttons .initials-ask-yes {
+  color: #000;
+  background: #ffb000;
+}
+
+// --- hooks/useInitialsCloud.ts ---
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { loadDriveJson, saveDriveJson } from '../services/googleDriveService';
+import { cleanInitials, getInitials, INITIALS_LENGTH, onInitialsChange, setInitials } from '../lib/initials';
+import { GoogleAuthStatus } from './useGoogleAuth';
+
+// Keeps the three-letter tag (lib/initials.ts) in the person's own Google
+// Drive while they are signed in. Both editions use the same Google client,
+// so they read and write the same private file. What is in the cloud wins,
+// but it only replaces a different tag on this device after the person says
+// yes (Marco, 2026-10-17); a "no" keeps the local tag and isn't asked again
+// for that same cloud tag. A tag the person picks while signed in goes to
+// the cloud right away.
+
+const FILE_NAME = 'retromind-initials.json';
+// The cloud tag someone chose not to take over on this device.
+const KEPT_LOCAL_KEY = 'retromind.initials.keptLocal';
+
+interface CloudFile {
+  version: 1;
+  initials: string;
+  updatedAt: string;
+}
+
+export interface InitialsConflict {
+  cloud: string;
+  local: string;
+}
+
+function keptLocalFor(): string {
+  try {
+    return localStorage.getItem(KEPT_LOCAL_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function useInitialsCloud(auth: { status: GoogleAuthStatus; getFreshAccessToken: () => Promise<string | null> }) {
+  const [conflict, setConflict] = useState<InitialsConflict | null>(null);
+  // The tag the cloud holds, once read; null until then (nothing is written
+  // before reading, so a new device can't overwrite the cloud tag).
+  const cloudTag = useRef<string | null>(null);
+  const authRef = useRef(auth);
+  authRef.current = auth;
+
+  const push = useCallback(async (tag: string) => {
+    const token = await authRef.current.getFreshAccessToken();
+    if (!token) return;
+    try {
+      await saveDriveJson(token, FILE_NAME, { version: 1, initials: tag, updatedAt: new Date().toISOString() } satisfies CloudFile);
+      cloudTag.current = tag;
+    } catch {
+      /* stays on this device; the next change tries again */
+    }
+  }, []);
+
+  // Read the cloud tag once per sign-in.
+  useEffect(() => {
+    if (auth.status !== 'signed_in') {
+      cloudTag.current = null;
+      setConflict(null);
+      return;
+    }
+    let alive = true;
+    (async () => {
+      const token = await authRef.current.getFreshAccessToken();
+      if (!token || !alive) return;
+      let remote = '';
+      try {
+        const file = await loadDriveJson<CloudFile>(token, FILE_NAME);
+        remote = file?.version === 1 ? cleanInitials(file.initials) : '';
+      } catch {
+        return;
+      }
+      if (!alive) return;
+      const local = getInitials();
+      if (remote.length !== INITIALS_LENGTH) {
+        cloudTag.current = '';
+        if (local) push(local);
+        return;
+      }
+      cloudTag.current = remote;
+      // Nothing set here yet, so there is nothing to overwrite.
+      if (!local) return setInitials(remote, false);
+      if (local !== remote && keptLocalFor() !== remote) setConflict({ cloud: remote, local });
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [auth.status, push]);
+
+  // A tag picked by the person while signed in goes up to the cloud.
+  useEffect(
+    () =>
+      onInitialsChange((fromUser) => {
+        if (!fromUser || cloudTag.current === null) return;
+        // Picking a tag answers the open question too.
+        setConflict(null);
+        const tag = getInitials();
+        if (tag !== cloudTag.current) push(tag);
+      }),
+    [push]
+  );
+
+  const takeCloud = useCallback(() => {
+    if (conflict) setInitials(conflict.cloud, false);
+    setConflict(null);
+  }, [conflict]);
+
+  const keepLocal = useCallback(() => {
+    if (conflict) {
+      try {
+        localStorage.setItem(KEPT_LOCAL_KEY, conflict.cloud);
+      } catch {
+        /* asked again next time */
+      }
+    }
+    setConflict(null);
+  }, [conflict]);
+
+  return { conflict, takeCloud, keepLocal };
+}

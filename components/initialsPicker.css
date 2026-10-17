@@ -1,0 +1,70 @@
+/* Three-slot initials entry (InitialsPicker.tsx), the same arcade look in
+   both editions: glowing letters on a black display. */
+.initials-picker {
+  display: inline-flex;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #000;
+  border: 3px solid #ffb000;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255, 176, 0, 0.35);
+}
+.initials-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.initials-step {
+  width: 44px;
+  height: 28px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: #ffb000;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.initials-step:hover,
+.initials-step:active {
+  color: #fff;
+}
+.initials-char {
+  width: 44px;
+  height: 52px;
+  padding: 0;
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffb000;
+  text-shadow: 0 0 8px rgba(255, 176, 0, 0.8);
+  border: 0;
+  border-bottom: 3px solid #5a3e00;
+  caret-color: transparent;
+  /* The Retro Warm design rounds and whitens every text field (index.css);
+     these slots are part of the display, not a form field. */
+  background: #000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.initials-char:focus {
+  outline: none;
+  color: #fff;
+  border-bottom-color: #ffb000 !important;
+  animation: initials-blink 0.9s steps(2, start) infinite;
+}
+.initials-char::selection {
+  background: transparent;
+}
+@keyframes initials-blink {
+  50% {
+    border-bottom-color: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .initials-char:focus {
+    animation: none;
+  }
+}

@@ -1,6 +1,9 @@
 // Arcade high score tables with three initials (api/highscores.js), shared
 // by everyone. This device keeps its own table too, which shows when the
-// server has none (offline, or no database configured).
+// server has none (offline, or no database configured). The initials are
+// the player's own tag from the settings (lib/initials.ts).
+
+import { getInitials, setInitials } from '../../lib/initials';
 
 export type BoardGame = 'blocks' | 'pinball' | 'pacman' | 'senso' | 'breakout' | 'snake' | 'invaders' | 'poker' | 'blackjack';
 export interface Entry {
@@ -11,7 +14,6 @@ export interface Entry {
 }
 
 const LOCAL = 'retromind.gaming.hiscores.v1';
-const INITIALS = 'retromind.gaming.initials';
 const SHOW = 10;
 
 function localAll(): Partial<Record<BoardGame, Entry[]>> {
@@ -36,12 +38,9 @@ function addLocal(game: BoardGame, entry: Entry) {
   }
 }
 
+/** The player's tag, or AAA as on a fresh cabinet. */
 export function lastInitials(): string {
-  try {
-    return localStorage.getItem(INITIALS) || 'AAA';
-  } catch {
-    return 'AAA';
-  }
+  return getInitials() || 'AAA';
 }
 
 /** The table for a game: everyone's when the server has one, else this device's. */
@@ -62,11 +61,8 @@ export function qualifies(board: Entry[], score: number): boolean {
 }
 
 export async function submitScore(game: BoardGame, name: string, score: number): Promise<Entry[]> {
-  try {
-    localStorage.setItem(INITIALS, name);
-  } catch {
-    /* fine */
-  }
+  // Initials typed at a table become the player's tag, as on a cabinet.
+  setInitials(name);
   addLocal(game, { name, score });
   let board: Entry[] | null = null;
   try {
