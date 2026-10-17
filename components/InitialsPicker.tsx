@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { INITIALS_CHARS, INITIALS_LENGTH } from '../lib/initials';
-import { InitialsConflict } from '../hooks/useInitialsCloud';
 import { tr } from '../lib/i18n';
 import './initialsPicker.css';
 
@@ -92,45 +91,3 @@ export const InitialsPicker: React.FC<{
     </div>
   );
 };
-
-/**
- * The question after a Google sign-in when the account holds a different
- * tag than this device: the cloud tag wins, but only with a yes.
- */
-export const InitialsCloudAsk: React.FC<{
-  conflict: InitialsConflict;
-  onTakeCloud: () => void;
-  onKeepLocal: () => void;
-}> = ({ conflict, onTakeCloud, onKeepLocal }) => (
-  <div className="initials-ask-backdrop">
-    <div className="initials-ask" role="alertdialog" aria-modal="true" aria-labelledby="initials-ask-title">
-      <p id="initials-ask-title" className="initials-ask-title">
-        {tr('YOUR INITIALS', 'DEIN KÜRZEL')}
-      </p>
-      <p>
-        {tr(
-          `Your Google account has the initials ${conflict.cloud}, this device has ${conflict.local}. Use ${conflict.cloud} here too?`,
-          `In deinem Google-Konto steht das Kürzel ${conflict.cloud}, auf diesem Gerät ${conflict.local}. Soll hier auch ${conflict.cloud} gelten?`
-        )}
-      </p>
-      <div className="initials-ask-tags" aria-hidden="true">
-        <span>
-          <small>GOOGLE</small>
-          {conflict.cloud}
-        </span>
-        <span>
-          <small>{tr('THIS DEVICE', 'DIESES GERÄT')}</small>
-          {conflict.local}
-        </span>
-      </div>
-      <div className="initials-ask-buttons">
-        <button type="button" className="initials-ask-yes" onClick={onTakeCloud} autoFocus data-nav>
-          {tr(`Yes, use ${conflict.cloud}`, `Ja, ${conflict.cloud} nehmen`)}
-        </button>
-        <button type="button" onClick={onKeepLocal} data-nav>
-          {tr(`No, keep ${conflict.local}`, `Nein, ${conflict.local} behalten`)}
-        </button>
-      </div>
-    </div>
-  </div>
-);

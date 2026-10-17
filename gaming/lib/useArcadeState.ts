@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Game } from '../data/games';
 import { hasMuteChoice, setMuted } from '../../lib/mute';
 import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
-import { ActiveQuest, activeQuests, freshLog, mergeLogs, PRIZES, QuestEvent, QuestLog, record } from './quests';
+import { ActiveQuest, activeQuests, freshLog, PRIZES, QuestEvent, QuestLog, record } from './quests';
 import { Egg, EGGS } from './eggs';
 import { tr } from '../../lib/i18n';
 
@@ -90,40 +90,6 @@ function load(): ArcadeState {
   } catch {
     return DEFAULTS;
   }
-}
-
-const union = (a: string[] = [], b: string[] = []) => Array.from(new Set([...a, ...b]));
-
-/**
- * Combines this device's profile with one from the cloud on sign-in: nothing
- * collected on either side is lost, and the account's look and sound
- * settings come along to the new device.
- */
-export function mergeStates(local: ArcadeState, remote: Partial<ArcadeState>): ArcadeState {
-  return {
-    ...local,
-    favorites: union(local.favorites, remote.favorites),
-    completed: union(local.completed, remote.completed),
-    discovered: union(local.discovered, remote.discovered),
-    achievements: union(local.achievements, remote.achievements),
-    customGames: { ...(remote.customGames ?? {}), ...local.customGames },
-    hiScore: Math.max(local.hiScore, remote.hiScore ?? 0),
-    // An old cloud backup must not switch the new default design back.
-    palette: (remote.designRev ?? 0) >= DESIGN_REV ? remote.palette ?? local.palette : local.palette,
-    designRev: Math.max(local.designRev, remote.designRev ?? 0),
-    music: remote.music ?? local.music,
-    musicSource: isMusicSource(remote.musicSource) ? remote.musicSource : local.musicSource,
-    track: isTrackId(remote.track) ? remote.track : local.track,
-    sfx: remote.sfx ?? local.sfx,
-    // Tokens can't be told apart per device, so the larger balance wins.
-    tokens: Math.max(local.tokens, remote.tokens ?? 0),
-    owned: union(local.owned, remote.owned),
-    quests: mergeLogs(local.quests, remote.quests),
-    eggs: union(local.eggs, remote.eggs),
-    partyLogo: remote.partyLogo ?? local.partyLogo,
-    hadBack: union(local.hadBack, remote.hadBack),
-    hadSystems: union(local.hadSystems, remote.hadSystems),
-  };
 }
 
 export interface Achievement {
@@ -259,9 +225,5 @@ export function useArcadeState(
     setState((s) => ({ ...s, [key]: value }));
   }, []);
 
-  const mergeIn = useCallback((remote: Partial<ArcadeState>) => {
-    setState((s) => mergeStates(s, remote));
-  }, []);
-
-  return { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg, earn };
+  return { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn };
 }

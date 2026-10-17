@@ -27,8 +27,6 @@ import { EmuLaunch } from './lib/emulator';
 import { countOpened } from '../lib/usage';
 import { readPage, writePage } from '../lib/pageMemory';
 import { useCloudSync } from './lib/useCloudSync';
-import { useInitialsCloud } from '../hooks/useInitialsCloud';
-import { InitialsCloudAsk } from '../components/InitialsPicker';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
@@ -154,10 +152,8 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg);
-  const cloud = useCloudSync(state, mergeIn);
-  // The player's own tag (settings, high score tables) in the Google account too.
-  const initialsCloud = useInitialsCloud(cloud);
+  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg);
+  const cloud = useCloudSync();
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
   const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
@@ -1104,7 +1100,13 @@ export const GamingApp: React.FC = () => {
               'Content live from Wikipedia (CC BY-SA). Game titles and images belong to their respective owners. RetroMind only links to legal ways of playing old games today.',
               'Inhalte live aus Wikipedia (CC BY-SA). Spieletitel und Bilder gehören ihren Rechteinhabern. RetroMind verlinkt nur auf legale Wege, alte Games heute zu zocken.'
             )}{' '}
-            <a href={withGoogleParam(withMuteParam('https://retromind.vercel.app/'))}>{tr('Back to RetroMind', 'Zurück zu RetroMind')}</a>
+            <a
+              href={withGoogleParam(withMuteParam('https://retromind.vercel.app/'))}
+              // At click time, so the data handed over (lib/sync.ts) is the latest.
+              onClick={(e) => (e.currentTarget.href = withGoogleParam(withMuteParam('https://retromind.vercel.app/')))}
+            >
+              {tr('Back to RetroMind', 'Zurück zu RetroMind')}
+            </a>
             {' · '}
             <a href={PRIVACY_URL}>{tr('Privacy', 'Datenschutz')}</a>
             {' · '}
@@ -1151,9 +1153,6 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
-      {initialsCloud.conflict && (
-        <InitialsCloudAsk conflict={initialsCloud.conflict} onTakeCloud={initialsCloud.takeCloud} onKeepLocal={initialsCloud.keepLocal} />
-      )}
       {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={setFromSettings} onClose={() => setSettingsOpen(false)} />}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 

@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise und Gaming sind jetzt eine App** (2026-10-17, PR #232): Alles,
+  was RetroMind sich merkt, ist in beiden Apps gleich: Sprache, Lautstärke,
+  Reise, Profil, Savegame, Coins, Highscore-Kürzel und Einstellungen. Wechselst
+  du über einen Link von der Zeitreise in die Spielhalle oder zurück, nimmt der
+  Link deinen Stand mit, auch ohne Anmeldung. Mit Google-Anmeldung bleiben
+  außerdem alle deine Geräte synchron: Jede Änderung landet nach ein, zwei
+  Sekunden in deinem Google Drive, und jede App holt sich beim Öffnen und beim
+  Zurückkehren den neuesten Stand. Liegt in der Cloud schon ein anderer Stand
+  als auf dem Gerät, fragt RetroMind einmal, welcher gelten soll (empfohlen:
+  der aus der Cloud). Anmeldungen und Datenschutz-Entscheidungen bleiben auf
+  dem jeweiligen Gerät; die Datenschutzerklärung beschreibt das.
 - **Dein eigenes Kürzel wie am Flipper** (2026-10-17, PR #231): In den
   Einstellungen beider Apps gibst du jetzt dein eigenes Kürzel aus drei
   Zeichen ein, wie früher auf den Highscore-Tafeln am Flipper, zum Beispiel

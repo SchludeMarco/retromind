@@ -59,7 +59,10 @@
     editions the settings (⚙️) have two buttons under “Your data” / “My data”: one downloads everything RetroMind
     stored in your browser as a file (access and data portability), the other deletes all of it from this device.
     In Time Travel you can also delete your journey via “Start over” (when signed in with Google, the backup in your
-    Drive too), or clear the site data in your browser.
+    Drive too), or clear the site data in your browser. Time Travel and the Gaming edition behave like one app: when
+    you follow a link from one to the other, the link takes this data along in the part of the address after “#”
+    (that part never reaches a server), so both are up to date. Spotify sign-ins and your privacy choices stay on
+    their own address.
     The Gaming edition’s retro console (an emulator we serve ourselves) also keeps its settings, saves, the emulator
     files and recently played game files only in your browser (localStorage and IndexedDB). A game file you pick on
     your device is not sent to our server or to anyone else. The delete button under “My data” removes this data too.
@@ -89,7 +92,9 @@
     your date of birth and gender from Google. Time Travel only uses this information so it doesn’t have to ask you
     for it separately; it stays on your device (and in your own Drive backup) and can be changed in the settings at
     any time. The backup is kept in a private app folder in your Google Drive that only RetroMind can see; none of it
-    is stored on our server. A sign-in token stays in your browser for no more than one hour. The legal basis is
+    is stored on our server. While you are signed in, RetroMind uses it to sync everything it stores in your browser
+    (except sign-in tokens and privacy choices), so Time Travel, the Gaming edition and all your devices share the
+    same data. A sign-in token stays in your browser for no more than one hour. The legal basis is
     your consent (Art. 6(1)(a) GDPR, Section 25(1) TDDDG). You can sign out at any time and revoke access in your
     Google account under “Third-party apps and services”. Provider: Google Ireland Limited (address see above).
   </p>

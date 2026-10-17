@@ -266,11 +266,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   `.json` lässt sich auf einem anderen Gerät wieder laden.
 - **Fortsetzen** – die komplette Sitzung liegt im `localStorage`; ein Reload bietet
   „Weitermachen“ an.
-- **Google-Login (optional)** – „Mit Google anmelden“ sichert die Reise zusätzlich
-  im **eigenen Google Drive** der Nutzer:in (privater `appDataFolder`, nur für
-  RetroMind, für niemand sonst sichtbar). Kein zentraler Server-Speicher: jede
-  Person hat ihre eigenen Erinnerungen in ihrem eigenen Konto (**dezentral**) und
-  kann so auf einem anderen Gerät weitermachen. Mit Google angemeldet entfällt
+- **Google-Login (optional)** – „Mit Google anmelden“ hält die Reise zusätzlich
+  im **eigenen Google Drive** der Nutzer:in synchron (privater `appDataFolder`,
+  nur für RetroMind, für niemand sonst sichtbar; siehe „Eine App, immer
+  synchron“). Kein zentraler Server-Speicher: jede Person hat ihre eigenen
+  Erinnerungen in ihrem eigenen Konto (**dezentral**) und macht auf jedem Gerät
+  dort weiter, wo sie war. Mit Google angemeldet entfällt
   die Start-Abfrage von Name und Geburtsdatum, sobald beides bekannt ist (Name
   aus dem Google-Profil, Geburtstag und Geschlecht über die People API, falls
   freigegeben, sonst aus der Drive-Sicherung);
@@ -411,15 +412,14 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 ### Für alle Module
 
 - **Dein Kürzel** ([`lib/initials.ts`](lib/initials.ts),
-  [`components/InitialsPicker.tsx`](components/InitialsPicker.tsx),
-  [`hooks/useInitialsCloud.ts`](hooks/useInitialsCloud.ts)) – in den
+  [`components/InitialsPicker.tsx`](components/InitialsPicker.tsx)) – in den
   Einstellungen beider Apps gibt man ein eigenes Kürzel aus drei Zeichen
   (A–Z, 0–9) ein, wie auf den Highscore-Tafeln alter Flipper: je Zeichen mit
   ▲/▼ oder getippt. Gaming trägt es an jeder Highscore-Tafel schon ein. Es
-  liegt im Browser und mit Google-Anmeldung zusätzlich im eigenen Google
-  Drive (`retromind-initials.json`), so gilt es auf allen Geräten und in
-  beiden Apps. Das Kürzel im Konto hat Vorrang, ersetzt ein anderes auf dem
-  Gerät aber nur nach einem Ja; ein Nein gilt für dieses Kürzel dauerhaft.
+  gleicht sich wie alle Daten ab (siehe „Eine App, immer synchron“) und gilt
+  so in beiden Apps und mit Google-Anmeldung auf allen Geräten. Die frühere
+  eigene Datei `retromind-initials.json` wird beim ersten Abgleich übernommen
+  und gelöscht.
 - **Neu laden bleibt auf der Seite** ([`lib/pageMemory.ts`](lib/pageMemory.ts))
   – beide Apps merken sich pro Browser-Tab die offene Seite (Zeitreise: Etappe
   und ob der Willkommensbildschirm schon vorbei ist; Gaming: Halle oder Eingang,
@@ -457,8 +457,22 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   sitzt knapp über der unteren Leiste und verdeckt keine anderen Knöpfe.
 - **Eine Google-Anmeldung** ([`lib/googleLogin.ts`](lib/googleLogin.ts)) –
   freiwillig, gilt für alle Module, öffnet nie ungefragt ein Fenster.
-- **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud-Sicherung im
-  eigenen Google Drive ist ein Angebot, keine Pflicht.
+- **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud im eigenen
+  Google Drive ist ein Angebot, keine Pflicht.
+- **Eine App, immer synchron** ([`lib/sync.ts`](lib/sync.ts),
+  [`lib/handoff.ts`](lib/handoff.ts)) – Zeitreise und Gaming-Edition halten
+  alle `retromind…`-Daten im `localStorage` gleich, obwohl sie auf zwei
+  Adressen laufen. Links zwischen den Apps tragen die Daten im `#`-Teil der
+  Adresse mit (geht nie an einen Server). Mit Google-Anmeldung liegt alles in
+  einer Datei `retromind-sync.json` im privaten Drive-`appDataFolder`, die
+  beide Apps teilen: gelesen vor dem Start der App, geschrieben kurz nach
+  jeder Änderung, neu geprüft jede Minute und beim Zurückkehren in den Tab
+  (dann lädt die Seite neu und bleibt, wo sie war). Jeder Schlüssel trägt die
+  Zeit seiner letzten Änderung, der neuere gewinnt. Trifft ein Gerät zum
+  ersten Mal auf einen anderen Cloud-Stand, fragt es einmal (Cloud empfohlen).
+  Nicht abgeglichen werden Anmelde-Tokens, die Spotify/YouTube-Zustimmung und
+  Zwischenspeicher. Die alten Sicherungen `retromind-session.json` und
+  `retromind-gaming.json` werden beim ersten Abgleich übernommen.
 - **Datenschutz (DSGVO)** ([`lib/privacy.ts`](lib/privacy.ts)) – kein Tracking.
   Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
   Bilder, Vorschaubilder und Klänge von fremden Servern holt
@@ -530,7 +544,7 @@ Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function) 
                           ──fetch──▶  /api/youtube  (Vercel Function)  ──▶  YouTube-Suche (Gaming)
                           ──fetch──▶  /api/highscores, /api/stats, /api/admin ──▶  Upstash Redis (Highscores, anonyme Zählung)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
-                          ──fetch──▶  Google Drive API (appDataFolder)  ──▶  Sitzung im eigenen Drive der Nutzer:in
+                          ──fetch──▶  Google Drive API (appDataFolder)  ──▶  retromind-sync.json im eigenen Drive der Nutzer:in
                           ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
 ```
 
@@ -541,7 +555,7 @@ Functions genutzt.
 Der **Google-Login läuft komplett clientseitig** über Google Identity Services
 (kein eigener Auth-Server, keine Sessions/Cookies auf unserer Seite). Der dabei
 ausgestellte Access-Token wird nur im Speicher gehalten (nie persistiert) und
-ausschließlich genutzt, um die Sitzungsdatei im `appDataFolder` der Nutzer:in zu
+ausschließlich genutzt, um die Sync-Datei im `appDataFolder` der Nutzer:in zu
 lesen/schreiben – ein versteckter, App-eigener Bereich ihres Google Drive, den
 weder andere Apps noch wir einsehen können.
 
@@ -625,12 +639,14 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   ändern. Text/Vision/Chat nutzen GA-Modelle.
 - **Bilder** sind bewusst symbolisch (Lizenzgründe) und als solche
   gekennzeichnet – kein echtes Ära-Material außer dem einen NASA-Foto.
-- **Geräteübergreifender Sync ist optional** – ohne Google-Anmeldung weiterhin
-  nur über `localStorage` + manuellen `.json`-Export/Import. Mit Anmeldung wird
-  beim Login das lokal vorhandene Drive-Backup automatisch geladen, sofern
-  lokal noch keine Reise begonnen wurde; läuft bereits eine Reise, wird sie ab
-  dann zusätzlich gesichert – es gibt (noch) keine Zusammenführung zweier
-  gleichzeitig unterschiedlicher Stände auf zwei Geräten.
+- **Geräteübergreifender Sync braucht Google** – ohne Anmeldung gleichen sich
+  nur Zeitreise und Gaming auf demselben Gerät ab (über die Links), sonst hilft
+  der `.json`-Export/Import. Mit Anmeldung gewinnt pro Schlüssel der neuere
+  Stand; ändert man auf zwei Geräten gleichzeitig dieselbe Sache (z. B. die
+  Reise), gewinnt die spätere Änderung, es wird nichts zusammengeführt. Eine
+  geöffnete Seite zeigt Änderungen von anderswo erst beim Zurückkehren in den
+  Tab. Sehr große Reisen mit vielen Fotos reisen nicht im Link mit, nur über
+  die Cloud.
 - **Google-Zugriffstoken sind kurzlebig** (~1 Stunde) und werden nicht
   gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
   widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
@@ -707,9 +723,6 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 - **Weitere Stitch-Screens umsetzen:** Fragen-Seite mit Tipp, Diktat und
   passendem Song, Einstellungen als eigene Seite mit Lautstärke-Regler und
   Toneffekte-Schalter (Stitch-Entwurf in `docs/stitch/`).
-- **Reise auf zwei Geräten zusammenführen:** Die Zeitreise sichert im Google
-  Drive, führt aber zwei unterschiedliche Stände nicht zusammen (die
-  Gaming-Edition kann das schon).
 - **Eigene Domain** für Zeitreise und Gaming-Edition (kostet Geld, erst nach
   Rücksprache).
 
@@ -717,6 +730,13 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
+
+- **Gleichzeitige Änderungen zusammenführen:** Der Abgleich nimmt pro
+  Schlüssel den neueren Stand. Wer auf zwei Geräten gleichzeitig reist oder
+  sammelt, verliert die ältere Änderung; Erinnerungen und Sammlungen ließen
+  sich stattdessen zusammenlegen (wie es die Gaming-Edition früher tat).
+- **Änderungen sofort zeigen statt beim Zurückkehren:** Eine offene Seite
+  übernimmt Änderungen von anderswo erst beim nächsten Wechsel in den Tab.
 
 - **Weg in die Spielhalle während der Reise:** Bisher führen Stube,
   Gaming-Karte und Wegweiser nur auf der Startseite zu RetroMind – Gaming.

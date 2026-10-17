@@ -44,11 +44,9 @@ import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
-import { useInitialsCloud } from './hooks/useInitialsCloud';
-import { InitialsCloudAsk } from './components/InitialsPicker';
 import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
-import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
+import { useSyncStatus } from './hooks/useSyncStatus';
 import { INTEREST_TO_CATEGORY, PHASES } from './lib/session';
 import { installMicroFx } from './lib/microFx';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
@@ -75,7 +73,7 @@ const App: React.FC = () => {
     manualDecade, setManualDecade,
     fontScale, setFontScale,
     focusDecade,
-    resetJourney, importSession, exportSession, loadRemoteState, hasProgress,
+    resetJourney, importSession, exportSession,
   } = session;
 
   const currentAudioDecade = manualDecade || focusDecade;
@@ -110,14 +108,11 @@ const App: React.FC = () => {
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
-  // Your own three-letter tag (settings) in the Google account too.
-  const initialsCloud = useInitialsCloud(googleAuth);
   const spotifyAuth = useSpotifyAuth();
-  const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-  const remoteLoadAttempted = useRef(false);
-  // True once the Drive copy has been read (or found missing). Saving waits
-  // for it, so a fresh device can't overwrite the backup before reading it.
-  const [remoteChecked, setRemoteChecked] = useState(false);
+  // The journey, profile and settings sync with the Gaming edition and the
+  // Google Drive copy on their own (lib/sync.ts); this only shows how it goes.
+  const syncStatus = useSyncStatus();
+  const driveSyncState = syncStatus === 'off' ? 'idle' : syncStatus === 'loading' ? 'saving' : syncStatus;
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -183,68 +178,6 @@ const App: React.FC = () => {
       window.removeEventListener('resize', checkScrollPosition);
     };
   }, [phase]);
-
-  // On sign-in, check the user's Google Drive for a previously saved journey.
-  // A fresh (empty) local session adopts it; an already-in-progress local
-  // session is left alone and simply starts syncing to Drive going forward.
-  useEffect(() => {
-    if (googleAuth.status !== 'signed_in' || remoteLoadAttempted.current) return;
-    remoteLoadAttempted.current = true;
-    (async () => {
-      const token = await googleAuth.getFreshAccessToken();
-      if (!token) return;
-      try {
-        const remote = await loadSessionFromDrive(token);
-        if (!remote) return;
-        if (!hasProgress) {
-          loadRemoteState(remote);
-          setToast(tr('Loaded your saved journey from Google Drive', 'Gespeicherte Reise aus Google Drive geladen'));
-        } else {
-          // The local journey wins, but profile fields still empty here
-          // (birthday, gender, …) are taken from the backup.
-          const r = remote.user;
-          if (r) {
-            setUser((prev) => ({
-              ...prev,
-              name: prev.name || r.name || '',
-              birthDate: prev.birthDate || r.birthDate || '',
-              gender: prev.gender || r.gender || '',
-              interests: prev.interests.length ? prev.interests : r.interests ?? [],
-              favoriteArtists: prev.favoriteArtists.length ? prev.favoriteArtists : r.favoriteArtists ?? [],
-            }));
-          }
-          setToast(tr('Your journey is now also backed up to Google Drive', 'Deine Reise wird jetzt zusätzlich in Google Drive gesichert'));
-        }
-      } catch {
-        setDriveSyncState('error');
-      } finally {
-        setRemoteChecked(true);
-      }
-    })();
-    // hasProgress / loadRemoteState are stable enough for this one-shot check.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleAuth.status]);
-
-  // Debounced push of the current session to Drive while signed in.
-  useEffect(() => {
-    if (googleAuth.status !== 'signed_in' || !remoteChecked) return;
-    const timer = setTimeout(async () => {
-      const token = await googleAuth.getFreshAccessToken();
-      if (!token) {
-        setDriveSyncState('error');
-        return;
-      }
-      setDriveSyncState('saving');
-      try {
-        await saveSessionToDrive(token, exportSession());
-        setDriveSyncState('saved');
-      } catch {
-        setDriveSyncState('error');
-      }
-    }, 1500);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleAuth.status, remoteChecked, phase, user, memories, diaryEntry, clickedBuzzwords, manualDecade, fontScale]);
 
   useEffect(() => {
     writePage(PAGE_KEY, { phase, splashDone: !showSplash } satisfies OpenPage);
@@ -667,9 +600,6 @@ const App: React.FC = () => {
   const handleGoogleSignOut = () => {
     playSFX('click');
     googleAuth.signOut();
-    remoteLoadAttempted.current = false;
-    setRemoteChecked(false);
-    setDriveSyncState('idle');
   };
 
   // --- Spotify account ---
@@ -893,9 +823,6 @@ const App: React.FC = () => {
         />
       )}
 
-      {initialsCloud.conflict && (
-        <InitialsCloudAsk conflict={initialsCloud.conflict} onTakeCloud={initialsCloud.takeCloud} onKeepLocal={initialsCloud.keepLocal} />
-      )}
 
       {isWhatsNewOpen && (
         <WhatsNewModal

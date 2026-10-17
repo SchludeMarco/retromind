@@ -2,10 +2,9 @@ import { useSyncExternalStore } from 'react';
 
 // Your own three-character tag, like the initials on an old pinball or
 // arcade high score table (Marco, 2026-10-17: "LIQ" or "MAR"). Both editions
-// share it: it lives in this browser under one key, and with Google signed
-// in also in the person's own Drive (hooks/useInitialsCloud.ts), which is
-// how it travels between devices and between the two apps (different
-// origins, so they don't share localStorage).
+// share it: it lives in this browser under one key, which lib/sync.ts keeps
+// the same in both apps (different origins) and, with Google signed in, on
+// every device.
 
 const KEY = 'retromind.initials';
 // Where the Gaming edition kept the last initials typed at a high score

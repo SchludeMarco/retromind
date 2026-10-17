@@ -8,9 +8,9 @@ export type DriveSyncState = 'idle' | 'saving' | 'saved' | 'error';
 
 const SYNC_LABEL: Record<DriveSyncState, string> = {
   idle: '',
-  saving: tr('☁️ saving …', '☁️ speichert …'),
-  saved: tr('☁️ backed up to Google Drive', '☁️ in Google Drive gesichert'),
-  error: tr('⚠️ Backup failed', '⚠️ Sicherung fehlgeschlagen'),
+  saving: tr('☁️ syncing …', '☁️ gleicht ab …'),
+  saved: tr('☁️ in sync via Google Drive', '☁️ über Google Drive synchron'),
+  error: tr('⚠️ Sync failed', '⚠️ Abgleich fehlgeschlagen'),
 };
 
 export const GoogleAuthControl: React.FC<{

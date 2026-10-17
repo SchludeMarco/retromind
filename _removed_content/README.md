@@ -138,3 +138,8 @@ gebaut oder ausgeliefert.
   drei Buchstaben an den Highscore-Tafeln der Gaming-Minispiele, samt CSS
   (ersetzt am 2026-10-17 durch die Kürzel-Eingabe im Automaten-Stil mit
   ▲/▼ je Zeichen, `components/InitialsPicker.tsx`).
+- `InitialsCloudAsk-kuerzel-cloud.tsx.txt`: die eigene Cloud-Abfrage fürs
+  Kürzel („Soll hier auch MAR gelten?“) samt `hooks/useInitialsCloud.ts`
+  und CSS (entfernt am 2026-10-17, PR #232: das Kürzel gleicht sich jetzt
+  wie alle Daten über `lib/sync.ts` ab, mit der einen gemeinsamen Frage
+  beim ersten Abgleich).
