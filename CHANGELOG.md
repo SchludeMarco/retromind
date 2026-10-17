@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Zeitreise und Gaming sind jetzt eine App** (2026-10-17, PR #PRNUM): Alles,
+- **Zeitreise und Gaming sind jetzt eine App** (2026-10-17, PR #232): Alles,
   was RetroMind sich merkt, ist in beiden Apps gleich: Sprache, Lautstärke,
   Reise, Profil, Savegame, Coins, Highscore-Kürzel und Einstellungen. Wechselst
   du über einen Link von der Zeitreise in die Spielhalle oder zurück, nimmt der
