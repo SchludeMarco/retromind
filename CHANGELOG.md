@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Spotify-Anmeldung gilt in beiden Apps** (2026-10-17, PR #PRNUM): Bist du
+- **Spotify-Anmeldung gilt in beiden Apps** (2026-10-17, PR #233): Bist du
   in der Zeitreise oder in der Gaming-Edition mit Spotify angemeldet, bist du
   es jetzt auch in der anderen App, und meldest du dich ab, gilt auch das für
   beide. Mit Google-Anmeldung gilt die Spotify-Anmeldung außerdem auf all
