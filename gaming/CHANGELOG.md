@@ -8,6 +8,18 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Dein eigenes Kürzel wie am Flipper** (2026-10-17, PR #231): In den
+  Einstellungen beider Apps gibst du jetzt dein eigenes Kürzel aus drei
+  Zeichen ein, wie früher auf den Highscore-Tafeln am Flipper, zum Beispiel
+  LIQ oder MAR. Jedes Zeichen stellst du mit ▲ und ▼ ein oder tippst es
+  einfach. In der Gaming-Edition steht es schon fertig an jeder
+  Highscore-Tafel, die jetzt dieselbe Automaten-Eingabe hat. Das Kürzel
+  bleibt auf deinem Gerät; mit Google-Anmeldung liegt es auch in deinem
+  Google-Konto und gilt so auf allen Geräten und in beiden Apps. Steht im
+  Konto ein anderes Kürzel als auf dem Gerät, fragt RetroMind, ob das aus
+  dem Konto übernommen werden soll; sagst du nein, bleibt dein Kürzel und
+  die Frage kommt für dieses Kürzel nicht wieder.
+
 - **Zwei neue Spiele für die Retro-Konsole** (2026-10-17, PR #230): In der
   Chill-Ecke der Gaming-Edition stehen jetzt vier freie Spiele. Neu sind
   „µCity“ für den Game Boy Color, in dem du wie in SimCity deine eigene

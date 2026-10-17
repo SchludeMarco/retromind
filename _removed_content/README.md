@@ -134,3 +134,7 @@ gebaut oder ausgeliefert.
   Gaming-Halle lief (entfernt am 2026-10-15 nach dem Rechtscheck, denn Pac-Man
   und die Geister gehören Bandai Namco). Ersetzt durch einen eigenen
   Mampf-Roboter mit Käfer in `gaming/components/MuncherWander.tsx`.
+- `HighscoreBoard-textfeld-kuerzel.tsx.txt`: das einfache Textfeld für die
+  drei Buchstaben an den Highscore-Tafeln der Gaming-Minispiele, samt CSS
+  (ersetzt am 2026-10-17 durch die Kürzel-Eingabe im Automaten-Stil mit
+  ▲/▼ je Zeichen, `components/InitialsPicker.tsx`).

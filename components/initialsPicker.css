@@ -1,0 +1,141 @@
+/* Three-slot initials entry (InitialsPicker.tsx), the same arcade look in
+   both editions: glowing letters on a black display. */
+.initials-picker {
+  display: inline-flex;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #000;
+  border: 3px solid #ffb000;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255, 176, 0, 0.35);
+}
+.initials-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.initials-step {
+  width: 44px;
+  height: 28px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: #ffb000;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.initials-step:hover,
+.initials-step:active {
+  color: #fff;
+}
+.initials-char {
+  width: 44px;
+  height: 52px;
+  padding: 0;
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffb000;
+  text-shadow: 0 0 8px rgba(255, 176, 0, 0.8);
+  border: 0;
+  border-bottom: 3px solid #5a3e00;
+  caret-color: transparent;
+  /* The Retro Warm design rounds and whitens every text field (index.css);
+     these slots are part of the display, not a form field. */
+  background: #000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.initials-char:focus {
+  outline: none;
+  color: #fff;
+  border-bottom-color: #ffb000 !important;
+  animation: initials-blink 0.9s steps(2, start) infinite;
+}
+.initials-char::selection {
+  background: transparent;
+}
+@keyframes initials-blink {
+  50% {
+    border-bottom-color: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .initials-char:focus {
+    animation: none;
+  }
+}
+
+/* The cloud-or-device question after a Google sign-in. */
+.initials-ask-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+}
+.initials-ask {
+  max-width: 380px;
+  width: 100%;
+  padding: 20px;
+  color: #fff;
+  background: #111;
+  border: 3px solid #ffb000;
+  border-radius: 6px;
+  box-shadow: 0 0 18px rgba(255, 176, 0, 0.4);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.initials-ask p {
+  margin: 0 0 12px;
+}
+.initials-ask-title {
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 13px;
+  color: #ffb000;
+}
+.initials-ask-tags {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 14px;
+  font-family: 'Press Start 2P', 'Courier New', ui-monospace, monospace;
+  font-size: 18px;
+  color: #ffb000;
+}
+.initials-ask-tags span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.initials-ask-tags small {
+  font-size: 8px;
+  color: #bbb;
+}
+.initials-ask-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.initials-ask-buttons button {
+  flex: 1 1 140px;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: bold;
+  color: #fff;
+  background: transparent;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.initials-ask-buttons .initials-ask-yes {
+  color: #000;
+  background: #ffb000;
+}

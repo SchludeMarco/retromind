@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { InitialsPicker } from './InitialsPicker';
+import { setInitials, useInitials } from '../lib/initials';
 import { Modal } from './Modal';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
@@ -78,6 +80,12 @@ export const SettingsModal: React.FC<{
   const xmasSounds = useXmasSounds();
   const theme = useTheme();
   const onHeadingTap = useSecretAdminTaps();
+  const initials = useInitials();
+  const [tag, setTag] = useState(initials || 'AAA');
+  // The tag can also arrive from the Google account while this is open.
+  useEffect(() => {
+    if (initials) setTag(initials);
+  }, [initials]);
 
   return (
     <Modal onClose={onDismiss} label={tr('App settings', 'App-Einstellungen')} above={aboveSplash}>
@@ -103,6 +111,28 @@ export const SettingsModal: React.FC<{
             ✏️ {tr('Change name and date of birth', 'Name und Geburtsdatum ändern')}
           </button>
         )}
+        <span className="block text-xs uppercase font-bold text-retro-brown mt-5 mb-2">{tr('Your initials', 'Dein Kürzel')}</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <InitialsPicker value={tag} onChange={setTag} onEnter={() => setInitials(tag)} />
+          <button
+            onClick={() => setInitials(tag)}
+            disabled={tag === initials}
+            className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm disabled:opacity-60"
+          >
+            {tag === initials ? tr('✓ Saved', '✓ Gespeichert') : tr('Save', 'Speichern')}
+          </button>
+        </div>
+        <p className="text-[10px] text-retro-tan mt-2">
+          {googleStatus === 'signed_in'
+            ? tr(
+                'Three characters, like on the old pinball high score tables. They are also kept in your Google account and show up on the high score tables in RetroMind – Gaming.',
+                'Drei Zeichen, wie früher auf den Highscore-Tafeln am Flipper. Sie liegen auch in deinem Google-Konto und stehen bei den Highscores in RetroMind – Gaming.'
+              )
+            : tr(
+                'Three characters, like on the old pinball high score tables. They stay on this device; with Google sign-in they also reach your other devices and the high score tables in RetroMind – Gaming.',
+                'Drei Zeichen, wie früher auf den Highscore-Tafeln am Flipper. Sie bleiben auf diesem Gerät; mit Google-Anmeldung kommen sie auch auf deine anderen Geräte und zu den Highscores in RetroMind – Gaming.'
+              )}
+        </p>
       </div>
 
       {(googleStatus !== 'not_configured' || spotifyStatus !== 'not_configured') && (
