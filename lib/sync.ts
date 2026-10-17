@@ -1,5 +1,5 @@
 import { deleteDriveFile, loadDriveJson, loadSessionFromDrive, saveDriveJson } from '../services/googleDriveService';
-import { loadGoogleSession, onGoogleSessionChange } from './googleLogin';
+import { ensureGoogleSession, googleSessionLikely, onGoogleSessionChange } from './googleLogin';
 import { addHandoffPart, b64urlToBytes, bytesToB64url, takeHandoff } from './handoff';
 
 // One RetroMind: the Zeitreise and the Gaming edition keep their data like a
@@ -26,7 +26,8 @@ import { addHandoffPart, b64urlToBytes, bytesToB64url, takeHandoff } from './han
 // The sign-ins count in both apps too: the Spotify login (its refresh token)
 // syncs like any other key, and the Google login travels with every link
 // between the apps (lib/googleLogin.ts; it can't come from the cloud, since
-// reaching the cloud needs it). Not synced: the Google token itself, the
+// reaching the cloud needs it) and is kept per device by the server
+// (api/_googleKeep.js). Not synced: the Google token itself, the
 // consent for Spotify/YouTube (asked per address), caches and per-tab state.
 
 export type SyncApp = 'zeitreise' | 'gaming';
@@ -290,7 +291,7 @@ let asking = false;
 /** One round with the cloud: read, ask once if needed, take in, write back. */
 function syncCloud(): Promise<string[]> {
   const run = chain.then(async () => {
-    const session = loadGoogleSession();
+    const session = await ensureGoogleSession();
     if (!session) {
       setStatus('off');
       return [];
@@ -334,7 +335,7 @@ function syncCloud(): Promise<string[]> {
 
 let pushTimer: number | undefined;
 function schedulePush() {
-  if (!loadGoogleSession()) return;
+  if (!googleSessionLikely()) return;
   window.clearTimeout(pushTimer);
   pushTimer = window.setTimeout(() => {
     pushTimer = undefined;
@@ -441,7 +442,8 @@ export async function bootSync(which: SyncApp): Promise<void> {
   }
 
   addHandoffPart(DATA_PART, () => handoffValue);
-  onGoogleSessionChange((session) => {
+  onGoogleSessionChange((session, renewed) => {
+    if (renewed) return;
     if (session) void foreground();
     else setStatus('off');
   });
@@ -455,17 +457,23 @@ export async function bootSync(which: SyncApp): Promise<void> {
         pushTimer = undefined;
         void background();
       }
-    } else if (loadGoogleSession() && Date.now() - hiddenSince > 5000) void foreground();
+    } else if (googleSessionLikely() && Date.now() - hiddenSince > 5000) void foreground();
     else if (reloadPending) reloadWithNotice();
   });
   window.setInterval(() => {
-    if (document.visibilityState === 'visible' && loadGoogleSession()) void background();
+    if (document.visibilityState === 'visible' && googleSessionLikely()) void background();
   }, 60_000);
 
   showNotice();
   void buildHandoff();
 
-  if (!loadGoogleSession()) return;
+  // A kept sign-in whose hour is up is renewed first (api/_googleKeep.js);
+  // a slow server just means the cloud follows a moment later.
+  const renewal = ensureGoogleSession();
+  if (!(await Promise.race([renewal, sleep(2500).then(() => null)]))) {
+    void renewal.then((session) => session && foreground());
+    return;
+  }
   const first = syncCloud();
   const inTime = await Promise.race([
     first.then(() => true),

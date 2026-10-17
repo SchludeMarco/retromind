@@ -19,7 +19,8 @@
   <h2>Kurz gesagt</h2>
   <ul>
     <li>RetroMind ist ein privates Angebot nur für eingeladene Gäste. Dafür meldest du dich einmal mit Google an, und
-      RetroMind setzt ein einziges, technisch nötiges Cookie (siehe Abschnitt 14).</li>
+      RetroMind setzt dafür ein technisch nötiges Cookie (siehe Abschnitt 14); bist du in der App mit Google
+      angemeldet, kommt ein zweites dazu, das dich angemeldet hält (siehe Abschnitt 5).</li>
     <li>Kein Tracking, keine fremden Analyse-Tools, keine Werbung. Gezählt wird nur
       anonym, wie oft die Apps geöffnet werden (siehe Abschnitt 10).</li>
     <li>Deine Reise, dein Profil und deine Einstellungen bleiben in deinem Browser auf deinem Gerät.</li>
@@ -97,7 +98,12 @@
     davon gespeichert. Solange du angemeldet bist, gleicht RetroMind darüber alles ab, was es in deinem Browser
     speichert (außer dem Google-Anmelde-Token und den Datenschutz-Entscheidungen; das Spotify-Anmelde-Token liegt
     dafür mit in der Datei), sodass Zeitreise, Gaming-Edition und alle deine
-    Geräte denselben Stand haben. Ein Anmelde-Token bleibt für höchstens eine Stunde in deinem Browser. Rechtsgrundlage ist
+    Geräte denselben Stand haben. Ein Anmelde-Token bleibt für höchstens eine Stunde in deinem Browser. Damit du
+    trotzdem angemeldet bleibst, erhält unser Server bei der Anmeldung von Google einen Erneuerungsschlüssel
+    (Refresh-Token). Er wird nicht in einer Datenbank gespeichert, sondern verschlüsselt im Cookie
+    <code>rm_gkeep</code> auf deinem Gerät, das nur unser Server lesen kann und das nur an die Anmelde-Schnittstelle
+    geht. Damit holt der Server stündlich ein neues Anmelde-Token bei Google, ohne dass ein Fenster aufgeht. Das
+    Cookie gilt bis zu 400 Tage nach der letzten Nutzung und wird beim Abmelden gelöscht. Rechtsgrundlage ist
     deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du kannst dich jederzeit abmelden und den
     Zugriff in deinem Google-Konto unter „Drittanbieter-Apps und -Dienste“ entziehen. Anbieter: Google Ireland
     Limited (Anschrift siehe oben).
@@ -260,8 +266,9 @@
     zufälligen Einmal-Code in der Upstash-Datenbank ab; die andere Adresse löst den Code ein, setzt ihr eigenes
     Cookie <code>rm_guest</code> und der Code ist danach gelöscht. Bist du mit Google angemeldet, nimmt der Link
     außerdem dein Anmelde-Token mit, und zwar im Teil der Adresse hinter dem #, der nie an einen Server geschickt
-    wird; die andere Edition speichert es in deinem Browser und entfernt es sofort aus der Adresse. So musst du dich
-    nur einmal anmelden.
+    wird; die andere Edition speichert es in deinem Browser und entfernt es sofort aus der Adresse. Den verschlüsselten
+    Inhalt des Cookies <code>rm_gkeep</code> (Abschnitt 5) legt der Server dafür ebenso für höchstens zwei Minuten unter
+    demselben Einmal-Code ab. So musst du dich nur einmal anmelden.
   </p>
 
   <h2>15. Deine Rechte</h2>
