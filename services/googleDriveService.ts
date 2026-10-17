@@ -61,11 +61,8 @@ export async function saveDriveJson(accessToken: string, fileName: string, data:
   if (!res.ok) throw new Error('drive_create_failed');
 }
 
+/** The journey's own backup from before lib/sync.ts; read once when the shared file is missing. */
 export async function loadSessionFromDrive(accessToken: string): Promise<SessionState | null> {
   const state = await loadDriveJson<SessionState>(accessToken, FILE_NAME);
   return state && state.version === 2 ? state : null;
-}
-
-export function saveSessionToDrive(accessToken: string, state: SessionState): Promise<void> {
-  return saveDriveJson(accessToken, FILE_NAME, state);
 }

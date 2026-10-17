@@ -1,5 +1,6 @@
 import { GoogleUser } from '../types';
 import type { GoogleToken } from './googleAuth';
+import { addHandoffPart, fromB64url, handoffFragment, takeHandoff, toB64url } from './handoff';
 
 // Whether the visitor chose to sign in with Google, shared by every RetroMind
 // module (the journey, the Gaming edition and whatever comes next). Google is
@@ -9,12 +10,13 @@ import type { GoogleToken } from './googleAuth';
 // Like the mute switch (lib/mute.ts) it is a single localStorage key, and
 // links to a module on another origin carry it along as ?google=1 / ?google=0
 // plus, while signed in, the session itself in the #fragment (fragments never
-// reach a server) and the guest pass of the door (see withGoogleParam).
+// reach a server, see lib/handoff.ts) and the guest pass of the door (see
+// withGoogleParam).
 
 const KEY = 'retromind.google';
 const SESSION_KEY = 'retromind.google.session';
 const PARAM = 'google';
-const HASH = 'rm_google=';
+const HASH = 'rm_google';
 /** Both domains of RetroMind; links between them go through the guest handoff (api/admin.js). */
 const ORIGINS = ['https://retromind.vercel.app', 'https://retromind-gaming.vercel.app'];
 /** The Gaming edition's own opt-in from before this switch existed. */
@@ -44,9 +46,9 @@ function readInitial(): boolean {
       url.searchParams.delete(PARAM);
       window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
     }
-    if (url.hash.startsWith(`#${HASH}`)) {
-      const session = JSON.parse(fromB64url(url.hash.slice(HASH.length + 1))) as GoogleSession;
-      window.history.replaceState(window.history.state, '', url.pathname + url.search);
+    const handed = takeHandoff(HASH);
+    if (handed) {
+      const session = JSON.parse(fromB64url(handed)) as GoogleSession;
       if (session?.token?.accessToken && session.user && session.token.expiresAt - Date.now() > 60_000) {
         stored = true;
         persist(true);
@@ -59,14 +61,6 @@ function readInitial(): boolean {
   return stored;
 }
 
-// Function declarations: readInitial() runs (and calls these) before the module's consts exist.
-function toB64url(s: string): string {
-  return btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-function fromB64url(s: string): string {
-  return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
-}
-
 function persist(on: boolean) {
   try {
     localStorage.setItem(KEY, on ? '1' : '0');
@@ -74,6 +68,11 @@ function persist(on: boolean) {
     /* storage unavailable — still applies for this visit */
   }
 }
+
+addHandoffPart(HASH, () => {
+  const session = loadGoogleSession();
+  return session ? toB64url(JSON.stringify(session)) : null;
+});
 
 /** True once the visitor signed in with Google in any module (until they sign out). */
 export function hasGoogleOptIn(): boolean {
@@ -104,6 +103,12 @@ export function loadGoogleSession(): GoogleSession | null {
   return null;
 }
 
+// Function declaration: readInitial() calls it before the module's consts exist.
+function sessionListeners(): Set<(s: GoogleSession | null) => void> {
+  const w = window as unknown as { __rmGoogleListeners?: Set<(s: GoogleSession | null) => void> };
+  return (w.__rmGoogleListeners ??= new Set());
+}
+
 export function saveGoogleSession(session: GoogleSession | null) {
   try {
     if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -111,6 +116,13 @@ export function saveGoogleSession(session: GoogleSession | null) {
   } catch {
     /* storage unavailable — this visit stays signed in, the next starts out */
   }
+  sessionListeners().forEach((fn) => fn(session));
+}
+
+/** Called whenever someone signs in or out (lib/sync.ts starts or stops the cloud). */
+export function onGoogleSessionChange(fn: (s: GoogleSession | null) => void): () => void {
+  sessionListeners().add(fn);
+  return () => sessionListeners().delete(fn);
 }
 
 export function setGoogleOptIn(on: boolean) {
@@ -132,9 +144,7 @@ export function withGoogleParam(href: string): string {
     if (url.origin === window.location.origin) return href;
     url.searchParams.set(PARAM, optedIn ? '1' : '0');
     if (!ORIGINS.includes(url.origin) || !ORIGINS.includes(window.location.origin)) return url.toString();
-    const session = loadGoogleSession();
-    const hash = session ? `#${HASH}${toB64url(JSON.stringify(session))}` : '';
-    return `/api/admin?view=handoff&to=${encodeURIComponent(url.toString())}${hash}`;
+    return `/api/admin?view=handoff&to=${encodeURIComponent(url.toString())}${handoffFragment()}`;
   } catch {
     return href;
   }

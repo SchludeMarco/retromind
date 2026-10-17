@@ -59,7 +59,10 @@
     Knöpfe: Der eine lädt alles, was RetroMind in deinem Browser gespeichert hat, als Datei herunter (Auskunft und
     Datenübertragbarkeit), der andere löscht alles davon auf diesem Gerät. Außerdem kannst du in der Zeitreise über
     „Neu beginnen“ deine Reise löschen (bei Google-Anmeldung auch die Sicherung in deinem Drive) oder die
-    Websitedaten in deinem Browser löschen.
+    Websitedaten in deinem Browser löschen. Zeitreise und Gaming-Edition verhalten sich wie eine App: Wechselst du
+    über einen Link von der einen in die andere, nimmt der Link diese Daten im Adressteil hinter „#“ mit (dieser Teil
+    geht nie an einen Server), damit beide auf demselben Stand sind. Anmeldungen bei Spotify und deine
+    Datenschutz-Entscheidungen bleiben dabei auf ihrer Adresse.
     Die Retro-Konsole der Gaming-Edition (ein Emulator, den wir selbst ausliefern) legt ihre Einstellungen, Spielstände,
     die Emulator-Bausteine und zuletzt gespielte Spieldateien ebenfalls nur in deinem Browser ab (localStorage und
     IndexedDB). Eine Spieldatei, die du von deinem Gerät wählst, wird nicht an unseren Server oder Dritte übertragen.
@@ -91,7 +94,9 @@
     Zeitreise nur, damit sie dich nicht extra danach fragen muss; sie bleiben auf deinem Gerät (und in deiner eigenen
     Drive-Sicherung) und lassen sich in den Einstellungen jederzeit ändern. Die Sicherung liegt
     in einem privaten App-Ordner in deinem Google Drive, den nur RetroMind sieht; auf unserem Server wird nichts
-    davon gespeichert. Ein Anmelde-Token bleibt für höchstens eine Stunde in deinem Browser. Rechtsgrundlage ist
+    davon gespeichert. Solange du angemeldet bist, gleicht RetroMind darüber alles ab, was es in deinem Browser
+    speichert (außer Anmelde-Tokens und Datenschutz-Entscheidungen), sodass Zeitreise, Gaming-Edition und alle deine
+    Geräte denselben Stand haben. Ein Anmelde-Token bleibt für höchstens eine Stunde in deinem Browser. Rechtsgrundlage ist
     deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du kannst dich jederzeit abmelden und den
     Zugriff in deinem Google-Konto unter „Drittanbieter-Apps und -Dienste“ entziehen. Anbieter: Google Ireland
     Limited (Anschrift siehe oben).

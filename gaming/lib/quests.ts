@@ -111,18 +111,6 @@ export function activeQuests(log: QuestLog): ActiveQuest[] {
   ].map((q) => ({ ...q, progress: Math.min(q.progress, q.goal), claimed: log.claimed.includes(q.key) }));
 }
 
-/** Merges two logs of the same device history (cloud sync). */
-export function mergeLogs(a: QuestLog | undefined, b: QuestLog | undefined): QuestLog {
-  const x = freshLog(a);
-  const y = freshLog(b);
-  const max = (p: QuestLog['daily'], q: QuestLog['daily']) => {
-    const out = { ...p };
-    for (const k of Object.keys(q) as QuestEvent[]) out[k] = Math.max(out[k] ?? 0, q[k] ?? 0);
-    return out;
-  };
-  return { ...x, daily: max(x.daily, y.daily), weekly: max(x.weekly, y.weekly), claimed: Array.from(new Set([...x.claimed, ...y.claimed])) };
-}
-
 // --- Prize counter ---
 
 export interface Prize {

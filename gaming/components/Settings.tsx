@@ -25,9 +25,9 @@ export const PALETTES: { id: Palette; label: string }[] = [
 const SYNC_TEXT: Record<Cloud['sync'], string> = {
   idle: '',
   loading: tr('Loading your save game …', 'Lade dein Savegame …'),
-  saving: 'Saving …',
-  saved: tr('✓ Save game, stash and preferences are safe in your Google Drive.', '✓ Savegame, Stash und Vorlieben liegen safe in deinem Google Drive.'),
-  error: tr('⚠ Backup isn’t working right now. Your profile stays on this device.', '⚠ Backup gerade nicht drin. Dein Profil bleibt auf diesem Gerät.'),
+  saving: tr('Syncing …', 'Gleicht ab …'),
+  saved: tr('✓ Save game, stash and preferences are in sync on all your devices and with the Zeitreise (via your Google Drive).', '✓ Savegame, Stash und Vorlieben sind auf all deinen Geräten und mit der Zeitreise synchron (über dein Google Drive).'),
+  error: tr('⚠ Sync isn’t working right now. Your profile stays on this device.', '⚠ Abgleich gerade nicht drin. Dein Profil bleibt auf diesem Gerät.'),
 };
 
 interface Props {

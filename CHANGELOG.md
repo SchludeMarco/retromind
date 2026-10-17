@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise und Gaming sind jetzt eine App** (2026-10-17, PR #PRNUM): Alles,
+  was RetroMind sich merkt, ist in beiden Apps gleich: Sprache, Lautstärke,
+  Reise, Profil, Savegame, Coins, Highscore-Kürzel und Einstellungen. Wechselst
+  du über einen Link von der Zeitreise in die Spielhalle oder zurück, nimmt der
+  Link deinen Stand mit, auch ohne Anmeldung. Mit Google-Anmeldung bleiben
+  außerdem alle deine Geräte synchron: Jede Änderung landet nach ein, zwei
+  Sekunden in deinem Google Drive, und jede App holt sich beim Öffnen und beim
+  Zurückkehren den neuesten Stand. Liegt in der Cloud schon ein anderer Stand
+  als auf dem Gerät, fragt RetroMind einmal, welcher gelten soll (empfohlen:
+  der aus der Cloud). Anmeldungen und Datenschutz-Entscheidungen bleiben auf
+  dem jeweiligen Gerät; die Datenschutzerklärung beschreibt das.
 - **Zwei neue Spiele für die Retro-Konsole** (2026-10-17, PR #230): In der
   Chill-Ecke der Gaming-Edition stehen jetzt vier freie Spiele. Neu sind
   „µCity“ für den Game Boy Color, in dem du wie in SimCity deine eigene

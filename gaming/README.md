@@ -248,12 +248,13 @@ zeigen dürfen.
 - **Meine Daten** – unter „Datenschutz“ lädt „Meine Daten“ alles, was die
   App im Browser gespeichert hat, als Datei herunter, „Alles löschen“ entfernt
   es von diesem Gerät ([`lib/myData.ts`](../lib/myData.ts)).
-- **Profil und Cloud-Sicherung** – Sammlung, Erfolge, Highscore, Coins und
-  Vorlieben liegen im `localStorage`. Mit Google-Login sichert die App sie
-  zusätzlich als `retromind-gaming.json` im privaten Drive-`appDataFolder` und
-  führt die Stände mehrerer Geräte zusammen
-  ([`lib/useCloudSync.ts`](lib/useCloudSync.ts)). Ohne Anmeldung steht
-  deutlich da, dass die Coins nur auf diesem Gerät liegen.
+- **Profil, immer synchron** – Sammlung, Erfolge, Highscore, Coins und
+  Vorlieben liegen im `localStorage` und gleichen sich wie alles in RetroMind
+  mit der Zeitreise ab ([`lib/sync.ts`](../lib/sync.ts)): über die Links
+  zwischen den Apps auch ohne Anmeldung, mit Google-Login über eine
+  gemeinsame Datei im privaten Drive-`appDataFolder` mit allen Geräten
+  ([`lib/useCloudSync.ts`](lib/useCloudSync.ts) zeigt den Stand). Ohne
+  Anmeldung steht deutlich da, dass die Coins nur auf diesem Gerät liegen.
 - **Feedback** – roter Knopf mit Briefsymbol; läuft über dieselbe
   `/api/feedback` wie die Zeitreise und ist in Mail und `feedback.md` mit
   „(Gaming)“ markiert.
@@ -361,7 +362,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz,
   vor allem für den Mega Drive. Die Sammlung „retrobrews“ scheidet aus: Ihre
   Spiele sind nur für diese Sammlung freigegeben.
-- **Mehr Minispiele in der Chill-Ecke**, Sudoku in mehreren
-  Schwierigkeitsstufen und die Bestwerte mit in die Cloud-Sicherung nehmen.
+- **Mehr Minispiele in der Chill-Ecke** und Sudoku in mehreren
+  Schwierigkeitsstufen.
+- **Spielstände der Retro-Konsole synchronisieren:** Sie liegen in der
+  IndexedDB des Emulators und bleiben bisher auf dem Gerät.
 - **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,
   Teilen beim Blackjack, Solitär mit drei Karten ziehen oder Spider.

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zeitreise und Gaming sind jetzt eine App': {
+    title: 'Time Travel and Gaming are now one app',
+    text: 'Everything RetroMind remembers is the same in both apps: language, volume, journey, profile, save game, coins, high-score initials and settings. When you follow a link from Time Travel into the arcade or back, the link takes your data along, even without signing in. Signed in with Google, all your devices stay in sync too: every change reaches your Google Drive within a second or two, and each app fetches the latest data when it opens and when you come back to it. If the cloud already holds different data than your device, RetroMind asks once which should count (recommended: the cloud). Sign-ins and privacy choices stay on each device; the privacy policy explains this.',
+  },
   'Zwei neue Spiele für die Retro-Konsole': {
     title: 'Two new games for the retro console',
     text: 'The Gaming edition’s chill corner now has four free games. New are “µCity” for the Game Boy Color, where you build your own city like in SimCity, and “Thwaite” for the NES, where you defend villages against incoming missiles like in Missile Command. Both are free software whose makers explicitly allow sharing them.',
