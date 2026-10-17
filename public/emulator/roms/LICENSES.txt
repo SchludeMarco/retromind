@@ -14,3 +14,16 @@ croom.nes — Concentration Room (NES, 2010)
   with the author's exception allowing exact copies in iNES form without source.
   Source: https://github.com/pinobatch/croom-nes
   This product is not sponsored or endorsed by Nintendo.
+
+ucity.gbc — µCity (Game Boy Color, 2017)
+  © Antonio Niño Díaz
+  Code: GNU GPL v3 or later (GBT Player: BSD 2-clause). Graphics and music: CC BY-SA 4.0
+  Built unchanged from source commit 71fb08e7ca53fe4228e66316968d9c6bea3439ba
+  Source: https://github.com/AntonioND/ucity (also https://codeberg.org/SkyLyrac/ucity)
+
+thwaite.nes — Thwaite (NES, 2011)
+  © 2011 Damian Yerrick
+  GNU GPL v3 or later (some helper files under a zlib-style license)
+  Built unchanged from source commit 00e36745188bc165990f60eed6b093c3ce6ad0e3
+  Source: https://github.com/pinobatch/thwaite-nes
+  This product is not sponsored or endorsed by Nintendo.

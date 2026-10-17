@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Zwei neue Spiele für die Retro-Konsole** (2026-10-17, PR #230): In der
+  Chill-Ecke der Gaming-Edition stehen jetzt vier freie Spiele. Neu sind
+  „µCity“ für den Game Boy Color, in dem du wie in SimCity deine eigene
+  Stadt baust, und „Thwaite“ für das NES, in dem du Dörfer gegen anfliegende
+  Raketen verteidigst wie bei Missile Command. Beide sind freie Software,
+  deren Macher das Weitergeben ausdrücklich erlauben.
+
 - **Die Retro-Konsole: alte Spiele direkt im Browser spielen** (2026-10-17,
   PR #229): In der Chill-Ecke der Gaming-Edition steht jetzt ein Emulator,
   der echte alte Konsolen nachbaut. Zwei freie Spiele, deren Macher das
