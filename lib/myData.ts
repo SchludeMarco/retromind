@@ -5,7 +5,9 @@ import { tr } from './i18n';
 // with "retromind", so one button downloads all of it as a file and another
 // deletes all of it. Nothing about the visitor is stored on our server
 // (the statistics only hold numbers, see the privacy policy), so there is
-// nothing else to export or delete there.
+// nothing else to export or delete there. The Gaming edition's emulator
+// (EmulatorJS) keeps its own settings ("ejs…" keys) and its saves, cores and
+// game files in IndexedDB; deleting removes those too.
 
 const PREFIX = 'retromind';
 
@@ -76,9 +78,34 @@ export function deleteMyData(): boolean {
   try {
     for (const k of ownKeys(localStorage)) localStorage.removeItem(k);
     for (const k of ownKeys(sessionStorage)) sessionStorage.removeItem(k);
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k?.startsWith('ejs')) localStorage.removeItem(k);
+    }
   } catch {
     /* storage blocked: nothing stored either */
   }
-  window.location.reload();
+  deleteEmulatorData().finally(() => window.location.reload());
   return true;
+}
+
+/** The emulator's databases: "EmulatorJS-…" and the save folder "/data/saves". */
+async function deleteEmulatorData() {
+  try {
+    const dbs = (await indexedDB.databases?.()) ?? [];
+    await Promise.all(
+      dbs
+        .map((d) => d.name)
+        .filter((n): n is string => !!n && (n.startsWith('EmulatorJS') || n.startsWith('/data')))
+        .map(
+          (n) =>
+            new Promise<void>((done) => {
+              const req = indexedDB.deleteDatabase(n);
+              req.onsuccess = req.onerror = req.onblocked = () => done();
+            })
+        )
+    );
+  } catch {
+    /* no IndexedDB here: nothing stored either */
+  }
 }

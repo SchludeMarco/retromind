@@ -1,0 +1,16 @@
+Freely licensed homebrew games that RetroMind – Gaming offers to play in the browser.
+No commercial game files are hosted here.
+
+tobutobugirl.gb — Tobu Tobu Girl (Game Boy, 2017)
+  Copyright (c) 2017 Tangram Games (Simon Larsen, Lukas Erekson, Kaja Lund)
+  Code: MIT License. Assets (images, text, sound, music): CC BY 4.0
+  https://creativecommons.org/licenses/by/4.0/
+  Source: https://github.com/SimonLarsen/tobutobugirl
+  More: https://tangramgames.dk/tobutobugirl/
+
+croom.nes — Concentration Room (NES, 2010)
+  © 2010 Damian Yerrick
+  Free software under the GNU General Public License, version 3 or later,
+  with the author's exception allowing exact copies in iNES form without source.
+  Source: https://github.com/pinobatch/croom-nes
+  This product is not sponsored or endorsed by Nintendo.

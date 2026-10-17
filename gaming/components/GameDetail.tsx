@@ -11,6 +11,8 @@ import { GameFactsTab } from './GameFacts';
 import { fetchVideos, formatViews, VideoKind, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
+import { EmuLaunch, emuFor } from '../lib/emulator';
+import { OWN_FILE_NOTE, useRomPicker } from './EmulatorCorner';
 
 type Tab = 'info' | 'facts' | 'videos' | 'media' | 'shots' | 'press' | 'guide' | 'web';
 
@@ -113,7 +115,11 @@ export const GameDetail: React.FC<{
   onNext?: () => void;
   /** Where a swiped-in game slides in from. */
   slideFrom?: 'left' | 'right' | null;
-}> = ({ game, isFavorite, isCompleted, isHadBack, onToggleHadBack, onToggleFavorite, onToggleCompleted, onClose, aiAvailable, onVideoChange, onPrev, onNext, slideFrom }) => {
+  /** Starts the emulator with a game file from the player's device. */
+  onPlay?: (launch: EmuLaunch) => void;
+}> = ({ game, isFavorite, isCompleted, isHadBack, onToggleHadBack, onToggleFavorite, onToggleCompleted, onClose, aiAvailable, onVideoChange, onPrev, onNext, slideFrom, onPlay }) => {
+  const emu = onPlay ? emuFor(game.platform) : undefined;
+  const picker = useRomPicker((file, system) => onPlay?.({ title: game.title, core: system.core, file }));
   // Horizontal swipe on the page flips to the next or previous game.
   const touch = useRef<{ x: number; y: number } | null>(null);
   const onTouchStart = (e: React.TouchEvent) => {
@@ -317,7 +323,14 @@ export const GameDetail: React.FC<{
               {isHadBack ? tr('♥ HAD IT', '♥ HATTE ICH') : tr('♡ HAD IT BACK THEN?', '♡ HATTE ICH DAMALS?')}
             </button>
           )}
+          {emu && (
+            <button className="px-btn" onClick={() => picker.pick(emu)} title={OWN_FILE_NOTE} data-nav>
+              {tr('🕹️ PLAY WITH YOUR OWN FILE', '🕹️ MIT EIGENER DATEI SPIELEN')}
+            </button>
+          )}
+          {emu && picker.element}
         </div>
+        {emu && <p className="dim emu-note">{OWN_FILE_NOTE}</p>}
 
         {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} thumb={playing.thumb} />}
         {playing && (

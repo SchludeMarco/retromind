@@ -53,6 +53,9 @@ export function moveFocus(dir: Dir): boolean {
   return false;
 }
 
+/** While the emulator runs, the gamepad belongs to the game, not to the menus. */
+export const controls = { paused: false };
+
 interface Options {
   onMove?: () => void;
   onBack?: () => void;
@@ -99,6 +102,11 @@ export function useControls(opts: Options) {
         return;
       }
       const pressed = pad.buttons.map((b) => b.pressed);
+      if (controls.paused) {
+        prev = pressed;
+        raf = requestAnimationFrame(poll);
+        return;
+      }
       const edge = (i: number) => pressed[i] && !prev[i];
       const now = performance.now();
       // Standard mapping: 12-15 D-pad, 0 = A, 1 = B, 9 = Start.
