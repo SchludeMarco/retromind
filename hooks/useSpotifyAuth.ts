@@ -69,7 +69,9 @@ export function useSpotifyAuth() {
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
     const cached = tokenRef.current;
     if (cached && cached.expiresAt - Date.now() > 60_000) return cached.accessToken;
-    const refreshToken = cached?.refreshToken || loadPersistedSpotifyRefreshToken();
+    // The stored token first: the other app or device may have renewed the
+    // login meanwhile (lib/sync.ts), which can retire the one held here.
+    const refreshToken = loadPersistedSpotifyRefreshToken() || cached?.refreshToken;
     if (!refreshToken) return null;
     try {
       const fresh = await refreshSpotifyAccessToken(refreshToken);

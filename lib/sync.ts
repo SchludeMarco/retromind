@@ -23,8 +23,11 @@ import { addHandoffPart, b64urlToBytes, bytesToB64url, takeHandoff } from './han
 // localStorage right away and shown by reloading the page the next time it
 // comes back to the front (the open page keeps its place, lib/pageMemory.ts).
 //
-// Not synced: the sign-ins themselves (tokens belong to one browser), the
-// consent for Spotify/YouTube (asked per device), caches and per-tab state.
+// The sign-ins count in both apps too: the Spotify login (its refresh token)
+// syncs like any other key, and the Google login travels with every link
+// between the apps (lib/googleLogin.ts; it can't come from the cloud, since
+// reaching the cloud needs it). Not synced: the Google token itself, the
+// consent for Spotify/YouTube (asked per address), caches and per-tab state.
 
 export type SyncApp = 'zeitreise' | 'gaming';
 export type SyncStatus = 'off' | 'loading' | 'saving' | 'saved' | 'error';
@@ -45,7 +48,7 @@ const DEVICE_ONLY = new Set([
   'retromind.page',
   'retromind-gaming.page',
 ]);
-const DEVICE_PREFIXES = ['retromind.sync', 'retromind.spotify.verifier', 'retromind.spotify.state', 'retromind.spotify.refresh_token'];
+const DEVICE_PREFIXES = ['retromind.sync', 'retromind.spotify.verifier', 'retromind.spotify.state'];
 
 /** Whether a localStorage key travels between the apps and devices. */
 export function isSynced(key: string): boolean {
@@ -53,7 +56,10 @@ export function isSynced(key: string): boolean {
 }
 
 /** Keys the Gaming edition reads; anything else changing doesn't need its page reloaded. */
-const GAMING_KEYS = ['retromind.lang', 'retromind.muted', 'retromind.music.volume', 'retromind.initials', 'retromind.spotify.autoTheme'];
+const GAMING_KEYS = ['retromind.lang', 'retromind.muted', 'retromind.music.volume', 'retromind.initials', 'retromind.spotify.autoTheme', 'retromind.spotify.refresh_token'];
+
+/** Read fresh on every use (hooks/useSpotifyAuth.ts): a renewed one needs no reload, only signing in or out does. */
+const QUIET_KEYS = ['retromind.spotify.refresh_token'];
 
 function relevant(app: SyncApp, key: string): boolean {
   return app === 'gaming' ? key.startsWith('retromind.gaming') || GAMING_KEYS.includes(key) : !key.startsWith('retromind.gaming');
@@ -226,7 +232,7 @@ function takeNewer(incoming: Record<string, Entry>): string[] {
     if (e.t > lt || (local === null && lt === 0 && e.v !== null)) {
       put(key, e.v);
       meta.times[key] = e.t;
-      applied.push(key);
+      if (!(QUIET_KEYS.includes(key) && local !== null && e.v !== null)) applied.push(key);
     }
   }
   writeMeta();

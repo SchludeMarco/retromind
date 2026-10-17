@@ -61,8 +61,8 @@
     In Time Travel you can also delete your journey via “Start over” (when signed in with Google, the backup in your
     Drive too), or clear the site data in your browser. Time Travel and the Gaming edition behave like one app: when
     you follow a link from one to the other, the link takes this data along in the part of the address after “#”
-    (that part never reaches a server), so both are up to date. Spotify sign-ins and your privacy choices stay on
-    their own address.
+    (that part never reaches a server), so both are up to date, including your Google and Spotify sign-ins. Your
+    privacy choices stay on their own address.
     The Gaming edition’s retro console (an emulator we serve ourselves) also keeps its settings, saves, the emulator
     files and recently played game files only in your browser (localStorage and IndexedDB). A game file you pick on
     your device is not sent to our server or to anyone else. The delete button under “My data” removes this data too.
@@ -93,7 +93,7 @@
     for it separately; it stays on your device (and in your own Drive backup) and can be changed in the settings at
     any time. The backup is kept in a private app folder in your Google Drive that only RetroMind can see; none of it
     is stored on our server. While you are signed in, RetroMind uses it to sync everything it stores in your browser
-    (except sign-in tokens and privacy choices), so Time Travel, the Gaming edition and all your devices share the
+    (except the Google sign-in token and your privacy choices; the Spotify sign-in token is included), so Time Travel, the Gaming edition and all your devices share the
     same data. A sign-in token stays in your browser for no more than one hour. The legal basis is
     your consent (Art. 6(1)(a) GDPR, Section 25(1) TDDDG). You can sign out at any time and revoke access in your
     Google account under “Third-party apps and services”. Provider: Google Ireland Limited (address see above).
@@ -107,7 +107,7 @@
     metal” (Gaming edition); each address asks separately. Spotify then receives, among other things, your IP
     address and device information and may set cookies, including to recognize you if you’re signed in to Spotify.
     Optionally, you can also sign in with your Spotify account (Spotify then receives profile data and your email;
-    we only store a sign-in token in your browser). Signed in with Spotify Premium, you hear a short clip of the song
+    we only store a sign-in token in your browser, shared by both RetroMind addresses and, when you are signed in with Google, also kept in your own Drive; see sections 3 and 5). Signed in with Spotify Premium, you hear a short clip of the song
     playing inside in front of the gaming hall; our server fetches this clip from Spotify (or, if there is none, from
     Deezer), your browser doesn’t contact these services for it, and nothing but the song is sent. With Premium, the
     Gaming edition also plays the music directly in your browser through Spotify’s Web Playback SDK: for this your
