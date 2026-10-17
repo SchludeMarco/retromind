@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Google-Anmeldung bleibt auf jedem Gerät** (2026-10-17, PR #234): Bisher
+  wollte Google nach einer Stunde wieder einen Tipp auf „Anmelden“. Jetzt
+  bleibst du auf jedem Gerät angemeldet, bis du dich abmeldest, in der
+  Zeitreise wie in der Gaming-Edition. Beim nächsten Anmelden fragt Google
+  einmal nach deiner Zustimmung, danach nicht mehr. Abmelden gilt nur für das
+  Gerät, auf dem du es tust.
 - **Spotify-Anmeldung gilt in beiden Apps** (2026-10-17, PR #233): Bist du
   in der Zeitreise oder in der Gaming-Edition mit Spotify angemeldet, bist du
   es jetzt auch in der anderen App, und meldest du dich ab, gilt auch das für

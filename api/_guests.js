@@ -120,3 +120,14 @@ export async function redeemHandoff(code) {
   if (!/^[0-9a-f]{48}$/.test(String(code || ""))) return null;
   return (await redis(["GETDEL", `rm:handoff:${code}`])) || null;
 }
+
+// The kept Google sign-in of this domain (api/_googleKeep.js) rides along with
+// the same one-time code, so the other domain stays signed in as well.
+export async function parkHandoffGoogle(code, value) {
+  await redis(["SET", `rm:handoff:g:${code}`, value, "EX", HANDOFF_TTL]);
+}
+
+export async function takeHandoffGoogle(code) {
+  if (!/^[0-9a-f]{48}$/.test(String(code || ""))) return null;
+  return (await redis(["GETDEL", `rm:handoff:g:${code}`])) || null;
+}

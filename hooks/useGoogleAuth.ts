@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { GoogleUser } from '../types';
 import {
   getGoogleClientId,
-  requestGoogleAccessToken,
+  signInWithGoogle,
   fetchGoogleProfile,
   fetchGoogleProfileHints,
   GoogleProfileHints,
@@ -10,16 +10,24 @@ import {
   preloadGoogleIdentityServices,
   GoogleToken,
 } from '../lib/googleAuth';
-import { hasGoogleOptIn, setGoogleOptIn, loadGoogleSession, saveGoogleSession } from '../lib/googleLogin';
+import {
+  ensureGoogleSession,
+  hasGoogleOptIn,
+  loadGoogleSession,
+  onGoogleSessionChange,
+  saveGoogleSession,
+  setGoogleOptIn,
+} from '../lib/googleLogin';
 
 export type GoogleAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 'signed_in' | 'error';
 
 // Wraps Google sign-in + Drive-token renewal for the app. Signing in is
 // optional and the choice is shared by all modules (lib/googleLogin.ts).
 // Google's token client always opens a popup, even for a "silent" renewal, so
-// nothing here talks to Google unless the person taps a button: a stored,
-// still-valid token restores the login on open, and once it expires the
-// module just shows the sign-in button again (one tap, no consent screen).
+// the browser never asks Google on its own: a stored, still-valid token
+// restores the login on open, and after its hour the server renews it from
+// the sign-in it keeps for this device (api/_googleKeep.js). Without a kept
+// sign-in the module just shows the sign-in button again.
 export function useGoogleAuth() {
   const [restored] = useState(loadGoogleSession);
   const [status, setStatus] = useState<GoogleAuthStatus>(
@@ -49,13 +57,43 @@ export function useGoogleAuth() {
     }
   }, [restored]);
 
-  // Never renews in the background (that would pop up a Google window): an
-  // expired token means signed out until the next tap, the opt-in remains.
+  // Follows sign-ins renewed or ended elsewhere (lib/googleLogin.ts), and
+  // renews an expired one right away when the server keeps it.
+  useEffect(() => {
+    const off = onGoogleSessionChange((session) => {
+      if (session) {
+        tokenRef.current = session.token;
+        setUser(session.user);
+        setStatus('signed_in');
+      } else if (!hasGoogleOptIn()) {
+        tokenRef.current = null;
+        setUser(null);
+        setStatus(getGoogleClientId() ? 'signed_out' : 'not_configured');
+      }
+    });
+    if (!restored && getGoogleClientId() && hasGoogleOptIn()) {
+      ensureGoogleSession().then((session) => {
+        if (!session) return;
+        fetchGoogleProfileHints(session.token.accessToken).then((h) => {
+          if (tokenRef.current === session.token) setHints(h);
+        });
+      });
+    }
+    return off;
+  }, [restored]);
+
+  // Never opens a Google window on its own: an expired token is renewed by
+  // the server when it keeps the sign-in, else it means signed out until the
+  // next tap (the opt-in remains).
   const getFreshAccessToken = useCallback(async (): Promise<string | null> => {
     const cached = tokenRef.current;
     if (cached && cached.expiresAt - Date.now() > 60_000) return cached.accessToken;
+    const session = await ensureGoogleSession();
+    if (session) {
+      tokenRef.current = session.token;
+      return session.token.accessToken;
+    }
     tokenRef.current = null;
-    saveGoogleSession(null);
     setStatus(getGoogleClientId() ? 'signed_out' : 'not_configured');
     return null;
   }, []);
@@ -69,7 +107,7 @@ export function useGoogleAuth() {
     try {
       // Someone who agreed before (here or in another module) only sees
       // Google's account chooser, not the consent screen again.
-      const token = await requestGoogleAccessToken(hasGoogleOptIn() ? '' : 'consent');
+      const token = await signInWithGoogle(hasGoogleOptIn() ? '' : 'consent');
       tokenRef.current = token;
       const profile = await fetchGoogleProfile(token.accessToken);
       setUser(profile);

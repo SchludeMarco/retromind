@@ -473,9 +473,21 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   Auch die Anmeldungen gelten in beiden Apps: die Spotify-Anmeldung
   (Refresh-Token) gleicht sich wie jeder Schlüssel ab, die Google-Anmeldung
   reist mit jedem Link zwischen den Apps (sie kann nicht aus der Cloud kommen,
-  weil man für die Cloud angemeldet sein muss). Nicht abgeglichen werden der
+  weil man für die Cloud angemeldet sein muss) und bleibt pro Gerät erhalten
+  (siehe „Google bleibt angemeldet“). Nicht abgeglichen werden der
   Google-Token selbst, die Spotify/YouTube-Zustimmung und Zwischenspeicher. Die alten Sicherungen `retromind-session.json` und
   `retromind-gaming.json` werden beim ersten Abgleich übernommen.
+- **Google bleibt angemeldet** ([`api/_googleKeep.js`](api/_googleKeep.js)) –
+  Google gibt dem Browser nur Schlüssel für eine Stunde, und eine Erneuerung im
+  Browser öffnet immer ein Fenster. Deshalb läuft der Anmelde-Tipp über Googles
+  Code-Ablauf: Der Server tauscht den Code gegen einen Refresh-Token, legt ihn
+  verschlüsselt im HttpOnly-Cookie `rm_gkeep` ab (nur `/api/admin` sieht es)
+  und holt daraus ohne Fenster neue Stunden-Schlüssel, beim App-Start vor dem
+  Cloud-Abgleich und immer, wenn einer abläuft. Links zwischen den Apps nehmen
+  das Cookie über den Gäste-Einmal-Code mit. Abmelden löscht es nur auf diesem
+  Gerät (bei Google zu widerrufen würde alle Geräte abmelden). Braucht
+  `GOOGLE_CLIENT_SECRET` in beiden Vercel-Projekten; ohne bleibt es bei der
+  Stunden-Anmeldung.
 - **Datenschutz (DSGVO)** ([`lib/privacy.ts`](lib/privacy.ts)) – kein Tracking.
   Schriften sind eingebaut (`@fontsource`, keine Google Fonts). Wikipedia-Texte,
   Bilder, Vorschaubilder und Klänge von fremden Servern holt
@@ -651,10 +663,12 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   geöffnete Seite zeigt Änderungen von anderswo erst beim Zurückkehren in den
   Tab. Sehr große Reisen mit vielen Fotos reisen nicht im Link mit, nur über
   die Cloud.
-- **Google-Zugriffstoken sind kurzlebig** (~1 Stunde) und werden nicht
-  gespeichert; nach längerer Inaktivität kann eine erneute stille (oder bei
-  widerrufener Zustimmung erneute) Anmeldung nötig sein, bevor wieder
-  gesichert wird.
+- **Google fragt einmal pro Gerät nach Zustimmung:** Damit die Anmeldung
+  bleibt, zeigt Google beim Anmelde-Tipp jedes Mal den Zustimmungs-Bildschirm,
+  das passiert aber nur einmal pro Gerät. Ohne `GOOGLE_CLIENT_SECRET` in Vercel
+  oder solange die App in der Google Cloud Console im Status „Testen“ steht
+  (dann laufen Refresh-Tokens nach 7 Tagen ab), will Google nach einer Stunde
+  bzw. einer Woche wieder einen Tipp.
 - **Spotify-Einblenden nur mit Premium:** Der eingebettete Spotify-Player
   bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
   Premium-Anmeldung am Computer: auf Handy und Tablet (iPhone, iPad, Android)

@@ -13,6 +13,11 @@
 // POST {action:"guestLogout"} → public: removes that cookie
 // GET  ?view=handoff&to=URL  → public: link to the other domain; a signed-in
 //                              guest gets a one-time code along (api/_guests.js)
+// GET  ?view=google          → public: whether Google sign-ins can be kept
+// POST {action:"googleCode", code} → public: sign-in code → token + kept
+//                              sign-in cookie (api/_googleKeep.js)
+// POST {action:"googleRefresh"} → public: fresh token from that cookie
+// POST {action:"googleSignOut"} → public: removes it (this device only)
 // GET  ?view=guests          → the guest list
 // POST {action:"guestAdd"|"guestRemove", email} → change the guest list
 
@@ -42,10 +47,18 @@ import {
   listGuests,
   makeCookie,
   normalizeEmail,
+  parkHandoffGoogle,
   readCookie,
   removeGuest,
   validEmail,
 } from "./_guests.js";
+import {
+  clearKeepCookie,
+  exchangeCode,
+  keepConfigured,
+  readKeepValue,
+  refreshFromCookie,
+} from "./_googleKeep.js";
 
 const REPO = process.env.FEEDBACK_GITHUB_REPO || "SchludeMarco/retromind";
 const BRANCH = process.env.FEEDBACK_GITHUB_BRANCH || "master";
@@ -121,6 +134,38 @@ async function guestLogin(body, res) {
   }
 }
 
+// The Google sign-in that stays (api/_googleKeep.js).
+async function googleKeep(req, body, res) {
+  if (!keepConfigured()) return res.status(503).json({ error: "not_configured" });
+  try {
+    if (body.action === "googleCode") {
+      const out = await exchangeCode(String(body.code || ""));
+      if (!out) return res.status(401).json({ error: "bad_code" });
+      if (out.cookie) res.setHeader("Set-Cookie", out.cookie);
+      return res.status(200).json({ accessToken: out.accessToken, expiresIn: out.expiresIn, kept: !!out.cookie });
+    }
+    if (body.action === "googleRefresh") {
+      const out = await refreshFromCookie(req.headers.cookie);
+      if (!out.accessToken) {
+        if (out.gone) res.setHeader("Set-Cookie", clearKeepCookie());
+        return res.status(out.gone ? 401 : 502).json({ error: out.gone ? "signed_out" : "upstream" });
+      }
+      res.setHeader("Set-Cookie", out.cookie);
+      return res.status(200).json({ accessToken: out.accessToken, expiresIn: out.expiresIn });
+    }
+    if (body.action === "googleSignOut") {
+      // Only this device forgets it: revoking at Google would end the kept
+      // sign-in on the person's other devices as well.
+      res.setHeader("Set-Cookie", clearKeepCookie());
+      return res.status(200).json({ ok: true });
+    }
+  } catch (err) {
+    console.error("google keep failed", err);
+    return res.status(502).json({ error: "upstream" });
+  }
+  return res.status(400).json({ error: "bad_action" });
+}
+
 // A link to the other edition: guests carry their access along (see
 // createHandoff); everyone else simply lands at the other door.
 async function handoff(req, res) {
@@ -134,7 +179,12 @@ async function handoff(req, res) {
   target.searchParams.delete(HANDOFF_PARAM);
   try {
     const guest = guestsConfigured() ? await readCookie(req.headers.cookie) : null;
-    if (guest) target.searchParams.set(HANDOFF_PARAM, await createHandoff(guest.email));
+    if (guest) {
+      const code = await createHandoff(guest.email);
+      target.searchParams.set(HANDOFF_PARAM, code);
+      const google = readKeepValue(req.headers.cookie);
+      if (google) await parkHandoffGoogle(code, google);
+    }
   } catch (err) {
     console.error("handoff failed", err);
   }
@@ -194,7 +244,9 @@ export default async function handler(req, res) {
     });
   }
   if (req.method === "GET" && view === "handoff") return handoff(req, res);
+  if (req.method === "GET" && view === "google") return res.status(200).json({ keep: keepConfigured() });
   const body = req.method === "POST" ? await readJsonBody(req) : {};
+  if (req.method === "POST" && String(body.action || "").startsWith("google")) return googleKeep(req, body, res);
   if (req.method === "POST" && body.action === "guestLogin") return guestLogin(body, res);
   if (req.method === "POST" && body.action === "guestLogout") {
     res.setHeader("Set-Cookie", clearCookie());

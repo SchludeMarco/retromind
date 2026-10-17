@@ -58,7 +58,8 @@ zeigen dürfen.
   im Boden. Die ersten Klänge steigen über etwa 10 Sekunden aus der Stille an.
 - **Anmelden am Eingang (freiwillig)** – mit Google (Savegame und Coins im
   eigenen Google Drive) und mit Spotify (Hallenmusik); beides geht auch später
-  in den Einstellungen.
+  in den Einstellungen. Beide Anmeldungen bleiben auf dem Gerät, bis du dich
+  abmeldest, und gelten auch in der Zeitreise.
 - **Zurück zu RetroMind** – wer aus der Zeitreise kommt (Wegweiser oder
   Einstellungen, `?from=zeitreise`), sieht vor der Tür und oben in der Halle
   den Knopf „Zurück zu RetroMind“, für den ganzen Besuch im Tab
