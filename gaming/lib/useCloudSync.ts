@@ -69,7 +69,7 @@ export function useCloudSync(state: ArcadeState, mergeIn: (remote: Partial<Arcad
     setSync('idle');
   }, [auth]);
 
-  return { status: auth.status, user: auth.user, sync, signIn: auth.signIn, signOut };
+  return { status: auth.status, user: auth.user, sync, signIn: auth.signIn, signOut, getFreshAccessToken: auth.getFreshAccessToken };
 }
 
 export type Cloud = ReturnType<typeof useCloudSync>;

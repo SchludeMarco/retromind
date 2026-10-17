@@ -44,6 +44,8 @@ import { useRetroSession } from './hooks/useRetroSession';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
+import { useInitialsCloud } from './hooks/useInitialsCloud';
+import { InitialsCloudAsk } from './components/InitialsPicker';
 import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
 import { loadSessionFromDrive, saveSessionToDrive } from './services/googleDriveService';
@@ -108,6 +110,8 @@ const App: React.FC = () => {
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
+  // Your own three-letter tag (settings) in the Google account too.
+  const initialsCloud = useInitialsCloud(googleAuth);
   const spotifyAuth = useSpotifyAuth();
   const [driveSyncState, setDriveSyncState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const remoteLoadAttempted = useRef(false);
@@ -887,6 +891,10 @@ const App: React.FC = () => {
           onDismiss={() => setIsSettingsOpen(false)}
           onCloseClick={closeSettingsWithSfx}
         />
+      )}
+
+      {initialsCloud.conflict && (
+        <InitialsCloudAsk conflict={initialsCloud.conflict} onTakeCloud={initialsCloud.takeCloud} onKeepLocal={initialsCloud.keepLocal} />
       )}
 
       {isWhatsNewOpen && (

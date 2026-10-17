@@ -216,8 +216,16 @@ zeigen dürfen.
   Solitär zählt die Bestzeit. Ein gemeinsames HTML-Kartendeck ohne Bilder
   ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
-  Buchstaben ein; die Top 10 gelten für alle Spieler (`api/highscores.js`,
-  Upstash Redis; ohne Datenbank bleibt die Tafel auf dem Gerät).
+  Zeichen ein, je Zeichen mit ▲/▼ oder getippt; dein Kürzel aus den
+  Einstellungen steht schon da. Die Top 10 gelten für alle Spieler
+  (`api/highscores.js`, Upstash Redis; ohne Datenbank bleibt die Tafel auf
+  dem Gerät).
+- **Dein Kürzel** – unter Einstellungen → „Your initials“ legst du dein
+  Kürzel aus drei Zeichen fest (wie LIQ oder MAR). Mit Google-Anmeldung liegt
+  es auch im Google-Konto und gilt auf allen Geräten und in der Zeitreise;
+  weicht es vom Gerät ab, fragt die App vor dem Übernehmen
+  ([`lib/initials.ts`](../lib/initials.ts),
+  [`hooks/useInitialsCloud.ts`](../hooks/useInitialsCloud.ts)).
 - **Quests und Preis-Tresen** – jeden Tag drei kleine Aufgaben und eine
   größere pro Woche. Sie bringen Coins für Designs (Vaporwave, Virtual Boy),
   Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo

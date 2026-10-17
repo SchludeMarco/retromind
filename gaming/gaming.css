@@ -961,6 +961,10 @@ a {
   flex-wrap: wrap;
   gap: 8px;
 }
+.settings-initials {
+  align-items: center;
+  gap: 14px;
+}
 
 /* Small settings button pinned to the top right of the HUD. */
 .hud {
@@ -3369,22 +3373,6 @@ section:first-child > .media-head {
   margin: 0;
   font-size: 11px;
   color: var(--a3);
-}
-.hs-initials {
-  width: 5.2em;
-  font-size: 28px;
-  letter-spacing: 0.3em;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 8px 0 8px 0.3em;
-  color: var(--a3);
-  background: #000;
-  border: 4px solid var(--a3);
-  caret-color: var(--a1);
-}
-.hs-initials:focus {
-  outline: none;
-  box-shadow: 0 0 12px var(--a3);
 }
 .hs-table {
   list-style: none;

@@ -27,6 +27,8 @@ import { EmuLaunch } from './lib/emulator';
 import { countOpened } from '../lib/usage';
 import { readPage, writePage } from '../lib/pageMemory';
 import { useCloudSync } from './lib/useCloudSync';
+import { useInitialsCloud } from '../hooks/useInitialsCloud';
+import { InitialsCloudAsk } from '../components/InitialsPicker';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
@@ -154,6 +156,8 @@ export const GamingApp: React.FC = () => {
   );
   const { state, discover, toggleIn, unlock, set, mergeIn, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg);
   const cloud = useCloudSync(state, mergeIn);
+  // The player's own tag (settings, high score tables) in the Google account too.
+  const initialsCloud = useInitialsCloud(cloud);
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
   const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
@@ -1147,6 +1151,9 @@ export const GamingApp: React.FC = () => {
         </nav>
       )}
 
+      {initialsCloud.conflict && (
+        <InitialsCloudAsk conflict={initialsCloud.conflict} onTakeCloud={initialsCloud.takeCloud} onKeepLocal={initialsCloud.keepLocal} />
+      )}
       {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={setFromSettings} onClose={() => setSettingsOpen(false)} />}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
