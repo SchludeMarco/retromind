@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InitialsPicker } from './InitialsPicker';
 import { setInitials, useInitials } from '../lib/initials';
 import { Modal } from './Modal';
+import { FavoriteBands } from './FavoriteBands';
 import { FontSizeControl } from './FontSizeControl';
 import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
@@ -49,6 +50,8 @@ export const SettingsModal: React.FC<{
   hasUnseenNews: boolean;
   userName: string;
   userBirthDate: string;
+  favoriteArtists: string[];
+  onFavoriteArtistsChange: (artists: string[]) => void;
   /** Left out on the welcome screen, where the name form isn't reached yet. */
   onEditProfile?: () => void;
   googleStatus: GoogleAuthStatus;
@@ -68,7 +71,7 @@ export const SettingsModal: React.FC<{
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
-  userName, userBirthDate, onEditProfile,
+  userName, userBirthDate, favoriteArtists, onFavoriteArtistsChange, onEditProfile,
   googleStatus, googleUser, onGoogleSignIn, onGoogleSignOut,
   spotifyStatus, spotifyUser, onSpotifySignIn, onSpotifySignOut,
   aboveSplash = false,
@@ -111,6 +114,14 @@ export const SettingsModal: React.FC<{
             ✏️ {tr('Change name and date of birth', 'Name und Geburtsdatum ändern')}
           </button>
         )}
+        <div className="mt-5">
+          <FavoriteBands
+            inputId="rm-settings-artist"
+            artists={favoriteArtists}
+            onChange={onFavoriteArtistsChange}
+            birthDate={userBirthDate}
+          />
+        </div>
         <span className="block text-xs uppercase font-bold text-retro-brown mt-5 mb-2">{tr('Your initials', 'Dein Kürzel')}</span>
         <div className="flex flex-wrap items-center gap-3">
           <InitialsPicker value={tag} onChange={setTag} onEnter={() => setInitials(tag)} />

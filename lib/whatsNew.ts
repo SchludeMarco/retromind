@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Lieblingsbands aus deinem ganzen Leben': {
+    title: 'Favorite bands from your whole life',
+    text: 'When you pack your suitcase before setting off, and in the settings under “Your details”, there is now “Need ideas?”. A tap on it shows, for every five years from your birth year until today, the bands and musicians that were big back then, with your age at the time. Tap a name to put it on your list, tap again to take it off; you can still type your own names. It all stays optional, and the ideas stay closed until you open them. Your favorite bands now also go into the personal questions while exploring and appear in your memory book.',
+  },
   'Hall of Fame zum Blättern, Laufband zum Ziehen': {
     title: 'Browse the Hall of Fame, drag the ticker',
     text: 'In the Gaming edition, the Hall of Fame (it starts after a minute without input) now lets you go to the previous game or on to the next random one with ◀ and ▶ or a swipe. Tapping the game opens its page, tapping next to it takes you back to the hall as before. The ticker with sayings on the Time Travel start page can be dragged back and forth with your finger and keeps running on its own afterwards.',

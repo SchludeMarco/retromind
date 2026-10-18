@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { UserProfile } from '../types';
 import { INTEREST_LABELS, GENDER_LABELS } from '../constants';
 import { tr } from '../lib/i18n';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
+import { FavoriteBands } from '../components/FavoriteBands';
 
 // Stored values stay German (ids, see lib/session.ts INTEREST_TO_CATEGORY);
 // only the labels are translated.
@@ -16,21 +17,6 @@ export const OnboardingPhase: React.FC<{
   onSubmit: (e: React.FormEvent) => void;
   onBack: () => void;
 }> = ({ user, onUserChange, onToggleInterest, onSubmit, onBack }) => {
-  const [artistDraft, setArtistDraft] = useState('');
-
-  const addArtist = () => {
-    const name = artistDraft.trim();
-    if (!name || user.favoriteArtists.includes(name)) {
-      setArtistDraft('');
-      return;
-    }
-    onUserChange({ ...user, favoriteArtists: [...user.favoriteArtists, name] });
-    setArtistDraft('');
-  };
-  const removeArtist = (name: string) => {
-    onUserChange({ ...user, favoriteArtists: user.favoriteArtists.filter((a) => a !== name) });
-  };
-
   return (
   <div className="py-8 animate-fadeIn">
     <div className="retro-card p-6 md:p-12 bg-retro-cream">
@@ -76,53 +62,12 @@ export const OnboardingPhase: React.FC<{
               </button>
             ))}
           </div>
-          <div>
-            <label htmlFor="rm-artist" className="block text-sm font-bold uppercase mb-1">
-              {tr('Favorite musicians (optional)', 'Lieblingsmusiker:innen (optional)')}
-            </label>
-            <div className="flex gap-2">
-              <input
-                id="rm-artist"
-                type="text"
-                value={artistDraft}
-                onChange={(e) => setArtistDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key !== 'Enter') return;
-                  e.preventDefault();
-                  addArtist();
-                }}
-                className="w-full border-2 border-retro-ink p-3 bg-white"
-                placeholder={tr('e.g. ABBA, Queen, Madonna …', 'z. B. ABBA, Queen, Nena …')}
-              />
-              <button
-                type="button"
-                onClick={addArtist}
-                className="retro-button border-2 border-retro-ink px-4 font-bold bg-white shrink-0"
-              >
-                +
-              </button>
-            </div>
-            {user.favoriteArtists.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {user.favoriteArtists.map((artist) => (
-                  <span
-                    key={artist}
-                    className="flex items-center gap-1 px-3 py-1 border-2 border-retro-ink text-sm font-bold bg-white"
-                  >
-                    {artist}
-                    <button
-                      type="button"
-                      onClick={() => removeArtist(artist)}
-                      aria-label={tr(`Remove ${artist}`, `${artist} entfernen`)}
-                      className="text-retro-brown hover:text-retro-ink"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+          <FavoriteBands
+            inputId="rm-artist"
+            artists={user.favoriteArtists}
+            onChange={(favoriteArtists) => onUserChange({ ...user, favoriteArtists })}
+            birthDate={user.birthDate}
+          />
         </div>
         <PhaseNav
           className="md:col-span-2 !mt-2"

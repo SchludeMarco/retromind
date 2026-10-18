@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Lieblingsbands aus deinem ganzen Leben** (2026-10-18, PR #236): Beim
+  Kofferpacken vor der Abfahrt und in den Einstellungen unter „Deine Angaben“
+  gibt es jetzt „Ideen gefällig?“. Ein Tipp darauf zeigt für jeden
+  Fünf-Jahres-Abschnitt seit deinem Geburtsjahr bis heute die Bands und
+  Musiker:innen, die damals groß waren, mit deinem Alter dazu. Ein Tipp auf
+  einen Namen setzt ihn auf deine Liste, ein zweiter nimmt ihn wieder weg;
+  eigene Namen tippst du wie bisher ein. Alles bleibt freiwillig, die Ideen
+  sind zu, bis du sie öffnest. Deine Lieblingsbands fließen jetzt auch in die
+  persönlichen Fragen beim Erkunden ein und stehen im Erinnerungsbuch.
 - **Hall of Fame zum Blättern, Laufband zum Ziehen** (2026-10-18, PR #235):
   In der Gaming-Edition kannst du in der Hall of Fame (sie startet nach einer
   Minute ohne Eingabe) jetzt mit ◀ und ▶ oder per Wischen zum vorherigen oder

@@ -309,7 +309,12 @@ const App: React.FC = () => {
       (await generateDeepQuestion(
         term,
         user.name,
-        user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ') || tr('general', 'allgemein'),
+        [
+          user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ') || tr('general', 'allgemein'),
+          user.favoriteArtists.length
+            ? tr('favorite bands', 'Lieblingsbands') + `: ${user.favoriteArtists.join(', ')}`
+            : '',
+        ].filter(Boolean).join('; '),
         decade,
         fallbackQuestion
       ));
@@ -808,6 +813,8 @@ const App: React.FC = () => {
           hasUnseenNews={unseenNews}
           userName={user.name}
           userBirthDate={user.birthDate}
+          favoriteArtists={user.favoriteArtists}
+          onFavoriteArtistsChange={(favoriteArtists) => setUser((prev) => ({ ...prev, favoriteArtists }))}
           onEditProfile={showSplash || !verified ? undefined : handleEditProfile}
           googleStatus={googleAuth.status}
           googleUser={googleAuth.user}
