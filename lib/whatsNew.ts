@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Was gerade läuft, unten in der Mitte': {
+    title: 'What’s playing, at the bottom in the middle',
+    text: 'Between “Back to top” and the “?” of the AI help you now see which song is playing, with back, play/pause and next, at the same height as the two buttons. Tapping the title opens the full music controls. This is in Time Travel (all designs) and in the arcade, once Spotify music is allowed.',
+  },
   '„Nach oben“ und „?“ auf einer Höhe': {
     title: '“Back to top” and “?” on one level',
     text: 'The “Back to top” button at the bottom left now sits at exactly the same height and size as the “?” button of the AI help at the bottom right, in Time Travel (all designs) and in the arcade.',

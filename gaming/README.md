@@ -98,8 +98,10 @@ zeigen dürfen.
   Chiptune-Musik weiterlaufen, bis Spotify wieder spielt (neuer Versuch alle
   zwei Minuten oder mit Weiter). Ein hängendes Intro gibt nach spätestens
   einer Minute ab, der Ton wacht nach dem Entsperren des Handys wieder auf.
-- **Musiksteuerung** – im Fenster hinter dem Griff am rechten Rand: Zurück,
-  Play/Pause, Weiter und der Song; „Mehr Musik“ öffnet die ganze Steuerung
+- **Musiksteuerung** – unten zwischen „Nach oben“ und dem „?“ der KI-Hilfe
+  (über dem Laufband) und im Fenster hinter dem Griff am rechten Rand:
+  Zurück, Play/Pause, Weiter und der Song (ein Tipp darauf öffnet die ganze
+  Steuerung); „Mehr Musik“ öffnet die ganze Steuerung
   (Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
   Thema“, also der Soundtrack des offenen Spiels). Oben links steht klein,
   welcher Song spielt. Die Musik pausiert bei

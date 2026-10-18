@@ -1081,6 +1081,24 @@ export const GamingApp: React.FC = () => {
       {/* The fun-fact ticker, pinned just above the dock (Marco, 2026-10-18). */}
       {screen === 'hub' && <HallTicker onOpen={open} onSound={() => chip.play('blip')} />}
 
+      {/* What's playing, between "Nach oben" and the "?" help (Marco, 2026-10-18). */}
+      {screen === 'hub' && state.music && spotify.active && (
+        <div className="gm-bottom-music" role="group" aria-label={tr('Music', 'Musik')}>
+          <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playPrevious(); }} disabled={!spotify.canSkip} aria-label={tr('Previous song', 'Vorheriger Song')}>
+            ◄◄
+          </button>
+          <button className="px-btn" onClick={() => { chip.play('blip'); spotify.togglePlay(); }} aria-label={spotify.playing ? 'Pause' : tr('Play', 'Abspielen')}>
+            {spotify.playing ? '❚❚' : '►'}
+          </button>
+          <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playNext(); }} disabled={!spotify.canSkip} aria-label={tr('Next song', 'Nächster Song')}>
+            ►►
+          </button>
+          <button className="gm-bottom-music-song" onClick={() => { chip.play('blip'); openMusicDock(); }} aria-label={tr('Open music controls', 'Musiksteuerung öffnen')}>
+            {spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+          </button>
+        </div>
+      )}
+
       {/* Questions about the app: the AI help at the very bottom right. */}
       {screen === 'hub' && (
         <HelpBot

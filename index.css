@@ -3272,6 +3272,34 @@ html[data-theme="nachtschicht"] .rm-control-handle {
   max-width: 100%;
 }
 
+/* The bottom row (Marco, 2026-10-18): "Nach oben" left, the "?" help right
+   (both 3rem at 1rem from the edges) and the music in between, on the same
+   height, above the pinned ticker in Retro Warm. */
+.rm-bottom-music {
+  position: fixed;
+  left: 4.5rem;
+  right: 4.5rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 60;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+html[data-ticker] .rm-bottom-music {
+  bottom: calc(4.25rem + env(safe-area-inset-bottom));
+}
+.rm-bottom-music .rm-music-mini {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 24rem;
+  height: 3rem;
+  box-sizing: border-box;
+}
+@media (max-width: 359px) {
+  .rm-bottom-music .rm-music-mini > button:first-child { display: none; }
+}
+
 /* Color slider from blue to orange (lib/colorTint.ts): the track shows the colors. */
 .rm-tint-slider,
 .settings-tint input {
