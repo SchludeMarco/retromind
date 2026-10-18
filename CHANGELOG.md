@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Die Uhr auf dem Startbildschirm ist wieder frei** (2026-10-18, PR #NNN):
+- **Die Uhr auf dem Startbildschirm ist wieder frei** (2026-10-18, PR #253):
   Die Zeitschaltkreise und der Knopf „Ab in die Vergangenheit“ lagen auf dem
   Zifferblatt der Kaminuhr, sodass man ihre laufenden Zeiger nicht mehr sah.
   Jetzt hat die Uhr ihren eigenen Platz zwischen der Zeitanzeige und dem
