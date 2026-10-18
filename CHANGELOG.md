@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Hall of Fame zum Blättern, Laufband zum Ziehen** (2026-10-18, PR #235):
+  In der Gaming-Edition kannst du in der Hall of Fame (sie startet nach einer
+  Minute ohne Eingabe) jetzt mit ◀ und ▶ oder per Wischen zum vorherigen oder
+  zum nächsten zufälligen Spiel wechseln. Ein Tipp aufs Spiel öffnet seine
+  Seite, ein Tipp daneben bringt dich wie bisher zurück in die Halle. Das
+  Laufband mit den Sprüchen auf der Startseite der Zeitreise lässt sich mit
+  dem Finger hin und her ziehen und läuft danach von allein weiter.
 - **Google-Anmeldung bleibt auf jedem Gerät** (2026-10-17, PR #234): Bisher
   wollte Google nach einer Stunde wieder einen Tipp auf „Anmelden“. Jetzt
   bleibst du auf jedem Gerät angemeldet, bis du dich abmeldest, in der

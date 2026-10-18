@@ -593,14 +593,18 @@
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
   mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
 }
+/* Moved by RetroTicker.tsx (clock and finger), not by a CSS animation. */
+.rm-ticker-viewport {
+  touch-action: pan-y;
+  cursor: grab;
+}
+.rm-ticker-viewport:active {
+  cursor: grabbing;
+}
 .rm-ticker-track {
   display: flex;
   width: max-content;
-  animation: rm-ticker-run 60s linear infinite;
-}
-.rm-ticker-track.is-paused,
-.rm-ticker-viewport:focus-within .rm-ticker-track {
-  animation-play-state: paused;
+  will-change: transform;
 }
 .rm-ticker-copy {
   display: flex;
@@ -682,10 +686,6 @@
 html[data-ticker] .rm-back-to-top {
   bottom: calc(8.25rem + env(safe-area-inset-bottom)) !important;
 }
-@keyframes rm-ticker-run {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
 @keyframes rm-ticker-bump {
   0% { transform: scale(1); }
   40% { transform: scale(1.45); background: #2f7a52; }
@@ -693,11 +693,10 @@ html[data-ticker] .rm-back-to-top {
 }
 /* Motion turned off: a still row to swipe through, no second copy. */
 @media (prefers-reduced-motion: reduce) {
-  .rm-ticker-track {
-    animation: none;
-  }
   .rm-ticker-viewport {
     overflow-x: auto;
+    touch-action: auto;
+    cursor: auto;
   }
   .rm-ticker-copy-2,
   .rm-ticker-pause {

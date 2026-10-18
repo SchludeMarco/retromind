@@ -1282,7 +1282,15 @@ export const GamingApp: React.FC = () => {
 
       {inserting && <CartInsert game={inserting} onDone={insertDone} />}
 
-      {attract && <AttractMode onExit={() => setAttract(false)} />}
+      {attract && (
+        <AttractMode
+          onExit={() => setAttract(false)}
+          onOpen={(game) => {
+            setAttract(false);
+            open(game);
+          }}
+        />
+      )}
 
       {selected && (
         <GameDetail

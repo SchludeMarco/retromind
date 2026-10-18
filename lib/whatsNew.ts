@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Hall of Fame zum Blättern, Laufband zum Ziehen': {
+    title: 'Browse the Hall of Fame, drag the ticker',
+    text: 'In the Gaming edition, the Hall of Fame (it starts after a minute without input) now lets you go to the previous game or on to the next random one with ◀ and ▶ or a swipe. Tapping the game opens its page, tapping next to it takes you back to the hall as before. The ticker with sayings on the Time Travel start page can be dragged back and forth with your finger and keeps running on its own afterwards.',
+  },
   'Google-Anmeldung bleibt auf jedem Gerät': {
     title: 'Your Google sign-in stays on every device',
     text: 'Until now Google wanted another tap on “Sign in” after an hour. Now you stay signed in on every device until you sign out, in Time Travel and in the Gaming edition alike. The next time you sign in, Google asks for your consent once, then never again. Signing out only applies to the device you do it on.',
