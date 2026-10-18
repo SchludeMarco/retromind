@@ -156,3 +156,8 @@ gebaut oder ausgeliefert.
   (`gaming-kopfknoepfe-dock-guru-steuerung-griff.tsx.txt`). Alles liegt jetzt
   im Fenster hinter dem Griff (`components/ControlHandle.tsx`,
   `gaming/components/ControlHandle.tsx`).
+- **Überschrift und „Go back...“-Knopf des Willkommensbildschirms**
+  (2026-10-18, `splash-titel-goback-knopf.tsx.txt`): „Welcome to RetroMind“
+  mit roten R und M und Kerzenschein-Glühen, „The ticket to your past🏳️“ und
+  der Knopf „Go back...“ im Look des gewählten Designs. Ersetzt durch den
+  Zeitreisefilm-Look (Blitze, Zeitschaltkreise, Flux-Knopf mit Tacho).

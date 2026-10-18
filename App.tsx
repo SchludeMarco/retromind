@@ -696,7 +696,7 @@ const App: React.FC = () => {
         <ControlHandle hasNews={unseenNews} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
       {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
-      {showSplash && <SplashScreen onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen destinationDate={user.birthDate} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from

@@ -86,8 +86,10 @@ No text below 12px.
 - **Primary** (one per screen, the next step): `retro-button rm-btn bg-retro-ink text-white`.
   Ink in Klassisch, terracotta pill in Retro Warm, cream on dark in Nachtschicht.
 - **Secondary**: `rm-btn rm-btn-secondary`, outlined, paper background.
-- **Start-type buttons** in the dark clock room ("Go back...", "Set the
-  clock") use `.splash-start`, which wears the chosen design.
+- **Start-type buttons** in the dark clock room: the ticket's "Set the
+  clock" uses `.splash-start`, which wears the chosen design. The welcome
+  screen's flux button (`.rm-flux-start`, speedometer to 88) looks the same
+  in every design, like the rest of that time-travel-film screen.
 - Touch targets at least 44px, primary 48px.
 
 ## 6. Cards

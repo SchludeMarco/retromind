@@ -1,0 +1,82 @@
+// Willkommensbildschirm der Zeitreise bis 2026-10-18: Überschrift "Welcome to RetroMind"
+// (rote R und M, Schild-Glühen) und der Startknopf "Go back..." im Look des gewählten Designs.
+// Ersetzt durch den Zeitmaschinen-Look (Blitze, Zeitschaltkreise, Flux-Knopf).
+
+      )}
+      <div className="splash-content relative h-full flex flex-col items-center justify-center text-center px-6">
+      <h1 className="splash-title relative font-display text-5xl md:text-7xl font-bold text-retro-paper tracking-wide mb-6">
+        Welcome to <span className="text-red-600">R</span>etro<span className="text-red-600">M</span>ind
+      </h1>
+      <p className="relative font-elegant text-xl md:text-2xl italic tracking-wide text-[#c9ab78] mb-12">
+        The ticket to your past🏳️
+      </p>
+      <div className="splash-start-row relative">
+        <span className="splash-start-tilt relative inline-block">
+          <button onClick={handleStart} disabled={struck} className="splash-start relative" data-quiet>
+            Go back...
+          </button>
+        </span>
+        <LoudSign show={!muted && !struck} />
+
+/* CSS (index.css) */
+/* The splash title glows and settles like a hand-lettered sign catching
+   candlelight — a slow pulse in its warm halo, not a hard blink. */
+@keyframes splashTitleGlow {
+  0%, 100% {
+    text-shadow: 0 0 18px rgba(217, 119, 6, 0.35), 0 0 3px rgba(244, 228, 188, 0.55);
+  }
+  50% {
+    text-shadow: 0 0 32px rgba(217, 119, 6, 0.65), 0 0 5px rgba(244, 228, 188, 0.85);
+  }
+}
+/* A slow bob and micro-tilt drift, like a hand-lettered sign hanging
+   slightly loose — the tilt itself lives in these keyframes (not a static
+   utility class) since the animation owns the transform property. */
+@keyframes splashTitleFloat {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(-1deg) translateY(-5px); }
+}
+.splash-title {
+  animation: splashTitleGlow 4s ease-in-out infinite, splashTitleFloat 6s ease-in-out infinite;
+}
+
+/* The welcome screen's start button wears the chosen design (lib/theme.ts):
+   "Klassisch" is a paper ticket with an ink outline and a hard shadow,
+   "Retro Warm" a terracotta pill in Epilogue, "Nachtschicht" a glowing
+html[data-theme="retro-warm"] .splash-start {
+  color: #fffdf8;
+  background: #d95d39;
+  border: none;
+  border-radius: 9999px;
+  min-height: 56px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 6px 20px rgba(217, 93, 57, 0.45), 0 0 34px rgba(232, 168, 56, 0.25);
+}
+html[data-theme="retro-warm"] .splash-start:hover {
+  background: #bf4b28;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(217, 93, 57, 0.5), 0 0 40px rgba(232, 168, 56, 0.3);
+}
+html[data-theme="retro-warm"] .splash-start:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(217, 93, 57, 0.4);
+}
+html[data-theme="nachtschicht"] .splash-start {
+  color: #fbbf24;
+  background: rgba(23, 16, 11, 0.85);
+  border: 2px solid #f59e0b;
+  border-radius: 0.375rem;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.45), inset 0 0 14px rgba(245, 158, 11, 0.2);
+}
+html[data-theme="nachtschicht"] .splash-start:hover {
+  background: rgba(61, 42, 18, 0.9);
+  transform: none;
+  box-shadow: 0 0 28px rgba(245, 158, 11, 0.65), inset 0 0 18px rgba(245, 158, 11, 0.3);
+}
+html[data-theme="nachtschicht"] .splash-start:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5), inset 0 0 10px rgba(245, 158, 11, 0.25);
+}
+/* Slightly askew, like a ticket stuck on in a hurry, and every few seconds
+   a glint of light sweeps across it (all designs). */
