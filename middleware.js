@@ -29,6 +29,10 @@ const OPEN = [
   /^\/retromind-logo-header\.webp$/,
   /^\/favicon\.ico$/,
   /^\/robots\.txt$/,
+  // Installing as an app: Android fetches the manifest and its icons without
+  // the guest cookie, so a closed door here made "Install app" disappear.
+  // They hold no personal data.
+  /^\/(gaming\/)?(manifest\.webmanifest|sw\.js|apple-touch-icon\.png|icon-(192|512|maskable-512)\.png|favicon-48\.png)$/,
   /^\/api\/admin$/,
   /^\/api\/feedback-approve$/,
 ];

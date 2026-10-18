@@ -24,9 +24,17 @@ ReactDOM.createRoot(root).render(
   </React.StrictMode>
 );
 
-// Installable as its own app (see public/gaming/manifest.webmanifest).
+// Installable as its own app (see public/gaming/manifest.webmanifest). On its
+// own domain the Gaming edition lives at the root, so the root worker
+// (public/sw.js) and manifest (scripts/edition.mjs) take over there.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/gaming/sw.js', { scope: '/gaming/' }).catch(() => {});
-  });
+  // This module loads after the sync (main.tsx), often after "load" already fired.
+  const register = () => {
+    const inFolder = location.pathname.startsWith('/gaming');
+    navigator.serviceWorker
+      .register(inFolder ? '/gaming/sw.js' : '/sw.js', { scope: inFolder ? '/gaming/' : '/' })
+      .catch(() => {});
+  };
+  if (document.readyState === 'complete') register();
+  else window.addEventListener('load', register);
 }

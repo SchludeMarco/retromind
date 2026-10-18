@@ -54,6 +54,33 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Aufleuchten ([`lib/microFx.ts`](lib/microFx.ts),
   [`lib/uiSounds.ts`](lib/uiSounds.ts),
   [`components/AmbientLife.tsx`](components/AmbientLife.tsx)).
+- **Jeden Tag etwas Neues** – unter der Stube: die **Frage des Tages**
+  ([`lib/dailyQuestion.ts`](lib/dailyQuestion.ts),
+  [`components/DailyQuestion.tsx`](components/DailyQuestion.tsx)), jeden Tag
+  eine andere und für alle dieselbe; die Antwort wird eine Seite im
+  Erinnerungsbuch. **Heute in deiner Jugend**
+  ([`components/YouthToday.tsx`](components/YouthToday.tsx)): was an diesem
+  Datum geschah, als man 6 bis 20 war (Wikipedia „Was geschah am …“ über den
+  eigenen Proxy), mit der Nr. 1 des Jahres. Ein **Brief „Seit deinem letzten
+  Besuch“** ([`components/WelcomeBackLetter.tsx`](components/WelcomeBackLetter.tsx),
+  [`lib/visits.ts`](lib/visits.ts)) begrüßt alle, die nach zwei Tagen oder
+  mehr wiederkommen, mit Neuigkeiten aus „Was ist neu?“ und dem Familienbuch.
+- **Familienbuch** ([`components/FamilyBook.tsx`](components/FamilyBook.tsx),
+  [`api/_family.js`](api/_family.js)) – jeden Montag eine Frage für alle
+  eingeladenen Gäste, alle lesen alle Antworten, frühere Wochen zum
+  Zurückblättern. Antworten gehen erst nach einer einmaligen Einwilligung an
+  den Server (Upstash), zugeordnet einem Hash der Gast-E-Mail aus dem
+  Gast-Cookie; ändern, löschen und „Alle meine Daten löschen“ entfernen sie.
+- **Als App aufs Handy und Kalender-Erinnerung**
+  ([`lib/install.ts`](lib/install.ts), [`components/StayInTouch.tsx`](components/StayInTouch.tsx),
+  [`lib/calendarReminder.ts`](lib/calendarReminder.ts)) – Manifest, Symbole und
+  Service Worker ([`public/manifest.webmanifest`](public/manifest.webmanifest),
+  [`public/sw.js`](public/sw.js)). „Auf den Startbildschirm“ auf der Startseite
+  und in den Einstellungen installiert mit einem Tipp, wo Chrome das anbietet,
+  sonst zeigt es die Schritte für Android, iPhone oder Computer. Manifest und
+  Symbole liegen vor der Gästetür, weil Android sie ohne Cookie abruft.
+  „In meinen Kalender“ lädt eine `.ics`-Datei mit einer Erinnerung jeden
+  Sonntag um 10 Uhr, „Google Kalender“ öffnet dieselbe als Vorlage.
 - **Gemütliche Stube zum Anfassen** – oben auf der Startseite, in allen
   Designs, eine gezeichnete Stube (Couch mit Häkeldecke, Stehlampe,
   dampfender Tee, Holzofen, schlafende Katze, Röhrenfernseher und in der
@@ -543,7 +570,9 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   schnell auf die Überschrift „Einstellungen“ tippen (Zeitreise und Gaming).
   Zeigt für
   beide Editionen Besucher pro Tag, Besuche über 7/30/90 Tage und App-Starts
-  insgesamt, als Balken und als Tabelle. Den Zugang prüft der Server: Das
+  insgesamt, als Balken und als Tabelle, dazu „Wiederkommen“: wie lange der
+  letzte Besuch des Geräts beim Start her war (erster Besuch, gestern, bis
+  eine Woche, bis ein Monat, länger; seit 18.10.2026). Den Zugang prüft der Server: Das
   Google-Token muss zur App gehören und zu `ADMIN_EMAIL` (Standard
   marco.schlude@gmail.com). Gezählt wird anonym ohne Cookies: ein Einweg-Hash
   aus IP, Browser und einem Tageswert, der nach zwei Tagen gelöscht wird, landet
@@ -810,6 +839,12 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Erinnerungs-Buch als gestaltetes PDF** mit Fotos aus dem Memory-Labor,
   statt über den Druckdialog.
 - **Erinnerungen teilen:** Ein Buch oder einzelne Erinnerungen mit Familie
-  und Freund:innen teilen, die eigene Erinnerungen ergänzen.
+  und Freund:innen teilen, die eigene Erinnerungen ergänzen (das Familienbuch
+  mit der Wochenfrage ist ein erster Schritt).
+- **Erinnerung per Push oder Mail:** Eine Nachricht, wenn die Frage der Woche
+  da ist oder jemand im Familienbuch geantwortet hat. Braucht eine
+  ausdrückliche Einwilligung und gespeicherte Daten pro Person (Push-Schlüssel
+  oder E-Mail-Adresse mit Double-Opt-in); Push klappt auf dem iPhone nur bei
+  installierter App, Mails über Resend sind im kleinen Rahmen kostenlos.
 - **Video im Memory-Labor ohne Google-Billing**, z. B. durch eine animierte
   Diashow statt Veo.

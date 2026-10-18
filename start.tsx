@@ -96,3 +96,11 @@ ReactDOM.createRoot(rootElement).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+// Installable as an app (public/manifest.webmanifest, lib/install.ts).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  // This module loads after the sync (index.tsx), often after "load" already fired.
+  const register = () => navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+  if (document.readyState === 'complete') register();
+  else window.addEventListener('load', register);
+}

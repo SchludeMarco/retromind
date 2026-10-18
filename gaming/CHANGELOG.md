@@ -8,6 +8,22 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **RetroMind als App aufs Handy** (2026-10-18, PR #239): Die Zeitreise lässt
+  sich jetzt wie die Gaming-Edition als App installieren, mit eigenem Symbol.
+  Auf Android bot Chrome das Installieren bisher oft gar nicht an; das ist
+  behoben, in beiden Apps. Ein Knopf „Auf den Startbildschirm“ (Startseite und
+  Einstellungen der Zeitreise, Einstellungen der Gaming-Edition) installiert mit
+  einem Tipp oder zeigt die zwei, drei Schritte im Browser-Menü. Daneben legt
+  „In meinen Kalender“ eine Erinnerung für jeden Sonntagmorgen in deinen
+  eigenen Kalender, ohne dass RetroMind dafür etwas speichert.
+
+- **Gaming-Edition: Serie und Wochen-Duell** (2026-10-18, PR #239): Jeder Tag
+  in Folge in der Spielhalle bringt Coins, von 5 bis 30, und jeder siebte Tag
+  25 extra; ein verpasster Tag pro Woche wird verziehen. Die Serie steht oben
+  in der Kopfleiste. Unter „Quests“ gibt es außerdem jede Woche ein
+  Wochen-Duell: Alle spielen dasselbe Minispiel, und eine eigene
+  Highscore-Tafel zeigt die Besten der Woche.
+
 - **Diskette auch im Gaming-Ticker** (2026-10-18, PR #238): Hinter jedem
   Fun Fact in der Spielhalle sitzt jetzt eine Diskette. Ein Tipp legt die
   Meldung in die Grabbelkiste, ein zweiter nimmt sie wieder heraus. Die Kiste

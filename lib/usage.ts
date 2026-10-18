@@ -1,7 +1,10 @@
-// Anonymous usage numbers for the admin area (api/stats.js). No cookie,
-// nothing written to the device, no ID sent along: an app start carries the
-// device type and whether the app runs installed; an event names what was
-// opened (a decade, a game, a mini-game) and nothing about who opened it.
+// Anonymous usage numbers for the admin area (api/stats.js). No cookie, no
+// ID sent along: an app start carries the device type, whether the app runs
+// installed, and how long ago this device last opened it as a rough bucket
+// (lib/visits.ts: first visit, same day, a day, a week, a month, longer); an
+// event names what was opened (a decade, a game, a mini-game) and nothing
+// about who opened it.
+import { returnBucket } from './visits';
 export type UsageApp = 'zeitreise' | 'gaming';
 export type UsageEvent = 'decade' | 'game' | 'minigame';
 
@@ -40,7 +43,7 @@ function runsInstalled(): boolean {
 export function countAppStart(app: UsageApp) {
   if (counted) return;
   counted = true;
-  send({ app, device: deviceType(), installed: runsInstalled() });
+  send({ app, device: deviceType(), installed: runsInstalled(), back: returnBucket(app) });
 }
 
 const seen = new Set<string>();

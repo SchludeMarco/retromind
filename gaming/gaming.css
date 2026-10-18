@@ -4226,3 +4226,23 @@ button.pcard {
   background: var(--a1);
   box-shadow: none;
 }
+
+/* Steps for installing from the browser menu (Settings → On your phone). */
+.install-steps {
+  margin: 8px 0 4px;
+  padding-left: 22px;
+  list-style: decimal;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.install-steps li + li {
+  margin-top: 4px;
+}
+
+/* The weekly duel's table above the all-time one (HighscoreBoard). */
+.hs-week-title {
+  font-size: 10px;
+  text-align: center;
+  margin: 10px 0 6px;
+  color: var(--a3);
+}

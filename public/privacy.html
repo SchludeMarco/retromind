@@ -13,7 +13,7 @@
   <h1>Privacy Policy</h1>
   <p class="muted">
     Applies to RetroMind – Time Travel (retromind.vercel.app) and RetroMind – Gaming (retromind-gaming.vercel.app).
-    Last updated: October 17, 2026
+    Last updated: October 18, 2026
   </p>
 
   <h2>In short</h2>
@@ -23,7 +23,8 @@
       keeps you signed in (see section 5).</li>
     <li>No tracking, no third-party analytics tools, no ads. The only thing counted
       is, anonymously, how often the apps are opened (see section 10).</li>
-    <li>Your journey, your profile and your settings stay in your browser on your device.</li>
+    <li>Your journey, your profile and your settings stay in your browser on your device. Only what you write in the
+      family book yourself lies on our server, after you agree (see section 15).</li>
     <li>Fonts are hosted on our own server. Our server fetches pictures, sounds and text from Wikipedia/Wikimedia
       and Wikidata for you, so your browser doesn’t connect to third-party servers for them.</li>
     <li>Spotify (music) and YouTube (videos) only load once you agree. You only use Google sign-in, AI features and
@@ -54,7 +55,8 @@
     RetroMind stores what you enter in your browser’s local storage (localStorage), not on our server:
     in Time Travel, for example, your name, date of birth, interests, memories, photos and diary; in the
     Gaming edition, your high score, collection, achievements, coins and found Easter eggs; and in both, settings such
-    as sound, text size, color scheme and your privacy choices. The language you choose is also stored locally in your
+    as sound, text size, color scheme and your privacy choices, plus the time of your last visit on this device (for
+    the “Since your last visit” letter in Time Travel and the streak in the Gaming edition). The language you choose is also stored locally in your
     browser. This storage is strictly necessary for the features you ask for (Section 25(2) No. 2 of the German
     Telecommunications Digital Services Data Protection Act (TDDDG), Art. 6(1)(b) and (f) GDPR). The data stays until you delete it. In both
     editions the settings (⚙️) have two buttons under “Your data” / “My data”: one downloads everything RetroMind
@@ -175,10 +177,12 @@
   <p>
     So that the operator can see how many people use RetroMind, our server counts how often Time Travel and the
     Gaming edition are opened. For this, the app sends the name of the app (“zeitreise” or “gaming”), the type of
-    device (phone, tablet or computer, derived from the browser identifier) and whether the app is running as an
-    installed app to our server on launch. It also counts which decades are opened in Time Travel and which games
+    device (phone, tablet or computer, derived from the browser identifier), whether the app is running as an
+    installed app, and roughly how long ago your last visit on this device was (first visit, same day, yesterday,
+    within a week, within a month or longer; never a date) to our server on launch. The app works this step out
+    from the visit time it stores in your browser anyway for the letter and the streak (section 3). It also counts which decades are opened in Time Travel and which games
     and mini-games are opened in the Gaming edition; only the name of the decade, game or mini-game is sent.
-    <strong>No cookies</strong> are set, nothing is stored on your device, and no identifier is sent along.
+    <strong>No cookies</strong> are set and no identifier is sent along.
   </p>
   <p>
     To count visitors per day, the server creates a one-way hash from your IP address, the browser identifier
@@ -186,15 +190,15 @@
     counter (HyperLogLog) that only knows the number of different visitors and doesn’t store the value itself. Your
     IP address and browser identifier are not stored. The random value is deleted after two days at the latest;
     after that, no one, not even the operator, can link a visit to a person or to another day. Only numbers are
-    kept: app launches, visitors and device type per day and app, and how often a decade, game or mini-game was
+    kept: app launches, visitors, device type and the last-visit steps per day and app, and how often a decade, game or mini-game was
     opened, without any link to a visitor.
   </p>
   <p>
     The numbers are kept in a database of the Upstash service (Upstash, Inc., USA, servers in the EU), which we use
     through Vercel; their data processing agreement with the EU Standard Contractual Clauses applies. Only the
     operator can see the numbers, after signing in with his Google account. The legal basis is our legitimate
-    interest in knowing whether and how much RetroMind is used (Art. 6(1)(f) GDPR); your device is not accessed in
-    the process (Section 25 TDDDG does not apply). You can object (Art. 21 GDPR); an informal message is enough.
+    interest in knowing whether and how much RetroMind is used and whether people come back (Art. 6(1)(f) GDPR).
+    You can object (Art. 21 GDPR); an informal message is enough.
   </p>
 
   <h2>11. High score table (Gaming edition)</h2>
@@ -205,7 +209,8 @@
     best 50 entries per game are kept, and anyone who opens the game sees the top 10. Nothing else is stored, in
     particular no IP address and no identifier. So please don’t pick letters that make you recognizable to others
     if you don’t want that. The app also remembers your last initials and its own table in your browser. The legal
-    basis is your consent by entering them (Art. 6(1)(a) GDPR); we remove an entry on request.
+    basis is your consent by entering them (Art. 6(1)(a) GDPR); we remove an entry on request. In the weekly duel’s
+    game your entry also goes on that week’s table, which is deleted after 30 days.
   </p>
 
   <h2>12. Feedback</h2>
@@ -260,7 +265,25 @@
     sign in once.
   </p>
 
-  <h2>15. Your rights</h2>
+  <h2>15. Family book (Time Travel)</h2>
+  <p>
+    In the family book all invited guests answer the same question each week and read each other’s answers. When you
+    write an answer, the app sends your text, the name you give for it and the question to our server, but only
+    after you have explicitly agreed once. The server stores them with the time in the same Upstash database as the
+    statistics (servers in the EU, see section 10), filed under a one-way hash of your guest e-mail address (from the
+    guest cookie, section 14) so that only you can change or delete your answer; the address itself is not stored
+    for this. Only invited guests can read the answers. The legal basis is your consent (Art. 6(1)(a) GDPR), which you
+    can withdraw at any time. The answers stay until you delete them: one by one with “Delete my answer”, or all at
+    once with “Delete all my data” in the settings.
+  </p>
+  <p>
+    The question of the day, “Today in your youth” (from Wikipedia, fetched through our server, section 8) and the
+    calendar reminder need no data from you: your answers to the question of the day go into your memory book in
+    your browser, and the calendar reminder is a file you add to your calendar yourself (or a link to Google Calendar
+    that only opens when you tap it).
+  </p>
+
+  <h2>16. Your rights</h2>
   <p>You have the right to</p>
   <ul>
     <li>access the data stored about you (Art. 15 GDPR), in RetroMind directly via “Download my data” in the

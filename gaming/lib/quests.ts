@@ -132,3 +132,52 @@ export const PRIZES: Prize[] = [
 /** Designs and tunes that are only available from the prize counter. */
 export const PRIZE_IDS = new Set(PRIZES.map((p) => p.id));
 export const isOwned = (id: string, owned: string[]) => !PRIZE_IDS.has(id) || owned.includes(id);
+
+// --- Streak (tester feedback, 2026-10-18: a reason to come back tomorrow) ---
+
+/** Days in a row with a visit to the hall. One missed day per week is forgiven. */
+export interface Streak {
+  /** Local day of the last counted visit (YYYY-MM-DD). */
+  last: string;
+  count: number;
+  best: number;
+  /** Week (Monday) in which the missed day was already forgiven. */
+  savedWeek?: string;
+}
+
+/** Coins for a visit on day n of a streak: 5, 10, 15 … up to 30, plus 25 extra every seventh day. */
+export const streakReward = (n: number) => Math.min(5 * n, 30) + (n % 7 === 0 ? 25 : 0);
+
+const addDays = (day: string, n: number) => {
+  const [y, m, d] = day.split('-').map(Number);
+  return iso(new Date(y, m - 1, d + n));
+};
+
+/** Today's visit counted into the streak; null when it was already counted today. */
+export function visitStreak(prev: Streak | undefined, now = new Date()): { streak: Streak; reward: number; forgiven: boolean } | null {
+  const day = today(now);
+  if (prev?.last === day) return null;
+  const week = weekOf(now);
+  let count = 1;
+  let forgiven = false;
+  let savedWeek = prev?.savedWeek;
+  if (prev && prev.last === addDays(day, -1)) count = prev.count + 1;
+  else if (prev && prev.last === addDays(day, -2) && savedWeek !== week) {
+    count = prev.count + 1;
+    forgiven = true;
+    savedWeek = week;
+  }
+  const streak = { last: day, count, best: Math.max(prev?.best ?? 0, count), savedWeek };
+  return { streak, reward: streakReward(count), forgiven };
+}
+
+// --- Weekly duel: one mini game per week, its own high score table ---
+
+/** Mini games with a high score table that take part in the weekly duel. */
+export const DUEL_GAMES = ['pacman', 'breakout', 'snake', 'invaders', 'blocks', 'senso', 'pinball'] as const;
+export type DuelGame = (typeof DUEL_GAMES)[number];
+
+/** This week's duel game, the same for everyone. */
+export function duelGame(now = new Date()): DuelGame {
+  return DUEL_GAMES[Math.floor(seeded(`duel:${weekOf(now)}`)() * DUEL_GAMES.length)];
+}

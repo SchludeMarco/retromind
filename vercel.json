@@ -11,6 +11,10 @@
     {
       "source": "/admin",
       "destination": "/admin/index.html"
+    },
+    {
+      "source": "/api/family",
+      "destination": "/api/stats?module=family"
     }
   ],
   "functions": {

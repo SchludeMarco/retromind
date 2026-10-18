@@ -1,7 +1,9 @@
 // Arcade high score tables for the Gaming mini games, shared by all players.
 //
 // GET  /api/highscores?game=pacman      → { scores: [{name, score}], ready }
-// POST /api/highscores {game, name, score} → the new table
+// GET  /api/highscores?game=pacman&week=YYYY-MM-DD → that week's table (weekly duel)
+// POST /api/highscores {game, name, score, week?} → the new table; with week
+//      the score also goes on that week's table (kept 30 days)
 //
 // Names are three letters or digits, like the initials on an arcade cabinet;
 // nothing else about the player is stored. Same Upstash Redis as /api/stats
@@ -34,6 +36,13 @@ async function redis(commands) {
 }
 
 const key = (game) => `rm:hs:${game}`;
+const weekKey = (game, week) => `rm:hs:w:${week}:${game}`;
+// The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
+const validWeek = (w) =>
+  typeof w === "string" &&
+  /^\d{4}-\d{2}-\d{2}$/.test(w) &&
+  new Date(`${w}T12:00:00Z`).getUTCDay() === 1 &&
+  Math.abs(Date.parse(`${w}T12:00:00Z`) - Date.now()) < 9 * 86_400_000;
 
 // Three-letter words nobody should see on a public board (English and
 // German swear words and Nazi codes).
@@ -50,8 +59,8 @@ function parse(flat) {
   return out;
 }
 
-async function table(game) {
-  const [flat] = await redis([["ZRANGE", key(game), 0, SHOW - 1, "REV", "WITHSCORES"]]);
+async function table(game, week) {
+  const [flat] = await redis([["ZRANGE", week ? weekKey(game, week) : key(game), 0, SHOW - 1, "REV", "WITHSCORES"]]);
   return parse(flat || []);
 }
 
@@ -63,7 +72,10 @@ export default async function handler(req, res) {
   if (!configured()) return res.status(200).json({ scores: [], ready: false });
 
   try {
-    if (req.method === "GET") return res.status(200).json({ scores: await table(game), ready: true });
+    if (req.method === "GET") {
+      const week = validWeek(req.query?.week) ? req.query.week : null;
+      return res.status(200).json({ scores: await table(game, week), ready: true });
+    }
     if (req.method !== "POST") {
       res.setHeader("Allow", "GET, POST");
       return res.status(405).end();
@@ -74,11 +86,20 @@ export default async function handler(req, res) {
     const score = Math.floor(Number(body.score));
     if (name.length !== 3 || !(score > 0) || score > GAMES[game]) return res.status(400).json({ error: "bad_entry" });
     const member = `${name}:${Math.random().toString(36).slice(2, 8)}`;
-    await redis([
+    const week = validWeek(body.week) ? body.week : null;
+    const commands = [
       ["ZADD", key(game), score, member],
       ["ZREMRANGEBYRANK", key(game), 0, -(KEEP + 1)],
-    ]);
-    return res.status(200).json({ scores: await table(game), ready: true });
+    ];
+    if (week) {
+      commands.push(
+        ["ZADD", weekKey(game, week), score, member],
+        ["ZREMRANGEBYRANK", weekKey(game, week), 0, -(KEEP + 1)],
+        ["EXPIRE", weekKey(game, week), 30 * 86_400],
+      );
+    }
+    await redis(commands);
+    return res.status(200).json({ scores: await table(game), week: week ? await table(game, week) : undefined, ready: true });
   } catch (e) {
     console.error("highscores:", e?.message || e);
     return res.status(200).json({ scores: [], ready: false });
