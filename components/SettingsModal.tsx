@@ -47,7 +47,7 @@ export const SettingsModal: React.FC<{
   onToggleSpotify: () => void;
   spotifyAllowed: boolean;
   onOpenWhatsNew: () => void;
-  /** Shows the welcome screen (ticking clock, "Go back...") again; left out
+  /** Shows the welcome screen (ticking clock, flux button) again; left out
    *  while the welcome screen is already showing. */
   onBackToWelcome?: () => void;
   hasUnseenNews: boolean;

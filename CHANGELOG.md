@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Startbildschirm wie aus einem Zeitreisefilm** (2026-10-18, PR #NNN): Die
+  Überschrift und der „Go back...“-Knopf der Zeitreise sind neu, ganz im Stil
+  von „Zurück in die Zukunft“. Über der Kaminuhr zucken Blitze und erhellen
+  kurz den Raum, einer schlägt in die Uhr. „RetroMind“ steht schräg in Chrom
+  und Feuer da, mit einer Feuerspur darunter. Zeitschaltkreise zeigen die
+  Zielzeit (dein Geburtstag, wenn du schon mal da warst) und die Gegenwart.
+  Der Start ist jetzt ein Flux-Knopf „Ab in die Vergangenheit“ mit Tacho: Beim
+  Drücken rast er auf 88 MPH, die Blitze schlagen ununterbrochen ein, zwei
+  Feuerspuren ziehen über den Boden, dann saugt die Zeitmaschine dich ein.
+  Mit „Bewegung reduzieren“ am Gerät flackert nichts. Die kleine weiße Fahne
+  hinter „Die Fahrkarte in deine Vergangenheit“ ist weg.
+
 - **Bildschirmfarbe von Blau bis Orange** (2026-10-18, PR #241): In den
   Einstellungen (Griff am rechten Rand) gibt es unter der Schriftgröße einen
   neuen Regler „Bildschirmfarbe“. Nach rechts wird alles wärmer und

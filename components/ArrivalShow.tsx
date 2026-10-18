@@ -48,7 +48,7 @@ const MONTHS_EN = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP'
 const MONTHS_DE = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];
 const MONTHS = isGerman ? MONTHS_DE : MONTHS_EN;
 
-interface Stamp {
+export interface Stamp {
   month: number;
   day: number;
   year: number;
@@ -115,20 +115,21 @@ function boom(chord = true) {
 
 const pad = (n: number, w = 2) => String(n).padStart(w, '0');
 
-const Row: React.FC<{ label: string; stamp: Stamp; tone: 'red' | 'green' | 'amber'; locked?: boolean }> = ({ label, stamp, tone, locked }) => (
+/** One row of the time circuits; without a stamp it shows dashes (the welcome screen before anyone has entered a birthday). */
+export const TimeCircuitRow: React.FC<{ label: string; stamp: Stamp | null; tone: 'red' | 'green' | 'amber'; locked?: boolean }> = ({ label, stamp, tone, locked }) => (
   <div className={`rm-tc-row is-${tone} ${locked ? 'is-locked' : ''}`}>
     <div className="rm-tc-cells">
       <span className="rm-tc-cell">
         <small>{tr('Month', 'Monat')}</small>
-        <b>{MONTHS[stamp.month]}</b>
+        <b>{stamp ? MONTHS[stamp.month] : '---'}</b>
       </span>
       <span className="rm-tc-cell">
         <small>{tr('Day', 'Tag')}</small>
-        <b>{pad(stamp.day)}</b>
+        <b>{stamp ? pad(stamp.day) : '--'}</b>
       </span>
       <span className="rm-tc-cell rm-tc-year">
         <small>{tr('Year', 'Jahr')}</small>
-        <b>{stamp.year}</b>
+        <b>{stamp ? stamp.year : '----'}</b>
       </span>
     </div>
     <span className="rm-tc-label">{label}</span>
@@ -324,8 +325,8 @@ export const ArrivalShow: React.FC<{
     >
       <div className="rm-arrival-stars" aria-hidden="true" />
       <div className="rm-tc" aria-hidden={phase !== 'race'}>
-        <Row label={tr('Destination time', 'Zielzeit')} stamp={shown} tone="red" locked={phase !== 'race'} />
-        <Row label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
+        <TimeCircuitRow label={tr('Destination time', 'Zielzeit')} stamp={shown} tone="red" locked={phase !== 'race'} />
+        <TimeCircuitRow label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
       </div>
       {phase !== 'race' && (
         <>

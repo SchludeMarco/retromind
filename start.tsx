@@ -15,6 +15,7 @@ import '@fontsource/cormorant-garamond/latin-600-italic.css';
 // Fonts of the "Retro Warm" design (only downloaded while it is active).
 import '@fontsource/epilogue/latin-600.css';
 import '@fontsource/epilogue/latin-700.css';
+import '@fontsource/epilogue/latin-900-italic.css';
 import '@fontsource/plus-jakarta-sans/latin-400.css';
 import '@fontsource/plus-jakarta-sans/latin-500.css';
 import '@fontsource/plus-jakarta-sans/latin-600.css';

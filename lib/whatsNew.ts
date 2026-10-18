@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Startbildschirm wie aus einem Zeitreisefilm': {
+    title: 'A welcome screen straight out of a time-travel film',
+    text: 'The heading and the “Go back...” button of Time Travel are new, in the spirit of “Back to the Future”. Lightning flickers over the mantel clock and lights up the room for a moment, one bolt strikes the clock. “RetroMind” stands slanted in chrome and fire, with a trail of fire beneath it. Time circuits show the destination time (your birthday, if you have been here before) and the present. Starting is now a flux button “Go back in time” with a speedometer: press it and it races to 88 MPH, lightning strikes non-stop, two trails of fire streak across the floor, then the time machine pulls you in. With “reduce motion” on your device nothing flickers. The little white flag after “The ticket to your past” is gone.',
+  },
   'Bildschirmfarbe von Blau bis Orange': {
     title: 'Screen color from blue to orange',
     text: 'The settings (handle at the right edge) now have a new “Screen color” slider below the text size. Slide it right and everything turns warmer and more orange, like the night light on a phone; slide it left and it turns cooler and bluer. In the middle the app looks as designed. The slider works in every design of Time Travel and in the arcade (there under “Screen”), and your choice carries over to the other app and to your other devices. “Back to normal” resets the color.',

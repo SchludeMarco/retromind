@@ -178,7 +178,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   springt man über den Griff am rechten Rand zu jedem Halt.
   Ein gemeinsames Design-System (Abstände, Kanten, Schatten, Knöpfe,
   Überschriften) beschreibt [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md).
-- **Die Zeitmaschine saugt dich ein** – ein Druck auf „Go back...“ zieht
+- **Die Zeitmaschine saugt dich ein** – ein Druck auf den Flux-Knopf „Go back in time“ zieht
   Schrift, Knopf und Uhr in einer Spirale ins Zifferblatt, Lichtringe rasen
   zur Mitte, ein heller Kern wächst, bis alles Licht ist, und dann öffnet
   sich das Licht von der Mitte her wie eine Blende. Dazu rasen die Ticks der
@@ -381,10 +381,19 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [CHANGELOG.md](CHANGELOG.md) direkt in der App ([`lib/whatsNew.ts`](lib/whatsNew.ts)),
   ein kleiner roter Punkt am Griff am rechten Rand meldet Neues seit dem
   letzten Blick.
-- **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
-  Kaminuhr, die laut und zweimal pro Sekunde tickt. Der „Go back...“-Knopf trägt den Look des
-  gewählten Designs, steht leicht schräg und blitzt ab und zu auf; ein Druck darauf startet die
-  Zeitmaschine (siehe oben), bei der Ankunft schlägt ein großer Gong. Alles synthetisiert
+- **Willkommens-Bildschirm im Zeitreisefilm-Look** – vor einer alten Kaminuhr,
+  die laut und zweimal pro Sekunde tickt, zucken ab und zu Blitze über den
+  Himmel (einer schlägt in die Uhr) und erhellen kurz den Raum. „RetroMind“
+  steht schräg in Chrom und Feuer da, mit einer Feuerspur darunter. Darunter
+  zeigen Zeitschaltkreise die Zielzeit (dein Geburtstag, sobald bekannt, sonst
+  blinkende Striche) und die Gegenwart. Der Flux-Knopf „Go back in time“ / „Ab
+  in die Vergangenheit“ hat ein leuchtendes Emblem und einen Tacho: Beim Drücken
+  rast er auf 88 MPH, die Blitze schlagen ohne Pause ein, zwei Feuerspuren
+  ziehen über den Boden, und die Zeitmaschine startet (siehe oben); bei der
+  Ankunft schlägt ein großer Gong. Gleicher Look in allen Designs; mit
+  „Bewegung reduzieren“ stehen die Blitze still und blass am Himmel. Nur die
+  Stimmung ist vom Film geliehen, kein Logo, keine Schrift, kein Filmbild
+  ([`components/SplashScreen.tsx`](components/SplashScreen.tsx)). Alles synthetisiert
   ([`lib/clockSounds.ts`](lib/clockSounds.ts)) und still, wenn der Ton aus
   ist. Lässt der Browser noch keinen Ton zu, tickt die Uhr ab dem ersten
   Antippen (auch auf dem Handy, auch mit dem Stumm-Schalter des iPhones);
