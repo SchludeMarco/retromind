@@ -1,4 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 // Server-side proxy for all Gemini / Veo calls. The API key lives only here
 // (Vercel env var GEMINI_API_KEY) and never reaches the browser.
@@ -71,6 +73,62 @@ const GAMING_CHAT_SYSTEM_EN =
   "2000s: noob, epic fail, GG, OP; today: no cap, lowkey, goated, cringe), at most two slang words " +
   "per answer so everything stays easy to understand. Don't make up facts; say honestly when you're unsure. " +
   "Never link to or recommend illegal ROM downloads.";
+
+// The app help bot (components/HelpBot.tsx, Marco 2026-10-18: "einen Button
+// ganz unten rechts für einen KI bot, dem man alle Fragen über die App stellen
+// kann"). It answers from the feature lists of both READMEs, so it stays
+// current with every PR that updates them. vercel.json `includeFiles` ships
+// the two files with this function.
+function featureSection(file) {
+  try {
+    const md = readFileSync(join(process.cwd(), file), "utf8");
+    const start = md.search(/^## Was .* kann\s*$/m);
+    if (start < 0) return "";
+    const rest = md.slice(start);
+    const end = rest.slice(3).search(/^## /m);
+    return (end < 0 ? rest : rest.slice(0, end + 3))
+      // Source file links mean nothing to visitors: "([`lib/x.ts`](lib/x.ts))".
+      .replace(/\s*\((?:\[`[^`]*`\]\([^)]*\)[,;\s]*(?:und\s*)?)+\)/g, "")
+      .replace(/\[`([^`]*)`\]\([^)]*\)/g, "$1")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  } catch (e) {
+    console.warn("help bot: cannot read", file, e?.message || e);
+    return "";
+  }
+}
+
+let appGuide = null;
+function getAppGuide() {
+  if (appGuide === null) {
+    appGuide =
+      "=== RetroMind (Zeitreise, retromind.vercel.app) ===\n" + featureSection("README.md") +
+      "\n\n=== RetroMind – Gaming (retromind-gaming.vercel.app) ===\n" + featureSection("gaming/README.md");
+  }
+  return appGuide;
+}
+
+function helpSystem(de, app) {
+  const where = app === "gaming"
+    ? (de ? "Die Person ist gerade in der Gaming-Edition (Spielhalle)." : "The person is currently in the Gaming edition (the arcade).")
+    : (de ? "Die Person ist gerade in der Zeitreise." : "The person is currently in the Zeitreise (time travel) app.");
+  const rules = de
+    ? "Du bist die freundliche Hilfe von RetroMind. Du beantwortest Fragen dazu, was die App kann, wo man etwas " +
+      "findet und wie es funktioniert. " + where + " Stütze dich NUR auf die Funktionsbeschreibung unten (sie ist auf " +
+      "Deutsch). Steht etwas nicht darin, sag ehrlich, dass du es nicht weißt, und schlag vor, es über den roten " +
+      "Feedback-Knopf in der Steuerung zu melden. Erfinde keine Funktionen. Fast alle Knöpfe und Einstellungen " +
+      "liegen hinter dem kleinen Griff am rechten Bildschirmrand in der Mitte. Antworte im Du, kurz (2-5 Sätze), " +
+      "einfach und ohne Technik-Begriffe wie Dateinamen, Code oder Markdown. Bei Fragen, die nichts mit RetroMind " +
+      "zu tun haben, lenk freundlich zurück zur App. Über den Adminbereich sprichst du nicht."
+    : "You are RetroMind's friendly help. You answer questions about what the app can do, where to find things " +
+      "and how they work. " + where + " Rely ONLY on the feature description below (it is written in German; " +
+      "translate names of buttons and places sensibly). If something isn't in it, say honestly that you don't know " +
+      "and suggest reporting it with the red Feedback button in the controls. Never make up features. Almost all " +
+      "buttons and settings sit behind the small handle at the middle of the right screen edge. Reply in American " +
+      "English, speaking to the person as \"you\", briefly (2-5 sentences), simply and without technical terms such " +
+      "as file names, code or Markdown. If a question has nothing to do with RetroMind, kindly steer back to the app. Don't talk about the admin area.";
+  return rules + "\n\n" + getAppGuide();
+}
 
 // Text plus the web pages Google Search grounded it in, for display.
 function grounded(r) {
@@ -210,12 +268,14 @@ export default async function handler(req, res) {
             parts: [{ text: m.text }],
           }));
         if (!contents.length) return res.status(400).json({ error: "empty_history" });
+        const help = payload.persona === "help";
         const r = await generate(ai, {
           model: MODELS.chat,
-          contents,
+          contents: help ? contents.slice(-12).filter((c, i, a) => i > 0 || c.role === "user" || a.length === 1).map((c) => ({ ...c, parts: [{ text: clip(c.parts[0].text, 1500) }] })) : contents,
           config: {
-            systemInstruction:
-              payload.persona === "gaming"
+            systemInstruction: help
+              ? helpSystem(de, payload.app)
+              : payload.persona === "gaming"
                 ? de ? GAMING_CHAT_SYSTEM : GAMING_CHAT_SYSTEM_EN
                 : de ? CHAT_SYSTEM : CHAT_SYSTEM_EN,
           },

@@ -19,7 +19,8 @@
   ],
   "functions": {
     "api/gemini.js": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "includeFiles": "{README.md,gaming/README.md}"
     },
     "api/video.js": {
       "maxDuration": 60

@@ -8,6 +8,15 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Fragen zur App? Ein KI-Helfer unten rechts** (2026-10-18, PR #248): In
+  der Zeitreise und in der Spielhalle sitzt ganz unten rechts ein runder
+  „?“-Knopf. Er öffnet einen kleinen Chat, dem du jede Frage über RetroMind
+  stellen kannst: was die App kann, wo du etwas findest und wie es
+  funktioniert. Er antwortet in deiner Sprache, stützt sich nur auf die
+  Beschreibung aller Funktionen und sagt ehrlich, wenn er etwas nicht weiß.
+  Drei Beispielfragen helfen beim Einstieg. Wie alle KI-Funktionen läuft er
+  über Google Gemini und ist als KI gekennzeichnet.
+
 - **Nichts mehr unter dem Griff, nichts mehr über dem Rand** (2026-10-18,
   PR #247): Auf dem Handy lag der Griff am rechten Rand über dem Text, und
   bei „Heute in deiner Jugend“ liefen lange Wörter wie

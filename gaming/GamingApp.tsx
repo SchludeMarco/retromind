@@ -17,6 +17,7 @@ import { ATTRACT_AFTER_MS, AttractMode } from './components/AttractMode';
 import { MuncherWander } from './components/MuncherWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
+import { HelpBot } from '../components/HelpBot';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
@@ -215,6 +216,7 @@ export const GamingApp: React.FC = () => {
   }>({ term: '', total: 0, next: null, loading: false, related: false, label: '' });
   const [selected, setSelected] = useState<Game | null>(reloaded.selected ?? null);
   const [guruOpen, setGuruOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
   const [emu, setEmu] = useState<EmuLaunch | null>(null);
@@ -1079,8 +1081,22 @@ export const GamingApp: React.FC = () => {
       {/* The fun-fact ticker, pinned just above the dock (Marco, 2026-10-18). */}
       {screen === 'hub' && <HallTicker onOpen={open} onSound={() => chip.play('blip')} />}
 
+      {/* Questions about the app: the AI help at the very bottom right. */}
+      {screen === 'hub' && (
+        <HelpBot
+          app="gaming"
+          open={helpOpen}
+          hidden={guruOpen}
+          onOpenChange={(o) => {
+            setHelpOpen(o);
+            if (o) setGuruOpen(false);
+          }}
+          onSound={() => chip.play('blip')}
+        />
+      )}
+
       {/* Every control behind one handle at the right edge (Marco, 2026-10-18). */}
-      {screen === 'hub' && !settingsOpen && (
+      {screen === 'hub' && !settingsOpen && !helpOpen && (
         <GamingHandle
           dot={cloud.status === 'signed_in' && cloud.sync === 'error'}
           onOpen={() => {
@@ -1154,6 +1170,7 @@ export const GamingApp: React.FC = () => {
                   chip.play(guruOpen ? 'back' : 'select');
                   setSettingsOpen(false);
                   setGuruOpen(!guruOpen);
+                  setHelpOpen(false);
                 }}
                 onFeedback={() => {
                   chip.play('select');
