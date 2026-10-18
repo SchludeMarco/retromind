@@ -73,6 +73,8 @@ zeigen dürfen.
   schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
   Fun Facts, Erscheinungsjahre und Anekdoten zu allen Katalogspielen (ein Tipp
   öffnet das Spiel); ist alles einmal durch, holt die KI frische Fakten dazu.
+  Die Diskette hinter jeder Meldung legt sie in die **Grabbelkiste**, dieselbe
+  wie in der Zeitreise; die Kiste vorn im Ticker zeigt alles Gesammelte.
   Die zuletzt gezeigten merkt sich das Gerät zum Zurückblättern
   ([`components/HallTicker.tsx`](components/HallTicker.tsx), Technik geteilt
   mit der Zeitreise: [`components/TickerTrack.tsx`](../components/TickerTrack.tsx),

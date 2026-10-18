@@ -9,7 +9,7 @@ import { keptItem } from './grabbelkiste';
 // twin and "Gag me with a spoon" no German one. Ids are stable: the
 // Grabbelkiste (lib/grabbelkiste.ts) stores them, so never reuse or renumber.
 
-export type TickerKind = 'saying' | 'thing' | 'year';
+export type TickerKind = 'saying' | 'thing' | 'year' | 'game';
 
 export interface TickerItem {
   id: string;
@@ -190,7 +190,8 @@ export function tickerPool(): TickerItem[] {
 export function tickerItem(id: string): TickerItem | undefined {
   if (id.startsWith('year-')) return yearItem(Number(id.slice(5))) ?? undefined;
   if (isAi(id)) return aiItems.find((i) => i.id === id) ?? keptItem(id);
-  return ALL.find((i) => i.id === id);
+  // Fun facts from the gaming hall live in the box with their words.
+  return ALL.find((i) => i.id === id) ?? keptItem(id);
 }
 
 /**

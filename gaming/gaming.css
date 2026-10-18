@@ -276,23 +276,88 @@ a {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  gap: 6px;
   padding: 0 10px;
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
   color: var(--bg);
   background: var(--a1);
+  border: none;
+  cursor: pointer;
 }
-.hall-ticker-badge-short {
-  display: none;
-  font-size: 14px;
+.hall-ticker-box {
+  width: 22px;
+  height: 22px;
+}
+.hall-ticker-count {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  color: var(--a1);
+  background: var(--bg);
+}
+.hall-ticker-count.bump {
+  animation: hall-bump 0.5s ease-out;
+}
+@keyframes hall-bump {
+  40% { transform: scale(1.45); }
 }
 @media (max-width: 560px) {
   .hall-ticker-badge-long {
     display: none;
   }
-  .hall-ticker-badge-short {
-    display: inline;
-  }
+}
+.hall-ticker-disk {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  color: var(--a1);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.hall-ticker-disk.is-saved {
+  color: #3ddc84;
+}
+.hall-ticker-disk-icon {
+  width: 24px;
+  height: 24px;
+}
+.box-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.box-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px solid var(--panel);
+}
+.box-list-disk {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--a1);
+}
+.box-list-text {
+  flex: 1;
+  min-width: 0;
+}
+.box-list-text small {
+  display: block;
+  color: var(--dim);
 }
 .hall-ticker-view {
   flex: 1 1 auto;
@@ -1531,6 +1596,17 @@ html[data-ticker] .hub {
   letter-spacing: 0.04em;
   color: #fff;
   background: #d97706;
+}
+.arcade[data-palette='modul'] .hall-ticker-count {
+  color: #d97706;
+  background: #fff;
+}
+.arcade[data-palette='modul'] .hall-ticker-disk,
+.arcade[data-palette='modul'] .box-list-disk {
+  color: #d97706;
+}
+.arcade[data-palette='modul'] .hall-ticker-disk.is-saved {
+  color: #15803d;
 }
 .arcade[data-palette='modul'] .hall-ticker-step {
   color: #78350f;

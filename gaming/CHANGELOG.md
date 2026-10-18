@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Diskette auch im Gaming-Ticker** (2026-10-18, PR #238): Hinter jedem
+  Fun Fact in der Spielhalle sitzt jetzt eine Diskette. Ein Tipp legt die
+  Meldung in die Grabbelkiste, ein zweiter nimmt sie wieder heraus. Die Kiste
+  vorn im Ticker zählt mit und zeigt alles Gesammelte. Es ist dieselbe
+  Grabbelkiste wie in der Zeitreise: Sprüche und Fun Facts landen in einer
+  Kiste, in beiden Apps und auf allen Geräten.
+
 - **Laufbänder zum Zurückholen und Weiterblättern** (2026-10-18, PR #237):
   Die Fun Facts in der Gaming-Edition laufen jetzt wie das Laufband der
   Zeitreise ganz unten, direkt über den Knöpfen der Navigation. Beide

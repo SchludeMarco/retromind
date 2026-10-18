@@ -47,13 +47,15 @@ export function isInGrabbelkiste(id: string): boolean {
 }
 
 // Entries the AI added to the ticker exist only on the device that loaded
-// them, so the box keeps their words itself (same sync as the box).
+// them, and fun facts from the gaming hall (gaming/components/HallTicker.tsx)
+// aren't known to the Zeitreise, so the box keeps their words itself (same
+// sync as the box). One box for both apps.
 const ITEMS_KEY = 'retromind.grabbelkiste.items';
 
 export interface KeptItem {
   id: string;
   decade: string;
-  kind: 'saying' | 'thing' | 'year';
+  kind: 'saying' | 'thing' | 'year' | 'game';
   text: string;
   info: string;
 }
