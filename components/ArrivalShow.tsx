@@ -23,6 +23,11 @@ import type { CapturedMemory } from '../types';
 // lib/yearFacts), the visitor's own memories (photos and terms they already
 // collected) fly out with the decade's things, and a few seconds of that
 // year's No. 1 hit ring out as the fanfare (the Spotify music pauses for it).
+// Since Marco's calm-down wish (2026-10-18: "Nachdem die Zeitreise fertig ist,
+// ändert sich die Musik kurz, sie bricht ab … zu stressig"): when the music
+// is already running, it simply keeps running through the show and the hit
+// is only named, not played; the fanfare only sounds when no music plays,
+// and then fades out slowly instead of breaking off.
 // Tapping anywhere skips it. Without motion (prefers-reduced-motion) it
 // isn't shown. Sounds are Web Audio, quiet at first and off when muted.
 
@@ -33,6 +38,8 @@ const HIT_HOLD_MS = 4600;
 const FADE_MS = 700;
 // The clip starts a moment in, past any fade-in of the preview.
 const HIT_OFFSET_S = 2;
+// How long the fanfare takes to fade out at the end (or when skipped).
+const HIT_FADE_S = 2.5;
 
 const ERA_THINGS: Record<string, string[]> = {
   '1960': ['🚀', '📺', '🌼', '🎸', '🛵', '📻', '☮️', '🎞️'],
@@ -148,7 +155,9 @@ export const ArrivalShow: React.FC<{
   memories?: CapturedMemory[];
   /** The hit's fanfare starts (true) or is over (false). */
   onMusic?: (on: boolean) => void;
-}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic }) => {
+  /** The app's music is playing: then it keeps playing and the fanfare stays silent. */
+  musicPlaying?: boolean;
+}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic, musicPlaying = false }) => {
   const now = new Date();
   const present: Stamp = { month: now.getMonth(), day: now.getDate(), year: now.getFullYear() };
   const [, m, d] = birthDate.split('-').map(Number);
@@ -161,6 +170,8 @@ export const ArrivalShow: React.FC<{
   onDoneRef.current = onDone;
   const onMusicRef = useRef(onMusic);
   onMusicRef.current = onMusic;
+  const musicPlayingRef = useRef(musicPlaying);
+  musicPlayingRef.current = musicPlaying;
 
   // The No. 1 hit of the year, loaded while the dials race.
   const hit = hitOf(year);
@@ -173,14 +184,14 @@ export const ArrivalShow: React.FC<{
   const startHit = () => {
     const c = audio();
     const buf = hitBuffer.current;
-    if (!c || !buf || hitPlay.current || !lockedAt.current) return;
+    if (!c || !buf || hitPlay.current || !lockedAt.current || musicPlayingRef.current) return;
     const left = (holdRef.current + FADE_MS - (performance.now() - lockedAt.current)) / 1000;
-    if (left < 1.5) return;
+    if (left < HIT_FADE_S + 1) return;
     const t = c.currentTime;
     const gain = c.createGain();
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(0.9, t + 0.25);
-    gain.gain.setValueAtTime(0.9, t + left - 1);
+    gain.gain.exponentialRampToValueAtTime(0.9, t + 0.6);
+    gain.gain.setValueAtTime(0.9, t + left - HIT_FADE_S);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + left);
     gain.connect(c.destination);
     const src = c.createBufferSource();
@@ -198,7 +209,7 @@ export const ArrivalShow: React.FC<{
   useEffect(() => {
     // The clip is a piece of someone else's recording, so like the Spotify
     // music it only plays once the visitor allowed music (lib/privacy).
-    if (!hit || isMuted() || getConsent('spotify') !== true) return;
+    if (!hit || isMuted() || getConsent('spotify') !== true || musicPlayingRef.current) return;
     let live = true;
     fetch(hitClipUrl(hit))
       .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject()))
@@ -224,8 +235,8 @@ export const ArrivalShow: React.FC<{
           const t = c.currentTime;
           p.gain.gain.cancelScheduledValues(t);
           p.gain.gain.setValueAtTime(Math.max(0.0001, p.gain.gain.value), t);
-          p.gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
-          p.src.stop(t + 0.55);
+          p.gain.gain.exponentialRampToValueAtTime(0.0001, t + HIT_FADE_S);
+          p.src.stop(t + HIT_FADE_S + 0.05);
         } catch {
           /* already stopped */
         }
@@ -237,7 +248,7 @@ export const ArrivalShow: React.FC<{
 
   const lockIn = () => {
     lockedAt.current = performance.now();
-    holdRef.current = hitBuffer.current ? HIT_HOLD_MS : HOLD_MS;
+    holdRef.current = hitBuffer.current && !musicPlayingRef.current ? HIT_HOLD_MS : HOLD_MS;
     setPhase('locked');
     boom(!hitBuffer.current);
     onLockRef.current();
@@ -353,9 +364,10 @@ export const ArrivalShow: React.FC<{
             <p className="rm-arrival-eyebrow">{tr('Welcome back', 'Willkommen zurück')}</p>
             <p className="rm-arrival-digits">{year}</p>
             {line ? <p className="rm-arrival-title">… {line}</p> : title && <p className="rm-arrival-title">{title}</p>}
-            {hitOn && hit && (
+            {(hitOn || musicPlaying) && hit && (
               <p className="rm-arrival-hit">
-                ♪ {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
+                {hitOn ? '♪ ' : ''}
+                {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
                 <b>{hit.title}</b> · {hit.artist}
               </p>
             )}

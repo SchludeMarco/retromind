@@ -527,7 +527,8 @@ const App: React.FC = () => {
   const videoOn = quietFor.video || quietFor.fanfare;
   const handleYearVideo = useCallback((on: boolean) => setQuietFor((q) => (q.video === on ? q : { ...q, video: on })), []);
   const handleFanfare = useCallback((on: boolean) => setQuietFor((q) => (q.fanfare === on ? q : { ...q, fanfare: on })), []);
-  // A moment's grace: when the show ends, the year's video comes right after.
+  // A moment's grace: the music comes back while the fanfare is still fading
+  // out (a soft crossfade), and a closed-then-reopened video doesn't flicker it.
   useEffect(() => {
     if (videoOn || !pausedForVideoRef.current) return;
     const t = window.setTimeout(() => {
@@ -737,6 +738,7 @@ const App: React.FC = () => {
           onDone={() => setArrivalShow(false)}
           memories={memories}
           onMusic={handleFanfare}
+          musicPlaying={spotify.isPlaying}
         />
       )}
       {toast && (
@@ -834,7 +836,7 @@ const App: React.FC = () => {
               onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }}
             />
           )}
-          {travelYear && <YearWelcome year={travelYear} travel={travel} hold={arrivalShow} onPlayingChange={handleYearVideo} />}
+          {travelYear && <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />}
           {musicDock}
           <BackToTop warm={warm} hidden={isChatOpen} onClick={() => playSFX('click')} />
           {/* Questions about the app: the AI help at the very bottom right. */}

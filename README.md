@@ -277,13 +277,15 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   des Mauerfalls“, [`lib/yearFacts.ts`](lib/yearFacts.ts)), Dinge des
   Jahrzehnts und die eigenen Fotos und Begriffe fliegen heraus, und ein paar
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
-  `/api/spotify-preview`) klingen als Fanfare; ein Tipp überspringt sie. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
+  `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
+  schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
+  Tipp überspringt die Show. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
   back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
   sagt sie „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
   Sprachausgabe des Browsers, tief und langsam, still bei ausgeschaltetem
   Ton). Über jedem
-  Halt steht der Satz groß, darunter startet ein **Jahresrückblick-Video**
-  aus diesem Jahr von YouTube ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
+  Halt steht der Satz groß, darunter wartet ein **Jahresrückblick-Video**
+  aus diesem Jahr von YouTube, das erst auf Tippen startet ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
   über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen
   unter „Videos“; die Spotify-Musik pausiert solange).
   Die Musik steuert man im Fenster hinter dem Griff am rechten Rand: Zurück,
