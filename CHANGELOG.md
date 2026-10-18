@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Donner zu den Blitzen** (2026-10-18, PR #243): Die Blitze auf dem
+  Startbildschirm der Zeitreise sind jetzt auch zu hören. Zu jedem Blitz
+  kracht es, dann rollt der Donner ein paar Sekunden nach. Der Blitz, der in
+  die Uhr einschlägt, ist laut und kracht sofort; die beiden fernen Blitze
+  grollen leiser und etwas später. Wie alle Töne am Anfang wird auch der
+  Donner erst langsam lauter, und bei ausgeschaltetem Ton bleibt er still.
+
 - **Startbildschirm wie aus einem Zeitreisefilm** (2026-10-18, PR #242): Die
   Überschrift und der „Go back...“-Knopf der Zeitreise sind neu, ganz im Stil
   von „Zurück in die Zukunft“. Über der Kaminuhr zucken Blitze und erhellen

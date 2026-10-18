@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MantelClock } from './MantelClock';
-import { startTicking, playWarp, WARP_SECONDS } from '../lib/clockSounds';
+import { startTicking, playWarp, playThunder, WARP_SECONDS } from '../lib/clockSounds';
 import { useMuted } from '../lib/mute';
 import { LoudSign } from './LoudSign';
 import { tr } from '../lib/i18n';
@@ -30,12 +30,33 @@ const TIME_SPEED = 88;
 // journey goes, a flux button whose speedometer races to 88 and leaves two
 // trails of fire. Only the mood is borrowed, no logo, font or film picture.
 
-/** Lightning: three bolts flicker now and then (one strikes the clock) and light up the room; during the warp they strike non-stop. */
-const Storm: React.FC = () => (
+// Where in its cycle a bolt flashes (the rmBolt keyframes in index.css), and
+// how far away each one sounds: bolt a strikes the clock, b and c are farther.
+const FLASH_AT = 0.81;
+const BOLT_DISTANCE = { a: 0, b: 0.6, c: 0.9 } as const;
+
+/**
+ * Lightning: three bolts flicker now and then (one strikes the clock) and
+ * light up the room, each with its thunder; during the warp they strike
+ * non-stop (the warp's own sound carries that part, so no thunder then).
+ */
+const Storm: React.FC<{ thunder: boolean }> = ({ thunder }) => {
+  const thunderRef = useRef(thunder);
+  thunderRef.current = thunder;
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  // Each cycle of a flash's animation: thunder at the moment it lights up.
+  const onCycle = (bolt: keyof typeof BOLT_DISTANCE) => (e: React.AnimationEvent<HTMLSpanElement>) => {
+    const seconds = parseFloat(getComputedStyle(e.currentTarget).animationDuration) || 0;
+    timers.current.push(
+      window.setTimeout(() => thunderRef.current && playThunder(BOLT_DISTANCE[bolt]), seconds * FLASH_AT * 1000),
+    );
+  };
+  return (
   <div aria-hidden="true" className="rm-storm">
-    <span className="rm-sky-flash is-a" />
-    <span className="rm-sky-flash is-b" />
-    <span className="rm-sky-flash is-c" />
+    {(['a', 'b', 'c'] as const).map((b) => (
+      <span key={b} className={`rm-sky-flash is-${b}`} onAnimationStart={onCycle(b)} onAnimationIteration={onCycle(b)} />
+    ))}
     <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMin slice" className="rm-storm-bolts">
       <g className="rm-bolt is-a">
         <path d="M520 -10 L494 90 L534 112 L478 210 L520 228 L496 330" />
@@ -51,7 +72,8 @@ const Storm: React.FC = () => (
       </g>
     </svg>
   </div>
-);
+  );
+};
 
 /** The flux button's emblem: three glowing tubes meeting in the middle, light running inwards. */
 const FluxIcon: React.FC = () => (
@@ -177,7 +199,7 @@ export const SplashScreen: React.FC<{
           <div className="splash-core" />
         </div>
       )}
-      <Storm />
+      <Storm thunder={!struck && !reduceMotion} />
       <div className="splash-content relative h-full flex flex-col items-center justify-center text-center px-6">
       <h1 className="rm-tm-title relative">
         <span className="rm-tm-welcome">{tr('Welcome to', 'Willkommen bei')}</span>

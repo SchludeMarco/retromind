@@ -428,6 +428,83 @@ export function playWarp() {
   window.setTimeout(playGong, WARP_SECONDS * 1000);
 }
 
+/**
+ * Thunder for the lightning on the welcome screen (Marco, 2026-10-18: "Die
+ * Blitze soll man auch hören"): a sharp crack, then a rolling rumble that
+ * swells and dies away over a few seconds. `distance` 0 is the bolt that
+ * strikes the clock (loud, the crack at once), 1 a far one (quieter, the
+ * crack later and duller). Synthesized from noise, kept mostly above 120 Hz
+ * so phone and laptop speakers still carry it, and played through the
+ * welcome screen's bus, so it also rises from silence with the page.
+ */
+export function playThunder(distance = 0) {
+  if (isMuted()) return;
+  const c = audioContext();
+  if (!c || c.state !== 'running') return;
+  const dest = bus ?? c.destination;
+  const t = c.currentTime + 0.05 + distance * 0.45;
+  const level = 0.85 - distance * 0.45;
+
+  const master = c.createGain();
+  master.gain.value = level;
+  const shaper = c.createWaveShaper();
+  shaper.curve = softClipCurve();
+  master.connect(shaper).connect(dest);
+
+  // The crack: bright noise, gone in a flash.
+  const crack = c.createBufferSource();
+  crack.buffer = noiseBuffer(c, 0.4);
+  const crackFilter = c.createBiquadFilter();
+  crackFilter.type = 'highpass';
+  crackFilter.frequency.value = 900 - distance * 600;
+  const crackGain = c.createGain();
+  crackGain.gain.setValueAtTime(0.0001, t);
+  crackGain.gain.exponentialRampToValueAtTime(0.9 - distance * 0.5, t + 0.008);
+  crackGain.gain.exponentialRampToValueAtTime(0.25, t + 0.06);
+  crackGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+  crack.connect(crackFilter).connect(crackGain).connect(master);
+  crack.start(t);
+  crack.stop(t + 0.4);
+
+  // The rumble: dark noise that rolls in a few uneven swells.
+  const seconds = 3.2 + distance * 1.2;
+  const rumble = c.createBufferSource();
+  rumble.buffer = noiseBuffer(c, seconds);
+  const low = c.createBiquadFilter();
+  low.type = 'lowpass';
+  low.frequency.setValueAtTime(900 - distance * 400, t);
+  low.frequency.exponentialRampToValueAtTime(260, t + seconds);
+  const high = c.createBiquadFilter();
+  high.type = 'highpass';
+  high.frequency.value = 110;
+  const rumbleGain = c.createGain();
+  rumbleGain.gain.setValueAtTime(0.0001, t);
+  rumbleGain.gain.exponentialRampToValueAtTime(0.9, t + 0.12 + distance * 0.2);
+  let at = t + 0.35;
+  for (let i = 0; i < 4 && at < t + seconds - 0.6; i++) {
+    rumbleGain.gain.exponentialRampToValueAtTime(0.35 + Math.random() * 0.2, at);
+    at += 0.25 + Math.random() * 0.35;
+    rumbleGain.gain.exponentialRampToValueAtTime(0.7 + Math.random() * 0.3 - i * 0.12, at);
+    at += 0.2 + Math.random() * 0.3;
+  }
+  rumbleGain.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+  rumble.connect(low).connect(high).connect(rumbleGain).connect(master);
+  rumble.start(t);
+  rumble.stop(t + seconds);
+
+  const unsubscribe = subscribeMuted(() => {
+    if (!isMuted()) return;
+    const now = c.currentTime;
+    master.gain.cancelScheduledValues(now);
+    master.gain.setValueAtTime(master.gain.value, now);
+    master.gain.linearRampToValueAtTime(0, now + 0.15);
+  });
+  window.setTimeout(() => {
+    unsubscribe();
+    master.disconnect();
+  }, (seconds + 1.5) * 1000);
+}
+
 /** How long the clock takes to turn back on the name form. */
 export const REWIND_SECONDS = 1.4;
 

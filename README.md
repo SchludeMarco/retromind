@@ -383,7 +383,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   letzten Blick.
 - **Willkommens-Bildschirm im Zeitreisefilm-Look** – vor einer alten Kaminuhr,
   die laut und zweimal pro Sekunde tickt, zucken ab und zu Blitze über den
-  Himmel (einer schlägt in die Uhr) und erhellen kurz den Raum. „RetroMind“
+  Himmel (einer schlägt in die Uhr) und erhellen kurz den Raum; zu jedem
+  kracht und grollt synthetischer Donner, nah laut, fern leiser und später
+  ([`lib/clockSounds.ts`](lib/clockSounds.ts) `playThunder`). „RetroMind“
   steht schräg in Chrom und Feuer da, mit einer Feuerspur darunter. Darunter
   zeigen Zeitschaltkreise die Zielzeit (dein Geburtstag, sobald bekannt, sonst
   blinkende Striche) und die Gegenwart. Der Flux-Knopf „Go back in time“ / „Ab
