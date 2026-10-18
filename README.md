@@ -470,6 +470,17 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 
 ### Für alle Module
 
+- **KI-Hilfe zur App** ([`components/HelpBot.tsx`](components/HelpBot.tsx)) –
+  ganz unten rechts in beiden Apps ein runder „?“-Knopf (über dem Laufband,
+  weit weg vom Griff in der Mitte des rechten Rands). Er öffnet einen Chat,
+  dem man jede Frage über RetroMind stellen kann, mit drei Beispielfragen zum
+  Einstieg. Die KI (Google Gemini, `api/gemini.js`, Persona „help“) bekommt
+  die Funktionslisten beider READMEs mit („Was RetroMind kann“ und „Was die
+  Gaming-Edition kann“) und antwortet nur daraus, in der gewählten Sprache;
+  was dort nicht steht, sagt sie ehrlich und verweist auf Feedback. Darum
+  bleibt sie mit jeder README-Änderung von selbst aktuell. Solange die Hilfe
+  offen ist, ist der Griff ausgeblendet; sie schließt den Chat-Begleiter
+  (Zeitreise) bzw. den Retro-Guru (Gaming) und umgekehrt.
 - **Dein Kürzel** ([`lib/initials.ts`](lib/initials.ts),
   [`components/InitialsPicker.tsx`](components/InitialsPicker.tsx)) – in den
   Einstellungen beider Apps gibt man ein eigenes Kürzel aus drei Zeichen

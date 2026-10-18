@@ -274,6 +274,12 @@ zeigen dürfen.
 
 ### Einstellungen und Konto
 
+- **KI-Hilfe zur App** – ganz unten rechts über dem Laufband ein „?“-Knopf
+  im Pixel-Look. Er öffnet einen Chat für alle Fragen über RetroMind (Halle,
+  Coins, Suche, Einstellungen, Zeitreise), der nur aus den Funktionslisten
+  beider READMEs antwortet (Details in der
+  [Haupt-README](../README.md#für-alle-module)). Solange der Retro-Guru offen
+  ist, versteckt sich der Knopf.
 - **Design wählbar** unter „Bildschirm“: „Arcade“ (Standard, dunkler
   Pixel-Look mit Neonfarben), „Modul“ (mit Google Stitch entworfen: helles
   Konsolen-Plastik, weiße Modul-Karten, Vorlage in

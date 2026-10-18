@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Fragen zur App? Ein KI-Helfer unten rechts': {
+    title: 'Questions about the app? An AI helper at the bottom right',
+    text: 'In Time Travel and in the arcade there is now a round “?” button at the very bottom right. It opens a small chat where you can ask anything about RetroMind: what the app can do, where to find something and how it works. It answers in your language, relies only on the description of all features and says honestly when it doesn’t know. Three sample questions help you get started. Like all AI features it runs on Google Gemini and is labeled as AI.',
+  },
   'Nichts mehr unter dem Griff, nichts mehr über dem Rand': {
     title: 'Nothing under the handle, nothing past the edge',
     text: 'On phones the handle at the right edge covered text, and in “Today in your youth” long words ran past the edge of the card. Now the page leaves room for the handle on the right (Time Travel and the arcade), long words wrap, and the welcome card stays fully on screen on narrow phones too.',

@@ -184,3 +184,9 @@ export async function fetchTickerMore(decade: string, recent: string[]): Promise
   const { items } = await callApi("tickerMore", { app: "zeitreise", decade, recent });
   return Array.isArray(items) ? items : [];
 }
+
+/** The app help bot (components/HelpBot.tsx): answers from the READMEs. */
+export async function askAppHelp(history: ChatMessage[], app: "zeitreise" | "gaming"): Promise<string> {
+  const { text } = await callApi("chat", { history, persona: "help", app });
+  return (text as string) || "";
+}

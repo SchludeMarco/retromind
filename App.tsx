@@ -19,6 +19,7 @@ import { AmbientLife } from './components/AmbientLife';
 import { ChristmasDeco } from './components/ChristmasDeco';
 import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { ControlCenter, ControlHandle } from './components/ControlHandle';
+import { HelpBot } from './components/HelpBot';
 import { MusicMini } from './components/MusicMini';
 import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
@@ -134,6 +135,7 @@ const App: React.FC = () => {
   // below doesn't skip the form they just opened.
   const [profileEditRequested, setProfileEditRequested] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
@@ -694,7 +696,7 @@ const App: React.FC = () => {
       {/* All controls behind one handle at the right edge, halfway down
           (Marco, 2026-10-18); on the welcome screen too, so sound and
           language can be set before the first note. */}
-      {!isSettingsOpen && (
+      {!isSettingsOpen && !isHelpOpen && (
         <ControlHandle hasNews={unseenNews} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
       {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
@@ -791,7 +793,7 @@ const App: React.FC = () => {
               }}
               music={!showSplash && verified ? musicMini?.('float') : undefined}
               onOpenMusic={() => { playSFX('click'); setIsSettingsOpen(false); openMusicDock(); }}
-              onOpenCompanion={verified && !showSplash && phase !== 'intro' ? () => { playSFX('click'); setIsSettingsOpen(false); setIsChatOpen((v) => !v); } : undefined}
+              onOpenCompanion={verified && !showSplash && phase !== 'intro' ? () => { playSFX('click'); setIsSettingsOpen(false); setIsHelpOpen(false); setIsChatOpen((v) => !v); } : undefined}
               companionOpen={isChatOpen}
               onFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
             />
@@ -835,6 +837,13 @@ const App: React.FC = () => {
           {travelYear && <YearWelcome year={travelYear} travel={travel} hold={arrivalShow} onPlayingChange={handleYearVideo} />}
           {musicDock}
           <BackToTop warm={warm} hidden={isChatOpen} onClick={() => playSFX('click')} />
+          {/* Questions about the app: the AI help at the very bottom right. */}
+          <HelpBot
+            app="zeitreise"
+            open={isHelpOpen}
+            onOpenChange={(o) => { setIsHelpOpen(o); if (o) setIsChatOpen(false); }}
+            onSound={() => playSFX('click')}
+          />
 
           {phase !== 'intro' && (
             <>
