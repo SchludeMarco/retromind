@@ -125,7 +125,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
   dahinter legt sie in die **Grabbelkiste**, die vorn im Laufband zählt und
   alles Gesammelte zeigt. Ein Tipp auf den Spruch selbst erklärt, woher er
-  kommt. Langsam, mit Pause-Knopf, hält bei Berührung an
+  kommt. Langsam, mit Pause-Knopf, hält bei Berührung an und lässt sich mit
+  dem Finger oder der Maus hin und her ziehen
   ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
   [`lib/tickerItems.ts`](lib/tickerItems.ts)).
 - **Geführte Reise in 7 Halten** – `intro → onboarding → induction → exploration → diary → book → finish`

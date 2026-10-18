@@ -15,11 +15,15 @@ import { Modal } from './Modal';
 // Easy on older eyes and hands: it moves slowly, stops while a finger or the
 // mouse is on it or a disk has keyboard focus, has its own pause button
 // (WCAG 2.2.2), and for people who turned motion off it is a still row that
-// can be swiped sideways. Retro Warm pins it just above the bottom
+// can be swiped sideways. A finger (or the mouse) can drag it back and forth
+// (Marco, 2026-10-17); it runs on by itself after letting go. Retro Warm pins it just above the bottom
 // navigation; the other designs show it at the end of the start page.
 // Styles in index.css (.rm-ticker).
 
 const PX_PER_SECOND = 38;
+
+const reducedMotion = () =>
+  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export const FloppyIcon: React.FC<{ saved?: boolean; className?: string }> = ({ saved = false, className = 'w-6 h-6' }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
@@ -179,18 +183,70 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
   const [bump, setBump] = useState(0);
   const [announce, setAnnounce] = useState('');
   const copyRef = useRef<HTMLUListElement>(null);
-  const [seconds, setSeconds] = useState(60);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [focused, setFocused] = useState(false);
+  const stopped = paused || held || focused;
+  const stoppedRef = useRef(stopped);
+  stoppedRef.current = stopped;
 
-  // The speed stays the same however long the run or wide the screen.
+  // Where the run stands (px from the start of the first copy); moved by the
+  // clock and by dragging. Two copies side by side make the loop seamless.
+  const offset = useRef(0);
+  const drag = useRef<{ id: number; x: number; from: number; moved: boolean } | null>(null);
+  const swallowClick = useRef(false);
+  const place = useCallback(() => {
+    const width = copyRef.current?.offsetWidth || 0;
+    if (width) offset.current = ((offset.current % width) + width) % width;
+    if (trackRef.current) trackRef.current.style.transform = `translate3d(${-offset.current}px,0,0)`;
+  }, []);
+
+  // The same slow speed however long the run or wide the screen.
   useLayoutEffect(() => {
-    const el = copyRef.current;
-    if (!el) return;
-    const measure = () => setSeconds(Math.max(20, el.scrollWidth / PX_PER_SECOND));
-    measure();
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
-    ro?.observe(el);
-    return () => ro?.disconnect();
-  }, [run]);
+    if (reducedMotion()) return;
+    let last = performance.now();
+    let frame = 0;
+    const tick = (t: number) => {
+      const dt = Math.min(0.1, (t - last) / 1000);
+      last = t;
+      if (!stoppedRef.current && !drag.current) {
+        offset.current += PX_PER_SECOND * dt;
+        place();
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [run, place]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (reducedMotion() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    drag.current = { id: e.pointerId, x: e.clientX, from: offset.current, moved: false };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    if (!d.moved && Math.abs(dx) < 6) return;
+    if (!d.moved) {
+      d.moved = true;
+      (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    }
+    offset.current = d.from - dx;
+    place();
+  };
+  const endDrag = (e: React.PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    // A drag isn't a tap: the saying or disk under the finger stays as it is.
+    if (d.moved) swallowClick.current = true;
+    drag.current = null;
+  };
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (!swallowClick.current) return;
+    swallowClick.current = false;
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   // Retro Warm: lets the back-to-top button make room above the ticker.
   useEffect(() => {
@@ -213,7 +269,6 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
     }
   };
 
-  const stopped = paused || held;
   return (
     <section
       aria-label={tr('Sayings and things from back then', 'Sprüche und Dinge von damals')}
@@ -234,11 +289,17 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
         className="rm-ticker-viewport"
         onPointerEnter={() => setHeld(true)}
         onPointerLeave={() => setHeld(false)}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onClickCapture={onClickCapture}
+        onFocus={() => setFocused(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+        }}
       >
-        <div
-          className={`rm-ticker-track ${stopped ? 'is-paused' : ''}`}
-          style={{ animationDuration: `${seconds}s` }}
-        >
+        <div ref={trackRef} className="rm-ticker-track">
           <ul ref={copyRef} className="rm-ticker-copy">
             {run.map((item) => (
               <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy={false} onToggle={toggle} onOpen={setInfoItem} />

@@ -99,8 +99,10 @@ zeigen dürfen.
   ([`components/MuncherWander.tsx`](components/MuncherWander.tsx), eigene
   Figuren statt Pac-Man, aus bei
   „Bewegung reduzieren“). Nach einer Minute ohne Eingabe startet der Attract
-  Mode wie bei alten Automaten
-  ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
+  Mode wie bei alten Automaten, die „Hall of Fame“: Mit ◀ / ▶, Wischen oder
+  den Pfeiltasten geht es zum vorherigen oder zum nächsten zufälligen Spiel,
+  ein Tipp aufs Spiel öffnet seine Seite, ein Tipp daneben führt zurück in
+  die Halle ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
 - **Club verlassen** – ein Tür-Knopf oben in der Kopfleiste führt zurück auf
   die Straße; die Musik ist dann wieder nur dumpf durch die Wand zu hören.
 - **Kopfleiste** – Coins (ein Tipp öffnet die Quests), Punktestand (SCORE),
