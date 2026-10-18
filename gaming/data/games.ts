@@ -764,6 +764,13 @@ export const TICKER_FACTS = tr(
     'Game magazines printed cheats, maps and code listings to type in yourself.',
     'Digital games can vanish too: when licenses expire, they get pulled from the stores.',
     'Many of today’s indie hits deliberately pay homage to the games of the ’80s and ’90s.',
+    'Mew was slipped into Pokémon Red and Green at the last minute by programmer Shigeki Morimoto, into space freed up by removed debug code.',
+    'Mewtwo is #150 and Mew #151: in the story, Mewtwo was cloned from Mew’s genes.',
+    'The schoolyard rumor said Mew was hiding under the truck by the S.S. Anne. It never was.',
+    'The Pokémon trading card game came out in Japan in 1996, before the first episode of the anime.',
+    'Yu-Gi-Oh! started as a manga in 1996 and later set a world record as the best-selling trading card game.',
+    'Digimon began in 1997 as a virtual pet keychain, like a Tamagotchi with fights.',
+    'Super Meat Boy (2010) was made by just two people, Edmund McMillen and Tommy Refenes.',
   ],
   [
     'Auf Kassette dauerte das Laden eines C64-Spiels oft mehrere Minuten.',
@@ -773,5 +780,12 @@ export const TICKER_FACTS = tr(
     'Spielezeitschriften druckten Cheats, Karten und Listings zum Abtippen.',
     'Auch digitale Spiele können verschwinden: Laufen Lizenzen aus, fliegen sie aus den Stores.',
     'Viele heutige Indie-Hits zitieren bewusst die Spiele der 80er und 90er.',
+    'Mew wurde erst ganz zum Schluss von Programmierer Shigeki Morimoto in Pokémon Rot und Grün geschmuggelt, in Platz, den gelöschter Debug-Code frei gemacht hatte.',
+    'Mewtu ist Nr. 150 und Mew Nr. 151: In der Geschichte wurde Mewtu aus Mews Genen geklont.',
+    'Auf dem Schulhof hieß es, Mew verstecke sich unter dem Lkw bei der M.S. Anne. Stimmte nie.',
+    'Das Pokémon-Sammelkartenspiel kam 1996 in Japan heraus, noch vor der ersten Folge der Serie.',
+    'Yu-Gi-Oh! begann 1996 als Manga und stellte später einen Weltrekord als meistverkauftes Sammelkartenspiel auf.',
+    'Digimon fing 1997 als virtuelles Haustier am Schlüsselanhänger an, wie ein Tamagotchi mit Kämpfen.',
+    'Super Meat Boy (2010) haben nur zwei Leute gemacht: Edmund McMillen und Tommy Refenes.',
   ]
 );

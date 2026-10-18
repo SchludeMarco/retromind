@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { CapturedMemory, UserProfile } from '../types';
 import { INTEREST_LABELS } from '../constants';
 import { tr, LOCALE } from '../lib/i18n';
+import { treasureLines } from '../lib/treasures';
 import { BookProgress } from '../components/BookProgress';
 import { useWarmChrome } from '../lib/theme';
 import { PhaseNav } from '../components/PhaseNav';
@@ -43,6 +44,9 @@ export const BookPhase: React.FC<{
           {user.favoriteArtists.length > 0 && (
             <p className="text-xs text-retro-tan mt-1">{tr('Favorite bands', 'Lieblingsbands')}: {user.favoriteArtists.join(', ')}</p>
           )}
+          {treasureLines(user, 50).map((line) => (
+            <p key={line} className="text-xs text-retro-tan mt-1">{line}</p>
+          ))}
         </div>
 
         {memories.length === 0 && !diaryEntry.trim() && (
