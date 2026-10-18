@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Google-Anmeldung bleibt auf jedem Gerät': {
+    title: 'Your Google sign-in stays on every device',
+    text: 'Until now Google wanted another tap on “Sign in” after an hour. Now you stay signed in on every device until you sign out, in Time Travel and in the Gaming edition alike. The next time you sign in, Google asks for your consent once, then never again. Signing out only applies to the device you do it on.',
+  },
   'Spotify-Anmeldung gilt in beiden Apps': {
     title: 'Your Spotify sign-in counts in both apps',
     text: 'If you are signed in with Spotify in Time Travel or in the Gaming edition, you now are in the other app too, and signing out counts for both. Signed in with Google, your Spotify sign-in also applies on all your devices. Every switch between the apps takes your Google sign-in along; after an hour, though, Google wants another tap on “Sign in”, which then also counts for the other app at the next switch.',

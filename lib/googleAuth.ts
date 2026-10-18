@@ -2,7 +2,8 @@ import { GoogleUser } from '../types';
 
 // Google Identity Services (loaded on demand, not bundled) — gets us both an
 // identity (name/email/picture) and a Drive access token in one consent
-// screen, so RetroMind stays a static SPA with no auth backend of its own.
+// screen. Keeping the sign-in beyond the token's hour needs the server
+// (api/_googleKeep.js, signInWithGoogle below).
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
 const BIRTHDAY_SCOPE = 'https://www.googleapis.com/auth/user.birthday.read';
@@ -28,12 +29,61 @@ let gisLoadPromise: Promise<void> | null = null;
 // the user ever taps the button, so the popup opens synchronously in the
 // gesture handler.
 export function preloadGoogleIdentityServices(): Promise<void> {
+  void checkKeep();
   return loadGis();
 }
 
 /** For sign-in buttons (hover/focus/press): fetch the script just before the tap. */
 export function warmUpGoogle() {
-  if (getGoogleClientId()) loadGis().catch(() => {});
+  if (getGoogleClientId()) {
+    void checkKeep();
+    loadGis().catch(() => {});
+  }
+}
+
+// Whether the server can keep the sign-in (api/_googleKeep.js, needs the
+// client secret in Vercel). Asked together with the script, before the tap,
+// because the popup has to open synchronously in the tap; unknown → the plain
+// one-hour sign-in as before.
+let keep: boolean | null = null;
+let keepPromise: Promise<boolean> | null = null;
+
+export function checkKeep(): Promise<boolean> {
+  keepPromise ??= fetch('/api/admin?view=google', { cache: 'no-store' })
+    .then((r) => (r.ok ? r.json() : { keep: false }))
+    .then((d) => (keep = !!d?.keep))
+    .catch(() => (keep = false));
+  return keepPromise;
+}
+
+async function keepCall(action: string, extra: Record<string, string> = {}): Promise<GoogleToken | null> {
+  try {
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...extra }),
+    });
+    if (!res.ok) return null;
+    const d = await res.json();
+    return d?.accessToken ? { accessToken: d.accessToken, expiresAt: Date.now() + (Number(d.expiresIn) || 3600) * 1000 } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** A fresh token from the kept sign-in of this device, without any popup; null when there is none. */
+export function refreshKeptGoogleToken(): Promise<GoogleToken | null> {
+  return keepCall('googleRefresh');
+}
+
+/** Ends the kept sign-in on this domain (the other app's copy goes with the next link, ?google=0). */
+export function forgetKeptGoogleSignIn() {
+  void fetch('/api/admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'googleSignOut' }),
+    keepalive: true,
+  }).catch(() => {});
 }
 
 function loadGis(): Promise<void> {
@@ -52,6 +102,34 @@ function loadGis(): Promise<void> {
 }
 
 let tokenClient: any = null;
+
+/**
+ * The sign-in tap. With a kept sign-in available it uses Google's code flow
+ * (always shows the consent screen, once per device) and the server keeps
+ * the refresh token; otherwise the one-hour token flow below.
+ */
+export async function signInWithGoogle(prompt: '' | 'consent'): Promise<GoogleToken> {
+  if (keep !== true) return requestGoogleAccessToken(prompt);
+  const clientId = getGoogleClientId();
+  if (!clientId) throw new Error('not_configured');
+  await loadGis();
+  const google = (window as any).google;
+  const code = await new Promise<string>((resolve, reject) => {
+    google.accounts.oauth2
+      .initCodeClient({
+        client_id: clientId,
+        scope: SCOPES,
+        ux_mode: 'popup',
+        select_account: true,
+        callback: (resp: any) => (resp?.code ? resolve(resp.code) : reject(new Error(resp?.error || 'code_failed'))),
+        error_callback: (err: any) => reject(new Error(err?.type || 'code_failed')),
+      })
+      .requestCode();
+  });
+  const token = await keepCall('googleCode', { code });
+  if (!token) throw new Error('code_exchange_failed');
+  return token;
+}
 
 // Opens Google's consent popup (or renews silently when `prompt` is empty
 // and the user already granted access) and resolves with a short-lived
@@ -93,7 +171,13 @@ export async function fetchGoogleProfile(accessToken: string): Promise<GoogleUse
   return { id: data.sub, name: data.name || data.email, email: data.email, picture: data.picture || '' };
 }
 
+/**
+ * Sign-out. A kept sign-in is only forgotten on this device: revoking at
+ * Google would end it on the person's other devices too.
+ */
 export function revokeGoogleToken(accessToken: string) {
+  forgetKeptGoogleSignIn();
+  if (keep !== false) return;
   (window as any).google?.accounts?.oauth2?.revoke(accessToken, () => {});
 }
 

@@ -18,7 +18,9 @@ import {
   makeCookie,
   readCookie,
   redeemHandoff,
+  takeHandoffGoogle,
 } from "./api/_guests.js";
+import { keepCookie } from "./api/_googleKeep.js";
 
 const OPEN = [
   /^\/gate\.html$/,
@@ -63,10 +65,15 @@ async function takeHandoff(url) {
   const code = url.searchParams.get(HANDOFF_PARAM);
   const clean = new URL(url);
   clean.searchParams.delete(HANDOFF_PARAM);
-  const headers = { Location: clean.toString(), "Cache-Control": "no-store" };
+  const headers = new Headers({ Location: clean.toString(), "Cache-Control": "no-store" });
   try {
     const email = await redeemHandoff(code);
-    if (email && (await isGuest(email))) headers["Set-Cookie"] = await makeCookie(email);
+    if (email && (await isGuest(email))) {
+      headers.append("Set-Cookie", await makeCookie(email));
+      // The kept Google sign-in comes along (api/_googleKeep.js).
+      const google = await takeHandoffGoogle(code);
+      if (google) headers.append("Set-Cookie", keepCookie(google));
+    }
   } catch {
     // Database hiccup: the guest just meets the door once more.
   }

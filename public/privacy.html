@@ -19,7 +19,8 @@
   <h2>In short</h2>
   <ul>
     <li>RetroMind is a private offer for invited guests only. For this you sign in once with Google, and RetroMind
-      sets a single, technically necessary cookie (see section 14).</li>
+      sets a technically necessary cookie for it (see section 14); if you sign in with Google in the app, a second one
+      keeps you signed in (see section 5).</li>
     <li>No tracking, no third-party analytics tools, no ads. The only thing counted
       is, anonymously, how often the apps are opened (see section 10).</li>
     <li>Your journey, your profile and your settings stay in your browser on your device.</li>
@@ -94,7 +95,11 @@
     any time. The backup is kept in a private app folder in your Google Drive that only RetroMind can see; none of it
     is stored on our server. While you are signed in, RetroMind uses it to sync everything it stores in your browser
     (except the Google sign-in token and your privacy choices; the Spotify sign-in token is included), so Time Travel, the Gaming edition and all your devices share the
-    same data. A sign-in token stays in your browser for no more than one hour. The legal basis is
+    same data. A sign-in token stays in your browser for no more than one hour. So that you stay signed in anyway, our
+    server receives a renewal key (refresh token) from Google when you sign in. It is not stored in a database but
+    encrypted in the cookie <code>rm_gkeep</code> on your device, which only our server can read and which is only
+    sent to the sign-in interface. With it the server fetches a new sign-in token from Google every hour without
+    opening a window. The cookie lasts up to 400 days after its last use and is deleted when you sign out. The legal basis is
     your consent (Art. 6(1)(a) GDPR, Section 25(1) TDDDG). You can sign out at any time and revoke access in your
     Google account under “Third-party apps and services”. Provider: Google Ireland Limited (address see above).
   </p>
@@ -250,7 +255,9 @@
     database for at most two minutes; the other address redeems the code, sets its own <code>rm_guest</code> cookie,
     and the code is deleted. If you are signed in with Google, the link also carries your sign-in token, in the part
     of the address after the #, which is never sent to a server; the other edition stores it in your browser and
-    removes it from the address right away. That way you only sign in once.
+    removes it from the address right away. For this the server also keeps the encrypted content of the
+    <code>rm_gkeep</code> cookie (section 5) under the same one-time code for at most two minutes. That way you only
+    sign in once.
   </p>
 
   <h2>15. Your rights</h2>
