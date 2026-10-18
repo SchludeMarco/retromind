@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ruhigere Ankunft nach der Zeitreise** (2026-10-18, PR #249): Bisher
+  wechselte nach der Zeitreise kurz die Musik, brach dann ab, und sofort
+  startete von selbst das Video des Jahres mit eigenem Ton. Jetzt läuft
+  deine Musik einfach weiter durch die Ankunft, und der Nr.-1-Hit des Jahres
+  wird nur genannt. Läuft gerade keine Musik, klingt der Hit wie bisher als
+  Fanfare, blendet am Ende aber langsam aus, und die Musik kommt sanft
+  zurück. Das Jahresvideo startet nicht mehr von allein: Es spielt erst,
+  wenn du auf „▶ Video aus …“ tippst.
+
 - **Fragen zur App? Ein KI-Helfer unten rechts** (2026-10-18, PR #248): In
   der Zeitreise und in der Spielhalle sitzt ganz unten rechts ein runder
   „?“-Knopf. Er öffnet einen kleinen Chat, dem du jede Frage über RetroMind

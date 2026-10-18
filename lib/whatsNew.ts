@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Ruhigere Ankunft nach der Zeitreise': {
+    title: 'A calmer arrival after the journey',
+    text: 'Until now, after the journey the music changed briefly, then broke off, and the video of the year started on its own with its own sound. Now your music simply keeps playing through the arrival, and the year’s No. 1 hit is only named. If no music is playing, the hit sounds as a fanfare as before, but fades out slowly at the end, and the music comes back gently. The year’s video no longer starts by itself: it only plays once you tap “▶ Video from …”.',
+  },
   'Fragen zur App? Ein KI-Helfer unten rechts': {
     title: 'Questions about the app? An AI helper at the bottom right',
     text: 'In Time Travel and in the arcade there is now a round “?” button at the very bottom right. It opens a small chat where you can ask anything about RetroMind: what the app can do, where to find something and how it works. It answers in your language, relies only on the description of all features and says honestly when it doesn’t know. Three sample questions help you get started. Like all AI features it runs on Google Gemini and is labeled as AI.',

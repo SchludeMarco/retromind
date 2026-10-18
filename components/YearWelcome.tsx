@@ -9,8 +9,10 @@ import { yearOf } from '../lib/yearFacts';
 // time machine has put you (Marco, 2026-10-14: "der entsprechende Text
 // welcome to the year x sollte dastehen, damit man weiß, wo man gerade ist;
 // unter dem Text sollte automatisch ein YouTube-Video abgespielt werden aus
-// dieser Zeit"). After every journey (`travel` changes) the video of that
-// year opens and starts on its own; it can be folded away. The video is a
+// dieser Zeit"). Since 2026-10-18 the video no longer starts on its own
+// (Marco: "das Video legt automatisch los … zu stressig und zu viel auf
+// einmal"): after a journey the button "▶ Video from …" waits, and the video
+// only plays once it is tapped; it can be folded away again. The video is a
 // year in review found through /api/youtube. Nothing from YouTube loads
 // before the visitor allows it (lib/privacy), and the player follows the
 // app-wide mute switch. App.tsx pauses the Spotify music while a video is on screen.
@@ -75,29 +77,21 @@ const Player: React.FC<{ video: Video; onPlayingChange?: (playing: boolean) => v
 
 export const YearWelcome: React.FC<{
   year: number;
-  /** Changes on every journey: opens and starts the video again. */
+  /** Changes on every journey: a video still open from before folds away. */
   travel: number;
-  /** While true (the arrival show runs over the app), the video waits. */
-  hold?: boolean;
   /** A video is on screen (App pauses the Spotify music meanwhile). */
   onPlayingChange?: (playing: boolean) => void;
-}> = ({ year, travel, hold = false, onPlayingChange }) => {
+}> = ({ year, travel, onPlayingChange }) => {
   const allowed = useConsent('youtube') === true;
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState<Video | null | undefined>(undefined);
 
   const change = (next: boolean) => setOpen(next);
 
-  // Every journey opens the video of the new year, once the arrival show
-  // is over (not underneath it, mixed with its fanfare).
-  const openedFor = useRef(0);
+  // A new journey doesn't start a video by itself; one still open folds away.
   useEffect(() => {
-    if (travel > 0 && !hold && openedFor.current !== travel) {
-      openedFor.current = travel;
-      change(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [travel, hold]);
+    if (travel > 0) change(false);
+  }, [travel]);
 
   useEffect(() => {
     if (!allowed || !open) return;
