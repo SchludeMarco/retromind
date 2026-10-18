@@ -15,6 +15,8 @@ interface Day {
   day: string;
   starts: number;
   visitors: number;
+  /** Starts by someone who was here on an earlier day (since 2026-10-18). */
+  returning?: number;
 }
 interface TopEntry {
   key: string;
@@ -24,6 +26,8 @@ interface AppStatsData {
   totalStarts: number;
   daily: Day[];
   devices: { phone: number; tablet: number; desktop: number; installed: number };
+  /** How long ago each start's device had last opened the app (lib/visits.ts). */
+  back?: Record<'first' | 'same' | 'day' | 'week' | 'month' | 'later', number>;
   top: Record<string, { month: TopEntry[]; all: TopEntry[] }>;
 }
 interface Stats {
@@ -83,7 +87,7 @@ const fmtMonth = (ym?: string) => {
   const [y, m] = ym.split('-');
   return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(LOCALE, { month: 'long', year: 'numeric' });
 };
-const sum = (days: Day[], key: 'starts' | 'visitors') => days.reduce((n, d) => n + d[key], 0);
+const sum = (days: Day[], key: 'starts' | 'visitors' | 'returning') => days.reduce((n, d) => n + (d[key] ?? 0), 0);
 const decadeLabel = (key: string) => (/^\d{4}$/.test(key) ? tr(`${key}s`, `${key}er`) : key);
 
 export const AdminApp: React.FC = () => {
@@ -359,6 +363,8 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
         </>
       )}
 
+      <ComeBack back={data.back} days={days} />
+
       {Object.entries(data.top).map(([kind, lists]) => (
         <div key={kind}>
           <h3>{TOP_LABELS[kind] ?? kind}</h3>
@@ -369,6 +375,41 @@ const AppStats: React.FC<{ label: string; data: AppStatsData; month?: string }> 
         </div>
       ))}
     </section>
+  );
+};
+
+// Do people come back? Each app start says how long ago that device last
+// opened the app (lib/visits.ts), so this shows returns without knowing who.
+const ComeBack: React.FC<{ back?: AppStatsData['back']; days: Day[] }> = ({ back, days }) => {
+  const total = back ? Object.values(back).reduce((a, b) => a + b, 0) : 0;
+  const returning = back ? back.day + back.week + back.month + back.later : 0;
+  return (
+    <>
+      <h3>{tr(`Coming back, ${days.length} days`, `Wiederkommen, ${days.length} Tage`)}</h3>
+      {!back || total === 0 ? (
+        <p className="note">{tr('No data yet (counted since 10/18/2026).', 'Noch keine Daten (gezählt seit 18.10.2026).')}</p>
+      ) : (
+        <>
+          <Rows
+            rows={[
+              { key: tr('First visit on this device', 'Erster Besuch auf dem Gerät'), count: back.first },
+              { key: tr('Again the same day', 'Am selben Tag nochmal'), count: back.same },
+              { key: tr('Back after 1 day', 'Zurück nach 1 Tag'), count: back.day },
+              { key: tr('Back after 2–7 days', 'Zurück nach 2–7 Tagen'), count: back.week },
+              { key: tr('Back after 8–31 days', 'Zurück nach 8–31 Tagen'), count: back.month },
+              { key: tr('Back after more than a month', 'Zurück nach über einem Monat'), count: back.later },
+            ]}
+            total={total}
+          />
+          <p className="note">
+            {tr(
+              `${returning.toLocaleString(LOCALE)} starts came from devices that had been here on an earlier day; last 7 days: ${sum(days.slice(-7), 'returning').toLocaleString(LOCALE)}.`,
+              `${returning.toLocaleString(LOCALE)} Starts kamen von Geräten, die an einem früheren Tag schon hier waren; letzte 7 Tage: ${sum(days.slice(-7), 'returning').toLocaleString(LOCALE)}.`
+            )}
+          </p>
+        </>
+      )}
+    </>
   );
 };
 

@@ -933,6 +933,9 @@ const App: React.FC = () => {
               diaryWritten={diaryEntry.trim().length > 0}
               onOpenStage={openStage}
               userName={user.name}
+              birthYear={birthYear}
+              memories={memories}
+              onSaveMemory={upsertMemory}
             />
           )}
 

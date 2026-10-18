@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Game } from '../data/games';
 import { hasMuteChoice, setMuted } from '../../lib/mute';
 import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
-import { ActiveQuest, activeQuests, freshLog, PRIZES, QuestEvent, QuestLog, record } from './quests';
+import { ActiveQuest, activeQuests, freshLog, PRIZES, QuestEvent, QuestLog, record, Streak, visitStreak } from './quests';
 import { Egg, EGGS } from './eggs';
 import { tr } from '../../lib/i18n';
 
@@ -43,6 +43,8 @@ export interface ArcadeState {
   /** "Had it back then": games and systems the player really owned as a kid. */
   hadBack: string[];
   hadSystems: string[];
+  /** Days in a row with a visit (quests.ts), paid in Coins once per day. */
+  streak?: Streak;
 }
 
 /** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */
@@ -117,9 +119,21 @@ export function scoreOf(s: ArcadeState) {
 export function useArcadeState(
   onAchievement: (a: Achievement) => void,
   onQuest: (q: ActiveQuest) => void,
-  onEgg: (e: Egg) => void
+  onEgg: (e: Egg) => void,
+  onStreak?: (days: number, coins: number, forgiven: boolean) => void
 ) {
   const [state, setState] = useState<ArcadeState>(load);
+
+  // Today's visit counts into the streak once and pays its Coins.
+  const streakDone = useRef(false);
+  useEffect(() => {
+    if (streakDone.current) return;
+    streakDone.current = true;
+    const next = visitStreak(state.streak);
+    if (!next) return;
+    setState((s) => ({ ...s, streak: next.streak, tokens: s.tokens + next.reward }));
+    onStreak?.(next.streak.count, next.reward, next.forgiven);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {

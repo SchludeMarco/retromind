@@ -1,11 +1,12 @@
 import { tr } from './i18n';
+import { deleteAllAnswers } from './familyBook';
 
 // "Your data" in the settings of both editions (DSGVO Art. 15, 17 and 20):
 // everything RetroMind keeps lives in this browser under keys that start
 // with "retromind", so one button downloads all of it as a file and another
-// deletes all of it. Nothing about the visitor is stored on our server
-// (the statistics only hold numbers, see the privacy policy), so there is
-// nothing else to export or delete there. The Gaming edition's emulator
+// deletes all of it. Apart from the family book (below), nothing about the
+// visitor is stored on our server (the statistics only hold numbers, see the
+// privacy policy). The Gaming edition's emulator
 // (EmulatorJS) keeps its own settings ("ejs…" keys) and its saves, cores and
 // game files in IndexedDB; deleting removes those too.
 
@@ -70,11 +71,12 @@ export function downloadMyData(edition: 'zeitreise' | 'gaming') {
 export function deleteMyData(): boolean {
   const ok = window.confirm(
     tr(
-      'Delete everything RetroMind stored in this browser (journey, profile, savegame, settings, privacy choices, sign-ins)? This cannot be undone. A backup in your own Google Drive stays; you can remove it in your Google account.',
-      'Alles löschen, was RetroMind in diesem Browser gespeichert hat (Reise, Profil, Savegame, Einstellungen, Datenschutz-Entscheidungen, Anmeldungen)? Das lässt sich nicht rückgängig machen. Eine Sicherung in deinem eigenen Google Drive bleibt; die kannst du in deinem Google-Konto entfernen.'
+      'Delete everything RetroMind stored in this browser (journey, profile, savegame, settings, privacy choices, sign-ins) and your answers in the family book? This cannot be undone. A backup in your own Google Drive stays; you can remove it in your Google account.',
+      'Alles löschen, was RetroMind in diesem Browser gespeichert hat (Reise, Profil, Savegame, Einstellungen, Datenschutz-Entscheidungen, Anmeldungen), und deine Antworten im Familienbuch? Das lässt sich nicht rückgängig machen. Eine Sicherung in deinem eigenen Google Drive bleibt; die kannst du in deinem Google-Konto entfernen.'
     )
   );
   if (!ok) return false;
+  const family = deleteAllAnswers();
   try {
     for (const k of ownKeys(localStorage)) localStorage.removeItem(k);
     for (const k of ownKeys(sessionStorage)) sessionStorage.removeItem(k);
@@ -85,7 +87,7 @@ export function deleteMyData(): boolean {
   } catch {
     /* storage blocked: nothing stored either */
   }
-  deleteEmulatorData().finally(() => window.location.reload());
+  Promise.all([family, deleteEmulatorData()]).finally(() => window.location.reload());
   return true;
 }
 

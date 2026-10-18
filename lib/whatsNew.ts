@@ -32,6 +32,18 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Jeden Tag etwas Neues in der Stube': {
+    title: 'Something new in the living room every day',
+    text: 'Below the living room there is now a new question of the day every day (“How did you celebrate your birthday as a child?”). Your answer becomes a new page in your memory book, so it keeps on growing. Below it, “Today in your youth” shows what happened on this date when you were between 6 and 20, with the No. 1 hit of that year. Also new is the family book: everyone invited gets the same question every Monday and reads the others’ answers. Before your first answer goes to our server, the app asks for your permission once; you can change or delete it at any time. If you come back after two days or more, a letter in the living room tells you what is new since then.',
+  },
+  'RetroMind als App aufs Handy': {
+    title: 'RetroMind as an app on your phone',
+    text: 'Time Travel can now be installed as an app like the Gaming edition, with its own icon. On Android, Chrome often didn’t offer to install at all; that is fixed in both apps. An “Add to home screen” button (start page and settings of Time Travel, settings of the Gaming edition) installs with one tap or shows the two or three steps in the browser menu. Next to it, “Add to my calendar” puts a reminder for every Sunday morning into your own calendar, without RetroMind storing anything for it.',
+  },
+  'Gaming-Edition: Serie und Wochen-Duell': {
+    title: 'Streak and weekly duel',
+    text: 'Every day in a row in the arcade pays Coins, from 5 up to 30, and every seventh day 25 extra; one missed day per week is forgiven. Your streak shows in the top bar. Under “Quests” there is also a weekly duel: everyone plays the same mini game, and its own high score table shows the best of the week.',
+  },
   'Lieblingsbands aus deinem ganzen Leben': {
     title: 'Favorite bands from your whole life',
     text: 'When you pack your suitcase before setting off, and in the settings under “Your details”, there is now “Need ideas?”. A tap on it shows, for every five years from your birth year until today, the bands and musicians that were big back then, with your age at the time. Tap a name to put it on your list, tap again to take it off; you can still type your own names. It all stays optional, and the ideas stay closed until you open them. Your favorite bands now also go into the personal questions while exploring and appear in your memory book.',
@@ -632,3 +644,10 @@ export const markNewsSeen = () => {
     /* storage unavailable: the dot just shows again next time */
   }
 };
+
+/** Titles of entries logged after the given day (YYYY-MM-DD), newest first, for the "since your last visit" letter. */
+export const newsSince = (day: string, max = 4): string[] =>
+  WHATS_NEW.flatMap((s) => s.entries)
+    .filter((e) => e.date && e.date > day)
+    .slice(0, max)
+    .map((e) => e.title);

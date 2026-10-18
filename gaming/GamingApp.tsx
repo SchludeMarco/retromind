@@ -25,6 +25,7 @@ import { EmulatorCorner } from './components/EmulatorCorner';
 import { EmulatorDialog } from './components/EmulatorDialog';
 import { EmuLaunch } from './lib/emulator';
 import { countOpened } from '../lib/usage';
+import { promptInstall, useInstall } from '../lib/install';
 import { readPage, writePage } from '../lib/pageMemory';
 import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
@@ -152,11 +153,29 @@ export const GamingApp: React.FC = () => {
     },
     [showToast]
   );
-  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg);
+  // The daily streak is counted at start but announced once the player is in the hall.
+  const [streakNews, setStreakNews] = useState<{ days: number; coins: number; forgiven: boolean } | null>(null);
+  const onStreak = useCallback((days: number, coins: number, forgiven: boolean) => setStreakNews({ days, coins, forgiven }), []);
+  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg, onStreak);
   const cloud = useCloudSync();
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
   const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
+  useEffect(() => {
+    if (screen !== 'hub' || !streakNews) return;
+    const { days, coins, forgiven } = streakNews;
+    setStreakNews(null);
+    chip.play('coin');
+    showToast(
+      days === 1 ? tr(`DAILY VISIT: +${coins} COINS`, `TAGESBESUCH: +${coins} COINS`) : tr(`${days}-DAY STREAK: +${coins} COINS`, `${days} TAGE IN FOLGE: +${coins} COINS`),
+      forgiven
+        ? tr('You missed a day, but one per week is forgiven. Come back tomorrow and the streak grows.', 'Einen Tag hast du verpasst, aber einer pro Woche wird verziehen. Komm morgen wieder, dann wächst die Serie.')
+        : days === 1
+          ? tr('Come back tomorrow: every day in a row pays more, up to 30 Coins, and every 7th day 25 extra.', 'Komm morgen wieder: Jeder Tag in Folge bringt mehr, bis zu 30 Coins, und jeder 7. Tag 25 extra.')
+          : tr(`Every day in a row pays more. Your best: ${state.streak?.best ?? days} days.`, `Jeder Tag in Folge bringt mehr. Dein Rekord: ${state.streak?.best ?? days} Tage.`),
+      '🔥'
+    );
+  }, [screen, streakNews, showToast, state.streak?.best]);
   // "Nachteule": in the hall between midnight and four in the morning.
   useEffect(() => {
     if (screen === 'hub' && new Date().getHours() < 4) findEgg('night');
@@ -203,29 +222,11 @@ export const GamingApp: React.FC = () => {
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
   const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
-  // Browsers that support installing web apps hand us a prompt to trigger later.
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
-
-  useEffect(() => {
-    const onPrompt = (e: Event) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-    };
-    const onInstalled = () => setInstallPrompt(null);
-    window.addEventListener('beforeinstallprompt', onPrompt);
-    window.addEventListener('appinstalled', onInstalled);
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onPrompt);
-      window.removeEventListener('appinstalled', onInstalled);
-    };
-  }, []);
-
+  // Browsers that support installing web apps hand us a prompt to trigger later (lib/install.ts).
+  const { canPrompt: installPrompt } = useInstall();
   const install = async () => {
-    if (!installPrompt) return;
     chip.play('powerup');
-    installPrompt.prompt();
-    await installPrompt.userChoice.catch(() => null);
-    setInstallPrompt(null);
+    await promptInstall();
   };
 
   // Sound settings follow the saved state.
@@ -817,6 +818,11 @@ export const GamingApp: React.FC = () => {
               {cloud.status !== 'signed_in' && <span className="token-local">{tr('ONLY HERE', 'NUR HIER')}</span>}
             </button>
             <div className="hud-stats">
+              {(state.streak?.count ?? 0) > 1 && (
+                <span title={tr('Days in a row in the arcade', 'Tage in Folge in der Spielhalle')}>
+                  <span className="label">🔥 {tr('STREAK', 'SERIE')}</span> <span className="value">{state.streak!.count}</span>
+                </span>
+              )}
               <span title={tr('Points for found games, stash and achievements', 'Punkte für entdeckte Games, Stash und Erfolge')}>
                 <span className="label">SCORE</span> <span className="value">{pad(score)}</span>
               </span>
@@ -991,6 +997,11 @@ export const GamingApp: React.FC = () => {
             <QuestBoard
               state={state}
               signedIn={cloud.status === 'signed_in'}
+              onPlay={(id) => {
+                chip.play('select');
+                countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
+                setMiniGame(id);
+              }}
               onOpenSettings={() => {
                 chip.play('select');
                 setSettingsOpen(true);

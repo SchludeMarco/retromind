@@ -13,7 +13,7 @@
   <h1>Datenschutzerklärung</h1>
   <p class="muted">
     Gilt für RetroMind – Zeitreise (retromind.vercel.app) und RetroMind – Gaming (retromind-gaming.vercel.app).
-    Stand: 17. Oktober 2026
+    Stand: 18. Oktober 2026
   </p>
 
   <h2>Kurz gesagt</h2>
@@ -23,7 +23,8 @@
       angemeldet, kommt ein zweites dazu, das dich angemeldet hält (siehe Abschnitt 5).</li>
     <li>Kein Tracking, keine fremden Analyse-Tools, keine Werbung. Gezählt wird nur
       anonym, wie oft die Apps geöffnet werden (siehe Abschnitt 10).</li>
-    <li>Deine Reise, dein Profil und deine Einstellungen bleiben in deinem Browser auf deinem Gerät.</li>
+    <li>Deine Reise, dein Profil und deine Einstellungen bleiben in deinem Browser auf deinem Gerät. Nur was du
+      selbst ins Familienbuch schreibst, liegt nach deiner Einwilligung auf unserem Server (siehe Abschnitt 15).</li>
     <li>Schriften liegen auf unserem eigenen Server. Bilder, Klänge und Texte von Wikipedia/Wikimedia und Wikidata
       holt unser Server für dich ab, dein Browser verbindet sich dafür nicht mit fremden Servern.</li>
     <li>Spotify (Musik) und YouTube (Videos) laden erst, wenn du zustimmst. Google-Anmeldung, KI-Funktionen und
@@ -54,7 +55,8 @@
     RetroMind speichert deine Eingaben im lokalen Speicher deines Browsers (localStorage), nicht auf unserem Server:
     in der Zeitreise zum Beispiel Name, Geburtsdatum, Interessen, Erinnerungen, Fotos und Tagebuch, in der
     Gaming-Edition Highscore, Sammlung, Erfolge, Coins und gefundene Easter Eggs, dazu in beiden Einstellungen wie Ton, Schriftgröße, Farbschema
-    und deine Datenschutz-Entscheidungen. Auch die gewählte Sprache wird lokal in deinem Browser gespeichert. Diese Speicherung ist für die von dir gewünschte Funktion unbedingt
+    und deine Datenschutz-Entscheidungen, außerdem der Zeitpunkt deines letzten Besuchs auf diesem Gerät (für den Brief
+    „Seit deinem letzten Besuch“ in der Zeitreise und die Serie in der Gaming-Edition). Auch die gewählte Sprache wird lokal in deinem Browser gespeichert. Diese Speicherung ist für die von dir gewünschte Funktion unbedingt
     erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG, Art. 6 Abs. 1 lit. b und f DSGVO). Die Daten bleiben, bis du sie
     löschst. In beiden Editionen findest du in den Einstellungen (⚙️) unter „Deine Daten“ bzw. „Meine Daten“ zwei
     Knöpfe: Der eine lädt alles, was RetroMind in deinem Browser gespeichert hat, als Datei herunter (Auskunft und
@@ -181,11 +183,13 @@
   <p>
     Damit der Betreiber sieht, wie viele Menschen RetroMind nutzen, zählt unser Server, wie oft die Zeitreise und die
     Gaming-Edition geöffnet werden. Dafür schickt die App beim Start den Namen der App („zeitreise“ oder
-    „gaming“), die Geräteart (Handy, Tablet oder Computer, aus der Browser-Kennung abgeleitet) und ob die App als
-    installierte App läuft an unseren Server. Außerdem zählt sie, welche Jahrzehnte in der Zeitreise und welche Spiele
+    „gaming“), die Geräteart (Handy, Tablet oder Computer, aus der Browser-Kennung abgeleitet), ob die App als
+    installierte App läuft, und grob, wie lange dein letzter Besuch auf diesem Gerät her ist (erster Besuch, am
+    selben Tag, gestern, innerhalb einer Woche, eines Monats oder länger; nie ein Datum) an unseren Server. Diese
+    Stufe berechnet die App aus dem Besuchszeitpunkt, den sie ohnehin für den Brief und die Serie in deinem Browser
+    speichert (Abschnitt 3). Außerdem zählt sie, welche Jahrzehnte in der Zeitreise und welche Spiele
     und Minispiele in der Gaming-Edition geöffnet werden; dabei wird nur der Name des Jahrzehnts, Spiels oder
-    Minispiels übertragen. Es werden <strong>keine Cookies</strong> gesetzt, nichts auf deinem Gerät gespeichert
-    und keine Kennung mitgeschickt.
+    Minispiels übertragen. Es werden <strong>keine Cookies</strong> gesetzt und keine Kennung mitgeschickt.
   </p>
   <p>
     Um Besucher pro Tag zu zählen, bildet der Server aus deiner IP-Adresse, der Browser-Kennung (User-Agent), dem
@@ -193,15 +197,16 @@
     fließt in einen Zähler (HyperLogLog), der nur die Anzahl verschiedener Besucher kennt und den Wert selbst nicht
     speichert. IP-Adresse und Browser-Kennung werden dabei nicht gespeichert. Der Zufallswert wird nach spätestens
     zwei Tagen gelöscht; danach kann niemand, auch der Betreiber nicht, einen Besuch einer Person oder einem anderen
-    Tag zuordnen. Gespeichert bleiben nur Zahlen: App-Starts, Besucher und Geräteart pro Tag und App sowie, wie oft
+    Tag zuordnen. Gespeichert bleiben nur Zahlen: App-Starts, Besucher, Geräteart und die Stufen des letzten Besuchs
+    pro Tag und App sowie, wie oft
     ein Jahrzehnt, Spiel oder Minispiel geöffnet wurde, ohne jeden Bezug zu einem Besucher.
   </p>
   <p>
     Die Zahlen liegen in einer Datenbank des Dienstes Upstash (Upstash, Inc., USA, Server in der EU), den wir über
     Vercel nutzen; es gilt deren Auftragsverarbeitungsvertrag mit den EU-Standardvertragsklauseln. Sehen kann die
     Zahlen nur der Betreiber nach Anmeldung mit seinem Google-Konto. Rechtsgrundlage ist unser berechtigtes Interesse,
-    zu wissen, ob und wie stark RetroMind genutzt wird (Art. 6 Abs. 1 lit. f DSGVO); auf dein Gerät wird dabei nicht
-    zugegriffen (§ 25 TDDDG ist nicht berührt). Du kannst widersprechen (Art. 21 DSGVO), eine formlose Nachricht genügt.
+    zu wissen, ob und wie stark RetroMind genutzt wird und ob Menschen wiederkommen (Art. 6 Abs. 1 lit. f DSGVO).
+    Du kannst widersprechen (Art. 21 DSGVO), eine formlose Nachricht genügt.
   </p>
 
   <h2>11. Highscore-Tafel (Gaming-Edition)</h2>
@@ -212,7 +217,8 @@
     Abschnitt 10); behalten werden die besten 50 Einträge pro Spiel, die besten 10 sieht jeder, der das Spiel
     öffnet. Gespeichert wird nichts weiter, insbesondere keine IP-Adresse und keine Kennung. Wähl deshalb bitte
     keine Buchstaben, die dich für andere erkennbar machen, wenn du das nicht möchtest. Deine letzten Buchstaben und
-    eine eigene Tafel merkt sich die App außerdem in deinem Browser. Rechtsgrundlage ist deine Einwilligung durch
+    eine eigene Tafel merkt sich die App außerdem in deinem Browser. Beim Spiel des Wochen-Duells steht dein Eintrag
+    zusätzlich auf der Tafel dieser Woche; sie wird nach 30 Tagen gelöscht. Rechtsgrundlage ist deine Einwilligung durch
     das Eintragen (Art. 6 Abs. 1 lit. a DSGVO); einen Eintrag entfernen wir auf Wunsch.
   </p>
 
@@ -271,7 +277,26 @@
     demselben Einmal-Code ab. So musst du dich nur einmal anmelden.
   </p>
 
-  <h2>15. Deine Rechte</h2>
+  <h2>15. Familienbuch (Zeitreise)</h2>
+  <p>
+    Im Familienbuch beantworten alle eingeladenen Gäste jede Woche dieselbe Frage und lesen die Antworten der anderen.
+    Schreibst du eine Antwort, schickt die App deinen Text, den Namen, den du dafür angibst, und die Frage an unseren
+    Server, aber erst, nachdem du einmal ausdrücklich zugestimmt hast. Der Server speichert sie mit dem Zeitpunkt in
+    derselben Upstash-Datenbank wie die Statistik (Server in der EU, siehe Abschnitt 10), zugeordnet einem
+    Einweg-Hashwert deiner Gast-E-Mail-Adresse (aus dem Gast-Cookie, Abschnitt 14), damit nur du deine Antwort ändern
+    oder löschen kannst; die Adresse selbst wird dafür nicht gespeichert. Lesen können die Antworten nur eingeladene
+    Gäste. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die du jederzeit widerrufen kannst. Die
+    Antworten bleiben, bis du sie löschst: einzeln über „Meine Antwort löschen“ oder alle auf einmal über „Alle meine
+    Daten löschen“ in den Einstellungen.
+  </p>
+  <p>
+    Neue Fragen des Tages, die Erinnerungen von „Heute in deiner Jugend“ (von Wikipedia, über unseren Server abgeholt,
+    Abschnitt 8) und die Kalender-Erinnerung brauchen keine Daten von dir: Deine Antworten auf die Frage des Tages
+    landen in deinem Erinnerungsbuch in deinem Browser, und die Kalender-Erinnerung ist eine Datei, die du selbst in
+    deinen Kalender übernimmst (oder ein Link zu Google Kalender, der erst mit deinem Tipp öffnet).
+  </p>
+
+  <h2>16. Deine Rechte</h2>
   <p>Du hast das Recht auf</p>
   <ul>
     <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO), in RetroMind direkt über „Meine Daten

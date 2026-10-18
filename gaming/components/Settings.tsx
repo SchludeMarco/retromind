@@ -14,6 +14,8 @@ import { LANG, LANGUAGES, setLang, tr } from '../../lib/i18n';
 import { setInitials, useInitials } from '../../lib/initials';
 import { InitialsPicker } from '../../components/InitialsPicker';
 import { chip } from '../lib/chiptune';
+import { installSteps, promptInstall, useInstall } from '../../lib/install';
+import { downloadReminder, googleCalendarLink } from '../../lib/calendarReminder';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -66,6 +68,8 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
   }, [onClose]);
 
   const signedIn = cloud.status === 'signed_in';
+  const install = useInstall();
+  const [installHelp, setInstallHelp] = useState(false);
   return (
     <div className="overlay" onClick={onClose}>
       <div
@@ -283,6 +287,52 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
             ))}
           </div>
           <p className="dim">{tr('More designs and tracks are waiting at the prize counter under “Quests”.', 'Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.')}</p>
+        </section>
+
+        {/* Install with one tap, or the menu steps where the browser has no prompt (lib/install.ts). */}
+        <section>
+          <h3 className="pixel-font">{tr('ON YOUR PHONE', 'AUFS HANDY')}</h3>
+          {install.installed ? (
+            <p className="dim">{tr('✓ The arcade is installed on this device.', '✓ Die Spielhalle ist auf diesem Gerät installiert.')}</p>
+          ) : (
+            <>
+              <div className="settings-row">
+                <button
+                  className="px-btn"
+                  onClick={async () => {
+                    chip.play('select');
+                    if (install.canPrompt) await promptInstall();
+                    else setInstallHelp((v) => !v);
+                  }}
+                  aria-expanded={install.canPrompt ? undefined : installHelp}
+                  data-nav
+                >
+                  {tr('⬇ INSTALL AS APP', '⬇ ALS APP INSTALLIEREN')}
+                </button>
+              </div>
+              {installHelp && (
+                <ol className="install-steps">
+                  {installSteps(install.platform).map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ol>
+              )}
+            </>
+          )}
+          <p className="dim">
+            {tr(
+              'A weekly nudge in your own calendar (Sunday morning). RetroMind stores nothing for it.',
+              'Ein Stups pro Woche in deinem eigenen Kalender (Sonntagmorgen). RetroMind speichert dafür nichts.'
+            )}
+          </p>
+          <div className="settings-row">
+            <button className="px-btn" onClick={() => downloadReminder('gaming')} data-nav>
+              {tr('📅 MY CALENDAR', '📅 MEIN KALENDER')}
+            </button>
+            <a className="px-btn" href={googleCalendarLink('gaming')} target="_blank" rel="noopener noreferrer" data-nav>
+              {tr('GOOGLE CALENDAR', 'GOOGLE KALENDER')}
+            </a>
+          </div>
         </section>
 
         <section>

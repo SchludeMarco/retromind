@@ -6,8 +6,10 @@
 //   and drops the hash into a HyperLogLog, which can count distinct visitors
 //   but cannot give any hash back. Once the salt is gone, nobody (not even
 //   Marco) can link a visit to a person or to another day. Optional fields:
-//   device ("phone" | "tablet" | "desktop") and installed (opened as an
-//   installed app) are added to per-day tallies.
+//   device ("phone" | "tablet" | "desktop"), installed (opened as an
+//   installed app) and back (how long ago this device last opened the app:
+//   "first" | "same" | "day" | "week" | "month" | "later", lib/visits.ts) are
+//   added to per-day tallies. Together they show whether people come back.
 // POST /api/stats {app, event: {kind, key}} → counts what is opened (decades
 //   in the Zeitreise, games and mini-games in Gaming) in plain tallies per
 //   month and overall, with no link to the visitor.
@@ -25,6 +27,7 @@ import { isAdmin, readJsonBody } from "./_admin.js";
 
 const APPS = ["zeitreise", "gaming"];
 const DEVICES = ["phone", "tablet", "desktop"];
+const BACK = ["first", "same", "day", "week", "month", "later"];
 const EVENT_KINDS = { zeitreise: ["decade"], gaming: ["game", "minigame"] };
 const TOP_KEEP = 300;
 const BOT_RE = /bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|facebookexternalhit|curl|wget/i;
@@ -78,7 +81,7 @@ const cleanKey = (key) =>
   typeof key === "string" ? key.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 60) : "";
 
 async function countVisit(req, res) {
-  const { app, device, installed, event } = await readJsonBody(req);
+  const { app, device, installed, back, event } = await readJsonBody(req);
   const ua = String(req.headers["user-agent"] || "");
   if (!APPS.includes(app) || !configured() || !ua || BOT_RE.test(ua)) return res.status(204).end();
 
@@ -108,6 +111,7 @@ async function countVisit(req, res) {
     ];
     if (DEVICES.includes(device)) commands.push(["HINCRBY", `rm:${app}:devices:${day}`, device, 1]);
     if (installed === true) commands.push(["HINCRBY", `rm:${app}:devices:${day}`, "installed", 1]);
+    if (BACK.includes(back)) commands.push(["HINCRBY", `rm:${app}:back:${day}`, back, 1]);
     await redis(commands);
   } catch (err) {
     console.error("stats count failed", err);
@@ -143,6 +147,7 @@ async function summary(req, res) {
         ["GET", `rm:${app}:starts:${day}`],
         ["PFCOUNT", `rm:${app}:visitors:${day}`],
         ["HGETALL", `rm:${app}:devices:${day}`],
+        ["HGETALL", `rm:${app}:back:${day}`],
       );
     }
     for (const kind of EVENT_KINDS[app]) {
@@ -160,17 +165,22 @@ async function summary(req, res) {
     for (const app of APPS) {
       const totalStarts = Number(results[i++]) || 0;
       const devices = { phone: 0, tablet: 0, desktop: 0, installed: 0 };
+      const back = Object.fromEntries(BACK.map((k) => [k, 0]));
       const daily = days.map((day) => {
         const row = { day, starts: Number(results[i++]) || 0, visitors: Number(results[i++]) || 0 };
         const d = fromHash(results[i++]);
         for (const k of Object.keys(devices)) devices[k] += d[k] || 0;
+        const b = fromHash(results[i++]);
+        for (const k of BACK) back[k] += b[k] || 0;
+        // Starts by someone who had been here on another day before.
+        row.returning = (b.day || 0) + (b.week || 0) + (b.month || 0) + (b.later || 0);
         return row;
       });
       const top = {};
       for (const kind of EVENT_KINDS[app]) {
         top[kind] = { month: toTop(results[i++]), all: toTop(results[i++]) };
       }
-      apps[app] = { totalStarts, daily, devices, top };
+      apps[app] = { totalStarts, daily, devices, back, top };
     }
     return res.status(200).json({ configured: true, since, days, month, apps });
   } catch (err) {

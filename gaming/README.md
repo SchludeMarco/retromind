@@ -232,6 +232,12 @@ zeigen dürfen.
   Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
+- **Serie und Wochen-Duell** – jeder Tag in Folge in der Halle bringt Coins
+  (5, 10, 15 … bis 30, jeder 7. Tag 25 extra, ein verpasster Tag pro Woche
+  verziehen), die Serie steht in der Kopfleiste. Jede Woche ist ein Minispiel
+  das Wochen-Duell mit eigener Highscore-Tafel der Woche (`week` in
+  [`api/highscores.js`](../api/highscores.js), 30 Tage aufbewahrt)
+  ([`lib/quests.ts`](lib/quests.ts)).
 - **Easter Eggs** – zehn Geheimnisse (IDDQD, Rosebud oder XYZZY in der Suche,
   Konami-Code, den Mampf-Roboter fangen, aufs Logo klopfen, den Guru nach dem Sinn des
   Lebens fragen, nachts vorbeischauen …), jedes bringt einmal Coins; die Liste
@@ -272,8 +278,13 @@ zeigen dürfen.
   Suche und ein offenes Spiel bleiben beim Neuladen erhalten
   ([`lib/pageMemory.ts`](../lib/pageMemory.ts)).
 - **Als App installierbar** – Manifest, Icons und Service Worker in
-  `public/gaming/`; im Hub gibt es dafür einen „Als App“-Knopf, wo der Browser
-  das kann. Steuerung auch per Pfeiltasten und Gamepad.
+  `public/gaming/`; auf der eigenen Domain liefert
+  [`scripts/edition.mjs`](../scripts/edition.mjs) ein Manifest für „/“ aus, damit
+  Android das Installieren auch dort anbietet. Im Hub gibt es einen
+  „Als App“-Knopf, wo der Browser das kann, und in den Einstellungen unter
+  „Aufs Handy“ einen Knopf, der sonst die Schritte im Browser-Menü zeigt, plus
+  eine wöchentliche Kalender-Erinnerung. Steuerung auch per Pfeiltasten und
+  Gamepad.
 
 ### Datenschutz
 

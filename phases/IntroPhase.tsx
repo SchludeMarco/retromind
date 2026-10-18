@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppPhase, GalleryItem } from '../types';
+import { AppPhase, CapturedMemory, GalleryItem } from '../types';
 import { DECADES_DB } from '../constants';
 import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
@@ -9,6 +9,12 @@ import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
 import { LivingRoom } from '../components/LivingRoom';
+import { DailyQuestion } from '../components/DailyQuestion';
+import { WelcomeBackLetter } from '../components/WelcomeBackLetter';
+import { YouthToday } from '../components/YouthToday';
+import { FamilyBook } from '../components/FamilyBook';
+import { StayInTouch } from '../components/StayInTouch';
+import { dailyMemoryId } from '../lib/dailyQuestion';
 
 export const IntroPhase: React.FC<{
   resumeTarget: AppPhase | null;
@@ -21,14 +27,41 @@ export const IntroPhase: React.FC<{
   diaryWritten: boolean;
   onOpenStage: (phase: AppPhase) => void;
   userName: string;
+  birthYear: number | null;
+  memories: CapturedMemory[];
+  onSaveMemory: (memory: CapturedMemory) => void;
 }> = (props) => (useWarmChrome() ? <WarmIntro {...props} /> : <ClassicIntro {...props} />);
 
 type IntroProps = React.ComponentProps<typeof IntroPhase>;
 
-const ClassicIntro: React.FC<IntroProps> = ({
-  resumeTarget, memoriesCount,
-  onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName
-}) => (
+// Something new every day under the Stube (tester feedback, 2026-10-18): a
+// letter for whoever comes back, the question of the day, what happened
+// today in your youth, the family book and a way to keep RetroMind close.
+const DailyCorner: React.FC<IntroProps & { warm: boolean }> = ({ warm, userName, focusDecade, memories, onSaveMemory }) => (
+  <>
+    <WelcomeBackLetter warm={warm} userName={userName} dailyAnswered={memories.some((m) => m.id === dailyMemoryId())} />
+    <DailyQuestion warm={warm} focusDecade={focusDecade} memories={memories} onSave={onSaveMemory} />
+  </>
+);
+
+const KeepClose: React.FC<{ warm: boolean }> = ({ warm }) => (
+  <section
+    aria-labelledby="rm-keep-close"
+    className={warm ? 'rounded-2xl bg-retro-cream p-5 md:p-6' : 'retro-card w-full max-w-2xl mx-auto mb-6 p-6 bg-white'}
+  >
+    <h2 id="rm-keep-close" className={`${warm ? 'text-xl' : 'text-2xl'} mb-3 text-left`}>
+      📲 {tr('Keep RetroMind close', 'RetroMind immer zur Hand')}
+    </h2>
+    <StayInTouch warm={warm} />
+  </section>
+);
+
+const ClassicIntro: React.FC<IntroProps> = (props) => {
+  const {
+    resumeTarget, memoriesCount,
+    onStart, onResume, onReset, diaryWritten, onOpenStage, focusDecade, onSelectGalleryItem, userName, birthYear
+  } = props;
+  return (
   <div className="flex flex-col items-center py-6 md:py-10 text-center animate-fadeIn">
     {/* The living room comes first in every design (components/LivingRoom.tsx). */}
     <LivingRoom
@@ -39,7 +72,8 @@ const ClassicIntro: React.FC<IntroProps> = ({
       onResume={onResume}
       onOpenStage={onOpenStage}
     />
-    <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream">
+    <DailyCorner {...props} warm={false} />
+    <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream mb-6">
       <h2 className="text-3xl mb-6">{tr('Welcome, time traveler', 'Willkommen, Zeitreisende:r')}</h2>
 
       {!resumeTarget && (
@@ -98,8 +132,12 @@ const ClassicIntro: React.FC<IntroProps> = ({
 
       <IntroExtras />
     </div>
+    <YouthToday warm={false} birthYear={birthYear} focusDecade={focusDecade} />
+    <FamilyBook warm={false} userName={userName} />
+    <KeepClose warm={false} />
   </div>
-);
+  );
+};
 
 // The gaming signpost moved up into the gaming card (components/GamingTeaser.tsx).
 const IntroExtras: React.FC = () => (
@@ -136,10 +174,11 @@ const FEATURES = [
   { icon: '📖', label: tr('Your very own memory book to keep', 'Dein eigenes Erinnerungsbuch zum Behalten') },
 ];
 
-const WarmIntro: React.FC<IntroProps> = ({
-  resumeTarget, memoriesCount, onStart, onResume, onReset,
-  focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName
-}) => {
+const WarmIntro: React.FC<IntroProps> = (props) => {
+  const {
+    resumeTarget, memoriesCount, onStart, onResume, onReset,
+    focusDecade, onSelectGalleryItem, diaryWritten, onOpenStage, userName, birthYear
+  } = props;
   const decades = Object.keys(DECADES_DB);
   const [shownDecade, setShownDecade] = useState(DECADES_DB[focusDecade] ? focusDecade : decades[0]);
   const shown = DECADES_DB[shownDecade];
@@ -204,7 +243,13 @@ const WarmIntro: React.FC<IntroProps> = ({
         </div>
       </section>
 
+      <DailyCorner {...props} warm />
+
       <GamingTeaser />
+
+      <YouthToday warm birthYear={birthYear} focusDecade={focusDecade} />
+
+      <FamilyBook warm userName={userName} />
 
       {!resumeTarget && (
         <EraSpotlight warm userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
@@ -273,6 +318,8 @@ const WarmIntro: React.FC<IntroProps> = ({
           </div>
         </section>
       )}
+
+      <KeepClose warm />
 
       <section className="retro-card bg-retro-paper-white p-6 md:p-8 text-center">
         <IntroExtras />

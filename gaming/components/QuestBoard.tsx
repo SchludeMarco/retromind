@@ -1,5 +1,7 @@
-import React from 'react';
-import { activeQuests, freshLog, PRIZES } from '../lib/quests';
+import React, { useEffect, useState } from 'react';
+import { activeQuests, duelGame, freshLog, PRIZES, streakReward, today } from '../lib/quests';
+import { Entry, fetchWeekBoard } from '../lib/highscores';
+import { MINI_GAMES, MiniGameId } from './MiniGames';
 import { EGGS } from '../lib/eggs';
 import { ArcadeState } from '../lib/useArcadeState';
 import { tr } from '../../lib/i18n';
@@ -12,9 +14,23 @@ export const QuestBoard: React.FC<{
   onBuy: (id: string) => void;
   onUse: (id: string) => void;
   onOpenSettings: () => void;
-}> = ({ state, signedIn, onBuy, onUse, onOpenSettings }) => {
+  onPlay: (id: MiniGameId) => void;
+}> = ({ state, signedIn, onBuy, onUse, onOpenSettings, onPlay }) => {
   const quests = activeQuests(freshLog(state.quests));
   const found = EGGS.filter((e) => state.eggs.includes(e.id)).length;
+  const duel = duelGame();
+  const duelInfo = MINI_GAMES.find((m) => m.id === duel);
+  const [week, setWeek] = useState<Entry[] | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetchWeekBoard(duel).then((w) => alive && setWeek(w));
+    return () => {
+      alive = false;
+    };
+  }, [duel]);
+  const streak = state.streak?.last === today() ? state.streak.count : 0;
+  const days = new Date().getDay();
+  const daysLeft = days === 0 ? 1 : 8 - days;
   return (
     <div className="quest-board">
       {/* Without Google the balance lives only in this browser (Marco, 2026-10-08). */}
@@ -54,6 +70,49 @@ export const QuestBoard: React.FC<{
           </>
         )}
       </div>
+
+      {/* Coming back pays (tester feedback, 2026-10-18): the daily streak and the weekly duel. */}
+      <section className="panel quest-panel">
+        <h3 className="pixel-font">
+          🔥 {tr('STREAK', 'SERIE')} {streak}
+        </h3>
+        <p className="dim">
+          {tr(
+            `Every day in a row in the arcade pays Coins: tomorrow it’s +${streakReward(streak + 1)}. Every 7th day there’s 25 extra, and one missed day per week is forgiven. Your best: ${state.streak?.best ?? streak} days.`,
+            `Jeder Tag in Folge in der Spielhalle bringt Coins: morgen gibt es +${streakReward(streak + 1)}. Jeder 7. Tag bringt 25 extra, und ein verpasster Tag pro Woche wird verziehen. Dein Rekord: ${state.streak?.best ?? streak} Tage.`
+          )}
+        </p>
+      </section>
+
+      {duelInfo && (
+        <section className="panel quest-panel">
+          <h3 className="pixel-font">{tr('WEEKLY DUEL', 'WOCHEN-DUELL')}</h3>
+          <p className="dim">
+            {tr(
+              `This week everyone plays ${duelInfo.title}. The best scores of the week stand here until Sunday night (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left), then a new game starts.`,
+              `Diese Woche spielen alle ${duelInfo.title}. Die besten Punkte der Woche stehen hier bis Sonntagnacht (noch ${daysLeft} ${daysLeft === 1 ? 'Tag' : 'Tage'}), dann kommt ein neues Spiel.`
+            )}
+          </p>
+          {week && week.length > 0 ? (
+            <ol className="hs-table pixel-font">
+              {week.slice(0, 5).map((e, i) => (
+                <li key={`${e.name}-${e.score}-${i}`}>
+                  <span>{i + 1}.</span>
+                  <span>{e.name}</span>
+                  <span>{e.score.toLocaleString('en-US')}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="dim">{tr('No scores yet this week. Go first!', 'Diese Woche noch keine Punkte. Leg vor!')}</p>
+          )}
+          <div className="settings-row" style={{ marginTop: 10 }}>
+            <button className="px-btn" onClick={() => onPlay(duel)} data-nav>
+              {duelInfo.icon} {tr('PLAY', 'SPIELEN')}
+            </button>
+          </div>
+        </section>
+      )}
 
       <section className="panel quest-panel">
         <h3 className="pixel-font">QUESTS</h3>

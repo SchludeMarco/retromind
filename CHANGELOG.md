@@ -7,6 +7,30 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Jeden Tag etwas Neues in der Stube** (2026-10-18, PR #237): Unter der
+  Stube wartet jetzt jeden Tag eine neue Frage des Tages („Wie hast du als Kind
+  Geburtstag gefeiert?“). Deine Antwort kommt als neue Seite in dein
+  Erinnerungsbuch, das so immer weiter wächst. Darunter steht „Heute in deiner
+  Jugend“: was an diesem Tag geschah, als du zwischen 6 und 20 warst, mit der
+  Nr. 1 des Jahres. Neu ist auch das Familienbuch: Alle Eingeladenen bekommen
+  jeden Montag dieselbe Frage und lesen die Antworten der anderen. Bevor deine
+  erste Antwort auf unseren Server geht, fragt die App einmal um Erlaubnis;
+  ändern und löschen kannst du sie jederzeit. Wer nach zwei Tagen oder mehr
+  wiederkommt, findet einen Brief in der Stube mit dem, was seitdem neu ist.
+- **RetroMind als App aufs Handy** (2026-10-18, PR #237): Die Zeitreise lässt
+  sich jetzt wie die Gaming-Edition als App installieren, mit eigenem Symbol.
+  Auf Android bot Chrome das Installieren bisher oft gar nicht an; das ist
+  behoben, in beiden Apps. Ein Knopf „Auf den Startbildschirm“ (Startseite und
+  Einstellungen der Zeitreise, Einstellungen der Gaming-Edition) installiert mit
+  einem Tipp oder zeigt die zwei, drei Schritte im Browser-Menü. Daneben legt
+  „In meinen Kalender“ eine Erinnerung für jeden Sonntagmorgen in deinen
+  eigenen Kalender, ohne dass RetroMind dafür etwas speichert.
+- **Gaming-Edition: Serie und Wochen-Duell** (2026-10-18, PR #237): Jeder Tag
+  in Folge in der Spielhalle bringt Coins, von 5 bis 30, und jeder siebte Tag
+  25 extra; ein verpasster Tag pro Woche wird verziehen. Die Serie steht oben
+  in der Kopfleiste. Unter „Quests“ gibt es außerdem jede Woche ein
+  Wochen-Duell: Alle spielen dasselbe Minispiel, und eine eigene
+  Highscore-Tafel zeigt die Besten der Woche.
 - **Lieblingsbands aus deinem ganzen Leben** (2026-10-18, PR #236): Beim
   Kofferpacken vor der Abfahrt und in den Einstellungen unter „Deine Angaben“
   gibt es jetzt „Ideen gefällig?“. Ein Tipp darauf zeigt für jeden

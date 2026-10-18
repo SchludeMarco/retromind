@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { StayInTouch } from './StayInTouch';
 import { InitialsPicker } from './InitialsPicker';
 import { setInitials, useInitials } from '../lib/initials';
 import { Modal } from './Modal';
@@ -144,6 +145,11 @@ export const SettingsModal: React.FC<{
                 'Drei Zeichen, wie früher auf den Highscore-Tafeln am Flipper. Sie bleiben auf diesem Gerät; mit Google-Anmeldung kommen sie auch auf deine anderen Geräte und zu den Highscores in RetroMind – Gaming.'
               )}
         </p>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-retro-ink/20">
+        <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('On your phone', 'Auf dem Handy')}</span>
+        <StayInTouch warm={false} />
       </div>
 
       {(googleStatus !== 'not_configured' || spotifyStatus !== 'not_configured') && (
