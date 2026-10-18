@@ -45,3 +45,9 @@ export async function sendGuruMessage(history: ChatMessage[]): Promise<string> {
   const { text } = await call('chat', { history, persona: 'gaming' });
   return text || '';
 }
+
+/** Fresh fun facts for the hall's ticker once the built-in ones ran (lib/tickerFeed.ts). */
+export async function fetchTickerFacts(recent: string[]): Promise<string[]> {
+  const { items } = await call('tickerMore', { app: 'gaming', recent });
+  return (Array.isArray(items) ? items : []).map((i: { text?: string }) => String(i?.text || '').trim()).filter(Boolean);
+}

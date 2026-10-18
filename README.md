@@ -151,10 +151,16 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Sprüche und Alltagsdinge aus den Jahrzehnten vorbei (deutsch und
   amerikanisch, das eigene Jahrzehnt öfter). Ein Tipp auf die Diskette
   dahinter legt sie in die **Grabbelkiste**, die vorn im Laufband zählt und
-  alles Gesammelte zeigt. Ein Tipp auf den Spruch selbst erklärt, woher er
-  kommt. Langsam, mit Pause-Knopf, hält bei Berührung an und lässt sich mit
-  dem Finger oder der Maus hin und her ziehen
+  alles Gesammelte zeigt (dieselbe Kiste wie im Gaming-Ticker). Ein Tipp auf den Spruch selbst erklärt, woher er
+  kommt. Dazu kommt ein Satz zu jedem Jahr mit seinem Nummer-1-Hit. Langsam,
+  mit Pause-Knopf, hält bei Berührung an, lässt sich mit dem Finger oder der
+  Maus hin und her schieben (mit Schwung) und mit ‹ › eine Meldung vor oder
+  zurück blättern. Es geht nie aus: Neue Meldungen kommen laufend nach, ist
+  alles einmal durch, holt die KI frische dazu, und die zuletzt gezeigten
+  merkt sich das Gerät zum Zurückblättern
   ([`components/RetroTicker.tsx`](components/RetroTicker.tsx),
+  [`components/TickerTrack.tsx`](components/TickerTrack.tsx),
+  [`lib/tickerFeed.ts`](lib/tickerFeed.ts),
   [`lib/tickerItems.ts`](lib/tickerItems.ts)).
 - **Geführte Reise in 7 Halten** – `intro → onboarding → induction → exploration → diary → book → finish`
   (Zuhause, Dein Profil, Deine Zeit, Erkunden, Tagebuch, Erinnerungsbuch,

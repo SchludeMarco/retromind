@@ -68,6 +68,17 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Fun-Fact-Laufband** – ganz unten, direkt über den Knöpfen der Navigation,
+  wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
+  schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
+  Fun Facts, Erscheinungsjahre und Anekdoten zu allen Katalogspielen (ein Tipp
+  öffnet das Spiel); ist alles einmal durch, holt die KI frische Fakten dazu.
+  Die Diskette hinter jeder Meldung legt sie in die **Grabbelkiste**, dieselbe
+  wie in der Zeitreise; die Kiste vorn im Ticker zeigt alles Gesammelte.
+  Die zuletzt gezeigten merkt sich das Gerät zum Zurückblättern
+  ([`components/HallTicker.tsx`](components/HallTicker.tsx), Technik geteilt
+  mit der Zeitreise: [`components/TickerTrack.tsx`](../components/TickerTrack.tsx),
+  [`lib/tickerFeed.ts`](../lib/tickerFeed.ts)).
 - **80er-Heavy-Metal-Intro** – beim Betreten zwei verzerrte Gitarren links
   und rechts, Bass, Solo, Schlagzeug und Hall, vorab im eigenen kleinen
   „Studio“ aufgenommen ([`lib/metalBand.ts`](lib/metalBand.ts),

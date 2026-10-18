@@ -31,6 +31,24 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
   in der Kopfleiste. Unter „Quests“ gibt es außerdem jede Woche ein
   Wochen-Duell: Alle spielen dasselbe Minispiel, und eine eigene
   Highscore-Tafel zeigt die Besten der Woche.
+- **Diskette auch im Gaming-Ticker** (2026-10-18, PR #238): Hinter jedem
+  Fun Fact in der Spielhalle sitzt jetzt eine Diskette. Ein Tipp legt die
+  Meldung in die Grabbelkiste, ein zweiter nimmt sie wieder heraus. Die Kiste
+  vorn im Ticker zählt mit und zeigt alles Gesammelte. Es ist dieselbe
+  Grabbelkiste wie in der Zeitreise: Sprüche und Fun Facts landen in einer
+  Kiste, in beiden Apps und auf allen Geräten.
+- **Laufbänder zum Zurückholen und Weiterblättern** (2026-10-18, PR #237):
+  Die Fun Facts in der Gaming-Edition laufen jetzt wie das Laufband der
+  Zeitreise ganz unten, direkt über den Knöpfen der Navigation. Beide
+  Laufbänder sind langsamer und lassen sich mit dem Finger hin und her
+  schieben, mit Schwung auch ein Stück weiter. Neu sind die Pfeile ‹ und ›
+  daneben: zurück zur Meldung, die gerade weg ist, oder weiter zur nächsten.
+  Die Laufbänder gehen nie aus: Es kommen ständig neue Meldungen nach, in der
+  Zeitreise jetzt auch ein Satz zu jedem Jahr mit dem Nummer-1-Hit, in der
+  Spielhalle Fun Facts und Erscheinungsjahre zu allen Katalogspielen (ein Tipp
+  öffnet das Spiel). Ist alles einmal durchgelaufen, holt die KI frische
+  Meldungen dazu. Die zuletzt gezeigten Meldungen merkt sich das Gerät, so
+  kannst du auch nach dem Neuladen zurückblättern.
 - **Lieblingsbands aus deinem ganzen Leben** (2026-10-18, PR #236): Beim
   Kofferpacken vor der Abfahrt und in den Einstellungen unter „Deine Angaben“
   gibt es jetzt „Ideen gefällig?“. Ein Tipp darauf zeigt für jeden
