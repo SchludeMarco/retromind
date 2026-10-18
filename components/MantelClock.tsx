@@ -36,7 +36,23 @@ const ticks = Array.from({ length: 60 }, (_, i) => {
 // time — this is meant to feel a little uncanny, not tell the hour.
 // `rewinding` makes the hands race backwards (the time machine at work, see
 // .mc-rewinding in index.css).
-export const MantelClock: React.FC<{ className?: string; rewinding?: boolean }> = ({ className, rewinding = false }) => {
+// `lightning` adds the reflections of the welcome screen's lightning (Marco,
+// 2026-10-18: "bei jedem Blitz soll man die Reflexionen auf der Uhr sehen"):
+// one set per bolt, lit from its side (a from above, b from the left, c from
+// the right) and flashing in step with it (.mc-flash in index.css).
+const RIM_R = 72;
+const RIM_ARC = 150;
+const FLASHES = [
+  { key: 'a', angle: -90, glare: -18, x: 95 },
+  { key: 'b', angle: -150, glare: -32, x: 70 },
+  { key: 'c', angle: -30, glare: 14, x: 140 },
+] as const;
+
+export const MantelClock: React.FC<{ className?: string; rewinding?: boolean; lightning?: boolean }> = ({
+  className,
+  rewinding = false,
+  lightning = false,
+}) => {
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -77,6 +93,19 @@ export const MantelClock: React.FC<{ className?: string; rewinding?: boolean }> 
         <clipPath id="mc-glass-clip">
           <circle cx={FACE_CX} cy={FACE_CY} r="66" />
         </clipPath>
+        {lightning && (
+          <>
+            <linearGradient id="mc-flash-glare" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#eaf4ff" stopOpacity="0" />
+              <stop offset="45%" stopColor="#f4f9ff" stopOpacity="0.85" />
+              <stop offset="55%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#eaf4ff" stopOpacity="0" />
+            </linearGradient>
+            <filter id="mc-flash-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.2" />
+            </filter>
+          </>
+        )}
       </defs>
 
       {/* ground shadow */}
@@ -152,6 +181,46 @@ export const MantelClock: React.FC<{ className?: string; rewinding?: boolean }> 
       <g clipPath="url(#mc-glass-clip)">
         <rect x="60" y="40" width="150" height="140" fill="url(#mc-glass)" transform="rotate(-18 135 110)" />
       </g>
+
+      {/* lightning reflections: a cold sheen over the case, the brass rim
+          catching the flash on the bolt's side, a glare across the glass */}
+      {lightning &&
+        FLASHES.map((f) => (
+          <g key={f.key} className={`mc-flash is-${f.key}`}>
+            <path
+              d="M40,178 C40,55 95,18 150,18 C205,18 262,55 272,115 C276,145 276,163 272,178 Z"
+              fill="#bcd8ff"
+              opacity="0.16"
+            />
+            <circle
+              cx={FACE_CX}
+              cy={FACE_CY}
+              r={RIM_R}
+              fill="none"
+              stroke="#f2f8ff"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray={`${RIM_ARC} ${2 * Math.PI * RIM_R}`}
+              transform={`rotate(${f.angle - (RIM_ARC / (2 * Math.PI * RIM_R)) * 180} ${FACE_CX} ${FACE_CY})`}
+              filter="url(#mc-flash-glow)"
+            />
+            <circle
+              cx={FACE_CX}
+              cy={FACE_CY}
+              r={RIM_R}
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeDasharray={`${RIM_ARC * 0.7} ${2 * Math.PI * RIM_R}`}
+              transform={`rotate(${f.angle - (RIM_ARC * 0.7 / (2 * Math.PI * RIM_R)) * 180} ${FACE_CX} ${FACE_CY})`}
+            />
+            <g clipPath="url(#mc-glass-clip)">
+              <rect x={f.x} y="20" width="34" height="190" fill="url(#mc-flash-glare)" transform={`rotate(${f.glare} ${FACE_CX} ${FACE_CY})`} />
+              <rect x={f.x + 44} y="20" width="10" height="190" fill="url(#mc-flash-glare)" opacity="0.7" transform={`rotate(${f.glare} ${FACE_CX} ${FACE_CY})`} />
+            </g>
+          </g>
+        ))}
     </svg>
   );
 };
