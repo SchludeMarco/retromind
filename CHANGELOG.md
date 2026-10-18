@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Titelmusik beim Öffnen eines Spiels** (2026-10-18, PR #246): Öffnest du
+  in der Gaming-Edition eine Spieleseite, laufen zuerst 20 Sekunden vom
+  Anfang des Soundtracks, meist die Titelmusik. Mit „WEITER ►“ springst du
+  gleich zum Gameplay-Video; nach der Titelmusik wartet es angehalten oben,
+  bis du es startest. Die Musik kommt über den YouTube-Player, also erst,
+  wenn du YouTube erlaubt hast, und bei ausgeschaltetem Ton bleibt sie stumm.
+
 - **Schatzkiste und klügere Bandvorschläge** (2026-10-18, PR #245): In der
   Zeitreise passen die Ideen bei den Lieblingsbands jetzt zu dem, was schon
   auf deiner Liste steht: Wer Nirvana einträgt, bekommt Pearl Jam und Green

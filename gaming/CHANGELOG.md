@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Titelmusik beim Öffnen eines Spiels** (2026-10-18, PR #246): Öffnest du
+  in der Gaming-Edition eine Spieleseite, laufen zuerst 20 Sekunden vom
+  Anfang des Soundtracks, meist die Titelmusik. Mit „WEITER ►“ springst du
+  gleich zum Gameplay-Video; nach der Titelmusik wartet es angehalten oben,
+  bis du es startest. Die Musik kommt über den YouTube-Player, also erst,
+  wenn du YouTube erlaubt hast, und bei ausgeschaltetem Ton bleibt sie stumm.
+
 - **Gamer-Fakten im Laufband der Spielhalle** (2026-10-18, PR #245): Das
   Fun-Fact-Laufband der Gaming-Edition kennt neue Geschichten: wie Mew in
   letzter Minute in Pokémon Rot und Grün geschmuggelt wurde, warum Mewtu die

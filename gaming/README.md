@@ -179,8 +179,13 @@ zeigen dürfen.
   GameFAQs, MobyGames, Kultboy und Handbüchern im Internet Archive.
 - **KI-Guide** – ein Guide mit Google-Websuche und Quellenangaben
   (`gameGuide` in `api/gemini.js`).
-- **Videos** – das beliebteste YouTube-Video zum Spiel startet automatisch
-  (stumm bei Ton aus), weitere im Reiter „Videos“; gesucht wird mit Titel und
+- **Titelmusik beim Öffnen** – geht eine Spieleseite auf, laufen zuerst
+  20 Sekunden vom Anfang des besten Soundtrack-Videos (meist die Titelmusik),
+  mit „WEITER ►“ zum Überspringen; danach wartet das Gameplay-Video
+  angehalten oben. Läuft über den YouTube-Player, also erst nach der
+  YouTube-Zustimmung ([`components/GameDetail.tsx`](components/GameDetail.tsx)).
+- **Videos** – das beliebteste YouTube-Video zum Spiel steht oben bereit und
+  startet von selbst, wenn es keine Titelmusik gibt (stumm bei Ton aus), weitere im Reiter „Videos“; gesucht wird mit Titel und
   Jahr, Videos zu Nachfolgern fliegen raus (`api/youtube.js`,
   [`lib/youtube.ts`](lib/youtube.ts)).
 - **Musik & TV-Werbung** – Soundtrack und alte Fernsehspots von YouTube.
@@ -409,9 +414,5 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   Schwierigkeitsstufen.
 - **Spielstände der Retro-Konsole synchronisieren:** Sie liegen in der
   IndexedDB des Emulators und bleiben bisher auf dem Gerät.
-- **Titelmusik beim Öffnen eines Spiels** (Marco, 2026-10-18): ein kurzes
-  Stück der Titelmusik, sobald eine Spieleseite aufgeht. Rechtlich sauber ginge
-  es nur über einen offiziellen Player (YouTube oder Spotify), nicht über
-  eigene Musikdateien.
 - **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,
   Teilen beim Blackjack, Solitär mit drei Karten ziehen oder Spider.
