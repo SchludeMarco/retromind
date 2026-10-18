@@ -187,9 +187,6 @@ export const SplashScreen: React.FC<{
       {stage !== 'iris' && (
       <>
       <div className="grainy-bg" />
-      <div className="mantel-clock-wrapper absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-60 pointer-events-none">
-        <MantelClock className="w-full h-full" rewinding={stage === 'warp'} lightning />
-      </div>
       {stage === 'warp' && !reduceMotion && (
         <div aria-hidden="true" className="splash-vortex">
           <div className="splash-swirl" />
@@ -217,6 +214,14 @@ export const SplashScreen: React.FC<{
         <TimeCircuitRow label={tr('Destination time', 'Zielzeit')} stamp={destination} tone="red" />
         <TimeCircuitRow label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
       </div>
+      {/* The clock gets its own gap between the time circuits and the start
+          button, so nothing covers its face (Marco, 2026-10-18: "Der Button
+          sollte die Uhr nicht verdecken!"). */}
+      <div className="splash-clock-slot" aria-hidden="true">
+        <div className="mantel-clock-wrapper pointer-events-none">
+          <MantelClock className="w-full h-full" rewinding={stage === 'warp'} lightning />
+        </div>
+      </div>
       <div className="splash-start-row relative">
         <button
           onClick={handleStart}
@@ -236,7 +241,7 @@ export const SplashScreen: React.FC<{
       </div>
       <p
         aria-live="polite"
-        className={`relative mt-6 text-sm text-[#c9ab78]/80 transition-opacity duration-500 ${
+        className={`relative mt-3 text-sm text-[#c9ab78]/80 transition-opacity duration-500 ${
           (waitingForTouch || heard) && !muted && !struck ? 'opacity-100' : 'opacity-0'
         }`}
       >
@@ -249,7 +254,7 @@ export const SplashScreen: React.FC<{
           tr('🔊 Tap anywhere on the screen to hear the clock tick.', '🔊 Tippe irgendwo auf den Bildschirm, um die Uhr ticken zu hören.')
         )}
       </p>
-      <div className="relative mt-4 flex flex-col items-center gap-1 max-w-xs">
+      <div className="relative mt-2 flex flex-col items-center gap-1 max-w-xs">
         <button
           type="button"
           role="switch"

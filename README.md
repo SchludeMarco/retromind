@@ -405,7 +405,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`lib/clockSounds.ts`](lib/clockSounds.ts) `playThunder`). „RetroMind“
   steht schräg in Chrom und Feuer da, mit einer Feuerspur darunter. Darunter
   zeigen Zeitschaltkreise die Zielzeit (dein Geburtstag, sobald bekannt, sonst
-  blinkende Striche) und die Gegenwart. Der Flux-Knopf „Go back in time“ / „Ab
+  blinkende Striche) und die Gegenwart. Die Uhr hat ihren eigenen Platz
+  zwischen Zeitschaltkreisen und Knopf, ihr Zifferblatt mit den laufenden
+  Zeigern ist auf jedem Bildschirm frei zu sehen (`.splash-clock-slot`). Der Flux-Knopf „Go back in time“ / „Ab
   in die Vergangenheit“ hat ein leuchtendes Emblem und einen Tacho: Beim Drücken
   rast er auf 88 MPH, die Blitze schlagen ohne Pause ein, zwei Feuerspuren
   ziehen über den Boden, und die Zeitmaschine startet (siehe oben); bei der
