@@ -24,6 +24,7 @@
 
 import crypto from "node:crypto";
 import { isAdmin, readJsonBody } from "./_admin.js";
+import familyHandler from "./_family.js";
 
 const APPS = ["zeitreise", "gaming"];
 const DEVICES = ["phone", "tablet", "desktop"];
@@ -190,6 +191,8 @@ async function summary(req, res) {
 }
 
 export default async function handler(req, res) {
+  // The family book shares this function (vercel.json rewrite, api/_family.js).
+  if (req.query?.module === "family") return familyHandler(req, res);
   if (req.method === "POST") return countVisit(req, res);
   if (req.method === "GET") return summary(req, res);
   res.setHeader("Allow", "GET, POST");

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-// The family book's side in the browser (api/family.js): the agreement to
+// The family book's side in the browser (api/_family.js, served at /api/family): the agreement to
 // share, and the calls. Answers only go to the server after the person has
 // agreed in the app; the agreement is a "retromind" key, so it travels with
 // the rest of their data (lib/sync.ts) and "Delete my data" removes it.

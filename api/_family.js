@@ -14,6 +14,9 @@
 // DELETE /api/family?week=YYYY-MM-DD → deletes the guest's answer for that week
 // DELETE /api/family?all=1           → deletes all of the guest's answers ("Delete my data")
 //
+// Served through api/stats.js (vercel.json rewrites /api/family there),
+// because the Hobby plan allows only 12 functions per deployment.
+//
 // Storage: the same Upstash Redis as /api/stats, one hash per week
 // (rm:family:<week>, field = author hash) and a set of weeks that have answers.
 
@@ -67,7 +70,7 @@ function parseHash(flat, me) {
   return out.sort((a, b) => a.at - b.at);
 }
 
-export default async function handler(req, res) {
+export default async function familyHandler(req, res) {
   res.setHeader("Cache-Control", "no-store");
   // Without the guest list the site is open to anyone, and so would be the family book.
   if (!guestsConfigured()) return res.status(200).json({ ready: false, answers: [] });

@@ -5,7 +5,7 @@ import { deleteAnswer, FamilyAnswer, loadWeek, saveAnswer, setFamilyConsent, use
 import { playChime } from '../lib/uiSounds';
 import { MemoryAnswer } from './MemoryAnswer';
 
-// The family book (api/family.js): one question a week for everyone Marco
+// The family book (api/_family.js, served at /api/family): one question a week for everyone Marco
 // invited, and everybody reads everybody's answers. The strongest reason to
 // come back is other people (tester feedback, 2026-10-18). Writing needs a
 // one-time agreement, because the answer and first name then lie on the

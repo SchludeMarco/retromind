@@ -66,7 +66,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [`lib/visits.ts`](lib/visits.ts)) begrüßt alle, die nach zwei Tagen oder
   mehr wiederkommen, mit Neuigkeiten aus „Was ist neu?“ und dem Familienbuch.
 - **Familienbuch** ([`components/FamilyBook.tsx`](components/FamilyBook.tsx),
-  [`api/family.js`](api/family.js)) – jeden Montag eine Frage für alle
+  [`api/_family.js`](api/_family.js)) – jeden Montag eine Frage für alle
   eingeladenen Gäste, alle lesen alle Antworten, frühere Wochen zum
   Zurückblättern. Antworten gehen erst nach einer einmaligen Einwilligung an
   den Server (Upstash), zugeordnet einem Hash der Gast-E-Mail aus dem
