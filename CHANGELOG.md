@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Nichts mehr unter dem Griff, nichts mehr über dem Rand** (2026-10-18,
-  PR #PRNUM): Auf dem Handy lag der Griff am rechten Rand über dem Text, und
+  PR #247): Auf dem Handy lag der Griff am rechten Rand über dem Text, und
   bei „Heute in deiner Jugend“ liefen lange Wörter wie
   „Schachweltmeisterschaft“ über den Rand der Karte hinaus. Jetzt lässt die
   Seite rechts Platz für den Griff (Zeitreise und Spielhalle), lange Wörter
