@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Startbildschirm wie aus einem Zeitreisefilm** (2026-10-18, PR #NNN): Die
+- **Startbildschirm wie aus einem Zeitreisefilm** (2026-10-18, PR #242): Die
   Überschrift und der „Go back...“-Knopf der Zeitreise sind neu, ganz im Stil
   von „Zurück in die Zukunft“. Über der Kaminuhr zucken Blitze und erhellen
   kurz den Raum, einer schlägt in die Uhr. „RetroMind“ steht schräg in Chrom
