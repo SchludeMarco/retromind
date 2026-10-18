@@ -86,7 +86,9 @@ export const YouthToday: React.FC<{ warm: boolean; birthYear: number | null; foc
         {events.map((e) => (
           <li key={e.year} className="flex gap-3">
             <span className="font-bold text-retro-amber-dark shrink-0 w-12">{e.year}</span>
-            <span className="leading-snug">{e.text}</span>
+            {/* min-w-0 + wrapping: a long word ("Schachweltmeisterschaft") must not
+                push the text past the card's edge on a phone. */}
+            <span className="leading-snug min-w-0 [overflow-wrap:anywhere] hyphens-auto">{e.text}</span>
           </li>
         ))}
       </ul>

@@ -4293,6 +4293,12 @@ button.pcard {
   border-radius: 14px 0 0 14px;
   box-shadow: -2px 4px 12px rgba(0, 0, 0, 0.18);
 }
+/* Keeps the hall clear of the handle wherever it reaches the right edge. */
+@media (max-width: 1290px) {
+  .hub {
+    padding-right: 52px;
+  }
+}
 .side-overlay {
   justify-content: flex-end;
   align-items: stretch;

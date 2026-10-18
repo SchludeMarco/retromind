@@ -686,7 +686,7 @@ const App: React.FC = () => {
     />
   ) : null;
   return (
-    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-24' : 'pb-16'}`}>
+    <div className={`rm-app min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-24' : 'pb-16'}`}>
       <BootOverlay />
       <CrtOverlay />
       <ChristmasDeco />
