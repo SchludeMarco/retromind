@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Titelmusik beim Öffnen eines Spiels': {
+    title: 'Title music when you open a game',
+    text: 'When you open a game page in the Gaming edition, the first 20 seconds of its soundtrack play first, usually the title music. “SKIP ►” jumps straight to the gameplay video; after the title music it waits, paused, at the top until you start it. The music comes through the YouTube player, so only once you have allowed YouTube, and it stays silent while sound is off.',
+  },
   'Schatzkiste und klügere Bandvorschläge': {
     title: 'Treasure chest and smarter band ideas',
     text: 'In Time Travel, the ideas for your favorite bands now follow what is already on your list: add Nirvana and you get Pearl Jam and Green Day, like Michael Jackson and you get Prince and Whitney Houston. There is also a “Legends of all time” row for every age, with Elvis, the Beatles, Michael Jackson, Queen, ABBA and more. Every idea now has a small ✕ for “doesn’t fit me / don’t know it”; it disappears and comes back with one tap. New is the treasure chest (when packing your suitcase and in the settings, optional and closed at first): favorite film and game characters (like Solid Snake or Kazuhira Miller), special games (Super Meat Boy), books and comics, special places (the school library with video tapes) and events, smells (cinnamon, your own room), old shops, card games (Yu-Gi-Oh!, Pokémon, Digimon) and lines from old films and games. The ideas are sorted by decade to fit your birth year. Whatever is in the chest goes into the questions on your journey and into the memory book.',

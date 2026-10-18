@@ -8,7 +8,19 @@ import { isGerman, tr } from '../../lib/i18n';
 // while it plays mutes or unmutes it through the iframe API.
 // Nothing from YouTube loads before the visitor allows it (DSGVO): until
 // then a placeholder with the proxied thumbnail asks first.
-export const YouTubePlayer: React.FC<{ id: string; title: string; thumb?: string }> = (props) => {
+// `end` stops the video after that many seconds (the title music clip on the
+// game page), `autoplay={false}` loads it paused, and `onEnded` fires once the
+// video has played to its end.
+interface Props {
+  id: string;
+  title: string;
+  thumb?: string;
+  end?: number;
+  autoplay?: boolean;
+  onEnded?: () => void;
+}
+
+export const YouTubePlayer: React.FC<Props> = (props) => {
   const allowed = useConsent('youtube') === true;
   return allowed ? <Player {...props} /> : <AskFirst thumb={props.thumb} />;
 };
@@ -34,7 +46,7 @@ const AskFirst: React.FC<{ thumb?: string }> = ({ thumb }) => (
   </div>
 );
 
-const Player: React.FC<{ id: string; title: string }> = ({ id, title }) => {
+const Player: React.FC<Props> = ({ id, title, end, autoplay = true, onEnded }) => {
   const muted = useMuted();
   const frame = useRef<HTMLIFrameElement>(null);
   // The start value only matters for the first load of each video.
@@ -48,7 +60,26 @@ const Player: React.FC<{ id: string; title: string }> = ({ id, title }) => {
     send(muted ? 'mute' : 'unMute');
   }, [muted]);
 
-  const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${
+  // The iframe API reports the player state once we say we're listening;
+  // state 0 means the video (or its `end`) is over.
+  const ended = useRef(onEnded);
+  ended.current = onEnded;
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== frame.current?.contentWindow || typeof e.data !== 'string') return;
+      try {
+        const d = JSON.parse(e.data);
+        const state = d.event === 'onStateChange' ? d.info : d.event === 'infoDelivery' ? d.info?.playerState : undefined;
+        if (state === 0) ended.current?.();
+      } catch {
+        /* not from the player */
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
+  const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=${autoplay ? 1 : 0}${end ? `&end=${end}` : ''}&mute=${
     startMuted.current ? 1 : 0
   }&enablejsapi=1&rel=0&modestbranding=1&playsinline=1&hl=${isGerman ? 'de' : 'en'}&origin=${encodeURIComponent(window.location.origin)}`;
 
@@ -62,7 +93,12 @@ const Player: React.FC<{ id: string; title: string }> = ({ id, title }) => {
         allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
         allowFullScreen
         // the player only sets itself up after load; repeat the mute state then
-        onLoad={() => setTimeout(() => send(startMuted.current ? 'mute' : 'unMute'), 400)}
+        onLoad={() =>
+          setTimeout(() => {
+            send(startMuted.current ? 'mute' : 'unMute');
+            frame.current?.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: 1 }), '*');
+          }, 400)
+        }
       />
     </div>
   );

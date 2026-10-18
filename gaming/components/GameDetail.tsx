@@ -38,6 +38,9 @@ const Loading: React.FC = () => {
   );
 };
 
+/** How much of the title music plays when a game page opens. */
+const TITLE_MUSIC_SECONDS = 20;
+
 /** A row of YouTube clips; a tap plays one in the player at the top. */
 const VideoList: React.FC<{ videos: YouTubeVideo[]; playingId?: string; onPlay: (v: YouTubeVideo) => void }> = ({ videos, playingId, onPlay }) => (
   <div className="yt-list">
@@ -170,20 +173,38 @@ export const GameDetail: React.FC<{
     };
   }, [tab, game.title, game.platform, game.year]);
 
-  // The best rated video starts on its own as soon as the list is there.
+  // Opening a game plays a short piece of its title music first (Marco,
+  // 2026-10-18): the start of the best soundtrack video, which is usually the
+  // title theme, stopped after TITLE_MUSIC_SECONDS. Then the best rated
+  // gameplay video waits, paused, at the top. Without a soundtrack the
+  // gameplay video starts on its own as before.
+  const [titleMusic, setTitleMusic] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
   useEffect(() => {
     let alive = true;
     setVideos(undefined);
     setPlaying(null);
-    fetchVideos({ title: game.title, platform: String(game.platform), year: game.year }).then((v) => {
+    setTitleMusic(false);
+    setAutoplay(true);
+    const g = { title: game.title, platform: String(game.platform), year: game.year };
+    Promise.all([fetchVideos(g), fetchVideos(g, 'soundtrack')]).then(([v, ost]) => {
       if (!alive) return;
       setVideos(v);
-      setPlaying(v[0] ?? null);
+      if (ost[0]) {
+        setTitleMusic(true);
+        setPlaying(ost[0]);
+      } else setPlaying(v[0] ?? null);
     });
     return () => {
       alive = false;
     };
   }, [game.title, game.platform, game.year]);
+  const endTitleMusic = () => {
+    if (!titleMusic) return;
+    setTitleMusic(false);
+    setAutoplay(false);
+    setPlaying(videos?.[0] ?? null);
+  };
 
   // Only counts as playing once YouTube is allowed and the player is there.
   const videoOn = !!playing && youtubeOk;
@@ -268,6 +289,8 @@ export const GameDetail: React.FC<{
 
   const playClip = (v: YouTubeVideo) => {
     chip.play('select');
+    setTitleMusic(false);
+    setAutoplay(true);
     setPlaying(v);
     dialogRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -332,14 +355,29 @@ export const GameDetail: React.FC<{
         </div>
         {emu && <p className="dim emu-note">{OWN_FILE_NOTE}</p>}
 
-        {playing && <YouTubePlayer id={playing.id} title={`YouTube: ${playing.title}`} thumb={playing.thumb} />}
+        {playing && (
+          <YouTubePlayer
+            id={playing.id}
+            title={`YouTube: ${playing.title}`}
+            thumb={playing.thumb}
+            end={titleMusic ? TITLE_MUSIC_SECONDS : undefined}
+            autoplay={autoplay}
+            onEnded={endTitleMusic}
+          />
+        )}
         {playing && (
           <p className="dim yt-caption">
-            ▶ {playing.title}
+            {titleMusic ? tr('🎵 TITLE MUSIC: ', '🎵 TITELMUSIK: ') : '▶ '}
+            {playing.title}
             {playing.channel && ` · ${playing.channel}`}
             {playing.views > 0 && ` · ${formatViews(playing.views)}`}
             {' '}
-            <button className="px-btn" onClick={() => { chip.play('back'); setPlaying(null); }} data-nav>
+            {titleMusic && videos?.[0] && (
+              <button className="px-btn" onClick={() => { chip.play('select'); endTitleMusic(); }} data-nav>
+                {tr('SKIP ►', 'WEITER ►')}
+              </button>
+            )}{' '}
+            <button className="px-btn" onClick={() => { chip.play('back'); setTitleMusic(false); setPlaying(null); }} data-nav>
               {tr('■ STOP', '■ STOPP')}
             </button>
           </p>
