@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Mit Spotify Premium wieder ganze Songs': {
+    title: 'Full songs again with Spotify Premium',
+    text: 'If RetroMind couldn’t find your Spotify app on your phone, only previews played without a word, and the hint was buried in the music window. Now the top of the screen says “Only previews: open your Spotify app for full songs”. Tap it to open the app; as soon as you’re back, RetroMind finds it on its own and plays full songs, in the time journey and in the gaming hall. Even without a tap, RetroMind looks again every 15 seconds. If only a permission is missing, the hint takes you to signing in to Spotify again.',
+  },
   'Was gerade läuft, unten in der Mitte': {
     title: 'What’s playing, at the bottom in the middle',
     text: 'Between “Back to top” and the “?” of the AI help you now see which song is playing, with back, play/pause and next, at the same height as the two buttons. Tapping the title opens the full music controls. This is in Time Travel (all designs) and in the arcade, once Spotify music is allowed.',

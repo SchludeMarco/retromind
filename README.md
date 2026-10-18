@@ -346,8 +346,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts)): ganze Songs, die App
   spielt sie, RetroMind steuert Song, Pause, Weiter und Zurück und fragt alle
   2 Sekunden ab, was läuft. Findet sie keine Spotify-App (sie muss offen
-  oder kurz vorher offen gewesen sein), zeigt der Musik-Player „Öffne kurz
-  die Spotify-App … Nochmal versuchen“; Logins von vor dieser Funktion
+  oder kurz vorher offen gewesen sein), steht oben in der Mitte „Nur
+  Ausschnitte: für ganze Songs Spotify-App öffnen“; ein Tipp öffnet die App,
+  und zurück in RetroMind (oder spätestens nach 15 Sekunden) findet sie
+  RetroMind von selbst und spielt ganze Songs; Logins von vor dieser Funktion
   bitten einmal um eine neue Anmeldung (Erlaubnis
   `user-read-playback-state`). Beim Verlassen der Seite hält die App an.
   Ohne Premium, ohne Anmeldung oder wenn Spotifys Player nicht startet,

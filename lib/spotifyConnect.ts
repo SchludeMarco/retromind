@@ -43,7 +43,53 @@ function setState(next: ConnectState, name: string | null = deviceName) {
   if (next === state && name === deviceName) return;
   state = next;
   deviceName = name;
+  watchForApp(next === 'no-device');
   notify();
+}
+
+// No Spotify app found: keep looking on our own (Marco, 2026-10-18: "Dass
+// immer volle Titel gespielt werden sollen ist irgendwie vergessen worden").
+// Whenever the visitor comes back to RetroMind (after opening the Spotify
+// app) and every WATCH_MS meanwhile, ask Spotify for the devices again; as
+// soon as the app shows up the music hook builds the full-song player, no
+// "Try again" needed.
+const WATCH_MS = 15000;
+let lastSource: TokenSource | null = null;
+let watchTimer: number | null = null;
+let looking = false;
+
+async function lookForApp() {
+  if (looking || state !== 'no-device' || !lastSource || document.hidden) return;
+  looking = true;
+  try {
+    const found = await pickDevice(lastSource);
+    if (found && state === 'no-device') retryConnect();
+  } finally {
+    looking = false;
+  }
+}
+
+function onBack() {
+  if (!document.hidden) lookForApp();
+}
+
+function watchForApp(on: boolean) {
+  if (typeof window === 'undefined') return;
+  if (on && watchTimer === null) {
+    watchTimer = window.setInterval(lookForApp, WATCH_MS);
+    document.addEventListener('visibilitychange', onBack);
+    window.addEventListener('focus', onBack);
+  } else if (!on && watchTimer !== null) {
+    window.clearInterval(watchTimer);
+    watchTimer = null;
+    document.removeEventListener('visibilitychange', onBack);
+    window.removeEventListener('focus', onBack);
+  }
+}
+
+/** Opens the Spotify app on the phone, so Spotify lists it as a device. */
+export function openSpotifyApp() {
+  window.location.href = 'spotify:';
 }
 
 export function useConnectState(): { state: ConnectState; device: string | null } {
@@ -110,6 +156,7 @@ const isTrack = (item: any, u: string) => item?.uri === u || item?.linked_from?.
  * caller then takes the embed). `scope` is what the login granted.
  */
 export async function createConnectController(source: TokenSource, scope: string, initialUri: string): Promise<SpotifyEmbedController | null> {
+  lastSource = source;
   if (!new RegExp(`\\b${NEEDED_SCOPE}\\b`).test(scope)) {
     setState('login', null);
     return null;
