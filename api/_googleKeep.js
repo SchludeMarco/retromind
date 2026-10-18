@@ -14,7 +14,8 @@ const KEEP_PATH = "/api/admin";
 const MAX_AGE = 400 * 24 * 3600; // browsers cap cookies at 400 days; renewed with every new token
 
 const clientId = () => process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || "";
-const clientSecret = () => process.env.GOOGLE_CLIENT_SECRET || "";
+// Marco entered the name in lower case in Vercel (2026-10-17); both spellings count.
+const clientSecret = () => process.env.GOOGLE_CLIENT_SECRET || process.env.google_client_secret || "";
 export const keepConfigured = () => !!(clientId() && clientSecret());
 
 const enc = new TextEncoder();
