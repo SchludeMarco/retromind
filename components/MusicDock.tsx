@@ -52,6 +52,9 @@ export interface MusicDockProps {
   extras?: MusicDockExtras;
   /** The app also plays music of its own that the volume slider turns down (gaming hall). */
   ownMusic?: boolean;
+  /** No round button of its own: the panel only opens through openMusicDock()
+   *  (the control panel behind the handle at the right edge, Marco 2026-10-18). */
+  hideKnob?: boolean;
 }
 
 export interface MusicDockExtras {
@@ -298,6 +301,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   ticker = true,
   extras,
   ownMusic = false,
+  hideKnob = false,
 }) => {
   const symbol = icon === 'bolt' ? BOLT : NOTE;
   // The Premium player says what really plays (also inside an album).
@@ -346,7 +350,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
           </button>,
           document.body
         )}
-      <button
+      {!hideKnob && <button
         type="button"
         className={`music-dock-knob${playing ? ' playing' : ''} ${className}`}
         onClick={() => toggle(!open)}
@@ -356,7 +360,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
         title={tr('Music', 'Musik')}
       >
         <Svg d={symbol} size={22} />
-      </button>
+      </button>}
       {open &&
         createPortal(
         <div className="music-dock-backdrop" onClick={() => toggle(false)}>

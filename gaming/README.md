@@ -68,7 +68,7 @@ zeigen dürfen.
 
 ### In der Halle
 
-- **Fun-Fact-Laufband** – ganz unten, direkt über den Knöpfen der Navigation,
+- **Fun-Fact-Laufband** – ganz unten am Bildschirmrand,
   wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
   schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
   Fun Facts, Erscheinungsjahre und Anekdoten zu allen Katalogspielen (ein Tipp
@@ -97,11 +97,11 @@ zeigen dürfen.
   Chiptune-Musik weiterlaufen, bis Spotify wieder spielt (neuer Versuch alle
   zwei Minuten oder mit Weiter). Ein hängendes Intro gibt nach spätestens
   einer Minute ab, der Ton wacht nach dem Entsperren des Handys wieder auf.
-- **Musiksteuerung** – unten in der Mitte öffnet ein schwarz-blaues
-  Metall-Symbol mit Blitz die Steuerung (Song, Zurück, Play/Pause, Weiter,
-  Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
-  Thema“, also der Soundtrack des offenen Spiels). Läuft Musik, leuchtet es
-  gelb; oben links steht klein, welcher Song spielt. Die Musik pausiert bei
+- **Musiksteuerung** – im Fenster hinter dem Griff am rechten Rand: Zurück,
+  Play/Pause, Weiter und der Song; „Mehr Musik“ öffnet die ganze Steuerung
+  (Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
+  Thema“, also der Soundtrack des offenen Spiels). Oben links steht klein,
+  welcher Song spielt. Die Musik pausiert bei
   YouTube-Videos und wenn die App im Hintergrund liegt.
 - **Atmosphäre** – Marcos Bild vom Innenraum der Spielhalle hinter dem
   Katalog (`public/gaming/arcade-innen.webp`), blinkende Automatenlichter,
@@ -114,10 +114,17 @@ zeigen dürfen.
   den Pfeiltasten geht es zum vorherigen oder zum nächsten zufälligen Spiel,
   ein Tipp aufs Spiel öffnet seine Seite, ein Tipp daneben führt zurück in
   die Halle ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
-- **Club verlassen** – ein Tür-Knopf oben in der Kopfleiste führt zurück auf
-  die Straße; die Musik ist dann wieder nur dumpf durch die Wand zu hören.
-- **Kopfleiste** – Coins (ein Tipp öffnet die Quests), Punktestand (SCORE),
-  entdeckte Perlen, Ton, Zahnrad und der rote Feedback-Knopf.
+- **Die ganze Steuerung hinter einem Griff** – am rechten Rand, auf halber
+  Höhe, sitzt ein kleiner Pixel-Griff mit drei Reglern
+  ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)). Ein Tipp
+  schiebt von rechts ein Fenster herein: oben die Bereiche (Katalog, Kisten,
+  Stash, Trophäen, Chillen, Quests), die Musik, Ton an/aus, der Guru,
+  Feedback, „Club verlassen“ und für Gäste aus der Zeitreise „Zurück zu
+  RetroMind“, darunter alle Einstellungen. Wie in der Zeitreise.
+- **Club verlassen** – im Fenster hinter dem Griff; führt zurück auf die
+  Straße, die Musik ist dann wieder nur dumpf durch die Wand zu hören.
+- **Kopfleiste** – Coins (ein Tipp öffnet die Quests), Punktestand (SCORE)
+  und entdeckte Perlen.
 
 ### Spiele finden
 
@@ -255,7 +262,7 @@ zeigen dürfen.
   mit Tipps steht unter „Quests“ ([`lib/eggs.ts`](lib/eggs.ts)).
 - **Erfolge, Sammlung und Stash** – Erfolge erscheinen als runde Pokal-Leiste
   mit weichem „Plopp“; Bereiche Katalog, Kisten, Stash, Trophäen, Chillen und
-  Quests liegen in der Leiste unten.
+  Quests liegen im Fenster hinter dem Griff am rechten Rand.
 - **Am Handy spürbar** – kurzes Rütteln beim Münzeinwurf, beim Öffnen der Tür,
   bei Erfolgen und Käufen (Android, schaltet sich mit den Soundeffekten ab).
 
@@ -281,7 +288,7 @@ zeigen dürfen.
   gemeinsame Datei im privaten Drive-`appDataFolder` mit allen Geräten
   ([`lib/useCloudSync.ts`](lib/useCloudSync.ts) zeigt den Stand). Ohne
   Anmeldung steht deutlich da, dass die Coins nur auf diesem Gerät liegen.
-- **Feedback** – roter Knopf mit Briefsymbol; läuft über dieselbe
+- **Feedback** – roter Knopf im Fenster hinter dem Griff; läuft über dieselbe
   `/api/feedback` wie die Zeitreise und ist in Mail und `feedback.md` mit
   „(Gaming)“ markiert.
 - **Version** – unten in den Einstellungen „Version 2.<PR-Nummer> (<Commit>)“.

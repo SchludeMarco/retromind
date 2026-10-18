@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Die ganze Steuerung hinter einem Griff am rechten Rand** (2026-10-18,
+  PR #240): In der Zeitreise und in der Gaming-Edition sitzt am rechten
+  Bildschirmrand, auf halber Höhe, ein kleiner Griff mit drei Reglern. Ein
+  Tipp schiebt von rechts ein Fenster mit allem herein: in der Zeitreise die
+  sieben Halte der Reise, die Musik, Ton an/aus, der Begleiter und Feedback,
+  in der Spielhalle die Bereiche (Katalog bis Quests), die Musik, Ton, Guru,
+  Feedback und „Club verlassen“, darunter jeweils alle Einstellungen. Dafür
+  sind die vielen Knöpfe über der Seite verschwunden: Zahnrad, Lautsprecher,
+  Musik oben links, Konten unten links, Haus- und Begleiter-Knopf, die
+  untere Leiste von Retro Warm, die mitlaufende Pille der Reiseleiste und in
+  der Spielhalle die Knöpfe oben und die Leiste unten. Über das Fenster
+  kommst du jetzt auch von jedem Halt der Reise in die Spielhalle.
 - **Jeden Tag etwas Neues in der Stube** (2026-10-18, PR #239): Unter der
   Stube wartet jetzt jeden Tag eine neue Frage des Tages („Wie hast du als Kind
   Geburtstag gefeiert?“). Deine Antwort kommt als neue Seite in dein

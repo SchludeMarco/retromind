@@ -173,9 +173,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   und Buch begleiten sie nur. Über jedem Halt steht in allen Designs die
   Reiseleiste: eine kleine Uhr, deren Zeiger auf den aktuellen Halt zeigt,
   „Halt 4 von 7“ mit Namen, beim Erkunden mit Brotkrumen („Erkunden ›
-  Musik“), die sieben Halte zum Antippen und der Weg zurück. Beim Lesen
-  bleibt oben eine schmale Pille mit Uhr, Halt und Pfeilen zurück und
-  weiter stehen ([`components/JourneyBar.tsx`](components/JourneyBar.tsx)).
+  Musik“), die sieben Halte zum Antippen und der Weg zurück
+  ([`components/JourneyBar.tsx`](components/JourneyBar.tsx)). Beim Lesen
+  springt man über den Griff am rechten Rand zu jedem Halt.
   Ein gemeinsames Design-System (Abstände, Kanten, Schatten, Knöpfe,
   Überschriften) beschreibt [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md).
 - **Die Zeitmaschine saugt dich ein** – ein Druck auf „Go back...“ zieht
@@ -276,22 +276,17 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   aus diesem Jahr von YouTube ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
   über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen
   unter „Videos“; die Spotify-Musik pausiert solange).
-  **Oben links** steht immer die Musiksteuerung
-  ([`components/MusicMini.tsx`](components/MusicMini.tsx)): Zurück,
+  Die Musik steuert man im Fenster hinter dem Griff am rechten Rand: Zurück,
   Play/Pause und Weiter als richtige Knöpfe und daneben gut lesbar, was
-  läuft; ein Tipp auf den Titel öffnet die ganze Musiksteuerung (in „Retro
-  Warm“ in der Kopfleiste, in den anderen Designs als Schild in der Ecke).
-  Ganz unten in der Mitte sitzt ein kleines schwarz-blaues **Metall-Symbol**
-  ([`components/MusicDock.tsx`](components/MusicDock.tsx)): in „Retro Warm“
-  mitten in der unteren Leiste, in den anderen Designs ganz unten rechts
-  (erst, wenn man ganz nach unten scrollt). Solange Musik läuft, leuchtet es gelb. Ein Druck darauf öffnet die **Musiksteuerung** über die halbe
-  Seite: welche Musik und welcher Song gerade läuft, Zurück, Play/Pause und
-  Weiter als Symbole und ein Knopf für Ton an/aus. Weiter spielt den nächsten
-  Zufallssong, Zurück den Song davor. Ton an/aus gibt es auch in den
-  Einstellungen. Lange Songtitel werden kleiner geschrieben und laufen, wenn
-  das nicht reicht, als Laufschrift durch. Solange Musik läuft, steht oben
-  links in kleiner Schrift, welcher Song gerade spielt (auch in der
-  Gaming-Halle). Ein Tipp darauf öffnet ebenfalls die Musiksteuerung.
+  läuft ([`components/MusicMini.tsx`](components/MusicMini.tsx)). „Mehr
+  Musik“ öffnet die ganze **Musiksteuerung**
+  ([`components/MusicDock.tsx`](components/MusicDock.tsx)) über die halbe
+  Seite: welche Musik und welcher Song gerade läuft, Lautstärke, Suche und
+  ein Knopf für Ton an/aus. Weiter spielt den nächsten Zufallssong, Zurück
+  den Song davor. Lange Songtitel werden kleiner geschrieben und laufen, wenn
+  das nicht reicht, als Laufschrift durch. In der Gaming-Halle steht oben
+  links in kleiner Schrift, welcher Song gerade spielt; ein Tipp darauf
+  öffnet ebenfalls die Musiksteuerung.
 - **Nostalgie-Begleiter** – Chat auf Gemini-Basis, mit echtem Gesprächsverlauf.
 - **Perspektivwechsel** – nach einer gespeicherten Erinnerung lässt sich eine
   Frage erzeugen, die denselben Moment aus Sicht einer anderen Person von
@@ -318,11 +313,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   „Mit Spotify anmelden“ stehen in den Einstellungen unter „Konten
   (freiwillig)“, samt Abmelden; Googles Skript lädt erst, wenn man nach dem
   Knopf greift.
-- **Einstellungen immer oben rechts** – das Zahnrad ⚙️ sitzt schon auf dem
-  Willkommensbildschirm oben rechts (in allen Designs), in „Klassisch“ und
-  „Nachtschicht“ danach fest oben rechts in der Ecke, auch beim Scrollen und
-  auf dem Namensformular (z. B. um die Sprache umzustellen); in „Retro Warm“
-  in der Kopfleiste.
+- **Die ganze Steuerung hinter einem Griff** – am rechten Rand, auf halber
+  Höhe, sitzt in allen Designs ein kleiner Griff mit drei Reglern, schon auf
+  dem Willkommensbildschirm ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)).
+  Ein Tipp schiebt von rechts ein Fenster mit allem herein: oben die sieben
+  Halte der Zeitreise (der aktuelle markiert), die Musik, Ton an/aus, der
+  Begleiter und Feedback, darunter alle Einstellungen. Sonst liegen keine
+  Knöpfe mehr über der Seite (nur „Nach oben“ beim Scrollen). Ein roter
+  Punkt am Griff meldet Neues unter „Was ist neu?“.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +
   PKCE, komplett clientseitig, kein eigener Auth-Server) holt Name und
   Premium-/Free-Status ab. Mit **Spotify Premium** läuft die Musik
@@ -363,10 +361,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.
-- **Feedback-Button** – ein roter Knopf mit Briefsymbol und der Aufschrift
-  „Feedback“ ganz unten links unter den Konten mit „Abmelden“ (im Design
-  „Retro Warm“ im Konten-Fenster hinter dem Personen-Knopf oben rechts, in
-  den anderen Designs, sobald man ganz nach unten scrollt). Darüber
+- **Feedback-Button** – ein roter Knopf „✉️ Feedback“ im Fenster hinter
+  dem Griff am rechten Rand, unter „Schnellzugriff“. Darüber
   kann jede Nutzer:in Lob, Tadel, Vorschläge oder Wünsche zur App hinterlassen; die Nachricht kommt per E-Mail
   an die Betreiber:in an (optional: eigene E-Mail-Adresse für eine Antwort).
   Zusätzlich wird jedes Feedback (ohne E-Mail-Adresse) in
@@ -378,7 +374,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
 
 - **„Was ist neu?“** – in den Einstellungen; zeigt die Einträge der
   [CHANGELOG.md](CHANGELOG.md) direkt in der App ([`lib/whatsNew.ts`](lib/whatsNew.ts)),
-  ein kleines rotes „New“ (deutsch „Neu“) am Zahnrad meldet Neues seit dem
+  ein kleiner roter Punkt am Griff am rechten Rand meldet Neues seit dem
   letzten Blick.
 - **Willkommens-Bildschirm** – „Welcome to RetroMind“ vor einer alten
   Kaminuhr, die laut und zweimal pro Sekunde tickt. Der „Go back...“-Knopf trägt den Look des
@@ -415,10 +411,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   - **Retro Warm** (Standard, entworfen mit Google Stitch, Vorlage in
     [`docs/stitch/DESIGN.md`](docs/stitch/DESIGN.md)): Pergament und
     Terrakotta, Schriften Epilogue und Plus Jakarta Sans, runde Karten und
-    Knöpfe, kein Flimmern. Eigener App-Aufbau: Kopfleiste mit Logo,
-    Musiksteuerung (Zurück, Play/Pause, Weiter und der laufende Song),
-    Tonband-Schalter, Einstellungen und Konten, untere Navigation (Start,
-    Deine Zeit, Musik-Symbol, Erkunden, Erinnerung),
+    Knöpfe, kein Flimmern. Eigener App-Aufbau: schlanke Kopfleiste mit Logo
+    und dem aktuellen Halt (die Bedienung liegt wie überall hinter dem Griff),
     Startseite mit Jahrzehnt-Überblick (sechs gleich große Knöpfe in zwei
     Reihen, auf dem Handy drei pro Reihe) und Archiv-Fundstücken, „Erkunden“ als
     Karten pro Jahrzehnt ([`components/WarmChrome.tsx`](components/WarmChrome.tsx)).
@@ -475,8 +469,8 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   gespeichert. Auch die KI (Fragen, Fotoanalyse, Chat, Retro-Guru, Spieleguides)
   antwortet in der gewählten Sprache. Die rechtlichen Seiten gibt es auf
   Englisch (`privacy.html`, `imprint.html`) und Deutsch.
-- **Ein Stummschalter** ([`lib/mute.ts`](lib/mute.ts)) – ein Lautsprecher-Knopf
-  schaltet jedes Modul stumm, auch über verschiedene Adressen hinweg
+- **Ein Stummschalter** ([`lib/mute.ts`](lib/mute.ts)) – „Ton an/aus“ im
+  Fenster hinter dem Griff schaltet jedes Modul stumm, auch über verschiedene Adressen hinweg
   (`?mute=1/0`). Neue Module nutzen denselben Schalter. Liegt die App im
   Hintergrund (andere App oder anderer Tab vorne), gilt sie automatisch als
   stumm und spielt beim Zurückkehren weiter.
@@ -795,11 +789,8 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Änderungen sofort zeigen statt beim Zurückkehren:** Eine offene Seite
   übernimmt Änderungen von anderswo erst beim nächsten Wechsel in den Tab.
 
-- **Weg in die Spielhalle während der Reise:** Bisher führen Stube,
-  Gaming-Karte und Wegweiser nur auf der Startseite zu RetroMind – Gaming.
-  Ein fünfter Reiter „Spielhalle“ in der unteren Leiste von Retro Warm und
-  ein Joystick-Symbol neben dem Zahnrad in Klassisch und Nachtschicht
-  wären von jeder Station aus einen Tipp entfernt.
+- **Griff wahlweise links:** Für Linkshänder:innen könnte der Griff in den
+  Einstellungen an den linken Rand wandern.
 - **Echte Roboterstimme und ausgesuchte Jahresvideos:** Statt der
   Sprachausgabe des Browsers (klingt je nach Gerät anders) eine einmal
   aufgenommene Roboterstimme für jedes Jahr, und statt des ersten

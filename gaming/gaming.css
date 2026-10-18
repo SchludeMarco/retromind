@@ -221,7 +221,7 @@ a {
   z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 16px 120px;
+  padding: 16px 16px 60px;
 }
 .hud {
   display: flex;
@@ -263,7 +263,7 @@ a {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: var(--dock-h, calc(70px + env(safe-area-inset-bottom)));
+  bottom: var(--dock-h, env(safe-area-inset-bottom));
   z-index: 389;
   display: flex;
   align-items: stretch;
@@ -430,7 +430,7 @@ a {
   border-left: 2px solid var(--bg);
 }
 html[data-ticker] .hub {
-  padding-bottom: calc(120px + var(--ticker-h, 46px));
+  padding-bottom: calc(60px + var(--ticker-h, 46px));
 }
 
 .px-btn {
@@ -886,14 +886,14 @@ html[data-ticker] .hub {
   position: fixed;
   right: 16px;
   /* above the dock */
-  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 400;
 }
 /* "Nach oben", bottom left, mirroring the Guru button; shows after scrolling. */
 .to-top {
   position: fixed;
   left: 16px;
-  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 395;
   display: inline-flex;
   align-items: center;
@@ -916,7 +916,7 @@ html[data-ticker] .hub {
 .guru {
   position: fixed;
   right: 16px;
-  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 410;
   width: min(380px, calc(100vw - 32px));
   height: min(480px, 70vh);
@@ -1616,7 +1616,7 @@ html[data-ticker] .hub {
   border-left-color: #fef3c7;
 }
 html[data-ticker] .arcade[data-palette='modul'] .hub {
-  padding-bottom: calc(140px + var(--ticker-h, 46px));
+  padding-bottom: calc(70px + var(--ticker-h, 46px));
 }
 .arcade[data-palette='modul'] .search input {
   font-size: 16px;
@@ -1859,15 +1859,15 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
 
 /* Game-Guru chat and trophy toast. */
 .arcade[data-palette='modul'] .guru-fab {
-  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
 }
 .arcade[data-palette='modul'] .to-top {
-  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   border-radius: 999px;
 }
 .arcade[data-palette='modul'] .guru {
-  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
-  height: min(480px, calc(100vh - 190px));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  height: min(480px, calc(100vh - 120px));
   background: #fff;
   border: 1px solid var(--ridge);
   border-bottom-width: 4px;
@@ -3370,7 +3370,7 @@ section:first-child > .media-head {
 /* --- Achievement toast like on a console: round trophy, bottom centre --- */
 .toast.xbox {
   top: auto;
-  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   border: none;
   border-radius: 999px;
   padding: 8px 22px 8px 8px;
@@ -4245,4 +4245,113 @@ button.pcard {
   text-align: center;
   margin: 10px 0 6px;
   color: var(--a3);
+}
+
+/* The handle at the right edge, halfway down (components/ControlHandle.tsx,
+   Marco 2026-10-18): opens every control and setting as a panel from the
+   right. Replaces the top-bar buttons and the dock (_removed_content/). */
+.gm-control-handle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 420;
+  width: 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--a1);
+  color: var(--bg);
+  border: 3px solid var(--fg);
+  border-right: 0;
+  box-shadow: -4px 4px 0 var(--panel);
+  cursor: pointer;
+  transition: width 0.15s steps(3);
+}
+.gm-control-handle:hover,
+.gm-control-handle:focus-visible {
+  width: 46px;
+}
+.gm-control-handle svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+.gm-control-dot {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 8px;
+  height: 8px;
+  background: #ff3b3b;
+}
+.arcade[data-palette='modul'] .gm-control-handle {
+  border: 1px solid var(--ridge);
+  border-right: 0;
+  border-radius: 14px 0 0 14px;
+  box-shadow: -2px 4px 12px rgba(0, 0, 0, 0.18);
+}
+.side-overlay {
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+}
+.dialog.side-panel {
+  width: min(460px, 94vw);
+  max-height: none;
+  height: 100%;
+  overscroll-behavior: contain;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  animation: gm-side-in 0.2s steps(5) both;
+}
+@keyframes gm-side-in {
+  from { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog.side-panel {
+    animation: none;
+  }
+}
+.gm-controls {
+  padding-bottom: 14px;
+  border-bottom: 4px dashed var(--panel);
+}
+.gm-controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.gm-controls-grid .px-btn[aria-current='page'] {
+  background: var(--a1);
+  color: var(--bg);
+}
+.gm-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gm-controls-music {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.gm-controls-song {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.gm-feedback {
+  background: #c62828;
+  color: #fff;
+}
+.gm-feedback:hover,
+.gm-feedback:focus-visible {
+  background: #e53935;
+  color: #fff;
 }

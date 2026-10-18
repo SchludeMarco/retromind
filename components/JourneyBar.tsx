@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { AppPhase } from '../types';
 import { PHASES } from '../lib/session';
 import { STATION_NAME, STATION_SHORT } from '../lib/stations';
@@ -13,8 +13,9 @@ import { tr } from '../lib/i18n';
 //   the Explore stop ("Explore › Music"),
 // - the seven stops on a line, done ones filled, every one tappable,
 // - the way back to the previous stop.
-// Once the bar is scrolled away, a slim pill with the same clock, the stop
-// and back / next arrows stays at the top of the screen.
+// Moving between stops while reading is done behind the handle at the right
+// edge (components/ControlHandle); the slim pill that used to stay at the top
+// is in _removed_content/ (2026-10-18).
 // Replaces the Retro Warm stepper, the Classic/Night Shift station picker
 // and the thin progress line (all in _removed_content/).
 
@@ -57,23 +58,8 @@ export const JourneyBar: React.FC<{
   onSelect: (p: AppPhase) => void;
 }> = ({ phase, warm, crumb, onSelect }) => {
   const index = STOPS.indexOf(phase);
-  const ref = useRef<HTMLElement | null>(null);
-  const [pinned, setPinned] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(
-      ([entry]) => setPinned(!entry.isIntersecting && entry.boundingClientRect.top < 0),
-      { threshold: 0 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   if (index < 0) return null;
   const prev = index > 0 ? STOPS[index - 1] : null;
-  const next = index < STOPS.length - 1 ? STOPS[index + 1] : null;
   const stopOf = tr(`Stop ${index + 1} of ${STOPS.length}`, `Halt ${index + 1} von ${STOPS.length}`);
 
   const title = (
@@ -101,7 +87,6 @@ export const JourneyBar: React.FC<{
   return (
     <>
       <section
-        ref={ref}
         aria-label={tr('Your time travel', 'Deine Zeitreise')}
         className={`rm-journey no-print ${warm ? 'mt-4' : 'mt-2'}`}
       >
@@ -144,45 +129,6 @@ export const JourneyBar: React.FC<{
         </ol>
       </section>
 
-      {/* The slim pill that stays at the top while reading. */}
-      <div
-        className={`rm-journey-mini rm-fixed no-print ${warm ? 'is-warm' : ''} ${pinned ? 'is-shown' : ''}`}
-        aria-hidden={!pinned}
-      >
-        <button
-          type="button"
-          tabIndex={pinned ? 0 : -1}
-          disabled={!prev}
-          onClick={() => prev && onSelect(prev)}
-          className="rm-mini-arrow"
-          aria-label={prev ? tr(`Back to: ${STATION_NAME[prev]}`, `Zurück zu: ${STATION_NAME[prev]}`) : undefined}
-        >
-          ‹
-        </button>
-        <button
-          type="button"
-          tabIndex={pinned ? 0 : -1}
-          onClick={() => (crumb ? crumb.onUp() : window.scrollTo({ top: 0, behavior: 'smooth' }))}
-          className="rm-mini-mid"
-          title={tr('Show the whole journey', 'Die ganze Reise zeigen')}
-        >
-          <JourneyClock index={index} className="w-7 h-7" />
-          <span className="truncate">
-            <span className="rm-mini-count">{index + 1}/{STOPS.length}</span> {STATION_NAME[phase]}
-            {crumb && <> › {crumb.label}</>}
-          </span>
-        </button>
-        <button
-          type="button"
-          tabIndex={pinned ? 0 : -1}
-          disabled={!next}
-          onClick={() => next && onSelect(next)}
-          className="rm-mini-arrow"
-          aria-label={next ? tr(`Next stop: ${STATION_NAME[next]}`, `Nächster Halt: ${STATION_NAME[next]}`) : undefined}
-        >
-          ›
-        </button>
-      </div>
     </>
   );
 };
