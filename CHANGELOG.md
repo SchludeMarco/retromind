@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Die Uhr auf dem Startbildschirm ist wieder frei** (2026-10-18, PR #NNN):
+  Die Zeitschaltkreise und der Knopf „Ab in die Vergangenheit“ lagen auf dem
+  Zifferblatt der Kaminuhr, sodass man ihre laufenden Zeiger nicht mehr sah.
+  Jetzt hat die Uhr ihren eigenen Platz zwischen der Zeitanzeige und dem
+  Knopf, auf dem Handy wie am Computer, und nichts verdeckt sie mehr.
+  Schriftzug und Abstände passen sich der Bildschirmhöhe an, damit alles
+  draufpasst.
+
 - **Mit Spotify Premium wieder ganze Songs** (2026-10-18, PR #252): Findet
   RetroMind deine Spotify-App auf dem Handy nicht, liefen bisher still nur
   Ausschnitte, und der Hinweis dazu steckte tief im Musik-Fenster. Jetzt

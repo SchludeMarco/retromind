@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die Uhr auf dem Startbildschirm ist wieder frei': {
+    title: 'The clock on the welcome screen is in view again',
+    text: 'The time circuits and the “Go back in time” button sat on the face of the mantel clock, so you could no longer see its hands moving. Now the clock has its own spot between the time display and the button, on phones and computers alike, and nothing covers it. The lettering and spacing adapt to the screen height so everything fits.',
+  },
   'Mit Spotify Premium wieder ganze Songs': {
     title: 'Full songs again with Spotify Premium',
     text: 'If RetroMind couldn’t find your Spotify app on your phone, only previews played without a word, and the hint was buried in the music window. Now the top of the screen says “Only previews: open your Spotify app for full songs”. Tap it to open the app; as soon as you’re back, RetroMind finds it on its own and plays full songs, in the time journey and in the gaming hall. Even without a tap, RetroMind looks again every 15 seconds. If only a permission is missing, the hint takes you to signing in to Spotify again.',
