@@ -526,7 +526,8 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 - **„Nach oben“-Knopf** ([`hooks/useScrolledDown.ts`](hooks/useScrolledDown.ts)) –
   unten links, erscheint erst nach etwas Scrollen und bringt sanft zurück an den
   Seitenanfang. In der Zeitreise (alle Designs) und in der Gaming-Halle; er
-  sitzt knapp über der unteren Leiste und verdeckt keine anderen Knöpfe.
+  sitzt auf derselben Höhe wie der „?“-Knopf der KI-Hilfe unten rechts, über
+  dem Laufband.
 - **Eine Google-Anmeldung** ([`lib/googleLogin.ts`](lib/googleLogin.ts)) –
   freiwillig, gilt für alle Module, öffnet nie ungefragt ein Fenster.
 - **Lokal zuerst** – alle Daten liegen auf dem Gerät; die Cloud im eigenen

@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **„Nach oben“ und „?“ auf einer Höhe** (2026-10-18, PR #249): Der
+  „Nach oben“-Knopf unten links sitzt jetzt genau auf derselben Höhe und in
+  derselben Größe wie der „?“-Knopf der KI-Hilfe unten rechts, in der
+  Zeitreise (alle Designs) und in der Spielhalle.
+
 - **Fragen zur App? Ein KI-Helfer unten rechts** (2026-10-18, PR #248): In
   der Zeitreise und in der Spielhalle sitzt ganz unten rechts ein runder
   „?“-Knopf. Er öffnet einen kleinen Chat, dem du jede Frage über RetroMind

@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Nach oben“ und „?“ auf einer Höhe** (2026-10-18, PR #249): Der
+  „Nach oben“-Knopf unten links sitzt jetzt genau auf derselben Höhe und in
+  derselben Größe wie der „?“-Knopf der KI-Hilfe unten rechts, in der
+  Zeitreise (alle Designs) und in der Spielhalle.
 - **Ruhigere Ankunft nach der Zeitreise** (2026-10-18, PR #249): Bisher
   wechselte nach der Zeitreise kurz die Musik, brach dann ab, und sofort
   startete von selbst das Video des Jahres mit eigenem Ton. Jetzt läuft
