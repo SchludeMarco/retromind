@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Die ganze Steuerung hinter einem Griff am rechten Rand** (2026-10-18,
-  PR #PRNUM): In der Zeitreise und in der Gaming-Edition sitzt am rechten
+  PR #240): In der Zeitreise und in der Gaming-Edition sitzt am rechten
   Bildschirmrand, auf halber Höhe, ein kleiner Griff mit drei Reglern. Ein
   Tipp schiebt von rechts ein Fenster mit allem herein: in der Zeitreise die
   sieben Halte der Reise, die Musik, Ton an/aus, der Begleiter und Feedback,

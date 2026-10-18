@@ -8,6 +8,19 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Die ganze Steuerung hinter einem Griff am rechten Rand** (2026-10-18,
+  PR #240): In der Zeitreise und in der Gaming-Edition sitzt am rechten
+  Bildschirmrand, auf halber Höhe, ein kleiner Griff mit drei Reglern. Ein
+  Tipp schiebt von rechts ein Fenster mit allem herein: in der Zeitreise die
+  sieben Halte der Reise, die Musik, Ton an/aus, der Begleiter und Feedback,
+  in der Spielhalle die Bereiche (Katalog bis Quests), die Musik, Ton, Guru,
+  Feedback und „Club verlassen“, darunter jeweils alle Einstellungen. Dafür
+  sind die vielen Knöpfe über der Seite verschwunden: Zahnrad, Lautsprecher,
+  Musik oben links, Konten unten links, Haus- und Begleiter-Knopf, die
+  untere Leiste von Retro Warm, die mitlaufende Pille der Reiseleiste und in
+  der Spielhalle die Knöpfe oben und die Leiste unten. Über das Fenster
+  kommst du jetzt auch von jedem Halt der Reise in die Spielhalle.
+
 - **RetroMind als App aufs Handy** (2026-10-18, PR #239): Die Zeitreise lässt
   sich jetzt wie die Gaming-Edition als App installieren, mit eigenem Symbol.
   Auf Android bot Chrome das Installieren bisher oft gar nicht an; das ist
