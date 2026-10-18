@@ -54,6 +54,7 @@ import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './
 import { toggleMuted, useMuted } from './lib/mute';
 import { DECADES_DB, INTEREST_LABELS } from './constants';
 import { tr } from './lib/i18n';
+import { treasureLines } from './lib/treasures';
 import { readPage, writePage } from './lib/pageMemory';
 import { findTrack, useAutoTheme, useSpotifyApi } from './lib/spotifyApi';
 
@@ -292,6 +293,7 @@ const App: React.FC = () => {
           user.favoriteArtists.length
             ? tr('favorite bands', 'Lieblingsbands') + `: ${user.favoriteArtists.join(', ')}`
             : '',
+          ...treasureLines(user, 8),
         ].filter(Boolean).join('; '),
         decade,
         fallbackQuestion
@@ -763,8 +765,8 @@ const App: React.FC = () => {
           hasUnseenNews={unseenNews}
           userName={user.name}
           userBirthDate={user.birthDate}
-          favoriteArtists={user.favoriteArtists}
-          onFavoriteArtistsChange={(favoriteArtists) => setUser((prev) => ({ ...prev, favoriteArtists }))}
+          profile={user}
+          onProfileChange={(patch) => setUser((prev) => ({ ...prev, ...patch }))}
           onEditProfile={showSplash || !verified ? undefined : handleEditProfile}
           googleStatus={googleAuth.status}
           googleUser={googleAuth.user}

@@ -1,6 +1,7 @@
 import { CapturedMemory, UserProfile } from '../types';
 import { GENDER_LABELS, INTEREST_LABELS } from '../constants';
 import { tr, LOCALE } from './i18n';
+import { treasureLines } from './treasures';
 
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 export const todayStamp = () => new Date().toISOString().slice(0, 10);
@@ -51,6 +52,7 @@ export function buildBookText(user: UserProfile, decade: string, memories: Captu
     user.favoriteArtists.length
       ? tr('Favorite bands', 'Lieblingsbands') + `: ${user.favoriteArtists.join(', ')}`
       : '',
+    ...treasureLines(user, 50),
     tr('Created', 'Erstellt') + `: ${new Date().toLocaleString(LOCALE)}`,
   ].filter(Boolean);
 

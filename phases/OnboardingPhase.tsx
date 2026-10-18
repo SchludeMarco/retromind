@@ -4,6 +4,7 @@ import { INTEREST_LABELS, GENDER_LABELS } from '../constants';
 import { tr } from '../lib/i18n';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
 import { FavoriteBands } from '../components/FavoriteBands';
+import { TreasureChest } from '../components/TreasureChest';
 
 // Stored values stay German (ids, see lib/session.ts INTEREST_TO_CATEGORY);
 // only the labels are translated.
@@ -67,7 +68,10 @@ export const OnboardingPhase: React.FC<{
             artists={user.favoriteArtists}
             onChange={(favoriteArtists) => onUserChange({ ...user, favoriteArtists })}
             birthDate={user.birthDate}
+            notMine={user.notMine ?? []}
+            onNotMineChange={(notMine) => onUserChange({ ...user, notMine })}
           />
+          <TreasureChest idPrefix="rm-treasure" user={user} onChange={(patch) => onUserChange({ ...user, ...patch })} />
         </div>
         <PhaseNav
           className="md:col-span-2 !mt-2"

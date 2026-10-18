@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gamer-Fakten im Laufband der Spielhalle** (2026-10-18, PR #NNN): Das
+  Fun-Fact-Laufband der Gaming-Edition kennt neue Geschichten: wie Mew in
+  letzter Minute in Pokémon Rot und Grün geschmuggelt wurde, warum Mewtu die
+  Nummer 150 ist, das Gerücht vom Lkw bei der M.S. Anne, die Anfänge der
+  Sammelkartenspiele Pokémon, Yu-Gi-Oh! und Digimon und dass Super Meat Boy
+  von nur zwei Leuten stammt.
+
 - **Bildschirmfarbe von Blau bis Orange** (2026-10-18, PR #241): In den
   Einstellungen (Griff am rechten Rand) gibt es unter der Schriftgröße einen
   neuen Regler „Bildschirmfarbe“. Nach rechts wird alles wärmer und

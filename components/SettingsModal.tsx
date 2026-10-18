@@ -4,6 +4,8 @@ import { InitialsPicker } from './InitialsPicker';
 import { setInitials, useInitials } from '../lib/initials';
 import { Modal } from './Modal';
 import { FavoriteBands } from './FavoriteBands';
+import { TreasureChest } from './TreasureChest';
+import type { UserProfile } from '../types';
 import { FontSizeControl } from './FontSizeControl';
 import { ColorTintControl } from './ColorTintControl';
 import { DECADES_DB } from '../constants';
@@ -53,8 +55,9 @@ export const SettingsModal: React.FC<{
   hasUnseenNews: boolean;
   userName: string;
   userBirthDate: string;
-  favoriteArtists: string[];
-  onFavoriteArtistsChange: (artists: string[]) => void;
+  /** Bands, treasure chest and hidden suggestions are edited right here. */
+  profile: UserProfile;
+  onProfileChange: (patch: Partial<UserProfile>) => void;
   /** Left out on the welcome screen, where the name form isn't reached yet. */
   onEditProfile?: () => void;
   googleStatus: GoogleAuthStatus;
@@ -76,7 +79,7 @@ export const SettingsModal: React.FC<{
   currentDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
-  userName, userBirthDate, favoriteArtists, onFavoriteArtistsChange, onEditProfile,
+  userName, userBirthDate, profile, onProfileChange, onEditProfile,
   googleStatus, googleUser, onGoogleSignIn, onGoogleSignOut,
   spotifyStatus, spotifyUser, onSpotifySignIn, onSpotifySignOut,
   aboveSplash = false,
@@ -128,10 +131,15 @@ export const SettingsModal: React.FC<{
         <div className="mt-5">
           <FavoriteBands
             inputId="rm-settings-artist"
-            artists={favoriteArtists}
-            onChange={onFavoriteArtistsChange}
+            artists={profile.favoriteArtists}
+            onChange={(favoriteArtists) => onProfileChange({ favoriteArtists })}
             birthDate={userBirthDate}
+            notMine={profile.notMine ?? []}
+            onNotMineChange={(notMine) => onProfileChange({ notMine })}
           />
+        </div>
+        <div className="mt-5">
+          <TreasureChest idPrefix="rm-settings-treasure" user={profile} onChange={onProfileChange} />
         </div>
         <span className="block text-xs uppercase font-bold text-retro-brown mt-5 mb-2">{tr('Your initials', 'Dein Kürzel')}</span>
         <div className="flex flex-wrap items-center gap-3">

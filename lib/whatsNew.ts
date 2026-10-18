@@ -32,6 +32,14 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Schatzkiste und klügere Bandvorschläge': {
+    title: 'Treasure chest and smarter band ideas',
+    text: 'In Time Travel, the ideas for your favorite bands now follow what is already on your list: add Nirvana and you get Pearl Jam and Green Day, like Michael Jackson and you get Prince and Whitney Houston. There is also a “Legends of all time” row for every age, with Elvis, the Beatles, Michael Jackson, Queen, ABBA and more. Every idea now has a small ✕ for “doesn’t fit me / don’t know it”; it disappears and comes back with one tap. New is the treasure chest (when packing your suitcase and in the settings, optional and closed at first): favorite film and game characters (like Solid Snake or Kazuhira Miller), special games (Super Meat Boy), books and comics, special places (the school library with video tapes) and events, smells (cinnamon, your own room), old shops, card games (Yu-Gi-Oh!, Pokémon, Digimon) and lines from old films and games. The ideas are sorted by decade to fit your birth year. Whatever is in the chest goes into the questions on your journey and into the memory book.',
+  },
+  'Gamer-Fakten im Laufband der Spielhalle': {
+    title: 'Gamer facts in the arcade ticker',
+    text: 'The fun-fact ticker of the Gaming edition has new stories: how Mew was slipped into Pokémon Red and Green at the last minute, why Mewtwo is number 150, the rumor about the truck by the S.S. Anne, how the Pokémon, Yu-Gi-Oh! and Digimon card games began, and that Super Meat Boy was made by just two people.',
+  },
   'Blitze spiegeln sich in der Uhr': {
     title: 'The lightning reflects in the clock',
     text: 'With every flash of lightning on the Time Travel welcome screen, the mantel clock lights up for a moment. A cold sheen falls over the case, the brass rim gleams on the side the bolt comes from (above, left or right), and a bright streak of light runs across the glass. With “reduce motion”, the clock stays still.',

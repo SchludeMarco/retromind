@@ -7,6 +7,32 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Schatzkiste und klügere Bandvorschläge** (2026-10-18, PR #NNN): In der
+  Zeitreise passen die Ideen bei den Lieblingsbands jetzt zu dem, was schon
+  auf deiner Liste steht: Wer Nirvana einträgt, bekommt Pearl Jam und Green
+  Day vorgeschlagen, wer Michael Jackson mag, Prince und Whitney Houston.
+  Dazu gibt es für jedes Alter eine Reihe „Legenden aller Zeiten“ mit Elvis,
+  den Beatles, Michael Jackson, Queen, ABBA und anderen. Jeder Vorschlag hat
+  jetzt ein kleines ✕ für „passt nicht zu mir / kenn ich nicht“; er
+  verschwindet dann und lässt sich mit einem Tipp wieder zeigen. Neu ist die
+  Schatzkiste (beim Kofferpacken und in den Einstellungen, freiwillig und
+  zugeklappt): Lieblingsfiguren aus Film und Spiel (etwa Solid Snake oder
+  Kazuhira Miller), besondere Spiele (Super Meat Boy), Bücher und Comics
+  (Die Kinder von Schewenborn), besondere Orte (die Schulbibliothek mit
+  Filmkassetten) und Ereignisse, Gerüche (Zimt, Apfelduft bei Rossmann),
+  alte Läden (Rossmann, Media Markt, Schlecker), Kartenspiele (Yu-Gi-Oh!,
+  Pokémon, Digimon) und Sprüche aus alten Filmen und Spielen. Die Ideen sind
+  nach Jahrzehnten sortiert, passend zu deinem Geburtsjahr. Was in der
+  Schatzkiste liegt, fließt in die Fragen der Reise und ins Erinnerungs-Buch
+  ein.
+
+- **Gamer-Fakten im Laufband der Spielhalle** (2026-10-18, PR #NNN): Das
+  Fun-Fact-Laufband der Gaming-Edition kennt neue Geschichten: wie Mew in
+  letzter Minute in Pokémon Rot und Grün geschmuggelt wurde, warum Mewtu die
+  Nummer 150 ist, das Gerücht vom Lkw bei der M.S. Anne, die Anfänge der
+  Sammelkartenspiele Pokémon, Yu-Gi-Oh! und Digimon und dass Super Meat Boy
+  von nur zwei Leuten stammt.
+
 - **Blitze spiegeln sich in der Uhr** (2026-10-18, PR #244): Bei jedem Blitz
   auf dem Startbildschirm der Zeitreise leuchtet die Kaminuhr kurz auf. Ein
   kalter Schein liegt über dem Gehäuse, der Messingrand glänzt auf der Seite,

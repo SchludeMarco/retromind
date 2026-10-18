@@ -14,7 +14,13 @@ export interface UserProfile {
   interests: string[];
   /** free-text artists/bands the user names as favourites (optional). */
   favoriteArtists: string[];
+  /** The treasure chest (lib/treasures.ts): characters, games, books, places … (optional). */
+  treasures?: Partial<Record<TreasureKind, string[]>>;
+  /** Suggestions tapped away with ✕ ("doesn't fit me / don't know it"), as lib/picks norm() keys. */
+  notMine?: string[];
 }
+
+export type TreasureKind = 'figures' | 'games' | 'books' | 'places' | 'events' | 'smells' | 'shops' | 'cards' | 'quotes';
 
 export type BuzzwordCategory = 'music' | 'tech' | 'toy' | 'lifestyle' | 'food';
 

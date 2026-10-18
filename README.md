@@ -215,9 +215,19 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   der Reiseleiste ist jeder Halt antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
   Interessen und Lieblingsbands (freiwillig, eigene Eingabe oder per Tipp aus
-  „Ideen gefällig?“: die großen Namen jedes Fünf-Jahres-Abschnitts seit dem
-  Geburtsjahr, [`lib/favoriteBands.ts`](lib/favoriteBands.ts); auch in den
-  Einstellungen änderbar, fließt in die persönlichen Fragen ein). Das Kindheits-
+  „Ideen gefällig?“: zuerst Bands, die zu deinen Favoriten passen, dann
+  „Legenden aller Zeiten“ wie Elvis oder Michael Jackson, dann die großen
+  Namen jedes Fünf-Jahres-Abschnitts seit dem Geburtsjahr,
+  [`lib/favoriteBands.ts`](lib/favoriteBands.ts); ✕ an einem Vorschlag heißt
+  „passt nicht zu mir / kenn ich nicht“ und blendet ihn aus; auch in den
+  Einstellungen änderbar, fließt in die persönlichen Fragen ein). Darunter
+  die zugeklappte **Schatzkiste**: Lieblingsfiguren aus Film und Spiel,
+  besondere Spiele, Bücher und Comics, besondere Orte und Ereignisse,
+  Gerüche, alte Läden, Kartenspiele und Sprüche aus Filmen und Spielen, mit
+  Ideen nach Jahrzehnten passend zum Geburtsjahr. Der Inhalt fließt in die
+  Fragen der Reise und ins Erinnerungs-Buch
+  ([`lib/treasures.ts`](lib/treasures.ts),
+  [`components/TreasureChest.tsx`](components/TreasureChest.tsx)). Das Kindheits-
   Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
   1960–2010 begrenzt. Die Einstimmung nennt dazu dein Geburtsjahr und deine
   ungefähren Grundschuljahre und sagt ehrlich, wenn dein Jahrzehnt noch
@@ -850,6 +860,11 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Erinnerungen teilen:** Ein Buch oder einzelne Erinnerungen mit Familie
   und Freund:innen teilen, die eigene Erinnerungen ergänzen (das Familienbuch
   mit der Wochenfrage ist ein erster Schritt).
+- **Die eigene Seite mit anderen teilen, wie bei Instagram** (Marco,
+  2026-10-18): ein Profil mit Lieblingsbands, Schatzkiste und ausgewählten
+  Erinnerungen, das andere Gäste ansehen können. Braucht Speicher auf dem
+  Server, eine Einwilligung pro Person und eine Entscheidung, wer was sehen
+  darf.
 - **Erinnerung per Push oder Mail:** Eine Nachricht, wenn die Frage der Woche
   da ist oder jemand im Familienbuch geantwortet hat. Braucht eine
   ausdrückliche Einwilligung und gespeicherte Daten pro Person (Push-Schlüssel

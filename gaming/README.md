@@ -72,7 +72,8 @@ zeigen dürfen.
   wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
   schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
   Fun Facts, Erscheinungsjahre und Anekdoten zu allen Katalogspielen (ein Tipp
-  öffnet das Spiel); ist alles einmal durch, holt die KI frische Fakten dazu.
+  öffnet das Spiel), dazu Gamer-Fakten wie die Geschichte von Mew und Mewtu
+  oder die Anfänge von Yu-Gi-Oh! und Digimon; ist alles einmal durch, holt die KI frische Fakten dazu.
   Die Diskette hinter jeder Meldung legt sie in die **Grabbelkiste**, dieselbe
   wie in der Zeitreise; die Kiste vorn im Ticker zeigt alles Gesammelte.
   Die zuletzt gezeigten merkt sich das Gerät zum Zurückblättern
@@ -408,5 +409,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   Schwierigkeitsstufen.
 - **Spielstände der Retro-Konsole synchronisieren:** Sie liegen in der
   IndexedDB des Emulators und bleiben bisher auf dem Gerät.
+- **Titelmusik beim Öffnen eines Spiels** (Marco, 2026-10-18): ein kurzes
+  Stück der Titelmusik, sobald eine Spieleseite aufgeht. Rechtlich sauber ginge
+  es nur über einen offiziellen Player (YouTube oder Spotify), nicht über
+  eigene Musikdateien.
 - **Mehr Kartenspiele:** Mau-Mau oder Texas Hold’em gegen Computer-Gegner,
   Teilen beim Blackjack, Solitär mit drei Karten ziehen oder Spider.
