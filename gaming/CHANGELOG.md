@@ -8,7 +8,7 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
-- **„Nach oben“ und „?“ auf einer Höhe** (2026-10-18, PR #249): Der
+- **„Nach oben“ und „?“ auf einer Höhe** (2026-10-18, PR #250): Der
   „Nach oben“-Knopf unten links sitzt jetzt genau auf derselben Höhe und in
   derselben Größe wie der „?“-Knopf der KI-Hilfe unten rechts, in der
   Zeitreise (alle Designs) und in der Spielhalle.
