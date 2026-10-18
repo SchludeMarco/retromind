@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Blitze spiegeln sich in der Uhr** (2026-10-18, PR #244): Bei jedem Blitz
+  auf dem Startbildschirm der Zeitreise leuchtet die Kaminuhr kurz auf. Ein
+  kalter Schein liegt über dem Gehäuse, der Messingrand glänzt auf der Seite,
+  von der der Blitz kommt (oben, links oder rechts), und ein heller
+  Lichtstreif läuft über das Glas. Mit „Bewegung reduzieren“ bleibt die Uhr
+  ruhig.
+
 - **Donner zu den Blitzen** (2026-10-18, PR #243): Die Blitze auf dem
   Startbildschirm der Zeitreise sind jetzt auch zu hören. Zu jedem Blitz
   kracht es, dann rollt der Donner ein paar Sekunden nach. Der Blitz, der in

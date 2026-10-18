@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Blitze spiegeln sich in der Uhr': {
+    title: 'The lightning reflects in the clock',
+    text: 'With every flash of lightning on the Time Travel welcome screen, the mantel clock lights up for a moment. A cold sheen falls over the case, the brass rim gleams on the side the bolt comes from (above, left or right), and a bright streak of light runs across the glass. With “reduce motion”, the clock stays still.',
+  },
   'Donner zu den Blitzen': {
     title: 'Thunder for the lightning',
     text: 'You can now hear the lightning on the Time Travel welcome screen too. Every bolt cracks, then the thunder rolls on for a few seconds. The bolt that strikes the clock is loud and cracks at once; the two distant ones rumble more quietly and a little later. Like every sound at the start, the thunder only gets louder slowly, and it stays silent when sound is off.',

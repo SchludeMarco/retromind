@@ -188,7 +188,7 @@ export const SplashScreen: React.FC<{
       <>
       <div className="grainy-bg" />
       <div className="mantel-clock-wrapper absolute top-1/2 left-1/2 w-[140vmin] h-[100vmin] max-w-[1400px] max-h-[1000px] opacity-60 pointer-events-none">
-        <MantelClock className="w-full h-full" rewinding={stage === 'warp'} />
+        <MantelClock className="w-full h-full" rewinding={stage === 'warp'} lightning />
       </div>
       {stage === 'warp' && !reduceMotion && (
         <div aria-hidden="true" className="splash-vortex">
