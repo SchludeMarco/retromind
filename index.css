@@ -593,25 +593,24 @@
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
   mask-image: linear-gradient(90deg, transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
 }
-/* Moved by RetroTicker.tsx (clock and finger), not by a CSS animation. */
+/* Moved by TickerTrack.tsx (clock and finger), not by a CSS animation. */
 .rm-ticker-viewport {
   touch-action: pan-y;
   cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .rm-ticker-viewport:active {
   cursor: grabbing;
 }
-.rm-ticker-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
 .rm-ticker-copy {
   display: flex;
   align-items: center;
+  width: max-content;
   margin: 0;
   padding: 0;
   list-style: none;
+  will-change: transform;
 }
 .rm-ticker-entry {
   display: flex;
@@ -660,8 +659,21 @@
 .rm-ticker-disk.is-saved {
   color: #9fd8b5;
 }
+.rm-ticker-step {
+  flex-shrink: 0;
+  width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fbeed7;
+  background: rgba(0, 0, 0, 0.18);
+}
+.rm-ticker-step:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
 .rm-ticker-disk:focus-visible,
 .rm-ticker-box:focus-visible,
+.rm-ticker-step:focus-visible,
 .rm-ticker-pause:focus-visible {
   outline: 3px solid #fbeed7;
   outline-offset: -3px;
@@ -682,6 +694,18 @@
 .rm-ticker-pause:hover {
   background: rgba(0, 0, 0, 0.4);
 }
+/* Phones: a little more room for the text between the buttons. */
+@media (max-width: 479px) {
+  .rm-ticker-box {
+    padding: 0 0.5rem;
+  }
+  .rm-ticker-step {
+    width: 2rem;
+  }
+  .rm-ticker-pause {
+    width: 2.5rem;
+  }
+}
 /* Retro Warm: "back to top" moves up above the pinned ticker. */
 html[data-ticker] .rm-back-to-top {
   bottom: calc(8.25rem + env(safe-area-inset-bottom)) !important;
@@ -691,14 +715,9 @@ html[data-ticker] .rm-back-to-top {
   40% { transform: scale(1.45); background: #2f7a52; }
   100% { transform: scale(1); }
 }
-/* Motion turned off: a still row to swipe through, no second copy. */
+/* Motion turned off: it stands still (no pause needed) but can still be
+   dragged and stepped with the arrows. */
 @media (prefers-reduced-motion: reduce) {
-  .rm-ticker-viewport {
-    overflow-x: auto;
-    touch-action: auto;
-    cursor: auto;
-  }
-  .rm-ticker-copy-2,
   .rm-ticker-pause {
     display: none;
   }

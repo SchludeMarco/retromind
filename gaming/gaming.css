@@ -256,20 +256,116 @@ a {
   display: block;
   margin-top: 6px;
 }
-.ticker {
-  overflow: hidden;
-  white-space: nowrap;
-  border-bottom: 4px dashed var(--panel);
-  padding: 6px 0;
+/* The fun-fact ticker (components/HallTicker.tsx), pinned just above the
+   dock. HallTicker measures the dock (--dock-h) and itself (--ticker-h);
+   the buttons floating above the dock add --ticker-h to make room. */
+.hall-ticker {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--dock-h, calc(70px + env(safe-area-inset-bottom)));
+  z-index: 389;
+  display: flex;
+  align-items: stretch;
+  height: 46px;
+  background: var(--bg);
   color: var(--dim);
+  border-top: 3px dashed var(--panel);
 }
-.ticker span {
-  display: inline-block;
-  padding-left: 100%;
-  animation: ticker 55s linear infinite;
+.hall-ticker-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--bg);
+  background: var(--a1);
 }
-@keyframes ticker {
-  to { transform: translateX(-100%); }
+.hall-ticker-badge-short {
+  display: none;
+  font-size: 14px;
+}
+@media (max-width: 560px) {
+  .hall-ticker-badge-long {
+    display: none;
+  }
+  .hall-ticker-badge-short {
+    display: inline;
+  }
+}
+.hall-ticker-view {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+.hall-ticker-view:active {
+  cursor: grabbing;
+}
+.hall-ticker-list {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: transform;
+}
+.hall-ticker-entry {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  padding-left: 14px;
+  font-size: 18px;
+}
+.hall-ticker-link {
+  min-height: 40px;
+  padding: 0 4px;
+  font: inherit;
+  color: var(--fg);
+  background: none;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+.hall-ticker-link:hover,
+.hall-ticker-link:focus-visible {
+  color: var(--a1);
+}
+.hall-ticker-star {
+  padding-left: 14px;
+  color: var(--a1);
+}
+.hall-ticker-step {
+  flex-shrink: 0;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg);
+  background: var(--panel);
+  border: none;
+  cursor: pointer;
+}
+.hall-ticker-step:hover,
+.hall-ticker-step:focus-visible {
+  color: var(--a1);
+}
+.hall-ticker-pause {
+  border-left: 2px solid var(--bg);
+}
+html[data-ticker] .hub {
+  padding-bottom: calc(120px + var(--ticker-h, 46px));
 }
 
 .px-btn {
@@ -725,14 +821,14 @@ a {
   position: fixed;
   right: 16px;
   /* above the dock */
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 400;
 }
 /* "Nach oben", bottom left, mirroring the Guru button; shows after scrolling. */
 .to-top {
   position: fixed;
   left: 16px;
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 395;
   display: inline-flex;
   align-items: center;
@@ -755,7 +851,7 @@ a {
 .guru {
   position: fixed;
   right: 16px;
-  bottom: calc(150px + env(safe-area-inset-bottom));
+  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 410;
   width: min(380px, calc(100vw - 32px));
   height: min(480px, 70vh);
@@ -821,7 +917,7 @@ a {
 .spotify-ask {
   position: fixed;
   left: 50%;
-  bottom: calc(76px + env(safe-area-inset-bottom));
+  bottom: calc(76px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 700;
   width: min(440px, calc(100vw - 32px));
@@ -906,14 +1002,12 @@ a {
   .crt-glass::after,
   .stars,
   .stars::after,
-  .ticker span,
   .blink,
   .rainbow .brand {
     animation: none !important;
   }
-  .ticker span {
-    padding-left: 0;
-    white-space: normal;
+  .hall-ticker-pause {
+    display: none;
   }
 }
 
@@ -1411,15 +1505,42 @@ a {
   background: var(--ok);
   border-radius: 50%;
 }
-.arcade[data-palette='modul'] .ticker {
-  margin-top: 12px;
+.arcade[data-palette='modul'] .hall-ticker {
   background: #fef3c7;
-  border: 1px solid #fcd34d;
-  border-radius: 10px;
-  padding: 8px 12px;
+  border-top: 1px solid #fcd34d;
   color: #78350f;
   font-weight: 600;
+}
+.arcade[data-palette='modul'] .hall-ticker-entry {
   font-size: 15px;
+}
+.arcade[data-palette='modul'] .hall-ticker-link {
+  color: #78350f;
+}
+.arcade[data-palette='modul'] .hall-ticker-link:hover,
+.arcade[data-palette='modul'] .hall-ticker-link:focus-visible {
+  color: #b45309;
+}
+.arcade[data-palette='modul'] .hall-ticker-star {
+  color: #d97706;
+}
+.arcade[data-palette='modul'] .hall-ticker-badge {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #d97706;
+}
+.arcade[data-palette='modul'] .hall-ticker-step {
+  color: #78350f;
+  background: #fde68a;
+}
+.arcade[data-palette='modul'] .hall-ticker-pause {
+  border-left-color: #fef3c7;
+}
+html[data-ticker] .arcade[data-palette='modul'] .hub {
+  padding-bottom: calc(140px + var(--ticker-h, 46px));
 }
 .arcade[data-palette='modul'] .search input {
   font-size: 16px;
@@ -1662,14 +1783,14 @@ a {
 
 /* Game-Guru chat and trophy toast. */
 .arcade[data-palette='modul'] .guru-fab {
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
 }
 .arcade[data-palette='modul'] .to-top {
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: calc(84px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   border-radius: 999px;
 }
 .arcade[data-palette='modul'] .guru {
-  bottom: calc(150px + env(safe-area-inset-bottom));
+  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   height: min(480px, calc(100vh - 190px));
   background: #fff;
   border: 1px solid var(--ridge);
@@ -2569,12 +2690,12 @@ a {
 .hall-music-knob {
   position: fixed;
   left: 50%;
-  bottom: calc(88px + env(safe-area-inset-bottom));
+  bottom: calc(88px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 396;
 }
 .arcade[data-palette='modul'] .hall-music-knob {
-  bottom: calc(88px + env(safe-area-inset-bottom));
+  bottom: calc(88px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
 }
 .hall-music-knob:active {
   transform: translateX(-50%) scale(0.94);
@@ -3173,7 +3294,7 @@ section:first-child > .media-head {
 /* --- Achievement toast like on a console: round trophy, bottom centre --- */
 .toast.xbox {
   top: auto;
-  bottom: calc(150px + env(safe-area-inset-bottom));
+  bottom: calc(150px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   border: none;
   border-radius: 999px;
   padding: 8px 22px 8px 8px;

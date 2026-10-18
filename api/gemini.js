@@ -348,6 +348,79 @@ export default async function handler(req, res) {
         return res.status(200).json({ candidates });
       }
 
+      case "tickerMore": {
+        // Fresh entries for the tickers once everything written by hand has
+        // run past (lib/tickerFeed.ts, Marco 2026-10-18: "immer neues
+        // Material"). Zeitreise: sayings and everyday things from back then;
+        // gaming: short facts about video games. `recent` are the texts just
+        // shown, so nothing comes twice.
+        const gaming = payload.app === "gaming";
+        const decade = /^(19|20)\d0$/.test(String(payload.decade)) ? String(payload.decade) : "";
+        const recent = (Array.isArray(payload.recent) ? payload.recent : [])
+          .slice(-40)
+          .map((t) => clip(t, 140))
+          .join("\n");
+        const avoid = recent
+          ? de ? `\n\nDiese gab es schon, wiederhole keine davon:\n${recent}` : `\n\nThese were already shown, repeat none of them:\n${recent}`
+          : "";
+        const prompt = gaming
+          ? de
+            ? `Schreibe 8 kurze, wahre und überprüfbare Fakten über Videospiele, Konsolen, Heimcomputer und Spielhallen ` +
+            `von den 1970ern bis heute, für ein Laufband in einer Retro-Spielhalle. Jeder Fakt höchstens 120 Zeichen, ` +
+            `auf Deutsch, locker formuliert, bunt gemischt über Jahrzehnte und Systeme. Erfinde nichts; ` +
+            `nimm nur, was gut belegt ist.${avoid}`
+            : `Write 8 short, true and verifiable facts about video games, consoles, home computers and arcades ` +
+            `from the 1970s to today, for a news ticker in a retro arcade. Each fact at most 120 characters, ` +
+            `in American English, casual, mixed across decades and systems. Don't make anything up; ` +
+            `use only what is well documented.${avoid}`
+          : de
+            ? `Schreibe 8 Einträge für ein nostalgisches Laufband: Sprüche, die man in Deutschland früher sagte, ` +
+            `und Dinge aus dem Alltag von damals, die jeder kannte` +
+            `${decade ? `, etwa die Hälfte aus den ${decade}er Jahren, der Rest aus anderen Jahrzehnten ab den 1950ern` : ", aus den 1950ern bis 2010ern"}. ` +
+            `Für jeden: decade (z. B. "1980"), kind ("saying" für Sprüche, in „…“, oder "thing" für Alltag), ` +
+            `text (höchstens 90 Zeichen) und info (2 Sätze, warum man das kannte und woher es kommt). ` +
+            `Auf Deutsch, warm und einfach. Erfinde nichts.${avoid}`
+            : `Write 8 entries for a nostalgic news ticker: sayings people in America used to say, and everyday ` +
+            `things from back then that everyone knew` +
+            `${decade ? `, about half from the ${decade}s, the rest from other decades since the 1950s` : ", from the 1950s to the 2010s"}. ` +
+            `For each: decade (e.g. "1980"), kind ("saying" for sayings, in “…”, or "thing" for everyday life), ` +
+            `text (at most 90 characters) and info (2 sentences on why people knew it and where it comes from). ` +
+            `In American English, warm and simple. Don't make anything up.${avoid}`;
+        const r = await generate(ai, {
+          model: MODELS.question,
+          contents: prompt,
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "array",
+              items: gaming
+                ? { type: "object", properties: { text: { type: "string" } }, required: ["text"] }
+                : {
+                  type: "object",
+                  properties: {
+                    decade: { type: "string" },
+                    kind: { type: "string" },
+                    text: { type: "string" },
+                    info: { type: "string" },
+                  },
+                  required: ["decade", "kind", "text", "info"],
+                },
+            },
+          },
+        });
+        let list = [];
+        try {
+          list = JSON.parse(r.text || "[]");
+        } catch {
+          list = [];
+        }
+        const items = (Array.isArray(list) ? list : [])
+          .filter((i) => i && typeof i.text === "string" && i.text.trim())
+          .slice(0, 10)
+          .map((i) => ({ decade: clip(i.decade, 4), kind: clip(i.kind, 10), text: clip(i.text, 140), info: clip(i.info, 500) }));
+        return res.status(200).json({ items });
+      }
+
       case "veoStart": {
         const { prompt, imageBase64, mimeType } = payload;
         const operation = await ai.models.generateVideos({

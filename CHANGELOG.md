@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Laufbänder zum Zurückholen und Weiterblättern** (2026-10-18, PR #237):
+  Die Fun Facts in der Gaming-Edition laufen jetzt wie das Laufband der
+  Zeitreise ganz unten, direkt über den Knöpfen der Navigation. Beide
+  Laufbänder sind langsamer und lassen sich mit dem Finger hin und her
+  schieben, mit Schwung auch ein Stück weiter. Neu sind die Pfeile ‹ und ›
+  daneben: zurück zur Meldung, die gerade weg ist, oder weiter zur nächsten.
+  Die Laufbänder gehen nie aus: Es kommen ständig neue Meldungen nach, in der
+  Zeitreise jetzt auch ein Satz zu jedem Jahr mit dem Nummer-1-Hit, in der
+  Spielhalle Fun Facts und Erscheinungsjahre zu allen Katalogspielen (ein Tipp
+  öffnet das Spiel). Ist alles einmal durchgelaufen, holt die KI frische
+  Meldungen dazu. Die zuletzt gezeigten Meldungen merkt sich das Gerät, so
+  kannst du auch nach dem Neuladen zurückblättern.
 - **Lieblingsbands aus deinem ganzen Leben** (2026-10-18, PR #236): Beim
   Kofferpacken vor der Abfahrt und in den Einstellungen unter „Deine Angaben“
   gibt es jetzt „Ideen gefällig?“. Ein Tipp darauf zeigt für jeden

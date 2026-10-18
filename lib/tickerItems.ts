@@ -1,12 +1,15 @@
-import { getLang } from './i18n';
+import { getLang, tr } from './i18n';
+import { hitOf, yearOf } from './yearFacts';
+import { keptItem } from './grabbelkiste';
 
 // What runs past in the ticker on the start page (components/RetroTicker.tsx,
-// Marco, 2026-10-13): sayings and everyday things from back then. German and
+// Marco, 2026-10-13): sayings and everyday things from back then, one line
+// per year (since 2026-10-18), and more from the AI once all of those ran. German and
 // American English each get their own, because "Null Bock" has no English
 // twin and "Gag me with a spoon" no German one. Ids are stable: the
 // Grabbelkiste (lib/grabbelkiste.ts) stores them, so never reuse or renumber.
 
-export type TickerKind = 'saying' | 'thing';
+export type TickerKind = 'saying' | 'thing' | 'year';
 
 export interface TickerItem {
   id: string;
@@ -92,22 +95,110 @@ const EN: Raw[] = [
 const toItem = ([id, decade, kind, text, info]: Raw): TickerItem => ({ id, decade, kind, text, info });
 const ALL = [...DE, ...EN].map(toItem);
 
-/** Every ticker item in the current language. */
+// One entry per year with a hand-picked line from lib/yearFacts.ts (the
+// arrival show), plus that year's No. 1 hit: "1989: the year the Berlin Wall
+// fell". Built in the current language; the id is the same in both.
+function yearItem(year: number): TickerItem | null {
+  const line = yearOf(year);
+  if (!line) return null;
+  const hit = hitOf(year);
+  return {
+    id: `year-${year}`,
+    decade: String(Math.floor(year / 10) * 10),
+    kind: 'year',
+    text: `${year}: ${line}`,
+    info: hit
+      ? tr(
+        `The No. 1 hit of ${year} in the US charts: “${hit.title}” by ${hit.artist}.`,
+        `Der Nummer-1-Hit von ${year} in den US-Charts: „${hit.title}“ von ${hit.artist}.`
+      )
+      : tr(`Something many people remember about ${year}.`, `Daran erinnern sich viele, wenn sie an ${year} denken.`),
+  };
+}
+
+function yearItems(): TickerItem[] {
+  const out: TickerItem[] = [];
+  for (let y = 1945; y <= new Date().getFullYear(); y++) {
+    const item = yearItem(y);
+    if (item) out.push(item);
+  }
+  return out;
+}
+
+// Sayings and things the AI came up with when everything above had run past
+// (lib/tickerFeed.ts, api/gemini.js "tickerMore"). Kept on this device so they
+// join the run next time; one put in the Grabbelkiste is stored with it
+// (lib/grabbelkiste.ts), so it travels to the other devices too.
+const AI_KEY = 'retromind.ticker.zeitreise.ai';
+const AI_MAX = 240;
+
+function loadAi(): TickerItem[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(AI_KEY) || '[]');
+    return Array.isArray(raw) ? raw.filter((i) => i && typeof i.id === 'string' && typeof i.text === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+let aiItems: TickerItem[] = loadAi();
+
+const hash = (text: string) => {
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+};
+
+/** Adds AI entries (text, info, decade, kind) and returns them as ticker items. */
+export function addAiTickerItems(raw: { decade?: string; kind?: string; text?: string; info?: string }[]): TickerItem[] {
+  const lang = getLang();
+  const known = new Set([...tickerItems(), ...aiItems].map((i) => i.text.toLowerCase()));
+  const fresh: TickerItem[] = [];
+  for (const r of raw) {
+    const text = String(r.text || '').trim().slice(0, 140);
+    const info = String(r.info || '').trim().slice(0, 500);
+    if (!text || !info || known.has(text.toLowerCase())) continue;
+    known.add(text.toLowerCase());
+    const decade = /^(19|20)\d0$/.test(String(r.decade)) ? String(r.decade) : '1980';
+    fresh.push({ id: `ai-${lang}-${hash(text)}`, decade, kind: r.kind === 'thing' ? 'thing' : 'saying', text, info });
+  }
+  if (fresh.length) {
+    aiItems = [...aiItems, ...fresh].slice(-AI_MAX);
+    try {
+      localStorage.setItem(AI_KEY, JSON.stringify(aiItems));
+    } catch {
+      /* storage full: they still run this visit */
+    }
+  }
+  return fresh;
+}
+
+const isAi = (id: string) => id.startsWith('ai-');
+
+/** Every hand-written ticker item in the current language. */
 export function tickerItems(): TickerItem[] {
   return (getLang() === 'de' ? DE : EN).map(toItem);
 }
 
+/** Everything that can run in the ticker now: hand-written, years, and loaded ones. */
+export function tickerPool(): TickerItem[] {
+  const lang = getLang();
+  return [...tickerItems(), ...yearItems(), ...aiItems.filter((i) => i.id.startsWith(`ai-${lang}-`))];
+}
+
 /** Looks an item up by id, whatever language it was saved in. */
 export function tickerItem(id: string): TickerItem | undefined {
+  if (id.startsWith('year-')) return yearItem(Number(id.slice(5))) ?? undefined;
+  if (isAi(id)) return aiItems.find((i) => i.id === id) ?? keptItem(id);
   return ALL.find((i) => i.id === id);
 }
 
 /**
- * A shuffled run for the ticker: the person's own decade comes first and a
- * bit more often, the rest mixed in, so every visit reads a little different.
+ * The order a full round of the ticker is dealt in: shuffled, with the
+ * person's own decade first and a bit more often, so every visit reads a
+ * little different.
  */
-export function tickerRun(focusDecade: string, count = 14): TickerItem[] {
-  const items = tickerItems();
+export function tickerOrder(items: TickerItem[], focusDecade: string): TickerItem[] {
   const shuffle = <T,>(a: T[]) => {
     const b = [...a];
     for (let i = b.length - 1; i > 0; i--) {
@@ -119,9 +210,9 @@ export function tickerRun(focusDecade: string, count = 14): TickerItem[] {
   const own = shuffle(items.filter((i) => i.decade === focusDecade));
   const rest = shuffle(items.filter((i) => i.decade !== focusDecade));
   const run: TickerItem[] = [];
-  while (run.length < count && (own.length || rest.length)) {
+  while (own.length || rest.length) {
     if (own.length && (run.length % 3 === 0 || !rest.length)) run.push(own.shift()!);
-    else if (rest.length) run.push(rest.shift()!);
+    else run.push(rest.shift()!);
   }
   return run;
 }

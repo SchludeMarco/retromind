@@ -178,3 +178,9 @@ export async function searchHeroesAi(query: string, decade: string): Promise<Her
   const { candidates } = await callApi("heroSearch", { query, decade });
   return Array.isArray(candidates) ? candidates : [];
 }
+
+/** Fresh entries for the start-page ticker once all the hand-written ones ran (lib/tickerFeed.ts). */
+export async function fetchTickerMore(decade: string, recent: string[]): Promise<{ decade?: string; kind?: string; text?: string; info?: string }[]> {
+  const { items } = await callApi("tickerMore", { app: "zeitreise", decade, recent });
+  return Array.isArray(items) ? items : [];
+}
