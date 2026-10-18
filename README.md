@@ -181,7 +181,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`components/JourneyStages.tsx`](components/JourneyStages.tsx)). Auch in
   der Reiseleiste ist jeder Halt antippbar.
 - **Personalisiertes Onboarding** – Name, Geburtsdatum, optional Geschlecht,
-  Interessen und Lieblingsmusiker:innen (freie Eingabe). Das Kindheits-
+  Interessen und Lieblingsbands (freiwillig, eigene Eingabe oder per Tipp aus
+  „Ideen gefällig?“: die großen Namen jedes Fünf-Jahres-Abschnitts seit dem
+  Geburtsjahr, [`lib/favoriteBands.ts`](lib/favoriteBands.ts); auch in den
+  Einstellungen änderbar, fließt in die persönlichen Fragen ein). Das Kindheits-
   Jahrzehnt wird berechnet (das Jahrzehnt, in dem du etwa 8 warst) und auf
   1960–2010 begrenzt. Die Einstimmung nennt dazu dein Geburtsjahr und deine
   ungefähren Grundschuljahre und sagt ehrlich, wenn dein Jahrzehnt noch

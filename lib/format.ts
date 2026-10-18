@@ -49,7 +49,7 @@ export function buildBookText(user: UserProfile, decade: string, memories: Captu
       ? tr('Interests', 'Interessen') + `: ${user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ')}`
       : '',
     user.favoriteArtists.length
-      ? tr('Favorite artists', 'Lieblingsmusiker:innen') + `: ${user.favoriteArtists.join(', ')}`
+      ? tr('Favorite bands', 'Lieblingsbands') + `: ${user.favoriteArtists.join(', ')}`
       : '',
     tr('Created', 'Erstellt') + `: ${new Date().toLocaleString(LOCALE)}`,
   ].filter(Boolean);

@@ -40,6 +40,9 @@ export const BookPhase: React.FC<{
           {user.interests.length > 0 && (
             <p className="text-xs text-retro-tan mt-1">{tr('Interests', 'Interessen')}: {user.interests.map((i) => INTEREST_LABELS[i] ?? i).join(', ')}</p>
           )}
+          {user.favoriteArtists.length > 0 && (
+            <p className="text-xs text-retro-tan mt-1">{tr('Favorite bands', 'Lieblingsbands')}: {user.favoriteArtists.join(', ')}</p>
+          )}
         </div>
 
         {memories.length === 0 && !diaryEntry.trim() && (
