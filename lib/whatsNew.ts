@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Diskette auch im Gaming-Ticker': {
+    title: 'Floppy disks in the gaming ticker too',
+    text: 'Every fun fact in the arcade ticker now has a floppy disk behind it. Tap it to put the entry in the Grabbelkiste, tap again to take it out. The box at the start of the ticker counts along and shows everything you collected. It is the same Grabbelkiste as in the time travel: sayings and fun facts end up in one box, in both apps and on all your devices.',
+  },
   'Laufbänder zum Zurückholen und Weiterblättern': {
     title: 'Tickers you can rewind and skip',
     text: 'The fun facts in the gaming edition now run at the very bottom, just above the navigation buttons, like the ticker in the time travel. Both tickers move more slowly and you can push them back and forth with your finger; a flick carries them a little further. New arrows ‹ and › next to them take you back to the entry that just went by, or on to the next one. The tickers never run out: new entries keep coming, in the time travel now also a line for every year with its No. 1 hit, in the arcade fun facts and release years for every catalog game (tap to open the game). Once everything has run past, the AI adds fresh entries. Your device remembers the last entries shown, so you can scroll back even after reloading.',

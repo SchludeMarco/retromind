@@ -6,6 +6,7 @@ import { addToGrabbelkiste, removeFromGrabbelkiste, useGrabbelkiste } from '../l
 import { useTickerFeed } from '../lib/tickerFeed';
 import { fetchTickerMore } from '../services/geminiService';
 import { Modal } from './Modal';
+import { BoxIcon, FloppyIcon } from './TickerIcons';
 import { TickerArrow, TickerTrack, TickerTrackHandle } from './TickerTrack';
 
 // The ticker on the start page (Marco, 2026-10-13): sayings and everyday
@@ -24,31 +25,12 @@ import { TickerArrow, TickerTrack, TickerTrackHandle } from './TickerTrack';
 // bottom navigation; the other designs show it at the end of the start page.
 // Styles in index.css (.rm-ticker).
 
-export const FloppyIcon: React.FC<{ saved?: boolean; className?: string }> = ({ saved = false, className = 'w-6 h-6' }) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
-    <path d="M4 3h13l3 3v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="currentColor" />
-    <rect x="7" y="3" width="9" height="6" rx="0.6" fill="#2a1a10" opacity="0.55" />
-    <rect x="12.5" y="4" width="2" height="4" rx="0.4" fill="currentColor" />
-    <rect x="6" y="12" width="12" height="8" rx="0.8" fill="#fff8ec" />
-    {saved ? (
-      <path d="M8.6 16.2l2.2 2.1 4.6-4.6" fill="none" stroke="#2f7a52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    ) : (
-      <path d="M8 14.6h8M8 17.4h5.5" stroke="#b9a58f" strokeWidth="1.2" strokeLinecap="round" />
-    )}
-  </svg>
-);
+export { BoxIcon, FloppyIcon };
 
-export const BoxIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round">
-    <path d="M3 9.5h18l-1.6 10.2a1.5 1.5 0 0 1-1.5 1.3H6.1a1.5 1.5 0 0 1-1.5-1.3z" />
-    <path d="M3 9.5l2.5-4.5h13L21 9.5M9 13.5h6" />
-  </svg>
-);
-
-const decadeLabel = (d: string) => tr(`${d}s`, `${d}er`);
+const decadeLabel = (d: string) => (d ? tr(`${d}s`, `${d}er`) : 'Gaming');
 
 const kindLabel = (item: TickerItem) =>
-  item.kind === 'saying' ? tr('Saying', 'Spruch') : item.kind === 'year' ? tr('The year', 'Das Jahr') : tr('Back then', 'Damals');
+  item.kind === 'saying' ? tr('Saying', 'Spruch') : item.kind === 'year' ? tr('The year', 'Das Jahr') : item.kind === 'game' ? 'Fun Fact' : tr('Back then', 'Damals');
 
 const Entry: React.FC<{
   item: TickerItem;
@@ -132,8 +114,8 @@ const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ i
       </div>
       <p className="text-retro-brown mb-4">
         {tr(
-          'Everything you picked out of the ticker on the start page. Tap a floppy disk there to add more.',
-          'Alles, was du aus dem Laufband auf der Startseite herausgefischt hast. Tippe dort auf eine Diskette, um mehr hineinzulegen.'
+          'Everything you picked out of the tickers, here and in the gaming hall. Tap a floppy disk there to add more.',
+          'Alles, was du aus den Laufbändern herausgefischt hast, hier und in der Spielhalle. Tippe dort auf eine Diskette, um mehr hineinzulegen.'
         )}
       </p>
       {items.length === 0 ? (
@@ -150,7 +132,7 @@ const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ i
                 <span className="block text-sm text-retro-brown">
                   {decadeLabel(item.decade)} · {kindLabel(item)}
                 </span>
-                <span className="block text-sm mt-1 leading-snug">{item.info}</span>
+                {item.info && <span className="block text-sm mt-1 leading-snug">{item.info}</span>}
               </span>
               <button
                 type="button"

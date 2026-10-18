@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { getLang, tr } from '../../lib/i18n';
 import { useTickerFeed } from '../../lib/tickerFeed';
 import { TickerArrow, TickerTrack, TickerTrackHandle } from '../../components/TickerTrack';
+import { BoxIcon, FloppyIcon } from '../../components/TickerIcons';
+import { addToGrabbelkiste, KeptItem, keptItem, removeFromGrabbelkiste, useGrabbelkiste } from '../../lib/grabbelkiste';
+import { tickerItem } from '../../lib/tickerItems';
 import { Game, GAMES, TICKER_FACTS } from '../data/games';
 import { fetchTickerFacts } from '../lib/ai';
 
@@ -11,7 +15,9 @@ import { fetchTickerFacts } from '../lib/ai';
 // (components/TickerTrack.tsx). It never runs dry: besides the facts written
 // for it, every catalog game brings its fun fact and its release, and once
 // all of those ran past the Guru's AI adds fresh ones (lib/tickerFeed.ts).
-// Tapping a game's entry opens that game.
+// Tapping a game's entry opens that game. The floppy disk behind each entry
+// keeps it in the Grabbelkiste, the same box as in the Zeitreise (Marco,
+// 2026-10-18); the box at the start of the ticker shows everything in it.
 
 interface HallFact {
   id: string;
@@ -78,12 +84,67 @@ async function more(recent: HallFact[]): Promise<HallFact[]> {
   return fresh;
 }
 
+const keepId = (f: HallFact) => `g-${f.id}`;
+
+function kept(f: HallFact): KeptItem {
+  const game = f.gameId ? GAMES.find((g) => g.id === f.gameId) : undefined;
+  return {
+    id: keepId(f),
+    decade: game ? String(Math.floor(game.year / 10) * 10) : '',
+    kind: 'game',
+    text: f.text,
+    info: game ? `${game.title} (${game.platform}, ${game.year})` : '',
+  };
+}
+
+/** The box: everything kept from both apps' tickers. */
+const BoxDialog: React.FC<{ ids: string[]; onClose: () => void }> = ({ ids, onClose }) => {
+  const items = ids.map((id) => tickerItem(id) ?? keptItem(id)).filter((i): i is NonNullable<typeof i> => !!i);
+  return (
+    <div className="overlay" onClick={onClose}>
+      <div className="dialog settings-dialog" role="dialog" aria-modal="true" aria-label={tr('Your Grabbelkiste', 'Deine Grabbelkiste')} onClick={(e) => e.stopPropagation()}>
+        <h2 className="pixel-font">{tr('YOUR GRABBELKISTE', 'DEINE GRABBELKISTE')}</h2>
+        <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
+          ✕
+        </button>
+        <p>
+          {tr(
+            'Everything you kept from the tickers, here and in the time travel. Tap a floppy disk in the ticker to add more.',
+            'Alles, was du aus den Laufbändern behalten hast, hier und in der Zeitreise. Tippe im Ticker auf eine Diskette, um mehr hineinzulegen.'
+          )}
+        </p>
+        {items.length === 0 ? (
+          <p className="dim">{tr('Still empty. The first floppy disk is waiting for you!', 'Noch leer. Die erste Diskette wartet schon auf dich!')}</p>
+        ) : (
+          <ul className="box-list">
+            {items.map((item) => (
+              <li key={item.id}>
+                <FloppyIcon saved className="box-list-disk" />
+                <span className="box-list-text">
+                  <strong>{item.text}</strong>
+                  {item.info && <small>{item.info}</small>}
+                </span>
+                <button className="px-btn" onClick={() => removeFromGrabbelkiste(item.id)} aria-label={tr(`Take out: ${item.text}`, `Herausnehmen: ${item.text}`)} data-nav>
+                  {tr('TAKE OUT', 'RAUS')}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const valid = (f: HallFact) => !f.gameId || GAMES.some((g) => g.id === f.gameId);
 
 export const HallTicker: React.FC<{ onOpen: (game: Game) => void; onSound: () => void }> = ({ onOpen, onSound }) => {
   const feed = useTickerFeed<HallFact>({ key: 'gaming', pool, more, valid });
   const [paused, setPaused] = useState(false);
   const [held, setHeld] = useState(false);
+  const [boxOpen, setBoxOpen] = useState(false);
+  const [bump, setBump] = useState(0);
+  const saved = useGrabbelkiste();
   const track = useRef<TickerTrackHandle>(null);
   const self = useRef<HTMLElement>(null);
 
@@ -109,6 +170,15 @@ export const HallTicker: React.FC<{ onOpen: (game: Game) => void; onSound: () =>
     };
   }, []);
 
+  const toggle = (f: HallFact) => {
+    onSound();
+    if (saved.includes(keepId(f))) removeFromGrabbelkiste(keepId(f));
+    else {
+      addToGrabbelkiste(keepId(f), kept(f));
+      setBump((n) => n + 1);
+    }
+  };
+
   const step = (dir: -1 | 1) => {
     onSound();
     track.current?.step(dir);
@@ -116,10 +186,20 @@ export const HallTicker: React.FC<{ onOpen: (game: Game) => void; onSound: () =>
 
   return (
     <section ref={self} className="hall-ticker" aria-label={tr('Fun facts', 'Fun Facts')}>
-      <span className="hall-ticker-badge" aria-hidden="true">
-        <span className="hall-ticker-badge-long">{tr('FUN FACT, DUDE', 'FUN FACT, DIGGA')}</span>
-        <span className="hall-ticker-badge-short">★</span>
-      </span>
+      <button
+        type="button"
+        className="hall-ticker-badge"
+        onClick={() => {
+          onSound();
+          setBoxOpen(true);
+        }}
+        aria-label={tr(`Open your Grabbelkiste (${saved.length})`, `Deine Grabbelkiste öffnen (${saved.length})`)}
+        title={tr('Your Grabbelkiste', 'Deine Grabbelkiste')}
+      >
+        <BoxIcon className="hall-ticker-box" />
+        <span key={bump} className={`hall-ticker-count${bump ? ' bump' : ''}`}>{saved.length}</span>
+        <span className="hall-ticker-badge-long">FUN FACTS</span>
+      </button>
       <TickerArrow dir={-1} className="hall-ticker-step" onStep={() => step(-1)} />
       <TickerTrack
         ref={track}
@@ -148,6 +228,18 @@ export const HallTicker: React.FC<{ onOpen: (game: Game) => void; onSound: () =>
               ) : (
                 <span className="hall-ticker-text">{item.text}</span>
               )}
+              <button
+                type="button"
+                className={`hall-ticker-disk${saved.includes(keepId(item)) ? ' is-saved' : ''}`}
+                onClick={() => toggle(item)}
+                aria-pressed={saved.includes(keepId(item))}
+                aria-label={saved.includes(keepId(item))
+                  ? tr(`Take out of the Grabbelkiste: ${item.text}`, `Aus der Grabbelkiste nehmen: ${item.text}`)
+                  : tr(`Put in the Grabbelkiste: ${item.text}`, `In die Grabbelkiste legen: ${item.text}`)}
+                title={saved.includes(keepId(item)) ? tr('In your Grabbelkiste', 'In deiner Grabbelkiste') : tr('Put in the Grabbelkiste', 'In die Grabbelkiste legen')}
+              >
+                <FloppyIcon saved={saved.includes(keepId(item))} className="hall-ticker-disk-icon" />
+              </button>
               <span className="hall-ticker-star" aria-hidden="true">★</span>
             </>
           );
@@ -168,6 +260,8 @@ export const HallTicker: React.FC<{ onOpen: (game: Game) => void; onSound: () =>
           <path d={paused ? 'M8 5v14l11-7z' : 'M7 5h3.5v14H7zM13.5 5H17v14h-3.5z'} fill="currentColor" />
         </svg>
       </button>
+      {/* Portalled: the ticker is its own layer under the dock. */}
+      {boxOpen && createPortal(<BoxDialog ids={saved} onClose={() => setBoxOpen(false)} />, document.querySelector('.arcade') ?? document.body)}
     </section>
   );
 };
