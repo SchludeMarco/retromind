@@ -8,7 +8,7 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
-- **Gamer-Fakten im Laufband der Spielhalle** (2026-10-18, PR #NNN): Das
+- **Gamer-Fakten im Laufband der Spielhalle** (2026-10-18, PR #245): Das
   Fun-Fact-Laufband der Gaming-Edition kennt neue Geschichten: wie Mew in
   letzter Minute in Pokémon Rot und Grün geschmuggelt wurde, warum Mewtu die
   Nummer 150 ist, das Gerücht vom Lkw bei der M.S. Anne, die Anfänge der
