@@ -46,11 +46,52 @@ export function isInGrabbelkiste(id: string): boolean {
   return ids.includes(id);
 }
 
-export function addToGrabbelkiste(id: string) {
+// Entries the AI added to the ticker exist only on the device that loaded
+// them, so the box keeps their words itself (same sync as the box).
+const ITEMS_KEY = 'retromind.grabbelkiste.items';
+
+export interface KeptItem {
+  id: string;
+  decade: string;
+  kind: 'saying' | 'thing' | 'year';
+  text: string;
+  info: string;
+}
+
+function readItems(): Record<string, KeptItem> {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(ITEMS_KEY) || '{}');
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+/** The stored words of an entry in the box, for ones the ticker can't look up itself. */
+export function keptItem(id: string): KeptItem | undefined {
+  return readItems()[id];
+}
+
+function writeItems(next: Record<string, KeptItem>) {
+  try {
+    localStorage.setItem(ITEMS_KEY, JSON.stringify(next));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+/** Puts an entry in the box; `item` keeps its words when it came from the AI. */
+export function addToGrabbelkiste(id: string, item?: KeptItem) {
+  if (item) writeItems({ ...readItems(), [id]: item });
   if (!ids.includes(id)) write([id, ...ids]);
 }
 
 export function removeFromGrabbelkiste(id: string) {
+  const items = readItems();
+  if (items[id]) {
+    delete items[id];
+    writeItems(items);
+  }
   if (ids.includes(id)) write(ids.filter((i) => i !== id));
 }
 

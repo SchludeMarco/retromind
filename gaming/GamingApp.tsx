@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DECADES, Game, GAMES, PLATFORM_COLORS, TICKER_FACTS } from './data/games';
+import { DECADES, Game, GAMES, PLATFORM_COLORS } from './data/games';
+import { HallTicker } from './components/HallTicker';
 import { KIND_ICON, PLATFORMS, platformInfo, platformLabel } from './data/platforms';
 import { archiveSupports, fetchArchive, searchArchive } from './lib/archive';
 import { chip } from './lib/chiptune';
@@ -202,7 +203,6 @@ export const GamingApp: React.FC = () => {
   const [emuRunning, setEmuRunning] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
   const [aiAvailable, setAiAvailable] = useState(true);
-  const tickerFact = useMemo(() => TICKER_FACTS.join('   ★   '), []);
   // Browsers that support installing web apps hand us a prompt to trigger later.
   const [installPrompt, setInstallPrompt] = useState<any>(null);
 
@@ -829,10 +829,6 @@ export const GamingApp: React.FC = () => {
             </div>
           </header>
 
-          <div className="ticker" aria-hidden="true">
-            <span>{tr('FUN FACT, DUDE', 'FUN FACT, DIGGA')} ★ {tickerFact}</span>
-          </div>
-
           {/* Only search and the coin slot up here; the sections live in the
               dock at the bottom, music, SFX and colors in the settings. */}
           <div className="toolbar top-bar">
@@ -1114,6 +1110,9 @@ export const GamingApp: React.FC = () => {
           </footer>
         </main>
       )}
+
+      {/* The fun-fact ticker, pinned just above the dock (Marco, 2026-10-18). */}
+      {screen === 'hub' && <HallTicker onOpen={open} onSound={() => chip.play('blip')} />}
 
       {screen === 'hub' && (
         <nav className="dock" aria-label={tr('Sections', 'Bereiche')}>

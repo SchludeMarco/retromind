@@ -1,9 +1,12 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { tr } from '../lib/i18n';
-import { TickerItem, tickerItem, tickerRun } from '../lib/tickerItems';
+import { addAiTickerItems, TickerItem, tickerItem, tickerOrder, tickerPool } from '../lib/tickerItems';
 import { addToGrabbelkiste, removeFromGrabbelkiste, useGrabbelkiste } from '../lib/grabbelkiste';
+import { useTickerFeed } from '../lib/tickerFeed';
+import { fetchTickerMore } from '../services/geminiService';
 import { Modal } from './Modal';
+import { TickerArrow, TickerTrack, TickerTrackHandle } from './TickerTrack';
 
 // The ticker on the start page (Marco, 2026-10-13): sayings and everyday
 // things from back then run past like the news crawl on an old TV. Behind
@@ -13,17 +16,13 @@ import { Modal } from './Modal';
 // opens a little card with where it comes from.
 //
 // Easy on older eyes and hands: it moves slowly, stops while a finger or the
-// mouse is on it or a disk has keyboard focus, has its own pause button
-// (WCAG 2.2.2), and for people who turned motion off it is a still row that
-// can be swiped sideways. A finger (or the mouse) can drag it back and forth
-// (Marco, 2026-10-17); it runs on by itself after letting go. Retro Warm pins it just above the bottom
-// navigation; the other designs show it at the end of the start page.
+// mouse is on it or a disk has keyboard focus, and has its own pause button
+// (WCAG 2.2.2). A finger (or the mouse) pushes it back and forth, the arrows
+// step one entry (components/TickerTrack.tsx), and it never runs out: new
+// entries keep coming, the ones already gone can be fetched back
+// (lib/tickerFeed.ts, Marco 2026-10-18). Retro Warm pins it just above the
+// bottom navigation; the other designs show it at the end of the start page.
 // Styles in index.css (.rm-ticker).
-
-const PX_PER_SECOND = 38;
-
-const reducedMotion = () =>
-  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export const FloppyIcon: React.FC<{ saved?: boolean; className?: string }> = ({ saved = false, className = 'w-6 h-6' }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
@@ -48,21 +47,20 @@ export const BoxIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6
 
 const decadeLabel = (d: string) => tr(`${d}s`, `${d}er`);
 
-const kindLabel = (item: TickerItem) => (item.kind === 'saying' ? tr('Saying', 'Spruch') : tr('Back then', 'Damals'));
+const kindLabel = (item: TickerItem) =>
+  item.kind === 'saying' ? tr('Saying', 'Spruch') : item.kind === 'year' ? tr('The year', 'Das Jahr') : tr('Back then', 'Damals');
 
 const Entry: React.FC<{
   item: TickerItem;
   saved: boolean;
-  copy: boolean;
   onToggle: (item: TickerItem) => void;
   onOpen: (item: TickerItem) => void;
-}> = ({ item, saved, copy, onToggle, onOpen }) => (
-  <li className="rm-ticker-entry">
+}> = ({ item, saved, onToggle, onOpen }) => (
+  <>
     {/* Tapping the saying itself tells a little more about it (Marco). */}
     <button
       type="button"
       onClick={() => onOpen(item)}
-      tabIndex={copy ? -1 : undefined}
       aria-label={tr(`More about: ${item.text}`, `Mehr dazu: ${item.text}`)}
       className="rm-ticker-text"
     >
@@ -71,7 +69,6 @@ const Entry: React.FC<{
     <button
       type="button"
       onClick={() => onToggle(item)}
-      tabIndex={copy ? -1 : undefined}
       aria-pressed={saved}
       aria-label={saved
         ? tr(`Take out of the Grabbelkiste: ${item.text}`, `Aus der Grabbelkiste nehmen: ${item.text}`)
@@ -82,7 +79,7 @@ const Entry: React.FC<{
       <FloppyIcon saved={saved} />
     </button>
     <span aria-hidden="true" className="rm-ticker-dot">✦</span>
-  </li>
+  </>
 );
 
 const CloseButton: React.FC<{ onClose: () => void }> = ({ onClose }) => (
@@ -172,7 +169,13 @@ const GrabbelkisteModal: React.FC<{ ids: string[]; onClose: () => void }> = ({ i
 };
 
 export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ warm, focusDecade }) => {
-  const run = useMemo(() => tickerRun(focusDecade), [focusDecade]);
+  const feed = useTickerFeed<TickerItem>({
+    key: 'zeitreise',
+    pool: tickerPool,
+    order: (items) => tickerOrder(items, focusDecade),
+    more: async (recent) => addAiTickerItems(await fetchTickerMore(focusDecade, recent.map((i) => i.text))),
+    valid: (i) => !!tickerItem(i.id),
+  });
   const saved = useGrabbelkiste();
   const [paused, setPaused] = useState(false);
   const [held, setHeld] = useState(false);
@@ -182,71 +185,7 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
   const closeInfo = useCallback(() => setInfoItem(null), []);
   const [bump, setBump] = useState(0);
   const [announce, setAnnounce] = useState('');
-  const copyRef = useRef<HTMLUListElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [focused, setFocused] = useState(false);
-  const stopped = paused || held || focused;
-  const stoppedRef = useRef(stopped);
-  stoppedRef.current = stopped;
-
-  // Where the run stands (px from the start of the first copy); moved by the
-  // clock and by dragging. Two copies side by side make the loop seamless.
-  const offset = useRef(0);
-  const drag = useRef<{ id: number; x: number; from: number; moved: boolean } | null>(null);
-  const swallowClick = useRef(false);
-  const place = useCallback(() => {
-    const width = copyRef.current?.offsetWidth || 0;
-    if (width) offset.current = ((offset.current % width) + width) % width;
-    if (trackRef.current) trackRef.current.style.transform = `translate3d(${-offset.current}px,0,0)`;
-  }, []);
-
-  // The same slow speed however long the run or wide the screen.
-  useLayoutEffect(() => {
-    if (reducedMotion()) return;
-    let last = performance.now();
-    let frame = 0;
-    const tick = (t: number) => {
-      const dt = Math.min(0.1, (t - last) / 1000);
-      last = t;
-      if (!stoppedRef.current && !drag.current) {
-        offset.current += PX_PER_SECOND * dt;
-        place();
-      }
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [run, place]);
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    if (reducedMotion() || (e.pointerType === 'mouse' && e.button !== 0)) return;
-    drag.current = { id: e.pointerId, x: e.clientX, from: offset.current, moved: false };
-  };
-  const onPointerMove = (e: React.PointerEvent) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId) return;
-    const dx = e.clientX - d.x;
-    if (!d.moved && Math.abs(dx) < 6) return;
-    if (!d.moved) {
-      d.moved = true;
-      (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-    }
-    offset.current = d.from - dx;
-    place();
-  };
-  const endDrag = (e: React.PointerEvent) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId) return;
-    // A drag isn't a tap: the saying or disk under the finger stays as it is.
-    if (d.moved) swallowClick.current = true;
-    drag.current = null;
-  };
-  const onClickCapture = (e: React.MouseEvent) => {
-    if (!swallowClick.current) return;
-    swallowClick.current = false;
-    e.preventDefault();
-    e.stopPropagation();
-  };
+  const track = useRef<TickerTrackHandle>(null);
 
   // Retro Warm: lets the back-to-top button make room above the ticker.
   useEffect(() => {
@@ -263,7 +202,7 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
       removeFromGrabbelkiste(item.id);
       setAnnounce(tr(`Taken out of the Grabbelkiste: ${item.text}`, `Aus der Grabbelkiste genommen: ${item.text}`));
     } else {
-      addToGrabbelkiste(item.id);
+      addToGrabbelkiste(item.id, item.id.startsWith('ai-') ? item : undefined);
       setBump((n) => n + 1);
       setAnnounce(tr(`Put in the Grabbelkiste: ${item.text}`, `In die Grabbelkiste gelegt: ${item.text}`));
     }
@@ -285,34 +224,23 @@ export const RetroTicker: React.FC<{ warm: boolean; focusDecade: string }> = ({ 
         <span key={bump} className={`rm-ticker-count ${bump ? 'is-bumped' : ''}`}>{saved.length}</span>
         <span className="rm-ticker-box-label">{tr('Box', 'Kiste')}</span>
       </button>
-      <div
+      <TickerArrow dir={-1} className="rm-ticker-step" onStep={() => track.current?.step(-1)} />
+      <TickerTrack
+        ref={track}
+        slots={feed.slots}
+        startSeq={feed.startSeq}
+        stopped={paused || held}
+        onHold={setHeld}
+        onNeedMore={feed.needMore}
+        onReach={feed.reached}
         className="rm-ticker-viewport"
-        onPointerEnter={() => setHeld(true)}
-        onPointerLeave={() => setHeld(false)}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onClickCapture={onClickCapture}
-        onFocus={() => setFocused(true)}
-        onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
-        }}
-      >
-        <div ref={trackRef} className="rm-ticker-track">
-          <ul ref={copyRef} className="rm-ticker-copy">
-            {run.map((item) => (
-              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy={false} onToggle={toggle} onOpen={setInfoItem} />
-            ))}
-          </ul>
-          {/* The same run once more, so the loop has no gap. */}
-          <ul aria-hidden="true" className="rm-ticker-copy rm-ticker-copy-2">
-            {run.map((item) => (
-              <Entry key={item.id} item={item} saved={saved.includes(item.id)} copy onToggle={toggle} onOpen={setInfoItem} />
-            ))}
-          </ul>
-        </div>
-      </div>
+        listClassName="rm-ticker-copy"
+        itemClassName="rm-ticker-entry"
+        render={({ item }) => (
+          <Entry item={item} saved={saved.includes(item.id)} onToggle={toggle} onOpen={setInfoItem} />
+        )}
+      />
+      <TickerArrow dir={1} className="rm-ticker-step" onStep={() => track.current?.step(1)} />
       <button
         type="button"
         onClick={() => setPaused((p) => !p)}

@@ -49,7 +49,8 @@ const DEVICE_ONLY = new Set([
   'retromind.page',
   'retromind-gaming.page',
 ]);
-const DEVICE_PREFIXES = ['retromind.sync', 'retromind.spotify.verifier', 'retromind.spotify.state'];
+// retromind.ticker.*: what the tickers showed last (lib/tickerFeed.ts), changes all the time.
+const DEVICE_PREFIXES = ['retromind.sync', 'retromind.ticker', 'retromind.spotify.verifier', 'retromind.spotify.state'];
 
 /** Whether a localStorage key travels between the apps and devices. */
 export function isSynced(key: string): boolean {

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Laufbänder zum Zurückholen und Weiterblättern': {
+    title: 'Tickers you can rewind and skip',
+    text: 'The fun facts in the gaming edition now run at the very bottom, just above the navigation buttons, like the ticker in the time travel. Both tickers move more slowly and you can push them back and forth with your finger; a flick carries them a little further. New arrows ‹ and › next to them take you back to the entry that just went by, or on to the next one. The tickers never run out: new entries keep coming, in the time travel now also a line for every year with its No. 1 hit, in the arcade fun facts and release years for every catalog game (tap to open the game). Once everything has run past, the AI adds fresh entries. Your device remembers the last entries shown, so you can scroll back even after reloading.',
+  },
   'Lieblingsbands aus deinem ganzen Leben': {
     title: 'Favorite bands from your whole life',
     text: 'When you pack your suitcase before setting off, and in the settings under “Your details”, there is now “Need ideas?”. A tap on it shows, for every five years from your birth year until today, the bands and musicians that were big back then, with your age at the time. Tap a name to put it on your list, tap again to take it off; you can still type your own names. It all stays optional, and the ideas stay closed until you open them. Your favorite bands now also go into the personal questions while exploring and appear in your memory book.',
