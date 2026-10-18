@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Was gerade läuft, unten in der Mitte** (2026-10-18, PR #251): Zwischen
+  „Nach oben“ und dem „?“ der KI-Hilfe steht jetzt, welcher Song gerade
+  läuft, mit Zurück, Play/Pause und Weiter, auf derselben Höhe wie die beiden
+  Knöpfe. Ein Tipp auf den Titel öffnet die ganze Musiksteuerung. Das gibt es
+  in der Zeitreise (alle Designs) und in der Spielhalle, sobald die
+  Spotify-Musik erlaubt ist.
+
 - **„Nach oben“ und „?“ auf einer Höhe** (2026-10-18, PR #250): Der
   „Nach oben“-Knopf unten links sitzt jetzt genau auf derselben Höhe und in
   derselben Größe wie der „?“-Knopf der KI-Hilfe unten rechts, in der

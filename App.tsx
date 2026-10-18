@@ -642,7 +642,8 @@ const App: React.FC = () => {
     `Music of the ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}s`,
     `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`
   );
-  // Back / play / next and the song, at the top of the control panel (components/MusicMini).
+  // Back / play / next and the song: in the bottom row between "Nach oben"
+  // and the help, and at the top of the control panel (components/MusicMini).
   const musicMini = spotify.allowed
     ? (variant: 'bar' | 'float') => (
         <MusicMini
@@ -839,6 +840,8 @@ const App: React.FC = () => {
           {travelYear && <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />}
           {musicDock}
           <BackToTop warm={warm} hidden={isChatOpen} onClick={() => playSFX('click')} />
+          {/* What's playing, between "Nach oben" and the "?" help (Marco, 2026-10-18). */}
+          {!showSplash && musicMini && !isChatOpen && <div className="rm-bottom-music rm-fixed no-print">{musicMini('float')}</div>}
           {/* Questions about the app: the AI help at the very bottom right. */}
           <HelpBot
             app="zeitreise"

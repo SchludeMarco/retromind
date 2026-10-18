@@ -4344,6 +4344,47 @@ button.pcard {
   gap: 6px;
   margin-bottom: 8px;
 }
+/* The bottom row (Marco, 2026-10-18): "Nach oben" left, the "?" help right
+   (46 px at 20 px from the edges) and what's playing in between. */
+.gm-bottom-music {
+  position: fixed;
+  left: 74px;
+  right: 74px;
+  bottom: calc(20px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  z-index: 394;
+  height: 46px;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  background: var(--bg);
+  box-shadow: 0 0 0 4px var(--dim);
+}
+.gm-bottom-music .px-btn {
+  flex-shrink: 0;
+  padding: 8px 8px;
+  font-size: 9px;
+}
+.gm-bottom-music-song {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font: inherit;
+  font-size: 14px;
+  color: var(--fg);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+@media (max-width: 359px) {
+  .gm-bottom-music .px-btn:first-child { display: none; }
+}
 .gm-controls-song {
   flex: 1;
   min-width: 0;

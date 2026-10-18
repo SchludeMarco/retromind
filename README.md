@@ -288,9 +288,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   aus diesem Jahr von YouTube, das erst auf Tippen startet ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
   über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen
   unter „Videos“; die Spotify-Musik pausiert solange).
-  Die Musik steuert man im Fenster hinter dem Griff am rechten Rand: Zurück,
-  Play/Pause und Weiter als richtige Knöpfe und daneben gut lesbar, was
-  läuft ([`components/MusicMini.tsx`](components/MusicMini.tsx)). „Mehr
+  Die Musik steuert man in der unteren Reihe zwischen „Nach oben“ und dem
+  „?“ der KI-Hilfe (und auch im Fenster hinter dem Griff am rechten Rand):
+  Zurück, Play/Pause und Weiter als richtige Knöpfe und daneben gut lesbar,
+  was läuft ([`components/MusicMini.tsx`](components/MusicMini.tsx)). „Mehr
   Musik“ öffnet die ganze **Musiksteuerung**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)) über die halbe
   Seite: welche Musik und welcher Song gerade läuft, Lautstärke, Suche und
