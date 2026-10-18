@@ -11,6 +11,8 @@ import '@fontsource/plus-jakarta-sans/latin-400.css';
 import '@fontsource/plus-jakarta-sans/latin-600.css';
 import '@fontsource/plus-jakarta-sans/latin-700.css';
 import './gaming.css';
+// The color tint from blue to orange, shared with the Zeitreise (settings).
+import '../lib/colorTint';
 import { countAppStart } from '../lib/usage';
 
 const root = document.getElementById('root');

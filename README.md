@@ -358,6 +358,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`lib/musicVolume.ts`](lib/musicVolume.ts)). Spotifys eingebetteter Player
   lässt sich von keiner Webseite leiser stellen; dort sagt der Player, dass
   die Lautstärketasten des Geräts helfen.
+- **Bildschirmfarbe von Blau bis Orange** – ein Regler in den Einstellungen
+  unter der Schriftgröße färbt die ganze App wärmer (Richtung Orange, wie das
+  Nachtlicht am Handy) oder kühler (Richtung Blau), in allen Designs und in
+  der Gaming-Edition gleich; die Einstellung wird mit synchronisiert
+  ([`lib/colorTint.ts`](lib/colorTint.ts)).
 - **Barrierefreiheit** – Schriftgrößen-Umschalter (A / A+ / A++), größere Grund-
   schrift, Fokus-Ringe, Tastatur-/Esc-Bedienung und Fokus-Falle in Dialogen,
   `prefers-reduced-motion`, ARIA-Labels.

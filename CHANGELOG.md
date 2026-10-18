@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Bildschirmfarbe von Blau bis Orange** (2026-10-18, PR #241): In den
+  Einstellungen (Griff am rechten Rand) gibt es unter der Schriftgröße einen
+  neuen Regler „Bildschirmfarbe“. Nach rechts wird alles wärmer und
+  orangener, wie das Nachtlicht am Handy, nach links kühler und blauer; in
+  der Mitte sieht die App aus wie gestaltet. Der Regler gilt für alle Designs
+  der Zeitreise und für die Spielhalle (dort unter „Bildschirm“), und die
+  Einstellung wandert mit in die andere App und auf deine anderen Geräte.
+  „Zurück auf normal“ stellt die Farbe wieder zurück.
+
 - **Die ganze Steuerung hinter einem Griff am rechten Rand** (2026-10-18,
   PR #240): In der Zeitreise und in der Gaming-Edition sitzt am rechten
   Bildschirmrand, auf halber Höhe, ein kleiner Griff mit drei Reglern. Ein
