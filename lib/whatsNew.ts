@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  '„Nach oben“ und „?“ auf einer Höhe': {
+    title: '“Back to top” and “?” on one level',
+    text: 'The “Back to top” button at the bottom left now sits at exactly the same height and size as the “?” button of the AI help at the bottom right, in Time Travel (all designs) and in the arcade.',
+  },
   'Ruhigere Ankunft nach der Zeitreise': {
     title: 'A calmer arrival after the journey',
     text: 'Until now, after the journey the music changed briefly, then broke off, and the video of the year started on its own with its own sound. Now your music simply keeps playing through the arrival, and the year’s No. 1 hit is only named. If no music is playing, the hit sounds as a fanfare as before, but fades out slowly at the end, and the music comes back gently. The year’s video no longer starts by itself: it only plays once you tap “▶ Video from …”.',

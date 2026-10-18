@@ -11,9 +11,11 @@
 html[data-ticker] .rm-help.is-zeitreise {
   bottom: calc(4.25rem + env(safe-area-inset-bottom));
 }
-/* Gaming: HallTicker measures itself into --ticker-h. */
+/* Gaming: HallTicker measures itself into --ticker-h. Same row and size as
+   "Nach oben" (.to-top, a 46 px .px-btn at 20 px from the edges). */
 .rm-help.is-gaming {
-  bottom: calc(16px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
+  right: calc(20px + env(safe-area-inset-right));
+  bottom: calc(20px + var(--ticker-h, 0px) + env(safe-area-inset-bottom));
   z-index: 405;
 }
 
@@ -187,6 +189,8 @@ html[data-theme="retro-warm"] .rm-help-head {
 
 /* Gaming: the arcade's pixel palette. */
 .rm-help.is-gaming .rm-help-fab {
+  width: 46px;
+  height: 46px;
   border-radius: 0;
   font: 400 18px/1 'Press Start 2P', monospace;
   color: var(--bg);
