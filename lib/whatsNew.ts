@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Die ganze Steuerung hinter einem Griff am rechten Rand': {
+    title: 'All the controls behind one handle at the right edge',
+    text: 'In Time Travel and in the Gaming edition, a small handle with three sliders now sits at the right edge of the screen, halfway down. One tap slides in a panel from the right with everything: in Time Travel the seven stops of the journey, the music, sound on/off, the companion and feedback; in the arcade the sections (Catalog to Quests), the music, sound, the Guru, feedback and “Leave the club”; below that, all the settings. In return, the many buttons over the page are gone: the gear, the speaker, the music in the top left, the accounts in the bottom left, the home and companion buttons, the Retro Warm bottom bar, the journey bar’s floating pill, and in the arcade the buttons at the top and the bar at the bottom. From the panel you can now also reach the arcade from every stop of the journey.',
+  },
   'Jeden Tag etwas Neues in der Stube': {
     title: 'Something new in the living room every day',
     text: 'Below the living room there is now a new question of the day every day (“How did you celebrate your birthday as a child?”). Your answer becomes a new page in your memory book, so it keeps on growing. Below it, “Today in your youth” shows what happened on this date when you were between 6 and 20, with the No. 1 hit of that year. Also new is the family book: everyone invited gets the same question every Monday and reads the others’ answers. Before your first answer goes to our server, the app asks for your permission once; you can change or delete it at any time. If you come back after two days or more, a letter in the living room tells you what is new since then.',

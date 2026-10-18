@@ -10,8 +10,7 @@ import { DayGame, fetchOnThisDay } from './lib/onThisDay';
 import { useControls } from './lib/useControls';
 import { Achievement, ACHIEVEMENTS, scoreOf, useArcadeState } from './lib/useArcadeState';
 import { Entrance } from './components/Entrance';
-import { MuteButton } from './components/MuteButton';
-import { BackToZeitreise } from './components/BackToZeitreise';
+import { GamingControls, GamingHandle } from './components/ControlHandle';
 import { CartInsert } from './components/CartInsert';
 import { CoinDrop } from './components/CoinDrop';
 import { ATTRACT_AFTER_MS, AttractMode } from './components/AttractMode';
@@ -32,7 +31,7 @@ import { useCloudSync } from './lib/useCloudSync';
 import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
-import { MusicDock } from '../components/MusicDock';
+import { MusicDock, openMusicDock } from '../components/MusicDock';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, PRIZES } from './lib/quests';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
@@ -744,57 +743,12 @@ export const GamingApp: React.FC = () => {
         />
       ) : (
         <main className="hub">
-          <BackToZeitreise className="pixel-font back-hub" />
           <header className="hud pixel-font">
             <h1 className="brand rgb-split" onClick={tapLogo}>
               <img className="brand-motif" src="/gaming/motif.webp" alt="" />
               RETROMIND
               <small>GAMING</small>
             </h1>
-            {/* Back out to the street in front of the door (Marco, 2026-10-08). */}
-            <button
-              className="px-btn exit-btn"
-              onClick={leaveClub}
-              data-nav
-              aria-label={tr('Leave the club', 'Club verlassen')}
-              title={tr('Leave the club', 'Club verlassen')}
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M2 1h9v4H9V3H4v10h5v-2h2v4H2z" />
-                <path d="M10 6h2V4h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v-2h-2H6V7h4z" />
-              </svg>
-            </button>
-            <button
-              className="px-btn feedback-btn"
-              onClick={() => {
-                chip.play('select');
-                setFeedbackOpen(true);
-              }}
-              data-nav
-              title={tr('Send feedback', 'Feedback geben')}
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M1 3h14v10H1zM2 4v8h12V4z" />
-                <path d="M3 5h1v1h1v1h1v1h1v1h2V8h1V7h1V6h1V5h1v1h-1v1h-1v1h-1v1h-1v1H7V9H6V8H5V7H4V6H3z" />
-              </svg>
-              <span>Feedback</span>
-            </button>
-            <MuteButton className="hud-mute" muted={muted} onToggle={toggleMute} />
-            <button
-              className="px-btn settings-btn"
-              onClick={() => {
-                chip.play('select');
-                setSettingsOpen(true);
-              }}
-              data-nav
-              aria-label={cloud.status === 'signed_in' ? tr(`Settings, signed in as ${cloud.user?.name ?? ''}`, `Einstellungen, angemeldet als ${cloud.user?.name ?? ''}`) : tr('Settings and sign-in', 'Einstellungen und Anmeldung')}
-              title={tr('Settings', 'Einstellungen')}
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M7 1h2v2h1V2h2v2h-1v1h2v2h1v2h-1v2h-2v1h1v2h-2v-1H9v2H7v-2H6v1H4v-2h1v-1H3V9H2V7h1V5h2V4H4V2h2v1h1zM6 6v4h4V6z" />
-              </svg>
-              {cloud.status === 'signed_in' && <span className={`settings-dot${cloud.sync === 'error' ? ' warn' : ''}`} />}
-            </button>
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>
                 <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
@@ -1125,45 +1079,96 @@ export const GamingApp: React.FC = () => {
       {/* The fun-fact ticker, pinned just above the dock (Marco, 2026-10-18). */}
       {screen === 'hub' && <HallTicker onOpen={open} onSound={() => chip.play('blip')} />}
 
-      {screen === 'hub' && (
-        <nav className="dock" aria-label={tr('Sections', 'Bereiche')}>
-          <button className="dock-btn" aria-current={view === 'catalog' ? 'page' : undefined} onClick={() => switchView('catalog')} data-nav>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v13l-2 2H8l-2-2zM9 7h6v5H9zM8 21h8" /></svg>
-            {tr('CATALOG', 'KATALOG')}
-          </button>
-          <button
-            className="dock-btn"
-            aria-haspopup="dialog"
-            onClick={() => {
-              if (view !== 'catalog') switchView('catalog');
-              setPickerOpen(true);
-              chip.play('select');
-            }}
-            data-nav
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v8H3zM7 11v4M5 13h4M15 12h.01M18 14h.01" /></svg>
-            {tr('SYSTEMS', 'KISTEN')}
-          </button>
-          <button className="dock-btn" aria-current={view === 'collection' ? 'page' : undefined} onClick={() => switchView('collection')} data-nav>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 3v5h7V3M8 21v-7h8v7" /></svg>
-            STASH
-          </button>
-          <button className="dock-btn" aria-current={view === 'trophies' ? 'page' : undefined} onClick={() => switchView('trophies')} data-nav>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6" /></svg>
-            {tr('TROPHIES', 'TROPHÄEN')}
-          </button>
-          <button className="dock-btn" aria-current={view === 'chill' ? 'page' : undefined} onClick={() => switchView('chill')} data-nav>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v3M12 3v3" /></svg>
-            {tr('CHILL', 'CHILLEN')}
-          </button>
-          <button className="dock-btn" aria-current={view === 'quests' ? 'page' : undefined} onClick={() => switchView('quests')} data-nav>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 8v8M9 10h6M9 14h6" /></svg>
-            QUESTS
-          </button>
-        </nav>
+      {/* Every control behind one handle at the right edge (Marco, 2026-10-18). */}
+      {screen === 'hub' && !settingsOpen && (
+        <GamingHandle
+          dot={cloud.status === 'signed_in' && cloud.sync === 'error'}
+          onOpen={() => {
+            chip.play('select');
+            setSettingsOpen(true);
+          }}
+        />
       )}
-
-      {settingsOpen && <Settings cloud={cloud} spotifyAuth={spotifyAuth} state={state} set={setFromSettings} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && (
+        <Settings
+          cloud={cloud}
+          spotifyAuth={spotifyAuth}
+          state={state}
+          set={setFromSettings}
+          onClose={() => setSettingsOpen(false)}
+          controls={
+            screen === 'hub' ? (
+              <GamingControls<View>
+                sections={[
+                  { id: 'catalog', label: tr('CATALOG', 'KATALOG') },
+                  { id: 'systems', label: tr('SYSTEMS', 'KISTEN') },
+                  { id: 'collection', label: 'STASH' },
+                  { id: 'trophies', label: tr('TROPHIES', 'TROPHÄEN') },
+                  { id: 'chill', label: tr('CHILL', 'CHILLEN') },
+                  { id: 'quests', label: 'QUESTS' },
+                ]}
+                current={view}
+                onSection={(id) => {
+                  setSettingsOpen(false);
+                  if (id === 'systems') {
+                    if (view !== 'catalog') switchView('catalog');
+                    setPickerOpen(true);
+                    chip.play('select');
+                  } else {
+                    switchView(id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                music={
+                  state.music && spotify.active ? (
+                    <>
+                      <div className="gm-controls-music">
+                        <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playPrevious(); }} disabled={!spotify.canSkip} aria-label={tr('Previous song', 'Vorheriger Song')} data-nav>
+                          ◄◄
+                        </button>
+                        <button className="px-btn" onClick={() => { chip.play('blip'); spotify.togglePlay(); }} aria-label={spotify.playing ? 'Pause' : tr('Play', 'Abspielen')} data-nav>
+                          {spotify.playing ? '❚❚' : '►'}
+                        </button>
+                        <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playNext(); }} disabled={!spotify.canSkip} aria-label={tr('Next song', 'Nächster Song')} data-nav>
+                          ►►
+                        </button>
+                        <span className="gm-controls-song">{spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}</span>
+                      </div>
+                      <button
+                        className="px-btn"
+                        onClick={() => {
+                          setSettingsOpen(false);
+                          openMusicDock();
+                        }}
+                        data-nav
+                      >
+                        {tr('♫ MORE MUSIC: VOLUME, SEARCH', '♫ MEHR MUSIK: LAUTSTÄRKE, SUCHE')}
+                      </button>
+                    </>
+                  ) : undefined
+                }
+                muted={muted}
+                onToggleMute={toggleMute}
+                guruOpen={guruOpen}
+                onGuru={() => {
+                  chip.play(guruOpen ? 'back' : 'select');
+                  setSettingsOpen(false);
+                  setGuruOpen(!guruOpen);
+                }}
+                onFeedback={() => {
+                  chip.play('select');
+                  setSettingsOpen(false);
+                  setFeedbackOpen(true);
+                }}
+                onLeave={() => {
+                  setSettingsOpen(false);
+                  leaveClub();
+                }}
+              />
+            ) : undefined
+          }
+        />
+      )}
       {feedbackOpen && <Feedback onClose={() => setFeedbackOpen(false)} />}
 
       {screen === 'hub' && (
@@ -1187,7 +1192,7 @@ export const GamingApp: React.FC = () => {
               between "Nach oben" and the Guru (Marco, 2026-10-06). */}
           {state.music && spotify.active && (
             <MusicDock
-              className="hall-music-knob"
+              hideKnob
               icon="bolt"
               ownMusic
               title={spotify.songTitle}
@@ -1236,16 +1241,6 @@ export const GamingApp: React.FC = () => {
               }}
             />
           )}
-          <button
-            className="px-btn big guru-fab"
-            onClick={() => {
-              chip.play(guruOpen ? 'back' : 'select');
-              setGuruOpen(!guruOpen);
-            }}
-            aria-expanded={guruOpen}
-          >
-            {guruOpen ? '✕' : '☻ GURU'}
-          </button>
           {guruOpen && (
             <GuruChat
               onClose={() => setGuruOpen(false)}

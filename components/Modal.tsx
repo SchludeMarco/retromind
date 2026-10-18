@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { playPop } from '../lib/uiSounds';
 
 // `above` lifts the dialog over the welcome screen (SplashScreen, z-900).
-export const Modal: React.FC<{ onClose: () => void; label: string; above?: boolean; children: React.ReactNode }> = ({ onClose, label, above = false, children }) => {
+// `side` slides it in from the right edge at full height instead of popping
+// up in the middle (the control panel, components/ControlHandle).
+export const Modal: React.FC<{ onClose: () => void; label: string; above?: boolean; side?: boolean; children: React.ReactNode }> = ({ onClose, label, above = false, side = false, children }) => {
   const ref = useRef<HTMLDivElement>(null);
   // Parents pass a fresh onClose on every render (e.g. each time the song
   // changes). Keeping it in a ref lets the setup below run only once, so the
@@ -45,7 +47,10 @@ export const Modal: React.FC<{ onClose: () => void; label: string; above?: boole
   }, []);
 
   return (
-    <div className={`rm-fixed fixed inset-0 bg-black/60 ${above ? 'z-[1100]' : 'z-[650]'} flex items-center justify-center p-4 backdrop-blur-sm`} onClick={onClose}>
+    <div
+      className={`rm-fixed fixed inset-0 bg-black/60 ${above ? 'z-[1100]' : 'z-[650]'} flex ${side ? 'justify-end' : 'items-center justify-center p-4'} backdrop-blur-sm`}
+      onClick={onClose}
+    >
       <div
         ref={ref}
         role="dialog"
@@ -53,7 +58,11 @@ export const Modal: React.FC<{ onClose: () => void; label: string; above?: boole
         aria-label={label}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="rm-modal retro-card max-w-lg w-full p-6 md:p-8 bg-white relative animate-popIn max-h-[90vh] overflow-y-auto outline-none"
+        className={
+          side
+            ? 'rm-modal rm-side-panel retro-card max-w-md w-[92vw] h-full p-6 md:p-8 bg-white relative overflow-y-auto overscroll-contain outline-none'
+            : 'rm-modal retro-card max-w-lg w-full p-6 md:p-8 bg-white relative animate-popIn max-h-[90vh] overflow-y-auto outline-none'
+        }
       >
         {children}
       </div>

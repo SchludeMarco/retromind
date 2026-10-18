@@ -17,8 +17,10 @@ import {
 import { RetroTicker } from './components/RetroTicker';
 import { AmbientLife } from './components/AmbientLife';
 import { ChristmasDeco } from './components/ChristmasDeco';
-import { Header, SettingsModal, FeedbackModal, AccountControls, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MuteToggle, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { ControlCenter, ControlHandle } from './components/ControlHandle';
 import { MusicMini } from './components/MusicMini';
+import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
 import { setRoomEra } from './lib/roomEra';
@@ -27,7 +29,7 @@ import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { hasUnseenNews } from './lib/whatsNew';
 import { useWarmChrome } from './lib/theme';
-import { WarmTopBar, WarmBottomNav, Icon, NewBadge } from './components/WarmChrome';
+import { WarmTopBar } from './components/WarmChrome';
 import {
   IntroPhase,
   OnboardingPhase,
@@ -46,7 +48,6 @@ import { useSpotifyBackground } from './hooks/useSpotifyBackground';
 import { useGoogleAuth } from './hooks/useGoogleAuth';
 import { countOpened } from './lib/usage';
 import { useSpotifyAuth } from './hooks/useSpotifyAuth';
-import { useSyncStatus } from './hooks/useSyncStatus';
 import { INTEREST_TO_CATEGORY, PHASES } from './lib/session';
 import { installMicroFx } from './lib/microFx';
 import { downloadBlob, todayStamp, buildBookText, downscaleImage, uid } from './lib/format';
@@ -109,10 +110,6 @@ const App: React.FC = () => {
 
   const googleAuth = useGoogleAuth();
   const spotifyAuth = useSpotifyAuth();
-  // The journey, profile and settings sync with the Gaming edition and the
-  // Google Drive copy on their own (lib/sync.ts); this only shows how it goes.
-  const syncStatus = useSyncStatus();
-  const driveSyncState = syncStatus === 'off' ? 'idle' : syncStatus === 'loading' ? 'saving' : syncStatus;
 
   const [selectedWord, setSelectedWord] = useState<
     { id: string; term: string; knowledge: string; question: string; decade: string } | null
@@ -140,9 +137,7 @@ const App: React.FC = () => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
   const [unseenNews, setUnseenNews] = useState(hasUnseenNews);
-  const [showBottomControls, setShowBottomControls] = useState(false);
   const warm = useWarmChrome();
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
 
@@ -161,23 +156,6 @@ const App: React.FC = () => {
   useEffect(() => {
     getAiAvailability().then(setAiAvailability);
   }, []);
-
-  // The account controls (and the classic music knob) stay out of the way while reading —
-  // they slide in only once the page is scrolled (near) to the bottom.
-  useEffect(() => {
-    const checkScrollPosition = () => {
-      const doc = document.documentElement;
-      const nearBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 24;
-      setShowBottomControls(nearBottom);
-    };
-    checkScrollPosition();
-    window.addEventListener('scroll', checkScrollPosition, { passive: true });
-    window.addEventListener('resize', checkScrollPosition);
-    return () => {
-      window.removeEventListener('scroll', checkScrollPosition);
-      window.removeEventListener('resize', checkScrollPosition);
-    };
-  }, [phase]);
 
   useEffect(() => {
     writePage(PAGE_KEY, { phase, splashDone: !showSplash } satisfies OpenPage);
@@ -652,16 +630,14 @@ const App: React.FC = () => {
   const isAnswered = (id: string) => !!memoryFor(id);
 
 
-  // The music controls (Marco, 2026-10-06): a small black-blue metal button
-  // at the bottom centre that opens them as a panel over the lower half of
-  // the screen. Retro Warm: in the middle of the bottom navigation; the other
-  // designs: in the bottom row left of the settings button, and like it only
-  // once the page is scrolled to the bottom (index.css .rm-music-knob).
+  // The music controls (Marco, 2026-10-06): a panel over the lower half of
+  // the screen. Since 2026-10-18 it has no button of its own any more; it
+  // opens from the control panel behind the handle at the right edge.
   const decadeMusicName = spotify.youthLabel ?? tr(
     `Music of the ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}s`,
     `Musik der ${Number(currentAudioDecade) >= 2000 ? currentAudioDecade : currentAudioDecade.slice(2)}er`
   );
-  // Back / play / next and the song, top left (components/MusicMini).
+  // Back / play / next and the song, at the top of the control panel (components/MusicMini).
   const musicMini = spotify.allowed
     ? (variant: 'bar' | 'float') => (
         <MusicMini
@@ -681,11 +657,7 @@ const App: React.FC = () => {
   const musicDock = spotify.allowed ? (
     <MusicDock
       ticker={false}
-      className={
-        warm
-          ? ''
-          : `rm-music-knob rm-fixed transition-opacity duration-300 ${showBottomControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`
-      }
+      hideKnob
       title={spotify.songTitle}
       source={decadeMusicName}
       playing={spotify.isPlaying}
@@ -712,40 +684,18 @@ const App: React.FC = () => {
     />
   ) : null;
   return (
-    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-36' : 'pb-24'}`}>
+    <div className={`min-h-screen px-4 md:px-8 max-w-6xl mx-auto text-retro-ink ${warm ? 'pt-16 pb-24' : 'pb-16'}`}>
       <BootOverlay />
       <CrtOverlay />
       <ChristmasDeco />
       {verified && !showSplash && <AmbientLife />}
-      {(!warm || showSplash || !verified) && <MuteToggle besideSettings />}
-      {(!warm || showSplash || !verified) && (
-        // Always in the top-right corner: on the welcome screen in every
-        // design, and in Classic and Night Shift also while scrolling and
-        // before the name form is filled in (Retro Warm has it in its top bar).
-        <button
-          onClick={() => { playSFX('click'); setIsSettingsOpen(true); }}
-          aria-label={unseenNews
-            ? tr('Open app settings (new: What’s new)', 'App-Einstellungen öffnen (neu: Was ist neu)')
-            : tr('Open app settings', 'App-Einstellungen öffnen')}
-          title={unseenNews ? tr('New in RetroMind: see “What’s new” in the settings', 'Neu in RetroMind: siehe „Was ist neu“ in den Einstellungen') : undefined}
-          className="rm-fixed fixed top-3 right-4 md:right-10 z-[1000] w-10 h-10 rounded-full bg-retro-cream border-2 border-retro-ink retro-button flex items-center justify-center text-base"
-        >
-          ⚙️
-          {unseenNews && <NewBadge />}
-        </button>
+      {/* All controls behind one handle at the right edge, halfway down
+          (Marco, 2026-10-18); on the welcome screen too, so sound and
+          language can be set before the first note. */}
+      {!isSettingsOpen && (
+        <ControlHandle hasNews={unseenNews} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
-      {!warm && !showSplash && verified && musicMini && <div className="rm-fixed fixed top-3 left-4 z-[1000] rm-music-mini-corner">{musicMini('float')}</div>}
-      {warm && !showSplash && verified && (
-        <WarmTopBar
-          phase={phase}
-          showAccount={verified}
-          hasUnseenNews={unseenNews}
-          accountOpen={isAccountOpen}
-          onOpenSettings={() => { playSFX('click'); setIsSettingsOpen(true); }}
-          music={musicMini?.('bar')}
-          onToggleAccount={() => { playSFX('click'); setIsAccountOpen((v) => !v); }}
-        />
-      )}
+      {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
       {showSplash && <SplashScreen onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
@@ -825,6 +775,25 @@ const App: React.FC = () => {
           onSpotifySignIn={handleSpotifySignIn}
           onSpotifySignOut={handleSpotifySignOut}
           aboveSplash={showSplash}
+          controls={
+            <ControlCenter
+              phase={verified && !showSplash ? phase : null}
+              onSelectStop={(p) => {
+                setIsSettingsOpen(false);
+                if (p === phase) return;
+                if (p === 'intro') goHome();
+                else {
+                  setResumeTarget(null);
+                  goTo(p);
+                }
+              }}
+              music={!showSplash && verified ? musicMini?.('float') : undefined}
+              onOpenMusic={() => { playSFX('click'); setIsSettingsOpen(false); openMusicDock(); }}
+              onOpenCompanion={verified && !showSplash && phase !== 'intro' ? () => { playSFX('click'); setIsSettingsOpen(false); setIsChatOpen((v) => !v); } : undefined}
+              companionOpen={isChatOpen}
+              onFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
+            />
+          }
           onDismiss={() => setIsSettingsOpen(false)}
           onCloseClick={closeSettingsWithSfx}
         />
@@ -853,35 +822,6 @@ const App: React.FC = () => {
         />
       ) : (
         <>
-          <AccountControls
-            googleStatus={googleAuth.status}
-            googleUser={googleAuth.user}
-            driveSyncState={driveSyncState}
-            onGoogleSignIn={handleGoogleSignIn}
-            onGoogleSignOut={handleGoogleSignOut}
-            spotifyStatus={spotifyAuth.status}
-            spotifyUser={spotifyAuth.user}
-            onSpotifySignIn={handleSpotifySignIn}
-            onSpotifySignOut={handleSpotifySignOut}
-            onFeedback={() => { playSFX('click'); setIsFeedbackOpen(true); }}
-            visible={warm ? isAccountOpen : showBottomControls}
-            raised={warm}
-          />
-
-          {warm && (
-            <WarmBottomNav
-              phase={phase}
-              center={musicDock}
-              onNavigate={(target) => {
-                if (target === 'intro') {
-                  if (phase !== 'intro') goHome();
-                } else if (target !== phase) {
-                  setResumeTarget(null);
-                  goTo(target);
-                }
-              }}
-            />
-          )}
           {phase !== 'intro' && (
             <JourneyBar
               phase={phase}
@@ -891,27 +831,11 @@ const App: React.FC = () => {
             />
           )}
           {travelYear && <YearWelcome year={travelYear} travel={travel} hold={arrivalShow} onPlayingChange={handleYearVideo} />}
-          {!warm && musicDock}
-          <BackToTop warm={warm} hidden={isChatOpen || (warm && isAccountOpen)} onClick={() => playSFX('click')} />
+          {musicDock}
+          <BackToTop warm={warm} hidden={isChatOpen} onClick={() => playSFX('click')} />
 
           {phase !== 'intro' && (
             <>
-              {!warm && (
-              <button
-                onClick={goHome}
-                aria-label={tr('Back to the home screen', 'Zum Startbildschirm zurückkehren')}
-                className="rm-fixed fixed bottom-2 left-1/2 -translate-x-1/2 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
-              >
-                🏠
-              </button>
-              )}
-              <button
-                onClick={() => { playSFX('click'); setIsChatOpen((v) => !v); }}
-                aria-label={isChatOpen ? tr('Close companion', 'Begleiter schließen') : tr('Open companion', 'Begleiter öffnen')}
-                className="rm-chat-button rm-fixed fixed bottom-20 left-4 md:left-10 z-50 w-14 h-14 bg-retro-ink text-white rounded-full retro-button flex items-center justify-center text-2xl shadow-lg"
-              >
-                {warm ? <Icon name={isChatOpen ? 'close' : 'chat'} /> : isChatOpen ? '✕' : '💬'}
-              </button>
               <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} playSFX={playSFX} disabled={aiOff} />
             </>
           )}

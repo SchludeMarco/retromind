@@ -41,11 +41,13 @@ interface Props {
   state: ArcadeState;
   set: <K extends keyof ArcadeState>(key: K, value: ArcadeState[K]) => void;
   onClose: () => void;
+  /** The hall's controls (components/ControlHandle GamingControls), at the top. */
+  controls?: React.ReactNode;
 }
 
 // Settings: the optional Google account (which brings score, collection and
 // preferences to every device) plus sound and screen colour.
-export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose }) => {
+export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose, controls }) => {
   const muted = useMuted();
   const musicVolume = useMusicVolume();
   const youtube = useConsent('youtube') === true;
@@ -71,9 +73,9 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
   const install = useInstall();
   const [installHelp, setInstallHelp] = useState(false);
   return (
-    <div className="overlay" onClick={onClose}>
+    <div className="overlay side-overlay" onClick={onClose}>
       <div
-        className="dialog settings-dialog"
+        className="dialog settings-dialog side-panel"
         role="dialog"
         aria-modal="true"
         aria-label={tr('Settings', 'Einstellungen')}
@@ -83,6 +85,8 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
         <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
+
+        {controls}
 
         <section>
           <h3 className="pixel-font">{tr('YOUR ACCOUNT', 'DEIN ACCOUNT')}</h3>

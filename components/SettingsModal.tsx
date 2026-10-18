@@ -23,6 +23,7 @@ import { GoogleUser, SpotifyUser } from '../types';
 import { GoogleAuthStatus } from '../hooks/useGoogleAuth';
 import { SpotifyAuthStatus } from '../hooks/useSpotifyAuth';
 import { warmUpGoogle } from '../lib/googleAuth';
+import { useSyncStatus } from '../hooks/useSyncStatus';
 
 const SPOTIFY_PRODUCT_LABEL: Record<string, string> = {
   premium: 'Spotify Premium',
@@ -65,6 +66,8 @@ export const SettingsModal: React.FC<{
   onSpotifySignOut: () => void;
   /** Lifts the dialog above the welcome screen. */
   aboveSplash?: boolean;
+  /** The app's controls (components/ControlHandle ControlCenter), at the top. */
+  controls?: React.ReactNode;
   onDismiss: () => void;
   onCloseClick: () => void;
 }> = ({
@@ -76,6 +79,7 @@ export const SettingsModal: React.FC<{
   googleStatus, googleUser, onGoogleSignIn, onGoogleSignOut,
   spotifyStatus, spotifyUser, onSpotifySignIn, onSpotifySignOut,
   aboveSplash = false,
+  controls,
   onDismiss, onCloseClick,
 }) => {
   const info = DECADES_DB[currentDecade];
@@ -84,6 +88,8 @@ export const SettingsModal: React.FC<{
   const xmasSounds = useXmasSounds();
   const theme = useTheme();
   const onHeadingTap = useSecretAdminTaps();
+  // Was on the Google pill at the bottom left until 2026-10-18.
+  const sync = useSyncStatus();
   const initials = useInitials();
   const [tag, setTag] = useState(initials || 'AAA');
   // The tag can also arrive from the Google account while this is open.
@@ -92,12 +98,14 @@ export const SettingsModal: React.FC<{
   }, [initials]);
 
   return (
-    <Modal onClose={onDismiss} label={tr('App settings', 'App-Einstellungen')} above={aboveSplash}>
+    <Modal onClose={onDismiss} label={tr('Controls and settings', 'Steuerung und Einstellungen')} above={aboveSplash} side>
       <button onClick={onCloseClick} aria-label={tr('Close', 'Schließen')} className="absolute top-3 right-3 text-2xl leading-none">
         ✕
       </button>
-      <span className="text-xs uppercase font-bold text-retro-amber-dark block">{tr('General', 'Allgemein')}</span>
+      <span className="text-xs uppercase font-bold text-retro-amber-dark block">{tr('Everything in one place', 'Alles an einem Ort')}</span>
       <h3 className="text-3xl font-bold mb-5" onClick={onHeadingTap}>{tr('Settings', 'Einstellungen')}</h3>
+
+      {controls}
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
 
@@ -165,6 +173,15 @@ export const SettingsModal: React.FC<{
                       `☁️ Mit Google angemeldet als ${googleUser.name}. Deine Reise wird zusätzlich in deinem eigenen Google Drive gesichert.`
                     )}
                   </p>
+                  {(sync === 'loading' || sync === 'saving' || sync === 'saved' || sync === 'error') && (
+                    <p role="status" className="text-xs font-bold mb-2">
+                      {sync === 'saved'
+                        ? tr('✓ Backed up', '✓ Gesichert')
+                        : sync === 'error'
+                        ? tr('⚠ The backup isn’t working right now; everything stays on this device.', '⚠ Die Sicherung klappt gerade nicht; alles bleibt auf diesem Gerät.')
+                        : tr('Backing up …', 'Sichere …')}
+                    </p>
+                  )}
                   <button onClick={onGoogleSignOut} className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm">
                     {tr('Sign out of Google', 'Von Google abmelden')}
                   </button>
@@ -322,8 +339,8 @@ export const SettingsModal: React.FC<{
         </button>
         <p className="text-[10px] text-retro-tan mt-2">
           {tr(
-            'Applies to all of RetroMind, including RetroMind – Gaming. The speaker button in the top right toggles it too.',
-            'Gilt für ganz RetroMind, auch für RetroMind – Gaming. Der Lautsprecher-Knopf oben rechts schaltet ebenfalls um.'
+            'Applies to all of RetroMind, including RetroMind – Gaming. “Quick access” at the top of this panel toggles it too.',
+            'Gilt für ganz RetroMind, auch für RetroMind – Gaming. Der Schnellzugriff oben in diesem Fenster schaltet ebenfalls um.'
           )}
         </p>
       </div>

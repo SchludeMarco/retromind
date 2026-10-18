@@ -540,7 +540,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(4rem + 4px + env(safe-area-inset-bottom));
+  bottom: env(safe-area-inset-bottom);
   z-index: 59;
   box-shadow: 0 -2px 8px rgba(42, 26, 16, 0.25);
 }
@@ -708,7 +708,7 @@
 }
 /* Retro Warm: "back to top" moves up above the pinned ticker. */
 html[data-ticker] .rm-back-to-top {
-  bottom: calc(8.25rem + env(safe-area-inset-bottom)) !important;
+  bottom: calc(4.25rem + env(safe-area-inset-bottom)) !important;
 }
 @keyframes rm-ticker-bump {
   0% { transform: scale(1); }
@@ -2893,4 +2893,122 @@ html[data-theme="nachtschicht"] .rm-ambient span {
 @media print {
   .rm-ambient, .rm-stop-sheen, .rm-ripple, .rm-burst { display: none !important; }
   .rm-rv { opacity: 1 !important; }
+}
+
+/* The handle at the right edge, halfway down (components/ControlHandle,
+   Marco 2026-10-18): a small tab that opens every control and setting as a
+   panel sliding in from the right. Above the welcome screen (z 900). */
+.rm-control-handle {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  width: 2.5rem;
+  height: 4.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-retro-ink);
+  border-right: 0;
+  border-radius: 0.9rem 0 0 0.9rem;
+  background: var(--color-retro-cream);
+  color: var(--color-retro-ink);
+  box-shadow: -3px 3px 0 rgba(44, 24, 16, 0.85);
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+.rm-control-handle:hover,
+.rm-control-handle:focus-visible {
+  width: 2.9rem;
+  background: var(--color-retro-highlight);
+}
+.rm-control-handle-dot {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.35rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 9999px;
+  background: #dc2626;
+  border: 2px solid var(--color-retro-cream);
+}
+html[data-theme="retro-warm"] .rm-control-handle {
+  border: 0;
+  background: #b45309;
+  color: #fffdf7;
+  box-shadow: -2px 4px 14px rgba(91, 70, 54, 0.35);
+}
+html[data-theme="retro-warm"] .rm-control-handle:hover,
+html[data-theme="retro-warm"] .rm-control-handle:focus-visible {
+  background: #92400e;
+}
+html[data-theme="nachtschicht"] .rm-control-handle {
+  background: #1e2235;
+  color: #fbbf24;
+  border-color: #fbbf24;
+  box-shadow: -2px 0 12px rgba(251, 191, 36, 0.35);
+}
+@media print {
+  .rm-control-handle {
+    display: none;
+  }
+}
+
+/* The panel behind the handle: full height at the right edge. */
+.rm-side-panel {
+  border-radius: 1rem 0 0 1rem !important;
+  animation: rm-side-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+}
+@keyframes rm-side-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-side-panel {
+    animation: none;
+  }
+}
+
+/* The stops of the journey at the top of the panel. */
+.rm-cc-stop {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: left;
+}
+.rm-cc-stop:hover,
+.rm-cc-stop:focus-visible {
+  border-color: currentColor;
+}
+.rm-cc-stop.is-now {
+  background: var(--color-retro-highlight);
+  border-color: var(--color-retro-amber-dark);
+  color: var(--color-retro-ink);
+}
+.rm-cc-stop-dot {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  border: 2px solid currentColor;
+}
+.rm-cc-stop.is-done .rm-cc-stop-dot,
+.rm-cc-stop.is-now .rm-cc-stop-dot {
+  background: var(--color-retro-amber-dark);
+  border-color: var(--color-retro-amber-dark);
+  color: #fff;
+}
+.rm-cc-music .rm-music-mini {
+  max-width: 100%;
 }

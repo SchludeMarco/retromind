@@ -143,3 +143,16 @@ gebaut oder ausgeliefert.
   und CSS (entfernt am 2026-10-17, PR #232: das Kürzel gleicht sich jetzt
   wie alle Daten über `lib/sync.ts` ab, mit der einen gemeinsamen Frage
   beim ersten Abgleich).
+- Steuerung hinter dem Griff am rechten Rand (entfernt am 2026-10-18): die
+  Konten-Pillen mit Feedback unten links (`AccountControls-steuerung-griff.tsx.txt`,
+  `GoogleAuthControl-steuerung-griff.tsx.txt`,
+  `SpotifyAuthControl-steuerung-griff.tsx.txt`), der Lautsprecher-Knopf oben
+  rechts (`MuteToggle-steuerung-griff.tsx.txt`), die Kopfleiste mit Knöpfen
+  und die untere Navigation von Retro Warm
+  (`WarmChrome-leisten-steuerung-griff.tsx.txt`), die mitlaufende Pille der
+  Reiseleiste (`JourneyBar-mini-leiste-steuerung-griff.tsx.txt`) sowie in der
+  Gaming-Halle die Knöpfe oben (Club verlassen, Feedback, Ton, Zahnrad,
+  Zurück zu RetroMind), die Leiste unten und der Guru-Knopf
+  (`gaming-kopfknoepfe-dock-guru-steuerung-griff.tsx.txt`). Alles liegt jetzt
+  im Fenster hinter dem Griff (`components/ControlHandle.tsx`,
+  `gaming/components/ControlHandle.tsx`).
