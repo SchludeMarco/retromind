@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Nichts mehr unter dem Griff, nichts mehr über dem Rand': {
+    title: 'Nothing under the handle, nothing past the edge',
+    text: 'On phones the handle at the right edge covered text, and in “Today in your youth” long words ran past the edge of the card. Now the page leaves room for the handle on the right (Time Travel and the arcade), long words wrap, and the welcome card stays fully on screen on narrow phones too.',
+  },
   'Titelmusik beim Öffnen eines Spiels': {
     title: 'Title music when you open a game',
     text: 'When you open a game page in the Gaming edition, the first 20 seconds of its soundtrack play first, usually the title music. “SKIP ►” jumps straight to the gameplay video; after the title music it waits, paused, at the top until you start it. The music comes through the YouTube player, so only once you have allowed YouTube, and it stays silent while sound is off.',

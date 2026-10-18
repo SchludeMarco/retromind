@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Nichts mehr unter dem Griff, nichts mehr über dem Rand** (2026-10-18,
+  PR #PRNUM): Auf dem Handy lag der Griff am rechten Rand über dem Text, und
+  bei „Heute in deiner Jugend“ liefen lange Wörter wie
+  „Schachweltmeisterschaft“ über den Rand der Karte hinaus. Jetzt lässt die
+  Seite rechts Platz für den Griff (Zeitreise und Spielhalle), lange Wörter
+  werden umbrochen, und auch die Willkommens-Karte bleibt auf schmalen
+  Handys ganz im Bild.
 - **Titelmusik beim Öffnen eines Spiels** (2026-10-18, PR #246): Öffnest du
   in der Gaming-Edition eine Spieleseite, laufen zuerst 20 Sekunden vom
   Anfang des Soundtracks, meist die Titelmusik. Mit „WEITER ►“ springst du

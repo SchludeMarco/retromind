@@ -3205,6 +3205,14 @@ html[data-theme="nachtschicht"] .rm-control-handle {
   }
 }
 
+/* Keeps the page clear of the handle wherever the page reaches the right
+   edge (phones, tablets, narrow windows), so no text sits under it. */
+@media (max-width: 1240px) {
+  .rm-app {
+    padding-right: 3rem;
+  }
+}
+
 /* The panel behind the handle: full height at the right edge. */
 .rm-side-panel {
   border-radius: 1rem 0 0 1rem !important;

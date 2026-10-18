@@ -73,13 +73,13 @@ const ClassicIntro: React.FC<IntroProps> = (props) => {
       onOpenStage={onOpenStage}
     />
     <DailyCorner {...props} warm={false} />
-    <div className="retro-card p-8 md:p-12 max-w-2xl bg-retro-cream mb-6">
+    <div className="retro-card w-full p-5 sm:p-8 md:p-12 max-w-2xl bg-retro-cream mb-6 break-words">
       <h2 className="text-3xl mb-6">{tr('Welcome, time traveler', 'Willkommen, Zeitreisende:r')}</h2>
 
       {!resumeTarget && (
         <button
           onClick={onStart}
-          className="retro-button bg-retro-amber text-white px-12 py-5 text-2xl font-bold hover:bg-retro-amber-dark w-full md:w-auto mb-8"
+          className="retro-button bg-retro-amber text-white px-6 sm:px-12 py-5 text-2xl font-bold hover:bg-retro-amber-dark w-full md:w-auto mb-8"
         >
           {tr('Start the time travel', 'Zeitreise starten')}
         </button>
