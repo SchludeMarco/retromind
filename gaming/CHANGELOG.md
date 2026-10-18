@@ -8,6 +8,15 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Mit Spotify Premium wieder ganze Songs** (2026-10-18, PR #252): Findet
+  RetroMind deine Spotify-App auf dem Handy nicht, liefen bisher still nur
+  Ausschnitte, und der Hinweis dazu steckte tief im Musik-Fenster. Jetzt
+  steht oben in der Mitte „Nur Ausschnitte: für ganze Songs Spotify-App
+  öffnen“. Ein Tipp darauf öffnet die App, und sobald du zurück bist, findet
+  RetroMind sie von selbst und spielt ganze Songs, in der Zeitreise und in
+  der Gaming-Halle. Auch ohne Tipp schaut RetroMind alle 15 Sekunden nach.
+  Fehlt nur eine Erlaubnis, führt der Hinweis zur neuen Spotify-Anmeldung.
+
 - **Was gerade läuft, unten in der Mitte** (2026-10-18, PR #251): Zwischen
   „Nach oben“ und dem „?“ der KI-Hilfe steht jetzt, welcher Song gerade
   läuft, mit Zurück, Play/Pause und Weiter, auf derselben Höhe wie die beiden

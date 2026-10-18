@@ -5,7 +5,7 @@ import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
 import { setMusicVolume, useMusicVolume } from '../lib/musicVolume';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import { tr } from '../lib/i18n';
-import { retryConnect, useConnectState } from '../lib/spotifyConnect';
+import { openSpotifyApp, retryConnect, useConnectState } from '../lib/spotifyConnect';
 import { beginSpotifyLogin } from '../lib/spotifyAuth';
 import './musicDock.css';
 
@@ -265,14 +265,62 @@ const ConnectNote: React.FC = () => {
     <div className="music-dock-volume-note">
       <p>
         {tr(
-          'For full songs, open the Spotify app on your phone for a moment, come back and tap “Try again”. Until then you hear short previews.',
-          'Für ganze Songs öffne kurz die Spotify-App auf deinem Handy, komm zurück und tippe auf „Nochmal versuchen“. Bis dahin hörst du kurze Ausschnitte.'
+          'For full songs, open the Spotify app on your phone for a moment and come back: RetroMind then finds it on its own. Until then you hear short previews.',
+          'Für ganze Songs öffne kurz die Spotify-App auf deinem Handy und komm zurück: RetroMind findet sie dann von selbst. Bis dahin hörst du kurze Ausschnitte.'
         )}
       </p>
+      <button type="button" className="music-dock-mute" onClick={openSpotifyApp}>
+        {tr('Open Spotify app', 'Spotify-App öffnen')}
+      </button>
       <button type="button" className="music-dock-mute" onClick={retryConnect}>
         {tr('Try again', 'Nochmal versuchen')}
       </button>
     </div>
+  );
+};
+
+// Only previews play although the visitor has Premium (no Spotify app found,
+// or a login from before the needed permission): said right on the screen,
+// not only inside the music panel behind the handle (Marco, 2026-10-18:
+// "Dass immer volle Titel gespielt werden sollen ist irgendwie vergessen
+// worden"). One tap opens the Spotify app (or the login); back in RetroMind
+// the app is found on its own (lib/spotifyConnect) and full songs play.
+const HINT_KEY = 'rm-full-songs-hint-closed';
+const FullSongsHint: React.FC = () => {
+  const { state } = useConnectState();
+  // Closed for this state ("no-device" or "login") until the tab is closed.
+  const [closedFor, setClosedFor] = useState<string | null>(() => {
+    try {
+      return sessionStorage.getItem(HINT_KEY);
+    } catch {
+      return null;
+    }
+  });
+  if ((state !== 'no-device' && state !== 'login') || closedFor === state) return null;
+  const close = () => {
+    setClosedFor(state);
+    try {
+      sessionStorage.setItem(HINT_KEY, state);
+    } catch {
+      /* private mode */
+    }
+  };
+  return createPortal(
+    <div className="music-full-hint no-print" role="status">
+      <button
+        type="button"
+        className="music-full-hint-go"
+        onClick={() => (state === 'login' ? beginSpotifyLogin().catch(() => undefined) : openSpotifyApp())}
+      >
+        {state === 'login'
+          ? tr('♪ Only previews: sign in to Spotify again for full songs', '♪ Nur Ausschnitte: für ganze Songs neu bei Spotify anmelden')
+          : tr('♪ Only previews: open your Spotify app for full songs', '♪ Nur Ausschnitte: für ganze Songs Spotify-App öffnen')}
+      </button>
+      <button type="button" className="music-full-hint-x" onClick={close} aria-label={tr('Close', 'Schließen')}>
+        ×
+      </button>
+    </div>,
+    document.body
   );
 };
 
@@ -332,6 +380,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
 
   return (
     <>
+      {!open && <FullSongsHint />}
       {ticker &&
         playing &&
         shownTitle &&
