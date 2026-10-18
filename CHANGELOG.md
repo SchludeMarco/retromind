@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Donner zu den Blitzen** (2026-10-18, PR #NNN): Die Blitze auf dem
+- **Donner zu den Blitzen** (2026-10-18, PR #243): Die Blitze auf dem
   Startbildschirm der Zeitreise sind jetzt auch zu hören. Zu jedem Blitz
   kracht es, dann rollt der Donner ein paar Sekunden nach. Der Blitz, der in
   die Uhr einschlägt, ist laut und kracht sofort; die beiden fernen Blitze
