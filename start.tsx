@@ -22,6 +22,8 @@ import '@fontsource/plus-jakarta-sans/latin-700.css';
 import './index.css';
 // Applies the saved design before the first render, so it doesn't flash.
 import './lib/theme';
+// And the color tint from blue to orange (settings).
+import './lib/colorTint';
 import { countAppStart } from './lib/usage';
 import { tr } from './lib/i18n';
 

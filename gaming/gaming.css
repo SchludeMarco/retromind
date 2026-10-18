@@ -4355,3 +4355,37 @@ button.pcard {
   background: #e53935;
   color: #fff;
 }
+
+/* Color slider from blue to orange (lib/colorTint.ts): the track shows the colors. */
+.rm-tint-slider,
+.settings-tint input {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  cursor: pointer;
+}
+.rm-tint-slider::-webkit-slider-thumb,
+.settings-tint input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #222;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.rm-tint-slider::-moz-range-thumb,
+.settings-tint input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #222;
+}
+@media print {
+  #rm-color-tint {
+    display: none;
+  }
+}

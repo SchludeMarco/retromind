@@ -3,6 +3,7 @@ import { Cloud } from '../lib/useCloudSync';
 import { ArcadeState, Palette } from '../lib/useArcadeState';
 import { toggleMuted, useMuted } from '../../lib/mute';
 import { setMusicVolume, useMusicVolume } from '../../lib/musicVolume';
+import { TINT_TRACK, setColorTint, useColorTint } from '../../lib/colorTint';
 import { TRACKS, trackById } from '../lib/tracks';
 import { isOwned } from '../lib/quests';
 import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../../lib/privacy';
@@ -50,6 +51,7 @@ interface Props {
 export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onClose, controls }) => {
   const muted = useMuted();
   const musicVolume = useMusicVolume();
+  const tint = Math.round(useColorTint() * 100);
   const youtube = useConsent('youtube') === true;
   const onHeadingTap = useSecretAdminTaps();
   const spotify = useConsent('spotify') === true;
@@ -290,6 +292,29 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
               </button>
             ))}
           </div>
+          {/* Blue to orange over the whole screen, the same slider as in the Zeitreise (lib/colorTint.ts). */}
+          <label className="settings-volume settings-tint">
+            <span className="pixel-font">{tr('BLUE', 'BLAU')}</span>
+            <input
+              type="range"
+              min={-100}
+              max={100}
+              step={5}
+              value={tint}
+              onChange={(e) => setColorTint(Number(e.target.value) / 100)}
+              aria-label={tr('Screen color from blue to orange', 'Bildschirmfarbe von Blau bis Orange')}
+              style={{ background: TINT_TRACK }}
+              data-nav
+            />
+            <span className="pixel-font">ORANGE</span>
+          </label>
+          {tint !== 0 && (
+            <div className="settings-row">
+              <button className="px-btn" onClick={() => setColorTint(0)} data-nav>
+                {tr('COLOR NORMAL', 'FARBE NORMAL')}
+              </button>
+            </div>
+          )}
           <p className="dim">{tr('More designs and tracks are waiting at the prize counter under “Quests”.', 'Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.')}</p>
         </section>
 

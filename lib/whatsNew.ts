@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Bildschirmfarbe von Blau bis Orange': {
+    title: 'Screen color from blue to orange',
+    text: 'The settings (handle at the right edge) now have a new “Screen color” slider below the text size. Slide it right and everything turns warmer and more orange, like the night light on a phone; slide it left and it turns cooler and bluer. In the middle the app looks as designed. The slider works in every design of Time Travel and in the arcade (there under “Screen”), and your choice carries over to the other app and to your other devices. “Back to normal” resets the color.',
+  },
   'Die ganze Steuerung hinter einem Griff am rechten Rand': {
     title: 'All the controls behind one handle at the right edge',
     text: 'In Time Travel and in the Gaming edition, a small handle with three sliders now sits at the right edge of the screen, halfway down. One tap slides in a panel from the right with everything: in Time Travel the seven stops of the journey, the music, sound on/off, the companion and feedback; in the arcade the sections (Catalog to Quests), the music, sound, the Guru, feedback and “Leave the club”; below that, all the settings. In return, the many buttons over the page are gone: the gear, the speaker, the music in the top left, the accounts in the bottom left, the home and companion buttons, the Retro Warm bottom bar, the journey bar’s floating pill, and in the arcade the buttons at the top and the bar at the bottom. From the panel you can now also reach the arcade from every stop of the journey.',

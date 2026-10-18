@@ -273,6 +273,10 @@ zeigen dürfen.
   Konsolen-Plastik, weiße Modul-Karten, Vorlage in
   [`docs/stitch/gaming/DESIGN.md`](../docs/stitch/gaming/DESIGN.md)), dazu
   „Handheld“ und „Bernstein“ und die am Tresen gekauften Designs.
+- **Bildschirmfarbe** – unter „Bildschirm“ ein Regler von Blau bis Orange,
+  der die ganze Halle kühler oder wärmer färbt; derselbe Regler wie in der
+  Zeitreise, die Einstellung gilt in beiden Apps
+  ([`lib/colorTint.ts`](../lib/colorTint.ts)).
 - **Musik und Ton** – Hallenmusik (Spotify-Metal oder Chiptune-Stück),
   Musik-Lautstärke (Start bei der Hälfte), Soundeffekte, gemeinsamer
   Stummschalter.

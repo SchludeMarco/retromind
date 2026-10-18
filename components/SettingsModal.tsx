@@ -5,6 +5,7 @@ import { setInitials, useInitials } from '../lib/initials';
 import { Modal } from './Modal';
 import { FavoriteBands } from './FavoriteBands';
 import { FontSizeControl } from './FontSizeControl';
+import { ColorTintControl } from './ColorTintControl';
 import { DECADES_DB } from '../constants';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { THEMES, setTheme, useTheme } from '../lib/theme';
@@ -108,6 +109,7 @@ export const SettingsModal: React.FC<{
       {controls}
 
       <FontSizeControl scale={fontScale} onChange={onFontScaleChange} />
+      <ColorTintControl />
 
       <div className="mt-6 pt-5 border-t border-retro-ink/20">
         <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Your details', 'Deine Angaben')}</span>
