@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Blitze spiegeln sich in der Uhr** (2026-10-18, PR #NNN): Bei jedem Blitz
+- **Blitze spiegeln sich in der Uhr** (2026-10-18, PR #244): Bei jedem Blitz
   auf dem Startbildschirm der Zeitreise leuchtet die Kaminuhr kurz auf. Ein
   kalter Schein liegt über dem Gehäuse, der Messingrand glänzt auf der Seite,
   von der der Blitz kommt (oben, links oder rechts), und ein heller
