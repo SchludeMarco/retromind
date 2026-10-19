@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit** (2026-10-19, PR #NNN):
+- **Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit** (2026-10-19, PR #255):
   Nach „Ab in die Vergangenheit“ ruckelte die Zeitreise stark, weil der
   Wirbel und die Lichtringe sehr viel Grafikspeicher brauchten. Sie werden
   jetzt sparsam gezeichnet und sehen gleich aus, der Speicherbedarf beim
