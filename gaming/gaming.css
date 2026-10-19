@@ -4461,3 +4461,14 @@ button.pcard {
     display: none;
   }
 }
+
+/* Favorite songs heart next to the hall music (components/FavoriteSongs). */
+.px-btn.rm-fav-heart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.px-btn.rm-fav-heart.is-saved {
+  color: #ff4d79;
+}

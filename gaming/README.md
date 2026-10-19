@@ -106,6 +106,12 @@ zeigen dürfen.
   Thema“, also der Soundtrack des offenen Spiels). Oben links steht klein,
   welcher Song spielt. Die Musik pausiert bei
   YouTube-Videos und wenn die App im Hintergrund liegt.
+- **Lieblingssongs merken** – ein Herz ♡ neben dem Song (unten, hinter dem
+  Griff und in der Musiksteuerung) merkt einen geilen Song, auf Wunsch mit
+  eigenem Kommentar. „Meine Lieblingssongs“ in der Musiksteuerung listet alle
+  gemerkten Songs, spielt sie noch einmal ab und gleicht sich mit der
+  Zeitreise und allen Geräten ab
+  ([`components/FavoriteSongs.tsx`](../components/FavoriteSongs.tsx)).
 - **Atmosphäre** – Marcos Bild vom Innenraum der Spielhalle hinter dem
   Katalog (`public/gaming/arcade-innen.webp`), blinkende Automatenlichter,
   CRT-Effekte, ein kleiner halb durchsichtiger Mampf-Roboter mit einem Käfer

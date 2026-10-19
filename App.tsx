@@ -649,6 +649,7 @@ const App: React.FC = () => {
         <MusicMini
           variant={variant}
           title={spotify.songTitle}
+          songUri={spotify.songUri}
           source={decadeMusicName}
           playing={spotify.isPlaying}
           ready={spotify.isReady}
@@ -665,6 +666,7 @@ const App: React.FC = () => {
       ticker={false}
       hideKnob
       title={spotify.songTitle}
+      songUri={spotify.songUri}
       source={decadeMusicName}
       playing={spotify.isPlaying}
       ready={spotify.isReady}

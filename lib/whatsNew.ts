@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Lieblingssongs merken': {
+    title: 'Save your favorite songs',
+    text: 'When a great song comes on, tap the heart ♡ next to the title to save it, in the time travel and in the arcade. If you like, add a comment, like why it’s so good or where you first heard it. In the music controls, “My favorite songs” lists every saved song with its comment and date; from there you can play it again, change the comment or remove it. The list is the same in both apps and on all your devices.',
+  },
   'Damals & heute: Begriffe von früher und von heute': {
     title: 'Then & Now: words from back then and from today',
     text: 'Explore has a new category, “Then & Now.” At a glance it shows which words and things we had back then and what they are called today, like rotary phone and smartphone, party line and group chat, or layaway and buy now, pay later. Every pair comes with a short note and two sentences: how you said it then and how you say it now. It is sorted by decade (your own first) and by topic: gadgets, slang, everyday life, money, TV & music and games. A search finds words across all decades, “Cover up today” turns it into a guessing game, and every word can go into your memory book.',

@@ -33,6 +33,7 @@ import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
 import { MusicDock, openMusicDock } from '../components/MusicDock';
+import { FavoriteHeart } from '../components/FavoriteSongs';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, PRIZES } from './lib/quests';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
@@ -1110,6 +1111,15 @@ export const GamingApp: React.FC = () => {
           <button className="gm-bottom-music-song" onClick={() => { chip.play('blip'); openMusicDock(); }} aria-label={tr('Open music controls', 'Musiksteuerung öffnen')}>
             {spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
           </button>
+          {!spotify.fallback && (
+            <FavoriteHeart
+              className="px-btn"
+              title={spotify.songTitle}
+              uri={spotify.songUri}
+              image={null}
+              where={tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+            />
+          )}
         </div>
       )}
 
@@ -1181,6 +1191,16 @@ export const GamingApp: React.FC = () => {
                           ►►
                         </button>
                         <span className="gm-controls-song">{spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}</span>
+                        {/* A great song? Save it, a comment optional (Marco, 2026-10-19). */}
+                        {!spotify.fallback && (
+                          <FavoriteHeart
+                            className="px-btn"
+                            title={spotify.songTitle}
+                            uri={spotify.songUri}
+                            image={null}
+                            where={tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+                          />
+                        )}
                       </div>
                       <button
                         className="px-btn"
@@ -1190,7 +1210,7 @@ export const GamingApp: React.FC = () => {
                         }}
                         data-nav
                       >
-                        {tr('♫ MORE MUSIC: VOLUME, SEARCH', '♫ MEHR MUSIK: LAUTSTÄRKE, SUCHE')}
+                        {tr('♫ MORE MUSIC: VOLUME, SEARCH, FAVORITES', '♫ MEHR MUSIK: LAUTSTÄRKE, SUCHE, LIEBLINGSSONGS')}
                       </button>
                     </>
                   ) : undefined
@@ -1245,6 +1265,7 @@ export const GamingApp: React.FC = () => {
               icon="bolt"
               ownMusic
               title={spotify.songTitle}
+              songUri={spotify.songUri}
               source={tr('Arcade music · \'80s heavy metal', 'Hallenmusik · 80er Heavy Metal')}
               playing={spotify.playing}
               ready={spotify.ready || spotify.fallback}

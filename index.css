@@ -2057,6 +2057,10 @@ html[data-theme="nachtschicht"] .splash-start:active {
   background: var(--color-retro-highlight);
   outline: none;
 }
+/* A saved favorite song: the heart turns red (components/FavoriteSongs). */
+.rm-music-mini > .rm-fav-heart.is-saved {
+  color: #d6335a;
+}
 .rm-music-mini > button:disabled {
   opacity: 0.35;
   cursor: default;

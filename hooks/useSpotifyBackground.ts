@@ -356,6 +356,8 @@ export function useSpotifyBackground(decade: string, enabled = true, birthYear: 
     playPrevious,
     /** "Title · Artist" of the song playing, when known. */
     songTitle: special ? `${special.name} · ${special.sub}` : trackName(song),
+    /** spotify:track:… of that song, when one single song plays. */
+    songUri: special ? (special.kind === 'track' ? special.uri : null) : song ? `spotify:track:${song}` : null,
     /** "Hits von 1983–1989" while the songs come from the person's own years. */
     youthLabel: christmas ? tr('Christmas songs', 'Weihnachtslieder') : youthLabel,
     /** A single random song plays, so next/back can switch songs. */

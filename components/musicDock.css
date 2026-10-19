@@ -523,3 +523,191 @@
   font-size: 12px;
   color: #8fa9d8;
 }
+
+/* Favorite songs (components/FavoriteSongs, Marco 2026-10-19): a heart next
+   to the song, a small card for an optional comment, the list in the panel. */
+.music-dock-title-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.music-dock-title-row .music-dock-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rm-fav-heart {
+  cursor: pointer;
+}
+.rm-fav-heart:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.rm-fav-heart.is-saved {
+  color: #e8436a;
+}
+.music-dock-heart {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #4d6390;
+  border-radius: 9999px;
+  color: #e4ecfb;
+  background: rgb(255 255 255 / 0.06);
+}
+.music-dock-heart.is-saved {
+  color: #ff6b8b;
+  border-color: #ff6b8b;
+}
+.music-dock-favs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+}
+.music-dock-favs svg {
+  color: #ff6b8b;
+}
+.rm-fav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+.rm-fav-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.05);
+}
+.rm-fav-list img,
+.rm-fav-list-blank {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff6b8b;
+  background: rgb(255 255 255 / 0.08);
+}
+.rm-fav-list-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rm-fav-list-text strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.rm-fav-list-text em {
+  font-size: 13px;
+  color: #ffd9e1;
+  overflow-wrap: anywhere;
+}
+.rm-fav-list-text small {
+  font-size: 12px;
+  color: #8fa9d8;
+}
+.rm-fav-list li > button {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #4d6390;
+  border-radius: 9999px;
+  color: #e4ecfb;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.rm-fav-list li > button:hover,
+.rm-fav-list li > button:focus-visible {
+  background: rgb(255 255 255 / 0.1);
+  outline: none;
+}
+
+.rm-fav-card-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  background: rgb(5 8 16 / 0.35);
+  animation: music-dock-fade 0.2s ease-out;
+}
+.rm-fav-card {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 2px solid #5b6f94;
+  border-radius: 16px;
+  color: #e4ecfb;
+  background: linear-gradient(180deg, #16233f, #0b1324);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+}
+.rm-fav-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff8fa6;
+}
+.rm-fav-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.rm-fav-card textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #4d6390;
+  border-radius: 10px;
+  color: #f2f6ff;
+  background: rgb(255 255 255 / 0.06);
+  font: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+.rm-fav-card textarea::placeholder {
+  color: #8fa9d8;
+}
+.rm-fav-card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rm-fav-card-buttons button {
+  min-height: 42px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rm-fav-card-remove {
+  border: 1px solid #4d6390;
+  color: #c9d6f0;
+  background: transparent;
+}
+.rm-fav-card-done {
+  border: none;
+  color: #1a1203;
+  background: #ffd34d;
+}

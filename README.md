@@ -390,6 +390,17 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`lib/musicVolume.ts`](lib/musicVolume.ts)). Spotifys eingebetteter Player
   lässt sich von keiner Webseite leiser stellen; dort sagt der Player, dass
   die Lautstärketasten des Geräts helfen.
+- **Lieblingssongs merken** ([`lib/favoriteSongs.ts`](lib/favoriteSongs.ts),
+  [`components/FavoriteSongs.tsx`](components/FavoriteSongs.tsx)) – läuft ein
+  geiler Song, merkt ihn ein Tipp aufs Herz ♡ neben dem Titel: im kleinen
+  Musik-Player der Zeitreise und in der Musiksteuerung beider Apps. Danach
+  geht eine kleine Karte auf, in die man freiwillig einen Kommentar schreibt
+  (warum er so gut ist, wo man ihn zuerst gehört hat); „Entfernen“ nimmt ihn
+  wieder raus. In der Musiksteuerung listet „Meine Lieblingssongs“ alle
+  gemerkten Songs mit Kommentar, woher sie kamen (etwa „Musik der 80er“ oder
+  Hallenmusik) und Datum; ▶ spielt einen davon noch einmal, ✎ ändert den
+  Kommentar. Die Liste gleicht sich wie alle Daten zwischen Zeitreise,
+  Gaming-Halle und Geräten ab.
 - **Bildschirmfarbe von Blau bis Orange** – ein Regler in den Einstellungen
   unter der Schriftgröße färbt die ganze App wärmer (Richtung Orange, wie das
   Nachtlicht am Handy) oder kühler (Richtung Blau), in allen Designs und in
