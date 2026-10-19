@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-App wecken statt Ausschnitte** (2026-10-19, PR #257): RetroMind
+  merkt sich dein Handy, sobald es die Spotify-App einmal gefunden hat. Ist
+  die App später zu, bittet RetroMind Spotify, die Musik an dieses Handy zu
+  übergeben, bevor es auf Ausschnitte ausweicht. Klappt das, laufen ganze
+  Songs, ohne dass du die App öffnest.
 - **Android: Spotify-App muss nicht mehr offen sein** (2026-10-19, PR #256):
   Auf Android-Handys erklärt der Hinweis „Nur Ausschnitte“ jetzt, wie es
   ohne Öffnen der App geht: In der Spotify-App unter Einstellungen → Geräte

@@ -349,7 +349,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   oder kurz vorher offen gewesen sein), steht oben in der Mitte „Nur
   Ausschnitte: für ganze Songs Spotify-App öffnen“; ein Tipp öffnet die App,
   und zurück in RetroMind (oder spätestens nach 15 Sekunden) findet sie
-  RetroMind von selbst und spielt ganze Songs (auf Android steht dazu der
+  RetroMind von selbst und spielt ganze Songs (ein einmal gefundenes Handy
+  merkt sich RetroMind und bittet Spotify bei geschlossener App zuerst, die
+  Musik dorthin zu übergeben; auf Android steht dazu der
   Tipp, in der Spotify-App „Spotify Connect im Hintergrund“ einzuschalten,
   dann muss die App gar nicht offen sein; eine Webseite kann Spotify nicht
   unbemerkt im Hintergrund starten); Logins von vor dieser Funktion

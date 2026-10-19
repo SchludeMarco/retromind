@@ -140,12 +140,46 @@ async function pickDevice(source: TokenSource): Promise<Device | null> {
   const res = await call(source, 'GET', '/me/player/devices');
   if (!res || !res.ok) return null;
   const devices: Device[] = ((await res.json().catch(() => null))?.devices ?? []).filter((d: Device) => d.id && !d.is_restricted);
-  return (
+  const found =
     devices.find((d) => d.is_active) ??
     devices.find((d) => d.type === 'Smartphone') ??
     devices[0] ??
-    null
-  );
+    null;
+  if (found) rememberDevice(found);
+  return found ?? (await wakeRemembered(source));
+}
+
+// The phone's Spotify app, remembered from the last time it was found
+// (Marco, 2026-10-19: the app closed, only previews again). Spotify only
+// lists an app while it is open, but it may still accept playback handed
+// over to a device it knows and wake the app: try that before giving up.
+const DEVICE_KEY = 'rm-spotify-device';
+
+function rememberDevice(d: Device) {
+  if (d.type !== 'Smartphone' && d.type !== 'Tablet') return;
+  try {
+    localStorage.setItem(DEVICE_KEY, JSON.stringify({ id: d.id, name: d.name, type: d.type }));
+  } catch {
+    /* private mode */
+  }
+}
+
+async function wakeRemembered(source: TokenSource): Promise<Device | null> {
+  let saved: { id?: string; name?: string; type?: string } | null = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(DEVICE_KEY) || 'null');
+  } catch {
+    saved = null;
+  }
+  if (!saved?.id) return null;
+  const res = await call(source, 'PUT', '/me/player', { device_ids: [saved.id], play: false });
+  if (!res || !res.ok) return null;
+  // Only count it when the app really came up (it then lists itself).
+  await new Promise((r) => setTimeout(r, 1500));
+  const again = await call(source, 'GET', '/me/player/devices');
+  if (!again || !again.ok) return null;
+  const devices: Device[] = (await again.json().catch(() => null))?.devices ?? [];
+  return devices.find((d) => d.id === saved!.id && !d.is_restricted) ?? null;
 }
 
 // Spotify may play the same song under another id in the visitor's country.
