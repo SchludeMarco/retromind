@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Spielhalle im Schnellzugriff** (2026-10-19, PR #263): Hinter dem Griff am
+  rechten Rand der Zeitreise steht unter „Schnellzugriff“ jetzt auch
+  „Spielhalle“. Ein Tipp bringt dich von überall direkt in die
+  Gaming-Edition, deine Daten und deine Google-Anmeldung kommen mit.
+
 - **Plauderecke: Chat mit den anderen Gästen** (2026-10-19, PR #262): In
   beiden Apps öffnet hinter dem Griff am rechten Rand „Plauderecke“ einen
   Chat für alle eingeladenen Gäste: alle zusammen im Raum „Alle zusammen“

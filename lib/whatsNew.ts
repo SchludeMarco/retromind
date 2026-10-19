@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spielhalle im Schnellzugriff': {
+    title: 'Gaming zone in quick access',
+    text: 'Behind the handle at the right edge of the time travel, “Quick access” now also has “Gaming zone”. One tap takes you straight into the gaming edition from anywhere, and your data and Google sign-in come along.',
+  },
   'Plauderecke: Chat mit den anderen Gästen': {
     title: 'Chat corner: write with the other guests',
     text: 'In both apps, “Chat corner” behind the handle at the right edge opens a chat for all invited guests: everyone together in the “Everyone” room, or just the two of you. The first time, you pick your chat name and agree that your name and messages are stored for 30 days. A red dot on the handle shows new messages, you delete your own messages with ✕, and if you like, messages to you arrive as notifications on your phone. The time travel and the arcade share the same conversations.',

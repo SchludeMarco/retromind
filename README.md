@@ -343,7 +343,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   dem Willkommensbildschirm ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)).
   Ein Tipp schiebt von rechts ein Fenster mit allem herein: oben die sieben
   Halte der Zeitreise (der aktuelle markiert), die Musik, Ton an/aus, der
-  Begleiter und Feedback, darunter alle Einstellungen. Sonst liegen keine
+  Begleiter, ein Knopf „Spielhalle“ direkt in die Gaming-Edition und
+  Feedback, darunter alle Einstellungen. Sonst liegen keine
   Knöpfe mehr über der Seite (nur „Nach oben“ beim Scrollen). Ein roter
   Punkt am Griff meldet Neues unter „Was ist neu?“.
 - **Spotify-Login (optional)** – „Mit Spotify anmelden“ (Authorization Code +

@@ -4,6 +4,7 @@ import { PHASES } from '../lib/session';
 import { STATION_NAME } from '../lib/stations';
 import { toggleMuted, useMuted } from '../lib/mute';
 import { tr } from '../lib/i18n';
+import { gamingHref } from '../lib/gamingLink';
 
 // All of the app's controls behind one small handle at the right edge,
 // halfway down the screen (Marco, 2026-10-18: "die ganze Steuerung der App
@@ -48,7 +49,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
 const btn = 'retro-button px-3 py-2 border-2 border-retro-ink bg-white font-bold text-sm text-left';
 
 // The controls at the top of the panel: the stops of the journey, the music,
-// the sound, the companion and feedback. Every tap that leaves the panel
+// the sound, the companion, the gaming zone and feedback. Every tap that leaves the panel
 // (a stop, the music panel, the companion, feedback) closes it first.
 export const ControlCenter: React.FC<{
   /** The journey's stop; null before name and birthday are known. */
@@ -119,6 +120,18 @@ export const ControlCenter: React.FC<{
               {guestChatNews && <span className="rm-control-handle-dot" style={{ top: '-0.3rem', left: 'auto', right: '-0.3rem' }} aria-label={tr('new messages', 'neue Nachrichten')} />}
             </button>
           )}
+          {/* The way into RetroMind – Gaming from anywhere in the app (Marco,
+              2026-10-19: "Im Schnellzugriff sollte Gaming zusätzlich vorhanden
+              sein"). The href is rebuilt at click time (lib/gamingLink.ts). */}
+          <a
+            href={gamingHref()}
+            onClick={(e) => {
+              e.currentTarget.href = gamingHref();
+            }}
+            className={`${btn} no-underline`}
+          >
+            🕹️ {tr('Gaming zone', 'Spielhalle')}
+          </a>
           {onFeedback && (
             <button type="button" onClick={onFeedback} className={`${btn} !bg-[#c62828] !text-white`}>
               ✉️ Feedback
