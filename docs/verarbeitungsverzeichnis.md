@@ -29,15 +29,18 @@ nur durch Marco.
 | 8 | Nutzungsstatistik | Wissen, wie stark RetroMind genutzt wird | Tagesbezogener Einweg-Hash aus IP und User-Agent (nicht gespeichert), Geräteart, geöffnetes Jahrzehnt/Spiel | Art. 6 (1) f | Upstash Inc. (Server in der EU, SCC) | Zufallswert max. 2 Tage; danach nur Zahlen ohne Personenbezug |
 | 9 | Highscore-Tafel und Bestenliste | Bestenliste, eigene Einträge erkennen, Überholt-Notiz | Drei frei gewählte Zeichen, Punktzahl, Spiel, Einweg-Hash der Gäste-E-Mail (nur serverseitig); Notiz an Überholte: Spiel, Zeichen, Punktzahl, Zeit | Art. 6 (1) a | Upstash Inc. (EU) | beste 50 pro Spiel; Notizen 30 Tage; Löschung auf Wunsch |
 | 9a | Überholt-Meldung per Push (freiwillig) | Nachricht, wenn jemand dich überholt | Push-Adresse und Schlüssel des Browsers, Einweg-Hash der Gäste-E-Mail, Sprache | Art. 6 (1) a, § 25 (1) TDDDG | Upstash Inc. (EU); Push-Dienst des Browsers: Google FCM (USA, DPF), Mozilla, Apple (Inhalt Ende-zu-Ende verschlüsselt) | bis Abmeldung, „Meine Daten löschen“ oder höchstens 180 Tage |
+| 9b | Plauderecke (Chat unter Gästen, freiwillig) | Gäste schreiben sich, im Raum oder zu zweit | Beigetretene Gäste: Chat-Name, Beitritt, letzter Besuch (Tag), Nachrichten (Text, Name, Zeit), Kennung = HMAC der Gäste-E-Mail (nur serverseitig); Direktnachricht optional als Push (wie 9a, Thema „chat“) | Art. 6 (1) a, § 25 (1) TDDDG (Push) | Upstash Inc. (EU); Push wie 9a | Nachrichten 30 Tage (max. 300 je Gespräch); Profil bis „Chat verlassen“/„Meine Daten löschen“ oder 180 Tage ohne Besuch |
 | 10 | Feedback | Rückmeldungen beantworten | Nachricht, Kategorie, freiwillig E-Mail | Art. 6 (1) a | Resend Inc. (USA, SCC), Gmail (Google), GitHub Inc. (USA, öffentlich, ohne E-Mail) | Mail bis erledigt; `feedback.md` bis Löschwunsch |
 | 12 | Zugang nur für Gäste (`middleware.js`, `/gate.html`) | RetroMind privat halten | Eingeladene: E-Mail-Adresse (Gästeliste), Cookie `rm_guest` mit E-Mail, Zeitpunkt, Signatur | Art. 6 (1) f und b, § 25 (2) Nr. 2 TDDDG | Google (Anmeldung, USA, DPF), Upstash Inc. (EU) | Cookie 30 Tage ab letzter Prüfung; Gästeliste bis Austragung; Einmal-Code für den Wechsel zwischen den Domains höchstens 2 Minuten. Die Anmeldung an der Tür gilt zugleich als Google-Anmeldung der Apps (Zeile zur Google-Anmeldung) |
 | 11 | Adminbereich | Zahlen und Feedback ansehen | Marcos Google-Konto (Prüfung des Tokens) | Art. 6 (1) f | Google (Token-Prüfung) | keine Speicherung |
 
 Löschkonzept: Nutzerdaten liegen im Browser und werden über „Alle meine Daten
 löschen“ oder „Neu beginnen“ entfernt. Serverseitig gibt es nur
-Highscore-Einträge (mit Überholt-Notizen und Push-Anmeldungen) und Feedback;
-beides wird auf formlose Anfrage gelöscht, Push-Anmeldungen auch über „Alle
-meine Daten löschen“.
+Highscore-Einträge (mit Überholt-Notizen und Push-Anmeldungen),
+Familienbuch-Antworten, Chat-Nachrichten und Feedback; alles wird auf
+formlose Anfrage gelöscht, Push-Anmeldungen, Familienbuch und Chat auch über
+„Alle meine Daten löschen“, Chat-Nachrichten außerdem nach 30 Tagen von
+selbst.
 Anfragen nach Art. 15 bis 21 beantwortet Marco innerhalb eines Monats.
 
 Datenschutz-Folgenabschätzung (Art. 35): nicht erforderlich. Es gibt kein

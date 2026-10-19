@@ -4323,6 +4323,14 @@ button.pcard {
   height: 8px;
   background: #ff3b3b;
 }
+.gm-chat-btn {
+  position: relative;
+}
+.gm-chat-btn .gm-control-dot {
+  top: -4px;
+  left: auto;
+  right: -4px;
+}
 .arcade[data-palette='modul'] .gm-control-handle {
   border: 1px solid var(--ridge);
   border-right: 0;

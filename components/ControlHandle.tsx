@@ -15,14 +15,16 @@ import { tr } from '../lib/i18n';
 // music corner, the account pills, the home and companion buttons, the Retro
 // Warm bottom navigation and the journey's floating pill (_removed_content/).
 
-export const ControlHandle: React.FC<{ onOpen: () => void; hasNews: boolean }> = ({ onOpen, hasNews }) => (
+export const ControlHandle: React.FC<{ onOpen: () => void; hasNews: boolean; chatNews?: boolean }> = ({ onOpen, hasNews, chatNews = false }) => (
   <button
     type="button"
     onClick={onOpen}
     className="rm-control-handle rm-fixed no-print"
-    aria-label={hasNews
-      ? tr('Open controls and settings (new: What’s new)', 'Steuerung und Einstellungen öffnen (neu: Was ist neu)')
-      : tr('Open controls and settings', 'Steuerung und Einstellungen öffnen')}
+    aria-label={chatNews
+      ? tr('Open controls and settings (new chat messages)', 'Steuerung und Einstellungen öffnen (neue Chat-Nachrichten)')
+      : hasNews
+        ? tr('Open controls and settings (new: What’s new)', 'Steuerung und Einstellungen öffnen (neu: Was ist neu)')
+        : tr('Open controls and settings', 'Steuerung und Einstellungen öffnen')}
     title={tr('Controls and settings', 'Steuerung und Einstellungen')}
   >
     {/* Three sliders, like the knobs on an old mixing desk. */}
@@ -32,7 +34,7 @@ export const ControlHandle: React.FC<{ onOpen: () => void; hasNews: boolean }> =
       <circle cx="15" cy="12" r="2.2" fill="currentColor" />
       <circle cx="7" cy="18" r="2.2" fill="currentColor" />
     </svg>
-    {hasNews && <span className="rm-control-handle-dot" aria-hidden="true" />}
+    {(hasNews || chatNews) && <span className="rm-control-handle-dot" aria-hidden="true" />}
   </button>
 );
 
@@ -58,7 +60,10 @@ export const ControlCenter: React.FC<{
   onOpenCompanion?: () => void;
   companionOpen?: boolean;
   onFeedback?: () => void;
-}> = ({ phase, onSelectStop, music, onOpenMusic, onOpenCompanion, companionOpen = false, onFeedback }) => {
+  /** The chat corner with the other guests (components/GuestChat.tsx). */
+  onOpenGuestChat?: () => void;
+  guestChatNews?: boolean;
+}> = ({ phase, onSelectStop, music, onOpenMusic, onOpenCompanion, companionOpen = false, onFeedback, onOpenGuestChat, guestChatNews = false }) => {
   const muted = useMuted();
   const index = phase ? PHASES.indexOf(phase) : -1;
   return (
@@ -106,6 +111,12 @@ export const ControlCenter: React.FC<{
           {onOpenCompanion && (
             <button type="button" onClick={onOpenCompanion} aria-pressed={companionOpen} className={btn}>
               💬 {companionOpen ? tr('Close companion', 'Begleiter schließen') : tr('Ask the companion', 'Begleiter fragen')}
+            </button>
+          )}
+          {onOpenGuestChat && (
+            <button type="button" onClick={onOpenGuestChat} className={`${btn} relative`}>
+              🛋️ {tr('Chat corner', 'Plauderecke')}
+              {guestChatNews && <span className="rm-control-handle-dot" style={{ top: '-0.3rem', left: 'auto', right: '-0.3rem' }} aria-label={tr('new messages', 'neue Nachrichten')} />}
             </button>
           )}
           {onFeedback && (

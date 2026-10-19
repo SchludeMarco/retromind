@@ -33,8 +33,9 @@ self.addEventListener('fetch', (e) => {
   );
 });
 
-// Rival alerts (gaming/lib/rivals.ts, api/highscores.js): someone passed you
-// on a high score table. A tap opens the arcade, which shows who it was.
+// Push messages (lib/push.ts, api/_push.js): rival alerts (someone passed
+// you on a high score table; a tap opens the arcade, which shows who it was)
+// and chat messages (a tap opens that conversation, ?chat=<id>, lib/chat.ts).
 self.addEventListener('push', (e) => {
   let data = {};
   try {
@@ -49,7 +50,7 @@ self.addEventListener('push', (e) => {
       tag: data.tag,
       icon: '/gaming/icon-192.png',
       badge: '/gaming/favicon-48.png',
-      data: { url: self.registration.scope },
+      data: { url: self.registration.scope, chat: typeof data.chat === 'string' ? data.chat : null },
     })
   );
 });
@@ -57,10 +58,15 @@ self.addEventListener('push', (e) => {
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
   const url = e.notification.data?.url || self.registration.scope;
+  const chat = e.notification.data?.chat;
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       const open = list.find((c) => c.url.startsWith(url));
-      return open ? open.focus() : self.clients.openWindow(url);
+      if (open) {
+        if (chat) open.postMessage({ type: 'rm-chat', chat });
+        return open.focus();
+      }
+      return self.clients.openWindow(chat ? `${url}?chat=${encodeURIComponent(chat)}` : url);
     })
   );
 });

@@ -18,6 +18,9 @@ import { MuncherWander } from './components/MuncherWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { HelpBot } from '../components/HelpBot';
+import { GuestChat } from '../components/GuestChat';
+import { useChatOpenRequest, useChatUnread } from '../lib/chat';
+import { getInitials } from '../lib/initials';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
@@ -221,6 +224,14 @@ export const GamingApp: React.FC = () => {
   const [selected, setSelected] = useState<Game | null>(reloaded.selected ?? null);
   const [guruOpen, setGuruOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  // The chat corner with the other guests (components/GuestChat.tsx), shared with the Zeitreise.
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatWith, setChatWith] = useState<string | null>(null);
+  const chatUnread = useChatUnread(screen === 'hub');
+  useChatOpenRequest((id) => {
+    setChatWith(id);
+    setChatOpen(true);
+  });
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
   // The Hall of Fame (all tables) and the note that someone passed you (lib/rivals.ts).
@@ -1162,19 +1173,33 @@ export const GamingApp: React.FC = () => {
         <HelpBot
           app="gaming"
           open={helpOpen}
-          hidden={guruOpen}
+          hidden={guruOpen || chatOpen}
           onOpenChange={(o) => {
             setHelpOpen(o);
-            if (o) setGuruOpen(false);
+            if (o) {
+              setGuruOpen(false);
+              setChatOpen(false);
+            }
           }}
+          onSound={() => chip.play('blip')}
+        />
+      )}
+      {/* Writing with the other guests (Marco, 2026-10-19). */}
+      {screen === 'hub' && (
+        <GuestChat
+          app="gaming"
+          open={chatOpen}
+          openWith={chatWith}
+          suggestedName={getInitials()}
+          onClose={() => setChatOpen(false)}
           onSound={() => chip.play('blip')}
         />
       )}
 
       {/* Every control behind one handle at the right edge (Marco, 2026-10-18). */}
-      {screen === 'hub' && !settingsOpen && !helpOpen && (
+      {screen === 'hub' && !settingsOpen && !helpOpen && !chatOpen && (
         <GamingHandle
-          dot={cloud.status === 'signed_in' && cloud.sync === 'error'}
+          dot={(cloud.status === 'signed_in' && cloud.sync === 'error') || chatUnread}
           onOpen={() => {
             chip.play('select');
             setSettingsOpen(true);
@@ -1263,6 +1288,15 @@ export const GamingApp: React.FC = () => {
                   setSettingsOpen(false);
                   setFeedbackOpen(true);
                 }}
+                onChat={() => {
+                  chip.play('select');
+                  setSettingsOpen(false);
+                  setHelpOpen(false);
+                  setGuruOpen(false);
+                  setChatWith(null);
+                  setChatOpen(true);
+                }}
+                chatNews={chatUnread}
                 onLeave={() => {
                   setSettingsOpen(false);
                   leaveClub();
