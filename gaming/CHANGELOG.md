@@ -8,6 +8,15 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Lieblingssongs merken** (2026-10-19, PR #PRNR): Läuft ein geiler Song,
+  merkst du ihn dir mit einem Tipp aufs Herz ♡ neben dem Titel, in der
+  Zeitreise und in der Gaming-Halle. Danach kannst du, wenn du magst, einen
+  Kommentar dazuschreiben, etwa warum er so gut ist oder wo du ihn zuerst
+  gehört hast. In der Musiksteuerung zeigt „Meine Lieblingssongs“ alle
+  gemerkten Songs mit Kommentar und Datum; von dort spielst du sie noch einmal
+  ab, änderst den Kommentar oder nimmst sie wieder raus. Die Liste ist in
+  beiden Apps und auf allen deinen Geräten dieselbe.
+
 - **Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen** (2026-10-19, PR #254):
   In der Gaming-Halle unter „Chillen“ zeigt „Die Retro-Konsole“ jetzt zwei
   Listen, die erst einmal zugeklappt sind: „ROM-Spiele“ (die freien

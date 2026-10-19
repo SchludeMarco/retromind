@@ -3,6 +3,7 @@ import { FitMarquee } from './FitMarquee';
 import { MusicStatus, useMusicStatus } from '../lib/musicStatus';
 import { tr } from '../lib/i18n';
 import { openMusicDock } from './MusicDock';
+import { FavoriteHeart } from './FavoriteSongs';
 
 // The music always at hand, top left (Marco, 2026-10-14: "oben links dafür
 // die Musiksteuerung, dass man eben play pause back forth machen kann und da
@@ -26,6 +27,8 @@ const Svg: React.FC<{ d: string; size?: number }> = ({ d, size = 18 }) => (
 
 export const MusicMini: React.FC<{
   title: string | null;
+  /** spotify:track:… of that song, when known. */
+  songUri?: string | null;
   /** Where the music comes from, e.g. "Music of the 80s". */
   source: string;
   playing: boolean;
@@ -37,9 +40,11 @@ export const MusicMini: React.FC<{
   status?: MusicStatus;
   /** bar: inside the Retro Warm top bar; float: fixed in the top-left corner. */
   variant: 'bar' | 'float';
-}> = ({ title, source, playing, ready, canSkip, onPrev, onToggle, onNext, status, variant }) => {
+}> = ({ title, songUri = null, source, playing, ready, canSkip, onPrev, onToggle, onNext, status, variant }) => {
   const live = useMusicStatus(status).track;
   const shown = live ? `${live.name} · ${live.artists}` : title;
+  // Inside an album the Premium player names another song than the one loaded.
+  const favUri = live && title !== shown ? null : songUri;
   return (
     <div className={`rm-music-mini is-${variant} no-print`} role="group" aria-label={tr('Music', 'Musik')}>
       <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label={tr('Previous song', 'Vorheriger Song')} title={tr('Previous song', 'Vorheriger Song')}>
@@ -67,6 +72,8 @@ export const MusicMini: React.FC<{
         <span className="rm-music-mini-label">{!ready ? tr('Loading …', 'Lädt …') : playing ? tr('Now playing', 'Läuft gerade') : tr('Paused', 'Pausiert')}</span>
         <FitMarquee text={shown ?? source} maxSize={14} minSize={12} />
       </button>
+      {/* A great song? Save it, a comment optional (Marco, 2026-10-19). */}
+      <FavoriteHeart title={ready ? shown : null} uri={favUri} image={live?.image ?? null} where={source} />
     </div>
   );
 };

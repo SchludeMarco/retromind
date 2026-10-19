@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Lieblingssongs merken** (2026-10-19, PR #PRNR): Läuft ein geiler Song,
+  merkst du ihn dir mit einem Tipp aufs Herz ♡ neben dem Titel, in der
+  Zeitreise und in der Gaming-Halle. Danach kannst du, wenn du magst, einen
+  Kommentar dazuschreiben, etwa warum er so gut ist oder wo du ihn zuerst
+  gehört hast. In der Musiksteuerung zeigt „Meine Lieblingssongs“ alle
+  gemerkten Songs mit Kommentar und Datum; von dort spielst du sie noch einmal
+  ab, änderst den Kommentar oder nimmst sie wieder raus. Die Liste ist in
+  beiden Apps und auf allen deinen Geräten dieselbe.
 - **Dokumentation: README und Datenschutzhinweise auf aktuellem Stand**
   (2026-10-19, PR #259): Die Datenschutzhinweise sagen jetzt, dass mit
   Spotify Premium auch die Zeitreise ganze Songs abspielt (am Computer im

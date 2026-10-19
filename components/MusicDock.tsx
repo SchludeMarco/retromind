@@ -7,6 +7,8 @@ import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/sp
 import { tr } from '../lib/i18n';
 import { openSpotifyApp, retryConnect, useConnectState } from '../lib/spotifyConnect';
 import { beginSpotifyLogin } from '../lib/spotifyAuth';
+import { FavoriteCard, FavoriteHeart, FavoriteSongsList, HeartIcon } from './FavoriteSongs';
+import { useFavoriteSongs } from '../lib/favoriteSongs';
 import './musicDock.css';
 
 // The music controls (Marco, 2026-10-06): tucked away behind a small
@@ -26,6 +28,8 @@ export function openMusicDock() {
 export interface MusicDockProps {
   /** "Title · Artist" of the song playing, when known. */
   title: string | null;
+  /** spotify:track:… of that song, when known (for playing a saved favorite again). */
+  songUri?: string | null;
   /** Where the music comes from, e.g. "Musik der 80er". */
   source: string;
   playing: boolean;
@@ -346,6 +350,7 @@ const DOWN = 'M5 8l7 7 7-7-1.4-1.4L12 12.2 6.4 6.6z';
 
 export const MusicDock: React.FC<MusicDockProps> = ({
   title,
+  songUri = null,
   source,
   playing,
   ready,
@@ -370,6 +375,10 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   // Playing in the Spotify app: its volume is the phone's, no slider.
   const inApp = useConnectState().state === 'app';
   const [open, setOpen] = useState(false);
+  const [showFavs, setShowFavs] = useState(false);
+  const favCount = useFavoriteSongs().length;
+  // Inside an album the Premium player names another song than the one loaded.
+  const favUri = live && title !== shownTitle ? null : songUri;
   const toggle = (next: boolean) => {
     setOpen(next);
     onOpenChange?.(next);
@@ -393,6 +402,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
   return (
     <>
       {!open && <FullSongsHint />}
+      <FavoriteCard />
       {ticker &&
         playing &&
         shownTitle &&
@@ -446,9 +456,12 @@ export const MusicDock: React.FC<MusicDockProps> = ({
               </div>
             )}
             <p className="music-dock-label">{playing ? tr('Now playing', 'Läuft gerade') : tr('Paused', 'Pausiert')}</p>
-            <p className="music-dock-title" aria-live="polite">
-              <FitMarquee text={ready ? shownTitle ?? 'Spotify' : tr('Spotify is loading …', 'Spotify lädt …')} maxSize={22} minSize={14} />
-            </p>
+            <div className="music-dock-title-row">
+              <p className="music-dock-title" aria-live="polite">
+                <FitMarquee text={ready ? shownTitle ?? 'Spotify' : tr('Spotify is loading …', 'Spotify lädt …')} maxSize={22} minSize={14} />
+              </p>
+              <FavoriteHeart title={ready ? shownTitle : null} uri={favUri} image={live?.image ?? null} where={source} className="music-dock-heart" size={22} />
+            </div>
             <div className="music-dock-buttons">
               <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label={tr('Previous song', 'Vorheriger Song')} title={tr('Previous song', 'Vorheriger Song')}>
                 <Svg d={PREV} />
@@ -467,6 +480,21 @@ export const MusicDock: React.FC<MusicDockProps> = ({
                 <Svg d={NEXT} />
               </button>
             </div>
+            <button type="button" className="music-dock-chip music-dock-favs" aria-expanded={showFavs} onClick={() => setShowFavs(!showFavs)}>
+              <HeartIcon filled size={14} /> {tr('My favorite songs', 'Meine Lieblingssongs')} ({favCount})
+            </button>
+            {showFavs && (
+              <FavoriteSongsList
+                onPlay={
+                  extras
+                    ? (s) => {
+                        const [name, ...rest] = s.title.split(' · ');
+                        extras.onPick({ uri: s.uri!, name, sub: rest.join(' · '), image: s.image, kind: 'track' });
+                      }
+                    : undefined
+                }
+              />
+            )}
             <ConnectNote />
             {!inApp && <Volume extras={extras} ownMusic={ownMusic} />}
             {extras && <Extras extras={extras} onPicked={() => undefined} />}

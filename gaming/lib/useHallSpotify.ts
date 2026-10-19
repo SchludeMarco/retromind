@@ -419,6 +419,8 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       : special
         ? `${special.name} · ${special.sub}`
         : trackName(song),
+    /** spotify:track:… of that song, when one single song plays. */
+    songUri: fallback ? null : special ? (special.kind === 'track' ? special.uri : null) : song ? `spotify:track:${song}` : null,
     canSkip: !!song || !!special || fallback,
     status: statusRef.current,
     playUri,
