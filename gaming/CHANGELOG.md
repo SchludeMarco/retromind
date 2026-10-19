@@ -8,6 +8,14 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen** (2026-10-19, PR #254):
+  In der Gaming-Halle unter „Chillen“ zeigt „Die Retro-Konsole“ jetzt zwei
+  Listen, die erst einmal zugeklappt sind: „ROM-Spiele“ (die freien
+  Homebrew-Spiele und dein eigenes Modul) und „Browser-Spiele“ (die
+  Minispiele wie Memory, Snake oder Pac-Mampf). Neben jedem Namen steht, wie
+  viele Spiele drin sind. Ein Tipp klappt die Liste auf, ein zweiter wieder
+  zu, so ist die Seite kürzer und übersichtlicher.
+
 - **Mit Spotify Premium wieder ganze Songs** (2026-10-18, PR #252): Findet
   RetroMind deine Spotify-App auf dem Handy nicht, liefen bisher still nur
   Ausschnitte, und der Hinweis dazu steckte tief im Musik-Fenster. Jetzt

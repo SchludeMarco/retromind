@@ -24,7 +24,7 @@ import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { EmulatorCorner } from './components/EmulatorCorner';
 import { EmulatorDialog } from './components/EmulatorDialog';
-import { EmuLaunch } from './lib/emulator';
+import { EmuLaunch, FREE_GAMES } from './lib/emulator';
 import { countOpened } from '../lib/usage';
 import { promptInstall, useInstall } from '../lib/install';
 import { readPage, writePage } from '../lib/pageMemory';
@@ -836,14 +836,28 @@ export const GamingApp: React.FC = () => {
           {/* The mini games: one of the sections in the dock. */}
           {view === 'chill' && (
             <div className="chill-panel">
-              <EmulatorCorner onPlay={play} />
-              <MiniGameCorner
-                onPick={(id) => {
-                  chip.play('select');
-                  countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
-                  setMiniGame(id);
-                }}
-              />
+              {/* Two lists, both closed at first so the player sees what is there. */}
+              <section className="emu-corner" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
+                <h3 className="pixel-font">{tr('🕹️ THE RETRO CONSOLE', '🕹️ DIE RETRO-KONSOLE')}</h3>
+                <details className="chill-list">
+                  <summary data-nav>
+                    {tr('💾 ROM GAMES', '💾 ROM-SPIELE')} ({FREE_GAMES.length})
+                  </summary>
+                  <EmulatorCorner onPlay={play} />
+                </details>
+                <details className="chill-list">
+                  <summary data-nav>
+                    {tr('🌐 BROWSER GAMES', '🌐 BROWSER-SPIELE')} ({MINI_GAMES.length})
+                  </summary>
+                  <MiniGameCorner
+                    onPick={(id) => {
+                      chip.play('select');
+                      countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
+                      setMiniGame(id);
+                    }}
+                  />
+                </details>
+              </section>
             </div>
           )}
 

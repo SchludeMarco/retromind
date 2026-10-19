@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen** (2026-10-19, PR #254):
+  In der Gaming-Halle unter „Chillen“ zeigt „Die Retro-Konsole“ jetzt zwei
+  Listen, die erst einmal zugeklappt sind: „ROM-Spiele“ (die freien
+  Homebrew-Spiele und dein eigenes Modul) und „Browser-Spiele“ (die
+  Minispiele wie Memory, Snake oder Pac-Mampf). Neben jedem Namen steht, wie
+  viele Spiele drin sind. Ein Tipp klappt die Liste auf, ein zweiter wieder
+  zu, so ist die Seite kürzer und übersichtlicher.
+
 - **Die Uhr auf dem Startbildschirm ist wieder frei** (2026-10-18, PR #253):
   Die Zeitschaltkreise und der Knopf „Ab in die Vergangenheit“ lagen auf dem
   Zifferblatt der Kaminuhr, sodass man ihre laufenden Zeiger nicht mehr sah.
