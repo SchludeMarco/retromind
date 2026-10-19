@@ -34,13 +34,18 @@ const TIME_SPEED = 88;
 // how far away each one sounds: bolt a strikes the clock, b and c are farther.
 const FLASH_AT = 0.81;
 const BOLT_DISTANCE = { a: 0, b: 0.6, c: 0.9 } as const;
+const BOLTS = {
+  a: ['M520 -10 L494 90 L534 112 L478 210 L520 228 L496 330', 'M534 112 L590 160 L576 196 L626 250'],
+  b: ['M150 -10 L196 110 L150 140 L232 270 L190 290 L262 430', 'M150 140 L96 230 L118 262 L70 340'],
+  c: ['M880 -10 L842 96 L890 126 L800 250 L846 272 L772 400', 'M890 126 L940 210 L912 236 L960 320'],
+} as const;
 
 /**
  * Lightning: three bolts flicker now and then (one strikes the clock) and
  * light up the room, each with its thunder; during the warp they strike
  * non-stop (the warp's own sound carries that part, so no thunder then).
  */
-const Storm: React.FC<{ thunder: boolean }> = ({ thunder }) => {
+const Storm = React.memo(({ thunder }: { thunder: boolean }) => {
   const thunderRef = useRef(thunder);
   thunderRef.current = thunder;
   const timers = useRef<number[]>([]);
@@ -54,25 +59,111 @@ const Storm: React.FC<{ thunder: boolean }> = ({ thunder }) => {
   };
   return (
   <div aria-hidden="true" className="rm-storm">
+    {/* Each flash is one layer, its bolt drawn inside it, so a flash only
+        fades that layer instead of repainting the sky. */}
     {(['a', 'b', 'c'] as const).map((b) => (
-      <span key={b} className={`rm-sky-flash is-${b}`} onAnimationStart={onCycle(b)} onAnimationIteration={onCycle(b)} />
+      <span key={b} className={`rm-sky-flash is-${b}`} onAnimationStart={onCycle(b)} onAnimationIteration={onCycle(b)}>
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMin slice" className="rm-storm-bolts rm-bolt">
+          {BOLTS[b].map((d) => <path key={d} d={d} />)}
+        </svg>
+      </span>
     ))}
-    <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMin slice" className="rm-storm-bolts">
-      <g className="rm-bolt is-a">
-        <path d="M520 -10 L494 90 L534 112 L478 210 L520 228 L496 330" />
-        <path d="M534 112 L590 160 L576 196 L626 250" />
-      </g>
-      <g className="rm-bolt is-b">
-        <path d="M150 -10 L196 110 L150 140 L232 270 L190 290 L262 430" />
-        <path d="M150 140 L96 230 L118 262 L70 340" />
-      </g>
-      <g className="rm-bolt is-c">
-        <path d="M880 -10 L842 96 L890 126 L800 250 L846 272 L772 400" />
-        <path d="M890 126 L940 210 L912 236 L960 320" />
-      </g>
-    </svg>
   </div>
   );
+});
+
+/**
+ * The pull into the clock, drawn on one canvas at screen size (Marco,
+ * 2026-10-19: the start asked so much of the graphics chip and memory that
+ * it stuttered). Before, the swirl and six rings were each a CSS layer one
+ * and a half screens wide, which at a phone's pixel density meant hundreds
+ * of megabytes of graphics memory. Same picture: a swirl turning faster and
+ * faster, rings of light rushing to the centre, a bright core that grows
+ * until it fills the screen.
+ */
+const WarpVortex: React.FC<{ ms: number }> = ({ ms }) => {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.scale(dpr, dpr);
+    const cx = w / 2;
+    const cy = h / 2;
+    const vmax = Math.max(w, h);
+    const reach = Math.hypot(cx, cy);
+    const t0 = performance.now();
+    let frame = 0;
+    const draw = (now: number) => {
+      const elapsed = now - t0;
+      const k = Math.min(1, elapsed / ms);
+      ctx.clearRect(0, 0, w, h);
+      // The swirl: amber spokes turning ever faster, dark towards the rim.
+      const turn = -1260 * k * k * (Math.PI / 180);
+      const swirlR = vmax * 0.85 * (1.3 - 0.7 * k);
+      ctx.globalAlpha = Math.min(1, k / 0.25);
+      ctx.fillStyle = 'rgba(232, 168, 56, 0.22)';
+      ctx.beginPath();
+      for (let a = 0; a < 360; a += 24) {
+        const a0 = turn + ((a + 13) * Math.PI) / 180;
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, swirlR, a0, a0 + (3 * Math.PI) / 180);
+        ctx.closePath();
+      }
+      ctx.fill();
+      const shade = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(swirlR, reach));
+      shade.addColorStop(0, 'rgba(4, 3, 2, 0)');
+      shade.addColorStop(0.18, 'rgba(4, 3, 2, 0)');
+      shade.addColorStop(0.62, 'rgba(4, 3, 2, 0.85)');
+      shade.addColorStop(1, 'rgba(4, 3, 2, 0.85)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(0, 0, w, h);
+      // Rings rushing inwards, one after another.
+      for (let i = 0; i < 6; i++) {
+        const local = elapsed - i * 160;
+        if (local < 0) continue;
+        const p = (local % 950) / 950;
+        const r = vmax * 0.75 * (1 - 0.98 * p * p);
+        const alpha = p < 0.3 ? (p / 0.3) * 0.9 : 0.9 - ((p - 0.3) / 0.7) * 0.7;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(232, 168, 56, 0.25)';
+        ctx.lineWidth = 14;
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(240, 196, 120, 0.7)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+      // The bright core, from halfway on, growing until it fills the screen.
+      if (k > 0.5) {
+        const q = (k - 0.5) / 0.5;
+        const coreR = vmax * 0.2 * 4.5 * q * q * q;
+        if (coreR > 1) {
+          const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+          core.addColorStop(0, '#fffaf0');
+          core.addColorStop(0.3, '#ffe4a8');
+          core.addColorStop(0.55, 'rgba(232, 168, 56, 0.55)');
+          core.addColorStop(0.72, 'rgba(232, 168, 56, 0)');
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = core;
+          ctx.beginPath();
+          ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+      if (k < 1) frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(frame);
+  }, [ms]);
+  return <canvas ref={ref} aria-hidden="true" className="splash-vortex" />;
 };
 
 /** The flux button's emblem: three glowing tubes meeting in the middle, light running inwards. */
@@ -128,12 +219,25 @@ export const SplashScreen: React.FC<{
   // popping up later in the middle of the form (MusicConsentBanner stays as
   // the fallback for anyone who leaves the switch alone).
   const musicAllowed = useConsent('spotify') === true;
-  const [mph, setMph] = useState(0);
+  // The speedometer is written straight into the page on every frame, so the
+  // whole screen doesn't redraw 60 times a second; only reaching 88 re-renders.
+  const speedRef = useRef<HTMLElement>(null);
+  const [at88, setAt88] = useState(false);
   const destination = toStamp(destinationDate);
   const now = new Date();
   const present: Stamp = { year: now.getFullYear(), month: now.getMonth(), day: now.getDate() };
   const reduceMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // While the welcome screen covers the app, what lies beneath it (the
+  // app-wide old-screen pane, the ticket) has nothing to show and only costs
+  // work; it comes back as the light opens.
+  const covering = stage !== 'iris';
+  useEffect(() => {
+    if (!covering) return;
+    document.documentElement.classList.add('rm-splash-up');
+    return () => document.documentElement.classList.remove('rm-splash-up');
+  }, [covering]);
 
   useEffect(() => {
     if (struck) return;
@@ -166,7 +270,9 @@ export const SplashScreen: React.FC<{
     const t0 = performance.now();
     const step = (t: number) => {
       const k = Math.min(1, (t - t0) / (warp * 0.85));
-      setMph(Math.round(TIME_SPEED * k * k));
+      const mph = Math.round(TIME_SPEED * k * k);
+      if (speedRef.current) speedRef.current.textContent = String(mph).padStart(2, '0');
+      if (mph >= TIME_SPEED) setAt88(true);
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -188,13 +294,7 @@ export const SplashScreen: React.FC<{
       <>
       <div className="grainy-bg" />
       {stage === 'warp' && !reduceMotion && (
-        <div aria-hidden="true" className="splash-vortex">
-          <div className="splash-swirl" />
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <span key={i} className="splash-ring" style={{ animationDelay: `${i * 0.16}s` }} />
-          ))}
-          <div className="splash-core" />
-        </div>
+        <WarpVortex ms={WARP_MS} />
       )}
       <Storm thunder={!struck && !reduceMotion} />
       <div className="splash-content relative h-full flex flex-col items-center justify-center text-center px-6">
@@ -226,14 +326,14 @@ export const SplashScreen: React.FC<{
         <button
           onClick={handleStart}
           disabled={struck}
-          className={`rm-flux-start relative ${mph >= 88 ? 'is-88' : ''}`}
+          className={`rm-flux-start relative ${at88 ? 'is-88' : ''}`}
           data-quiet
         >
           <FluxIcon />
           <span className="rm-flux-text">
             <span className="rm-flux-label">{tr('Go back in time', 'Ab in die Vergangenheit')}</span>
             <span className="rm-flux-speed" aria-hidden="true">
-              <b>{String(mph).padStart(2, '0')}</b> MPH
+              <b ref={speedRef}>00</b> MPH
             </span>
           </span>
         </button>
@@ -282,7 +382,7 @@ export const SplashScreen: React.FC<{
         </p>
       </div>
       </div>
-      {mph >= 88 && !reduceMotion && (
+      {at88 && !reduceMotion && (
         <div aria-hidden="true" className="rm-fire-trails">
           <span />
           <span />

@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit** (2026-10-19, PR #255):
+  Nach „Ab in die Vergangenheit“ ruckelte die Zeitreise stark, weil der
+  Wirbel und die Lichtringe sehr viel Grafikspeicher brauchten. Sie werden
+  jetzt sparsam gezeichnet und sehen gleich aus, der Speicherbedarf beim
+  Start ist auf etwa ein Viertel gesunken. Auch die Blitze und die Uhr kosten
+  das Handy weniger Arbeit. Die Kaminuhr zeigt jetzt die echte Uhrzeit, und
+  ein dünner roter Sekundenzeiger springt jede Sekunde weiter, so sieht man
+  sofort, dass sie läuft.
 - **Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen** (2026-10-19, PR #254):
   In der Gaming-Halle unter „Chillen“ zeigt „Die Retro-Konsole“ jetzt zwei
   Listen, die erst einmal zugeklappt sind: „ROM-Spiele“ (die freien

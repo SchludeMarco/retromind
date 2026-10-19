@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit': {
+    title: 'The welcome screen runs smoothly, the clock shows the real time',
+    text: 'After “Go back in time” the journey stuttered badly, because the swirl and the rings of light needed a lot of graphics memory. They are now drawn sparingly and look the same, and the memory needed at the start has dropped to about a quarter. The lightning and the clock also cost your phone less work. The mantel clock now shows the real time, and a thin red second hand jumps on every second, so you can see at once that it is running.',
+  },
   'Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen': {
     title: 'Retro console tidied up: two lists to fold open',
     text: 'In the gaming hall under “Chill”, “The retro console” now shows two lists that start folded: “ROM games” (the free homebrew games and your own module) and “Browser games” (the mini games like Memory, Snake or Pac-Mampf). Next to each name you see how many games are inside. One tap opens a list, another closes it, so the page is shorter and easier to scan.',
