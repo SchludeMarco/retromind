@@ -661,8 +661,15 @@ Browser (React/Vite SPA)  ──fetch──▶  /api/gemini   (Vercel Function) 
                           ──fetch──▶  /api/highscores, /api/stats, /api/admin ──▶  Upstash Redis (Highscores, anonyme Zählung)
                           ──OAuth──▶  Google Identity Services          ──▶  Login + Drive-Access-Token
                           ──fetch──▶  Google Drive API (appDataFolder)  ──▶  retromind-sync.json im eigenen Drive der Nutzer:in
+                          ──fetch──▶  /api/family  (→ /api/stats)        ──▶  Upstash Redis (Familienbuch, nur mit Einwilligung)
                           ──OAuth──▶  Spotify Accounts (PKCE, Redirect)  ──▶  Login + Premium-/Free-Status
+                          ──fetch──▶  Spotify Web API + Web Playback SDK ──▶  Premium: ganze Songs im Browser oder in der Spotify-App
 ```
+
+Vercel Hobby erlaubt höchstens 12 Functions. Neue Server-Teile kommen deshalb
+in bestehende Functions (`api/_*.js` sind Bausteine ohne eigenen Endpunkt,
+z. B. `_family.js` in `stats.js`, `_guests.js` und `_googleKeep.js` in
+`admin.js`).
 
 Der **Gemini-Schlüssel liegt ausschließlich serverseitig** (Vercel-Env-Var
 `GEMINI_API_KEY`) und ist nie im Client-Bundle. `@google/genai` wird nur von den
@@ -683,9 +690,12 @@ der Refresh-Token landet in `localStorage` (und gleicht sich zwischen den Apps
 und über das eigene Drive ab, siehe „Eine App, immer synchron“), sonst könnte man nach einem Reload
 nicht ohne erneuten Consent-Screen angemeldet bleiben. Abgefragt werden nur
 Name, E-Mail und Premium-/Free-Status (`GET /v1/me`), keine Playlists. Nur
-mit Premium auf dem Handy fragt die Zeitreise zusätzlich ab, welche
-Spotify-Geräte es gibt und was gerade läuft (`user-read-playback-state`), um
-die Musik über die Spotify-App zu spielen; gespeichert wird davon nichts.
+mit Premium auf dem Handy fragen Zeitreise und Gaming-Halle zusätzlich ab,
+welche Spotify-Geräte es gibt und was gerade läuft (`user-read-playback-state`),
+um die Musik über die Spotify-App zu spielen. Gemerkt wird davon nur das
+gefundene Handy (Kennung, Name, Typ) unter `rm-spotify-device` im Browser,
+damit RetroMind die Musik später auch bei geschlossener App dorthin übergeben
+kann; dieser Schlüssel gleicht sich nicht ab.
 
 ## Tech-Stack
 
@@ -701,7 +711,7 @@ die Musik über die Spotify-App zu spielen; gespeichert wird davon nichts.
 - **Upstash Redis** (Vercel Marketplace) für Highscores und anonyme Zählung ·
   **Resend** für Feedback-Mails
 - Web Audio (selbst erzeugte Klänge, Chiptune, Metal-Aufnahmen) · PWA
-  (Gaming installierbar)
+  (Zeitreise und Gaming installierbar)
 
 ## Lokal ausführen
 
@@ -746,6 +756,8 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 | `YOUTUBE_API_KEY`        | Vercel-Env  | Optional (Gaming): Schlüssel für die YouTube Data API v3. Damit sortiert die Videosuche nach Likes; ohne ihn liest `api/youtube.js` die öffentliche YouTube-Suche (nur Aufrufe) |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Vercel-Env | Werden automatisch gesetzt, wenn eine Upstash-Redis-Datenbank (Vercel → Storage, Free-Plan, Region Frankfurt) mit dem Projekt verbunden ist. Dieselbe Datenbank mit `retromind` **und** `retromind-gaming` verbinden, dann zeigt der Adminbereich beide Editionen |
 | `ADMIN_EMAIL`            | Vercel-Env  | Optional: Google-Konto mit Zugang zum Adminbereich (Standard marco.schlude@gmail.com) |
+| `GOOGLE_CLIENT_SECRET`   | Vercel-Env  | Optional: Client-Secret desselben Google-OAuth-Clients; damit bleibt die Google-Anmeldung über die Stunde hinaus bestehen (Cookie `rm_gkeep`), in beiden Vercel-Projekten setzen |
+| `GUEST_SECRET`           | Vercel-Env  | Optional: Schlüssel für die Gäste-Cookies der Gästetür; ohne ihn dient der Redis-Token als Schlüssel |
 | `FEEDBACK_GITHUB_TOKEN`  | Vercel-Env  | Optional: GitHub-Token (fein granuliert, nur dieses Repo, „Contents: Read and write“). Speichert Feedback in `feedback.md` und ermöglicht den „Als To Do übernehmen“-Link in der Mail |
 
 ## Bekannte Einschränkungen
@@ -755,7 +767,8 @@ npm i -g vercel && npm run dev:full   # = vercel dev
 - **Vorschau-Modell** für Video (`veo-3.1-fast-generate-preview`) – ID kann sich
   ändern. Text/Vision/Chat nutzen GA-Modelle.
 - **Bilder** sind bewusst symbolisch (Lizenzgründe) und als solche
-  gekennzeichnet – kein echtes Ära-Material außer dem einen NASA-Foto.
+  gekennzeichnet. Echte Fotos gibt es nur, wo die Lizenz es erlaubt: das
+  NASA-Foto und die Heldenbilder von Wikimedia Commons unter freier Lizenz.
 - **Geräteübergreifender Sync braucht Google** – ohne Anmeldung gleichen sich
   nur Zeitreise und Gaming auf demselben Gerät ab (über die Links), sonst hilft
   der `.json`-Export/Import. Mit Anmeldung gewinnt pro Schlüssel der neuere
@@ -774,8 +787,9 @@ npm i -g vercel && npm run dev:full   # = vercel dev
   bietet keine Lautstärke an. Langsam lauter wird die Spotify-Musik nur mit
   Premium-Anmeldung am Computer: auf Handy und Tablet (iPhone, iPad, Android)
   unterstützt Spotify seinen Browser-Player nicht. Dort spielt die Zeitreise
-  ganze Songs über die Spotify-App, deren Lautstärke aber die des Handys ist.
-  Die Gaming-Halle nutzt die Spotify-App noch nicht.
+  und die Gaming-Halle ganze Songs über die Spotify-App, deren Lautstärke aber
+  die des Handys ist. Ist die App zu, braucht es auf dem iPhone einen Tipp zum
+  Öffnen; auf Android hilft „Spotify Connect im Hintergrund“.
 
 ## Pflege dieses Repos
 
@@ -877,7 +891,8 @@ Ideen nur für die Gaming-Edition stehen in deren
   („Wer gehörte noch dazu?“) angezeigt werden.
 
 - **Weihnachten in der Stube:** In der Weihnachtszeit könnte die Stube
-  einen Christbaum, einen Adventskranz und Schnee vor dem Fenster bekommen.
+  einen Christbaum und einen Adventskranz bekommen (Schnee vor dem Fenster
+  gibt es schon, wenn es draußen wirklich schneit).
 - **Mehr Rezepte in Omas Kochbuch:** Eigene Rezepte der Familie
   hinzufügen (mit Foto aus dem Memory-Labor) und ins Erinnerungsbuch
   übernehmen; das Kochbuch könnte auch als Ecke in der Stube auftauchen.

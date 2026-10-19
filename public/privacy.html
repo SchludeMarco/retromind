@@ -13,7 +13,7 @@
   <h1>Privacy Policy</h1>
   <p class="muted">
     Applies to RetroMind – Time Travel (retromind.vercel.app) and RetroMind – Gaming (retromind-gaming.vercel.app).
-    Last updated: October 18, 2026
+    Last updated: October 19, 2026
   </p>
 
   <h2>In short</h2>
@@ -116,10 +116,13 @@
     Optionally, you can also sign in with your Spotify account (Spotify then receives profile data and your email;
     we only store a sign-in token in your browser, shared by both RetroMind addresses and, when you are signed in with Google, also kept in your own Drive; see sections 3 and 5). Signed in with Spotify Premium, you hear a short clip of the song
     playing inside in front of the gaming hall; our server fetches this clip from Spotify (or, if there is none, from
-    Deezer), your browser doesn’t contact these services for it, and nothing but the song is sent. With Premium, the
-    Gaming edition also plays the music directly in your browser through Spotify’s Web Playback SDK: for this your
-    browser loads Spotify’s player (sdk.scdn.co) and signs in to Spotify with your sign-in token, so Spotify sees which
-    songs you listen to. Which songs are on a playlist is asked of Spotify by our server, without any data about you.
+    Deezer), your browser doesn’t contact these services for it, and nothing but the song is sent. With Premium, Time
+    Travel and the Gaming edition also play the music directly: on a computer in your browser through Spotify’s Web
+    Playback SDK (your browser loads Spotify’s player from sdk.scdn.co), on a phone through your own Spotify app
+    (Spotify Connect). For this your browser signs in to Spotify with your sign-in token (api.spotify.com), asks which
+    Spotify devices you have and what is playing, and Spotify sees which songs you listen to. RetroMind remembers the
+    phone it found (ID, name, device type) only in your browser, so the music can move there later even when the app
+    is closed; it is never sent to our servers. Which songs are on a playlist is asked of Spotify by our server, without any data about you.
     In Time Travel, a short clip of that year’s hit plays when you arrive in a year, but only if you chose “Allow
     music”. Our server fetches this clip too (from Deezer); only the song’s title and artist are sent, nothing
     about you.
