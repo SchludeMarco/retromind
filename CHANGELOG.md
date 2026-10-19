@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Logo in kräftigen Farben mit Metallglanz** (2026-10-19, PR #264): Das
+  RetroMind-Logo auf der Startseite leuchtet jetzt in satten Neonfarben und
+  ist das Farbigste auf der Seite. Streifen und Schleier des
+  Röhrenbildschirms liegen nicht mehr darüber, es glänzt wie poliertes
+  Chrom, und alle paar Sekunden zieht ein Lichtschimmer darüber. Das kleine
+  Logo unterwegs und oben in Retro Warm ist ebenfalls farbiger. Wer auf dem
+  Gerät weniger Bewegung eingestellt hat, sieht den Glanz ohne Schimmer.
+
 - **Spielhalle im Schnellzugriff** (2026-10-19, PR #263): Hinter dem Griff am
   rechten Rand der Zeitreise steht unter „Schnellzugriff“ jetzt auch
   „Spielhalle“. Ein Tipp bringt dich von überall direkt in die
