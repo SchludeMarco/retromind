@@ -295,6 +295,7 @@ export const Solitaire: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           text={tr(`All cards home in ${fmt(result.secs)} minutes and ${result.moves} moves.`, `Alle Karten abgelegt in ${fmt(result.secs)} Minuten und ${result.moves} Zügen.`)}
           record={result.record}
           onAgain={again}
+          board={{ game: 'solitaire', score: result.secs }}
         />
       )}
     </>

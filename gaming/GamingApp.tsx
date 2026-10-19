@@ -22,6 +22,9 @@ import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { HallOfFame } from './components/HallOfFame';
+import { BoardGame, formatScore } from './lib/highscores';
+import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { EmulatorCorner } from './components/EmulatorCorner';
 import { EmulatorDialog } from './components/EmulatorDialog';
 import { EmuLaunch, FREE_GAMES } from './lib/emulator';
@@ -220,6 +223,9 @@ export const GamingApp: React.FC = () => {
   const [helpOpen, setHelpOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
+  // The Hall of Fame (all tables) and the note that someone passed you (lib/rivals.ts).
+  const [hall, setHall] = useState<{ start?: BoardGame } | null>(null);
+  const [rival, setRival] = useState<RivalNews | null>(null);
   const [emu, setEmu] = useState<EmuLaunch | null>(null);
   const [emuRunning, setEmuRunning] = useState(false);
   const [rolling, setRolling] = useState<string | null>(null);
@@ -373,11 +379,29 @@ export const GamingApp: React.FC = () => {
     setSelected(null);
   }, []);
 
+  // Someone passed you on a table since your last visit: say so once, with a rematch button.
+  useEffect(() => {
+    if (screen !== 'hub') return;
+    let alive = true;
+    unseenRivalNews().then((news) => {
+      if (!alive) return;
+      markRivalsSeen();
+      if (news.length) {
+        chip.play('error');
+        setRival(news[0]);
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [screen]);
+
   useControls({
     onMove: () => chip.play('blip'),
     onBack: () => {
       if (selected) closeDetail();
       else if (miniGame) setMiniGame(null);
+      else if (hall) setHall(null);
       else if (pickerOpen) setPickerOpen(false);
       else if (guruOpen) setGuruOpen(false);
     },
@@ -683,7 +707,7 @@ export const GamingApp: React.FC = () => {
 
   // Attract mode: a minute without input in the hall and the covers run by.
   const [attract, setAttract] = useState(false);
-  const attractAllowed = screen === 'hub' && !selected && !inserting && !miniGame && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
+  const attractAllowed = screen === 'hub' && !selected && !inserting && !miniGame && !hall && !rival && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
   useEffect(() => {
     if (!attractAllowed || reducedMotion) return;
     let id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
@@ -840,6 +864,16 @@ export const GamingApp: React.FC = () => {
               {/* Two lists, both closed at first so the player sees what is there. */}
               <section className="emu-corner" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
                 <h3 className="pixel-font">{tr('🕹️ THE RETRO CONSOLE', '🕹️ DIE RETRO-KONSOLE')}</h3>
+                <button
+                  className="px-btn hof-open"
+                  onClick={() => {
+                    chip.play('select');
+                    setHall({});
+                  }}
+                  data-nav
+                >
+                  {tr('🏆 HALL OF FAME', '🏆 BESTENLISTE')}
+                </button>
                 <details className="chill-list">
                   <summary data-nav>
                     {tr('💾 ROM GAMES', '💾 ROM-SPIELE')} ({FREE_GAMES.length})
@@ -1353,6 +1387,59 @@ export const GamingApp: React.FC = () => {
             setMiniGame(null);
           }}
         />
+      )}
+
+      {hall && (
+        <HallOfFame
+          start={hall.start}
+          onPlay={(g) => {
+            setHall(null);
+            setMiniGame(g);
+          }}
+          onClose={() => {
+            chip.play('back');
+            setHall(null);
+          }}
+        />
+      )}
+
+      {rival && !miniGame && !hall && !toast && (
+        <div className="rival-alert" role="alert">
+          <p className="pixel-font rival-title blink">{tr('⚔️ YOU’VE BEEN BEATEN!', '⚔️ ÜBERHOLT!')}</p>
+          <p>
+            {tr(
+              `${rival.name} passed you at ${MINI_GAMES.find((m) => m.id === rival.game)?.title ?? rival.game} with ${formatScore(rival.game, rival.score)}.`,
+              `${rival.name} hat dich bei ${MINI_GAMES.find((m) => m.id === rival.game)?.title ?? rival.game} überholt, mit ${formatScore(rival.game, rival.score)}.`
+            )}
+          </p>
+          <div className="settings-row">
+            <button
+              className="px-btn big"
+              onClick={() => {
+                chip.play('select');
+                setRival(null);
+                setMiniGame(rival.game);
+              }}
+              data-nav
+            >
+              {tr('REMATCH!', 'REVANCHE!')}
+            </button>
+            <button
+              className="px-btn"
+              onClick={() => {
+                chip.play('back');
+                setRival(null);
+                setHall({ start: rival.game });
+              }}
+              data-nav
+            >
+              🏆 {tr('TABLE', 'TAFEL')}
+            </button>
+          </div>
+          <button className="toast-close" onClick={() => setRival(null)} aria-label={tr('Close', 'Schließen')} title={tr('Close', 'Schließen')}>
+            ×
+          </button>
+        </div>
       )}
 
       {inserting && <CartInsert game={inserting} onDone={insertDone} />}

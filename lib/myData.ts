@@ -87,8 +87,27 @@ export function deleteMyData(): boolean {
   } catch {
     /* storage blocked: nothing stored either */
   }
-  Promise.all([family, deleteEmulatorData()]).finally(() => window.location.reload());
+  Promise.all([family, deleteEmulatorData(), stopRivalAlerts()]).finally(() => window.location.reload());
   return true;
+}
+
+/** Gaming's rival alerts (gaming/lib/rivals.ts): this device's push subscription, here and on the server. */
+async function stopRivalAlerts() {
+  try {
+    const regs = (await navigator.serviceWorker?.getRegistrations()) ?? [];
+    for (const reg of regs) {
+      const sub = await reg.pushManager?.getSubscription();
+      if (!sub) continue;
+      await fetch('/api/highscores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ push: null, endpoint: sub.endpoint }),
+      }).catch(() => {});
+      await sub.unsubscribe().catch(() => {});
+    }
+  } catch {
+    /* no service workers here: nothing subscribed either */
+  }
 }
 
 /** The emulator's databases: "EmulatorJS-…" and the save folder "/data/saves". */

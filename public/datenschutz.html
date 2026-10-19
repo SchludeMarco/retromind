@@ -218,11 +218,26 @@
     in die Highscore-Tafel eintragen. Nur wenn du auf „OK“ tippst, schickt die App das Spiel, deine drei Zeichen und
     deine Punktzahl an unseren Server. Er speichert sie in derselben Upstash-Datenbank wie die Statistik (siehe
     Abschnitt 10); behalten werden die besten 50 Einträge pro Spiel, die besten 10 sieht jeder, der das Spiel
-    öffnet. Gespeichert wird nichts weiter, insbesondere keine IP-Adresse und keine Kennung. Wähl deshalb bitte
-    keine Buchstaben, die dich für andere erkennbar machen, wenn du das nicht möchtest. Deine letzten Buchstaben und
-    eine eigene Tafel merkt sich die App außerdem in deinem Browser. Beim Spiel des Wochen-Duells steht dein Eintrag
-    zusätzlich auf der Tafel dieser Woche; sie wird nach 30 Tagen gelöscht. Rechtsgrundlage ist deine Einwilligung durch
-    das Eintragen (Art. 6 Abs. 1 lit. a DSGVO); einen Eintrag entfernen wir auf Wunsch.
+    öffnet. Zu jedem Eintrag legt der Server außerdem eine Einweg-Prüfsumme (Hash) deiner E-Mail-Adresse aus dem
+    Gäste-Zugang ab (Abschnitt zur Gästeliste). Die Adresse selbst steht nicht dabei, und die Prüfsumme sieht niemand
+    außer dem Server. Er erkennt daran deine eigenen Einträge (sie leuchten auf der Tafel) und wen dein neuer
+    Punktestand gerade überholt hat. Wer überholt wurde, bekommt eine kurze Notiz (Spiel, deine drei Zeichen, deine
+    Punktzahl, Zeitpunkt), die er beim nächsten Besuch sieht; Notizen werden nach 30 Tagen gelöscht. Eine IP-Adresse
+    wird nicht gespeichert. Wähl bitte keine Buchstaben, die dich für andere erkennbar machen, wenn du das nicht
+    möchtest. Deine letzten Buchstaben und eine eigene Tafel merkt sich die App außerdem in deinem Browser. Beim Spiel
+    des Wochen-Duells steht dein Eintrag zusätzlich auf der Tafel dieser Woche; sie wird nach 30 Tagen gelöscht.
+    Rechtsgrundlage ist deine Einwilligung durch das Eintragen (Art. 6 Abs. 1 lit. a DSGVO); einen Eintrag entfernen
+    wir auf Wunsch.
+  </p>
+  <p>
+    <strong>Überholt-Meldung per Push (freiwillig):</strong> Schaltest du in den Einstellungen der Gaming-Edition die
+    „Überholt-Meldung“ ein und erlaubst Mitteilungen, meldet dein Browser das Gerät bei seinem Push-Dienst an (bei
+    Chrome und Android Google Firebase Cloud Messaging, bei Firefox Mozilla, bei Safari und iPhone Apple). Unser
+    Server speichert die Push-Adresse und die zugehörigen Schlüssel zusammen mit der Prüfsumme deiner E-Mail-Adresse
+    und deiner Sprache in der Upstash-Datenbank, höchstens 180 Tage. Überholt dich jemand, schickt er über diesen
+    Dienst eine verschlüsselte Nachricht (Spiel und die drei Zeichen des anderen). Ausschalten in den Einstellungen,
+    „Alle meine Daten löschen“ oder das Entziehen der Mitteilungs-Erlaubnis im Browser beendet das; die Anmeldung wird
+    dann gelöscht. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG).
   </p>
 
   <h2>12. Feedback</h2>

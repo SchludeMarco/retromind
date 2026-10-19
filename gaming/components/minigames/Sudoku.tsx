@@ -171,7 +171,7 @@ export const Sudoku: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           </button>
         </div>
       )}
-      {result && <Done text={tr(`Solved in ${fmt(result.secs)} minutes.`, `Gelöst in ${fmt(result.secs)} Minuten.`)} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Solved in ${fmt(result.secs)} minutes.`, `Gelöst in ${fmt(result.secs)} Minuten.`)} record={result.record} onAgain={again} board={{ game: 'sudoku', score: result.secs }} />}
     </>
   );
 };

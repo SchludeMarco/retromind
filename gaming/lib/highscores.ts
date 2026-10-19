@@ -1,17 +1,73 @@
 // Arcade high score tables with three initials (api/highscores.js), shared
-// by everyone. This device keeps its own table too, which shows when the
+// by everyone, one per mini game. This device keeps its own table too, which shows when the
 // server has none (offline, or no database configured). The initials are
 // the player's own tag from the settings (lib/initials.ts).
 
 import { getInitials, setInitials } from '../../lib/initials';
 import { duelGame, weekOf } from './quests';
+import { tr } from '../../lib/i18n';
 
-export type BoardGame = 'blocks' | 'pinball' | 'pacman' | 'senso' | 'breakout' | 'snake' | 'invaders' | 'poker' | 'blackjack';
+export type BoardGame =
+  | 'blocks'
+  | 'pinball'
+  | 'pacman'
+  | 'senso'
+  | 'breakout'
+  | 'snake'
+  | 'invaders'
+  | 'poker'
+  | 'blackjack'
+  | 'quiz'
+  | 'memory'
+  | 'puzzle'
+  | 'sudoku'
+  | 'solitaire';
 export interface Entry {
   name: string;
   score: number;
   /** This player's entry, just made. */
   mine?: boolean;
+  /** One of this player's entries (the server knows them by the guest sign-in). */
+  me?: boolean;
+}
+
+/** How each table counts: points (more is better), or moves and seconds (fewer is better). */
+const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time'> = {
+  blocks: 'points',
+  pinball: 'points',
+  pacman: 'points',
+  senso: 'rounds',
+  breakout: 'points',
+  snake: 'points',
+  invaders: 'points',
+  poker: 'points',
+  blackjack: 'points',
+  quiz: 'right',
+  memory: 'moves',
+  puzzle: 'moves',
+  sudoku: 'time',
+  solitaire: 'time',
+};
+
+/** Every game with a table, in the order of the Chill-Ecke. */
+export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire'];
+
+export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';
+
+/** A score as the table shows it: 12,340 · 1:05 · 23 MOVES. */
+export function formatScore(game: BoardGame, score: number): string {
+  switch (UNIT[game]) {
+    case 'time':
+      return `${Math.floor(score / 60)}:${String(score % 60).padStart(2, '0')}`;
+    case 'moves':
+      return tr(`${score} MOVES`, `${score} ZÜGE`);
+    case 'rounds':
+      return tr(`ROUND ${score}`, `RUNDE ${score}`);
+    case 'right':
+      return `${score}/5`;
+    default:
+      return score.toLocaleString('en-US');
+  }
 }
 
 const LOCAL = 'retromind.gaming.hiscores.v1';
@@ -31,7 +87,8 @@ function localBoard(game: BoardGame): Entry[] {
 
 function addLocal(game: BoardGame, entry: Entry) {
   const all = localAll();
-  all[game] = [...(all[game] ?? []), { name: entry.name, score: entry.score }].sort((a, b) => b.score - a.score).slice(0, SHOW);
+  const sign = lowerIsBetter(game) ? -1 : 1;
+  all[game] = [...(all[game] ?? []), { name: entry.name, score: entry.score }].sort((a, b) => sign * (b.score - a.score)).slice(0, SHOW);
   try {
     localStorage.setItem(LOCAL, JSON.stringify(all));
   } catch {
@@ -71,8 +128,11 @@ export async function fetchWeekBoard(game: BoardGame, week = weekOf()): Promise<
 export const isDuelGame = (game: BoardGame) => duelGame() === game;
 
 /** Whether a score would make it onto the table. */
-export function qualifies(board: Entry[], score: number): boolean {
-  return score > 0 && (board.length < SHOW || score > board[board.length - 1].score);
+export function qualifies(board: Entry[], score: number, game: BoardGame): boolean {
+  if (!(score > 0)) return false;
+  if (board.length < SHOW) return true;
+  const last = board[board.length - 1].score;
+  return lowerIsBetter(game) ? score < last : score > last;
 }
 
 export async function submitScore(game: BoardGame, name: string, score: number): Promise<Entry[]> {

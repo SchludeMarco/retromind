@@ -133,6 +133,7 @@ export const Quiz: React.FC<{ onWin: () => void; onEarn?: (coins: number) => voi
           )}
           record={result.record}
           onAgain={again}
+          board={{ game: 'quiz', score: result.right }}
         />
       )}
     </>

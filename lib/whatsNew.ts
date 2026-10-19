@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Bestenliste und Überholt-Meldung: Konkurrenzkampf in der Spielhalle': {
+    title: 'Hall of Fame and rival alerts: battle for the top spot',
+    text: 'Each of the 14 browser games now has its own high score table for all guests, including Pixel Memory and Slide Puzzle (fewest moves), Sudoku and Solitaire (fastest time) and the game quiz. Under “The Retro Console”, “Hall of Fame” shows every table arcade-style on a glowing tube screen, with your own entries glowing green. When someone passes you, you see “You’ve been beaten!” on your next visit, with a rematch button. If you like, switch on “Rival alerts” in the settings to get the message on your phone right away, even when the arcade is closed (on iPhone in the installed app).',
+  },
   'Lieblingssongs merken': {
     title: 'Save your favorite songs',
     text: 'When a great song comes on, tap the heart ♡ next to the title to save it, in the time travel and in the arcade. If you like, add a comment, like why it’s so good or where you first heard it. In the music controls, “My favorite songs” lists every saved song with its comment and date; from there you can play it again, change the comment or remove it. The list is the same in both apps and on all your devices.',

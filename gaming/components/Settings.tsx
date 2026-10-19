@@ -17,6 +17,7 @@ import { InitialsPicker } from '../../components/InitialsPicker';
 import { chip } from '../lib/chiptune';
 import { installSteps, promptInstall, useInstall } from '../../lib/install';
 import { downloadReminder, googleCalendarLink } from '../../lib/calendarReminder';
+import { PushState, pushState, turnPushOff, turnPushOn } from '../lib/rivals';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -318,6 +319,8 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
           <p className="dim">{tr('More designs and tracks are waiting at the prize counter under “Quests”.', 'Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.')}</p>
         </section>
 
+        <RivalAlerts />
+
         {/* Install with one tap, or the menu steps where the browser has no prompt (lib/install.ts). */}
         <section>
           <h3 className="pixel-font">{tr('ON YOUR PHONE', 'AUFS HANDY')}</h3>
@@ -419,5 +422,49 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
         <p className="dim settings-version">RetroMind – Gaming · Version {__APP_VERSION__}</p>
       </div>
     </div>
+  );
+};
+
+/** Push on this device when someone passes you on a high score table (lib/rivals.ts). */
+const RivalAlerts: React.FC = () => {
+  const [state, setState] = useState<PushState | 'busy' | null>(null);
+  useEffect(() => {
+    pushState().then(setState);
+  }, []);
+  if (state === null || state === 'unsupported') return null;
+  const toggle = async () => {
+    chip.play('select');
+    const was = state;
+    setState('busy');
+    setState(was === 'on' ? await turnPushOff() : await turnPushOn());
+  };
+  return (
+    <section>
+      <h3 className="pixel-font">{tr('RIVAL ALERTS', 'ÜBERHOLT-MELDUNG')}</h3>
+      {state === 'install-first' ? (
+        <p className="dim">
+          {tr(
+            'On iPhone and iPad, alerts only work in the app on your home screen: install the arcade first (below), then switch them on there.',
+            'Auf iPhone und iPad gehen Meldungen nur in der App auf dem Home-Bildschirm: installiere zuerst die Spielhalle (unten) und schalte sie dort ein.'
+          )}
+        </p>
+      ) : (
+        <>
+          <div className="settings-row">
+            <button className="px-btn" aria-pressed={state === 'on'} onClick={toggle} disabled={state === 'busy' || state === 'blocked'} data-nav>
+              ⚔️ {state === 'on' ? tr('ON', 'AN') : state === 'busy' ? '…' : tr('OFF', 'AUS')}
+            </button>
+          </div>
+          <p className="dim">
+            {state === 'blocked'
+              ? tr('Notifications are blocked for this site. You can allow them again in your browser settings.', 'Mitteilungen sind für diese Seite gesperrt. In den Browser-Einstellungen kannst du sie wieder erlauben.')
+              : tr(
+                  'A message on this device as soon as someone passes your entry on a high score table, even when the arcade is closed. Without it, you see who passed you the next time you come in.',
+                  'Eine Nachricht auf diesem Gerät, sobald dich jemand auf einer Highscore-Tafel überholt, auch wenn die Spielhalle zu ist. Ohne sie siehst du beim nächsten Besuch, wer dich überholt hat.'
+                )}
+          </p>
+        </>
+      )}
+    </section>
   );
 };
