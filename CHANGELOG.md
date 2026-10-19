@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Dokumentation: README und Datenschutzhinweise auf aktuellem Stand**
+  (2026-10-19, PR #259): Die Datenschutzhinweise sagen jetzt, dass mit
+  Spotify Premium auch die Zeitreise ganze Songs abspielt (am Computer im
+  Browser, auf dem Handy über deine Spotify-App) und dass RetroMind sich dafür
+  dein Handy nur im Browser merkt. In der README stimmen jetzt die Hinweise zur
+  Spotify-App in der Gaming-Halle, zu installierbaren Apps und zu echten Fotos,
+  der Aufbau nennt Familienbuch und Spotify-Player, und die Einstellungen
+  `GOOGLE_CLIENT_SECRET` und `GUEST_SECRET` sind beschrieben.
 - **Damals & heute: Begriffe von früher und von heute** (2026-10-19, PR #258):
   Beim Erkunden gibt es eine neue Sparte „Damals & heute“. Sie zeigt auf
   einen Blick, welche Wörter und Dinge es früher gab und wie sie heute

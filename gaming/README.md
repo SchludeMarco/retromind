@@ -373,6 +373,7 @@ legt dann die Gaming-Seite unter `/` ab. Das Projekt braucht eigene Variablen:
 | `VITE_GOOGLE_CLIENT_ID` | Optional: Google-Login und Cloud-Sicherung (Domain als erlaubter JavaScript-Ursprung im OAuth-Client) |
 | `VITE_SPOTIFY_CLIENT_ID` | Optional: Spotify-Login (Redirect-URI `https://retromind-gaming.vercel.app/`) |
 | `YOUTUBE_API_KEY` | Optional: Videosuche nach Likes sortiert |
+| `GOOGLE_CLIENT_SECRET` | Optional: Google-Anmeldung bleibt über die Stunde hinaus bestehen |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Optional: Upstash Redis für Highscores und Statistik (dieselbe Datenbank wie `retromind`) |
 
 Alle Variablen erklärt die [Haupt-README](../README.md#deployment-vercel).
