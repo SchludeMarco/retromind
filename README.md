@@ -406,8 +406,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   steht schräg in Chrom und Feuer da, mit einer Feuerspur darunter. Darunter
   zeigen Zeitschaltkreise die Zielzeit (dein Geburtstag, sobald bekannt, sonst
   blinkende Striche) und die Gegenwart. Die Uhr hat ihren eigenen Platz
-  zwischen Zeitschaltkreisen und Knopf, ihr Zifferblatt mit den laufenden
-  Zeigern ist auf jedem Bildschirm frei zu sehen (`.splash-clock-slot`). Der Flux-Knopf „Go back in time“ / „Ab
+  zwischen Zeitschaltkreisen und Knopf, ihr Zifferblatt ist auf jedem
+  Bildschirm frei zu sehen (`.splash-clock-slot`). Sie zeigt die echte Uhrzeit,
+  ein roter Sekundenzeiger springt jede Sekunde; gezeichnet ist sie in Ebenen,
+  damit nur die Zeiger neu gemalt werden. Der Sog in die Uhr (Wirbel,
+  Lichtringe, heller Kern) läuft auf einer einzigen Leinwand (`WarpVortex`),
+  damit auch ältere Handys nicht ins Ruckeln kommen. Der Flux-Knopf „Go back in time“ / „Ab
   in die Vergangenheit“ hat ein leuchtendes Emblem und einen Tacho: Beim Drücken
   rast er auf 88 MPH, die Blitze schlagen ohne Pause ein, zwei Feuerspuren
   ziehen über den Boden, und die Zeitmaschine startet (siehe oben); bei der
