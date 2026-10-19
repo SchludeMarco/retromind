@@ -2257,6 +2257,31 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
   color: var(--a3);
   font-size: 13px;
 }
+/* The two closed lists in it: ROM games and browser games. */
+.chill-list {
+  border-top: 2px solid var(--bg2);
+  padding: 4px 0;
+}
+.chill-list:last-of-type {
+  border-bottom: 2px solid var(--bg2);
+}
+.chill-list summary {
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--a2);
+  padding: 10px 0;
+}
+.chill-list[open] summary {
+  color: var(--a1);
+}
+.chill-list > :last-child {
+  margin-bottom: 14px;
+}
+.arcade[data-palette='modul'] .chill-list summary {
+  font-size: 14px;
+}
 .emu-own select {
   font: inherit;
   max-width: 100%;

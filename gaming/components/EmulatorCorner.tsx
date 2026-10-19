@@ -3,7 +3,7 @@ import { acceptFor, EMU_SYSTEMS, EmuLaunch, EmuSystem, FREE_GAMES } from '../lib
 import { platformLabel } from '../data/platforms';
 import { tr } from '../../lib/i18n';
 
-// "Die Retro-Konsole" in the Chill-Ecke: real old consoles in the browser.
+// The ROM games in "Die Retro-Konsole" (Chill-Ecke): real old consoles in the browser.
 // The free homebrew games start with one tap; any other game comes as a file
 // from the player's own device.
 
@@ -45,8 +45,7 @@ export const EmulatorCorner: React.FC<{ onPlay: (launch: EmuLaunch) => void }> =
   const picker = useRomPicker((file) => onPlay({ title: file.name.replace(/\.[^.]+$/, ''), core: EMU_SYSTEMS[system].core, file }));
 
   return (
-    <section className="emu-corner" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
-      <h3 className="pixel-font">{tr('🕹️ THE RETRO CONSOLE', '🕹️ DIE RETRO-KONSOLE')}</h3>
+    <>
       <p className="dim archive-count">
         {tr(
           'Real old consoles, emulated right in your browser. These games are free homebrew whose makers allow sharing them.',
@@ -103,6 +102,6 @@ export const EmulatorCorner: React.FC<{ onPlay: (launch: EmuLaunch) => void }> =
           </React.Fragment>
         ))}
       </p>
-    </section>
+    </>
   );
 };

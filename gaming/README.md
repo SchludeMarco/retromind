@@ -213,8 +213,10 @@ zeigen dürfen.
 - **Retro-Guru** – ein Chat, der in Gamer-Slang von den 80ern bis heute
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
-- **Die Retro-Konsole** – echte alte Konsolen im Browser, oben in der
-  Chill-Ecke ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
+- **Die Retro-Konsole** – oben in der Chill-Ecke, mit zwei Listen, die
+  zugeklappt starten (Name mit Anzahl, ein Tipp klappt auf): „ROM-Spiele“
+  und „Browser-Spiele“ (die Minispiele, siehe Chill-Ecke). Die ROM-Spiele
+  sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
   [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
   [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS) (GPL 3.0), den wir
   beim Build von npm holen und selbst ausliefern (`scripts/emulator.mjs`,

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Retro-Konsole aufgeräumt: zwei Listen zum Aufklappen': {
+    title: 'Retro console tidied up: two lists to fold open',
+    text: 'In the gaming hall under “Chill”, “The retro console” now shows two lists that start folded: “ROM games” (the free homebrew games and your own module) and “Browser games” (the mini games like Memory, Snake or Pac-Mampf). Next to each name you see how many games are inside. One tap opens a list, another closes it, so the page is shorter and easier to scan.',
+  },
   'Die Uhr auf dem Startbildschirm ist wieder frei': {
     title: 'The clock on the welcome screen is in view again',
     text: 'The time circuits and the “Go back in time” button sat on the face of the mantel clock, so you could no longer see its hands moving. Now the clock has its own spot between the time display and the button, on phones and computers alike, and nothing covers it. The lettering and spacing adapt to the screen height so everything fits.',
