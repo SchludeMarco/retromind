@@ -1116,6 +1116,81 @@ h1, h2, h3, .retro-serif {
   backdrop-filter: blur(0.5px) saturate(0.65) sepia(0.22) contrast(0.9) brightness(1);
   animation: crt-flicker 6.5s ease-in-out infinite;
 }
+/* The RetroMind logo as polished, colourful metal (components/Header.tsx).
+   Boosted neon colours, two layers cut to the logo's own shape: static
+   brushed-metal bands (soft-light) and a light glint that sweeps across now
+   and then. Only the glint moves, by transform, so it costs no repaints;
+   under reduced motion it is left out. The big start logo sits above the
+   CrtOverlay (z-index 500), below every dialog (650+). */
+.rm-logo-metal {
+  position: relative;
+  z-index: 510;
+  display: block;
+  isolation: isolate;
+  --rm-logo-mask: url(/retromind-logo-header.webp) center / 100% 100% no-repeat;
+}
+.rm-logo-metal img {
+  filter: saturate(1.7) contrast(1.12) brightness(1.06)
+    drop-shadow(0 0 6px rgba(255, 92, 170, 0.35)) drop-shadow(0 0 10px rgba(80, 220, 255, 0.25));
+}
+/* The small logo in the Retro Warm top bar: just the colours. */
+.rm-logo-pop { filter: saturate(1.7) contrast(1.12) brightness(1.06); }
+.rm-logo-metal-small { z-index: auto; }
+/* Under the overlay, which takes away a third of the colour. */
+.rm-logo-metal-small img { filter: saturate(2.3) contrast(1.18) brightness(1.1); }
+.rm-logo-bands,
+.rm-logo-glint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask: var(--rm-logo-mask);
+  mask: var(--rm-logo-mask);
+}
+.rm-logo-bands {
+  mix-blend-mode: hard-light;
+  opacity: 0.5;
+  /* Chrome: bright sky above, a dark horizon line, light again below. */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.35) 30%,
+    rgba(0, 0, 0, 0.6) 44%,
+    rgba(255, 255, 255, 0.9) 47%,
+    rgba(255, 255, 255, 0.3) 62%,
+    rgba(0, 0, 0, 0.45) 80%,
+    rgba(255, 255, 255, 0.85) 86%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+.rm-logo-glint { mix-blend-mode: screen; }
+.rm-logo-glint::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    110deg,
+    transparent 22%,
+    rgba(255, 236, 200, 0.35) 40%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(200, 236, 255, 0.35) 60%,
+    transparent 78%
+  );
+  transform: translateX(-110%);
+  animation: rm-logo-glint 5.5s ease-in-out 1.2s infinite;
+  will-change: transform;
+}
+@keyframes rm-logo-glint {
+  0% { transform: translateX(-110%); }
+  32%, 100% { transform: translateX(240%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-logo-glint { display: none; }
+}
+
 /* Nothing to tint while the welcome screen covers the app (SplashScreen). */
 .rm-splash-up .crt-overlay { display: none; }
 .rm-splash-up .rm-gate { visibility: hidden; }

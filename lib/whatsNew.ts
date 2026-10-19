@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Logo in kräftigen Farben mit Metallglanz': {
+    title: 'A bright, shiny metal logo',
+    text: 'The RetroMind logo on the start page now glows in rich neon colors and is the most colorful thing on the page. The stripes and haze of the old TV screen no longer cover it, it shines like polished chrome, and every few seconds a gleam of light sweeps across it. The small logo during the journey and at the top in Retro Warm is more colorful too. If your device is set to reduce motion, you see the shine without the gleam.',
+  },
   'Spielhalle im Schnellzugriff': {
     title: 'Gaming zone in quick access',
     text: 'Behind the handle at the right edge of the time travel, “Quick access” now also has “Gaming zone”. One tap takes you straight into the gaming edition from anywhere, and your data and Google sign-in come along.',

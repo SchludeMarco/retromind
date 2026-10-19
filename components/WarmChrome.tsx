@@ -10,7 +10,7 @@ import { STATION_NAME } from '../lib/stations';
 export const WarmTopBar: React.FC<{ phase: AppPhase }> = ({ phase }) => (
   <header className="rm-fixed fixed top-0 inset-x-0 z-[60] bg-retro-paper/95 backdrop-blur">
     <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8 h-16 flex items-center gap-3">
-      <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="w-8 sm:w-9 h-auto flex-shrink-0" />
+      <img src="/retromind-logo-header.webp" alt="" width={640} height={756} className="rm-logo-pop w-8 sm:w-9 h-auto flex-shrink-0" />
       <div className="leading-tight min-w-0 flex-grow overflow-hidden">
         <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
         <span className="block text-xs text-retro-brown truncate">{STATION_NAME[phase]}</span>

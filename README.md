@@ -473,8 +473,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ganzen App liegt (außer in Retro Warm) ein Röhrenbildschirm-Look mit
   Streifen und gelegentlichem Flackern, Fotos wirken wie verblasste Abzüge.
 - **Kopfbereich mit Logo** – Marcos 8-Bit-Logo mit durchsichtigem Hintergrund
-  und dem Untertitel „… willkommen zurück in der Vergangenheit“, im selben
-  Röhrenbildschirm-Look (Scanlines, Schleier) wie die ganze App.
+  und dem Untertitel „… willkommen zurück in der Vergangenheit“. Das Logo ist
+  das Farbigste auf der Seite: kräftige Neonfarben ohne Scanlines oder
+  Schleier darüber, Chrom-Glanz wie poliertes Metall und ab und zu ein
+  Lichtschimmer, der darüberzieht (bei weniger Bewegung nur der ruhige Glanz;
+  [`components/Header.tsx`](components/Header.tsx)).
 - **Design wählbar** – in den Einstellungen unter „Design & Atmosphäre“:
   - **Retro Warm** (Standard, entworfen mit Google Stitch, Vorlage in
     [`docs/stitch/DESIGN.md`](docs/stitch/DESIGN.md)): Pergament und
