@@ -509,6 +509,28 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 
 ### Für alle Module
 
+- **Plauderecke: Chat mit den anderen Gästen**
+  ([`components/GuestChat.tsx`](components/GuestChat.tsx),
+  [`lib/chat.ts`](lib/chat.ts), [`api/_chat.js`](api/_chat.js)) – in beiden
+  Apps hinter dem Griff am rechten Rand unter „Schnellzugriff“ („Plauderecke“,
+  Gaming „☏ PLAUDERECKE“). Eingeladene Gäste schreiben sich dort, alle
+  zusammen im Raum „Alle zusammen“ oder zu zweit. Beim ersten Öffnen wählt
+  man einen Namen für den Chat (vorgeschlagen: der Reisename bzw. das
+  Kürzel) und stimmt zu, dass Name und Nachrichten 30 Tage auf dem Server
+  liegen; erst dann sieht man, wer sonst dabei ist. Eigene Nachrichten lassen
+  sich mit ✕ löschen (Marco kann im Raum jede löschen), „Chat verlassen“
+  löscht Name, Nachrichten und Gespräche, „Alle meine Daten löschen“ ebenso.
+  Neue Nachrichten zeigt ein roter Punkt am Griff und am Knopf; was gelesen
+  ist, gleicht sich zwischen den Apps und Geräten ab. Wer mag, schaltet im
+  Chat „Mitteilung bei Nachrichten an dich“ ein und bekommt jede
+  Direktnachricht als Push aufs Gerät (dieselbe Push-Anmeldung wie die
+  Überholt-Meldung, je Thema an/aus, [`lib/push.ts`](lib/push.ts)); ein Tipp
+  darauf öffnet das Gespräch. Weil Vercel Hobby keine Dauerverbindungen
+  kennt, fragt die App bei offenem Gespräch alle 4 Sekunden nach, sonst einmal
+  pro Minute (nur wer beigetreten ist). Speicher: dieselbe Upstash-Datenbank,
+  je Gespräch höchstens 300 Nachrichten, 20 Nachrichten pro Minute; ein Gast
+  ist in beiden Editionen dieselbe Person. `/api/chat` läuft über
+  `api/highscores.js` (Rewrite in `vercel.json`, wegen der 12 Funktionen).
 - **KI-Hilfe zur App** ([`components/HelpBot.tsx`](components/HelpBot.tsx)) –
   ganz unten rechts in beiden Apps ein runder „?“-Knopf (über dem Laufband,
   weit weg vom Griff in der Mitte des rechten Rands). Er öffnet einen Chat,
@@ -875,6 +897,15 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
 
+- **Chat: Bilder, Reaktionen und „gelesen“:** Fotos von damals in die
+  Plauderecke schicken, mit 👍 oder ❤️ auf eine Nachricht antworten und sehen,
+  ob sie gelesen wurde. Bilder bräuchten einen Speicher dafür (Vercel Blob
+  hat ein kostenloses Kontingent, sonst erst nach Rücksprache).
+- **Chat: Gruppen und Erwähnungen:** eigene Räume (etwa „Familie“ oder
+  „Spieleabend“) und @Name, das auch im gemeinsamen Raum eine Mitteilung
+  schickt.
+- **Chat-Aufsicht im Admin-Bereich:** ein Reiter, in dem Marco den Raum
+  überblickt und Gäste aus dem Chat nimmt.
 - **Gleichzeitige Änderungen zusammenführen:** Der Abgleich nimmt pro
   Schlüssel den neueren Stand. Wer auf zwei Geräten gleichzeitig reist oder
   sammelt, verliert die ältere Änderung; Erinnerungen und Sammlungen ließen

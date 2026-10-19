@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Plauderecke: Chat mit den anderen Gästen': {
+    title: 'Chat corner: write with the other guests',
+    text: 'In both apps, “Chat corner” behind the handle at the right edge opens a chat for all invited guests: everyone together in the “Everyone” room, or just the two of you. The first time, you pick your chat name and agree that your name and messages are stored for 30 days. A red dot on the handle shows new messages, you delete your own messages with ✕, and if you like, messages to you arrive as notifications on your phone. The time travel and the arcade share the same conversations.',
+  },
   'Bestenliste und Überholt-Meldung: Konkurrenzkampf in der Spielhalle': {
     title: 'Hall of Fame and rival alerts: battle for the top spot',
     text: 'Each of the 14 browser games now has its own high score table for all guests, including Pixel Memory and Slide Puzzle (fewest moves), Sudoku and Solitaire (fastest time) and the game quiz. Under “The Retro Console”, “Hall of Fame” shows every table arcade-style on a glowing tube screen, with your own entries glowing green. When someone passes you, you see “You’ve been beaten!” on your next visit, with a rematch button. If you like, switch on “Rival alerts” in the settings to get the message on your phone right away, even when the arcade is closed (on iPhone in the installed app).',

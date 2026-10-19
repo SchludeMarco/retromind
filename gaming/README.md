@@ -299,6 +299,12 @@ zeigen dürfen.
 
 ### Einstellungen und Konto
 
+- **Plauderecke** – hinter dem Griff am rechten Rand unter „Schnellzugriff“
+  („☏ PLAUDERECKE“): mit den anderen Gästen schreiben, alle zusammen oder zu
+  zweit, im Pixel-Look der Halle; dieselben Gespräche wie in der Zeitreise
+  (Details in der [Haupt-README](../README.md#für-alle-module)). Ein roter
+  Punkt am Griff zeigt neue Nachrichten, auf Wunsch kommen Nachrichten an
+  dich als Push.
 - **KI-Hilfe zur App** – ganz unten rechts über dem Laufband ein „?“-Knopf
   im Pixel-Look. Er öffnet einen Chat für alle Fragen über RetroMind (Halle,
   Coins, Suche, Einstellungen, Zeitreise), der nur aus den Funktionslisten

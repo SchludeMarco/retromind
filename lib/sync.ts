@@ -48,6 +48,8 @@ const DEVICE_ONLY = new Set([
   'retromind.gaming.fromZeitreise',
   'retromind.page',
   'retromind-gaming.page',
+  // Push topics of this browser's subscription (lib/push.ts).
+  'retromind.push.topics',
 ]);
 // retromind.ticker.*: what the tickers showed last (lib/tickerFeed.ts), changes all the time.
 const DEVICE_PREFIXES = ['retromind.sync', 'retromind.ticker', 'retromind.visit.', 'retromind.spotify.verifier', 'retromind.spotify.state'];

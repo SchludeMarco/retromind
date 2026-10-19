@@ -24,7 +24,8 @@
     <li>Kein Tracking, keine fremden Analyse-Tools, keine Werbung. Gezählt wird nur
       anonym, wie oft die Apps geöffnet werden (siehe Abschnitt 10).</li>
     <li>Deine Reise, dein Profil und deine Einstellungen bleiben in deinem Browser auf deinem Gerät. Nur was du
-      selbst ins Familienbuch schreibst, liegt nach deiner Einwilligung auf unserem Server (siehe Abschnitt 15).</li>
+      selbst ins Familienbuch oder in die Plauderecke schreibst, liegt nach deiner Einwilligung auf unserem Server
+      (siehe Abschnitte 15 und 16).</li>
     <li>Schriften liegen auf unserem eigenen Server. Bilder, Klänge und Texte von Wikipedia/Wikimedia und Wikidata
       holt unser Server für dich ab, dein Browser verbindet sich dafür nicht mit fremden Servern.</li>
     <li>Spotify (Musik) und YouTube (Videos) laden erst, wenn du zustimmst. Google-Anmeldung, KI-Funktionen und
@@ -231,7 +232,7 @@
   </p>
   <p>
     <strong>Überholt-Meldung per Push (freiwillig):</strong> Schaltest du in den Einstellungen der Gaming-Edition die
-    „Überholt-Meldung“ ein und erlaubst Mitteilungen, meldet dein Browser das Gerät bei seinem Push-Dienst an (bei
+    „Überholt-Meldung“ (oder in der Plauderecke die Mitteilung bei Nachrichten an dich, Abschnitt 16) ein und erlaubst Mitteilungen, meldet dein Browser das Gerät bei seinem Push-Dienst an (bei
     Chrome und Android Google Firebase Cloud Messaging, bei Firefox Mozilla, bei Safari und iPhone Apple). Unser
     Server speichert die Push-Adresse und die zugehörigen Schlüssel zusammen mit der Prüfsumme deiner E-Mail-Adresse
     und deiner Sprache in der Upstash-Datenbank, höchstens 180 Tage. Überholt dich jemand, schickt er über diesen
@@ -314,7 +315,32 @@
     deinen Kalender übernimmst (oder ein Link zu Google Kalender, der erst mit deinem Tipp öffnet).
   </p>
 
-  <h2>16. Deine Rechte</h2>
+  <h2>16. Plauderecke: Chat mit anderen Gästen (Zeitreise und Gaming-Edition)</h2>
+  <p>
+    In der Plauderecke schreiben sich eingeladene Gäste, alle zusammen in einem Raum oder zu zweit. Bevor du etwas
+    siehst oder schreibst, wählst du einen Namen für den Chat und stimmst ausdrücklich zu. Dann speichert unser Server
+    in derselben Upstash-Datenbank wie die Statistik (Server in der EU, siehe Abschnitt 10) deinen Chat-Namen, den
+    Zeitpunkt deines Beitritts und deines letzten Besuchs (auf den Tag) und jede Nachricht mit Text, Namen und Zeit.
+    Zugeordnet wird das einer Kennung, die der Server mit einem geheimen Schlüssel aus deiner Gast-E-Mail-Adresse
+    (Abschnitt 14) bildet; die Adresse selbst wird dafür nicht gespeichert und niemand sieht sie. Nachrichten im Raum
+    lesen alle Gäste, die beigetreten sind; Nachrichten zu zweit nur ihr beide. Den Inhalt sehen wir als Betreiber
+    technisch in der Datenbank, wir lesen ihn aber nicht mit. Damit neue Nachrichten erscheinen, fragt die App bei
+    offenem Gespräch alle paar Sekunden und sonst etwa einmal pro Minute bei unserem Server nach; was du schon gelesen
+    hast, merkt sie sich in deinem Browser (und gleicht es, wenn du das eingeschaltet hast, über dein Google Drive ab,
+    Abschnitt 5).
+  </p>
+  <p>
+    Nachrichten werden nach 30 Tagen automatisch gelöscht (je Gespräch höchstens die neuesten 300). Eigene Nachrichten
+    kannst du jederzeit mit ✕ löschen; „Chat verlassen“ und „Alle meine Daten löschen“ entfernen deinen Namen, alle
+    deine Nachrichten im Raum und deine Gespräche zu zweit. Wer ein halbes Jahr nicht in den Chat geschaut hat,
+    verschwindet aus der Liste. Marco kann zum Schutz aller Nachrichten im gemeinsamen Raum löschen. Auf Wunsch
+    bekommst du Nachrichten an dich als Mitteilung aufs Gerät: dafür gilt das zur Überholt-Meldung Gesagte
+    (Abschnitt 11), die Mitteilung enthält Namen und Anfang der Nachricht. Rechtsgrundlage ist deine Einwilligung
+    (Art. 6 Abs. 1 lit. a DSGVO), die du jederzeit widerrufen kannst. Schreib bitte nichts, was andere nicht lesen
+    sollen, und keine besonders sensiblen Daten.
+  </p>
+
+  <h2>17. Deine Rechte</h2>
   <p>Du hast das Recht auf</p>
   <ul>
     <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO), in RetroMind direkt über „Meine Daten

@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Plauderecke: Chat mit den anderen Gästen** (2026-10-19, PR #262): In
+  beiden Apps öffnet hinter dem Griff am rechten Rand „Plauderecke“ einen
+  Chat für alle eingeladenen Gäste: alle zusammen im Raum „Alle zusammen“
+  oder nur zu zweit. Beim ersten Mal wählst du deinen Namen im Chat und
+  stimmst zu, dass Name und Nachrichten 30 Tage gespeichert werden. Neue
+  Nachrichten zeigt ein roter Punkt am Griff, eigene Nachrichten löschst du
+  mit ✕, und wer mag, bekommt Nachrichten an sich als Mitteilung aufs Handy.
+  Zeitreise und Gaming-Halle teilen dieselben Gespräche.
+
 - **Bestenliste und Überholt-Meldung: Konkurrenzkampf in der Spielhalle**
   (2026-10-19, PR #261): Jedes der 14 Browser-Spiele hat jetzt eine eigene
   Highscore-Tafel für alle Gäste, auch Memory und Schiebepuzzle (wenigste

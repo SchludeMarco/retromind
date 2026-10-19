@@ -9,7 +9,10 @@
 //      the score also goes on that week's table (kept 30 days)
 // GET  /api/highscores?news=1           → { news: [{game, name, score, at}] }: who overtook me
 // GET  /api/highscores?vapid=1          → { key } public key for push subscriptions
-// POST /api/highscores {push: subscription | null, endpoint?, lang} → alerts on/off for this device
+// POST /api/highscores {push: subscription | null, endpoint?, lang, topic?} → alerts on/off for this
+//      device; topic "rivals" (default) or "chat" (api/_push.js)
+// /api/chat → the chat corner (api/_chat.js; vercel.json rewrites it here as ?module=chat,
+//      because the Hobby plan allows only 12 functions per deployment)
 //
 // Names are three letters or digits, like the initials on an arcade cabinet.
 // Behind each entry the server also files a one-way hash of the guest's
@@ -18,10 +21,10 @@
 // Redis as /api/stats (sorted set per game, best 50 kept). Without Redis the
 // tables are empty and the app keeps its own table on the device.
 
-import crypto from "node:crypto";
-import webpush from "web-push";
 import { readJsonBody } from "./_admin.js";
 import { readCookie } from "./_guests.js";
+import { playerOf, sendPush, setPush, vapidKeys } from "./_push.js";
+import chatHandler from "./_chat.js";
 
 // Highest believable score per game, so a typo in a hand-made request
 // cannot take the table over for good. `low`: fewer is better (moves, seconds).
@@ -45,7 +48,6 @@ const KEEP = 50;
 const SHOW = 10;
 const NEWS_KEEP = 20;
 const NEWS_DAYS = 30;
-const PUSH_DAYS = 180;
 
 const redisUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -67,7 +69,6 @@ async function redis(commands) {
 const key = (game) => `rm:hs:${game}`;
 const weekKey = (game, week) => `rm:hs:w:${week}:${game}`;
 const newsKey = (pid) => `rm:hs:news:${pid}`;
-const pushKey = (pid) => `rm:hs:push:${pid}`;
 // The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
 const validWeek = (w) =>
   typeof w === "string" &&
@@ -87,7 +88,7 @@ const BLOCKED = new Set([
 async function playerId(req) {
   const guest = await readCookie(req.headers.cookie);
   if (!guest) return null;
-  return crypto.createHash("sha256").update(`retromind-player|${guest.email.toLowerCase()}`).digest("hex").slice(0, 16);
+  return playerOf(guest.email);
 }
 
 // Members are "NAME:random" (older entries) or "NAME:random:player".
@@ -108,23 +109,6 @@ async function table(game, week, me) {
   return parse(flat || [], me ?? null);
 }
 
-// ---- push (Web Push with VAPID; no outside service besides the browser's own push server)
-
-// Without VAPID_* settings the key pair is derived from the same secret as
-// the guest cookie, so alerts work without any extra setup.
-function vapidKeys() {
-  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
-    return { publicKey: process.env.VAPID_PUBLIC_KEY, privateKey: process.env.VAPID_PRIVATE_KEY };
-  }
-  const secret = process.env.GUEST_SECRET || redisToken();
-  if (!secret) return null;
-  const priv = crypto.createHash("sha256").update(`retromind-vapid|${secret}`).digest();
-  const ecdh = crypto.createECDH("prime256v1");
-  ecdh.setPrivateKey(priv);
-  const b64 = (buf) => buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  return { publicKey: b64(ecdh.getPublicKey()), privateKey: b64(priv) };
-}
-
 const GAME_NAMES = {
   blocks: ["Block Stacker", "Blockstapler"],
   pinball: ["Pinball", "Flipper"],
@@ -142,36 +126,17 @@ const GAME_NAMES = {
   solitaire: ["Solitaire", "Solitär"],
 };
 
-async function sendAlerts(pid, game, name) {
-  const keys = vapidKeys();
-  if (!keys) return;
-  const [subs] = await redis([["HGETALL", pushKey(pid)]]);
-  if (!subs || !subs.length) return;
-  webpush.setVapidDetails("https://retromind-gaming.vercel.app", keys.publicKey, keys.privateKey);
-  const gone = [];
-  await Promise.all(
-    Array.from({ length: subs.length / 2 }, async (_, i) => {
-      const field = subs[2 * i];
-      let sub;
-      try {
-        sub = JSON.parse(subs[2 * i + 1]);
-      } catch {
-        return gone.push(field);
-      }
-      const de = sub.lang === "de";
-      const title = de ? "⚔️ Überholt!" : "⚔️ You’ve been beaten!";
-      const gameName = GAME_NAMES[game][de ? 1 : 0];
-      const body = de ? `${name} hat dich bei ${gameName} überholt. Revanche?` : `${name} just beat you at ${gameName}. Rematch?`;
-      try {
-        await webpush.sendNotification(sub.subscription, JSON.stringify({ title, body, tag: `rm-rival-${game}`, game }), { TTL: 86_400 });
-      } catch (e) {
-        // The browser dropped the subscription (app removed, permission taken back).
-        if (e?.statusCode === 404 || e?.statusCode === 410) gone.push(field);
-        else console.error("highscores push:", e?.statusCode || e?.message || e);
-      }
-    })
-  );
-  if (gone.length) await redis([["HDEL", pushKey(pid), ...gone]]);
+function sendAlerts(pid, game, name) {
+  return sendPush(pid, "rivals", (lang) => {
+    const de = lang === "de";
+    const gameName = GAME_NAMES[game][de ? 1 : 0];
+    return {
+      title: de ? "⚔️ Überholt!" : "⚔️ You’ve been beaten!",
+      body: de ? `${name} hat dich bei ${gameName} überholt. Revanche?` : `${name} just beat you at ${gameName}. Rematch?`,
+      tag: `rm-rival-${game}`,
+      game,
+    };
+  });
 }
 
 /** Leaves a note (and push alerts) for everyone whose best entry on the table the new score just passed. */
@@ -200,25 +165,8 @@ async function notifyBeaten(before, game, name, score, me) {
   await Promise.all([...beaten].map((pid) => sendAlerts(pid, game, name).catch((e) => console.error("highscores push:", e?.message || e))));
 }
 
-async function setPush(pid, body) {
-  const endpoint = String(body.push?.endpoint || body.endpoint || "");
-  if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return false;
-  const field = crypto.createHash("sha256").update(endpoint).digest("hex").slice(0, 16);
-  if (!body.push) {
-    await redis([["HDEL", pushKey(pid), field]]);
-    return true;
-  }
-  const { keys } = body.push;
-  if (!keys || typeof keys.p256dh !== "string" || typeof keys.auth !== "string") return false;
-  const sub = { subscription: { endpoint, keys: { p256dh: keys.p256dh, auth: keys.auth } }, lang: body.lang === "de" ? "de" : "en" };
-  await redis([
-    ["HSET", pushKey(pid), field, JSON.stringify(sub)],
-    ["EXPIRE", pushKey(pid), PUSH_DAYS * 86_400],
-  ]);
-  return true;
-}
-
 export default async function handler(req, res) {
+  if (req.query?.module === "chat") return chatHandler(req, res);
   res.setHeader("Cache-Control", "no-store");
   const body = req.method === "POST" ? await readJsonBody(req) : {};
 
@@ -247,7 +195,7 @@ export default async function handler(req, res) {
     }
     if (req.method === "POST" && "push" in body) {
       if (!me) return res.status(200).json({ ok: false });
-      return res.status(200).json({ ok: await setPush(me, body) });
+      return res.status(200).json(await setPush(me, body));
     }
   } catch (e) {
     console.error("highscores:", e?.message || e);

@@ -20,6 +20,8 @@ import { ChristmasDeco } from './components/ChristmasDeco';
 import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { ControlCenter, ControlHandle } from './components/ControlHandle';
 import { HelpBot } from './components/HelpBot';
+import { GuestChat } from './components/GuestChat';
+import { useChatOpenRequest, useChatUnread } from './lib/chat';
 import { MusicMini } from './components/MusicMini';
 import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
@@ -136,6 +138,14 @@ const App: React.FC = () => {
   const [profileEditRequested, setProfileEditRequested] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  // The chat corner with the other guests (components/GuestChat.tsx); chatWith opens one conversation.
+  const [isGuestChatOpen, setIsGuestChatOpen] = useState(false);
+  const [chatWith, setChatWith] = useState<string | null>(null);
+  const chatUnread = useChatUnread(verified);
+  useChatOpenRequest((id) => {
+    setChatWith(id);
+    setIsGuestChatOpen(true);
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
@@ -700,8 +710,8 @@ const App: React.FC = () => {
       {/* All controls behind one handle at the right edge, halfway down
           (Marco, 2026-10-18); on the welcome screen too, so sound and
           language can be set before the first note. */}
-      {!isSettingsOpen && !isHelpOpen && (
-        <ControlHandle hasNews={unseenNews} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
+      {!isSettingsOpen && !isHelpOpen && !isGuestChatOpen && (
+        <ControlHandle hasNews={unseenNews} chatNews={verified && chatUnread} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
       {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
       {showSplash && <SplashScreen destinationDate={user.birthDate} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
@@ -801,6 +811,8 @@ const App: React.FC = () => {
               onOpenCompanion={verified && !showSplash && phase !== 'intro' ? () => { playSFX('click'); setIsSettingsOpen(false); setIsHelpOpen(false); setIsChatOpen((v) => !v); } : undefined}
               companionOpen={isChatOpen}
               onFeedback={() => { playSFX('click'); setIsSettingsOpen(false); setIsFeedbackOpen(true); }}
+              onOpenGuestChat={verified ? () => { playSFX('click'); setIsSettingsOpen(false); setIsHelpOpen(false); setChatWith(null); setIsGuestChatOpen(true); } : undefined}
+              guestChatNews={chatUnread}
             />
           }
           onDismiss={() => setIsSettingsOpen(false)}
@@ -848,7 +860,17 @@ const App: React.FC = () => {
           <HelpBot
             app="zeitreise"
             open={isHelpOpen}
-            onOpenChange={(o) => { setIsHelpOpen(o); if (o) setIsChatOpen(false); }}
+            hidden={isGuestChatOpen}
+            onOpenChange={(o) => { setIsHelpOpen(o); if (o) { setIsChatOpen(false); setIsGuestChatOpen(false); } }}
+            onSound={() => playSFX('click')}
+          />
+          {/* Writing with the other guests (Marco, 2026-10-19). */}
+          <GuestChat
+            app="zeitreise"
+            open={isGuestChatOpen}
+            openWith={chatWith}
+            suggestedName={user.name}
+            onClose={() => setIsGuestChatOpen(false)}
             onSound={() => playSFX('click')}
           />
 

@@ -15,6 +15,10 @@
     {
       "source": "/api/family",
       "destination": "/api/stats?module=family"
+    },
+    {
+      "source": "/api/chat",
+      "destination": "/api/highscores?module=chat"
     }
   ],
   "functions": {

@@ -24,7 +24,7 @@
     <li>No tracking, no third-party analytics tools, no ads. The only thing counted
       is, anonymously, how often the apps are opened (see section 10).</li>
     <li>Your journey, your profile and your settings stay in your browser on your device. Only what you write in the
-      family book yourself lies on our server, after you agree (see section 15).</li>
+      family book or the chat corner yourself lies on our server, after you agree (see sections 15 and 16).</li>
     <li>Fonts are hosted on our own server. Our server fetches pictures, sounds and text from Wikipedia/Wikimedia
       and Wikidata for you, so your browser doesn’t connect to third-party servers for them.</li>
     <li>Spotify (music) and YouTube (videos) only load once you agree. You only use Google sign-in, AI features and
@@ -300,7 +300,30 @@
     that only opens when you tap it).
   </p>
 
-  <h2>16. Your rights</h2>
+  <h2>16. Chat corner: chatting with other guests (Time Travel and Gaming edition)</h2>
+  <p>
+    In the chat corner invited guests write to each other, all together in one room or just the two of them. Before
+    you see or write anything, you pick a name for the chat and explicitly agree. Then our server stores, in the same
+    Upstash database as the statistics (servers in the EU, see section 10), your chat name, when you joined and when
+    you last looked in (to the day), and every message with its text, name and time. All of this is filed under an
+    identifier the server derives from your guest e-mail address (section 14) with a secret key; the address itself
+    is not stored for this and nobody sees it. Messages in the room can be read by all guests who joined; messages
+    between two people only by the two of you. As operators we can technically see the content in the database, but
+    we don’t read along. So that new messages appear, the app asks our server every few seconds while a conversation
+    is open and about once a minute otherwise; what you have read is remembered in your browser (and, if you switched
+    it on, synced through your Google Drive, section 5).
+  </p>
+  <p>
+    Messages are deleted automatically after 30 days (at most the newest 300 per conversation). You can delete your
+    own messages at any time with ✕; “Leave the chat” and “Delete all my data” remove your name, all your messages in
+    the room and your one-to-one conversations. Anyone who hasn’t looked into the chat for half a year drops off the
+    list. To protect everyone, Marco can delete messages in the shared room. If you like, messages to you arrive as
+    notifications on your device: what section 11 says about rival alerts applies, and the notification contains the
+    name and the beginning of the message. The legal basis is your consent (Art. 6(1)(a) GDPR), which you can
+    withdraw at any time. Please don’t write anything others shouldn’t read, and no particularly sensitive data.
+  </p>
+
+  <h2>17. Your rights</h2>
   <p>You have the right to</p>
   <ul>
     <li>access the data stored about you (Art. 15 GDPR), in RetroMind directly via “Download my data” in the
