@@ -8,7 +8,7 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
-- **Lieblingssongs merken** (2026-10-19, PR #PRNR): Läuft ein geiler Song,
+- **Lieblingssongs merken** (2026-10-19, PR #260): Läuft ein geiler Song,
   merkst du ihn dir mit einem Tipp aufs Herz ♡ neben dem Titel, in der
   Zeitreise und in der Gaming-Halle. Danach kannst du, wenn du magst, einen
   Kommentar dazuschreiben, etwa warum er so gut ist oder wo du ihn zuerst
