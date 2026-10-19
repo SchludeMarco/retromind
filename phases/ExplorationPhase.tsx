@@ -7,6 +7,7 @@ import { tr } from '../lib/i18n';
 import { HeroesSection } from './HeroesSection';
 import { CookbookSection } from './CookbookSection';
 import { AdventSection } from './AdventSection';
+import { GlossarySection } from './GlossarySection';
 import type { SpotifyHit } from '../lib/spotifyApi';
 import { useChristmas } from '../lib/season';
 import { showAdvent } from '../lib/advent';
@@ -21,8 +22,8 @@ const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
 };
 
 // The "Sparten" of the Explore stop: the five kinds of things, the heroes,
-// Grandma's cookbook and the photo lab.
-export type Sparte = BuzzwordCategory | 'lab' | 'heroes' | 'cookbook' | 'advent';
+// Grandma's cookbook, the then & now dictionary and the photo lab.
+export type Sparte = BuzzwordCategory | 'lab' | 'heroes' | 'cookbook' | 'advent' | 'glossary';
 
 /** The name of a Sparte, for the breadcrumb in the journey bar. */
 export function sparteLabel(s: Sparte): string {
@@ -30,6 +31,7 @@ export function sparteLabel(s: Sparte): string {
   if (s === 'heroes') return tr('Heroes of your youth', 'Helden deiner Jugend');
   if (s === 'cookbook') return tr('Grandma’s Cookbook', 'Omas Kochbuch');
   if (s === 'advent') return tr('Advent calendar', 'Adventskalender');
+  if (s === 'glossary') return tr('Then & Now', 'Damals & heute');
   return CATEGORY[s].label;
 }
 
@@ -171,6 +173,11 @@ export const ExplorationPhase: React.FC<{
           <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Grandma’s Cookbook', 'Omas Kochbuch')}</span>
           <span className="text-sm text-retro-brown">{tr('Treats from back then to cook at home', 'Leckereien von damals zum Nachkochen')}</span>
           {christmas && <span className="text-xs font-semibold text-retro-amber-dark">{tr('🎄 Christmas bakery open', '🎄 Weihnachtsbäckerei geöffnet')}</span>}
+        </button>
+        <button onClick={() => open('glossary')} className={tileClass}>
+          <span aria-hidden="true" className="text-3xl mb-1">🗝️</span>
+          <span className="font-bold text-lg leading-tight text-retro-ink">{tr('Then & Now', 'Damals & heute')}</span>
+          <span className="text-sm text-retro-brown">{tr('Words from back then and what we say today', 'Begriffe von damals und was man heute sagt')}</span>
         </button>
         <button onClick={() => open('lab')} className={tileClass}>
           <span aria-hidden="true" className="text-3xl mb-1">📷</span>
@@ -397,7 +404,10 @@ export const ExplorationPhase: React.FC<{
         backButton={backButton}
       />
     )}
-    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparte !== 'advent' && sparteView(sparte)}
+    {sparte === 'glossary' && (
+      <GlossarySection focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
+    )}
+    {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparte !== 'advent' && sparte !== 'glossary' && sparteView(sparte)}
 
     <PhaseNav back={{ to: 'induction', onClick: onBack }} next={{ to: 'diary', onClick: onNext }} />
   </div>

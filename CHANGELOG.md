@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Damals & heute: Begriffe von früher und von heute** (2026-10-19, PR #258):
+  Beim Erkunden gibt es eine neue Sparte „Damals & heute“. Sie zeigt auf
+  einen Blick, welche Wörter und Dinge es früher gab und wie sie heute
+  heißen, zum Beispiel Wählscheibentelefon und Smartphone, Bandsalat und
+  Ladekreis oder Fete und Party. Zu jedem Paar gibt es eine kurze Erklärung
+  und je einen Beispielsatz, wie man es damals sagte und wie man es heute
+  sagt. Sortiert ist alles nach Jahrzehnten (deine Zeit zuerst) und Themen
+  wie Technik, Jugendsprache, Alltag, Geld, Fernsehen & Musik und Spiele.
+  Eine Suche findet Begriffe in allen Jahrzehnten, „Heute abdecken“ macht
+  daraus ein Ratespiel, und jeder Begriff lässt sich als Erinnerung ins
+  Buch übernehmen. Auf Englisch gibt es eigene, amerikanische Begriffe
+  (etwa Party line und Group chat).
 - **Spotify-App wecken statt Ausschnitte** (2026-10-19, PR #257): RetroMind
   merkt sich dein Handy, sobald es die Spotify-App einmal gefunden hat. Ist
   die App später zu, bittet RetroMind Spotify, die Musik an dieses Handy zu

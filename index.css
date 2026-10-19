@@ -2677,6 +2677,159 @@ html[data-theme="nachtschicht"] .splash-start:active {
   .cookbook-tip { transform: none; }
 }
 
+/* ------------------------------------------------------------------
+   Damals & heute (phases/GlossarySection.tsx): the then & now dictionary.
+   It lives in the cookbook's ribbons and lined paper; the cards are index
+   cards with "then" on the left and "today" on the right.
+   ------------------------------------------------------------------ */
+.glossary-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rm-space-3);
+  align-items: center;
+}
+.glossary-search {
+  display: flex;
+  align-items: center;
+  gap: var(--rm-space-2);
+  flex: 1 1 16rem;
+  min-height: 44px;
+  padding: 0 var(--rm-space-4);
+  background: var(--color-retro-paper-white);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-control);
+}
+.glossary-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  background: transparent;
+  color: var(--color-retro-ink);
+  outline: none;
+}
+.glossary-search:focus-within { outline: 2px solid var(--rm-accent); outline-offset: 2px; }
+.glossary-toggle,
+.glossary-chip {
+  min-height: 44px;
+  padding: 0 var(--rm-space-4);
+  font-weight: 700;
+  color: var(--color-retro-ink);
+  background: var(--color-retro-paper-white);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-radius: var(--rm-radius-control);
+}
+.glossary-toggle.is-on,
+.glossary-chip.is-active {
+  background: var(--rm-accent);
+  border-color: var(--rm-accent);
+  color: var(--color-retro-paper-white);
+}
+/* Topic chips: one swipeable row on phones, wrapping on wider screens. */
+.glossary-topics {
+  display: flex;
+  gap: var(--rm-space-2);
+  margin: 0 calc(-1 * var(--rm-space-2)) var(--rm-space-6);
+  padding: 2px var(--rm-space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.glossary-topics::-webkit-scrollbar { display: none; }
+@media (min-width: 640px) {
+  .glossary-topics { flex-wrap: wrap; overflow: visible; }
+}
+.glossary-chip { flex-shrink: 0; min-height: 40px; padding: 0 var(--rm-space-3); font-size: 0.9rem; white-space: nowrap; }
+.glossary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-3);
+  padding: var(--rm-space-4) var(--rm-space-4) var(--rm-space-4) var(--rm-space-6);
+  background: var(--color-retro-cream-light);
+  border: var(--rm-border-w) solid var(--rm-border-color);
+  border-left: 4px solid var(--rm-accent);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+  box-shadow: var(--rm-shadow-float);
+}
+/* Phone: "then" above "today" with the arrow pointing down; wider: side by side. */
+.glossary-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rm-space-1);
+}
+.glossary-arrow { transform: rotate(90deg); justify-self: start; margin-left: 0.25rem; }
+@media (min-width: 640px) {
+  .glossary-pair {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--rm-space-3);
+    align-items: end;
+  }
+  .glossary-arrow { transform: none; margin-left: 0; }
+}
+.glossary-pair > div { display: flex; flex-direction: column; gap: 2px; }
+.glossary-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-retro-tan);
+}
+.glossary-word {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-retro-ink);
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.glossary-word.is-now { color: var(--rm-accent); }
+.glossary-arrow {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--color-retro-tan);
+}
+.glossary-reveal {
+  min-height: 44px;
+  padding: 0 var(--rm-space-3);
+  font-weight: 700;
+  color: var(--color-retro-ink);
+  background: repeating-linear-gradient(-45deg, var(--color-retro-highlight) 0 8px, var(--color-retro-paper-white) 8px 16px);
+  border: 2px dashed var(--rm-border-color);
+  border-radius: min(var(--rm-radius-card), 0.6rem);
+}
+.glossary-note {
+  color: var(--color-retro-brown);
+  line-height: 1.55;
+}
+.glossary-say {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rm-space-2);
+  padding: var(--rm-space-3);
+  background: var(--color-retro-paper-white);
+  border-radius: min(var(--rm-radius-card), 0.5rem);
+}
+.glossary-say dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-retro-tan);
+}
+.glossary-say dd {
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.45;
+  color: var(--color-retro-ink);
+}
+.glossary-remember {
+  align-self: flex-start;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--color-retro-amber-dark);
+}
+.glossary-remember.is-done { color: var(--color-retro-green); }
+
 /* The Stube furnished in your decade (lib/roomEra.ts, components/EraDecor.tsx) */
 .rm-era-note {
   font-size: 0.85rem;
