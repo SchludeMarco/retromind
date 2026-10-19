@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Damals & heute: Begriffe von früher und von heute': {
+    title: 'Then & Now: words from back then and from today',
+    text: 'Explore has a new category, “Then & Now.” At a glance it shows which words and things we had back then and what they are called today, like rotary phone and smartphone, party line and group chat, or layaway and buy now, pay later. Every pair comes with a short note and two sentences: how you said it then and how you say it now. It is sorted by decade (your own first) and by topic: gadgets, slang, everyday life, money, TV & music and games. A search finds words across all decades, “Cover up today” turns it into a guessing game, and every word can go into your memory book.',
+  },
   'Spotify-App wecken statt Ausschnitte': {
     title: 'Waking the Spotify app instead of previews',
     text: 'RetroMind now remembers your phone once it has found the Spotify app there. If the app is closed later, RetroMind asks Spotify to hand the music over to that phone before falling back to previews. If that works, full songs play without you opening the app.',

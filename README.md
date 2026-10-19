@@ -127,6 +127,18 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (US-Maße) und Deutsch
   ([`phases/CookbookSection.tsx`](phases/CookbookSection.tsx),
   [`lib/recipes.ts`](lib/recipes.ts)).
+- **Damals & heute** – eine Sparte beim Erkunden: ein kleines Wörterbuch,
+  das Begriffe und Dinge von damals neben das stellt, was sie heute sind
+  (Wählscheibentelefon → Smartphone, Bandsalat → Ladekreis, dufte → nice).
+  Jedes Paar hat eine kurze Erklärung und zwei Beispielsätze: so sagte man
+  es damals, so sagt man es heute. Lesezeichen für die Jahrzehnte (60er bis
+  2010er, die eigene Zeit zuerst), Themen zum Filtern (Technik,
+  Jugendsprache, Alltag, Geld, Fernsehen & Musik, Spiele), eine Suche über
+  alle Jahrzehnte, ein Ratespiel („Heute“ abdecken und antippen) und
+  „Erinnern“ fürs Erinnerungsbuch. Die englische Fassung hat eigene,
+  amerikanische Begriffe statt Übersetzungen, je rund 47 Paare pro Sprache
+  ([`phases/GlossarySection.tsx`](phases/GlossarySection.tsx),
+  [`lib/glossary.ts`](lib/glossary.ts)).
 - **Weihnachtszeit** – vom 1. November bis 6. Januar öffnet in Omas
   Kochbuch die Weihnachtsbäckerei (Plätzchen, Bratäpfel, Kinderpunsch), und
   die Zeitreise trägt Weihnachtslook: Lichterkette oben, viele kleine
@@ -869,6 +881,12 @@ Ideen nur für die Gaming-Edition stehen in deren
 - **Mehr Rezepte in Omas Kochbuch:** Eigene Rezepte der Familie
   hinzufügen (mit Foto aus dem Memory-Labor) und ins Erinnerungsbuch
   übernehmen; das Kochbuch könnte auch als Ecke in der Stube auftauchen.
+- **Mehr aus „Damals & heute“:** ein „Wort von damals“ jeden Tag auf der
+  Startseite, eigene Begriffe der Familie hinzufügen (mit eigenem
+  Beispielsatz), regionale Wörter (Bayern, Ruhrpott, Berlin, DDR) und die
+  Beispielsätze vorlesen lassen. Die Gaming-Edition könnte ein eigenes
+  Spieler-Wörterbuch bekommen (Modul → Download, Joypad → Controller,
+  Speicherkarte → Cloud-Speicherstand).
 - **Adventskalender jedes Jahr neu:** Für jedes Jahr eine andere Füllung
   der 24 Türchen, damit es im nächsten Dezember wieder Überraschungen gibt.
 
