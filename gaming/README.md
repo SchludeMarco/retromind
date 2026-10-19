@@ -254,9 +254,24 @@ zeigen dürfen.
   ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
   Zeichen ein, je Zeichen mit ▲/▼ oder getippt; dein Kürzel aus den
-  Einstellungen steht schon da. Die Top 10 gelten für alle Spieler
+  Einstellungen steht schon da. Jedes der 14 Browser-Spiele hat seine Tafel,
+  bei Memory und Schiebepuzzle zählen die wenigsten Züge, bei Sudoku und
+  Solitär die schnellste Zeit. Die Top 10 gelten für alle Gäste
   (`api/highscores.js`, Upstash Redis; ohne Datenbank bleibt die Tafel auf
-  dem Gerät).
+  dem Gerät), deine eigenen Einträge leuchten grün.
+- **Bestenliste (Hall of Fame)** – unter „Die Retro-Konsole“ zeigt
+  [`components/HallOfFame.tsx`](components/HallOfFame.tsx) alle Tafeln auf
+  einem leuchtenden Röhrenbildschirm, mit ◀ ▶ von Spiel zu Spiel, dazu die
+  Tafel des Wochen-Duells, „Wer dich überholt hat“ und „Spielen“.
+- **Überholt! Konkurrenzkampf um die Tafeln** – überholt dich jemand auf einer
+  Tafel, legt der Server dir eine Notiz ab (er erkennt Spieler an einer
+  Prüfsumme der Gäste-Anmeldung). Beim nächsten Besuch springt „Überholt!“ mit
+  „Revanche!“ auf. Mit der „Überholt-Meldung“ in den Einstellungen kommt die
+  Nachricht als Push aufs Gerät, auch wenn die Spielhalle zu ist (Web Push,
+  [`lib/rivals.ts`](lib/rivals.ts), die Service Worker zeigen sie an; auf
+  iPhone/iPad nur in der installierten App). Die Push-Schlüssel leitet der
+  Server aus dem vorhandenen Geheimnis ab, optional `VAPID_PUBLIC_KEY` und
+  `VAPID_PRIVATE_KEY`.
 - **Dein Kürzel** – unter Einstellungen → „Your initials“ legst du dein
   Kürzel aus drei Zeichen fest (wie LIQ oder MAR). Es gilt auch in der
   Zeitreise und mit Google-Anmeldung auf allen Geräten
@@ -381,6 +396,7 @@ legt dann die Gaming-Seite unter `/` ab. Das Projekt braucht eigene Variablen:
 | `YOUTUBE_API_KEY` | Optional: Videosuche nach Likes sortiert |
 | `GOOGLE_CLIENT_SECRET` | Optional: Google-Anmeldung bleibt über die Stunde hinaus bestehen |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Optional: Upstash Redis für Highscores und Statistik (dieselbe Datenbank wie `retromind`) |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | Optional: eigenes Schlüsselpaar für die Überholt-Meldung per Push; ohne sie leitet der Server eins aus `GUEST_SECRET` bzw. dem Datenbank-Token ab |
 
 Alle Variablen erklärt die [Haupt-README](../README.md#deployment-vercel).
 
@@ -419,6 +435,12 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
+- **Echtzeit-Duelle zu zweit:** Pong, Snake oder Blockstapler gleichzeitig
+  gegeneinander, direkt von Gerät zu Gerät (WebRTC). In manchen Handynetzen
+  braucht das einen kostenpflichtigen Vermittlungsdienst, also erst nach
+  Rücksprache.
+- **Rundenbasiert gegen Freunde:** ein Gast fordert einen anderen zum
+  Quiz-Duell oder Blackjack heraus, über die vorhandene Datenbank.
 - **Mehr Preise am Tresen:** geheime Minispiele, Deko für die Halle (Poster,
   Neonschilder, ein Flipper im Hintergrund) und ein „Cheat“, der ein
   vergessenes Spiel als Geheimtipp aufdeckt.

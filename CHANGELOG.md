@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Bestenliste und Überholt-Meldung: Konkurrenzkampf in der Spielhalle**
+  (2026-10-19, PR #261): Jedes der 14 Browser-Spiele hat jetzt eine eigene
+  Highscore-Tafel für alle Gäste, auch Memory und Schiebepuzzle (wenigste
+  Züge), Sudoku und Solitär (schnellste Zeit) und das Spiele-Quiz. Unter „Die
+  Retro-Konsole“ öffnet „Bestenliste“ alle Tafeln im Arcade-Look auf einem
+  leuchtenden Röhrenbildschirm, deine eigenen Einträge leuchten grün. Überholt
+  dich jemand, siehst du beim nächsten Besuch „Überholt!“ mit einem Knopf für
+  die Revanche. Wer mag, schaltet in den Einstellungen die
+  „Überholt-Meldung“ ein und bekommt die Nachricht sofort aufs Handy, auch
+  wenn die Spielhalle zu ist (auf dem iPhone in der installierten App).
+
 - **Lieblingssongs merken** (2026-10-19, PR #260): Läuft ein geiler Song,
   merkst du ihn dir mit einem Tipp aufs Herz ♡ neben dem Titel, in der
   Zeitreise und in der Gaming-Halle. Danach kannst du, wenn du magst, einen

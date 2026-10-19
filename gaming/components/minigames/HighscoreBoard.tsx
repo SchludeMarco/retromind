@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BoardGame, Entry, fetchBoard, fetchWeekBoard, isDuelGame, lastInitials, qualifies, submitScore } from '../../lib/highscores';
+import { BoardGame, Entry, fetchBoard, fetchWeekBoard, formatScore, isDuelGame, lastInitials, qualifies, submitScore } from '../../lib/highscores';
 import { chip } from '../../lib/chiptune';
 import { tr } from '../../../lib/i18n';
 import { InitialsPicker } from '../../../components/InitialsPicker';
@@ -20,7 +20,7 @@ export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ g
       if (!alive) return;
       setBoard(b);
       setWeek(w);
-      setEntering(qualifies(b, score) || (!!w && qualifies(w, score)));
+      setEntering(qualifies(b, score, game) || (!!w && qualifies(w, score, game)));
     });
     return () => {
       alive = false;
@@ -51,29 +51,24 @@ export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ g
       {duel && week && week.length > 0 && (
         <>
           <p className="pixel-font hs-week-title">{tr('THIS WEEK’S DUEL', 'WOCHEN-DUELL')}</p>
-          <ol className="hs-table pixel-font">
-            {week.slice(0, 5).map((e, i) => (
-              <li key={`w-${e.name}-${e.score}-${i}`}>
-                <span>{String(i + 1).padStart(2, ' ')}.</span>
-                <span>{e.name}</span>
-                <span>{e.score.toLocaleString('en-US')}</span>
-              </li>
-            ))}
-          </ol>
+          <ScoreTable game={game} entries={week.slice(0, 5)} />
           <p className="pixel-font hs-week-title">{tr('ALL TIME', 'ALLE ZEITEN')}</p>
         </>
       )}
-      {board.length > 0 && (
-        <ol className="hs-table pixel-font">
-          {board.map((e, i) => (
-            <li key={`${e.name}-${e.score}-${i}`} className={e.mine ? 'mine' : undefined}>
-              <span>{String(i + 1).padStart(2, ' ')}.</span>
-              <span>{e.name}</span>
-              <span>{e.score.toLocaleString('en-US')}</span>
-            </li>
-          ))}
-        </ol>
-      )}
+      {board.length > 0 && <ScoreTable game={game} entries={board} />}
     </div>
   );
 };
+
+/** A table in arcade style: rank, initials, score; your own lines glow. */
+export const ScoreTable: React.FC<{ game: BoardGame; entries: Entry[] }> = ({ game, entries }) => (
+  <ol className="hs-table pixel-font">
+    {entries.map((e, i) => (
+      <li key={`${e.name}-${e.score}-${i}`} className={e.mine ? 'mine' : e.me ? 'me' : undefined}>
+        <span>{String(i + 1).padStart(2, ' ')}.</span>
+        <span>{e.name}</span>
+        <span>{formatScore(game, e.score)}</span>
+      </li>
+    ))}
+  </ol>
+);

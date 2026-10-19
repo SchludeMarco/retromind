@@ -32,3 +32,35 @@ self.addEventListener('fetch', (e) => {
       .catch(() => caches.match(req).then((hit) => hit || caches.match('/')))
   );
 });
+
+// Rival alerts (gaming/lib/rivals.ts, api/highscores.js): someone passed you
+// on a high score table. A tap opens the arcade, which shows who it was.
+self.addEventListener('push', (e) => {
+  let data = {};
+  try {
+    data = e.data ? e.data.json() : {};
+  } catch {
+    /* not ours */
+  }
+  if (!data.title) return;
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      tag: data.tag,
+      icon: '/gaming/icon-192.png',
+      badge: '/gaming/favicon-48.png',
+      data: { url: self.registration.scope },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const url = e.notification.data?.url || self.registration.scope;
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      const open = list.find((c) => c.url.startsWith(url));
+      return open ? open.focus() : self.clients.openWindow(url);
+    })
+  );
+});

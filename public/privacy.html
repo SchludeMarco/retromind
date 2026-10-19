@@ -209,11 +209,25 @@
     After a good round in a points mini-game you can put yourself on the high score table with three letters or
     digits, like at an arcade cabinet. Only when you tap “OK” does the app send the game, your three characters and
     your score to our server. It stores them in the same Upstash database as the statistics (see section 10); the
-    best 50 entries per game are kept, and anyone who opens the game sees the top 10. Nothing else is stored, in
-    particular no IP address and no identifier. So please don’t pick letters that make you recognizable to others
-    if you don’t want that. The app also remembers your last initials and its own table in your browser. The legal
-    basis is your consent by entering them (Art. 6(1)(a) GDPR); we remove an entry on request. In the weekly duel’s
-    game your entry also goes on that week’s table, which is deleted after 30 days.
+    best 50 entries per game are kept, and anyone who opens the game sees the top 10. With each entry the server
+    also files a one-way hash of the email address from your guest access (see the guest list section). The address
+    itself is not stored with it, and nobody but the server sees the hash. It uses it to recognize your own entries
+    (they glow on the table) and whom your new score has just passed. Whoever was passed gets a short note (game,
+    your three characters, your score, time) that they see on their next visit; notes are deleted after 30 days. No
+    IP address is stored. Please don’t pick letters that make you recognizable to others if you don’t want that. The
+    app also remembers your last initials and its own table in your browser. The legal basis is your consent by
+    entering them (Art. 6(1)(a) GDPR); we remove an entry on request. In the weekly duel’s game your entry also goes
+    on that week’s table, which is deleted after 30 days.
+  </p>
+  <p>
+    <strong>Rival alerts by push (optional):</strong> If you switch on “Rival alerts” in the Gaming settings and allow
+    notifications, your browser registers the device with its push service (Google Firebase Cloud Messaging for
+    Chrome and Android, Mozilla for Firefox, Apple for Safari and iPhone). Our server stores the push address and its
+    keys together with the hash of your email address and your language in the Upstash database, for at most 180
+    days. When someone passes you, it sends an encrypted message through that service (the game and the other
+    player’s three characters). Switching it off in the settings, “Delete all my data” or withdrawing the
+    notification permission in your browser ends this, and the registration is deleted. The legal basis is your
+    consent (Art. 6(1)(a) GDPR, § 25(1) TDDDG).
   </p>
 
   <h2>12. Feedback</h2>

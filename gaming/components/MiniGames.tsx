@@ -216,7 +216,7 @@ const Memory: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           );
         })}
       </div>
-      {result && <Done text={tr(`Found all pairs in ${moves} moves.`, `Alle Pärchen in ${moves} Zügen gefunden.`)} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Found all pairs in ${moves} moves.`, `Alle Pärchen in ${moves} Zügen gefunden.`)} record={result.record} onAgain={again} board={{ game: 'memory', score: moves }} />}
     </>
   );
 };
@@ -304,7 +304,7 @@ const Puzzle: React.FC<{ onWin: () => void }> = ({ onWin }) => {
           )
         )}
       </div>
-      {result && <Done text={tr(`Sorted in ${moves} moves.`, `In ${moves} Zügen sortiert.`)} record={result.record} onAgain={again} />}
+      {result && <Done text={tr(`Sorted in ${moves} moves.`, `In ${moves} Zügen sortiert.`)} record={result.record} onAgain={again} board={{ game: 'puzzle', score: moves }} />}
     </>
   );
 };
