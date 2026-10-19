@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Android: Spotify-App muss nicht mehr offen sein** (2026-10-19, PR #256):
+  Auf Android-Handys erklärt der Hinweis „Nur Ausschnitte“ jetzt, wie es
+  ohne Öffnen der App geht: In der Spotify-App unter Einstellungen → Geräte
+  „Spotify Connect im Hintergrund“ einschalten. Dann findet RetroMind die
+  App auch, wenn sie zu ist, und spielt ganze Songs, ohne dass du RetroMind
+  verlässt. Eine Webseite kann die Spotify-App nicht unbemerkt im
+  Hintergrund starten; auf dem iPhone muss sie deshalb weiter kurz geöffnet
+  werden.
 - **Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit** (2026-10-19, PR #255):
   Nach „Ab in die Vergangenheit“ ruckelte die Zeitreise stark, weil der
   Wirbel und die Lichtringe sehr viel Grafikspeicher brauchten. Sie werden

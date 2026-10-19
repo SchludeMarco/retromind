@@ -269,6 +269,7 @@ const ConnectNote: React.FC = () => {
           'Für ganze Songs öffne kurz die Spotify-App auf deinem Handy und komm zurück: RetroMind findet sie dann von selbst. Bis dahin hörst du kurze Ausschnitte.'
         )}
       </p>
+      {ANDROID && <p>{ANDROID_TIP()}</p>}
       <button type="button" className="music-dock-mute" onClick={openSpotifyApp}>
         {tr('Open Spotify app', 'Spotify-App öffnen')}
       </button>
@@ -286,6 +287,16 @@ const ConnectNote: React.FC = () => {
 // worden"). One tap opens the Spotify app (or the login); back in RetroMind
 // the app is found on its own (lib/spotifyConnect) and full songs play.
 const HINT_KEY = 'rm-full-songs-hint-closed';
+// A web page can't start another app in the background: opening Spotify
+// always brings it to the front (Marco, 2026-10-19: "Mach du das, aber
+// verliert den Fokus auf RetroMind nicht"). On Android the Spotify app can
+// stay reachable while closed, through its own setting; iPhones have none.
+const ANDROID = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+const ANDROID_TIP = () =>
+  tr(
+    'Tip: in the Spotify app under Settings → Devices, switch on “Spotify Connect in background”. Then RetroMind finds the app even when it is closed, and you don’t have to open it any more.',
+    'Tipp: In der Spotify-App unter Einstellungen → Geräte „Spotify Connect im Hintergrund“ einschalten. Dann findet RetroMind die App auch, wenn sie zu ist, und du musst sie nicht mehr öffnen.'
+  );
 const FullSongsHint: React.FC = () => {
   const { state } = useConnectState();
   // Closed for this state ("no-device" or "login") until the tab is closed.
@@ -316,6 +327,7 @@ const FullSongsHint: React.FC = () => {
           ? tr('♪ Only previews: sign in to Spotify again for full songs', '♪ Nur Ausschnitte: für ganze Songs neu bei Spotify anmelden')
           : tr('♪ Only previews: open your Spotify app for full songs', '♪ Nur Ausschnitte: für ganze Songs Spotify-App öffnen')}
       </button>
+      {state === 'no-device' && ANDROID && <p className="music-full-hint-tip">{ANDROID_TIP()}</p>}
       <button type="button" className="music-full-hint-x" onClick={close} aria-label={tr('Close', 'Schließen')}>
         ×
       </button>

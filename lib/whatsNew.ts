@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Android: Spotify-App muss nicht mehr offen sein': {
+    title: 'Android: the Spotify app no longer has to be open',
+    text: 'On Android phones the “Only previews” hint now explains how it works without opening the app: in the Spotify app under Settings → Devices, switch on “Spotify Connect in background”. Then RetroMind finds the app even when it is closed and plays full songs without you leaving RetroMind. A web page can’t start the Spotify app quietly in the background, so on an iPhone you still have to open it for a moment.',
+  },
   'Startbildschirm läuft flüssig, die Uhr zeigt die echte Zeit': {
     title: 'The welcome screen runs smoothly, the clock shows the real time',
     text: 'After “Go back in time” the journey stuttered badly, because the swirl and the rings of light needed a lot of graphics memory. They are now drawn sparingly and look the same, and the memory needed at the start has dropped to about a quarter. The lightning and the clock also cost your phone less work. The mantel clock now shows the real time, and a thin red second hand jumps on every second, so you can see at once that it is running.',
