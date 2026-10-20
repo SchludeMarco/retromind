@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Bestenliste: Spiel aus einer Liste wählen** (2026-10-20, PR #267): Die
+  Bestenliste der Gaming-Edition öffnet jetzt mit einer Liste aller Spiele
+  untereinander statt mit ◀ ▶ von Spiel zu Spiel. Oben gibt es ein Suchfeld,
+  das beim Tippen filtert (deutsche und englische Namen), bei jedem Spiel
+  steht dein bestes Ergebnis auf diesem Gerät, und das Spiel des
+  Wochen-Duells ist markiert. Ein Tipp öffnet die Tafel des Spiels, „◀ Alle
+  Spiele“ führt zurück zur Liste.
+
 - **Benachrichtigungen ein- und ausschalten** (2026-10-20, PR #266): In den
   Einstellungen beider Apps gibt es jetzt den Bereich „Benachrichtigungen“
   mit einem Hauptschalter für alles und je einem Schalter für Nachrichten an
