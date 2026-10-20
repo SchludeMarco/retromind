@@ -40,6 +40,7 @@ export const FavoriteBands: React.FC<{
       )}
       notMine={notMine}
       onNotMineChange={onNotMineChange}
+      bundle={(n) => tr(`${n} favorites`, `${n} Favoriten`)}
     />
   );
 };

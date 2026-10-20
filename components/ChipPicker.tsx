@@ -20,9 +20,16 @@ export const ChipPicker: React.FC<{
   ideasOpen?: boolean;
   notMine: string[];
   onNotMineChange: (notMine: string[]) => void;
-}> = ({ label, inputId, placeholder, items, onChange, groups, ideasLabel, ideasIntro, ideasOpen: openAtStart = false, notMine, onNotMineChange }) => {
+  /** Bundles the chosen items behind one tap (Marco, 2026-10-20): collapsed,
+   *  only a count and the first names show. Gets the item count, returns the
+   *  noun ("12 favorites"). */
+  bundle?: (count: number) => string;
+}> = ({ label, inputId, placeholder, items, onChange, groups, ideasLabel, ideasIntro, ideasOpen: openAtStart = false, notMine, onNotMineChange, bundle }) => {
   const [draft, setDraft] = useState('');
   const [ideasOpen, setIdeasOpen] = useState(openAtStart);
+  const [listOpen, setListOpen] = useState(false);
+  const bundled = !!bundle && items.length > 1;
+  const showList = !bundled || listOpen;
 
   const has = (name: string) => items.some((a) => norm(a) === norm(name));
   const add = (name: string) => {
@@ -71,7 +78,26 @@ export const ChipPicker: React.FC<{
           +
         </button>
       </div>
-      {items.length > 0 && (
+      {bundled && (
+        <button
+          type="button"
+          onClick={() => setListOpen((o) => !o)}
+          aria-expanded={listOpen}
+          className="mt-3 w-full flex flex-wrap items-center gap-x-2 px-3 py-2 border-2 border-retro-ink text-sm text-left bg-white"
+        >
+          <span className="font-bold shrink-0">♪ {bundle!(items.length)}</span>
+          {!listOpen && (
+            <span className="order-last basis-full truncate opacity-70">
+              {items.slice(0, 3).join(', ')}
+              {items.length > 3 ? ' …' : ''}
+            </span>
+          )}
+          <span className="ml-auto shrink-0 font-bold underline">
+            {listOpen ? tr('Hide ▴', 'Zuklappen ▴') : tr('Show all ▾', 'Alle zeigen ▾')}
+          </span>
+        </button>
+      )}
+      {items.length > 0 && showList && (
         <div className="flex flex-wrap gap-2 mt-3">
           {items.map((item) => (
             <span

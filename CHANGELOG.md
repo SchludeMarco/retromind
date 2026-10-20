@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Lieblingsbands gebündelt** (2026-10-20, PR #269): Die Liste deiner
+  Lieblingsbands und Musiker:innen in den Einstellungen und beim Start ist
+  jetzt zusammengeklappt. Statt aller Namen untereinander steht dort eine
+  Zeile wie „♪ 12 Favoriten: Elvis Presley, Johnny Cash, The Beatles …“; ein
+  Tipp auf „Alle zeigen“ klappt die ganze Liste auf, ein zweiter wieder zu.
+  Das Eingabefeld zum Hinzufügen bleibt immer sichtbar.
+
 - **Gaming-Edition: Fünf neue Spiele für die Highscore-Jagd** (2026-10-20,
   PR #268): In der Chill-Ecke unter „Browser-Spiele“ gibt es fünf neue
   Automaten-Klassiker, jeder mit eigener Highscore-Tafel, Platz in der Hall of

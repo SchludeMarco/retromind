@@ -232,7 +232,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Namen jedes Fünf-Jahres-Abschnitts seit dem Geburtsjahr,
   [`lib/favoriteBands.ts`](lib/favoriteBands.ts); ✕ an einem Vorschlag heißt
   „passt nicht zu mir / kenn ich nicht“ und blendet ihn aus; auch in den
-  Einstellungen änderbar, fließt in die persönlichen Fragen ein). Darunter
+  Einstellungen änderbar, fließt in die persönlichen Fragen ein; ab zwei
+  Namen ist die Liste gebündelt: „♪ 12 Favoriten“ mit den ersten Namen, ein
+  Tipp auf „Alle zeigen“ klappt alle auf). Darunter
   die zugeklappte **Schatzkiste**: Lieblingsfiguren aus Film und Spiel,
   besondere Spiele, Bücher und Comics, besondere Orte und Ereignisse,
   Gerüche, alte Läden, Kartenspiele und Sprüche aus Filmen und Spielen, mit
