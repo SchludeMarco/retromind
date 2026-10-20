@@ -4568,6 +4568,10 @@ button.pcard {
   text-align: center;
   border-color: var(--a3);
 }
+/* Same height while typing in the search, so the field doesn't jump. */
+.hof-dialog.picking {
+  min-height: min(640px, calc(100dvh - 48px));
+}
 .hof-title {
   color: var(--a3);
   text-shadow: 0 0 8px var(--a3), 3px 3px 0 var(--a1);
@@ -4579,32 +4583,93 @@ button.pcard {
   }
 }
 .hof-switch {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  justify-content: flex-start;
   margin-top: 12px;
+}
+.hof-back {
+  font-size: 10px;
+  padding: 8px 10px;
 }
 .hof-game {
   font-size: 11px;
   color: var(--a2);
   line-height: 1.5;
+  margin-top: 12px;
 }
-.hof-dots {
+/* The game picker: a search field over one row per game (Marco 2026-10-20). */
+.search.hof-search {
+  position: sticky;
+  top: -20px;
+  z-index: 2;
+  margin: 12px -20px 0;
+  padding: 8px 20px;
+  background: var(--bg);
+}
+.hof-search input {
+  font-size: 20px;
+}
+.hof-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  text-align: left;
+}
+.hof-row {
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin: 8px 0 4px;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 6px;
+  background: none;
+  border: none;
+  border-bottom: 2px dashed var(--dim);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
-.hof-dots span {
-  width: 6px;
-  height: 6px;
-  background: var(--dim);
-  opacity: 0.5;
+.hof-row:hover,
+.hof-row:focus-visible {
+  background: var(--bg2);
+  outline: none;
 }
-.hof-dots span.on {
-  background: var(--a3);
-  opacity: 1;
+.hof-row-icon {
+  font-size: 24px;
+  width: 32px;
+  text-align: center;
+  flex: none;
+}
+.hof-row-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hof-row-title {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--a2);
+}
+.hof-row-best {
+  font-size: 15px;
+}
+.hof-row-duel {
+  flex: none;
+  font-size: 8px;
+  color: var(--a1);
+}
+.hof-row-go {
+  flex: none;
+  color: var(--a3);
+}
+.hof-none {
+  margin: 24px 0 8px;
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--a3);
 }
 /* A black CRT with scanlines around the tables. */
 .hof-screen {

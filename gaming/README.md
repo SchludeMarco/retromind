@@ -273,8 +273,10 @@ zeigen dürfen.
   dem Gerät), deine eigenen Einträge leuchten grün.
 - **Bestenliste (Hall of Fame)** – unter „Die Retro-Konsole“ zeigt
   [`components/HallOfFame.tsx`](components/HallOfFame.tsx) alle Tafeln auf
-  einem leuchtenden Röhrenbildschirm, mit ◀ ▶ von Spiel zu Spiel, dazu die
-  Tafel des Wochen-Duells, „Wer dich überholt hat“ und „Spielen“.
+  einem leuchtenden Röhrenbildschirm. Sie öffnet mit einer durchsuchbaren
+  Liste aller Spiele untereinander (mit deinem Bestwert und dem Wochen-Duell
+  markiert); ein Tipp zeigt die Tafel, dazu die Tafel des Wochen-Duells,
+  „Wer dich überholt hat“ und „Spielen“, „◀ Alle Spiele“ geht zurück.
 - **Überholt! Konkurrenzkampf um die Tafeln** – überholt dich jemand auf einer
   Tafel, legt der Server dir eine Notiz ab (er erkennt Spieler an einer
   Prüfsumme der Gäste-Anmeldung). Beim nächsten Besuch springt „Überholt!“ mit
