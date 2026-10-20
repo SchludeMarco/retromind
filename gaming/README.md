@@ -68,6 +68,8 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Bereich unterm Logo** – unter „RETROMIND GAMING“ steht immer, welcher
+  Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Chillen, Quests).
 - **Fun-Fact-Laufband** – ganz unten am Bildschirmrand,
   wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
   schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
