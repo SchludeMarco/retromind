@@ -1,16 +1,20 @@
 // Web Push for both editions (VAPID; no outside service besides the
 // browser's own push server). One subscription per device, filed under the
-// guest's player hash (api/highscores.js playerId) in rm:hs:push:<pid>, with
-// the topics this device asked for: "rivals" (someone passed you on a high
-// score table) and "chat" (a message for you in the chat corner,
-// api/_chat.js). Subscriptions from before topics existed count as "rivals".
-// Files starting with "_" are not routes.
+// guest's player hash (api/highscores.js playerId) in rm:hs:push:<pid>.
+// Topics: "rivals" (someone passed you on a high score table), "chat" (a
+// direct message for you in the chat corner, api/_chat.js) and "room" (a new
+// message in the chat room "Everyone").
+// Since PR #266 the guest's notification settings (lib/push.ts) live once per
+// player in rm:hs:pushprefs:<pid> and apply to all their devices: a main
+// switch plus one per topic. Players who never opened those settings keep
+// the old per-device topics (subscriptions from before topics existed count
+// as "rivals"). Files starting with "_" are not routes.
 
 import crypto from "node:crypto";
 import webpush from "web-push";
 
 const PUSH_DAYS = 180;
-export const TOPICS = ["rivals", "chat"];
+export const TOPICS = ["rivals", "chat", "room"];
 
 const redisUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -29,6 +33,7 @@ async function redis(commands) {
 }
 
 const pushKey = (pid) => `rm:hs:push:${pid}`;
+const prefsKey = (pid) => `rm:hs:pushprefs:${pid}`;
 
 /** The player behind a guest's e-mail: a short one-way hash (same as the high score tables). */
 export const playerOf = (email) =>
@@ -86,12 +91,41 @@ export async function setPush(pid, body) {
   return { ok: true, topics };
 }
 
-/** Sends `message(lang)` → {title, body, tag, url?} to every device of the player that asked for the topic. */
+/**
+ * The player's notification settings for all devices ({ on, rivals, chat,
+ * room }, all booleans), or null to delete them ("Delete my data"). Returns
+ * { ok, prefs }.
+ */
+export async function setPrefs(pid, prefs) {
+  if (prefs === null) {
+    await redis([["DEL", prefsKey(pid)]]);
+    return { ok: true, prefs: null };
+  }
+  if (!prefs || typeof prefs !== "object") return { ok: false };
+  const clean = { on: prefs.on !== false };
+  for (const t of TOPICS) clean[t] = prefs[t] === true;
+  await redis([["SET", prefsKey(pid), JSON.stringify(clean), "EX", PUSH_DAYS * 86_400]]);
+  return { ok: true, prefs: clean };
+}
+
+/**
+ * Sends `message(lang)` → {title, body, tag, chat?} to every device of the
+ * player, if their settings allow the topic (without settings: the devices
+ * that asked for it).
+ */
 export async function sendPush(pid, topic, message) {
   const keys = vapidKeys();
   if (!keys) return;
-  const [subs] = await redis([["HGETALL", pushKey(pid)]]);
+  const [subs, rawPrefs] = await redis([["HGETALL", pushKey(pid)], ["GET", prefsKey(pid)]]);
   if (!subs || !subs.length) return;
+  let prefs = null;
+  try {
+    prefs = rawPrefs ? JSON.parse(rawPrefs) : null;
+  } catch {
+    /* broken entry: fall back to the device topics */
+  }
+  // Switched off for all devices, in general or for this topic.
+  if (prefs && (prefs.on === false || prefs[topic] !== true)) return;
   webpush.setVapidDetails("https://retromind-gaming.vercel.app", keys.publicKey, keys.privateKey);
   const gone = [];
   await Promise.all(
@@ -103,7 +137,7 @@ export async function sendPush(pid, topic, message) {
       } catch {
         return gone.push(field);
       }
-      if (!topicsOf(sub).includes(topic)) return;
+      if (!prefs && !topicsOf(sub).includes(topic)) return;
       try {
         await webpush.sendNotification(sub.subscription, JSON.stringify(message(sub.lang === "de" ? "de" : "en")), { TTL: 86_400 });
       } catch (e) {

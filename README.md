@@ -513,6 +513,18 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 
 ### Für alle Module
 
+- **Benachrichtigungen an/aus** ([`lib/push.ts`](lib/push.ts),
+  [`api/_push.js`](api/_push.js)) – in den Einstellungen beider Apps der
+  Bereich „Benachrichtigungen“: ein Hauptschalter und je ein Schalter für
+  Nachrichten an dich (Plauderecke), den Gruppenchat „Alle zusammen“ (jede
+  neue Nachricht, standardmäßig aus) und die Überholt-Meldung der
+  Gaming-Edition. Die Auswahl liegt einmal pro Gast auf dem Server
+  (`rm:hs:pushprefs:<Prüfsumme>`) und gilt für alle Geräte und beide Apps;
+  der Server schickt nur, was sie erlaubt. Pro Gerät erlaubt man Mitteilungen
+  einmal im Browser („Auf diesem Gerät erlauben“ / „Nicht auf diesem
+  Gerät“). Ist alles oder die Überholt-Meldung aus, springt auch der
+  „Überholt!“-Hinweis in der Halle nicht auf. Wer die Einstellungen noch nie
+  geöffnet hat, behält die Auswahl von vorher.
 - **Plauderecke: Chat mit den anderen Gästen**
   ([`components/GuestChat.tsx`](components/GuestChat.tsx),
   [`lib/chat.ts`](lib/chat.ts), [`api/_chat.js`](api/_chat.js)) – in beiden
@@ -525,11 +537,10 @@ Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
   sich mit ✕ löschen (Marco kann im Raum jede löschen), „Chat verlassen“
   löscht Name, Nachrichten und Gespräche, „Alle meine Daten löschen“ ebenso.
   Neue Nachrichten zeigt ein roter Punkt am Griff und am Knopf; was gelesen
-  ist, gleicht sich zwischen den Apps und Geräten ab. Wer mag, schaltet im
-  Chat „Mitteilung bei Nachrichten an dich“ ein und bekommt jede
-  Direktnachricht als Push aufs Gerät (dieselbe Push-Anmeldung wie die
-  Überholt-Meldung, je Thema an/aus, [`lib/push.ts`](lib/push.ts)); ein Tipp
-  darauf öffnet das Gespräch. Weil Vercel Hobby keine Dauerverbindungen
+  ist, gleicht sich zwischen den Apps und Geräten ab. Wer mag, bekommt Direktnachrichten
+  und, falls eingeschaltet, jede neue Nachricht im Raum als Push aufs Gerät
+  (Schalter im Chat und unter „Benachrichtigungen“ in den Einstellungen, siehe
+  oben); ein Tipp darauf öffnet das Gespräch. Weil Vercel Hobby keine Dauerverbindungen
   kennt, fragt die App bei offenem Gespräch alle 4 Sekunden nach, sonst einmal
   pro Minute (nur wer beigetreten ist). Speicher: dieselbe Upstash-Datenbank,
   je Gespräch höchstens 300 Nachrichten, 20 Nachrichten pro Minute; ein Gast
@@ -900,6 +911,11 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
+
+- **Ruhezeit für Benachrichtigungen:** nachts (etwa 22 bis 7 Uhr) keine
+  Mitteilungen, sie kommen gesammelt am Morgen; dazu ein Gruppenchat-Modus
+  „nur wenn ich eine Weile nicht da war“, damit ein lebhafter Raum nicht
+  dauernd brummt.
 
 - **Chat: Bilder, Reaktionen und „gelesen“:** Fotos von damals in die
   Plauderecke schicken, mit 👍 oder ❤️ auf eine Nachricht antworten und sehen,

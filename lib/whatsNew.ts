@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Benachrichtigungen ein- und ausschalten': {
+    title: 'Turn notifications on and off',
+    text: 'Both apps now have a “Notifications” section in the settings, with one main switch for everything and one switch each for messages to you in the chat corner, the group chat “Everyone” and the gaming “Overtaken!” high score alert. New: if you like, your phone also tells you about every new message in the group chat; that stays off until you switch it on. Your choice applies to all your devices and both apps. With everything off, the “Overtaken!” note no longer pops up in the arcade either; who passed you is still in the Hall of Fame. “Not on this device” keeps a single device quiet.',
+  },
   'Bereichsname unter dem Gaming-Logo': {
     title: 'Section name under the gaming logo',
     text: 'In the gaming edition, the top now shows which section you are in, right under “RETROMIND GAMING”: Catalog, Stash, Search, Trophies, Chill or Quests. When you switch sections in the dock, the line switches too.',

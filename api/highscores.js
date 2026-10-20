@@ -10,7 +10,9 @@
 // GET  /api/highscores?news=1           → { news: [{game, name, score, at}] }: who overtook me
 // GET  /api/highscores?vapid=1          → { key } public key for push subscriptions
 // POST /api/highscores {push: subscription | null, endpoint?, lang, topic?} → alerts on/off for this
-//      device; topic "rivals" (default) or "chat" (api/_push.js)
+//      device; topic "rivals" (default), "chat" or "room" (api/_push.js)
+// POST /api/highscores {prefs: {on, rivals, chat, room} | null} → notification settings for all
+//      devices of this guest (api/_push.js)
 // /api/chat → the chat corner (api/_chat.js; vercel.json rewrites it here as ?module=chat,
 //      because the Hobby plan allows only 12 functions per deployment)
 //
@@ -23,7 +25,7 @@
 
 import { readJsonBody } from "./_admin.js";
 import { readCookie } from "./_guests.js";
-import { playerOf, sendPush, setPush, vapidKeys } from "./_push.js";
+import { playerOf, sendPush, setPrefs, setPush, vapidKeys } from "./_push.js";
 import chatHandler from "./_chat.js";
 
 // Highest believable score per game, so a typo in a hand-made request
@@ -176,7 +178,7 @@ export default async function handler(req, res) {
   }
   if (!configured()) {
     if (req.query?.news) return res.status(200).json({ news: [], ready: false });
-    if (req.method === "POST" && "push" in body) return res.status(200).json({ ok: false });
+    if (req.method === "POST" && ("push" in body || "prefs" in body)) return res.status(200).json({ ok: false });
   }
   const me = configured() ? await playerId(req) : null;
 
@@ -196,6 +198,10 @@ export default async function handler(req, res) {
     if (req.method === "POST" && "push" in body) {
       if (!me) return res.status(200).json({ ok: false });
       return res.status(200).json(await setPush(me, body));
+    }
+    if (req.method === "POST" && "prefs" in body) {
+      if (!me) return res.status(200).json({ ok: false });
+      return res.status(200).json(await setPrefs(me, body.prefs));
     }
   } catch (e) {
     console.error("highscores:", e?.message || e);

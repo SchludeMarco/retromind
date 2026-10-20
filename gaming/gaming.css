@@ -1131,6 +1131,10 @@ html[data-ticker] .hub {
   flex-wrap: wrap;
   gap: 8px;
 }
+.settings-notify {
+  align-items: center;
+  margin-top: 8px;
+}
 .settings-initials {
   align-items: center;
   gap: 14px;

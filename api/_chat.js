@@ -20,7 +20,9 @@
 // seconds while a conversation is open, and about once a minute otherwise.
 // Messages are kept for 30 days (and at most the newest 300 per
 // conversation). A direct message also goes out as a push message to the
-// recipient's devices that switched on chat alerts (api/_push.js).
+// recipient's devices (topic "chat"), a message in the room to everyone else
+// in the chat (topic "room", off unless switched on), each as their
+// notification settings allow (api/_push.js).
 //
 // Served through api/highscores.js (vercel.json rewrites /api/chat there),
 // because the Hobby plan allows only 12 functions per deployment.
@@ -178,7 +180,20 @@ export default async function chatHandler(req, res) {
       const commands = [["ZADD", k, now, JSON.stringify(message)], ...trim(k)];
       if (to !== "all") commands.push(["ZADD", inKey(to), now, me], ["PEXPIRE", inKey(to), KEEP_DAYS * DAY]);
       await redis(commands);
-      if (to !== "all") {
+      if (to === "all") {
+        // One push per person (several chat ids can share a player), the newest message replaces the last one.
+        const pids = new Set([...people.entries()].filter(([id, p]) => id !== me && p.pid && p.pid !== self.pid).map(([, p]) => p.pid));
+        await Promise.all(
+          [...pids].map((pid) =>
+            sendPush(pid, "room", (lang) => ({
+              title: `💬 ${self.name} · ${lang === "de" ? "Alle zusammen" : "Everyone"}`,
+              body: text.length > 140 ? `${text.slice(0, 139)}…` : text,
+              tag: "rm-chat-room",
+              chat: "all",
+            })).catch((e) => console.error("room push:", e?.message || e))
+          )
+        );
+      } else {
         const pid = people.get(to)?.pid;
         if (pid) {
           await sendPush(pid, "chat", () => ({
