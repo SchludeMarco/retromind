@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Bereichsname unter dem Gaming-Logo** (2026-10-20, PR #265): In der
+  Gaming-Edition steht oben unter „RETROMIND GAMING“ jetzt, in welchem
+  Bereich du gerade bist – Katalog, Stash, Suche, Trophäen, Chillen oder
+  Quests. Wechselst du über das Dock, wechselt die Zeile mit.
+
 - **Spielhalle im Schnellzugriff** (2026-10-19, PR #263): Hinter dem Griff am
   rechten Rand der Zeitreise steht unter „Schnellzugriff“ jetzt auch
   „Spielhalle“. Ein Tipp bringt dich von überall direkt in die
