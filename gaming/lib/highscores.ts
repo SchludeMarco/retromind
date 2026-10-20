@@ -21,7 +21,12 @@ export type BoardGame =
   | 'memory'
   | 'puzzle'
   | 'sudoku'
-  | 'solitaire';
+  | 'solitaire'
+  | 'asteroids'
+  | 'frogger'
+  | 'copter'
+  | 'merge'
+  | 'missile';
 export interface Entry {
   name: string;
   score: number;
@@ -32,7 +37,7 @@ export interface Entry {
 }
 
 /** How each table counts: points (more is better), or moves and seconds (fewer is better). */
-const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time'> = {
+const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time' | 'meters'> = {
   blocks: 'points',
   pinball: 'points',
   pacman: 'points',
@@ -47,10 +52,15 @@ const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time'> 
   puzzle: 'moves',
   sudoku: 'time',
   solitaire: 'time',
+  asteroids: 'points',
+  frogger: 'points',
+  copter: 'meters',
+  merge: 'points',
+  missile: 'points',
 };
 
 /** Every game with a table, in the order of the Chill-Ecke. */
-export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire'];
+export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile'];
 
 export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';
 
@@ -63,6 +73,8 @@ export function formatScore(game: BoardGame, score: number): string {
       return tr(`${score} MOVES`, `${score} ZÜGE`);
     case 'rounds':
       return tr(`ROUND ${score}`, `RUNDE ${score}`);
+    case 'meters':
+      return `${score.toLocaleString('en-US')} M`;
     case 'right':
       return `${score}/5`;
     default:

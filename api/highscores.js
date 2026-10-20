@@ -45,6 +45,11 @@ const GAMES = {
   puzzle: { max: 9_999, low: true, min: 1 },
   sudoku: { max: 86_400, low: true, min: 10 },
   solitaire: { max: 86_400, low: true, min: 10 },
+  asteroids: { max: 9_999_999 },
+  frogger: { max: 999_999 },
+  copter: { max: 999_999 },
+  merge: { max: 9_999_999 },
+  missile: { max: 9_999_999 },
 };
 const KEEP = 50;
 const SHOW = 10;
@@ -126,6 +131,11 @@ const GAME_NAMES = {
   puzzle: ["Slide Puzzle", "Schiebepuzzle"],
   sudoku: ["Sudoku", "Sudoku"],
   solitaire: ["Solitaire", "Solitär"],
+  asteroids: ["Asteroids", "Asteroiden"],
+  frogger: ["Frog Hop", "Froschhüpfer"],
+  copter: ["Cave Copter", "Höhlenflug"],
+  merge: ["2048", "2048"],
+  missile: ["Missile Defense", "Raketenabwehr"],
 };
 
 function sendAlerts(pid, game, name) {

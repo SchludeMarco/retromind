@@ -3709,6 +3709,51 @@ section:first-child > .media-head {
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* --- High score chasers: asteroids, frog hop, cave copter, 2048, missile defense --- */
+.arcade-board.frog-board {
+  width: min(100%, 320px, 50vh * 297 / 351);
+}
+.mini-hint {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.85em;
+}
+.merge-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: min(100%, 320px, 46vh);
+  margin: 0 auto;
+  padding: 6px;
+  border: 3px solid var(--dim);
+  border-radius: 6px;
+  background: var(--bg2);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.merge-tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: var(--panel);
+  color: #10102e;
+  font: 800 clamp(16px, 6vw, 26px) / 1 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+.merge-tile.v2 { background: #e9e9ff; }
+.merge-tile.v4 { background: #c7d2fe; }
+.merge-tile.v8 { background: #fdba74; }
+.merge-tile.v16 { background: #fb923c; }
+.merge-tile.v32 { background: #f87171; }
+.merge-tile.v64 { background: #ef4444; color: #fff; }
+.merge-tile.v128 { background: #fde047; font-size: clamp(14px, 5vw, 22px); }
+.merge-tile.v256 { background: #facc15; font-size: clamp(14px, 5vw, 22px); }
+.merge-tile.v512 { background: #4ade80; font-size: clamp(14px, 5vw, 22px); }
+.merge-tile.v1024 { background: #29d4ff; font-size: clamp(12px, 4vw, 18px); }
+.merge-tile.v2048 { background: #ff3ea5; color: #fff; font-size: clamp(12px, 4vw, 18px); box-shadow: 0 0 12px #ff3ea5; }
+.merge-tile.v4096 { background: #a855f7; color: #fff; font-size: clamp(12px, 4vw, 18px); box-shadow: 0 0 12px #a855f7; }
+
 /* --- Name that game (quiz) --- */
 .quiz-clue {
   max-width: 520px;

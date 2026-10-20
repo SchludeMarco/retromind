@@ -248,6 +248,16 @@ zeigen dürfen.
   Quiz „Erkennst du das Spiel?“ (bis zu fünf Coins am Tag)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
+- **Highscore-Jagd** – fünf Automaten-Klassiker zum Immer-wieder-Spielen:
+  Asteroiden (Schiff drehen, Schub, Feuer; Brocken zerfallen, Extraschiff
+  alle 10.000 Punkte), Froschhüpfer (Straße und Fluss, fünf Nester, jede
+  Runde schneller, tauchende Schildkröten ab Runde 2, Zeitbonus), Höhlenflug
+  (ein Knopf, die Höhle wird enger und schneller, Strecke in Metern), 2048
+  (Kacheln schieben und verschmelzen) und Raketenabwehr (tippen, wo die
+  Abwehr explodiert, Kettenreaktionen, Bonus für Städte und Raketen, alle
+  10.000 Punkte eine Stadt zurück)
+  ([`components/MiniGames.tsx`](components/MiniGames.tsx),
+  [`components/minigames/`](components/minigames/)).
 - **Kartenspiele** – Video-Poker („Jacks or Better“, 20 Hände), Blackjack
   (10 Hände, Bank bleibt ab 17 stehen) und Solitär (Klondike, eine Karte
   ziehen, unbegrenztes Zurück, automatisches Ablegen am Ende). Gespielt wird
@@ -256,7 +266,7 @@ zeigen dürfen.
   ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
   Zeichen ein, je Zeichen mit ▲/▼ oder getippt; dein Kürzel aus den
-  Einstellungen steht schon da. Jedes der 14 Browser-Spiele hat seine Tafel,
+  Einstellungen steht schon da. Jedes der 19 Browser-Spiele hat seine Tafel,
   bei Memory und Schiebepuzzle zählen die wenigsten Züge, bei Sudoku und
   Solitär die schnellste Zeit. Die Top 10 gelten für alle Gäste
   (`api/highscores.js`, Upstash Redis; ohne Datenbank bleibt die Tafel auf
@@ -290,6 +300,7 @@ zeigen dürfen.
 - **Serie und Wochen-Duell** – jeder Tag in Folge in der Halle bringt Coins
   (5, 10, 15 … bis 30, jeder 7. Tag 25 extra, ein verpasster Tag pro Woche
   verziehen), die Serie steht in der Kopfleiste. Jede Woche ist ein Minispiel
+  (eins von elf Action-Spielen, die Highscore-Jagd ab dem 26. Oktober 2026 dabei)
   das Wochen-Duell mit eigener Highscore-Tafel der Woche (`week` in
   [`api/highscores.js`](../api/highscores.js), 30 Tage aufbewahrt)
   ([`lib/quests.ts`](lib/quests.ts)).
@@ -466,7 +477,8 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz,
   vor allem für den Mega Drive. Die Sammlung „retrobrews“ scheidet aus: Ihre
   Spiele sind nur für diese Sammlung freigegeben.
-- **Mehr Minispiele in der Chill-Ecke** und Sudoku in mehreren
+- **Mehr Minispiele in der Chill-Ecke** (etwa Galaxian, Centipede, ein
+  Wüstenlauf mit Sprungknopf oder Minesweeper) und Sudoku in mehreren
   Schwierigkeitsstufen.
 - **Spielstände der Retro-Konsole synchronisieren:** Sie liegen in der
   IndexedDB des Emulators und bleiben bisher auf dem Gerät.

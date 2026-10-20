@@ -8,6 +8,22 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: Fünf neue Spiele für die Highscore-Jagd** (2026-10-20,
+  PR #268): In der Chill-Ecke unter „Browser-Spiele“ gibt es fünf neue
+  Automaten-Klassiker, jeder mit eigener Highscore-Tafel, Platz in der Hall of
+  Fame und „Überholt!“-Meldung, wenn dich jemand abhängt. **Asteroiden**:
+  drehen, Schub geben, Felsbrocken zerschießen, die in kleinere, schnellere
+  zerfallen, alle 10.000 Punkte ein Extraschiff. **Froschhüpfer**: über die
+  volle Straße und auf Baumstämmen und Schildkröten über den Fluss in alle
+  fünf Nester; jede Runde wird schneller, ab Runde 2 tauchen die Schildkröten
+  ab. **Höhlenflug**: halten zum Steigen, loslassen zum Sinken, die Höhle wird
+  immer enger, gezählt wird die Strecke in Metern. **2048**: Kacheln schieben,
+  gleiche Zahlen verschmelzen, jede Verschmelzung bringt Punkte.
+  **Raketenabwehr**: in den Himmel tippen und mit Abwehrexplosionen sechs
+  Städte schützen; stehende Städte und übrige Raketen bringen Bonus. Ab der
+  Woche vom 26. Oktober können Asteroiden, Froschhüpfer, Höhlenflug und
+  Raketenabwehr auch das Wochen-Duell sein.
+
 - **Bestenliste: Spiel aus einer Liste wählen** (2026-10-20, PR #267): Die
   Bestenliste der Gaming-Edition öffnet jetzt mit einer Liste aller Spiele
   untereinander statt mit ◀ ▶ von Spiel zu Spiel. Oben gibt es ein Suchfeld,

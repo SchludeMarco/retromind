@@ -12,12 +12,18 @@ import { Quiz, quizBest } from './minigames/Quiz';
 import { VideoPoker, pokerBest } from './minigames/VideoPoker';
 import { Blackjack, blackjackBest } from './minigames/Blackjack';
 import { Solitaire, solitaireBest } from './minigames/Solitaire';
+import { Asteroids, asteroidsBest } from './minigames/Asteroids';
+import { Frogger, froggerBest } from './minigames/Frogger';
+import { Copter, copterBest } from './minigames/Copter';
+import { Merge2048, mergeBest } from './minigames/Merge2048';
+import { Missile, missileBest } from './minigames/Missile';
 import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
 // blocks, pinball, Pac-Mampf and the card games (video poker, blackjack,
-// solitaire, sharing the deck in ./minigames/cards) have their own files in ./minigames. Everything works by
+// solitaire, sharing the deck in ./minigames/cards) and the high score chasers (asteroids,
+// frog hop, cave copter, 2048, missile defense) have their own files in ./minigames. Everything works by
 // touch, mouse and keyboard, and sounds go through the chip (which follows
 // lib/mute).
 
@@ -147,6 +153,61 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
       'Das Kartenspiel von jedem alten Windows-PC: jede Farbe vom Ass bis zum König ablegen. Antippen zum Nehmen, antippen zum Ablegen, Zurück geht immer.'
     ),
     best: solitaireBest,
+  },
+  {
+    id: 'asteroids',
+    title: tr('ASTEROIDS', 'ASTEROIDEN'),
+    statKey: 'ASTEROIDEN',
+    icon: '☄️',
+    text: tr(
+      'Turn, thrust and blast the rocks to pieces, like the 1979 vector cabinet. Big rocks split into faster small ones; an extra ship every 10,000 points.',
+      'Drehen, Schub geben und die Felsbrocken zerschießen, wie am Vektor-Automaten von 1979. Große Brocken zerfallen in schnellere kleine; alle 10.000 Punkte ein Extraschiff.'
+    ),
+    best: asteroidsBest,
+  },
+  {
+    id: 'frogger',
+    title: tr('FROG HOP', 'FROSCHHÜPFER'),
+    statKey: 'FROSCHHÜPFER',
+    icon: '🐸',
+    text: tr(
+      'Hop across the busy road and ride the logs over the river into all five homes, like Frogger in 1981. Tap to hop, swipe to the side. Every round runs faster.',
+      'Über die volle Straße hüpfen und auf den Baumstämmen über den Fluss in alle fünf Nester, wie Frogger 1981. Tippen hüpft, wischen geht zur Seite. Jede Runde wird schneller.'
+    ),
+    best: froggerBest,
+  },
+  {
+    id: 'copter',
+    title: tr('CAVE COPTER', 'HÖHLENFLUG'),
+    statKey: 'HÖHLENFLUG',
+    icon: '🚁',
+    text: tr(
+      'Hold to climb, let go to sink, don’t touch the walls: the one-button cave flight of the early browser games. The cave keeps getting narrower.',
+      'Halten zum Steigen, loslassen zum Sinken, bloß nicht die Wand berühren: der Ein-Knopf-Höhlenflug aus den frühen Browserspiel-Zeiten. Die Höhle wird immer enger.'
+    ),
+    best: copterBest,
+  },
+  {
+    id: 'merge',
+    title: '2048',
+    statKey: '2048',
+    icon: '🔢',
+    text: tr(
+      'Swipe the tiles, equal numbers merge into their sum. Every merge scores. Make it to 2048, then keep going as long as the board lets you.',
+      'Kacheln schieben, gleiche Zahlen verschmelzen zu ihrer Summe. Jede Verschmelzung bringt Punkte. Bis 2048 schaffen und dann weiter, solange das Brett es zulässt.'
+    ),
+    best: mergeBest,
+  },
+  {
+    id: 'missile',
+    title: tr('MISSILE DEFENSE', 'RAKETENABWEHR'),
+    statKey: 'RAKETENABWEHR',
+    icon: '🚀',
+    text: tr(
+      'Rockets rain down on six cities: tap the sky to set off a counter blast, like Missile Command in 1980. Every wave comes faster; cities left standing pay a bonus.',
+      'Raketen regnen auf sechs Städte: in den Himmel tippen zündet eine Abwehrexplosion, wie Missile Command 1980. Jede Welle kommt schneller; stehende Städte bringen Bonus.'
+    ),
+    best: missileBest,
   },
 ];
 
@@ -495,6 +556,16 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <Blackjack onWin={onWin} />
         ) : id === 'solitaire' ? (
           <Solitaire onWin={onWin} />
+        ) : id === 'asteroids' ? (
+          <Asteroids onWin={onWin} />
+        ) : id === 'frogger' ? (
+          <Frogger onWin={onWin} />
+        ) : id === 'copter' ? (
+          <Copter onWin={onWin} />
+        ) : id === 'merge' ? (
+          <Merge2048 onWin={onWin} />
+        ) : id === 'missile' ? (
+          <Missile onWin={onWin} />
         ) : id === 'quiz' ? (
           <Quiz onWin={onWin} onEarn={onEarn} />
         ) : (
