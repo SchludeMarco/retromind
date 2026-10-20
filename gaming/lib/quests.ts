@@ -174,10 +174,14 @@ export function visitStreak(prev: Streak | undefined, now = new Date()): { strea
 // --- Weekly duel: one mini game per week, its own high score table ---
 
 /** Mini games with a high score table that take part in the weekly duel. */
-export const DUEL_GAMES = ['pacman', 'breakout', 'snake', 'invaders', 'blocks', 'senso', 'pinball'] as const;
+export const DUEL_GAMES = ['pacman', 'breakout', 'snake', 'invaders', 'blocks', 'senso', 'pinball', 'asteroids', 'frogger', 'copter', 'missile'] as const;
 export type DuelGame = (typeof DUEL_GAMES)[number];
+/** The first seven took part from the start; the arcade games of October 2026 join from this week on (so a running week keeps its game). */
+const DUEL_GROWS = '2026-10-26';
 
 /** This week's duel game, the same for everyone. */
 export function duelGame(now = new Date()): DuelGame {
-  return DUEL_GAMES[Math.floor(seeded(`duel:${weekOf(now)}`)() * DUEL_GAMES.length)];
+  const week = weekOf(now);
+  const games = week < DUEL_GROWS ? DUEL_GAMES.slice(0, 7) : DUEL_GAMES;
+  return games[Math.floor(seeded(`duel:${week}`)() * games.length)];
 }

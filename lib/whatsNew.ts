@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Fünf neue Spiele für die Highscore-Jagd': {
+    title: 'Gaming edition: five new games for chasing high scores',
+    text: 'The chill corner has five new arcade classics under “Browser games”, each with its own high score table, a spot in the Hall of Fame and an “Overtaken!” alert when someone passes you. Asteroids: turn, thrust and blast the rocks, which split into smaller, faster ones, with an extra ship every 10,000 points. Frog Hop: cross the busy road and ride logs and turtles over the river into all five homes; every round runs faster, and from round 2 the turtles dive. Cave Copter: hold to climb, let go to sink, the cave keeps getting narrower, and the distance in meters is your score. 2048: slide the tiles, equal numbers merge, every merge scores. Missile Defense: tap the sky to set off counter blasts and protect six cities; cities left standing and unused rockets pay a bonus. From the week of October 26, Asteroids, Frog Hop, Cave Copter and Missile Defense can also be the weekly duel.',
+  },
   'Benachrichtigungen ein- und ausschalten': {
     title: 'Turn notifications on and off',
     text: 'Both apps now have a “Notifications” section in the settings, with one main switch for everything and one switch each for messages to you in the chat corner, the group chat “Everyone” and the gaming “Overtaken!” high score alert. New: if you like, your phone also tells you about every new message in the group chat; that stays off until you switch it on. Your choice applies to all your devices and both apps. With everything off, the “Overtaken!” note no longer pops up in the arcade either; who passed you is still in the Hall of Fame. “Not on this device” keeps a single device quiet.',
