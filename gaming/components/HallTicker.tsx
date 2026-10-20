@@ -8,6 +8,7 @@ import { addToGrabbelkiste, KeptItem, keptItem, removeFromGrabbelkiste, useGrabb
 import { tickerItem } from '../../lib/tickerItems';
 import { Game, GAMES, TICKER_FACTS } from '../data/games';
 import { fetchTickerFacts } from '../lib/ai';
+import { LEGENDS } from '../data/legends';
 
 // The fun-fact ticker of the hall (Marco, 2026-10-18): like the Laufband of
 // the Zeitreise, pinned at the very bottom just above the dock, slow, and
@@ -47,6 +48,9 @@ const hash = (text: string) => {
 
 function builtIn(): HallFact[] {
   const facts: HallFact[] = TICKER_FACTS.map((text, i) => ({ id: `fact-${i}`, text }));
+  // The legends of the Legenden-Ecke as teasers; the answer stays in the corner.
+  for (const l of LEGENDS)
+    facts.push({ id: `legend-${l.id}`, text: tr(`Legend or truth? ${l.claim}`, `Legende oder wahr? ${l.claim}`), gameId: l.gameId });
   for (const g of GAMES) {
     if (g.funFact) facts.push({ id: `fun-${g.id}`, text: `${g.title}: ${g.funFact}`, gameId: g.id });
     facts.push({

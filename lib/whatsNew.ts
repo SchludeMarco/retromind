@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Legenden & Mythen': {
+    title: 'Gaming edition: Legends & myths',
+    text: 'The arcade has a new “Legends” corner with 23 famous stories from the world of games, like the buried E.T. cartridges, the ghost cabinet Polybius, Mew under the truck, the Konami Code or why Pac-Man was first called Puck-Man. Each card shows the claim first; you guess “True”, “Half true” or “Myth” (or just let it tell you) and then read what really happened, with a link to Wikipedia and, where it fits, to the game. The catalog shows a “Legend of the day”, the ticker throws in legends as riddles, and matching game pages show their legend below “Did you know?”. Uncover 8 legends to earn the “Mythbuster” trophy.',
+  },
   'Lieblingsbands gebündelt': {
     title: 'Favorite bands bundled',
     text: 'Your list of favorite bands and musicians in the settings and at the start is now collapsed. Instead of every name stacked up, one line reads like “♪ 12 favorites: Elvis Presley, Johnny Cash, The Beatles …”; tap “Show all” to open the whole list and again to close it. The field for adding names always stays visible.',
