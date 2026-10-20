@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Bestenliste: Spiel aus einer Liste wählen': {
+    title: 'Hall of Fame: pick a game from a list',
+    text: 'The Hall of Fame in the Gaming edition now opens with a list of all games, one below the other, instead of paging game by game with ◀ ▶. A search field at the top filters as you type (English and German names), each game shows your best result on this device, and the game of the weekly duel is marked. Tap a game to open its table, “◀ All games” takes you back to the list.',
+  },
   'Benachrichtigungen ein- und ausschalten': {
     title: 'Turn notifications on and off',
     text: 'Both apps now have a “Notifications” section in the settings, with one main switch for everything and one switch each for messages to you in the chat corner, the group chat “Everyone” and the gaming “Overtaken!” high score alert. New: if you like, your phone also tells you about every new message in the group chat; that stays off until you switch it on. Your choice applies to all your devices and both apps. With everything off, the “Overtaken!” note no longer pops up in the arcade either; who passed you is still in the Hall of Fame. “Not on this device” keeps a single device quiet.',
