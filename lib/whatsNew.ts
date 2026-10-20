@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Song unten gut lesbar': {
+    title: 'Gaming edition: Song easy to read at the bottom',
+    text: 'On phones the music bar at the bottom only showed “No S…” of the song. Now the title gets its own line above the buttons in a larger font, and long titles scroll by. The buttons are wider with bigger symbols; the bar still lines up with the “?” at the bottom.',
+  },
   'Gaming-Edition: Legenden & Mythen': {
     title: 'Gaming edition: Legends & myths',
     text: 'The arcade has a new “Legends” corner with 23 famous stories from the world of games, like the buried E.T. cartridges, the ghost cabinet Polybius, Mew under the truck, the Konami Code or why Pac-Man was first called Puck-Man. Each card shows the claim first; you guess “True”, “Half true” or “Myth” (or just let it tell you) and then read what really happened, with a link to Wikipedia and, where it fits, to the game. The catalog shows a “Legend of the day”, the ticker throws in legends as riddles, and matching game pages show their legend below “Did you know?”. Uncover 8 legends to earn the “Mythbuster” trophy.',

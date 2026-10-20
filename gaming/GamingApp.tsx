@@ -42,6 +42,7 @@ import { useHallSpotify } from './lib/useHallSpotify';
 import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 import { SpotifyAsk } from './components/SpotifyAsk';
 import { MusicDock, openMusicDock } from '../components/MusicDock';
+import { FitMarquee } from '../components/FitMarquee';
 import { FavoriteHeart } from '../components/FavoriteSongs';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, PRIZES } from './lib/quests';
@@ -1213,8 +1214,14 @@ export const GamingApp: React.FC = () => {
           <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playNext(); }} disabled={!spotify.canSkip} aria-label={tr('Next song', 'Nächster Song')}>
             ►►
           </button>
-          <button className="gm-bottom-music-song" onClick={() => { chip.play('blip'); openMusicDock(); }} aria-label={tr('Open music controls', 'Musiksteuerung öffnen')}>
-            {spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+          {/* Big enough to read on a phone: its own line there, scrolls when
+              too long (Marco, 2026-10-20). */}
+          <button
+            className="gm-bottom-music-song"
+            onClick={() => { chip.play('blip'); openMusicDock(); }}
+            aria-label={`${spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}. ${tr('Open music controls', 'Musiksteuerung öffnen')}`}
+          >
+            <FitMarquee text={spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')} maxSize={22} minSize={18} />
           </button>
           {!spotify.fallback && (
             <FavoriteHeart

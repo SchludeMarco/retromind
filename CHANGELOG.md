@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Song unten gut lesbar** (2026-10-20, PR #271): In der
+  Musikleiste unten stand auf dem Handy vom Song nur „No S…“. Jetzt hat der
+  Titel dort eine eigene Zeile über den Knöpfen, in größerer Schrift, und
+  lange Titel laufen als Laufschrift durch. Die Knöpfe sind breiter und ihre
+  Zeichen größer; die Leiste bleibt unten auf einer Höhe mit dem „?“.
+
 - **Gaming-Edition: Legenden & Mythen** (2026-10-20, PR #270): Die Halle hat
   eine neue Ecke „Legenden“ mit 23 berühmten Geschichten aus der Spielewelt,
   etwa die vergrabenen E.T.-Module, der Geister-Automat Polybius, Mew unter
