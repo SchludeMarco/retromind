@@ -256,6 +256,17 @@ a {
   display: block;
   margin-top: 6px;
 }
+/* The open section, right under GAMING. */
+.brand-section {
+  display: block;
+  color: var(--a2);
+  font-size: 0.6em;
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+}
+.brand-section::before {
+  content: '▸ ';
+}
 /* The fun-fact ticker (components/HallTicker.tsx), pinned just above the
    dock. HallTicker measures the dock (--dock-h) and itself (--ticker-h);
    the buttons floating above the dock add --ticker-h to make room. */
@@ -1516,6 +1527,11 @@ html[data-ticker] .hub {
   border-radius: 10px;
   background: #111827;
   padding: 4px;
+}
+.arcade[data-palette='modul'] .brand-section {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  letter-spacing: 0.15em;
 }
 .arcade[data-palette='modul'] .brand small {
   font-family: 'Press Start 2P', monospace;

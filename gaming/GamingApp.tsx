@@ -786,6 +786,17 @@ export const GamingApp: React.FC = () => {
               <img className="brand-motif" src="/gaming/motif.webp" alt="" />
               RETROMIND
               <small>GAMING</small>
+              {/* Which section is open, so it's clear where you are. */}
+              <span className="brand-section" aria-live="polite">
+                {{
+                  catalog: tr('CATALOG', 'KATALOG'),
+                  collection: 'STASH',
+                  search: tr('SEARCH', 'SUCHE'),
+                  trophies: tr('TROPHIES', 'TROPHÄEN'),
+                  chill: tr('CHILL', 'CHILLEN'),
+                  quests: 'QUESTS',
+                }[view]}
+              </span>
             </h1>
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>

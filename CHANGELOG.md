@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Bereichsname unter dem Gaming-Logo** (2026-10-20, PR #265): In der
+  Gaming-Edition steht oben unter „RETROMIND GAMING“ jetzt, in welchem
+  Bereich du gerade bist – Katalog, Stash, Suche, Trophäen, Chillen oder
+  Quests. Wechselst du über das Dock, wechselt die Zeile mit.
+
 - **Logo in kräftigen Farben mit Metallglanz** (2026-10-19, PR #264): Das
   RetroMind-Logo auf der Startseite leuchtet jetzt in satten Neonfarben und
   ist das Farbigste auf der Seite. Streifen und Schleier des
