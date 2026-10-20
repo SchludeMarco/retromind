@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming-Edition: Song unten gut lesbar** (2026-10-20, PR #PRNR): In der
+- **Gaming-Edition: Song unten gut lesbar** (2026-10-20, PR #271): In der
   Musikleiste unten stand auf dem Handy vom Song nur „No S…“. Jetzt hat der
   Titel dort eine eigene Zeile über den Knöpfen, in größerer Schrift, und
   lange Titel laufen als Laufschrift durch. Die Knöpfe sind breiter und ihre
