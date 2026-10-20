@@ -28,6 +28,7 @@ import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './compon
 import { HallOfFame } from './components/HallOfFame';
 import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
+import { rivalNotesWanted } from '../lib/push';
 import { EmulatorCorner } from './components/EmulatorCorner';
 import { EmulatorDialog } from './components/EmulatorDialog';
 import { EmuLaunch, FREE_GAMES } from './lib/emulator';
@@ -397,7 +398,8 @@ export const GamingApp: React.FC = () => {
     unseenRivalNews().then((news) => {
       if (!alive) return;
       markRivalsSeen();
-      if (news.length) {
+      // Notifications or "Overtaken!" switched off in the settings: the notes wait in the Hall of Fame.
+      if (news.length && rivalNotesWanted()) {
         chip.play('error');
         setRival(news[0]);
       }

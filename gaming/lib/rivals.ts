@@ -1,12 +1,9 @@
 // The rivalry around the high score tables (Marco, 2026-10-19): when someone
 // passes your best entry on a table, the server leaves you a note
-// (api/highscores.js ?news=1), shown when you next open the arcade. On
-// devices where you switch on rival alerts the note also comes as a push
-// message, even with the app closed (the service workers public/sw.js and
-// public/gaming/sw.js show it). Push only after you ask for it; the browser
-// asks for permission once more.
+// (api/highscores.js ?news=1), shown when you next open the arcade. It also
+// comes as a push message, even with the app closed, as the notification
+// settings allow (lib/push.ts, topic "rivals").
 
-import { topicOff, topicOn, topicState } from '../../lib/push';
 import { BoardGame } from './highscores';
 
 export interface RivalNews {
@@ -53,11 +50,3 @@ export async function unseenRivalNews(): Promise<RivalNews[]> {
   const since = seenAt();
   return since ? news.filter((n) => n.at > since) : [];
 }
-
-/* ---------------------------------------------------------------- Push */
-
-// Shared with the chat corner (lib/push.ts): one subscription per device, topics on the server.
-export type { PushState } from '../../lib/push';
-export const pushState = () => topicState('rivals');
-export const turnPushOn = () => topicOn('rivals');
-export const turnPushOff = () => topicOff('rivals');

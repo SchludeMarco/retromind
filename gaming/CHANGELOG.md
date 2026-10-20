@@ -8,6 +8,17 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Benachrichtigungen ein- und ausschalten** (2026-10-20, PR #266): In den
+  Einstellungen beider Apps gibt es jetzt den Bereich „Benachrichtigungen“
+  mit einem Hauptschalter für alles und je einem Schalter für Nachrichten an
+  dich in der Plauderecke, den Gruppenchat „Alle zusammen“ und die
+  Überholt-Meldung beim Highscore. Neu: Auf Wunsch meldet sich das Handy auch
+  bei jeder neuen Nachricht im Gruppenchat; das ist aus, bis du es
+  einschaltest. Die Auswahl gilt für all deine Geräte und beide Apps. Ist
+  alles aus, springt auch der „Überholt!“-Hinweis in der Spielhalle nicht
+  mehr auf; wer dich überholt hat, steht weiter in der Hall of Fame. Mit
+  „Nicht auf diesem Gerät“ bleibt ein einzelnes Gerät still.
+
 - **Bereichsname unter dem Gaming-Logo** (2026-10-20, PR #265): In der
   Gaming-Edition steht oben unter „RETROMIND GAMING“ jetzt, in welchem
   Bereich du gerade bist – Katalog, Stash, Suche, Trophäen, Chillen oder

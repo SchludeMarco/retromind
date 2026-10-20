@@ -17,7 +17,7 @@ import { InitialsPicker } from '../../components/InitialsPicker';
 import { chip } from '../lib/chiptune';
 import { installSteps, promptInstall, useInstall } from '../../lib/install';
 import { downloadReminder, googleCalendarLink } from '../../lib/calendarReminder';
-import { PushState, pushState, turnPushOff, turnPushOn } from '../lib/rivals';
+import { PushTopic, useNotifySettings } from '../../lib/push';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -319,7 +319,7 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
           <p className="dim">{tr('More designs and tracks are waiting at the prize counter under “Quests”.', 'Weitere Designs und Musikstücke gibt es am Preis-Tresen unter „Quests“.')}</p>
         </section>
 
-        <RivalAlerts />
+        <Notifications />
 
         {/* Install with one tap, or the menu steps where the browser has no prompt (lib/install.ts). */}
         <section>
@@ -425,45 +425,77 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
   );
 };
 
-/** Push on this device when someone passes you on a high score table (lib/rivals.ts). */
-const RivalAlerts: React.FC = () => {
-  const [state, setState] = useState<PushState | 'busy' | null>(null);
-  useEffect(() => {
-    pushState().then(setState);
-  }, []);
-  if (state === null || state === 'unsupported') return null;
-  const toggle = async () => {
+/** Notifications for all devices (lib/push.ts): main switch, one per topic, this device. */
+const Notifications: React.FC = () => {
+  const n = useNotifySettings();
+  if (n.device === null || n.device === 'unsupported') return null;
+  const topics: { id: PushTopic; icon: string; label: string; hint: string }[] = [
+    {
+      id: 'rivals',
+      icon: '⚔️',
+      label: tr('OVERTAKEN!', 'ÜBERHOLT!'),
+      hint: tr('Someone passes your entry on a high score table.', 'Jemand überholt deinen Eintrag auf einer Highscore-Tafel.'),
+    },
+    {
+      id: 'chat',
+      icon: '✉️',
+      label: tr('MESSAGES TO YOU', 'NACHRICHTEN AN DICH'),
+      hint: tr('Someone writes to you in the chat corner.', 'Jemand schreibt dir in der Plauderecke.'),
+    },
+    {
+      id: 'room',
+      icon: '👥',
+      label: tr('GROUP CHAT', 'GRUPPENCHAT'),
+      hint: tr('Every new message in “Everyone”.', 'Jede neue Nachricht in „Alle zusammen“.'),
+    },
+  ];
+  const click = (fn: () => unknown) => () => {
     chip.play('select');
-    const was = state;
-    setState('busy');
-    setState(was === 'on' ? await turnPushOff() : await turnPushOn());
+    fn();
   };
   return (
     <section>
-      <h3 className="pixel-font">{tr('RIVAL ALERTS', 'ÜBERHOLT-MELDUNG')}</h3>
-      {state === 'install-first' ? (
-        <p className="dim">
-          {tr(
-            'On iPhone and iPad, alerts only work in the app on your home screen: install the arcade first (below), then switch them on there.',
-            'Auf iPhone und iPad gehen Meldungen nur in der App auf dem Home-Bildschirm: installiere zuerst die Spielhalle (unten) und schalte sie dort ein.'
-          )}
-        </p>
-      ) : (
-        <>
-          <div className="settings-row">
-            <button className="px-btn" aria-pressed={state === 'on'} onClick={toggle} disabled={state === 'busy' || state === 'blocked'} data-nav>
-              ⚔️ {state === 'on' ? tr('ON', 'AN') : state === 'busy' ? '…' : tr('OFF', 'AUS')}
+      <h3 className="pixel-font">{tr('NOTIFICATIONS', 'BENACHRICHTIGUNGEN')}</h3>
+      <div className="settings-row">
+        <button className="px-btn" aria-pressed={n.prefs.on} onClick={click(() => n.setMain(!n.prefs.on))} disabled={n.busy} data-nav>
+          {n.prefs.on ? tr('🔔 ON', '🔔 AN') : tr('🔕 OFF', '🔕 AUS')}
+        </button>
+      </div>
+      {n.prefs.on &&
+        topics.map((t) => (
+          <div key={t.id} className="settings-row settings-notify">
+            <button className="px-btn" aria-pressed={n.prefs[t.id]} onClick={click(() => n.setTopic(t.id, !n.prefs[t.id]))} disabled={n.busy} data-nav>
+              {t.icon} {t.label}: {n.prefs[t.id] ? tr('ON', 'AN') : tr('OFF', 'AUS')}
             </button>
+            <span className="dim">{t.hint}</span>
           </div>
-          <p className="dim">
-            {state === 'blocked'
-              ? tr('Notifications are blocked for this site. You can allow them again in your browser settings.', 'Mitteilungen sind für diese Seite gesperrt. In den Browser-Einstellungen kannst du sie wieder erlauben.')
-              : tr(
-                  'A message on this device as soon as someone passes your entry on a high score table, even when the arcade is closed. Without it, you see who passed you the next time you come in.',
-                  'Eine Nachricht auf diesem Gerät, sobald dich jemand auf einer Highscore-Tafel überholt, auch wenn die Spielhalle zu ist. Ohne sie siehst du beim nächsten Besuch, wer dich überholt hat.'
-                )}
-          </p>
-        </>
+        ))}
+      <p className="dim">
+        {n.device === 'install-first'
+          ? tr(
+              'On iPhone and iPad, notifications only work in the app on your home screen: install the arcade first (below), then allow them there.',
+              'Auf iPhone und iPad gehen Benachrichtigungen nur in der App auf dem Home-Bildschirm: installiere zuerst die Spielhalle (unten) und erlaube sie dort.'
+            )
+          : n.device === 'blocked'
+            ? tr('Notifications are blocked for this site. You can allow them again in your browser settings.', 'Mitteilungen sind für diese Seite gesperrt. In den Browser-Einstellungen kannst du sie wieder erlauben.')
+            : n.prefs.on
+              ? tr(
+                  'Applies to all your devices and to the Zeitreise. Off means no messages at all and no “Overtaken!” note in the arcade; who passed you is still in the Hall of Fame.',
+                  'Gilt für all deine Geräte und für die Zeitreise. Aus heißt: gar keine Nachrichten und kein „Überholt!“-Hinweis in der Spielhalle; wer dich überholt hat, steht weiter in der Hall of Fame.'
+                )
+              : tr('All notifications are off, on all your devices.', 'Alle Benachrichtigungen sind aus, auf all deinen Geräten.')}
+      </p>
+      {n.prefs.on && (n.device === 'on' || n.device === 'off') && (
+        <div className="settings-row settings-notify">
+          <button className="px-btn" onClick={click(n.device === 'on' ? n.stopHere : n.allowHere)} disabled={n.busy} data-nav>
+            {n.busy ? '…' : n.device === 'on' ? tr('NOT ON THIS DEVICE', 'NICHT AUF DIESEM GERÄT') : tr('ALLOW ON THIS DEVICE', 'AUF DIESEM GERÄT ERLAUBEN')}
+          </button>
+          <span className="dim">
+            {n.device === 'on'
+              ? tr('This device shows them.', 'Dieses Gerät zeigt sie an.')
+              : tr('This device doesn’t show them yet.', 'Dieses Gerät zeigt sie noch nicht an.')}
+          </span>
+        </div>
       )}
     </section>
   );

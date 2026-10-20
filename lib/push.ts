@@ -1,37 +1,82 @@
+import { useCallback, useEffect, useState } from 'react';
 import { getLang } from './i18n';
 
-// Push messages on this device, for both apps (api/_push.js): one browser
-// subscription, switched on per topic, "rivals" (Gaming: someone passed you
-// on a high score table, gaming/lib/rivals.ts) and "chat" (a message for you
-// in the chat corner, lib/chat.ts). The service workers (public/sw.js,
-// public/gaming/sw.js) show them. Push only after you ask for it; the browser
-// asks for permission once more.
+// Notifications for both apps (api/_push.js). Two parts:
+// - This device: one browser push subscription (the browser asks for
+//   permission once). The service workers (public/sw.js,
+//   public/gaming/sw.js) show the messages.
+// - The settings (Marco, 2026-10-20): a main switch plus one switch per
+//   topic, "rivals" (Gaming: someone passed you on a high score table,
+//   gaming/lib/rivals.ts), "chat" (a direct message for you in the chat
+//   corner, lib/chat.ts) and "room" (a new message in the room "Everyone",
+//   off unless switched on). They are synced (lib/sync.ts) and stored on the
+//   server once per guest, so they apply to all devices.
 
-export type PushTopic = 'rivals' | 'chat';
+export type PushTopic = 'rivals' | 'chat' | 'room';
 export type PushState = 'unsupported' | 'install-first' | 'blocked' | 'off' | 'on';
+export interface NotifyPrefs {
+  on: boolean;
+  rivals: boolean;
+  chat: boolean;
+  room: boolean;
+}
 
-// Which topics this device gets. Device only (lib/sync.ts): a push
-// subscription belongs to one browser.
-const TOPICS = 'retromind.push.topics';
+const PREFS = 'retromind.notify';
+// Which topics this device asked for before the settings existed (PR #261,
+// #262). Device only (lib/sync.ts); only read to carry the old choice over.
+const OLD_TOPICS = 'retromind.push.topics';
 
-function storedTopics(hasSub: boolean): PushTopic[] {
+const DEFAULTS: NotifyPrefs = { on: true, rivals: true, chat: true, room: false };
+
+function storedPrefs(): NotifyPrefs | null {
   try {
-    const raw = localStorage.getItem(TOPICS);
-    // Subscriptions from before topics existed were for rival alerts.
-    if (raw === null) return hasSub ? ['rivals'] : [];
-    const list = JSON.parse(raw);
-    return Array.isArray(list) ? list : [];
+    const raw = localStorage.getItem(PREFS);
+    return raw ? { ...DEFAULTS, ...JSON.parse(raw) } : null;
   } catch {
-    return [];
+    return null;
   }
 }
 
-function storeTopics(list: PushTopic[]) {
+function oldTopics(): PushTopic[] | null {
   try {
-    localStorage.setItem(TOPICS, JSON.stringify(list));
+    const raw = localStorage.getItem(OLD_TOPICS);
+    const list = raw === null ? null : JSON.parse(raw);
+    return Array.isArray(list) ? list : null;
   } catch {
-    /* storage unavailable */
+    return null;
   }
+}
+
+/** The settings, or what this device had switched on before they existed. */
+export function getPrefs(): NotifyPrefs {
+  const stored = storedPrefs();
+  if (stored) return stored;
+  const old = oldTopics();
+  return old ? { ...DEFAULTS, rivals: old.includes('rivals'), chat: old.includes('chat') } : DEFAULTS;
+}
+
+/** Whether the "Overtaken!" note may pop up in the arcade (the note stays in the Hall of Fame either way). */
+export function rivalNotesWanted(): boolean {
+  const stored = storedPrefs();
+  return !stored || (stored.on && stored.rivals);
+}
+
+const tellServer = async (body: object): Promise<{ ok: boolean }> => {
+  try {
+    const res = await fetch('/api/highscores', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    return await res.json();
+  } catch {
+    return { ok: false };
+  }
+};
+
+function savePrefs(prefs: NotifyPrefs) {
+  try {
+    localStorage.setItem(PREFS, JSON.stringify(prefs));
+  } catch {
+    /* storage unavailable: the server still knows */
+  }
+  return tellServer({ prefs });
 }
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -46,7 +91,8 @@ async function registration(): Promise<ServiceWorkerRegistration | null> {
   }
 }
 
-export async function topicState(topic: PushTopic): Promise<PushState> {
+/** Whether this device can show notifications and is signed up for them. */
+export async function deviceState(): Promise<PushState> {
   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
     // On iPhone and iPad push only works in the app on the home screen.
     return isIOS() && !standalone() ? 'install-first' : 'unsupported';
@@ -54,8 +100,7 @@ export async function topicState(topic: PushTopic): Promise<PushState> {
   if (Notification.permission === 'denied') return 'blocked';
   const reg = await registration();
   if (!reg) return 'unsupported';
-  const sub = await reg.pushManager.getSubscription();
-  return sub && storedTopics(true).includes(topic) ? 'on' : 'off';
+  return (await reg.pushManager.getSubscription()) ? 'on' : 'off';
 }
 
 const fromB64url = (s: string) => {
@@ -63,17 +108,8 @@ const fromB64url = (s: string) => {
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 };
 
-async function tellServer(body: object): Promise<{ ok: boolean; topics?: PushTopic[] }> {
-  try {
-    const res = await fetch('/api/highscores', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    return await res.json();
-  } catch {
-    return { ok: false };
-  }
-}
-
-/** Asks for permission and subscribes this device to the topic; the new state. */
-export async function topicOn(topic: PushTopic): Promise<PushState> {
+/** Asks for permission and signs this device up; the new state. */
+async function deviceOn(): Promise<PushState> {
   const reg = await registration();
   if (!reg) return 'unsupported';
   if ((await Notification.requestPermission()) !== 'granted') return Notification.permission === 'denied' ? 'blocked' : 'off';
@@ -82,11 +118,7 @@ export async function topicOn(topic: PushTopic): Promise<PushState> {
     if (!key) return 'unsupported';
     const had = await reg.pushManager.getSubscription();
     const sub = had ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: fromB64url(key) }));
-    const out = await tellServer({ push: sub.toJSON(), lang: getLang(), topic });
-    if (out.ok) {
-      storeTopics(out.topics ?? [...new Set([...storedTopics(!!had), topic])]);
-      return 'on';
-    }
+    if ((await tellServer({ push: sub.toJSON(), lang: getLang() })).ok) return 'on';
     if (!had) await sub.unsubscribe();
   } catch {
     /* subscribing failed (private window, blocked push service) */
@@ -94,15 +126,64 @@ export async function topicOn(topic: PushTopic): Promise<PushState> {
   return 'off';
 }
 
-export async function topicOff(topic: PushTopic): Promise<PushState> {
-  const reg = await registration();
-  const sub = await reg?.pushManager.getSubscription();
+/** Signs this device off, here and on the server ("Delete my data" does the same). */
+async function deviceOff(): Promise<PushState> {
+  const sub = await (await registration())?.pushManager.getSubscription();
   if (sub) {
-    const out = await tellServer({ push: null, endpoint: sub.endpoint, topic });
-    const left = out.ok && out.topics ? out.topics : storedTopics(true).filter((t) => t !== topic);
-    storeTopics(left);
-    // The last topic gone: the browser can forget the subscription too.
-    if (!left.length) await sub.unsubscribe().catch(() => {});
+    await tellServer({ push: null, endpoint: sub.endpoint });
+    await sub.unsubscribe().catch(() => {});
   }
   return 'off';
+}
+
+/** The notification settings for a settings panel, the same in both apps. */
+export function useNotifySettings() {
+  const [prefs, setPrefs] = useState<NotifyPrefs>(getPrefs);
+  const [device, setDevice] = useState<PushState | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    deviceState().then((state) => {
+      setDevice(state);
+      // A device signed up before the settings existed: hand its choice to the server once.
+      if (state === 'on' && !storedPrefs()) savePrefs(getPrefs());
+    });
+  }, []);
+
+  const change = useCallback(
+    async (next: NotifyPrefs) => {
+      setPrefs(next);
+      setBusy(true);
+      try {
+        // Switching something on on a device that isn't signed up yet asks the browser right away.
+        const wantsDevice = next.on && (next.rivals || next.chat || next.room);
+        if (wantsDevice && device === 'off') setDevice(await deviceOn());
+        await savePrefs(next);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [device]
+  );
+
+  return {
+    prefs,
+    /** This device: null while checking. */
+    device,
+    busy,
+    setMain: (on: boolean) => change({ ...prefs, on }),
+    setTopic: (topic: PushTopic, on: boolean) => change({ ...prefs, on: on ? true : prefs.on, [topic]: on }),
+    /** Signs this device up (the others keep their own choice). */
+    allowHere: async () => {
+      setBusy(true);
+      setDevice(await deviceOn());
+      setBusy(false);
+    },
+    /** Stops notifications on this device only. */
+    stopHere: async () => {
+      setBusy(true);
+      setDevice(await deviceOff());
+      setBusy(false);
+    },
+  };
 }

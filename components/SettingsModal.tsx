@@ -15,6 +15,7 @@ import { IMPRINT_URL, PRIVACY_URL, setConsent, useConsent } from '../lib/privacy
 import { deleteMyData, downloadMyData } from '../lib/myData';
 import { useSecretAdminTaps } from '../lib/admin';
 import { LANG, LANGUAGES, setLang, tr } from '../lib/i18n';
+import { PushTopic, useNotifySettings } from '../lib/push';
 import { setXmasMode, setXmasSounds, useXmasMode, useXmasSounds, XmasMode } from '../lib/season';
 
 const XMAS_OPTIONS: { id: XmasMode; label: string }[] = [
@@ -355,6 +356,8 @@ export const SettingsModal: React.FC<{
         </p>
       </div>
 
+      <Notifications />
+
       {info?.spotifyPlaylistId && (
         <div className="mt-6 pt-5 border-t border-retro-ink/20">
           <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Real hits from this decade', 'Echte Hits dieser Dekade')}</span>
@@ -537,6 +540,66 @@ const YouTubeChoice: React.FC = () => {
           'Nach jeder Reise läuft unter „Willkommen im Jahr …“ ein Video aus diesem Jahr. YouTube lädt erst nach deinem OK; dabei gehen Daten wie deine IP-Adresse an Google.'
         )}
       </p>
+    </div>
+  );
+};
+
+/** Notifications for all devices (lib/push.ts): main switch, one per topic, this device. */
+const Notifications: React.FC = () => {
+  const n = useNotifySettings();
+  if (n.device === null || n.device === 'unsupported') return null;
+  const topics: { id: PushTopic; label: string }[] = [
+    { id: 'chat', label: tr('Messages to you in the chat corner', 'Nachrichten an dich in der Plauderecke') },
+    { id: 'room', label: tr('Group chat “Everyone” (every new message)', 'Gruppenchat „Alle zusammen“ (jede neue Nachricht)') },
+    { id: 'rivals', label: tr('Gaming: someone passed your high score', 'Gaming: jemand hat deinen Highscore überholt') },
+  ];
+  return (
+    <div className="mt-6 pt-5 border-t border-retro-ink/20">
+      <span className="block text-xs uppercase font-bold text-retro-brown mb-2">{tr('Notifications', 'Benachrichtigungen')}</span>
+      <button
+        onClick={() => n.setMain(!n.prefs.on)}
+        disabled={n.busy}
+        aria-pressed={n.prefs.on}
+        className="retro-button px-4 py-2 border-2 border-retro-ink bg-white font-bold text-sm"
+      >
+        {n.prefs.on ? tr('🔔 Notifications are on – turn off', '🔔 Benachrichtigungen sind an – ausschalten') : tr('🔕 Notifications are off – turn on', '🔕 Benachrichtigungen sind aus – einschalten')}
+      </button>
+      {n.prefs.on &&
+        topics.map((t) => (
+          <label key={t.id} className="mt-3 flex items-center gap-2 text-sm font-bold cursor-pointer">
+            <input
+              type="checkbox"
+              checked={n.prefs[t.id]}
+              disabled={n.busy}
+              onChange={(e) => n.setTopic(t.id, e.target.checked)}
+              className="w-4 h-4 accent-retro-ink"
+            />
+            {t.label}
+          </label>
+        ))}
+      <p className="text-[10px] text-retro-tan mt-2">
+        {n.device === 'install-first'
+          ? tr(
+              'On iPhone and iPad, notifications only work in the app on your home screen: install RetroMind first, then allow them there.',
+              'Auf iPhone und iPad gehen Benachrichtigungen nur in der App auf dem Home-Bildschirm: installiere RetroMind zuerst und erlaube sie dort.'
+            )
+          : n.device === 'blocked'
+            ? tr('Notifications are blocked for this site. You can allow them again in your browser settings.', 'Mitteilungen sind für diese Seite gesperrt. In den Browser-Einstellungen kannst du sie wieder erlauben.')
+            : n.prefs.on
+              ? tr(
+                  'Applies to all your devices and to RetroMind – Gaming. The group chat is off unless you switch it on.',
+                  'Gilt für all deine Geräte und für RetroMind – Gaming. Der Gruppenchat ist aus, bis du ihn einschaltest.'
+                )
+              : tr('All notifications are off, on all your devices.', 'Alle Benachrichtigungen sind aus, auf all deinen Geräten.')}
+      </p>
+      {n.prefs.on && (n.device === 'on' || n.device === 'off') && (
+        <p className="text-[10px] text-retro-tan mt-1">
+          {n.device === 'on' ? tr('This device shows them.', 'Dieses Gerät zeigt sie an.') : tr('This device doesn’t show them yet.', 'Dieses Gerät zeigt sie noch nicht an.')}{' '}
+          <button type="button" onClick={n.device === 'on' ? n.stopHere : n.allowHere} disabled={n.busy} className="underline font-bold text-retro-amber-dark">
+            {n.device === 'on' ? tr('Not on this device', 'Nicht auf diesem Gerät') : tr('Allow on this device', 'Auf diesem Gerät erlauben')}
+          </button>
+        </p>
+      )}
     </div>
   );
 };

@@ -93,8 +93,13 @@ export function deleteMyData(): boolean {
   return true;
 }
 
-/** Push messages (lib/push.ts: rival alerts, chat): this device's push subscription, here and on the server. */
+/** Notifications (lib/push.ts): the settings on the server and this device's push subscription. */
 async function stopRivalAlerts() {
+  await fetch('/api/highscores', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prefs: null }),
+  }).catch(() => {});
   try {
     const regs = (await navigator.serviceWorker?.getRegistrations()) ?? [];
     for (const reg of regs) {

@@ -14,7 +14,7 @@ import {
   useChatInbox,
   useReadMarks,
 } from '../lib/chat';
-import { PushState, topicOff, topicOn, topicState } from '../lib/push';
+import { useNotifySettings } from '../lib/push';
 import './guestChat.css';
 
 // The chat corner of both apps (Marco, 2026-10-19: "Ich möchte einen Chat
@@ -341,18 +341,9 @@ const JoinForm: React.FC<{ suggestedName: string; onSound?: () => void }> = ({ s
 };
 
 const ChatFooter: React.FC<{ name: string; onSound?: () => void }> = ({ name, onSound }) => {
-  const [push, setPush] = useState<PushState | 'busy' | null>(null);
+  const notify = useNotifySettings();
   const [renaming, setRenaming] = useState(false);
   const [draft, setDraft] = useState(name);
-  useEffect(() => {
-    topicState('chat').then(setPush);
-  }, []);
-  const togglePush = useCallback(async () => {
-    onSound?.();
-    const was = push;
-    setPush('busy');
-    setPush(was === 'on' ? await topicOff('chat') : await topicOn('chat'));
-  }, [push, onSound]);
   const leave = async () => {
     if (
       !window.confirm(
@@ -364,7 +355,6 @@ const ChatFooter: React.FC<{ name: string; onSound?: () => void }> = ({ name, on
     )
       return;
     onSound?.();
-    await topicOff('chat').catch(() => {});
     await leaveChat();
     await refreshInbox();
   };
@@ -392,23 +382,41 @@ const ChatFooter: React.FC<{ name: string; onSound?: () => void }> = ({ name, on
           </button>
         </p>
       )}
-      {push && push !== 'unsupported' && (
+      {notify.device && notify.device !== 'unsupported' && (
         <p>
-          {push === 'install-first' ? (
+          {notify.device === 'install-first' ? (
             tr(
-              'On iPhone and iPad, message alerts only work in the app on your home screen.',
-              'Auf iPhone und iPad gehen Mitteilungen nur in der App auf dem Home-Bildschirm.'
+              'On iPhone and iPad, notifications only work in the app on your home screen.',
+              'Auf iPhone und iPad gehen Benachrichtigungen nur in der App auf dem Home-Bildschirm.'
             )
-          ) : push === 'blocked' ? (
+          ) : notify.device === 'blocked' ? (
             tr('Notifications are blocked for this site in your browser settings.', 'Mitteilungen sind für diese Seite in den Browser-Einstellungen gesperrt.')
           ) : (
-            <button type="button" className="rm-chat-link" onClick={togglePush} disabled={push === 'busy'} aria-pressed={push === 'on'}>
-              {push === 'on'
-                ? tr('🔔 Alerts for messages to you: on', '🔔 Mitteilung bei Nachrichten an dich: an')
-                : push === 'busy'
-                  ? '…'
-                  : tr('🔕 Alerts for messages to you: off', '🔕 Mitteilung bei Nachrichten an dich: aus')}
-            </button>
+            (['chat', 'room'] as const).map((topic) => {
+              const on = notify.prefs.on && notify.prefs[topic];
+              return (
+                <button
+                  key={topic}
+                  type="button"
+                  className="rm-chat-link"
+                  style={{ display: 'block' }}
+                  onClick={() => {
+                    onSound?.();
+                    notify.setTopic(topic, !on);
+                  }}
+                  disabled={notify.busy}
+                  aria-pressed={on}
+                >
+                  {topic === 'chat'
+                    ? on
+                      ? tr('🔔 Notify me of messages to me: on', '🔔 Benachrichtigung bei Nachrichten an mich: an')
+                      : tr('🔕 Notify me of messages to me: off', '🔕 Benachrichtigung bei Nachrichten an mich: aus')
+                    : on
+                      ? tr('🔔 Notify me of group chat messages: on', '🔔 Benachrichtigung bei Gruppenchat-Nachrichten: an')
+                      : tr('🔕 Notify me of group chat messages: off', '🔕 Benachrichtigung bei Gruppenchat-Nachrichten: aus')}
+                </button>
+              );
+            })
           )}
         </p>
       )}
