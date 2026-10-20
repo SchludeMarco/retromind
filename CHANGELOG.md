@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Bestenliste: Spiel aus einer Liste wählen** (2026-10-20, PR #PRNUM): Die
+- **Bestenliste: Spiel aus einer Liste wählen** (2026-10-20, PR #267): Die
   Bestenliste der Gaming-Edition öffnet jetzt mit einer Liste aller Spiele
   untereinander statt mit ◀ ▶ von Spiel zu Spiel. Oben gibt es ein Suchfeld,
   das beim Tippen filtert (deutsche und englische Namen), bei jedem Spiel
