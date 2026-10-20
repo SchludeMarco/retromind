@@ -8,6 +8,8 @@ import { MiniMarkdown } from './MiniMarkdown';
 import { YouTubePlayer } from './YouTubePlayer';
 import { PixelCover } from './PixelCover';
 import { GameFactsTab } from './GameFacts';
+import { legendsFor, VERDICT_LABEL } from '../data/legends';
+import { wikiUrl } from './LegendCorner';
 import { fetchVideos, formatViews, VideoKind, YouTubeVideo } from '../lib/youtube';
 import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
@@ -425,6 +427,20 @@ export const GameDetail: React.FC<{
                   {game.funFact}
                 </div>
               )}
+              {legendsFor(game).map((l) => (
+                <details key={l.id} className="panel legend-panel">
+                  <summary className="pixel-font" data-nav>
+                    {tr('📜 LEGEND', '📜 LEGENDE')}: {l.title}
+                  </summary>
+                  <p>{tr(`“${l.claim}”`, `„${l.claim}“`)}</p>
+                  <p>
+                    <b className="pixel-font legend-verdict-inline">{VERDICT_LABEL[l.verdict]}</b> {l.story}
+                  </p>
+                  <a href={wikiUrl(l.wiki)} target="_blank" rel="noreferrer">
+                    {tr('More on Wikipedia ↗', 'Mehr auf Wikipedia ↗')}
+                  </a>
+                </details>
+              ))}
             </div>
             <div>
               <PixelCover game={game} className="boxart" />

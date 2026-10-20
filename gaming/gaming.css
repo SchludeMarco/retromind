@@ -4771,3 +4771,149 @@ button.pcard {
   justify-content: center;
   align-items: center;
 }
+
+/* --- Die Legenden-Ecke (Marco, 2026-10-20): components/LegendCorner, data/legends --- */
+.day-legend {
+  border-color: var(--a2);
+}
+.day-legend .pixel-font {
+  color: var(--a2);
+}
+.legend-corner {
+  margin: 8px 0 22px;
+}
+.legend-corner > h3 {
+  margin: 0 0 8px;
+  color: var(--a3);
+  font-size: 13px;
+}
+.legend-intro {
+  margin: 0 0 6px;
+}
+.legend-count {
+  font-size: 9px;
+  margin: 0 0 12px;
+}
+.legend-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 14px;
+}
+.legend-card {
+  background: var(--panel);
+  border: 2px solid var(--bg2);
+  padding: 12px 14px;
+  scroll-margin: 80px;
+}
+.legend-card.focused {
+  border-color: var(--a3);
+}
+.legend-card[data-verdict='true'] {
+  border-left: 6px solid var(--ok);
+}
+.legend-card[data-verdict='myth'] {
+  border-left: 6px solid var(--a1);
+}
+.legend-card[data-verdict='partly'] {
+  border-left: 6px solid var(--a3);
+}
+.legend-card header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.legend-card header > div {
+  flex: 1;
+  min-width: 0;
+}
+.legend-card h3 {
+  margin: 2px 0 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--a1);
+}
+.legend-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.legend-year {
+  font-size: 16px;
+}
+.legend-verdict {
+  flex: none;
+  font-size: 9px;
+  padding: 4px 6px;
+  color: var(--bg);
+  background: var(--a3);
+}
+.legend-card[data-verdict='true'] .legend-verdict {
+  background: var(--ok);
+}
+.legend-card[data-verdict='myth'] .legend-verdict {
+  background: var(--a1);
+}
+.legend-claim {
+  font-style: italic;
+  margin: 10px 0;
+}
+.legend-guess > .pixel-font,
+.legend-right {
+  font-size: 9px;
+  color: var(--a2);
+}
+.legend-right {
+  color: var(--ok);
+  margin: 0 0 6px;
+}
+.legend-guess .settings-row {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.legend-skip {
+  background: none;
+  border: 0;
+  color: var(--dim);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.legend-story {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.legend-card .settings-row {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.legend-more {
+  color: var(--a2);
+}
+.legend-source {
+  font-size: 15px;
+  margin-top: 14px;
+}
+.legend-panel summary {
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--a1);
+}
+.legend-verdict-inline {
+  font-size: 9px;
+  color: var(--a3);
+}
+.arcade[data-palette='modul'] .legend-card {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-radius: 12px;
+}
+.arcade[data-palette='modul'] .legend-card h3,
+.arcade[data-palette='modul'] .legend-corner > h3 {
+  font-size: 14px;
+}
+.arcade[data-palette='modul'] .day-legend .pixel-font {
+  color: #0e7490;
+}

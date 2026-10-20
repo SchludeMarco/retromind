@@ -30,6 +30,8 @@ import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { rivalNotesWanted } from '../lib/push';
 import { EmulatorCorner } from './components/EmulatorCorner';
+import { LegendCorner } from './components/LegendCorner';
+import { Legend, legendOfTheDay } from './data/legends';
 import { EmulatorDialog } from './components/EmulatorDialog';
 import { EmuLaunch, FREE_GAMES } from './lib/emulator';
 import { countOpened } from '../lib/usage';
@@ -51,7 +53,7 @@ import { findSoundtrack, useAutoTheme, useSpotifyApi } from '../lib/spotifyApi';
 import { scrollToTop, useScrolledDown } from '../hooks/useScrolledDown';
 import { LANG, LOCALE, tr } from '../lib/i18n';
 
-type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests';
+type View = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests' | 'legends';
 
 
 const pad = (n: number, len = 6) => String(n).padStart(len, '0');
@@ -237,6 +239,8 @@ export const GamingApp: React.FC = () => {
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
   // The Hall of Fame (all tables) and the note that someone passed you (lib/rivals.ts).
   const [hall, setHall] = useState<{ start?: BoardGame } | null>(null);
+  // The legend card to scroll to when the Legenden-Ecke opens from the catalog.
+  const [legendFocus, setLegendFocus] = useState<string | null>(null);
   const [rival, setRival] = useState<RivalNews | null>(null);
   const [emu, setEmu] = useState<EmuLaunch | null>(null);
   const [emuRunning, setEmuRunning] = useState(false);
@@ -701,6 +705,25 @@ export const GamingApp: React.FC = () => {
     setEmu(launch);
   };
 
+  const dayLegend = useMemo(() => legendOfTheDay(), []);
+  // A legend's game: the catalog entry, or its Wikipedia article as a game page.
+  const legendGame = (l: Legend) => {
+    const game = l.gameId
+      ? GAMES.find((g) => g.id === l.gameId)
+      : l.game &&
+        withCurated({
+          id: `wiki:${l.wiki}`,
+          title: l.game.title,
+          year: l.year,
+          platform: l.game.platform,
+          developer: '',
+          genre: tr('gaming legend', 'Gaming-Legende'),
+          wiki: l.wiki,
+          custom: true,
+        });
+    return game ? () => open(game) : undefined;
+  };
+
   const openDayGame = () => {
     if (!dayGame) return;
     const title = dayGame.wiki.replace(/ \((\d{4} )?video game\)$/i, '');
@@ -797,6 +820,7 @@ export const GamingApp: React.FC = () => {
                   trophies: tr('TROPHIES', 'TROPHÄEN'),
                   chill: tr('CHILL', 'CHILLEN'),
                   quests: 'QUESTS',
+                  legends: tr('LEGENDS', 'LEGENDEN'),
                 }[view]}
               </span>
             </h1>
@@ -880,6 +904,29 @@ export const GamingApp: React.FC = () => {
                 {dayGame.wiki.replace(/ \((\d{4} )?video game\)$/i, '')} {tr('came out', 'kam raus')} ({dayGame.year}) ►
               </span>
             </button>
+          )}
+
+          {/* One gaming legend a day leads into the Legenden-Ecke (Marco, 2026-10-20). */}
+          {view === 'catalog' && (
+            <button
+              className="day-game day-legend"
+              onClick={() => {
+                setLegendFocus(dayLegend.id);
+                switchView('legends');
+              }}
+              data-nav
+            >
+              <span className="pixel-font">{tr('📜 LEGEND OF THE DAY · TRUE OR MYTH?', '📜 LEGENDE DES TAGES · WAHR ODER MYTHOS?')}</span>
+              <span>{dayLegend.claim} ►</span>
+            </button>
+          )}
+
+          {view === 'legends' && (
+            <LegendCorner
+              focus={legendFocus}
+              onGame={legendGame}
+              onProgress={(n) => n >= 8 && unlock('legends')}
+            />
           )}
 
           {/* The mini games: one of the sections in the dock. */}
@@ -1018,7 +1065,7 @@ export const GamingApp: React.FC = () => {
             </>
           )}
 
-          {view === 'chill' ? null : view === 'quests' ? (
+          {view === 'chill' || view === 'legends' ? null : view === 'quests' ? (
             <QuestBoard
               state={state}
               signedIn={cloud.status === 'signed_in'}
@@ -1236,6 +1283,7 @@ export const GamingApp: React.FC = () => {
                   { id: 'trophies', label: tr('TROPHIES', 'TROPHÄEN') },
                   { id: 'chill', label: tr('CHILL', 'CHILLEN') },
                   { id: 'quests', label: 'QUESTS' },
+                  { id: 'legends', label: tr('LEGENDS', 'LEGENDEN') },
                 ]}
                 current={view}
                 onSection={(id) => {

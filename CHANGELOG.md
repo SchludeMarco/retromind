@@ -7,6 +7,18 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Legenden & Mythen** (2026-10-20, PR #270): Die Halle hat
+  eine neue Ecke „Legenden“ mit 23 berühmten Geschichten aus der Spielewelt,
+  etwa die vergrabenen E.T.-Module, der Geister-Automat Polybius, Mew unter
+  dem Lastwagen, der Konami-Code oder warum Pac-Man erst Puck-Man hieß. Auf
+  jeder Karte steht zuerst die Behauptung; du rätst „Wahr“, „Halb wahr“ oder
+  „Mythos“ (oder lässt es dir verraten) und liest dann, was wirklich
+  dahintersteckt, mit Link zu Wikipedia und, wo es passt, zum Spiel. Im
+  Katalog wartet jeden Tag eine „Legende des Tages“, im Laufband tauchen die
+  Legenden als Rätsel auf, und auf passenden Spieleseiten steht die Legende
+  unter „Wusstest du?“. Wer 8 Legenden aufdeckt, bekommt die Trophäe
+  „Mythenjäger“.
+
 - **Lieblingsbands gebündelt** (2026-10-20, PR #269): Die Liste deiner
   Lieblingsbands und Musiker:innen in den Einstellungen und beim Start ist
   jetzt zusammengeklappt. Statt aller Namen untereinander steht dort eine

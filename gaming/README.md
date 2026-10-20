@@ -69,7 +69,8 @@ zeigen dürfen.
 ### In der Halle
 
 - **Bereich unterm Logo** – unter „RETROMIND GAMING“ steht immer, welcher
-  Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Chillen, Quests).
+  Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Chillen, Quests,
+  Legenden).
 - **Fun-Fact-Laufband** – ganz unten am Bildschirmrand,
   wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
   schieben, mit ‹ › eine Meldung vor oder zurück, mit Pause-Knopf. Es laufen
@@ -82,6 +83,22 @@ zeigen dürfen.
   ([`components/HallTicker.tsx`](components/HallTicker.tsx), Technik geteilt
   mit der Zeitreise: [`components/TickerTrack.tsx`](../components/TickerTrack.tsx),
   [`lib/tickerFeed.ts`](../lib/tickerFeed.ts)).
+- **Legenden & Mythen** – eine eigene Ecke der Halle (Bereich „Legenden“ in
+  der Steuerung) mit 23 berühmten Gaming-Legenden, Mythen und Fakten als
+  kurze, selbst geschriebene Geschichten: die E.T.-Müllkippe, Polybius, der
+  100-Yen-Engpass von Space Invaders, der verstopfte erste Pong-Automat, der
+  Konami-Code, MissingNo., Mew unter dem Lastwagen, das erste Easter Egg,
+  Puck-Man, Level 256, der Tetris-Absturz, die Minus-Welt, Sheng Long, Doom auf
+  dem Schwangerschaftstest und mehr. Jede Karte zeigt zuerst die Behauptung,
+  man rät „Wahr“, „Halb wahr“ oder „Mythos“ (oder lässt es sich einfach
+  verraten), dann öffnet sich die Geschichte mit Link zu Wikipedia und, wo es
+  passt, „Zum Spiel“. Aufgedeckte und richtig geratene Legenden merkt sich die
+  App (`retromind.gaming.legends`, synchronisiert). Ab 8 aufgedeckten gibt es
+  die Trophäe „Mythenjäger“. Im Katalog steht täglich eine **Legende des
+  Tages**, im Laufband laufen die Legenden als „Legende oder wahr?“, und auf
+  der Spieleseite (Info) steht die Legende zum Spiel
+  ([`data/legends.ts`](data/legends.ts),
+  [`components/LegendCorner.tsx`](components/LegendCorner.tsx)).
 - **80er-Heavy-Metal-Intro** – beim Betreten zwei verzerrte Gitarren links
   und rechts, Bass, Solo, Schlagzeug und Hall, vorab im eigenen kleinen
   „Studio“ aufgenommen ([`lib/metalBand.ts`](lib/metalBand.ts),
@@ -463,6 +480,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
+- **Mehr Legenden & Mythen:** weitere Geschichten (etwa „Sonic 2 hat eine
+  verschollene Zone“, „Lara Crofts Name kam aus einem Telefonbuch“), eine
+  Legende pro Katalogspiel und Coins für richtig geratene.
 - **Echtzeit-Duelle zu zweit:** Pong, Snake oder Blockstapler gleichzeitig
   gegeneinander, direkt von Gerät zu Gerät (WebRTC). In manchen Handynetzen
   braucht das einen kostenpflichtigen Vermittlungsdienst, also erst nach
