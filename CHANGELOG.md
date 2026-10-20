@@ -8,7 +8,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 ## Unreleased
 
 - **Gaming-Edition: Fünf neue Spiele für die Highscore-Jagd** (2026-10-20,
-  PR #267): In der Chill-Ecke unter „Browser-Spiele“ gibt es fünf neue
+  PR #268): In der Chill-Ecke unter „Browser-Spiele“ gibt es fünf neue
   Automaten-Klassiker, jeder mit eigener Highscore-Tafel, Platz in der Hall of
   Fame und „Überholt!“-Meldung, wenn dich jemand abhängt. **Asteroiden**:
   drehen, Schub geben, Felsbrocken zerschießen, die in kleinere, schnellere
