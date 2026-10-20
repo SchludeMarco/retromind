@@ -119,8 +119,9 @@ zeigen dürfen.
   einer Minute ab, der Ton wacht nach dem Entsperren des Handys wieder auf.
 - **Musiksteuerung** – unten zwischen „Nach oben“ und dem „?“ der KI-Hilfe
   (über dem Laufband) und im Fenster hinter dem Griff am rechten Rand:
-  Zurück, Play/Pause, Weiter und der Song (ein Tipp darauf öffnet die ganze
-  Steuerung); „Mehr Musik“ öffnet die ganze Steuerung
+  Zurück, Play/Pause, Weiter und der Song in gut lesbarer Schrift (auf dem
+  Handy in eigener Zeile über den Knöpfen, lange Titel laufen als
+  Laufschrift durch; ein Tipp darauf öffnet die ganze Steuerung); „Mehr Musik“ öffnet die ganze Steuerung
   (Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
   Thema“, also der Soundtrack des offenen Spiels). Oben links steht klein,
   welcher Song spielt. Die Musik pausiert bei

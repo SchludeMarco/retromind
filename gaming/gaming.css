@@ -4480,19 +4480,36 @@ button.pcard {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   text-align: left;
   font: inherit;
-  font-size: 14px;
+  line-height: 1.1;
   color: var(--fg);
   background: none;
   border: 0;
   padding: 0;
   cursor: pointer;
 }
-@media (max-width: 359px) {
-  .gm-bottom-music .px-btn:first-child { display: none; }
+/* Phones (Marco, 2026-10-20: "kaum lesen"): the song gets its own line on
+   top, the buttons share the row below. The bar grows upwards, so its bottom
+   edge stays level with the "?" help. */
+@media (max-width: 640px) {
+  .gm-bottom-music {
+    flex-wrap: wrap;
+    height: auto;
+    row-gap: 4px;
+    padding: 6px 6px 5px;
+  }
+  .gm-bottom-music-song {
+    order: -1;
+    flex: 1 0 100%;
+    padding: 0 2px;
+  }
+  .gm-bottom-music .px-btn {
+    flex: 1 1 0;
+    height: 36px;
+    padding: 0 4px;
+    font-size: 12px;
+  }
 }
 .gm-controls-song {
   flex: 1;
