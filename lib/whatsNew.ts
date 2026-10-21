@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Herz auf jeder Spieleseite': {
+    title: 'Gaming edition: A heart on every game page',
+    text: 'The like heart is now on the page of every game, archive finds included (like Pokémon Emerald), not only on the catalog games.',
+  },
   'Gaming-Edition: Spiele auch in der Hall-of-Fame-Show liken': {
     title: 'Gaming edition: Like games in the Hall of Fame show too',
     text: 'The “Hall of Fame” that shows the hall’s games after a minute without input now has a heart under every game, with “Like” and how many guests like it. The same heart is on the page of every catalog game, right by “Collect” and “Beaten it?”. Liking a game keeps it on screen a little longer.',

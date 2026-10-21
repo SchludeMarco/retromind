@@ -94,9 +94,9 @@ const dayKey = (game, day) => `rm:hs:d:${day}:${game}`;
 const newsKey = (pid) => `rm:hs:news:${pid}`;
 // The guests who like a game ("Spiel liken", Marco 2026-10-21): a set of player hashes, so each guest counts once.
 const likesKey = (game) => `rm:hs:likes:${game}`;
-// Every catalog game that has had a like, so a GET knows which sets to count.
+// Every catalog game or archive find that has had a like, so a GET knows which sets to count.
 const LIKED_KEY = "rm:hs:liked";
-const LIKED_MAX = 300;
+const LIKED_MAX = 1000;
 const likeable = (g) => g in GAMES || /^g:[a-z0-9-]{1,60}$/.test(g);
 // The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
 const validWeek = (w) =>

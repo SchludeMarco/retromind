@@ -4,12 +4,22 @@ import { BoardGame } from './highscores';
 
 // Likes for the games in the Hall of Fame (Marco, 2026-10-21: "a button to
 // like a game"): the mini games in the high score list, and the catalog games
-// in the Hall of Fame show and on their pages (id "g:<game id>"). The server
+// in the Hall of Fame show and on every game's page, archive finds too (id "g:<game id>"). The server
 // counts each guest once per game; this device keeps its own likes too, so
 // the hearts stay lit offline.
 
 export type LikeId = BoardGame | `g:${string}`;
-export const catalogLike = (gameId: string): LikeId => `g:${gameId}`;
+// Catalog ids are slugs already; archive finds ("wiki:Pokémon Emerald") become one, as the server only takes slugs.
+export const catalogLike = (gameId: string): LikeId =>
+  `g:${
+    gameId
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'x'
+  }`;
 
 const KEY = 'retromind.gaming.likes';
 

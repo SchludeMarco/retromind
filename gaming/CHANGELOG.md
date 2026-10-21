@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: Herz auf jeder Spieleseite** (2026-10-21, PR #279): Das
+  Like-Herz steht jetzt auf der Seite jedes Spiels, auch bei Fundstücken aus
+  dem Archiv (etwa Pokémon Smaragd), nicht nur bei den Spielen aus dem
+  Katalog.
+
 - **Gaming-Edition: Spiele auch in der Hall-of-Fame-Show liken** (2026-10-21,
   PR #278): Auch in der „Hall of Fame“, die nach einer Minute ohne Eingabe
   die Spiele der Halle zeigt, steht jetzt unter jedem Spiel ein Herz mit

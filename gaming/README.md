@@ -315,7 +315,7 @@ zeigen dürfen.
   einmal ([`lib/likes.ts`](lib/likes.ts), `api/highscores.js` mit
   `?likes=1` und `{like}`; eigene Likes merkt sich auch das Gerät). Dasselbe
   Herz steht in der Hall-of-Fame-Show unter jedem Spiel und auf der Seite
-  jedes Katalogspiels ([`components/LikeButton.tsx`](components/LikeButton.tsx)).
+  jedes Spiels, auch bei Fundstücken aus dem Archiv ([`components/LikeButton.tsx`](components/LikeButton.tsx)).
 - **Überholt! Konkurrenzkampf um die Tafeln** – überholt dich jemand auf einer
   Tafel, legt der Server dir eine Notiz ab (er erkennt Spieler an einer
   Prüfsumme der Gäste-Anmeldung). Beim nächsten Besuch springt „Überholt!“ mit
