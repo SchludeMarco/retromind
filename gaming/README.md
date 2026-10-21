@@ -306,8 +306,9 @@ zeigen dürfen.
 - **Bestenliste (Hall of Fame)** – unter „Die Retro-Konsole“ zeigt
   [`components/HallOfFame.tsx`](components/HallOfFame.tsx) alle Tafeln auf
   einem leuchtenden Röhrenbildschirm. Sie öffnet mit einer durchsuchbaren
-  Liste aller Spiele untereinander (mit deinem Bestwert und dem Wochen-Duell
-  markiert); ein Tipp zeigt die Tafel, dazu die Tafel des Wochen-Duells,
+  Liste aller Spiele untereinander (mit dem Rekord aller Gäste und dahinter
+  den Initialen des Rekordhalters, `GET ?tops=1`, dazu deinem Bestwert und
+  dem Wochen-Duell markiert); ein Tipp zeigt die Tafel, dazu die Tafel des Wochen-Duells,
   „Wer dich überholt hat“ und „Spielen“, „◀ Alle Spiele“ geht zurück.
 - **Spiele liken** – in der Bestenliste hat jedes Spiel ein Herz (in der
   Liste und groß über der Tafel). Ein Tipp liked das Spiel, ein zweiter nimmt

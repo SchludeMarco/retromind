@@ -126,6 +126,20 @@ export function lastInitials(): string {
   return getInitials() || 'AAA';
 }
 
+/** Each game's record and who holds it: everyone's when the server has them, else this device's. */
+export async function fetchTops(): Promise<Partial<Record<BoardGame, Entry>>> {
+  try {
+    const res = await fetch('/api/highscores?tops=1');
+    const data = await res.json();
+    if (data.ready) return data.tops;
+  } catch {
+    /* offline */
+  }
+  const tops: Partial<Record<BoardGame, Entry>> = {};
+  for (const [game, entries] of Object.entries(localAll()) as [BoardGame, Entry[]][]) if (entries?.[0]) tops[game] = entries[0];
+  return tops;
+}
+
 /** The table for a game: everyone's when the server has one, else this device's. */
 export async function fetchBoard(game: BoardGame): Promise<Entry[]> {
   try {

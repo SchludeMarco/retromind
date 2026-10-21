@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Rekordhalter in der Bestenliste': {
+    title: 'Gaming edition: Record holders in the Hall of Fame',
+    text: 'In the list of all games, each game now shows the record of all guests with 🏆, followed right away by the initials of whoever holds it, like the top line on an old arcade cabinet. If the record is yours, your initials glow.',
+  },
   'Gaming-Edition: Herz auf jeder Spieleseite': {
     title: 'Gaming edition: A heart on every game page',
     text: 'The like heart is now on the page of every game, archive finds included (like Pokémon Emerald), not only on the catalog games.',

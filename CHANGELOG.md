@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Rekordhalter in der Bestenliste** (2026-10-21, PR #280):
+  In der Liste aller Spiele steht unter jedem Spiel jetzt der Rekord aller
+  Gäste mit 🏆, direkt dahinter die Initialen dessen, der ihn hält – wie
+  ganz oben auf einem alten Automaten. Hältst du den Rekord selbst, leuchten
+  deine Initialen.
+
 - **Gaming-Edition: Herz auf jeder Spieleseite** (2026-10-21, PR #279): Das
   Like-Herz steht jetzt auf der Seite jedes Spiels, auch bei Fundstücken aus
   dem Archiv (etwa Pokémon Smaragd), nicht nur bei den Spielen aus dem

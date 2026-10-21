@@ -4673,6 +4673,21 @@ button.pcard {
 .hof-row-best {
   font-size: 15px;
 }
+/* The record and its holder's initials, right after the score (Marco 2026-10-21). */
+.hof-row-record {
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--fg);
+}
+.hof-row-holder {
+  margin-left: 4px;
+  color: var(--a1);
+  letter-spacing: 1px;
+}
+.hof-row-record.me .hof-row-holder {
+  color: var(--a3);
+  text-shadow: 0 0 6px currentColor;
+}
 .hof-row-duel {
   flex: none;
   font-size: 8px;
