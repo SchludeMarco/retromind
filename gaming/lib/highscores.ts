@@ -4,7 +4,8 @@
 // the player's own tag from the settings (lib/initials.ts).
 
 import { getInitials, setInitials } from '../../lib/initials';
-import { duelGame, weekOf } from './quests';
+import { duelGame, today, weekOf } from './quests';
+import { isChallengeGame } from './challenge';
 import { tr } from '../../lib/i18n';
 
 export type BoardGame =
@@ -137,6 +138,18 @@ export async function fetchWeekBoard(game: BoardGame, week = weekOf()): Promise<
   return [];
 }
 
+/** The daily challenge's table for today (everyone's; empty offline). */
+export async function fetchDayBoard(game: BoardGame, day = today()): Promise<Entry[]> {
+  try {
+    const res = await fetch(`/api/highscores?game=${game}&day=${day}`);
+    const data = await res.json();
+    if (data.ready) return data.scores;
+  } catch {
+    /* offline */
+  }
+  return [];
+}
+
 export const isDuelGame = (game: BoardGame) => duelGame() === game;
 
 /** Whether a score would make it onto the table. */
@@ -156,8 +169,8 @@ export async function submitScore(game: BoardGame, name: string, score: number):
     const res = await fetch('/api/highscores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // This week's duel game also goes on the weekly table.
-      body: JSON.stringify({ game, name, score, week: isDuelGame(game) ? weekOf() : undefined }),
+      // This week's duel game also goes on the weekly table, today's challenge game on the day's.
+      body: JSON.stringify({ game, name, score, week: isDuelGame(game) ? weekOf() : undefined, day: isChallengeGame(game) ? today() : undefined }),
     });
     const data = await res.json();
     if (data.ready) board = data.scores;

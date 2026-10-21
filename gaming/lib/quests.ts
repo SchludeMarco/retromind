@@ -83,7 +83,7 @@ export function record(log: QuestLog | undefined, event: QuestEvent, n = 1): Que
 }
 
 /** Small deterministic shuffle so everyone gets the same quests on a day. */
-function seeded(key: string) {
+export function seeded(key: string) {
   let h = 2166136261;
   for (const c of key) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
   return () => {

@@ -46,6 +46,7 @@ import { FitMarquee } from '../components/FitMarquee';
 import { FavoriteHeart } from '../components/FavoriteSongs';
 import { QuestBoard } from './components/QuestBoard';
 import { ActiveQuest, PRIZES } from './lib/quests';
+import { CHALLENGE_REWARD, dailyChallenge, RESULT_EVENT, todaysLog } from './lib/challenge';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
 import { withGoogleParam } from '../lib/googleLogin';
@@ -168,8 +169,19 @@ export const GamingApp: React.FC = () => {
   // The daily streak is counted at start but announced once the player is in the hall.
   const [streakNews, setStreakNews] = useState<{ days: number; coins: number; forgiven: boolean } | null>(null);
   const onStreak = useCallback((days: number, coins: number, forgiven: boolean) => setStreakNews({ days, coins, forgiven }), []);
-  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn } = useArcadeState(onAchievement, onQuest, onEgg, onStreak);
+  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult } = useArcadeState(onAchievement, onQuest, onEgg, onStreak);
   const cloud = useCloudSync();
+  // The daily challenge (Marco, 2026-10-21): every finished mini game reports its result (minigames/shared Done).
+  useEffect(() => {
+    const onResult = (e: Event) => {
+      const { game, score } = (e as CustomEvent<{ game: BoardGame; score: number }>).detail;
+      if (!challengeResult(game, score)) return;
+      chip.play('powerup');
+      showToast(tr(`DAILY CHALLENGE MADE: +${CHALLENGE_REWARD} COINS`, `TAGES-CHALLENGE GESCHAFFT: +${CHALLENGE_REWARD} COINS`), tr('Tomorrow there’s a new one. See you then!', 'Morgen wartet eine neue. Bis dann!'), '⚡');
+    };
+    window.addEventListener(RESULT_EVENT, onResult);
+    return () => window.removeEventListener(RESULT_EVENT, onResult);
+  }, [challengeResult, showToast]);
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
   const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
@@ -707,6 +719,8 @@ export const GamingApp: React.FC = () => {
   };
 
   const dayLegend = useMemo(() => legendOfTheDay(), []);
+  const challenge = useMemo(() => dailyChallenge(), []);
+  const challengeToday = todaysLog(state.challenge);
   // A legend's game: the catalog entry, or its Wikipedia article as a game page.
   const legendGame = (l: Legend) => {
     const game = l.gameId
@@ -895,6 +909,32 @@ export const GamingApp: React.FC = () => {
               </button>
             )}
           </div>
+
+          {/* The daily challenge: one short task a day, the same for everyone (Marco, 2026-10-21). */}
+          {view === 'catalog' && (
+            <button
+              className={`day-game day-challenge${challengeToday.won ? ' won' : ''}`}
+              onClick={() => {
+                chip.play('select');
+                countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === challenge.game)?.statKey ?? challenge.game);
+                setMiniGame(challenge.game);
+              }}
+              data-nav
+            >
+              <span className="pixel-font">
+                {challengeToday.won
+                  ? tr('⚡ DAILY CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ TAGES-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
+                  : tr(`⚡ DAILY CHALLENGE · ABOUT ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`, `⚡ TAGES-CHALLENGE · CA. ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`)}
+              </span>
+              <span>
+                {challenge.text}
+                {challengeToday.best !== undefined && !challengeToday.won
+                  ? tr(` Your best today: ${formatScore(challenge.game, challengeToday.best)}.`, ` Dein Bestes heute: ${formatScore(challenge.game, challengeToday.best)}.`)
+                  : ''}{' '}
+                ►
+              </span>
+            </button>
+          )}
 
           {dayGame && view === 'catalog' && (
             <button className="day-game" onClick={openDayGame} data-nav>

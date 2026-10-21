@@ -5,8 +5,10 @@
 //
 // GET  /api/highscores?game=pacman      → { scores: [{name, score, me?}], ready }
 // GET  /api/highscores?game=pacman&week=YYYY-MM-DD → that week's table (weekly duel)
-// POST /api/highscores {game, name, score, week?} → the new table; with week
-//      the score also goes on that week's table (kept 30 days)
+// GET  /api/highscores?game=snake&day=YYYY-MM-DD → that day's table (daily challenge)
+// POST /api/highscores {game, name, score, week?, day?} → the new table; with week
+//      the score also goes on that week's table (kept 30 days), with day on that
+//      day's table (kept 3 days)
 // GET  /api/highscores?news=1           → { news: [{game, name, score, at}] }: who overtook me
 // GET  /api/highscores?vapid=1          → { key } public key for push subscriptions
 // POST /api/highscores {push: subscription | null, endpoint?, lang, topic?} → alerts on/off for this
@@ -75,6 +77,7 @@ async function redis(commands) {
 
 const key = (game) => `rm:hs:${game}`;
 const weekKey = (game, week) => `rm:hs:w:${week}:${game}`;
+const dayKey = (game, day) => `rm:hs:d:${day}:${game}`;
 const newsKey = (pid) => `rm:hs:news:${pid}`;
 // The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
 const validWeek = (w) =>
@@ -82,6 +85,9 @@ const validWeek = (w) =>
   /^\d{4}-\d{2}-\d{2}$/.test(w) &&
   new Date(`${w}T12:00:00Z`).getUTCDay() === 1 &&
   Math.abs(Date.parse(`${w}T12:00:00Z`) - Date.now()) < 9 * 86_400_000;
+// The daily challenge's day is the player's local date; at most a day off (time zones).
+const validDay = (d) =>
+  typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d) && Math.abs(Date.parse(`${d}T12:00:00Z`) - Date.now()) < 2 * 86_400_000;
 
 // Three-letter words nobody should see on a public board (English and
 // German swear words and Nazi codes).
@@ -111,8 +117,8 @@ function parse(flat, me) {
 
 const range = (k, low, n = SHOW) => ["ZRANGE", k, 0, n - 1, ...(low ? [] : ["REV"]), "WITHSCORES"];
 
-async function table(game, week, me) {
-  const [flat] = await redis([range(week ? weekKey(game, week) : key(game), GAMES[game].low)]);
+async function table(game, week, me, day) {
+  const [flat] = await redis([range(day ? dayKey(game, day) : week ? weekKey(game, week) : key(game), GAMES[game].low)]);
   return parse(flat || [], me ?? null);
 }
 
@@ -226,7 +232,8 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const week = validWeek(req.query?.week) ? req.query.week : null;
-      return res.status(200).json({ scores: await table(game, week, me), ready: true });
+      const day = validDay(req.query?.day) ? req.query.day : null;
+      return res.status(200).json({ scores: await table(game, week, me, day), ready: true });
     }
     if (req.method !== "POST") {
       res.setHeader("Allow", "GET, POST");
@@ -239,6 +246,7 @@ export default async function handler(req, res) {
     if (name.length !== 3 || !(score >= min) || score > max) return res.status(400).json({ error: "bad_entry" });
     const member = `${name}:${Math.random().toString(36).slice(2, 8)}${me ? `:${me}` : ""}`;
     const week = validWeek(body.week) ? body.week : null;
+    const day = validDay(body.day) ? body.day : null;
     const [beforeFlat] = await redis([range(key(game), low)]);
     // Trim from the worse end: the lowest scores, or for "fewer is better" the highest.
     const trim = (k) => (low ? ["ZREMRANGEBYRANK", k, KEEP, -1] : ["ZREMRANGEBYRANK", k, 0, -(KEEP + 1)]);
@@ -246,13 +254,16 @@ export default async function handler(req, res) {
     if (week) {
       commands.push(["ZADD", weekKey(game, week), score, member], trim(weekKey(game, week)), ["EXPIRE", weekKey(game, week), 30 * 86_400]);
     }
+    if (day) {
+      commands.push(["ZADD", dayKey(game, day), score, member], trim(dayKey(game, day)), ["EXPIRE", dayKey(game, day), 3 * 86_400]);
+    }
     await redis(commands);
     try {
       await notifyBeaten(parse(beforeFlat || []), game, name, score, me);
     } catch (e) {
       console.error("highscores notify:", e?.message || e);
     }
-    return res.status(200).json({ scores: await table(game, null, me), week: week ? await table(game, week, me) : undefined, ready: true });
+    return res.status(200).json({ scores: await table(game, null, me), week: week ? await table(game, week, me) : undefined, day: day ? await table(game, null, me, day) : undefined, ready: true });
   } catch (e) {
     console.error("highscores:", e?.message || e);
     return res.status(200).json({ scores: [], ready: false });

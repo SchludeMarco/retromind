@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Tages-Challenge': {
+    title: 'Gaming edition: Daily challenge',
+    text: 'Every day the arcade has a short challenge for in between, done in a minute or two, like “Snake: eat 8 apples” or “Color Echo: make it to round 6”. Everyone gets the same task on the same day. The card sits in the catalog right below “Insert Coin”; one tap starts the game. Make it and you get 25 Coins once a day, and the card turns green. The best results of the day stand on their own daily table, under “Quests” and after the game; at midnight a new challenge starts.',
+  },
   'Gaming-Edition: Song unten gut lesbar': {
     title: 'Gaming edition: Song easy to read at the bottom',
     text: 'On phones the music bar at the bottom only showed “No S…” of the song. Now the title gets its own line above the buttons in a larger font, and long titles scroll by. The buttons are wider with bigger symbols; the bar still lines up with the “?” at the bottom.',

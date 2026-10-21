@@ -510,7 +510,7 @@ Spiele von den 1970ern bis heute (44 handverlesene plus Hunderte aus dem
 Wikipedia-Archiv, 36 Konsolen), echte Cover (nur im privaten Gästekreis, sonst eigene Pixelbilder), Spieleseiten
 mit KI-Guide, Videos, alten Testwertungen und „Fakten & Geheimnisse“, ein
 Retro-Guru im Gamer-Slang, Chill-Ecke mit Minispielen und Highscore-Tafel,
-Quests, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
+Quests, eine kurze Tages-Challenge, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 `http://localhost:3000/gaming/`.
 
 ### Für alle Module
