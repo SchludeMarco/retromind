@@ -8,17 +8,19 @@ import { getLang } from './i18n';
 // - The settings (Marco, 2026-10-20): a main switch plus one switch per
 //   topic, "rivals" (Gaming: someone passed you on a high score table,
 //   gaming/lib/rivals.ts), "chat" (a direct message for you in the chat
-//   corner, lib/chat.ts) and "room" (a new message in the room "Everyone",
-//   off unless switched on). They are synced (lib/sync.ts) and stored on the
+//   corner, lib/chat.ts), "room" (a new message in the room "Everyone",
+//   off unless switched on) and "challenge" (Gaming: an evening reminder
+//   when today's daily challenge is still open, off unless switched on). They are synced (lib/sync.ts) and stored on the
 //   server once per guest, so they apply to all devices.
 
-export type PushTopic = 'rivals' | 'chat' | 'room';
+export type PushTopic = 'rivals' | 'chat' | 'room' | 'challenge';
 export type PushState = 'unsupported' | 'install-first' | 'blocked' | 'off' | 'on';
 export interface NotifyPrefs {
   on: boolean;
   rivals: boolean;
   chat: boolean;
   room: boolean;
+  challenge: boolean;
 }
 
 const PREFS = 'retromind.notify';
@@ -26,7 +28,7 @@ const PREFS = 'retromind.notify';
 // #262). Device only (lib/sync.ts); only read to carry the old choice over.
 const OLD_TOPICS = 'retromind.push.topics';
 
-const DEFAULTS: NotifyPrefs = { on: true, rivals: true, chat: true, room: false };
+const DEFAULTS: NotifyPrefs = { on: true, rivals: true, chat: true, room: false, challenge: false };
 
 function storedPrefs(): NotifyPrefs | null {
   try {
@@ -53,6 +55,12 @@ export function getPrefs(): NotifyPrefs {
   if (stored) return stored;
   const old = oldTopics();
   return old ? { ...DEFAULTS, rivals: old.includes('rivals'), chat: old.includes('chat') } : DEFAULTS;
+}
+
+/** Tells the server that today's daily challenge is made, so the evening reminder skips this player. */
+export function challengeMade(day: string) {
+  const prefs = storedPrefs();
+  if (prefs?.on && prefs.challenge) void tellServer({ challengeWon: day });
 }
 
 /** Whether the "Overtaken!" note may pop up in the arcade (the note stays in the Hall of Fame either way). */
@@ -156,7 +164,7 @@ export function useNotifySettings() {
       setBusy(true);
       try {
         // Switching something on on a device that isn't signed up yet asks the browser right away.
-        const wantsDevice = next.on && (next.rivals || next.chat || next.room);
+        const wantsDevice = next.on && (next.rivals || next.chat || next.room || next.challenge);
         if (wantsDevice && device === 'off') setDevice(await deviceOn());
         await savePrefs(next);
       } finally {

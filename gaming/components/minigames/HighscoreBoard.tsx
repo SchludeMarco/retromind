@@ -60,7 +60,7 @@ export const HighscoreBoard: React.FC<{ game: BoardGame; score: number }> = ({ g
       ) : null}
       {challenge && day && day.length > 0 && (
         <>
-          <p className="pixel-font hs-week-title">{tr('TODAY’S CHALLENGE', 'TAGES-CHALLENGE')}</p>
+          <p className="pixel-font hs-week-title">{tr('TODAY’S BLITZ CHALLENGE', 'BLITZ-CHALLENGE')}</p>
           <ScoreTable game={game} entries={day.slice(0, 5)} />
           <p className="pixel-font hs-week-title">{tr('ALL TIME', 'ALLE ZEITEN')}</p>
         </>

@@ -91,14 +91,14 @@ export const QuestBoard: React.FC<{
 
       {/* The daily challenge (Marco, 2026-10-21): short, the same for everyone, its own table for the day. */}
       <section className="panel quest-panel">
-        <h3 className="pixel-font">⚡ {tr('DAILY CHALLENGE', 'TAGES-CHALLENGE')}</h3>
+        <h3 className="pixel-font">⚡ {tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE')}</h3>
         <p>{challenge.text}</p>
         <p className="dim">
           {challengeLog.won
             ? tr(`Made it today, +${CHALLENGE_REWARD} Coins. Tomorrow there’s a new one.`, `Heute geschafft, +${CHALLENGE_REWARD} Coins. Morgen kommt eine neue.`)
             : tr(
-                `About ${challenge.minutes} min. Make it today for +${CHALLENGE_REWARD} Coins. Everyone gets the same challenge, and the best scores of the day stand here until midnight.`,
-                `Ca. ${challenge.minutes} Min. Heute schaffen bringt +${CHALLENGE_REWARD} Coins. Alle bekommen dieselbe Challenge, und die besten Punkte des Tages stehen hier bis Mitternacht.`
+                `About ${challenge.minutes} min. Make it today for +${CHALLENGE_REWARD} Coins. Everyone gets the same challenge, and the best scores of the day stand here until midnight. Want a reminder in the evening? Switch it on in the settings under Notifications.`,
+                `Ca. ${challenge.minutes} Min. Heute schaffen bringt +${CHALLENGE_REWARD} Coins. Alle bekommen dieselbe Challenge, und die besten Punkte des Tages stehen hier bis Mitternacht. Abends erinnert werden? Das schaltest du in den Einstellungen unter Benachrichtigungen ein.`
               )}
           {challengeLog.wins > 0 && tr(` Challenges made so far: ${challengeLog.wins}.`, ` Bisher geschafft: ${challengeLog.wins}.`)}
         </p>

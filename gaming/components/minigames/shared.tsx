@@ -66,7 +66,7 @@ export const Done: React.FC<{ text: string; record: boolean; onAgain: () => void
     <p>{text}</p>
     {challenge && challenge.game === game && (
       <p className={`mini-challenge pixel-font${meets(challenge, score) ? ' won' : ''}`}>
-        {meets(challenge, score) ? tr('⚡ DAILY CHALLENGE MADE!', '⚡ TAGES-CHALLENGE GESCHAFFT!') : tr('⚡ DAILY CHALLENGE: NOT YET, GO AGAIN!', '⚡ TAGES-CHALLENGE: NOCH NICHT, NOCHMAL!')}
+        {meets(challenge, score) ? tr('⚡ BLITZ CHALLENGE MADE!', '⚡ BLITZ-CHALLENGE GESCHAFFT!') : tr('⚡ BLITZ CHALLENGE: NOT YET, GO AGAIN!', '⚡ BLITZ-CHALLENGE: NOCH NICHT, NOCHMAL!')}
       </p>
     )}
     {board && board.score > 0 && <HighscoreBoard game={board.game} score={board.score} />}

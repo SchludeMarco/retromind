@@ -19,6 +19,16 @@
     {
       "source": "/api/chat",
       "destination": "/api/highscores?module=chat"
+    },
+    {
+      "source": "/api/cron-challenge",
+      "destination": "/api/highscores?module=cron"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron-challenge",
+      "schedule": "0 17 * * *"
     }
   ],
   "functions": {

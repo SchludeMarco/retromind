@@ -28,7 +28,7 @@ import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './compon
 import { HallOfFame } from './components/HallOfFame';
 import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
-import { rivalNotesWanted } from '../lib/push';
+import { challengeMade, rivalNotesWanted } from '../lib/push';
 import { EmulatorCorner } from './components/EmulatorCorner';
 import { LegendCorner } from './components/LegendCorner';
 import { Legend, legendOfTheDay } from './data/legends';
@@ -45,7 +45,7 @@ import { MusicDock, openMusicDock } from '../components/MusicDock';
 import { FitMarquee } from '../components/FitMarquee';
 import { FavoriteHeart } from '../components/FavoriteSongs';
 import { QuestBoard } from './components/QuestBoard';
-import { ActiveQuest, PRIZES } from './lib/quests';
+import { ActiveQuest, PRIZES, today } from './lib/quests';
 import { CHALLENGE_REWARD, dailyChallenge, RESULT_EVENT, todaysLog } from './lib/challenge';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
@@ -176,8 +176,9 @@ export const GamingApp: React.FC = () => {
     const onResult = (e: Event) => {
       const { game, score } = (e as CustomEvent<{ game: BoardGame; score: number }>).detail;
       if (!challengeResult(game, score)) return;
+      challengeMade(today());
       chip.play('powerup');
-      showToast(tr(`DAILY CHALLENGE MADE: +${CHALLENGE_REWARD} COINS`, `TAGES-CHALLENGE GESCHAFFT: +${CHALLENGE_REWARD} COINS`), tr('Tomorrow there’s a new one. See you then!', 'Morgen wartet eine neue. Bis dann!'), '⚡');
+      showToast(tr(`BLITZ CHALLENGE MADE: +${CHALLENGE_REWARD} COINS`, `BLITZ-CHALLENGE GESCHAFFT: +${CHALLENGE_REWARD} COINS`), tr('Tomorrow there’s a new one. See you then!', 'Morgen wartet eine neue. Bis dann!'), '⚡');
     };
     window.addEventListener(RESULT_EVENT, onResult);
     return () => window.removeEventListener(RESULT_EVENT, onResult);
@@ -923,8 +924,8 @@ export const GamingApp: React.FC = () => {
             >
               <span className="pixel-font">
                 {challengeToday.won
-                  ? tr('⚡ DAILY CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ TAGES-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
-                  : tr(`⚡ DAILY CHALLENGE · ABOUT ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`, `⚡ TAGES-CHALLENGE · CA. ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`)}
+                  ? tr('⚡ BLITZ CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ BLITZ-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
+                  : tr(`⚡ BLITZ CHALLENGE · ABOUT ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`, `⚡ BLITZ-CHALLENGE · CA. ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`)}
               </span>
               <span>
                 {challenge.text}

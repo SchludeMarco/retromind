@@ -34,6 +34,7 @@ self.addEventListener('fetch', (e) => {
 // Push messages (lib/push.ts, api/_push.js): rival alerts (someone passed
 // you on a high score table; a tap opens the arcade, which shows who it was)
 // and chat messages (a tap opens that conversation, ?chat=<id>, lib/chat.ts).
+// A message with `open` (the daily challenge reminder: /gaming/) opens that page.
 self.addEventListener('push', (e) => {
   let data = {};
   try {
@@ -48,7 +49,7 @@ self.addEventListener('push', (e) => {
       tag: data.tag,
       icon: '/gaming/icon-192.png',
       badge: '/gaming/favicon-48.png',
-      data: { url: self.registration.scope, chat: typeof data.chat === 'string' ? data.chat : null },
+      data: { url: typeof data.open === 'string' && data.open.startsWith('/') ? new URL(data.open, self.location.origin).href : self.registration.scope, chat: typeof data.chat === 'string' ? data.chat : null },
     })
   );
 });

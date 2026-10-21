@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Blitz-Challenge mit Abend-Erinnerung** (2026-10-21, PR #273):
+  Die Tages-Challenge heißt jetzt „Blitz-Challenge“. Neu ist eine Erinnerung
+  am Abend (gegen 18 Uhr, im Sommer 19 Uhr), wenn du die Challenge des Tages
+  noch nicht geschafft hast. Sie ist standardmäßig aus; einschalten kannst du
+  sie in den Einstellungen unter „Benachrichtigungen“ mit „⚡ Blitz-Challenge“.
+  Ein Tipp auf die Nachricht öffnet die Spielhalle.
+
 - **Gaming-Edition: Tages-Challenge** (2026-10-21, PR #272): Jeden Tag
   gibt es in der Halle eine kurze Challenge für zwischendurch, in ein bis zwei
   Minuten zu schaffen, zum Beispiel „Snake: futter 8 Äpfel“ oder „Farbecho:

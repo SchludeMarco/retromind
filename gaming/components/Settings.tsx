@@ -448,6 +448,12 @@ const Notifications: React.FC = () => {
       label: tr('GROUP CHAT', 'GRUPPENCHAT'),
       hint: tr('Every new message in “Everyone”.', 'Jede neue Nachricht in „Alle zusammen“.'),
     },
+    {
+      id: 'challenge',
+      icon: '⚡',
+      label: tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE'),
+      hint: tr('A reminder in the evening if you haven’t made today’s challenge yet.', 'Abends eine Erinnerung, wenn du die Challenge des Tages noch nicht geschafft hast.'),
+    },
   ];
   const click = (fn: () => unknown) => () => {
     chip.play('select');

@@ -3,7 +3,9 @@
 // guest's player hash (api/highscores.js playerId) in rm:hs:push:<pid>.
 // Topics: "rivals" (someone passed you on a high score table), "chat" (a
 // direct message for you in the chat corner, api/_chat.js) and "room" (a new
-// message in the chat room "Everyone").
+// message in the chat room "Everyone") and "challenge" (Gaming: in the evening,
+// when today's daily challenge is still open; off unless switched on,
+// Marco 2026-10-21).
 // Since PR #266 the guest's notification settings (lib/push.ts) live once per
 // player in rm:hs:pushprefs:<pid> and apply to all their devices: a main
 // switch plus one per topic. Players who never opened those settings keep
@@ -14,7 +16,7 @@ import crypto from "node:crypto";
 import webpush from "web-push";
 
 const PUSH_DAYS = 180;
-export const TOPICS = ["rivals", "chat", "room"];
+export const TOPICS = ["rivals", "chat", "room", "challenge"];
 
 const redisUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -34,6 +36,9 @@ async function redis(commands) {
 
 const pushKey = (pid) => `rm:hs:push:${pid}`;
 const prefsKey = (pid) => `rm:hs:pushprefs:${pid}`;
+// Players who want the evening reminder, and who already made today's challenge.
+const REMIND = "rm:ch:remind";
+const wonKey = (day, pid) => `rm:ch:won:${day}:${pid}`;
 
 /** The player behind a guest's e-mail: a short one-way hash (same as the high score tables). */
 export const playerOf = (email) =>
@@ -98,13 +103,16 @@ export async function setPush(pid, body) {
  */
 export async function setPrefs(pid, prefs) {
   if (prefs === null) {
-    await redis([["DEL", prefsKey(pid)]]);
+    await redis([["DEL", prefsKey(pid)], ["SREM", REMIND, pid]]);
     return { ok: true, prefs: null };
   }
   if (!prefs || typeof prefs !== "object") return { ok: false };
   const clean = { on: prefs.on !== false };
   for (const t of TOPICS) clean[t] = prefs[t] === true;
-  await redis([["SET", prefsKey(pid), JSON.stringify(clean), "EX", PUSH_DAYS * 86_400]]);
+  await redis([
+    ["SET", prefsKey(pid), JSON.stringify(clean), "EX", PUSH_DAYS * 86_400],
+    clean.on && clean.challenge ? ["SADD", REMIND, pid] : ["SREM", REMIND, pid],
+  ]);
   return { ok: true, prefs: clean };
 }
 
@@ -148,4 +156,39 @@ export async function sendPush(pid, topic, message) {
     })
   );
   if (gone.length) await redis([["HDEL", pushKey(pid), ...gone]]);
+}
+
+// --- Evening reminder for the daily challenge (gaming/lib/challenge.ts) ---
+
+/** Today in Germany, where the guests live (the app counts days by the device's clock). */
+const berlinDay = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Berlin" });
+
+/** A player made today's challenge: no reminder for them tonight. */
+export async function challengeWon(pid, day) {
+  if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return { ok: false };
+  await redis([["SET", wonKey(day, pid), "1", "EX", 2 * 86_400]]);
+  return { ok: true };
+}
+
+/**
+ * Sends the reminder to everyone who switched it on and hasn't made today's
+ * challenge. Runs once a day (Vercel cron, vercel.json); a second call on
+ * the same day sends nothing.
+ */
+export async function sendChallengeReminders() {
+  const day = berlinDay();
+  const [first, players] = await redis([["SET", `rm:ch:sent:${day}`, "1", "NX", "EX", 2 * 86_400], ["SMEMBERS", REMIND]]);
+  if (first !== "OK" || !players?.length) return { day, sent: 0 };
+  const won = await redis(players.map((pid) => ["EXISTS", wonKey(day, pid)]));
+  const open = players.filter((_, i) => !won[i]);
+  await Promise.all(
+    open.map((pid) =>
+      sendPush(pid, "challenge", (lang) =>
+        lang === "de"
+          ? { title: "⚡ Deine Blitz-Challenge wartet", body: "Noch offen: ein, zwei Minuten in der Spielhalle, 25 Coins. Um Mitternacht kommt die nächste.", tag: "rm-challenge", open: "/gaming/" }
+          : { title: "⚡ Your Blitz Challenge is waiting", body: "Still open: a minute or two in the arcade, 25 Coins. A new one starts at midnight.", tag: "rm-challenge", open: "/gaming/" }
+      ).catch((e) => console.error("challenge push:", e?.message || e))
+    )
+  );
+  return { day, sent: open.length };
 }

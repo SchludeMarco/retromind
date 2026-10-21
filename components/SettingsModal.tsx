@@ -552,6 +552,7 @@ const Notifications: React.FC = () => {
     { id: 'chat', label: tr('Messages to you in the chat corner', 'Nachrichten an dich in der Plauderecke') },
     { id: 'room', label: tr('Group chat “Everyone” (every new message)', 'Gruppenchat „Alle zusammen“ (jede neue Nachricht)') },
     { id: 'rivals', label: tr('Gaming: someone passed your high score', 'Gaming: jemand hat deinen Highscore überholt') },
+    { id: 'challenge', label: tr('Gaming: evening reminder when the Blitz Challenge is still open', 'Gaming: abends erinnern, wenn die Blitz-Challenge noch offen ist') },
   ];
   return (
     <div className="mt-6 pt-5 border-t border-retro-ink/20">

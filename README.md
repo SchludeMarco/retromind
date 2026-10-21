@@ -510,7 +510,7 @@ Spiele von den 1970ern bis heute (44 handverlesene plus Hunderte aus dem
 Wikipedia-Archiv, 36 Konsolen), echte Cover (nur im privaten Gästekreis, sonst eigene Pixelbilder), Spieleseiten
 mit KI-Guide, Videos, alten Testwertungen und „Fakten & Geheimnisse“, ein
 Retro-Guru im Gamer-Slang, Chill-Ecke mit Minispielen und Highscore-Tafel,
-Quests, eine kurze Tages-Challenge, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
+Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 `http://localhost:3000/gaming/`.
 
 ### Für alle Module
@@ -519,8 +519,9 @@ Quests, eine kurze Tages-Challenge, Coins, Preis-Tresen und Easter Eggs. Lokal: 
   [`api/_push.js`](api/_push.js)) – in den Einstellungen beider Apps der
   Bereich „Benachrichtigungen“: ein Hauptschalter und je ein Schalter für
   Nachrichten an dich (Plauderecke), den Gruppenchat „Alle zusammen“ (jede
-  neue Nachricht, standardmäßig aus) und die Überholt-Meldung der
-  Gaming-Edition. Die Auswahl liegt einmal pro Gast auf dem Server
+  neue Nachricht, standardmäßig aus), die Überholt-Meldung der
+  Gaming-Edition und die abendliche Erinnerung an die offene Blitz-Challenge
+  (standardmäßig aus). Die Auswahl liegt einmal pro Gast auf dem Server
   (`rm:hs:pushprefs:<Prüfsumme>`) und gilt für alle Geräte und beide Apps;
   der Server schickt nur, was sie erlaubt. Pro Gerät erlaubt man Mitteilungen
   einmal im Browser („Auf diesem Gerät erlauben“ / „Nicht auf diesem

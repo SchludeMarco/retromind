@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Blitz-Challenge mit Abend-Erinnerung': {
+    title: 'Gaming edition: Blitz Challenge with an evening reminder',
+    text: 'The daily challenge is now called “Blitz Challenge”. New: a reminder in the evening (around 6 pm German time, 7 pm in summer) if you haven’t made today’s challenge yet. It’s off by default; switch it on in the settings under “Notifications” with “⚡ Blitz Challenge”. Tapping the message opens the arcade.',
+  },
   'Gaming-Edition: Tages-Challenge': {
     title: 'Gaming edition: Daily challenge',
     text: 'Every day the arcade has a short challenge for in between, done in a minute or two, like “Snake: eat 8 apples” or “Color Echo: make it to round 6”. Everyone gets the same task on the same day. The card sits in the catalog right below “Insert Coin”; one tap starts the game. Make it and you get 25 Coins once a day, and the card turns green. The best results of the day stand on their own daily table, under “Quests” and after the game; at midnight a new challenge starts.',
