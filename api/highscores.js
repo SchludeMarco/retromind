@@ -17,7 +17,8 @@
 //      devices of this guest (api/_push.js)
 // POST /api/highscores {challengeWon: "YYYY-MM-DD"} → no challenge reminder for me that day
 // GET  /api/highscores?likes=1          → { likes: {game: count}, mine: [game] }: who likes which game
-// POST /api/highscores {like: game, on}  → like or unlike a game (one like per guest) → { count, liked }
+// POST /api/highscores {like: game, on}  → like or unlike a game (one like per guest) → { count, liked };
+//      game is a mini game or "g:<id>" for a game of the catalog (the Hall of Fame show, game pages)
 // /api/cron-challenge → the evening reminder for the daily challenge (Vercel cron,
 //      vercel.json rewrites it here as ?module=cron; api/_push.js)
 // /api/chat → the chat corner (api/_chat.js; vercel.json rewrites it here as ?module=chat,
@@ -93,6 +94,10 @@ const dayKey = (game, day) => `rm:hs:d:${day}:${game}`;
 const newsKey = (pid) => `rm:hs:news:${pid}`;
 // The guests who like a game ("Spiel liken", Marco 2026-10-21): a set of player hashes, so each guest counts once.
 const likesKey = (game) => `rm:hs:likes:${game}`;
+// Every catalog game that has had a like, so a GET knows which sets to count.
+const LIKED_KEY = "rm:hs:liked";
+const LIKED_MAX = 300;
+const likeable = (g) => g in GAMES || /^g:[a-z0-9-]{1,60}$/.test(g);
 // The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
 const validWeek = (w) =>
   typeof w === "string" &&
@@ -250,7 +255,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ news, ready: true });
     }
     if (req.method === "GET" && req.query?.likes) {
-      const games = Object.keys(GAMES);
+      const [catalog] = await redis([["SRANDMEMBER", LIKED_KEY, LIKED_MAX]]);
+      const games = [...Object.keys(GAMES), ...(catalog || []).filter(likeable)];
       const counts = await redis(games.map((g) => ["SCARD", likesKey(g)]));
       const mine = me ? await redis(games.map((g) => ["SISMEMBER", likesKey(g), me])) : [];
       const likes = {};
@@ -261,8 +267,14 @@ export default async function handler(req, res) {
     }
     if (req.method === "POST" && "like" in body) {
       const game = String(body.like || "");
-      if (!(game in GAMES)) return res.status(400).json({ error: "unknown_game" });
+      if (!likeable(game)) return res.status(400).json({ error: "unknown_game" });
       if (!me) return res.status(200).json({ ok: false, ready: true });
+      if (!(game in GAMES) && body.on !== false) {
+        // The catalog is the app's, not the server's: cap the list so made-up ids cannot grow it for good.
+        const [known, size] = await redis([["SISMEMBER", LIKED_KEY, game], ["SCARD", LIKED_KEY]]);
+        if (!Number(known) && Number(size) >= LIKED_MAX) return res.status(200).json({ ok: false, ready: true });
+        await redis([["SADD", LIKED_KEY, game]]);
+      }
       const [, count] = await redis([[body.on === false ? "SREM" : "SADD", likesKey(game), me], ["SCARD", likesKey(game)]]);
       return res.status(200).json({ ok: true, count: Number(count), liked: body.on !== false, ready: true });
     }

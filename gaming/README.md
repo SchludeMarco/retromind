@@ -141,8 +141,9 @@ zeigen dürfen.
   „Bewegung reduzieren“). Nach einer Minute ohne Eingabe startet der Attract
   Mode wie bei alten Automaten, die „Hall of Fame“: Mit ◀ / ▶, Wischen oder
   den Pfeiltasten geht es zum vorherigen oder zum nächsten zufälligen Spiel,
-  ein Tipp aufs Spiel öffnet seine Seite, ein Tipp daneben führt zurück in
-  die Halle ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
+  ein Tipp aufs Spiel öffnet seine Seite, das Herz darunter liked es, ein
+  Tipp daneben führt zurück in die Halle
+  ([`components/AttractMode.tsx`](components/AttractMode.tsx)).
 - **Die ganze Steuerung hinter einem Griff** – am rechten Rand, auf halber
   Höhe, sitzt ein kleiner Pixel-Griff mit drei Reglern
   ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)). Ein Tipp
@@ -312,7 +313,9 @@ zeigen dürfen.
   Liste und groß über der Tafel). Ein Tipp liked das Spiel, ein zweiter nimmt
   es zurück; daneben steht, wie viele Gäste es mögen, jeder zählt pro Spiel
   einmal ([`lib/likes.ts`](lib/likes.ts), `api/highscores.js` mit
-  `?likes=1` und `{like}`; eigene Likes merkt sich auch das Gerät).
+  `?likes=1` und `{like}`; eigene Likes merkt sich auch das Gerät). Dasselbe
+  Herz steht in der Hall-of-Fame-Show unter jedem Spiel und auf der Seite
+  jedes Katalogspiels ([`components/LikeButton.tsx`](components/LikeButton.tsx)).
 - **Überholt! Konkurrenzkampf um die Tafeln** – überholt dich jemand auf einer
   Tafel, legt der Server dir eine Notiz ab (er erkennt Spieler an einer
   Prüfsumme der Gäste-Anmeldung). Beim nächsten Besuch springt „Überholt!“ mit
@@ -516,8 +519,7 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
 - **Beliebteste Spiele zuerst:** die Bestenliste nach Likes sortieren oder ein
-  „Lieblingsspiel der Halle“ auf der Startseite zeigen; Likes auch für
-  Katalogspiele.
+  „Lieblingsspiel der Halle“ auf der Startseite zeigen.
 - **Mehr Blitz-Spiele:** etwa ein Sound-Sprint (welches Spiel klingt so?), dazu mehr
   Spiele für Konsolen- und Jahres-Sprint, eine Challenge-Serie mit Bonus für 7 Tage am
   Stück und Challenges für die Kartenspiele.

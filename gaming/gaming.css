@@ -4744,6 +4744,17 @@ button.pcard {
 .hof-like-word {
   font-size: 10px;
 }
+/* In the Hall of Fame show (attract mode) and on a game's page. */
+.hof-like.am-like {
+  margin-top: 4px;
+  color: #ffd84a;
+}
+.hof-like.am-like.liked {
+  color: #ff4d8d;
+}
+.hof-like.gd-like {
+  min-height: 0;
+}
 @media (prefers-reduced-motion: reduce) {
   .hof-like.liked .hof-like-heart {
     animation: none;

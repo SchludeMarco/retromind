@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { chip } from '../lib/chiptune';
 import { BOARD_GAMES, BoardGame, Entry, fetchBoard, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
-import { Likes, fetchLikes, setLike } from '../lib/likes';
+import { useLikes } from '../lib/likes';
+import { LikeButton } from './LikeButton';
 import { RivalNews, fetchRivalNews } from '../lib/rivals';
 import { ScoreTable } from './minigames/HighscoreBoard';
 import { MINI_GAMES } from './MiniGames';
@@ -26,71 +27,18 @@ function ago(at: number): string {
   return new Date(at).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
 }
 
-const LikeButton: React.FC<{ game: BoardGame; likes: Likes; onToggle: (game: BoardGame) => void; big?: boolean }> = ({ game, likes, onToggle, big }) => {
-  const liked = likes.mine.has(game);
-  const count = likes.counts[game] ?? 0;
-  const name = gameInfo(game)?.title ?? game;
-  return (
-    <button
-      className={`hof-like${liked ? ' liked' : ''}${big ? ' big' : ''}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        onToggle(game);
-      }}
-      aria-pressed={liked}
-      aria-label={liked ? tr(`Unlike ${name} (${count} likes)`, `${name} nicht mehr liken (${count} Likes)`) : tr(`Like ${name} (${count} likes)`, `${name} liken (${count} Likes)`)}
-      data-nav
-    >
-      <span className="hof-like-heart" aria-hidden="true">
-        {liked ? '♥' : '♡'}
-      </span>
-      {big && <span className="pixel-font hof-like-word">{liked ? tr('LIKED', 'GELIKT') : tr('LIKE', 'LIKEN')}</span>}
-      {(big || count > 0) && <span className="pixel-font hof-like-count">{count}</span>}
-    </button>
-  );
-};
-
 export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame) => void; onClose: () => void }> = ({ start, onPlay, onClose }) => {
   const [game, setGame] = useState<BoardGame | null>(start ?? null);
   const [query, setQuery] = useState('');
   const [board, setBoard] = useState<Entry[] | null>(null);
   const [week, setWeek] = useState<Entry[] | null>(null);
   const [news, setNews] = useState<RivalNews[]>([]);
-  const [likes, setLikes] = useState<Likes>({ counts: {}, mine: new Set() });
+  const [likes, toggleLike] = useLikes();
   const bests = useMemo(() => loadBests(), []);
 
   useEffect(() => {
     fetchRivalNews().then((n) => setNews(n.slice(0, 5)));
-    fetchLikes().then(setLikes);
   }, []);
-
-  const toggleLike = (g: BoardGame) => {
-    const on = !likes.mine.has(g);
-    chip.play(on ? 'select' : 'back');
-    const mine = new Set(likes.mine);
-    if (on) mine.add(g);
-    else mine.delete(g);
-    const guess = Math.max(0, (likes.counts[g] ?? 0) + (on ? 1 : -1));
-    setLikes((l) => ({ counts: { ...l.counts, [g]: guess }, mine }));
-    setLike(g, on).then((count) => {
-      if (count !== null) setLikes((l) => ({ ...l, counts: { ...l.counts, [g]: count } }));
-    });
-  };
-
-  useEffect(() => {
-    if (!game) return;
-    let alive = true;
-    setBoard(null);
-    setWeek(null);
-    Promise.all([fetchBoard(game), isDuelGame(game) ? fetchWeekBoard(game) : Promise.resolve(null)]).then(([b, w]) => {
-      if (!alive) return;
-      setBoard(b);
-      setWeek(w);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [game]);
 
   const open = (g: BoardGame) => {
     chip.play('blip');
@@ -161,7 +109,7 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
                         ▶
                       </span>
                     </button>
-                    <LikeButton game={g} likes={likes} onToggle={toggleLike} />
+                    <LikeButton id={g} name={m?.title ?? g} likes={likes} onToggle={toggleLike} />
                   </li>
                 );
               })}
@@ -179,7 +127,7 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
               <span aria-hidden="true">{info.icon}</span> {info.title}
             </div>
             <div className="hof-like-row">
-              <LikeButton game={game} likes={likes} onToggle={toggleLike} big />
+              <LikeButton id={game} name={info.title} likes={likes} onToggle={toggleLike} big />
             </div>
 
             <div className="hof-screen">

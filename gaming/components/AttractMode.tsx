@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Game, GAMES, PLATFORM_COLORS } from '../data/games';
 import { platformLabel } from '../data/platforms';
 import { PixelCover } from './PixelCover';
+import { LikeButton } from './LikeButton';
+import { catalogLike, useLikes } from '../lib/likes';
 import { tr } from '../../lib/i18n';
 
 // Like an arcade cabinet nobody plays: after a while without input, the pixel
 // tiles of the hand-picked games run by and INSERT COIN blinks. Any touch ends it.
 // Browsing (Marco, 2026-10-17): ◀ / ▶ (or a swipe, or the arrow keys) go to
 // the previous game or on to the next random one, and tapping the game opens
-// its page.
+// its page. The heart under the game likes it (Marco, 2026-10-21), the same
+// likes as in the high score list and on the game's page.
 export const ATTRACT_AFTER_MS = 60_000;
 const SLIDE_MS = 3500;
 const SWIPE_PX = 40;
@@ -40,6 +43,7 @@ export const AttractMode: React.FC<{ onExit: () => void; onOpen: (game: Game) =>
   const [i, setI] = useState(0);
   // Bumped by every manual step, so the clock starts over from there.
   const [steps, setSteps] = useState(0);
+  const [likes, toggleLike] = useLikes();
   const go = useCallback(
     (by: number) => {
       setI((n) => (n + by + order.length) % order.length);
@@ -110,9 +114,21 @@ export const AttractMode: React.FC<{ onExit: () => void; onOpen: (game: Game) =>
           ▶
         </button>
       </div>
+      <LikeButton
+        id={catalogLike(order[i].id)}
+        name={order[i].title}
+        likes={likes}
+        onToggle={(id) => {
+          toggleLike(id);
+          // Stay on the game just liked a little longer.
+          setSteps((s) => s + 1);
+        }}
+        big
+        className="am-like"
+      />
       <p className="pixel-font am-coin blink">INSERT COIN</p>
       <p className="am-hint">
-        {tr('Tap the game to open it, anywhere else to play', 'Spiel antippen zum Öffnen, daneben zum Weiterspielen')}
+        {tr('Tap the game to open it, ♡ to like it, anywhere else to play', 'Spiel antippen zum Öffnen, ♡ zum Liken, daneben zum Weiterspielen')}
       </p>
     </div>
   );

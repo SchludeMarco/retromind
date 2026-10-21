@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Spiele auch in der Hall-of-Fame-Show liken** (2026-10-21,
+  PR #277): Auch in der „Hall of Fame“, die nach einer Minute ohne Eingabe
+  die Spiele der Halle zeigt, steht jetzt unter jedem Spiel ein Herz mit
+  „Liken“ und der Zahl der Likes aller Gäste. Dasselbe Herz gibt es auf der
+  Seite jedes Spiels aus dem Katalog, gleich bei „Sammeln“ und
+  „Durchgespielt?“. Wer gerade liked, bleibt etwas länger beim Spiel.
+
 - **Gaming-Edition: Bereich „Chillen“ heißt jetzt „Zocken“** (2026-10-21, PR #277):
   Der Bereich mit der Retro-Konsole, den Browser-Spielen und den
   Blitz-Challenges heißt im Menü, im Dock und oben unter „RETROMIND GAMING“
