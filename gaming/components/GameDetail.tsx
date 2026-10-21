@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Game, GAMES, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
+import { Game, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
 import { platformLabel } from '../data/platforms';
 import { fetchImages, fetchSummary, WikiImage, WikiSummary } from '../lib/wiki';
 import { AiUnavailableError, fetchGameGuide, fetchGamePress, GameGuide } from '../lib/ai';
@@ -306,8 +306,6 @@ export const GameDetail: React.FC<{
   };
 
   const label = PLATFORM_COLORS[game.platform] ?? 'var(--a1)';
-  // Catalog games can be liked here too (the same likes as in the Hall of Fame show).
-  const isCatalog = GAMES.some((g) => g.id === game.id);
 
   return (
     <div className="overlay" onClick={onClose}>
@@ -348,7 +346,7 @@ export const GameDetail: React.FC<{
           <button className="px-btn" aria-pressed={isCompleted} onClick={onToggleCompleted} data-nav>
             {isCompleted ? tr('✓ BEATEN', '✓ DURCHGESPIELT') : tr('○ BEATEN IT?', '○ DURCHGESPIELT?')}
           </button>
-          {isCatalog && <LikeButton id={catalogLike(game.id)} name={game.title} likes={likes} onToggle={toggleLike} big className="gd-like" />}
+          <LikeButton id={catalogLike(game.id)} name={game.title} likes={likes} onToggle={toggleLike} big className="gd-like" />
           {onToggleHadBack && (
             <button className="px-btn" aria-pressed={!!isHadBack} onClick={onToggleHadBack} data-nav>
               {isHadBack ? tr('♥ HAD IT', '♥ HATTE ICH') : tr('♡ HAD IT BACK THEN?', '♡ HATTE ICH DAMALS?')}
