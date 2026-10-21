@@ -8,6 +8,18 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: drei Blitz-Spiele** (2026-10-21, PR #274): Neu in der
+  Chill-Ecke sind drei Spiele, die extra für die Blitz-Challenge gemacht sind.
+  Jedes dauert genau 30 Sekunden, und am selben Tag bekommen alle exakt
+  dieselbe Runde. Beim **Knopf-Blitz** tippst du so schnell wie möglich auf den
+  Automatenknopf, der aufleuchtet. Beim **Konsolen-Sprint** siehst du ein
+  bekanntes Spiel und wählst die Konsole, auf der es rauskam. Beim
+  **Jahres-Sprint** tippst du an, welches von zwei Spielen zuerst erschien.
+  Ein falscher Tipp kostet einen Punkt, Raten lohnt also nicht. Ab dem
+  22. Oktober ist ungefähr jeden zweiten Tag eins davon die Blitz-Challenge,
+  an den anderen Tagen wie bisher ein Minispiel mit Zielwert. Jedes
+  Blitz-Spiel hat seine eigene Highscore-Tafel.
+
 - **Gaming-Edition: Blitz-Challenge mit Abend-Erinnerung** (2026-10-21, PR #273):
   Die Tages-Challenge heißt jetzt „Blitz-Challenge“. Neu ist eine Erinnerung
   am Abend (gegen 18 Uhr, im Sommer 19 Uhr), wenn du die Challenge des Tages

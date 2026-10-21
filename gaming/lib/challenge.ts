@@ -11,24 +11,35 @@ export interface Challenge {
   game: BoardGame;
   /** Points, rounds or meters to reach, or at most this many moves. */
   goal: number;
-  /** Rough minutes it takes, shown on the card. */
-  minutes: number;
+  /** About how long it takes, shown on the card ("30 s", "about 1 min"). */
+  length: string;
   text: string;
 }
 
-const POOL: Challenge[] = [
-  { game: 'senso', goal: 6, minutes: 1, text: tr('Color Echo: make it to round 6.', 'Farbecho: schaff Runde 6.') },
-  { game: 'memory', goal: 18, minutes: 1, text: tr('Pixel Memory: find all pairs in 18 moves or fewer.', 'Pixel-Memory: alle Pärchen in höchstens 18 Zügen.') },
-  { game: 'puzzle', goal: 45, minutes: 2, text: tr('Slide Puzzle: sort it in 45 moves or fewer.', 'Schiebepuzzle: sortiert in höchstens 45 Zügen.') },
-  { game: 'quiz', goal: 4, minutes: 1, text: tr('Name That Game: get 4 of 5 right.', 'Spiele-Quiz: 4 von 5 richtig.') },
-  { game: 'snake', goal: 80, minutes: 1, text: tr('Snake: eat 8 apples (80 points).', 'Snake: futter 8 Äpfel (80 Punkte).') },
-  { game: 'breakout', goal: 400, minutes: 2, text: tr('Brick Bash: score 400 points.', 'Mauerbrecher: hol 400 Punkte.') },
-  { game: 'invaders', goal: 300, minutes: 1, text: tr('Space Invasion: score 300 points.', 'Weltraum-Invasion: hol 300 Punkte.') },
-  { game: 'copter', goal: 300, minutes: 1, text: tr('Cave Copter: fly 300 meters.', 'Höhlenflug: flieg 300 Meter weit.') },
-  { game: 'frogger', goal: 300, minutes: 1, text: tr('Frog Hop: score 300 points.', 'Froschhüpfer: hol 300 Punkte.') },
-  { game: 'asteroids', goal: 1500, minutes: 2, text: tr('Asteroids: score 1,500 points.', 'Asteroiden: hol 1.500 Punkte.') },
-  { game: 'pacman', goal: 1000, minutes: 2, text: tr('Pac-Munch: score 1,000 points.', 'Pac-Mampf: hol 1.000 Punkte.') },
-  { game: 'blocks', goal: 500, minutes: 2, text: tr('Block Stacker: score 500 points.', 'Blockstapler: hol 500 Punkte.') },
+// The regular mini games with a goal.
+const OLD_POOL: Challenge[] = [
+  { game: 'senso', goal: 6, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Color Echo: make it to round 6.', 'Farbecho: schaff Runde 6.') },
+  { game: 'memory', goal: 18, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Pixel Memory: find all pairs in 18 moves or fewer.', 'Pixel-Memory: alle Pärchen in höchstens 18 Zügen.') },
+  { game: 'puzzle', goal: 45, length: tr('about 2 min', 'ca. 2 Min.'), text: tr('Slide Puzzle: sort it in 45 moves or fewer.', 'Schiebepuzzle: sortiert in höchstens 45 Zügen.') },
+  { game: 'quiz', goal: 4, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Name That Game: get 4 of 5 right.', 'Spiele-Quiz: 4 von 5 richtig.') },
+  { game: 'snake', goal: 80, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Snake: eat 8 apples (80 points).', 'Snake: futter 8 Äpfel (80 Punkte).') },
+  { game: 'breakout', goal: 400, length: tr('about 2 min', 'ca. 2 Min.'), text: tr('Brick Bash: score 400 points.', 'Mauerbrecher: hol 400 Punkte.') },
+  { game: 'invaders', goal: 300, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Space Invasion: score 300 points.', 'Weltraum-Invasion: hol 300 Punkte.') },
+  { game: 'copter', goal: 300, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Cave Copter: fly 300 meters.', 'Höhlenflug: flieg 300 Meter weit.') },
+  { game: 'frogger', goal: 300, length: tr('about 1 min', 'ca. 1 Min.'), text: tr('Frog Hop: score 300 points.', 'Froschhüpfer: hol 300 Punkte.') },
+  { game: 'asteroids', goal: 1500, length: tr('about 2 min', 'ca. 2 Min.'), text: tr('Asteroids: score 1,500 points.', 'Asteroiden: hol 1.500 Punkte.') },
+  { game: 'pacman', goal: 1000, length: tr('about 2 min', 'ca. 2 Min.'), text: tr('Pac-Munch: score 1,000 points.', 'Pac-Mampf: hol 1.000 Punkte.') },
+  { game: 'blocks', goal: 500, length: tr('about 2 min', 'ca. 2 Min.'), text: tr('Block Stacker: score 500 points.', 'Blockstapler: hol 500 Punkte.') },
+];
+
+// From 2026-10-22 on the Blitz games, made for it (Marco, 2026-10-21: 30
+// seconds each, the same round for everyone on a day), take turns with them:
+// about every other day is a Blitz game.
+const BLITZ_FROM = '2026-10-22';
+const BLITZ_POOL: Challenge[] = [
+  { game: 'blitzbuttons', goal: 35, length: tr('30 s', '30 Sek.'), text: tr('Button Blitz: hit 35 lit buttons in 30 seconds.', 'Knopf-Blitz: triff 35 leuchtende Knöpfe in 30 Sekunden.') },
+  { game: 'blitzconsole', goal: 8, length: tr('30 s', '30 Sek.'), text: tr('Console Sprint: 8 points in 30 seconds.', 'Konsolen-Sprint: 8 Punkte in 30 Sekunden.') },
+  { game: 'blitzyear', goal: 8, length: tr('30 s', '30 Sek.'), text: tr('Year Sprint: 8 points in 30 seconds (which came out first?).', 'Jahres-Sprint: 8 Punkte in 30 Sekunden (was kam zuerst raus?).') },
 ];
 
 /** Coins for making the day's challenge (once a day). */
@@ -38,8 +49,10 @@ export const CHALLENGE_REWARD = 25;
 export function dailyChallenge(now = new Date()): Challenge & { day: string } {
   const day = today(now);
   const duel = duelGame(now);
-  const pool = POOL.filter((c) => c.game !== duel);
-  return { ...pool[Math.floor(seeded(`challenge:${day}`)() * pool.length)], day };
+  const rnd = seeded(`challenge:${day}`);
+  const blitz = day >= BLITZ_FROM && rnd() < 0.5;
+  const pool = (blitz ? BLITZ_POOL : OLD_POOL).filter((c) => c.game !== duel);
+  return { ...pool[Math.floor((day < BLITZ_FROM ? seeded(`challenge:${day}`) : rnd)() * pool.length)], day };
 }
 
 /** Whether a result makes the challenge. */

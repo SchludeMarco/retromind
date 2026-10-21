@@ -17,6 +17,7 @@ import { Frogger, froggerBest } from './minigames/Frogger';
 import { Copter, copterBest } from './minigames/Copter';
 import { Merge2048, mergeBest } from './minigames/Merge2048';
 import { Missile, missileBest } from './minigames/Missile';
+import { BlitzButtons, BlitzConsole, BlitzYear, blitzBest } from './minigames/Blitz';
 import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
@@ -208,6 +209,31 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
       'Raketen regnen auf sechs Städte: in den Himmel tippen zündet eine Abwehrexplosion, wie Missile Command 1980. Jede Welle kommt schneller; stehende Städte bringen Bonus.'
     ),
     best: missileBest,
+  },
+  // The Blitz games, made for the Blitz-Challenge (Marco, 2026-10-21): 30 seconds, the same round for everyone each day.
+  {
+    id: 'blitzbuttons',
+    title: tr('BUTTON BLITZ', 'KNOPF-BLITZ'),
+    statKey: 'KNOPF-BLITZ',
+    icon: '⚡',
+    text: tr('30 seconds: tap the arcade button that lights up, as fast as you can. A wrong button costs a point.', '30 Sekunden: Tipp so schnell du kannst auf den Automatenknopf, der aufleuchtet. Ein falscher Knopf kostet einen Punkt.'),
+    best: blitzBest,
+  },
+  {
+    id: 'blitzconsole',
+    title: tr('CONSOLE SPRINT', 'KONSOLEN-SPRINT'),
+    statKey: 'KONSOLEN-SPRINT',
+    icon: '🎮',
+    text: tr('30 seconds: a famous game, four consoles. Which one did it come out on?', '30 Sekunden: ein bekanntes Spiel, vier Konsolen. Auf welcher kam es raus?'),
+    best: blitzBest,
+  },
+  {
+    id: 'blitzyear',
+    title: tr('YEAR SPRINT', 'JAHRES-SPRINT'),
+    statKey: 'JAHRES-SPRINT',
+    icon: '📅',
+    text: tr('30 seconds: two games side by side. Which one came out first?', '30 Sekunden: zwei Spiele nebeneinander. Welches kam zuerst raus?'),
+    best: blitzBest,
   },
 ];
 
@@ -566,6 +592,12 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <Merge2048 onWin={onWin} />
         ) : id === 'missile' ? (
           <Missile onWin={onWin} />
+        ) : id === 'blitzbuttons' ? (
+          <BlitzButtons onWin={onWin} />
+        ) : id === 'blitzconsole' ? (
+          <BlitzConsole onWin={onWin} />
+        ) : id === 'blitzyear' ? (
+          <BlitzYear onWin={onWin} />
         ) : id === 'quiz' ? (
           <Quiz onWin={onWin} onEarn={onEarn} />
         ) : (

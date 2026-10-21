@@ -925,7 +925,7 @@ export const GamingApp: React.FC = () => {
               <span className="pixel-font">
                 {challengeToday.won
                   ? tr('⚡ BLITZ CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ BLITZ-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
-                  : tr(`⚡ BLITZ CHALLENGE · ABOUT ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`, `⚡ BLITZ-CHALLENGE · CA. ${challenge.minutes} MIN · +${CHALLENGE_REWARD} COINS`)}
+                  : `⚡ ${tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE')} · ${challenge.length.toUpperCase()} · +${CHALLENGE_REWARD} COINS`}
               </span>
               <span>
                 {challenge.text}

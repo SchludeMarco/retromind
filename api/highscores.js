@@ -55,6 +55,10 @@ const GAMES = {
   copter: { max: 999_999 },
   merge: { max: 9_999_999 },
   missile: { max: 9_999_999 },
+  // The Blitz games: 30 seconds each (gaming/components/minigames/Blitz.tsx).
+  blitzbuttons: { max: 300 },
+  blitzconsole: { max: 120 },
+  blitzyear: { max: 120 },
 };
 const KEEP = 50;
 const SHOW = 10;
@@ -145,6 +149,9 @@ const GAME_NAMES = {
   copter: ["Cave Copter", "Höhlenflug"],
   merge: ["2048", "2048"],
   missile: ["Missile Defense", "Raketenabwehr"],
+  blitzbuttons: ["Button Blitz", "Knopf-Blitz"],
+  blitzconsole: ["Console Sprint", "Konsolen-Sprint"],
+  blitzyear: ["Year Sprint", "Jahres-Sprint"],
 };
 
 function sendAlerts(pid, game, name) {

@@ -27,7 +27,10 @@ export type BoardGame =
   | 'frogger'
   | 'copter'
   | 'merge'
-  | 'missile';
+  | 'missile'
+  | 'blitzbuttons'
+  | 'blitzconsole'
+  | 'blitzyear';
 export interface Entry {
   name: string;
   score: number;
@@ -58,10 +61,13 @@ const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time' |
   copter: 'meters',
   merge: 'points',
   missile: 'points',
+  blitzbuttons: 'points',
+  blitzconsole: 'points',
+  blitzyear: 'points',
 };
 
 /** Every game with a table, in the order of the Chill-Ecke. */
-export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile'];
+export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear'];
 
 export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';
 

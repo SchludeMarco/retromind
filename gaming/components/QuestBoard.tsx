@@ -97,8 +97,8 @@ export const QuestBoard: React.FC<{
           {challengeLog.won
             ? tr(`Made it today, +${CHALLENGE_REWARD} Coins. Tomorrow there’s a new one.`, `Heute geschafft, +${CHALLENGE_REWARD} Coins. Morgen kommt eine neue.`)
             : tr(
-                `About ${challenge.minutes} min. Make it today for +${CHALLENGE_REWARD} Coins. Everyone gets the same challenge, and the best scores of the day stand here until midnight. Want a reminder in the evening? Switch it on in the settings under Notifications.`,
-                `Ca. ${challenge.minutes} Min. Heute schaffen bringt +${CHALLENGE_REWARD} Coins. Alle bekommen dieselbe Challenge, und die besten Punkte des Tages stehen hier bis Mitternacht. Abends erinnert werden? Das schaltest du in den Einstellungen unter Benachrichtigungen ein.`
+                `${challenge.length[0].toUpperCase()}${challenge.length.slice(1)}. Make it today for +${CHALLENGE_REWARD} Coins. Everyone gets the same challenge, and the best scores of the day stand here until midnight. Want a reminder in the evening? Switch it on in the settings under Notifications.`,
+                `${challenge.length[0].toUpperCase()}${challenge.length.slice(1)} Heute schaffen bringt +${CHALLENGE_REWARD} Coins. Alle bekommen dieselbe Challenge, und die besten Punkte des Tages stehen hier bis Mitternacht. Abends erinnert werden? Das schaltest du in den Einstellungen unter Benachrichtigungen ein.`
               )}
           {challengeLog.wins > 0 && tr(` Challenges made so far: ${challengeLog.wins}.`, ` Bisher geschafft: ${challengeLog.wins}.`)}
         </p>

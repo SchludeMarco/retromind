@@ -276,6 +276,14 @@ zeigen dürfen.
   10.000 Punkte eine Stadt zurück)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
+- **Blitz-Spiele** – drei Spiele, gemacht für die Blitz-Challenge: genau 30
+  Sekunden mit 3-2-1-Countdown, und an einem Tag für alle exakt dieselbe
+  Runde (Zufall aus dem Datum). Knopf-Blitz (leuchtenden Automatenknopf
+  antippen), Konsolen-Sprint (bekanntes Spiel, vier Konsolen zur Wahl) und
+  Jahres-Sprint (welches von zwei Spielen kam zuerst raus?) mit 72 bekannten
+  Spielen von Pong bis Animal Crossing. Ein falscher Tipp kostet einen Punkt;
+  jedes hat eine eigene Highscore-Tafel
+  ([`components/minigames/Blitz.tsx`](components/minigames/Blitz.tsx)).
 - **Kartenspiele** – Video-Poker („Jacks or Better“, 20 Hände), Blackjack
   (10 Hände, Bank bleibt ab 17 stehen) und Solitär (Klondike, eine Karte
   ziehen, unbegrenztes Zurück, automatisches Ablegen am Ende). Gespielt wird
@@ -284,7 +292,7 @@ zeigen dürfen.
   ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
   Zeichen ein, je Zeichen mit ▲/▼ oder getippt; dein Kürzel aus den
-  Einstellungen steht schon da. Jedes der 19 Browser-Spiele hat seine Tafel,
+  Einstellungen steht schon da. Jedes der 22 Browser-Spiele hat seine Tafel,
   bei Memory und Schiebepuzzle zählen die wenigsten Züge, bei Sudoku und
   Solitär die schnellste Zeit. Die Top 10 gelten für alle Gäste
   (`api/highscores.js`, Upstash Redis; ohne Datenbank bleibt die Tafel auf
@@ -315,10 +323,11 @@ zeigen dürfen.
   Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
-- **Blitz-Challenge** – jeden Tag eine kurze Aufgabe in einem Minispiel, in
-  ein bis zwei Minuten zu schaffen und für alle gleich (z. B. „Snake: futter
-  8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das Spiel des
-  Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und startet
+- **Blitz-Challenge** – jeden Tag eine kurze Aufgabe, für alle gleich: ab dem
+  22. Oktober 2026 etwa jeden zweiten Tag eins der drei Blitz-Spiele (30
+  Sekunden), sonst ein Minispiel mit Zielwert in ein bis zwei Minuten (z. B.
+  „Snake: futter 8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das
+  Spiel des Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und startet
   das Spiel direkt; geschafft bringt einmal am Tag 25 Coins und färbt die
   Karte grün. Nach dem Spiel steht, ob es gereicht hat; die besten Ergebnisse
   des Tages stehen auf einer eigenen Tages-Tafel unter „Quests“ und nach dem
@@ -496,8 +505,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
-- **Mehr Blitz-Challenges:** Challenges mit Zeitlimit („so viele Punkte wie
-  möglich in 60 Sekunden“), eine Challenge-Serie mit Bonus für 7 Tage am
+- **Mehr Blitz-Spiele:** etwa „Pixel-Blitz“ (kurz gezeigtes Pixelbild merken
+  und nachtippen) oder ein Sound-Sprint (welches Spiel klingt so?), dazu mehr
+  Spiele für Konsolen- und Jahres-Sprint, eine Challenge-Serie mit Bonus für 7 Tage am
   Stück und Challenges für die Kartenspiele.
 - **Mehr Legenden & Mythen:** weitere Geschichten (etwa „Sonic 2 hat eine
   verschollene Zone“, „Lara Crofts Name kam aus einem Telefonbuch“), eine
