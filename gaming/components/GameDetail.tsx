@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Game, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
+import { Game, GAMES, LOADING_LINES, PLATFORM_COLORS } from '../data/games';
 import { platformLabel } from '../data/platforms';
 import { fetchImages, fetchSummary, WikiImage, WikiSummary } from '../lib/wiki';
 import { AiUnavailableError, fetchGameGuide, fetchGamePress, GameGuide } from '../lib/ai';
@@ -15,6 +15,8 @@ import { useConsent, viaProxy } from '../../lib/privacy';
 import { LOCALE, tr } from '../../lib/i18n';
 import { EmuLaunch, emuFor } from '../lib/emulator';
 import { OWN_FILE_NOTE, useRomPicker } from './EmulatorCorner';
+import { LikeButton } from './LikeButton';
+import { catalogLike, useLikes } from '../lib/likes';
 
 type Tab = 'info' | 'facts' | 'videos' | 'media' | 'shots' | 'press' | 'guide' | 'web';
 
@@ -145,6 +147,7 @@ export const GameDetail: React.FC<{
     else onPrev?.();
   };
   const [tab, setTab] = useState<Tab>('info');
+  const [likes, toggleLike] = useLikes();
   const [summary, setSummary] = useState<WikiSummary | null | undefined>(undefined);
   const [images, setImages] = useState<WikiImage[] | undefined>(undefined);
   const [lightbox, setLightbox] = useState<WikiImage | null>(null);
@@ -303,6 +306,8 @@ export const GameDetail: React.FC<{
   };
 
   const label = PLATFORM_COLORS[game.platform] ?? 'var(--a1)';
+  // Catalog games can be liked here too (the same likes as in the Hall of Fame show).
+  const isCatalog = GAMES.some((g) => g.id === game.id);
 
   return (
     <div className="overlay" onClick={onClose}>
@@ -343,6 +348,7 @@ export const GameDetail: React.FC<{
           <button className="px-btn" aria-pressed={isCompleted} onClick={onToggleCompleted} data-nav>
             {isCompleted ? tr('✓ BEATEN', '✓ DURCHGESPIELT') : tr('○ BEATEN IT?', '○ DURCHGESPIELT?')}
           </button>
+          {isCatalog && <LikeButton id={catalogLike(game.id)} name={game.title} likes={likes} onToggle={toggleLike} big className="gd-like" />}
           {onToggleHadBack && (
             <button className="px-btn" aria-pressed={!!isHadBack} onClick={onToggleHadBack} data-nav>
               {isHadBack ? tr('♥ HAD IT', '♥ HATTE ICH') : tr('♡ HAD IT BACK THEN?', '♡ HATTE ICH DAMALS?')}
