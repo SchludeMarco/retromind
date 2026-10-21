@@ -5027,3 +5027,89 @@ button.pcard {
 .quiz-options.two {
   grid-template-columns: 1fr 1fr;
 }
+.blitz-pixels {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 300px);
+  margin: 0 auto;
+}
+.blitz-pixel {
+  aspect-ratio: 1;
+  border: 3px solid rgba(0, 0, 0, 0.5);
+  background: #2a2a48;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.blitz-pixel.lit {
+  background: var(--ok);
+  box-shadow: 0 0 12px var(--ok);
+}
+.blitz-pixel.miss {
+  background: #b91c1c;
+}
+.blitz-hint {
+  text-align: center;
+  margin-top: 10px;
+}
+.blitz-word {
+  margin: 26px 0;
+  text-align: center;
+  font-size: 34px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+.blitz-word.right {
+  transform: scale(1.06);
+}
+.blitz-word.wrong {
+  opacity: 0.35;
+}
+.blitz-colors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: min(100%, 320px);
+  margin: 0 auto;
+}
+.px-btn.blitz-color {
+  height: 64px;
+  touch-action: manipulation;
+}
+.blitz-combo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0 22px;
+  font-size: 24px;
+}
+.blitz-combo span {
+  min-width: 34px;
+  padding: 6px 4px;
+  text-align: center;
+  border: 2px solid var(--dim);
+  color: var(--dim);
+}
+.blitz-combo span.now {
+  border-color: var(--a3);
+  color: var(--a3);
+}
+.blitz-combo span.done {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.blitz-combo.miss span {
+  border-color: #dc2626;
+}
+.blitz-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: min(100%, 320px);
+  margin: 0 auto;
+}
+.blitz-pad .px-btn {
+  height: 58px;
+  font-size: 20px;
+  touch-action: manipulation;
+}

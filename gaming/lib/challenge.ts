@@ -40,6 +40,9 @@ const BLITZ_POOL: Challenge[] = [
   { game: 'blitzbuttons', goal: 35, length: tr('30 s', '30 Sek.'), text: tr('Button Blitz: hit 35 lit buttons in 30 seconds.', 'Knopf-Blitz: triff 35 leuchtende Knöpfe in 30 Sekunden.') },
   { game: 'blitzconsole', goal: 8, length: tr('30 s', '30 Sek.'), text: tr('Console Sprint: 8 points in 30 seconds.', 'Konsolen-Sprint: 8 Punkte in 30 Sekunden.') },
   { game: 'blitzyear', goal: 8, length: tr('30 s', '30 Sek.'), text: tr('Year Sprint: 8 points in 30 seconds (which came out first?).', 'Jahres-Sprint: 8 Punkte in 30 Sekunden (was kam zuerst raus?).') },
+  { game: 'blitzpixel', goal: 5, length: tr('30 s', '30 Sek.'), text: tr('Pixel Blitz: get 5 patterns right in 30 seconds.', 'Pixel-Blitz: 5 Muster richtig in 30 Sekunden.') },
+  { game: 'blitzcolor', goal: 15, length: tr('30 s', '30 Sek.'), text: tr('Color Blitz: 15 points in 30 seconds (the ink, not the word!).', 'Farb-Blitz: 15 Punkte in 30 Sekunden (die Schriftfarbe, nicht das Wort!).') },
+  { game: 'blitzcombo', goal: 40, length: tr('30 s', '30 Sek.'), text: tr('Combo Blitz: 40 points in 30 seconds.', 'Combo-Blitz: 40 Punkte in 30 Sekunden.') },
 ];
 
 /** Coins for making the day's challenge (once a day). */

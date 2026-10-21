@@ -8,6 +8,19 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: eigene Liste „Blitz-Challenges“ und drei neue Blitz-Spiele**
+  (2026-10-21, PR #275): In der Retro-Konsole steht unter „Browser-Spiele“
+  jetzt eine eigene, zuklappbare Liste „⚡ Blitz-Challenges“ mit allen
+  Blitz-Spielen; die Browser-Spiele zeigen nur noch die normalen Minispiele.
+  Neu dazu kommen drei Blitz-Spiele, wieder 30 Sekunden und für alle am selben
+  Tag dieselbe Runde: Beim **Pixel-Blitz** blinkt kurz ein Muster auf einem
+  4×4-Raster auf, du tippst es aus dem Gedächtnis nach, und es wird mit jedem
+  Treffer größer. Beim **Farb-Blitz** steht ein Farbwort in einer anderen
+  Farbe da, und du tippst die Farbe der Schrift, nicht das Wort. Beim
+  **Combo-Blitz** gibst du Tasten-Kombos wie im Prügelspiel ein (↑ ↓ ← → A B,
+  auch mit der Tastatur). Auch diese drei können die Blitz-Challenge des Tages
+  sein und haben ihre eigene Highscore-Tafel.
+
 - **Gaming-Edition: drei Blitz-Spiele** (2026-10-21, PR #274): Neu in der
   Chill-Ecke sind drei Spiele, die extra für die Blitz-Challenge gemacht sind.
   Jedes dauert genau 30 Sekunden, und am selben Tag bekommen alle exakt

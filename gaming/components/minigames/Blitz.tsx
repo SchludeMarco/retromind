@@ -2,17 +2,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { chip } from '../../lib/chiptune';
 import { seeded, today } from '../../lib/quests';
 import { tr } from '../../../lib/i18n';
-import { Done, saveBest } from './shared';
+import { Done, saveBest, useGameKeys } from './shared';
 
 // The Blitz games (Marco, 2026-10-21: "games made for this purpose"): made
 // for the Blitz-Challenge, each one 30 seconds on the clock, no setup, and on
 // a given day everyone gets exactly the same round (seeded by the date), so
 // the day's table is fair. Knopf-Blitz (tap the lit button), Konsolen-Sprint
-// (which console was the game on?) and Jahres-Sprint (which came out first?).
+// (which console was the game on?), Jahres-Sprint (which came out first?),
+// and since Marco asked for three more: Pixel-Blitz (remember a pattern),
+// Farb-Blitz (the ink, not the word) and Combo-Blitz (type the fighting game combo).
 
 export const BLITZ_SECONDS = 30;
 
-type BlitzId = 'blitzbuttons' | 'blitzconsole' | 'blitzyear';
+type BlitzId = 'blitzbuttons' | 'blitzconsole' | 'blitzyear' | 'blitzpixel' | 'blitzcolor' | 'blitzcombo';
 
 /** The day's random numbers for a Blitz game: the same sequence for everyone today. */
 const dayRandom = (id: BlitzId) => seeded(`blitz:${id}:${today()}`);
@@ -400,5 +402,327 @@ export const BlitzYear: React.FC<{ onWin: () => void }> = ({ onWin }) => (
     intro={tr('Two games: which came out first? As many as you can in 30 seconds; a wrong answer costs a point.', 'Zwei Spiele: Welches kam zuerst raus? So viele wie möglich in 30 Sekunden; eine falsche Antwort kostet einen Punkt.')}
   />
 );
+
+/* ------------------------------------------------------------ Pixel-Blitz */
+
+const GRID = 4;
+
+/** A pattern of lit cells: 3 in the first round, one more every two rounds, at most 8. */
+function pattern(rnd: () => number, round: number): number[] {
+  const n = Math.min(8, 3 + Math.floor(round / 2));
+  const cells: number[] = [];
+  while (cells.length < n) {
+    const c = Math.floor(rnd() * GRID * GRID);
+    if (!cells.includes(c)) cells.push(c);
+  }
+  return cells;
+}
+
+export const BlitzPixel: React.FC<{ onWin: () => void }> = ({ onWin }) => {
+  const rnd = useRef(dayRandom('blitzpixel'));
+  const round = useRef(0);
+  const [cells, setCells] = useState<number[]>([]);
+  const [show, setShow] = useState(true);
+  const [hit, setHit] = useState<number[]>([]);
+  const [miss, setMiss] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+  const timer = useRef<number | null>(null);
+  useEffect(() => () => void (timer.current && clearTimeout(timer.current)), []);
+  const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
+  const clock = useBlitzClock(() => {
+    setDone(result('blitzpixel', scoreRef.current));
+    if (scoreRef.current >= 8) onWin();
+  });
+
+  /** Shows the next pattern for a moment, then hides it. */
+  const next = useCallback(() => {
+    setCells(pattern(rnd.current, round.current++));
+    setHit([]);
+    setShow(true);
+    timer.current = window.setTimeout(() => setShow(false), 900);
+  }, []);
+
+  useEffect(() => {
+    if (clock.phase === 'run' && !cells.length) next();
+  }, [clock.phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const tap = (i: number) => {
+    if (clock.phase !== 'run' || show || hit.includes(i)) return;
+    if (cells.includes(i)) {
+      const now = [...hit, i];
+      setHit(now);
+      chip.softNote(BUTTON_NOTES[now.length % BUTTON_NOTES.length], 0.06);
+      if (now.length === cells.length) {
+        chip.play('coin');
+        scoreRef.current += 1;
+        setScore(scoreRef.current);
+        timer.current = window.setTimeout(next, 250);
+      }
+    } else {
+      // A wrong cell costs a point and brings a new pattern.
+      chip.play('error');
+      scoreRef.current = Math.max(0, scoreRef.current - 1);
+      setScore(scoreRef.current);
+      setMiss(i);
+      setShow(true);
+      timer.current = window.setTimeout(() => {
+        setMiss(null);
+        next();
+      }, 600);
+    }
+  };
+
+  const again = () => {
+    rnd.current = dayRandom('blitzpixel');
+    round.current = 0;
+    scoreRef.current = 0;
+    setScore(0);
+    setCells([]);
+    setDone(null);
+    clock.start();
+  };
+
+  return (
+    <>
+      <Frame
+        clock={clock}
+        score={score}
+        intro={tr('A pattern lights up for a moment: tap the same squares from memory. Every pattern you get right scores; patterns grow as you go.', 'Ein Muster leuchtet kurz auf: Tipp dieselben Felder aus dem Gedächtnis nach. Jedes richtige Muster bringt einen Punkt; die Muster werden größer.')}
+      >
+        <div className="blitz-pixels" style={{ gridTemplateColumns: `repeat(${GRID}, 1fr)` }}>
+          {Array.from({ length: GRID * GRID }, (_, i) => (
+            <button
+              key={i}
+              className={`blitz-pixel${(show && cells.includes(i)) || hit.includes(i) ? ' lit' : ''}${miss === i ? ' miss' : ''}`}
+              onPointerDown={(e) => {
+                e.preventDefault();
+                tap(i);
+              }}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && tap(i)}
+              aria-label={tr(`Square ${i + 1}`, `Feld ${i + 1}`)}
+              data-nav
+            />
+          ))}
+        </div>
+        <p className="dim blitz-hint">{show ? tr('Remember …', 'Merken …') : tr('Your turn!', 'Jetzt du!')}</p>
+      </Frame>
+      {done && (
+        <Done
+          title={tr('TIME’S UP', 'ZEIT UM')}
+          text={tr(`${done.score} ${done.score === 1 ? 'pattern' : 'patterns'} in 30 seconds.`, `${done.score} ${done.score === 1 ? 'Muster' : 'Muster'} in 30 Sekunden.`)}
+          record={done.record}
+          onAgain={again}
+          board={{ game: 'blitzpixel', score: done.score }}
+        />
+      )}
+    </>
+  );
+};
+
+/* -------------------------------------------------------------- Farb-Blitz */
+
+const COLORS = [
+  { id: 'red', css: '#ef4444', name: tr('RED', 'ROT') },
+  { id: 'blue', css: '#3b82f6', name: tr('BLUE', 'BLAU') },
+  { id: 'green', css: '#22c55e', name: tr('GREEN', 'GRÜN') },
+  { id: 'yellow', css: '#facc15', name: tr('YELLOW', 'GELB') },
+];
+
+export const BlitzColor: React.FC<{ onWin: () => void }> = ({ onWin }) => {
+  const rnd = useRef(dayRandom('blitzcolor'));
+  // The word names one color, the ink is another: tap the ink.
+  const make = () => {
+    const word = Math.floor(rnd.current() * COLORS.length);
+    const ink = (word + 1 + Math.floor(rnd.current() * (COLORS.length - 1))) % COLORS.length;
+    return { word, ink };
+  };
+  const [card, setCard] = useState(make);
+  const [flash, setFlash] = useState<'right' | 'wrong' | null>(null);
+  const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+  const lock = useRef(false);
+  const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
+  const clock = useBlitzClock(() => {
+    setDone(result('blitzcolor', scoreRef.current));
+    if (scoreRef.current >= 20) onWin();
+  });
+
+  const answer = (i: number) => {
+    if (clock.phase !== 'run' || lock.current) return;
+    const right = i === card.ink;
+    chip.play(right ? 'blip' : 'error');
+    scoreRef.current = Math.max(0, scoreRef.current + (right ? 1 : -1));
+    setScore(scoreRef.current);
+    setFlash(right ? 'right' : 'wrong');
+    lock.current = true;
+    window.setTimeout(
+      () => {
+        lock.current = false;
+        setFlash(null);
+        setCard(make());
+      },
+      right ? 120 : 700
+    );
+  };
+
+  const again = () => {
+    rnd.current = dayRandom('blitzcolor');
+    scoreRef.current = 0;
+    setScore(0);
+    setCard(make());
+    setDone(null);
+    clock.start();
+  };
+
+  return (
+    <>
+      <Frame
+        clock={clock}
+        score={score}
+        intro={tr('A color word in the wrong ink: tap the color of the INK, not the word. A wrong tap costs a point.', 'Ein Farbwort in falscher Farbe: Tipp die FARBE der Schrift, nicht das Wort. Ein falscher Tipp kostet einen Punkt.')}
+      >
+        <p className={`blitz-word pixel-font${flash ? ` ${flash}` : ''}`} style={{ color: COLORS[card.ink].css }}>
+          {COLORS[card.word].name}
+        </p>
+        <div className="blitz-colors">
+          {COLORS.map((c, i) => (
+            <button
+              key={c.id}
+              className="px-btn blitz-color"
+              style={{ background: c.css }}
+              onPointerDown={(e) => {
+                e.preventDefault();
+                answer(i);
+              }}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && answer(i)}
+              aria-label={c.name}
+              data-nav
+            />
+          ))}
+        </div>
+      </Frame>
+      {done && (
+        <Done
+          title={tr('TIME’S UP', 'ZEIT UM')}
+          text={tr(`${done.score} ${done.score === 1 ? 'point' : 'points'} in 30 seconds.`, `${done.score} ${done.score === 1 ? 'Punkt' : 'Punkte'} in 30 Sekunden.`)}
+          record={done.record}
+          onAgain={again}
+          board={{ game: 'blitzcolor', score: done.score }}
+        />
+      )}
+    </>
+  );
+};
+
+/* ------------------------------------------------------------- Combo-Blitz */
+
+const KEYS = ['↑', '↓', '←', '→', 'A', 'B'] as const;
+const KEY_CODES: Record<string, number> = { ArrowUp: 0, ArrowDown: 1, ArrowLeft: 2, ArrowRight: 3, a: 4, b: 5, A: 4, B: 5 };
+
+/** A special move like in the fighting games: 4 to 7 inputs, longer as you go. */
+function combo(rnd: () => number, n: number): number[] {
+  const len = Math.min(7, 4 + Math.floor(n / 2));
+  return Array.from({ length: len }, () => Math.floor(rnd() * KEYS.length));
+}
+
+export const BlitzCombo: React.FC<{ onWin: () => void }> = ({ onWin }) => {
+  const rnd = useRef(dayRandom('blitzcombo'));
+  const count = useRef(0);
+  const [moves, setMoves] = useState<number[]>(() => combo(rnd.current, count.current++));
+  const [pos, setPos] = useState(0);
+  const [miss, setMiss] = useState(false);
+  const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+  const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
+  const clock = useBlitzClock(() => {
+    setDone(result('blitzcombo', scoreRef.current));
+    if (scoreRef.current >= 60) onWin();
+  });
+
+  const press = (k: number) => {
+    if (clock.phase !== 'run') return;
+    if (k === moves[pos]) {
+      chip.softNote(BUTTON_NOTES[k], 0.05);
+      scoreRef.current += 1;
+      if (pos + 1 === moves.length) {
+        // A finished combo pays its length again as a bonus.
+        scoreRef.current += moves.length;
+        chip.play('coin');
+        setMoves(combo(rnd.current, count.current++));
+        setPos(0);
+      } else setPos(pos + 1);
+    } else {
+      // A wrong input breaks the combo: a point off and back to its start.
+      chip.play('error');
+      scoreRef.current = Math.max(0, scoreRef.current - 1);
+      setPos(0);
+      setMiss(true);
+      window.setTimeout(() => setMiss(false), 250);
+    }
+    setScore(scoreRef.current);
+  };
+
+  useGameKeys((e, down) => {
+    const k = KEY_CODES[e.key];
+    if (k === undefined || clock.phase !== 'run') return false;
+    if (down) press(k);
+    return true;
+  });
+
+  const again = () => {
+    rnd.current = dayRandom('blitzcombo');
+    count.current = 0;
+    scoreRef.current = 0;
+    setScore(0);
+    setMoves(combo(rnd.current, count.current++));
+    setPos(0);
+    setDone(null);
+    clock.start();
+  };
+
+  return (
+    <>
+      <Frame
+        clock={clock}
+        score={score}
+        intro={tr('Type the combo like a special move in a fighting game. Every input scores, a finished combo pays a bonus; a wrong input breaks it.', 'Gib die Kombo ein wie einen Spezialangriff im Prügelspiel. Jede Eingabe bringt einen Punkt, eine fertige Kombo einen Bonus; eine falsche Eingabe bricht sie ab.')}
+      >
+        <p className={`blitz-combo pixel-font${miss ? ' miss' : ''}`} aria-live="polite">
+          {moves.map((m, i) => (
+            <span key={i} className={i < pos ? 'done' : i === pos ? 'now' : undefined}>
+              {KEYS[m]}
+            </span>
+          ))}
+        </p>
+        <div className="blitz-pad">
+          {KEYS.map((k, i) => (
+            <button
+              key={k}
+              className="px-btn"
+              onPointerDown={(e) => {
+                e.preventDefault();
+                press(i);
+              }}
+              aria-label={k}
+              data-nav
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+      </Frame>
+      {done && (
+        <Done
+          title={tr('TIME’S UP', 'ZEIT UM')}
+          text={tr(`${done.score} ${done.score === 1 ? 'point' : 'points'} in 30 seconds.`, `${done.score} ${done.score === 1 ? 'Punkt' : 'Punkte'} in 30 Sekunden.`)}
+          record={done.record}
+          onAgain={again}
+          board={{ game: 'blitzcombo', score: done.score }}
+        />
+      )}
+    </>
+  );
+};
 
 export const blitzBest = (n: number) => tr(`High score: ${n}`, `Rekord: ${n}`);

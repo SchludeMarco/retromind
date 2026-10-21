@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: eigene Liste „Blitz-Challenges“ und drei neue Blitz-Spiele': {
+    title: 'Gaming edition: Own “Blitz Challenges” list and three new Blitz games',
+    text: 'In the Retro Console there’s now a separate, collapsible “⚡ Blitz Challenges” list under “Browser games” with all Blitz games; the browser games list only shows the regular mini games. Plus three new Blitz games, again 30 seconds with the same round for everyone on a given day: in **Pixel Blitz** a pattern flashes on a 4×4 grid, you tap it from memory, and it grows with every hit. In **Color Blitz** a color word appears in a different color, and you tap the color of the ink, not the word. In **Combo Blitz** you enter button combos like in a fighting game (↑ ↓ ← → A B, keyboard works too). These three can also be the Blitz Challenge of the day and have their own high score tables.',
+  },
   'Gaming-Edition: drei Blitz-Spiele': {
     title: 'Gaming edition: Three Blitz games',
     text: 'New in the Chill Zone: three games made for the Blitz Challenge. Each one lasts exactly 30 seconds, and on any given day everyone gets exactly the same round. In **Button Blitz** you tap the arcade button that lights up, as fast as you can. In **Console Sprint** you see a famous game and pick the console it came out on. In **Year Sprint** you tap which of two games came out first. A wrong tap costs a point, so guessing doesn’t pay. From October 22 on, about every other day one of them is the Blitz Challenge; on the other days it’s a mini game with a goal, as before. Every Blitz game has its own high score table.',
