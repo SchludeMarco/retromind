@@ -9,6 +9,7 @@
 // POST /api/highscores {game, name, score, week?, day?} → the new table; with week
 //      the score also goes on that week's table (kept 30 days), with day on that
 //      day's table (kept 3 days)
+// GET  /api/highscores?tops=1          → { tops: {game: {name, score, me?}} }: each game's record and its holder
 // GET  /api/highscores?news=1           → { news: [{game, name, score, at}] }: who overtook me
 // GET  /api/highscores?vapid=1          → { key } public key for push subscriptions
 // POST /api/highscores {push: subscription | null, endpoint?, lang, topic?} → alerts on/off for this
@@ -236,6 +237,7 @@ export default async function handler(req, res) {
   if (!configured()) {
     if (req.query?.news) return res.status(200).json({ news: [], ready: false });
     if (req.query?.likes) return res.status(200).json({ likes: {}, mine: [], ready: false });
+    if (req.query?.tops) return res.status(200).json({ tops: {}, ready: false });
     if (req.method === "POST" && "like" in body) return res.status(200).json({ ok: false, ready: false });
     if (req.method === "POST" && ("push" in body || "prefs" in body || "challengeWon" in body)) return res.status(200).json({ ok: false });
   }
@@ -253,6 +255,17 @@ export default async function handler(req, res) {
         }
       });
       return res.status(200).json({ news, ready: true });
+    }
+    if (req.method === "GET" && req.query?.tops) {
+      // The record holder's initials beside each game in the Hall of Fame list (Marco, 2026-10-21).
+      const games = Object.keys(GAMES);
+      const firsts = await redis(games.map((g) => range(key(g), GAMES[g].low, 1)));
+      const tops = {};
+      games.forEach((g, i) => {
+        const [top] = parse(firsts[i] || [], me);
+        if (top) tops[g] = top;
+      });
+      return res.status(200).json({ tops, ready: true });
     }
     if (req.method === "GET" && req.query?.likes) {
       const [catalog] = await redis([["SRANDMEMBER", LIKED_KEY, LIKED_MAX]]);
@@ -292,7 +305,7 @@ export default async function handler(req, res) {
     }
   } catch (e) {
     console.error("highscores:", e?.message || e);
-    return res.status(200).json({ news: [], likes: {}, mine: [], ok: false, ready: false });
+    return res.status(200).json({ news: [], likes: {}, mine: [], tops: {}, ok: false, ready: false });
   }
 
   const game = String((req.method === "POST" ? body.game : req.query?.game) || "");

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { chip } from '../lib/chiptune';
-import { BOARD_GAMES, BoardGame, Entry, fetchBoard, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
+import { BOARD_GAMES, BoardGame, Entry, fetchBoard, fetchTops, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
 import { useLikes } from '../lib/likes';
 import { LikeButton } from './LikeButton';
 import { RivalNews, fetchRivalNews } from '../lib/rivals';
@@ -15,7 +15,8 @@ import { LOCALE, tr } from '../../lib/i18n';
 // found paging game by game with arrows too clumsy for finding one game, so
 // it opens on a searchable list of all games; a tap opens that game's table.
 // Each game has a heart (Marco, 2026-10-21): guests like a game, everyone
-// sees how many did.
+// sees how many did. Under each name the record with the holder's initials
+// right after the score (Marco, 2026-10-21), like the top line on a cabinet.
 
 const gameInfo = (g: BoardGame) => MINI_GAMES.find((m) => m.id === g)!;
 
@@ -33,11 +34,13 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
   const [board, setBoard] = useState<Entry[] | null>(null);
   const [week, setWeek] = useState<Entry[] | null>(null);
   const [news, setNews] = useState<RivalNews[]>([]);
+  const [tops, setTops] = useState<Partial<Record<BoardGame, Entry>>>({});
   const [likes, toggleLike] = useLikes();
   const bests = useMemo(() => loadBests(), []);
 
   useEffect(() => {
     fetchRivalNews().then((n) => setNews(n.slice(0, 5)));
+    fetchTops().then(setTops);
   }, []);
 
   const open = (g: BoardGame) => {
@@ -94,6 +97,7 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
               {games.map((g) => {
                 const m = gameInfo(g);
                 const best = bests[g as keyof typeof bests];
+                const top = tops[g];
                 return (
                   <li key={g} className="hof-item">
                     <button className="hof-row" onClick={() => open(g)} data-nav>
@@ -102,6 +106,11 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
                       </span>
                       <span className="hof-row-text">
                         <span className="pixel-font hof-row-title">{m?.title ?? g}</span>
+                        {top && (
+                          <span className={`pixel-font hof-row-record${top.me ? ' me' : ''}`}>
+                            🏆 {formatScore(g, top.score)} <span className="hof-row-holder">{top.name}</span>
+                          </span>
+                        )}
                         {best !== undefined && m && <span className="dim hof-row-best">{m.best(best)}</span>}
                       </span>
                       {isDuelGame(g) && <span className="pixel-font hof-row-duel">{tr('⚔️ DUEL', '⚔️ DUELL')}</span>}
