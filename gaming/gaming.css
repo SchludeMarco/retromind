@@ -4682,6 +4682,73 @@ button.pcard {
   flex: none;
   color: var(--a3);
 }
+/* The like heart beside each game and under the game's name (Marco 2026-10-21). */
+.hof-item {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px dashed var(--dim);
+}
+.hof-item .hof-row {
+  flex: 1;
+  min-width: 0;
+  border-bottom: none;
+}
+.hof-like {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 52px;
+  min-height: 44px;
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  color: var(--dim);
+  font: inherit;
+  cursor: pointer;
+}
+.hof-like:hover,
+.hof-like:focus-visible {
+  background: var(--bg2);
+  outline: none;
+}
+.hof-like-heart {
+  font-size: 22px;
+  line-height: 1;
+}
+.hof-like-count {
+  font-size: 9px;
+}
+.hof-like.liked {
+  color: var(--a1);
+}
+.hof-like.liked .hof-like-heart {
+  animation: hof-like-pop 0.35s ease-out;
+  text-shadow: 0 0 8px var(--a1);
+}
+@keyframes hof-like-pop {
+  40% {
+    transform: scale(1.4);
+  }
+}
+.hof-like-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+.hof-like.big {
+  border: 2px solid currentColor;
+  padding: 6px 14px;
+}
+.hof-like-word {
+  font-size: 10px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hof-like.liked .hof-like-heart {
+    animation: none;
+  }
+}
 .hof-none {
   margin: 24px 0 8px;
   font-size: 10px;

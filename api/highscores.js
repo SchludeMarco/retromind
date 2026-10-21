@@ -16,6 +16,8 @@
 // POST /api/highscores {prefs: {on, rivals, chat, room} | null} → notification settings for all
 //      devices of this guest (api/_push.js)
 // POST /api/highscores {challengeWon: "YYYY-MM-DD"} → no challenge reminder for me that day
+// GET  /api/highscores?likes=1          → { likes: {game: count}, mine: [game] }: who likes which game
+// POST /api/highscores {like: game, on}  → like or unlike a game (one like per guest) → { count, liked }
 // /api/cron-challenge → the evening reminder for the daily challenge (Vercel cron,
 //      vercel.json rewrites it here as ?module=cron; api/_push.js)
 // /api/chat → the chat corner (api/_chat.js; vercel.json rewrites it here as ?module=chat,
@@ -89,6 +91,8 @@ const key = (game) => `rm:hs:${game}`;
 const weekKey = (game, week) => `rm:hs:w:${week}:${game}`;
 const dayKey = (game, day) => `rm:hs:d:${day}:${game}`;
 const newsKey = (pid) => `rm:hs:news:${pid}`;
+// The guests who like a game ("Spiel liken", Marco 2026-10-21): a set of player hashes, so each guest counts once.
+const likesKey = (game) => `rm:hs:likes:${game}`;
 // The weekly duel's week is the Monday it starts on; at most a day or two ahead (time zones).
 const validWeek = (w) =>
   typeof w === "string" &&
@@ -226,6 +230,8 @@ export default async function handler(req, res) {
   }
   if (!configured()) {
     if (req.query?.news) return res.status(200).json({ news: [], ready: false });
+    if (req.query?.likes) return res.status(200).json({ likes: {}, mine: [], ready: false });
+    if (req.method === "POST" && "like" in body) return res.status(200).json({ ok: false, ready: false });
     if (req.method === "POST" && ("push" in body || "prefs" in body || "challengeWon" in body)) return res.status(200).json({ ok: false });
   }
   const me = configured() ? await playerId(req) : null;
@@ -243,6 +249,23 @@ export default async function handler(req, res) {
       });
       return res.status(200).json({ news, ready: true });
     }
+    if (req.method === "GET" && req.query?.likes) {
+      const games = Object.keys(GAMES);
+      const counts = await redis(games.map((g) => ["SCARD", likesKey(g)]));
+      const mine = me ? await redis(games.map((g) => ["SISMEMBER", likesKey(g), me])) : [];
+      const likes = {};
+      games.forEach((g, i) => {
+        if (counts[i]) likes[g] = Number(counts[i]);
+      });
+      return res.status(200).json({ likes, mine: games.filter((_, i) => Number(mine[i]) === 1), ready: true });
+    }
+    if (req.method === "POST" && "like" in body) {
+      const game = String(body.like || "");
+      if (!(game in GAMES)) return res.status(400).json({ error: "unknown_game" });
+      if (!me) return res.status(200).json({ ok: false, ready: true });
+      const [, count] = await redis([[body.on === false ? "SREM" : "SADD", likesKey(game), me], ["SCARD", likesKey(game)]]);
+      return res.status(200).json({ ok: true, count: Number(count), liked: body.on !== false, ready: true });
+    }
     if (req.method === "POST" && "push" in body) {
       if (!me) return res.status(200).json({ ok: false });
       return res.status(200).json(await setPush(me, body));
@@ -257,7 +280,7 @@ export default async function handler(req, res) {
     }
   } catch (e) {
     console.error("highscores:", e?.message || e);
-    return res.status(200).json({ news: [], ok: false, ready: false });
+    return res.status(200).json({ news: [], likes: {}, mine: [], ok: false, ready: false });
   }
 
   const game = String((req.method === "POST" ? body.game : req.query?.game) || "");
