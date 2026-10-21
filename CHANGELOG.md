@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Spiele in der Bestenliste liken** (2026-10-21, PR #276):
+  In der Bestenliste (Hall of Fame) hat jedes Spiel jetzt ein Herz. Ein Tipp
+  darauf liked das Spiel, ein zweiter nimmt das Like wieder weg. Neben dem
+  Herz steht, wie viele Gäste das Spiel mögen; jeder zählt pro Spiel einmal.
+  Das Herz gibt es in der Liste aller Spiele und groß unter dem Namen, wenn
+  die Tafel eines Spiels offen ist.
+
 - **Gaming-Edition: eigene Liste „Blitz-Challenges“ und drei neue Blitz-Spiele**
   (2026-10-21, PR #275): In der Retro-Konsole steht unter „Browser-Spiele“
   jetzt eine eigene, zuklappbare Liste „⚡ Blitz-Challenges“ mit allen

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { chip } from '../lib/chiptune';
 import { BOARD_GAMES, BoardGame, Entry, fetchBoard, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
+import { Likes, fetchLikes, setLike } from '../lib/likes';
 import { RivalNews, fetchRivalNews } from '../lib/rivals';
 import { ScoreTable } from './minigames/HighscoreBoard';
 import { MINI_GAMES } from './MiniGames';
@@ -12,6 +13,8 @@ import { LOCALE, tr } from '../../lib/i18n';
 // with this week's duel table and who passed you lately. Marco (2026-10-20)
 // found paging game by game with arrows too clumsy for finding one game, so
 // it opens on a searchable list of all games; a tap opens that game's table.
+// Each game has a heart (Marco, 2026-10-21): guests like a game, everyone
+// sees how many did.
 
 const gameInfo = (g: BoardGame) => MINI_GAMES.find((m) => m.id === g)!;
 
@@ -23,17 +26,56 @@ function ago(at: number): string {
   return new Date(at).toLocaleDateString(LOCALE, { day: 'numeric', month: 'short' });
 }
 
+const LikeButton: React.FC<{ game: BoardGame; likes: Likes; onToggle: (game: BoardGame) => void; big?: boolean }> = ({ game, likes, onToggle, big }) => {
+  const liked = likes.mine.has(game);
+  const count = likes.counts[game] ?? 0;
+  const name = gameInfo(game)?.title ?? game;
+  return (
+    <button
+      className={`hof-like${liked ? ' liked' : ''}${big ? ' big' : ''}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle(game);
+      }}
+      aria-pressed={liked}
+      aria-label={liked ? tr(`Unlike ${name} (${count} likes)`, `${name} nicht mehr liken (${count} Likes)`) : tr(`Like ${name} (${count} likes)`, `${name} liken (${count} Likes)`)}
+      data-nav
+    >
+      <span className="hof-like-heart" aria-hidden="true">
+        {liked ? '♥' : '♡'}
+      </span>
+      {big && <span className="pixel-font hof-like-word">{liked ? tr('LIKED', 'GELIKT') : tr('LIKE', 'LIKEN')}</span>}
+      {(big || count > 0) && <span className="pixel-font hof-like-count">{count}</span>}
+    </button>
+  );
+};
+
 export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame) => void; onClose: () => void }> = ({ start, onPlay, onClose }) => {
   const [game, setGame] = useState<BoardGame | null>(start ?? null);
   const [query, setQuery] = useState('');
   const [board, setBoard] = useState<Entry[] | null>(null);
   const [week, setWeek] = useState<Entry[] | null>(null);
   const [news, setNews] = useState<RivalNews[]>([]);
+  const [likes, setLikes] = useState<Likes>({ counts: {}, mine: new Set() });
   const bests = useMemo(() => loadBests(), []);
 
   useEffect(() => {
     fetchRivalNews().then((n) => setNews(n.slice(0, 5)));
+    fetchLikes().then(setLikes);
   }, []);
+
+  const toggleLike = (g: BoardGame) => {
+    const on = !likes.mine.has(g);
+    chip.play(on ? 'select' : 'back');
+    const mine = new Set(likes.mine);
+    if (on) mine.add(g);
+    else mine.delete(g);
+    const guess = Math.max(0, (likes.counts[g] ?? 0) + (on ? 1 : -1));
+    setLikes((l) => ({ counts: { ...l.counts, [g]: guess }, mine }));
+    setLike(g, on).then((count) => {
+      if (count !== null) setLikes((l) => ({ ...l, counts: { ...l.counts, [g]: count } }));
+    });
+  };
 
   useEffect(() => {
     if (!game) return;
@@ -105,7 +147,7 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
                 const m = gameInfo(g);
                 const best = bests[g as keyof typeof bests];
                 return (
-                  <li key={g}>
+                  <li key={g} className="hof-item">
                     <button className="hof-row" onClick={() => open(g)} data-nav>
                       <span className="hof-row-icon" aria-hidden="true">
                         {m?.icon}
@@ -119,6 +161,7 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
                         ▶
                       </span>
                     </button>
+                    <LikeButton game={g} likes={likes} onToggle={toggleLike} />
                   </li>
                 );
               })}
@@ -134,6 +177,9 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
             </div>
             <div className="hof-game pixel-font" aria-live="polite">
               <span aria-hidden="true">{info.icon}</span> {info.title}
+            </div>
+            <div className="hof-like-row">
+              <LikeButton game={game} likes={likes} onToggle={toggleLike} big />
             </div>
 
             <div className="hof-screen">

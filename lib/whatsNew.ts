@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Spiele in der Bestenliste liken': {
+    title: 'Gaming edition: Like games in the Hall of Fame',
+    text: 'Every game in the Hall of Fame now has a heart. Tap it to like the game, tap again to take the like back. Next to the heart you see how many guests like the game; everyone counts once per game. The heart is in the list of all games and, bigger, under the name when a game’s table is open.',
+  },
   'Gaming-Edition: eigene Liste „Blitz-Challenges“ und drei neue Blitz-Spiele': {
     title: 'Gaming edition: Own “Blitz Challenges” list and three new Blitz games',
     text: 'In the Retro Console there’s now a separate, collapsible “⚡ Blitz Challenges” list under “Browser games” with all Blitz games; the browser games list only shows the regular mini games. Plus three new Blitz games, again 30 seconds with the same round for everyone on a given day: in **Pixel Blitz** a pattern flashes on a 4×4 grid, you tap it from memory, and it grows with every hit. In **Color Blitz** a color word appears in a different color, and you tap the color of the ink, not the word. In **Combo Blitz** you enter button combos like in a fighting game (↑ ↓ ← → A B, keyboard works too). These three can also be the Blitz Challenge of the day and have their own high score tables.',

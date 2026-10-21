@@ -308,6 +308,11 @@ zeigen dürfen.
   Liste aller Spiele untereinander (mit deinem Bestwert und dem Wochen-Duell
   markiert); ein Tipp zeigt die Tafel, dazu die Tafel des Wochen-Duells,
   „Wer dich überholt hat“ und „Spielen“, „◀ Alle Spiele“ geht zurück.
+- **Spiele liken** – in der Bestenliste hat jedes Spiel ein Herz (in der
+  Liste und groß über der Tafel). Ein Tipp liked das Spiel, ein zweiter nimmt
+  es zurück; daneben steht, wie viele Gäste es mögen, jeder zählt pro Spiel
+  einmal ([`lib/likes.ts`](lib/likes.ts), `api/highscores.js` mit
+  `?likes=1` und `{like}`; eigene Likes merkt sich auch das Gerät).
 - **Überholt! Konkurrenzkampf um die Tafeln** – überholt dich jemand auf einer
   Tafel, legt der Server dir eine Notiz ab (er erkennt Spieler an einer
   Prüfsumme der Gäste-Anmeldung). Beim nächsten Besuch springt „Überholt!“ mit
@@ -510,6 +515,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
+- **Beliebteste Spiele zuerst:** die Bestenliste nach Likes sortieren oder ein
+  „Lieblingsspiel der Halle“ auf der Startseite zeigen; Likes auch für
+  Katalogspiele.
 - **Mehr Blitz-Spiele:** etwa ein Sound-Sprint (welches Spiel klingt so?), dazu mehr
   Spiele für Konsolen- und Jahres-Sprint, eine Challenge-Serie mit Bonus für 7 Tage am
   Stück und Challenges für die Kartenspiele.
