@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Gaming-Edition: Bereich „Chillen“ heißt jetzt „Zocken“** (2026-10-21, PR #PRNR):
+- **Gaming-Edition: Bereich „Chillen“ heißt jetzt „Zocken“** (2026-10-21, PR #277):
   Der Bereich mit der Retro-Konsole, den Browser-Spielen und den
   Blitz-Challenges heißt im Menü, im Dock und oben unter „RETROMIND GAMING“
   jetzt „Zocken“ (englisch „Play“), damit klar ist, dass du hier selbst
