@@ -35,6 +35,8 @@ const OPEN = [
   /^\/(gaming\/)?(manifest\.webmanifest|sw\.js|apple-touch-icon\.png|icon-(192|512|maskable-512)\.png|favicon-48\.png)$/,
   /^\/api\/admin$/,
   /^\/api\/feedback-approve$/,
+  // Vercel's daily cron comes without a guest cookie; the handler checks it itself.
+  /^\/api\/cron-challenge$/,
 ];
 
 export const config = {

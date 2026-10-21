@@ -15,6 +15,9 @@
 //      device; topic "rivals" (default), "chat" or "room" (api/_push.js)
 // POST /api/highscores {prefs: {on, rivals, chat, room} | null} → notification settings for all
 //      devices of this guest (api/_push.js)
+// POST /api/highscores {challengeWon: "YYYY-MM-DD"} → no challenge reminder for me that day
+// /api/cron-challenge → the evening reminder for the daily challenge (Vercel cron,
+//      vercel.json rewrites it here as ?module=cron; api/_push.js)
 // /api/chat → the chat corner (api/_chat.js; vercel.json rewrites it here as ?module=chat,
 //      because the Hobby plan allows only 12 functions per deployment)
 //
@@ -27,7 +30,7 @@
 
 import { readJsonBody } from "./_admin.js";
 import { readCookie } from "./_guests.js";
-import { playerOf, sendPush, setPrefs, setPush, vapidKeys } from "./_push.js";
+import { challengeWon, playerOf, sendChallengeReminders, sendPush, setPrefs, setPush, vapidKeys } from "./_push.js";
 import chatHandler from "./_chat.js";
 
 // Highest believable score per game, so a typo in a hand-made request
@@ -183,8 +186,24 @@ async function notifyBeaten(before, game, name, score, me) {
   await Promise.all([...beaten].map((pid) => sendAlerts(pid, game, name).catch((e) => console.error("highscores push:", e?.message || e))));
 }
 
+/** Vercel's daily cron call: with CRON_SECRET set Vercel sends it as a bearer token, else only its user agent tells. */
+async function cron(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+  const secret = process.env.CRON_SECRET;
+  const ok = secret ? req.headers.authorization === `Bearer ${secret}` : /^vercel-cron\//.test(req.headers["user-agent"] || "");
+  if (!ok) return res.status(401).json({ error: "cron_only" });
+  if (!configured()) return res.status(200).json({ sent: 0, ready: false });
+  try {
+    return res.status(200).json(await sendChallengeReminders());
+  } catch (e) {
+    console.error("challenge cron:", e?.message || e);
+    return res.status(200).json({ sent: 0, ok: false });
+  }
+}
+
 export default async function handler(req, res) {
   if (req.query?.module === "chat") return chatHandler(req, res);
+  if (req.query?.module === "cron") return cron(req, res);
   res.setHeader("Cache-Control", "no-store");
   const body = req.method === "POST" ? await readJsonBody(req) : {};
 
@@ -194,7 +213,7 @@ export default async function handler(req, res) {
   }
   if (!configured()) {
     if (req.query?.news) return res.status(200).json({ news: [], ready: false });
-    if (req.method === "POST" && ("push" in body || "prefs" in body)) return res.status(200).json({ ok: false });
+    if (req.method === "POST" && ("push" in body || "prefs" in body || "challengeWon" in body)) return res.status(200).json({ ok: false });
   }
   const me = configured() ? await playerId(req) : null;
 
@@ -214,6 +233,10 @@ export default async function handler(req, res) {
     if (req.method === "POST" && "push" in body) {
       if (!me) return res.status(200).json({ ok: false });
       return res.status(200).json(await setPush(me, body));
+    }
+    if (req.method === "POST" && "challengeWon" in body) {
+      if (!me) return res.status(200).json({ ok: false });
+      return res.status(200).json(await challengeWon(me, body.challengeWon));
     }
     if (req.method === "POST" && "prefs" in body) {
       if (!me) return res.status(200).json({ ok: false });
