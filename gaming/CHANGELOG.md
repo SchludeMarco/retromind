@@ -9,7 +9,7 @@ nicht von Hand bearbeiten.
 ## Unreleased
 
 - **Gaming-Edition: Spiele auch in der Hall-of-Fame-Show liken** (2026-10-21,
-  PR #277): Auch in der „Hall of Fame“, die nach einer Minute ohne Eingabe
+  PR #278): Auch in der „Hall of Fame“, die nach einer Minute ohne Eingabe
   die Spiele der Halle zeigt, steht jetzt unter jedem Spiel ein Herz mit
   „Liken“ und der Zahl der Likes aller Gäste. Dasselbe Herz gibt es auf der
   Seite jedes Spiels aus dem Katalog, gleich bei „Sammeln“ und
