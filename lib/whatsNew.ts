@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: Bereich „Chillen“ heißt jetzt „Zocken“': {
+    title: 'Gaming edition: “Chill” is now called “Play”',
+    text: 'The section with the retro console, the browser games and the Blitz Challenges is now called “Play” in the menu, in the dock and at the top under “RETROMIND GAMING”, so it’s clear this is where you play yourself. The quest and the trophy now talk about the “Play Zone” too; the trophy is called “Game On” instead of “Chill Mode”.',
+  },
   'Gaming-Edition: Spiele in der Bestenliste liken': {
     title: 'Gaming edition: Like games in the Hall of Fame',
     text: 'Every game in the Hall of Fame now has a heart. Tap it to like the game, tap again to take the like back. Next to the heart you see how many guests like the game; everyone counts once per game. The heart is in the list of all games and, bigger, under the name when a game’s table is open.',

@@ -3,7 +3,7 @@ import { acceptFor, EMU_SYSTEMS, EmuLaunch, EmuSystem, FREE_GAMES } from '../lib
 import { platformLabel } from '../data/platforms';
 import { tr } from '../../lib/i18n';
 
-// The ROM games in "Die Retro-Konsole" (Chill-Ecke): real old consoles in the browser.
+// The ROM games in "Die Retro-Konsole" (Zock-Ecke): real old consoles in the browser.
 // The free homebrew games start with one tap; any other game comes as a file
 // from the player's own device.
 

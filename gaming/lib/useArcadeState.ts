@@ -111,7 +111,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'collector', title: tr('Collector', 'Sammler'), text: tr('First game in your stash. Obviously.', 'Erstes Game im Stash. Ehrensache.') },
   { id: 'finisher', title: tr('Saw the Credits', 'Abspann gesehen'), text: tr('Beat a game. GG!', 'Ein Game durchgezockt. GG!') },
   { id: 'digger', title: tr('Bargain Bin', 'Grabbelkiste'), text: tr('Dug around beyond the catalog. A true crate digger.', 'Abseits des Katalogs gewühlt. Echter Digger.') },
-  { id: 'chill', title: tr('Chill Mode', 'Chillmodus'), text: tr('Beat a minigame in the Chill Zone. Relaxed!', 'Ein Minispiel in der Chill-Ecke geschafft. Entspannt!') },
+  { id: 'chill', title: tr('Game On', 'Selbst gezockt'), text: tr('Beat a minigame in the Play Zone. Nice!', 'Ein Minispiel in der Zock-Ecke geschafft. Stark!') },
   { id: 'legends', title: tr('Mythbuster', 'Mythenjäger'), text: tr('Uncovered 8 gaming legends. Nobody fools you anymore!', '8 Gaming-Legenden aufgedeckt. Dir macht keiner mehr was vor!') },
   { id: 'konami', title: '↑↑↓↓←→←→BA', text: tr('Entered the most famous cheat in the world. Old-school legend!', 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!') },
 ];

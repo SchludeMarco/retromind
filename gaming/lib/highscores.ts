@@ -72,7 +72,7 @@ const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time' |
   blitzcombo: 'points',
 };
 
-/** Every game with a table, in the order of the Chill-Ecke. */
+/** Every game with a table, in the order of the Zock-Ecke. */
 export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear', 'blitzpixel', 'blitzcolor', 'blitzcombo'];
 
 export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';

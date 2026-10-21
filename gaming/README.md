@@ -69,7 +69,7 @@ zeigen dürfen.
 ### In der Halle
 
 - **Bereich unterm Logo** – unter „RETROMIND GAMING“ steht immer, welcher
-  Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Chillen, Quests,
+  Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Zocken, Quests,
   Legenden).
 - **Fun-Fact-Laufband** – ganz unten am Bildschirmrand,
   wie das Laufband der Zeitreise: langsam, mit dem Finger hin und her zu
@@ -147,7 +147,7 @@ zeigen dürfen.
   Höhe, sitzt ein kleiner Pixel-Griff mit drei Reglern
   ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)). Ein Tipp
   schiebt von rechts ein Fenster herein: oben die Bereiche (Katalog, Kisten,
-  Stash, Trophäen, Chillen, Quests), die Musik, Ton an/aus, der Guru,
+  Stash, Trophäen, Zocken, Quests), die Musik, Ton an/aus, der Guru,
   Feedback, „Club verlassen“ und für Gäste aus der Zeitreise „Zurück zu
   RetroMind“, darunter alle Einstellungen. Wie in der Zeitreise.
 - **Club verlassen** – im Fenster hinter dem Griff; führt zurück auf die
@@ -239,9 +239,9 @@ zeigen dürfen.
 - **Retro-Guru** – ein Chat, der in Gamer-Slang von den 80ern bis heute
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
-- **Die Retro-Konsole** – oben in der Chill-Ecke, mit zwei Listen, die
+- **Die Retro-Konsole** – oben in der Zock-Ecke, mit zwei Listen, die
   zugeklappt starten (Name mit Anzahl, ein Tipp klappt auf): „ROM-Spiele“,
-  „Browser-Spiele“ (die Minispiele, siehe Chill-Ecke) und darunter
+  „Browser-Spiele“ (die Minispiele, siehe Zock-Ecke) und darunter
   „⚡ Blitz-Challenges“ (die Blitz-Spiele, siehe unten). Die ROM-Spiele
   sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
   [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
@@ -261,7 +261,7 @@ zeigen dürfen.
   kommerziellen Spieldateien; eine eigene Datei bleibt auf dem Gerät.
   Tastatur, Gamepad und auf dem Handy Touch-Knöpfe; Spielstände bleiben im
   Browser.
-- **Chill-Ecke** – Minispiele per Touch und Tastatur: Pixel-Memory,
+- **Zock-Ecke** – Minispiele per Touch und Tastatur: Pixel-Memory,
   Schiebepuzzle, Farbecho, Sudoku (immer neue Rätsel mit genau einer Lösung),
   Blockstapler, Flipper, Pac-Mampf, Mauerbrecher, Snake, Weltraum-Invasion und das
   Quiz „Erkennst du das Spiel?“ (bis zu fünf Coins am Tag)
@@ -360,7 +360,7 @@ zeigen dürfen.
   Lebens fragen, nachts vorbeischauen …), jedes bringt einmal Coins; die Liste
   mit Tipps steht unter „Quests“ ([`lib/eggs.ts`](lib/eggs.ts)).
 - **Erfolge, Sammlung und Stash** – Erfolge erscheinen als runde Pokal-Leiste
-  mit weichem „Plopp“; Bereiche Katalog, Kisten, Stash, Trophäen, Chillen und
+  mit weichem „Plopp“; Bereiche Katalog, Kisten, Stash, Trophäen, Zocken und
   Quests liegen im Fenster hinter dem Griff am rechten Rand.
 - **Am Handy spürbar** – kurzes Rütteln beim Münzeinwurf, beim Öffnen der Tür,
   bei Erfolgen und Käufen (Android, schaltet sich mit den Soundeffekten ab).
@@ -538,7 +538,7 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   nicht mitliefern dürfen) und weitere freie Homebrew-Spiele mit klarer Lizenz,
   vor allem für den Mega Drive. Die Sammlung „retrobrews“ scheidet aus: Ihre
   Spiele sind nur für diese Sammlung freigegeben.
-- **Mehr Minispiele in der Chill-Ecke** (etwa Galaxian, Centipede, ein
+- **Mehr Minispiele in der Zock-Ecke** (etwa Galaxian, Centipede, ein
   Wüstenlauf mit Sprungknopf oder Minesweeper) und Sudoku in mehreren
   Schwierigkeitsstufen.
 - **Spielstände der Retro-Konsole synchronisieren:** Sie liegen in der

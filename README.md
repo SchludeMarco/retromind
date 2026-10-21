@@ -509,7 +509,7 @@ Regen mit Neonschild und Metal durch die Wand, drinnen ein Katalog vergessener
 Spiele von den 1970ern bis heute (44 handverlesene plus Hunderte aus dem
 Wikipedia-Archiv, 36 Konsolen), echte Cover (nur im privaten Gästekreis, sonst eigene Pixelbilder), Spieleseiten
 mit KI-Guide, Videos, alten Testwertungen und „Fakten & Geheimnisse“, ein
-Retro-Guru im Gamer-Slang, Chill-Ecke mit Minispielen und Highscore-Tafel,
+Retro-Guru im Gamer-Slang, Zock-Ecke mit Minispielen und Highscore-Tafel,
 Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. Lokal: `npm run dev`, dann
 `http://localhost:3000/gaming/`.
 
