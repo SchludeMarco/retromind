@@ -21,7 +21,7 @@ const DAILY: Quest[] = [
   { id: 'open', event: 'open', goal: 5, reward: 10, text: tr('Take a closer look at 5 games.', 'Schau dir 5 Games genauer an.') },
   { id: 'coin', event: 'coin', goal: 2, reward: 10, text: tr('Drop a quarter in the slot twice (Insert Coin).', 'Wirf 2-mal eine Münze ein (Insert Coin).') },
   { id: 'search', event: 'search', goal: 2, reward: 10, text: tr('Search for a game twice.', 'Such 2-mal nach einem Game.') },
-  { id: 'minigame', event: 'minigame', goal: 1, reward: 20, text: tr('Beat a minigame in the Chill Zone.', 'Schaff ein Minispiel in der Chill-Ecke.') },
+  { id: 'minigame', event: 'minigame', goal: 1, reward: 20, text: tr('Beat a minigame in the Play Zone.', 'Schaff ein Minispiel in der Zock-Ecke.') },
   { id: 'favorite', event: 'favorite', goal: 1, reward: 15, text: tr('Put a game in your stash.', 'Pack ein Game in deinen Stash.') },
   { id: 'console', event: 'console', goal: 2, reward: 10, text: tr('Browse 2 consoles (Which System?).', 'Stöber bei 2 Konsolen (Welche Kiste?).') },
   { id: 'guru', event: 'guru', goal: 1, reward: 15, text: tr('Ask the Guru a question.', 'Stell dem Guru eine Frage.') },

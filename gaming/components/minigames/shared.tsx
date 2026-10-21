@@ -4,7 +4,7 @@ import { BoardGame } from '../../lib/highscores';
 import { HighscoreBoard } from './HighscoreBoard';
 import { dailyChallenge, meets, reportResult } from '../../lib/challenge';
 
-// Bits every mini game in the Chill-Ecke shares: best results on this device,
+// Bits every mini game in the Zock-Ecke shares: best results on this device,
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
 // focus navigation while a game runs.
 

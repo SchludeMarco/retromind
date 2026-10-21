@@ -20,7 +20,7 @@ import { Missile, missileBest } from './minigames/Missile';
 import { BlitzButtons, BlitzColor, BlitzCombo, BlitzConsole, BlitzPixel, BlitzYear, blitzBest } from './minigames/Blitz';
 import { tr } from '../../lib/i18n';
 
-// The "Chill-Ecke": small, calm games to unwind between the history
+// The "Zock-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
 // blocks, pinball, Pac-Mampf and the card games (video poker, blackjack,
 // solitaire, sharing the deck in ./minigames/cards) and the high score chasers (asteroids,

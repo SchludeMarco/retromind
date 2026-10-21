@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: Bereich „Chillen“ heißt jetzt „Zocken“** (2026-10-21, PR #PRNR):
+  Der Bereich mit der Retro-Konsole, den Browser-Spielen und den
+  Blitz-Challenges heißt im Menü, im Dock und oben unter „RETROMIND GAMING“
+  jetzt „Zocken“ (englisch „Play“), damit klar ist, dass du hier selbst
+  spielst. Auch Quest und Trophäe sprechen jetzt von der „Zock-Ecke“; die
+  Trophäe heißt „Selbst gezockt“ statt „Chillmodus“.
+
 - **Gaming-Edition: Spiele in der Bestenliste liken** (2026-10-21, PR #276):
   In der Bestenliste (Hall of Fame) hat jedes Spiel jetzt ein Herz. Ein Tipp
   darauf liked das Spiel, ein zweiter nimmt das Like wieder weg. Neben dem

@@ -2362,7 +2362,7 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
   }
 }
 
-/* --- Chill-Ecke: calm mini games --- */
+/* --- Zock-Ecke: calm mini games --- */
 .chill-panel {
   flex: 1 1 100%;
   margin-bottom: 8px;
@@ -2633,7 +2633,7 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
   color: #fff;
 }
 
-/* Sudoku, falling blocks and pinball in the Chill-Ecke. */
+/* Sudoku, falling blocks and pinball in the Zock-Ecke. */
 .sudoku-grid {
   display: grid;
   grid-template-columns: repeat(9, 1fr);

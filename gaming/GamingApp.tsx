@@ -627,7 +627,7 @@ export const GamingApp: React.FC = () => {
     setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false, related }));
   };
 
-  // Opening the Chill-Ecke (also from the dock) brings its games into view.
+  // Opening the Zock-Ecke (also from the dock) brings its games into view.
   useEffect(() => {
     if (view !== 'chill') return;
     const btn = document.querySelector('.chill-btn');
@@ -839,7 +839,7 @@ export const GamingApp: React.FC = () => {
                   collection: 'STASH',
                   search: tr('SEARCH', 'SUCHE'),
                   trophies: tr('TROPHIES', 'TROPHÄEN'),
-                  chill: tr('CHILL', 'CHILLEN'),
+                  chill: tr('PLAY', 'ZOCKEN'),
                   quests: 'QUESTS',
                   legends: tr('LEGENDS', 'LEGENDEN'),
                 }[view]}
@@ -1335,7 +1335,7 @@ export const GamingApp: React.FC = () => {
                   { id: 'systems', label: tr('SYSTEMS', 'KISTEN') },
                   { id: 'collection', label: 'STASH' },
                   { id: 'trophies', label: tr('TROPHIES', 'TROPHÄEN') },
-                  { id: 'chill', label: tr('CHILL', 'CHILLEN') },
+                  { id: 'chill', label: tr('PLAY', 'ZOCKEN') },
                   { id: 'quests', label: 'QUESTS' },
                   { id: 'legends', label: tr('LEGENDS', 'LEGENDEN') },
                 ]}
