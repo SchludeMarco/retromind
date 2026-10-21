@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: drei Blitz-Spiele': {
+    title: 'Gaming edition: Three Blitz games',
+    text: 'New in the Chill Zone: three games made for the Blitz Challenge. Each one lasts exactly 30 seconds, and on any given day everyone gets exactly the same round. In **Button Blitz** you tap the arcade button that lights up, as fast as you can. In **Console Sprint** you see a famous game and pick the console it came out on. In **Year Sprint** you tap which of two games came out first. A wrong tap costs a point, so guessing doesn’t pay. From October 22 on, about every other day one of them is the Blitz Challenge; on the other days it’s a mini game with a goal, as before. Every Blitz game has its own high score table.',
+  },
   'Gaming-Edition: Blitz-Challenge mit Abend-Erinnerung': {
     title: 'Gaming edition: Blitz Challenge with an evening reminder',
     text: 'The daily challenge is now called “Blitz Challenge”. New: a reminder in the evening (around 6 pm German time, 7 pm in summer) if you haven’t made today’s challenge yet. It’s off by default; switch it on in the settings under “Notifications” with “⚡ Blitz Challenge”. Tapping the message opens the arcade.',
