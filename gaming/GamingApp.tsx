@@ -24,7 +24,7 @@ import { getInitials } from '../lib/initials';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
-import { MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { isBlitz, MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { HallOfFame } from './components/HallOfFame';
 import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
@@ -720,6 +720,11 @@ export const GamingApp: React.FC = () => {
   };
 
   const dayLegend = useMemo(() => legendOfTheDay(), []);
+  const pickMini = (id: MiniGameId) => {
+    chip.play('select');
+    countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
+    setMiniGame(id);
+  };
   const challenge = useMemo(() => dailyChallenge(), []);
   const challengeToday = todaysLog(state.challenge);
   // A legend's game: the catalog entry, or its Wikipedia article as a game page.
@@ -995,15 +1000,16 @@ export const GamingApp: React.FC = () => {
                 </details>
                 <details className="chill-list">
                   <summary data-nav>
-                    {tr('🌐 BROWSER GAMES', '🌐 BROWSER-SPIELE')} ({MINI_GAMES.length})
+                    {tr('🌐 BROWSER GAMES', '🌐 BROWSER-SPIELE')} ({MINI_GAMES.filter((m) => !isBlitz(m.id)).length})
                   </summary>
-                  <MiniGameCorner
-                    onPick={(id) => {
-                      chip.play('select');
-                      countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
-                      setMiniGame(id);
-                    }}
-                  />
+                  <MiniGameCorner onPick={pickMini} />
+                </details>
+                {/* The Blitz games, made for the Blitz-Challenge, in a list of their own (Marco, 2026-10-21). */}
+                <details className="chill-list">
+                  <summary data-nav>
+                    {tr('⚡ BLITZ CHALLENGES', '⚡ BLITZ-CHALLENGES')} ({MINI_GAMES.filter((m) => isBlitz(m.id)).length})
+                  </summary>
+                  <MiniGameCorner onPick={pickMini} blitz />
                 </details>
               </section>
             </div>

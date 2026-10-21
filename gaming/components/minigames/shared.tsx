@@ -8,7 +8,7 @@ import { dailyChallenge, meets, reportResult } from '../../lib/challenge';
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
 // focus navigation while a game runs.
 
-export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball' | 'pacman' | 'breakout' | 'snake' | 'invaders' | 'quiz' | 'poker' | 'blackjack' | 'solitaire' | 'asteroids' | 'frogger' | 'copter' | 'merge' | 'missile' | 'blitzbuttons' | 'blitzconsole' | 'blitzyear';
+export type MiniGameId = 'memory' | 'puzzle' | 'senso' | 'sudoku' | 'blocks' | 'pinball' | 'pacman' | 'breakout' | 'snake' | 'invaders' | 'quiz' | 'poker' | 'blackjack' | 'solitaire' | 'asteroids' | 'frogger' | 'copter' | 'merge' | 'missile' | 'blitzbuttons' | 'blitzconsole' | 'blitzyear' | 'blitzpixel' | 'blitzcolor' | 'blitzcombo';
 
 const KEY = 'retromind.gaming.mini.v1';
 

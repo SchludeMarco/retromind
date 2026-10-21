@@ -59,6 +59,9 @@ const GAMES = {
   blitzbuttons: { max: 300 },
   blitzconsole: { max: 120 },
   blitzyear: { max: 120 },
+  blitzpixel: { max: 60 },
+  blitzcolor: { max: 200 },
+  blitzcombo: { max: 600 },
 };
 const KEEP = 50;
 const SHOW = 10;
@@ -152,6 +155,9 @@ const GAME_NAMES = {
   blitzbuttons: ["Button Blitz", "Knopf-Blitz"],
   blitzconsole: ["Console Sprint", "Konsolen-Sprint"],
   blitzyear: ["Year Sprint", "Jahres-Sprint"],
+  blitzpixel: ["Pixel Blitz", "Pixel-Blitz"],
+  blitzcolor: ["Color Blitz", "Farb-Blitz"],
+  blitzcombo: ["Combo Blitz", "Combo-Blitz"],
 };
 
 function sendAlerts(pid, game, name) {

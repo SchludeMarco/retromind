@@ -240,8 +240,9 @@ zeigen dürfen.
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
 - **Die Retro-Konsole** – oben in der Chill-Ecke, mit zwei Listen, die
-  zugeklappt starten (Name mit Anzahl, ein Tipp klappt auf): „ROM-Spiele“
-  und „Browser-Spiele“ (die Minispiele, siehe Chill-Ecke). Die ROM-Spiele
+  zugeklappt starten (Name mit Anzahl, ein Tipp klappt auf): „ROM-Spiele“,
+  „Browser-Spiele“ (die Minispiele, siehe Chill-Ecke) und darunter
+  „⚡ Blitz-Challenges“ (die Blitz-Spiele, siehe unten). Die ROM-Spiele
   sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
   [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
   [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS) (GPL 3.0), den wir
@@ -276,12 +277,16 @@ zeigen dürfen.
   10.000 Punkte eine Stadt zurück)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
-- **Blitz-Spiele** – drei Spiele, gemacht für die Blitz-Challenge: genau 30
+- **Blitz-Spiele** – sechs Spiele, gemacht für die Blitz-Challenge, in einer
+  eigenen Liste „⚡ Blitz-Challenges“: genau 30
   Sekunden mit 3-2-1-Countdown, und an einem Tag für alle exakt dieselbe
   Runde (Zufall aus dem Datum). Knopf-Blitz (leuchtenden Automatenknopf
   antippen), Konsolen-Sprint (bekanntes Spiel, vier Konsolen zur Wahl) und
   Jahres-Sprint (welches von zwei Spielen kam zuerst raus?) mit 72 bekannten
-  Spielen von Pong bis Animal Crossing. Ein falscher Tipp kostet einen Punkt;
+  Spielen von Pong bis Animal Crossing, Pixel-Blitz (kurz gezeigtes Muster
+  auf 4×4 Feldern nachtippen, wird mit jedem Treffer größer), Farb-Blitz
+  (Farbe der Schrift statt des Worts tippen) und Combo-Blitz (Tasten-Kombos
+  ↑ ↓ ← → A B eingeben, auch per Tastatur). Ein falscher Tipp kostet einen Punkt;
   jedes hat eine eigene Highscore-Tafel
   ([`components/minigames/Blitz.tsx`](components/minigames/Blitz.tsx)).
 - **Kartenspiele** – Video-Poker („Jacks or Better“, 20 Hände), Blackjack
@@ -292,7 +297,7 @@ zeigen dürfen.
   ([`components/minigames/cards.tsx`](components/minigames/cards.tsx)).
 - **Highscore-Tafel** – nach einer guten Runde trägst du wie am Automaten drei
   Zeichen ein, je Zeichen mit ▲/▼ oder getippt; dein Kürzel aus den
-  Einstellungen steht schon da. Jedes der 22 Browser-Spiele hat seine Tafel,
+  Einstellungen steht schon da. Jedes der 25 Browser- und Blitz-Spiele hat seine Tafel,
   bei Memory und Schiebepuzzle zählen die wenigsten Züge, bei Sudoku und
   Solitär die schnellste Zeit. Die Top 10 gelten für alle Gäste
   (`api/highscores.js`, Upstash Redis; ohne Datenbank bleibt die Tafel auf
@@ -324,7 +329,7 @@ zeigen dürfen.
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
 - **Blitz-Challenge** – jeden Tag eine kurze Aufgabe, für alle gleich: ab dem
-  22. Oktober 2026 etwa jeden zweiten Tag eins der drei Blitz-Spiele (30
+  22. Oktober 2026 etwa jeden zweiten Tag eins der sechs Blitz-Spiele (30
   Sekunden), sonst ein Minispiel mit Zielwert in ein bis zwei Minuten (z. B.
   „Snake: futter 8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das
   Spiel des Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und startet
@@ -505,8 +510,7 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
-- **Mehr Blitz-Spiele:** etwa „Pixel-Blitz“ (kurz gezeigtes Pixelbild merken
-  und nachtippen) oder ein Sound-Sprint (welches Spiel klingt so?), dazu mehr
+- **Mehr Blitz-Spiele:** etwa ein Sound-Sprint (welches Spiel klingt so?), dazu mehr
   Spiele für Konsolen- und Jahres-Sprint, eine Challenge-Serie mit Bonus für 7 Tage am
   Stück und Challenges für die Kartenspiele.
 - **Mehr Legenden & Mythen:** weitere Geschichten (etwa „Sonic 2 hat eine

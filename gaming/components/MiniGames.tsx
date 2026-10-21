@@ -17,7 +17,7 @@ import { Frogger, froggerBest } from './minigames/Frogger';
 import { Copter, copterBest } from './minigames/Copter';
 import { Merge2048, mergeBest } from './minigames/Merge2048';
 import { Missile, missileBest } from './minigames/Missile';
-import { BlitzButtons, BlitzConsole, BlitzYear, blitzBest } from './minigames/Blitz';
+import { BlitzButtons, BlitzColor, BlitzCombo, BlitzConsole, BlitzPixel, BlitzYear, blitzBest } from './minigames/Blitz';
 import { tr } from '../../lib/i18n';
 
 // The "Chill-Ecke": small, calm games to unwind between the history
@@ -235,7 +235,34 @@ export const MINI_GAMES: { id: MiniGameId; title: string; /** German title, the 
     text: tr('30 seconds: two games side by side. Which one came out first?', '30 Sekunden: zwei Spiele nebeneinander. Welches kam zuerst raus?'),
     best: blitzBest,
   },
+  {
+    id: 'blitzpixel',
+    title: tr('PIXEL BLITZ', 'PIXEL-BLITZ'),
+    statKey: 'PIXEL-BLITZ',
+    icon: '🟩',
+    text: tr('30 seconds: a pattern lights up for a moment. Tap it back from memory; the patterns keep growing.', '30 Sekunden: Ein Muster leuchtet kurz auf. Tipp es aus dem Gedächtnis nach; die Muster werden immer größer.'),
+    best: blitzBest,
+  },
+  {
+    id: 'blitzcolor',
+    title: tr('COLOR BLITZ', 'FARB-BLITZ'),
+    statKey: 'FARB-BLITZ',
+    icon: '🎨',
+    text: tr('30 seconds: “RED” written in blue? Tap the color of the ink, not the word. Harder than it sounds.', '30 Sekunden: „ROT“ in blauer Schrift? Tipp die Farbe der Schrift, nicht das Wort. Schwerer als gedacht.'),
+    best: blitzBest,
+  },
+  {
+    id: 'blitzcombo',
+    title: tr('COMBO BLITZ', 'COMBO-BLITZ'),
+    statKey: 'COMBO-BLITZ',
+    icon: '🥊',
+    text: tr('30 seconds: type special moves like in a fighting game, ↑ ↓ ← → A B. Finished combos pay a bonus.', '30 Sekunden: Spezialangriffe eintippen wie im Prügelspiel, ↑ ↓ ← → A B. Fertige Kombos bringen Bonus.'),
+    best: blitzBest,
+  },
 ];
+
+/** The Blitz games get their own list in the retro console (Marco, 2026-10-21). */
+export const isBlitz = (id: MiniGameId) => id.startsWith('blitz');
 
 /* ---------------------------------------------------------------- Memory */
 
@@ -519,13 +546,18 @@ const Senso: React.FC<{ onWin: () => void }> = ({ onWin }) => {
 /* --------------------------------------------------------------- Corner */
 
 /** The list of games in the hub. */
-export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void }> = ({ onPick }) => {
+export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void; blitz?: boolean }> = ({ onPick, blitz = false }) => {
   const bests = loadBests();
+  const games = MINI_GAMES.filter((g) => isBlitz(g.id) === blitz);
   return (
     <>
-      <p className="dim archive-count">{tr('Take a quick break: mini games to unwind, no ads and no sign-up.', 'Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.')}</p>
+      <p className="dim archive-count">
+        {blitz
+          ? tr('30 seconds each, and everyone gets the same round today. One of them is often the Blitz Challenge of the day.', 'Je 30 Sekunden, und heute bekommen alle dieselbe Runde. Oft ist eins davon die Blitz-Challenge des Tages.')
+          : tr('Take a quick break: mini games to unwind, no ads and no sign-up.', 'Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.')}
+      </p>
       <div className="grid mini-list" style={{ marginTop: 12 }}>
-        {MINI_GAMES.map((g) => (
+        {games.map((g) => (
           <button key={g.id} className="panel mini-card" onClick={() => onPick(g.id)} data-nav>
             <span className="mini-icon" aria-hidden="true">
               {g.icon}
@@ -598,6 +630,12 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
           <BlitzConsole onWin={onWin} />
         ) : id === 'blitzyear' ? (
           <BlitzYear onWin={onWin} />
+        ) : id === 'blitzpixel' ? (
+          <BlitzPixel onWin={onWin} />
+        ) : id === 'blitzcolor' ? (
+          <BlitzColor onWin={onWin} />
+        ) : id === 'blitzcombo' ? (
+          <BlitzCombo onWin={onWin} />
         ) : id === 'quiz' ? (
           <Quiz onWin={onWin} onEarn={onEarn} />
         ) : (

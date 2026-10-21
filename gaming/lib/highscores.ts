@@ -30,7 +30,10 @@ export type BoardGame =
   | 'missile'
   | 'blitzbuttons'
   | 'blitzconsole'
-  | 'blitzyear';
+  | 'blitzyear'
+  | 'blitzpixel'
+  | 'blitzcolor'
+  | 'blitzcombo';
 export interface Entry {
   name: string;
   score: number;
@@ -64,10 +67,13 @@ const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time' |
   blitzbuttons: 'points',
   blitzconsole: 'points',
   blitzyear: 'points',
+  blitzpixel: 'points',
+  blitzcolor: 'points',
+  blitzcombo: 'points',
 };
 
 /** Every game with a table, in the order of the Chill-Ecke. */
-export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear'];
+export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear', 'blitzpixel', 'blitzcolor', 'blitzcombo'];
 
 export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';
 
