@@ -4934,3 +4934,29 @@ button.pcard {
 .arcade[data-palette='modul'] .day-legend .pixel-font {
   color: #0e7490;
 }
+
+/* --- Daily challenge (Marco, 2026-10-21): lib/challenge.ts --- */
+.day-challenge {
+  border: 2px solid var(--a1);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--a1) 45%, transparent);
+}
+.day-challenge .pixel-font {
+  color: var(--a1);
+}
+.day-challenge.won {
+  border-color: var(--ok);
+  box-shadow: none;
+}
+.day-challenge.won .pixel-font {
+  color: var(--ok);
+}
+.arcade[data-palette='modul'] .day-challenge {
+  border-color: #db2777;
+}
+.mini-done .mini-challenge {
+  color: var(--a1);
+  font-size: 11px;
+}
+.mini-done .mini-challenge.won {
+  color: var(--ok);
+}

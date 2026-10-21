@@ -8,6 +8,15 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: Tages-Challenge** (2026-10-21, PR #272): Jeden Tag
+  gibt es in der Halle eine kurze Challenge für zwischendurch, in ein bis zwei
+  Minuten zu schaffen, zum Beispiel „Snake: futter 8 Äpfel“ oder „Farbecho:
+  schaff Runde 6“. Alle bekommen am selben Tag dieselbe Aufgabe. Die Karte
+  steht im Katalog gleich unter „Insert Coin“, ein Tipp startet das Spiel.
+  Wer es schafft, bekommt einmal am Tag 25 Coins, und die Karte leuchtet grün.
+  Die besten Ergebnisse des Tages stehen auf einer eigenen Tages-Tafel, unter
+  „Quests“ und nach dem Spiel; um Mitternacht kommt eine neue Challenge.
+
 - **Gaming-Edition: Song unten gut lesbar** (2026-10-20, PR #271): In der
   Musikleiste unten stand auf dem Handy vom Song nur „No S…“. Jetzt hat der
   Titel dort eine eigene Zeile über den Knöpfen, in größerer Schrift, und

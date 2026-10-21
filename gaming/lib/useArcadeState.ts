@@ -4,6 +4,8 @@ import { hasMuteChoice, setMuted } from '../../lib/mute';
 import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 import { ActiveQuest, activeQuests, freshLog, PRIZES, QuestEvent, QuestLog, record, Streak, visitStreak } from './quests';
 import { Egg, EGGS } from './eggs';
+import { CHALLENGE_REWARD, ChallengeLog, recordChallenge } from './challenge';
+import { BoardGame } from './highscores';
 import { tr } from '../../lib/i18n';
 
 // Everything the Gaming edition remembers between visits, in localStorage
@@ -45,6 +47,8 @@ export interface ArcadeState {
   hadSystems: string[];
   /** Days in a row with a visit (quests.ts), paid in Coins once per day. */
   streak?: Streak;
+  /** Today's daily challenge (challenge.ts): best result, made or not, wins in total. */
+  challenge?: ChallengeLog;
 }
 
 /** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */
@@ -219,6 +223,16 @@ export function useArcadeState(
     setState((s) => ({ ...s, tokens: s.tokens + n }));
   }, []);
 
+  /** A finished mini game: counts for today's challenge and pays its Coins the first time the goal is met. */
+  const challengeResult = useCallback((game: BoardGame, score: number) => {
+    const next = recordChallenge(stateRef.current.challenge, game, score);
+    if (!next) return false;
+    const reward = next.paid ? CHALLENGE_REWARD : 0;
+    stateRef.current = { ...stateRef.current, challenge: next.log, tokens: stateRef.current.tokens + reward };
+    setState((s) => ({ ...s, challenge: next.log, tokens: s.tokens + reward }));
+    return next.paid;
+  }, []);
+
   const discover = useCallback((game: Game) => {
     setState((s) =>
       s.discovered.includes(game.id)
@@ -240,5 +254,5 @@ export function useArcadeState(
     setState((s) => ({ ...s, [key]: value }));
   }, []);
 
-  return { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn };
+  return { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult };
 }

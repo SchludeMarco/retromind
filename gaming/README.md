@@ -315,6 +315,15 @@ zeigen dürfen.
   Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
+- **Tages-Challenge** – jeden Tag eine kurze Aufgabe in einem Minispiel, in
+  ein bis zwei Minuten zu schaffen und für alle gleich (z. B. „Snake: futter
+  8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das Spiel des
+  Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und startet
+  das Spiel direkt; geschafft bringt einmal am Tag 25 Coins und färbt die
+  Karte grün. Nach dem Spiel steht, ob es gereicht hat; die besten Ergebnisse
+  des Tages stehen auf einer eigenen Tages-Tafel unter „Quests“ und nach dem
+  Spiel (`day` in [`api/highscores.js`](../api/highscores.js), 3 Tage
+  aufbewahrt) ([`lib/challenge.ts`](lib/challenge.ts)).
 - **Serie und Wochen-Duell** – jeder Tag in Folge in der Halle bringt Coins
   (5, 10, 15 … bis 30, jeder 7. Tag 25 extra, ein verpasster Tag pro Woche
   verziehen), die Serie steht in der Kopfleiste. Jede Woche ist ein Minispiel
@@ -481,6 +490,12 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
+- **Erinnerung an die Tages-Challenge:** eine Push-Nachricht am Abend, wenn
+  die Challenge des Tages noch offen ist, abschaltbar unter
+  „Benachrichtigungen“. Erst nach Rücksprache (Einwilligung).
+- **Mehr Tages-Challenges:** Challenges mit Zeitlimit („so viele Punkte wie
+  möglich in 60 Sekunden“), eine Challenge-Serie mit Bonus für 7 Tage am
+  Stück und Challenges für die Kartenspiele.
 - **Mehr Legenden & Mythen:** weitere Geschichten (etwa „Sonic 2 hat eine
   verschollene Zone“, „Lara Crofts Name kam aus einem Telefonbuch“), eine
   Legende pro Katalogspiel und Coins für richtig geratene.

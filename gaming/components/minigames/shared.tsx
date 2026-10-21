@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { tr } from '../../../lib/i18n';
 import { BoardGame } from '../../lib/highscores';
 import { HighscoreBoard } from './HighscoreBoard';
+import { dailyChallenge, meets, reportResult } from '../../lib/challenge';
 
 // Bits every mini game in the Chill-Ecke shares: best results on this device,
 // the "done" panel and keyboard handling that wins over the hub's arrow-key
@@ -51,16 +52,30 @@ export const Done: React.FC<{ text: string; record: boolean; onAgain: () => void
   onAgain,
   title = tr('YOU DID IT!', 'GESCHAFFT!'),
   board,
-}) => (
+}) => {
+  // Every finished game reports its result once, for the daily challenge (GamingApp pays the Coins).
+  const game = board?.game;
+  const score = board?.score ?? 0;
+  useEffect(() => {
+    if (game) reportResult(game, score);
+  }, [game, score]);
+  const challenge = game ? dailyChallenge() : null;
+  return (
   <div className="mini-done" role="status">
     <p className="pixel-font">{record ? tr('★ NEW HIGH SCORE! ★', '★ NEUER REKORD! ★') : title}</p>
     <p>{text}</p>
+    {challenge && challenge.game === game && (
+      <p className={`mini-challenge pixel-font${meets(challenge, score) ? ' won' : ''}`}>
+        {meets(challenge, score) ? tr('⚡ DAILY CHALLENGE MADE!', '⚡ TAGES-CHALLENGE GESCHAFFT!') : tr('⚡ DAILY CHALLENGE: NOT YET, GO AGAIN!', '⚡ TAGES-CHALLENGE: NOCH NICHT, NOCHMAL!')}
+      </p>
+    )}
     {board && board.score > 0 && <HighscoreBoard game={board.game} score={board.score} />}
     <button className="px-btn big" onClick={onAgain} data-nav autoFocus={!board}>
       {tr('PLAY AGAIN', 'NOCHMAL')}
     </button>
   </div>
-);
+  );
+};
 
 /**
  * Game keys (arrows, space …). Listens in the capture phase and stops the

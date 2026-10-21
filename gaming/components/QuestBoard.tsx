@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { activeQuests, duelGame, freshLog, PRIZES, streakReward, today } from '../lib/quests';
-import { Entry, fetchWeekBoard } from '../lib/highscores';
+import { Entry, fetchDayBoard, fetchWeekBoard, formatScore } from '../lib/highscores';
+import { CHALLENGE_REWARD, dailyChallenge, todaysLog } from '../lib/challenge';
 import { MINI_GAMES, MiniGameId } from './MiniGames';
 import { EGGS } from '../lib/eggs';
 import { ArcadeState } from '../lib/useArcadeState';
@@ -21,13 +22,17 @@ export const QuestBoard: React.FC<{
   const duel = duelGame();
   const duelInfo = MINI_GAMES.find((m) => m.id === duel);
   const [week, setWeek] = useState<Entry[] | null>(null);
+  const challenge = dailyChallenge();
+  const challengeLog = todaysLog(state.challenge);
+  const [day, setDay] = useState<Entry[] | null>(null);
   useEffect(() => {
     let alive = true;
     fetchWeekBoard(duel).then((w) => alive && setWeek(w));
+    fetchDayBoard(challenge.game).then((d) => alive && setDay(d));
     return () => {
       alive = false;
     };
-  }, [duel]);
+  }, [duel, challenge.game]);
   const streak = state.streak?.last === today() ? state.streak.count : 0;
   const days = new Date().getDay();
   const daysLeft = days === 0 ? 1 : 8 - days;
@@ -82,6 +87,39 @@ export const QuestBoard: React.FC<{
             `Jeder Tag in Folge in der Spielhalle bringt Coins: morgen gibt es +${streakReward(streak + 1)}. Jeder 7. Tag bringt 25 extra, und ein verpasster Tag pro Woche wird verziehen. Dein Rekord: ${state.streak?.best ?? streak} Tage.`
           )}
         </p>
+      </section>
+
+      {/* The daily challenge (Marco, 2026-10-21): short, the same for everyone, its own table for the day. */}
+      <section className="panel quest-panel">
+        <h3 className="pixel-font">⚡ {tr('DAILY CHALLENGE', 'TAGES-CHALLENGE')}</h3>
+        <p>{challenge.text}</p>
+        <p className="dim">
+          {challengeLog.won
+            ? tr(`Made it today, +${CHALLENGE_REWARD} Coins. Tomorrow there’s a new one.`, `Heute geschafft, +${CHALLENGE_REWARD} Coins. Morgen kommt eine neue.`)
+            : tr(
+                `About ${challenge.minutes} min. Make it today for +${CHALLENGE_REWARD} Coins. Everyone gets the same challenge, and the best scores of the day stand here until midnight.`,
+                `Ca. ${challenge.minutes} Min. Heute schaffen bringt +${CHALLENGE_REWARD} Coins. Alle bekommen dieselbe Challenge, und die besten Punkte des Tages stehen hier bis Mitternacht.`
+              )}
+          {challengeLog.wins > 0 && tr(` Challenges made so far: ${challengeLog.wins}.`, ` Bisher geschafft: ${challengeLog.wins}.`)}
+        </p>
+        {day && day.length > 0 ? (
+          <ol className="hs-table pixel-font">
+            {day.slice(0, 5).map((e, i) => (
+              <li key={`${e.name}-${e.score}-${i}`} className={e.me ? 'me' : undefined}>
+                <span>{i + 1}.</span>
+                <span>{e.name}</span>
+                <span>{formatScore(challenge.game, e.score)}</span>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="dim">{tr('Nobody on today’s table yet. Go first!', 'Heute steht noch keiner auf der Liste. Leg vor!')}</p>
+        )}
+        <div className="settings-row" style={{ marginTop: 10 }}>
+          <button className="px-btn" onClick={() => onPlay(challenge.game)} data-nav>
+            {MINI_GAMES.find((m) => m.id === challenge.game)?.icon} {tr('PLAY', 'SPIELEN')}
+          </button>
+        </div>
       </section>
 
       {duelInfo && (
