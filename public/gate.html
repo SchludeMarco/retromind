@@ -90,8 +90,7 @@
     };
 
     // Same keys and permissions as lib/googleLogin.ts and lib/googleAuth.ts.
-    var SCOPES = 'openid email profile https://www.googleapis.com/auth/drive.appdata ' +
-      'https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read';
+    var SCOPES = 'openid email profile https://www.googleapis.com/auth/drive.appdata';
     var optedIn = false;
     try { optedIn = localStorage.getItem('retromind.google') === '1'; } catch (e) {}
 

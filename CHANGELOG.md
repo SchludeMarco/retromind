@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Google-Anmeldung ohne Geburtstag und Geschlecht** (2026-10-23): Beim
+  Anmelden mit Google fragt RetroMind nur noch Name, E-Mail, Profilbild und
+  den privaten Sicherungsordner in deinem Drive ab. Geburtstag und Geschlecht
+  trägst du selbst auf dem Ticket bzw. in „Deine Angaben“ ein, sie werden
+  nicht mehr aus deinem Google-Konto übernommen. Dadurch kann jede eingeladene
+  Person sich anmelden, ohne vorher zusätzlich bei Google freigeschaltet zu
+  werden; wer reindarf, entscheidet allein die Gästeliste.
+
 - **Gaming-Edition: Rekordhalter in der Bestenliste** (2026-10-21, PR #280):
   In der Liste aller Spiele steht unter jedem Spiel jetzt der Rekord aller
   Gäste mit 🏆, direkt dahinter die Initialen dessen, der ihn hält – wie

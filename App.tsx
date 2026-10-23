@@ -563,25 +563,19 @@ const App: React.FC = () => {
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrival(true);
   };
 
-  // Once name and birthday are known (saved on this device, from a Drive
-  // backup or from the signed-in Google account), there's no need to ask
+  // Once name and birthday are known (saved on this device or from a Drive
+  // backup; the name may also come from the signed-in Google account), there's no need to ask
   // again on every visit; they can be changed in the settings.
   useEffect(() => {
     if (verified || profileEditRequested) return;
     const google = googleAuth.status === 'signed_in';
     const name = (user.name || (google ? googleAuth.user?.name : '') || '').trim();
-    const birthDate = user.birthDate || (google ? googleAuth.birthdayHint : '') || '';
+    const birthDate = user.birthDate || '';
     if (!name || !birthDate) return;
     setUser((prev) => ({ ...prev, name, birthDate }));
     setVerified(true);
     setToast(tr(`Welcome, ${name.split(' ')[0]}!`, `Willkommen, ${name.split(' ')[0]}!`));
-  }, [verified, profileEditRequested, googleAuth.status, googleAuth.user, googleAuth.birthdayHint, user.name, user.birthDate]);
-
-  // Gender shared on the Google account fills an empty "Geschlecht" field.
-  useEffect(() => {
-    if (googleAuth.status !== 'signed_in' || !googleAuth.genderHint || user.gender) return;
-    setUser((prev) => (prev.gender ? prev : { ...prev, gender: googleAuth.genderHint! }));
-  }, [googleAuth.status, googleAuth.genderHint, user.gender]);
+  }, [verified, profileEditRequested, googleAuth.status, googleAuth.user, user.name, user.birthDate]);
 
   const handleEditProfile = () => {
     playSFX('click');
@@ -833,7 +827,6 @@ const App: React.FC = () => {
         <VerifyGate
           googleStatus={googleAuth.status}
           googleUser={googleAuth.user}
-          birthdayHint={googleAuth.birthdayHint}
           initialName={user.name}
           initialBirthDate={user.birthDate}
           maxBirthDate={todayStamp()}
