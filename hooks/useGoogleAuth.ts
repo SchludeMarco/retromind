@@ -4,8 +4,6 @@ import {
   getGoogleClientId,
   signInWithGoogle,
   fetchGoogleProfile,
-  fetchGoogleProfileHints,
-  GoogleProfileHints,
   revokeGoogleToken,
   preloadGoogleIdentityServices,
   GoogleToken,
@@ -34,7 +32,6 @@ export function useGoogleAuth() {
     !getGoogleClientId() ? 'not_configured' : restored ? 'signed_in' : 'signed_out',
   );
   const [user, setUser] = useState<GoogleUser | null>(restored?.user ?? null);
-  const [hints, setHints] = useState<GoogleProfileHints>({ birthday: null, gender: null });
   const tokenRef = useRef<GoogleToken | null>(restored?.token ?? null);
 
   // Google's script is only fetched for people who chose Google before
@@ -44,18 +41,6 @@ export function useGoogleAuth() {
   useEffect(() => {
     if (getGoogleClientId() && hasGoogleOptIn()) preloadGoogleIdentityServices().catch(() => {});
   }, []);
-
-  // A login restored from the stored token knows the name already; the
-  // birthday and gender are fetched again with that token (a plain API call,
-  // no popup) instead of being kept in the session store.
-  useEffect(() => {
-    const token = restored?.token;
-    if (token && token.expiresAt - Date.now() > 60_000) {
-      fetchGoogleProfileHints(token.accessToken).then((h) => {
-        if (tokenRef.current === token) setHints(h);
-      });
-    }
-  }, [restored]);
 
   // Follows sign-ins renewed or ended elsewhere (lib/googleLogin.ts), and
   // renews an expired one right away when the server keeps it.
@@ -72,12 +57,7 @@ export function useGoogleAuth() {
       }
     });
     if (!restored && getGoogleClientId() && hasGoogleOptIn()) {
-      ensureGoogleSession().then((session) => {
-        if (!session) return;
-        fetchGoogleProfileHints(session.token.accessToken).then((h) => {
-          if (tokenRef.current === session.token) setHints(h);
-        });
-      });
+      void ensureGoogleSession();
     }
     return off;
   }, [restored]);
@@ -114,7 +94,6 @@ export function useGoogleAuth() {
       setStatus('signed_in');
       setGoogleOptIn(true);
       saveGoogleSession({ token, user: profile });
-      setHints(await fetchGoogleProfileHints(token.accessToken));
     } catch {
       setStatus('error');
     }
@@ -126,11 +105,10 @@ export function useGoogleAuth() {
     setGoogleOptIn(false);
     saveGoogleSession(null);
     setUser(null);
-    setHints({ birthday: null, gender: null });
     setStatus(getGoogleClientId() ? 'signed_out' : 'not_configured');
   }, []);
 
-  return { status, user, birthdayHint: hints.birthday, genderHint: hints.gender, signIn, signOut, getFreshAccessToken };
+  return { status, user, signIn, signOut, getFreshAccessToken };
 }
 
 export type GoogleAuth = ReturnType<typeof useGoogleAuth>;

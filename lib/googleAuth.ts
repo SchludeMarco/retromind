@@ -6,9 +6,11 @@ import { GoogleUser } from '../types';
 // (api/_googleKeep.js, signInWithGoogle below).
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
-const BIRTHDAY_SCOPE = 'https://www.googleapis.com/auth/user.birthday.read';
-const GENDER_SCOPE = 'https://www.googleapis.com/auth/user.gender.read';
-const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE} ${BIRTHDAY_SCOPE} ${GENDER_SCOPE}`;
+// Only basic and non-sensitive scopes, so the OAuth app can run "In
+// production" without Google's verification and without a test-user list
+// (the guest list in api/_guests.js stays the only door). Birthday and gender
+// therefore come from the person's own entry on the ticket, not from Google.
+const SCOPES = `openid email profile ${DRIVE_APPDATA_SCOPE}`;
 
 export interface GoogleToken {
   accessToken: string;
@@ -179,37 +181,4 @@ export function revokeGoogleToken(accessToken: string) {
   forgetKeptGoogleSignIn();
   if (keep !== false) return;
   (window as any).google?.accounts?.oauth2?.revoke(accessToken, () => {});
-}
-
-export interface GoogleProfileHints {
-  birthday: string | null;
-  gender: string | null;
-}
-
-const GENDER_LABELS: Record<string, string> = { female: 'weiblich', male: 'männlich' };
-
-// Best-effort lookup of birthday and gender via the People API — only
-// populated if the person has them on their Google account and granted the
-// `user.birthday.read` / `user.gender.read` scopes (Google lets people untick
-// them on the consent screen). Used purely to prefill the profile, never
-// required.
-export async function fetchGoogleProfileHints(accessToken: string): Promise<GoogleProfileHints> {
-  const none = { birthday: null, gender: null };
-  try {
-    const res = await fetch('https://people.googleapis.com/v1/people/me?personFields=birthdays,genders', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    if (!res.ok) return none;
-    const data = await res.json();
-    const withYear = (data.birthdays || []).find((b: any) => b.date?.year);
-    let birthday: string | null = null;
-    if (withYear) {
-      const { year, month, day } = withYear.date;
-      birthday = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    }
-    const gender = GENDER_LABELS[(data.genders || [])[0]?.value] ?? null;
-    return { birthday, gender };
-  } catch {
-    return none;
-  }
 }

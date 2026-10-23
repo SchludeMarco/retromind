@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Google-Anmeldung ohne Geburtstag und Geschlecht': {
+    title: 'Google sign-in without birthday and gender',
+    text: 'Signing in with Google now only asks for your name, email, profile picture and the private backup folder in your Drive. You enter your birthday and gender yourself on the ticket or under “Your details”; they are no longer taken from your Google account. This lets every invited guest sign in without being unlocked at Google first; the guest list alone decides who gets in.',
+  },
   'Gaming-Edition: Rekordhalter in der Bestenliste': {
     title: 'Gaming edition: Record holders in the Hall of Fame',
     text: 'In the list of all games, each game now shows the record of all guests with 🏆, followed right away by the initials of whoever holds it, like the top line on an old arcade cabinet. If the record is yours, your initials glow.',

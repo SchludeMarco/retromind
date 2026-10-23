@@ -332,8 +332,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Erinnerungen in ihrem eigenen Konto (**dezentral**) und macht auf jedem Gerät
   dort weiter, wo sie war. Mit Google angemeldet entfällt
   die Start-Abfrage von Name und Geburtsdatum, sobald beides bekannt ist (Name
-  aus dem Google-Profil, Geburtstag und Geschlecht über die People API, falls
-  freigegeben, sonst aus der Drive-Sicherung);
+  aus dem Google-Profil, Geburtstag aus der eigenen Eingabe oder der
+  Drive-Sicherung). Die Anmeldung fragt nur Basisrechte (Name, E-Mail, Bild)
+  und den privaten Drive-App-Ordner ab, keine sensiblen Rechte; die
+  OAuth-App läuft deshalb „In Produktion“ ohne Testnutzer-Liste, und allein die
+  Gästeliste entscheidet, wer reinkommt;
   ändern lässt es sich in den Einstellungen unter „Deine Angaben“. Ohne Google
   fragt die App beim ersten Mal; danach bleiben die Angaben auf dem Gerät und
   die Abfrage entfällt bei jedem weiteren Besuch. „Mit Google anmelden“ und

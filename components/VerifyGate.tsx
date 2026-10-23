@@ -14,12 +14,11 @@ import { playRewind, REWIND_SECONDS } from '../lib/clockSounds';
 // fill in a ticket to your past. "Set the clock" turns the hands back, and
 // the room opens onto the app (the iris in App.tsx). Everything
 // stays on this device (localStorage). Signing in with Google is optional: it
-// prefills the form and backs the journey up to the person's own Google Drive,
+// prefills the name and backs the journey up to the person's own Google Drive,
 // so it can be picked up again on another device.
 export const VerifyGate: React.FC<{
   googleStatus: GoogleAuthStatus;
   googleUser: GoogleUser | null;
-  birthdayHint: string | null;
   initialName: string;
   initialBirthDate: string;
   maxBirthDate: string;
@@ -28,22 +27,18 @@ export const VerifyGate: React.FC<{
   /** false while the welcome screen still covers the form */
   revealed?: boolean;
 }> = ({
-  googleStatus, googleUser, birthdayHint,
+  googleStatus, googleUser,
   initialName, initialBirthDate, maxBirthDate,
   onGoogleSignIn, onVerified, revealed = true,
 }) => {
   const [name, setName] = useState(initialName);
   const [birthDate, setBirthDate] = useState(initialBirthDate);
 
-  // Once Google comes back with a profile (or a shared birthday), prefill the
-  // fields — but only if the person hasn't already got a value from a
+  // Once Google comes back with a profile, prefill the name — but only if the person hasn't already got a value from a
   // previous session, and only until they start typing themselves.
   useEffect(() => {
     if (googleUser && !initialName) setName(googleUser.name);
   }, [googleUser, initialName]);
-  useEffect(() => {
-    if (birthdayHint && !initialBirthDate) setBirthDate(birthdayHint);
-  }, [birthdayHint, initialBirthDate]);
   // A journey restored from Google Drive on a new device fills empty fields.
   useEffect(() => {
     if (initialName) setName((n) => n || initialName);
@@ -138,9 +133,6 @@ export const VerifyGate: React.FC<{
                 onChange={(e) => setBirthDate(e.target.value)}
                 className="rm-ticket-input"
               />
-              {birthdayHint && birthDate === birthdayHint && (
-                <p className="text-xs mt-1 opacity-80">{tr('Taken from your Google account – adjust if needed.', 'Aus deinem Google-Konto übernommen – bei Bedarf anpassen.')}</p>
-              )}
             </div>
           </div>
           <div className="rm-ticket-stub">
