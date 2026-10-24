@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Willkommensbrief in „Nachtschicht“ wieder lesbar': {
+    title: 'Welcome-back letter readable in “Night Shift”',
+    text: 'The letter “Dear …, how lovely that you’re back” in the living room was nearly invisible in the dark “Night Shift” design: light ink on light paper. Now its paper is dark and the ink light there; in “Classic” and “Retro Warm” it looks as before.',
+  },
   'Songdauer in der Musiksteuerung': {
     title: 'Song length in the music controls',
     text: 'The big music controls now show below the song title how long the song has been playing and how long it is in total, with a bar in between. Tap or drag the bar to jump to another spot in the song. It works for everyone now, even without a Spotify login, in Time Travel and in the Gaming edition.',

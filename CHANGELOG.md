@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Willkommensbrief in „Nachtschicht“ wieder lesbar** (2026-10-24, PR #283):
+  Der Brief „Hallo …, wie schön, dass du wieder da bist“ in der Stube war im
+  dunklen Design „Nachtschicht“ fast unsichtbar: helle Schrift auf hellem
+  Papier. Jetzt ist das Briefpapier dort dunkel und die Schrift hell, in
+  „Klassisch“ und „Retro Warm“ bleibt er wie gewohnt.
+
 - **Songdauer in der Musiksteuerung** (2026-10-24, PR #282): In der großen
   Musiksteuerung steht unter dem Songtitel jetzt, wie lange der Song schon
   läuft und wie lang er insgesamt ist, mit einem Balken dazwischen. Auf den
