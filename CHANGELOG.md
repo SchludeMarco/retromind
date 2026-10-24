@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Songdauer in der Musiksteuerung** (2026-10-24, PR #282): In der großen
+  Musiksteuerung steht unter dem Songtitel jetzt, wie lange der Song schon
+  läuft und wie lang er insgesamt ist, mit einem Balken dazwischen. Auf den
+  Balken tippen oder ihn ziehen springt an eine andere Stelle im Song. Das
+  gibt es jetzt für alle, auch ohne Spotify-Login, in der Zeitreise und in
+  der Gaming-Edition.
+
 - **Google-Anmeldung ohne Geburtstag und Geschlecht** (2026-10-23): Beim
   Anmelden mit Google fragt RetroMind nur noch Name, E-Mail, Profilbild und
   den privaten Sicherungsordner in deinem Drive ab. Geburtstag und Geschlecht

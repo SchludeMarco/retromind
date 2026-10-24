@@ -308,8 +308,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   was läuft ([`components/MusicMini.tsx`](components/MusicMini.tsx)). „Mehr
   Musik“ öffnet die ganze **Musiksteuerung**
   ([`components/MusicDock.tsx`](components/MusicDock.tsx)) über die halbe
-  Seite: welche Musik und welcher Song gerade läuft, Lautstärke, Suche und
-  ein Knopf für Ton an/aus. Weiter spielt den nächsten Zufallssong, Zurück
+  Seite: welche Musik und welcher Song gerade läuft, wie weit er ist und wie
+  lang er dauert (Balken zum Springen, auch ohne Spotify-Login), Lautstärke,
+  Suche und ein Knopf für Ton an/aus. Weiter spielt den nächsten Zufallssong, Zurück
   den Song davor. Lange Songtitel werden kleiner geschrieben und laufen, wenn
   das nicht reicht, als Laufschrift durch. In der Gaming-Halle steht oben
   links in kleiner Schrift, welcher Song gerade spielt; ein Tipp darauf

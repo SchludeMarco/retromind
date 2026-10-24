@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Songdauer in der Musiksteuerung': {
+    title: 'Song length in the music controls',
+    text: 'The big music controls now show below the song title how long the song has been playing and how long it is in total, with a bar in between. Tap or drag the bar to jump to another spot in the song. It works for everyone now, even without a Spotify login, in Time Travel and in the Gaming edition.',
+  },
   'Google-Anmeldung ohne Geburtstag und Geschlecht': {
     title: 'Google sign-in without birthday and gender',
     text: 'Signing in with Google now only asks for your name, email, profile picture and the private backup folder in your Drive. You enter your birthday and gender yourself on the ticket or under “Your details”; they are no longer taken from your Google account. This lets every invited guest sign in without being unlocked at Google first; the guest list alone decides who gets in.',
