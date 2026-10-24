@@ -32,11 +32,13 @@ export const WelcomeBackLetter: React.FC<{ warm: boolean; userName: string; dail
     );
   for (const n of news) items.push(tr(`new in RetroMind: ${n}`, `neu in RetroMind: ${n}`));
 
+  // Paper and ink come from the design tokens, so the letter flips along in
+  // Nachtschicht (a fixed cream paper left its light ink unreadable).
   return (
     <section
       role="note"
       aria-label={tr('A letter for you', 'Ein Brief für dich')}
-      className={`relative text-left p-5 pr-10 mb-4 rm-letter ${warm ? 'rounded-2xl bg-[#fffaf0] border border-[#e6dac8]' : 'w-full max-w-2xl mx-auto border-4 border-double border-retro-ink bg-[#fffaf0]'}`}
+      className={`relative text-left p-5 pr-10 mb-4 rm-letter text-retro-ink ${warm ? 'rounded-2xl bg-[#fffaf0] border border-[#e6dac8]' : 'w-full max-w-2xl mx-auto border-4 border-double border-retro-ink bg-retro-paper-white'}`}
     >
       <button onClick={() => setOpen(false)} aria-label={tr('Put the letter away', 'Brief weglegen')} className="absolute top-2 right-3 text-xl leading-none">
         ✕
