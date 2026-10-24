@@ -83,9 +83,31 @@ const time = (ms: number) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 };
 
-// Search, progress and the "Musik zum Thema" switch.
-const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ extras, onPicked }) => {
+// How far the song is and how long it runs, for everyone, with or without
+// Spotify login (Marco, 2026-10-24). Both the embed and the Premium player
+// report position and length; without them (still loading) nothing shows.
+const Progress: React.FC<{ extras: MusicDockExtras }> = ({ extras }) => {
   const { position, duration } = useMusicStatus(extras.status);
+  if (duration <= 0) return null;
+  return (
+    <div className="music-dock-progress">
+      <span>{time(Math.min(position, duration))}</span>
+      <input
+        type="range"
+        min={0}
+        max={Math.round(duration / 1000)}
+        value={Math.min(Math.round(position / 1000), Math.round(duration / 1000))}
+        onChange={(e) => extras.onSeek(Number(e.target.value))}
+        aria-label={tr('Position in song', 'Stelle im Song')}
+        aria-valuetext={tr(`${time(position)} of ${time(duration)}`, `${time(position)} von ${time(duration)}`)}
+      />
+      <span>{time(duration)}</span>
+    </div>
+  );
+};
+
+// Search and the "Musik zum Thema" switch.
+const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ extras, onPicked }) => {
   const auto = useAutoTheme();
   const [query, setQuery] = useState('');
   const [hits, setHits] = useState<SpotifyHit[] | null>(null);
@@ -124,20 +146,6 @@ const Extras: React.FC<{ extras: MusicDockExtras; onPicked: () => void }> = ({ e
 
   return (
     <div className="music-dock-extras">
-      {duration > 0 && (
-        <div className="music-dock-progress">
-          <span>{time(position)}</span>
-          <input
-            type="range"
-            min={0}
-            max={Math.round(duration / 1000)}
-            value={Math.round(position / 1000)}
-            onChange={(e) => extras.onSeek(Number(e.target.value))}
-            aria-label={tr('Position in song', 'Stelle im Song')}
-          />
-          <span>{time(duration)}</span>
-        </div>
-      )}
       <div className="music-dock-chips">
         <button type="button" className="music-dock-chip" aria-pressed={auto} onClick={() => setAutoTheme(!auto)} title={extras.themeHint}>
           {auto ? '✓ ' : ''}{tr('Theme music', 'Musik zum Thema')}
@@ -462,6 +470,7 @@ export const MusicDock: React.FC<MusicDockProps> = ({
               </p>
               <FavoriteHeart title={ready ? shownTitle : null} uri={favUri} image={live?.image ?? null} where={source} className="music-dock-heart" size={22} />
             </div>
+            {extras && <Progress extras={extras} />}
             <div className="music-dock-buttons">
               <button type="button" onClick={onPrev} disabled={!ready || !canSkip} aria-label={tr('Previous song', 'Vorheriger Song')} title={tr('Previous song', 'Vorheriger Song')}>
                 <Svg d={PREV} />

@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Songdauer in der Musiksteuerung** (2026-10-24, PR #282): In der großen
+  Musiksteuerung steht unter dem Songtitel jetzt, wie lange der Song schon
+  läuft und wie lang er insgesamt ist, mit einem Balken dazwischen. Auf den
+  Balken tippen oder ihn ziehen springt an eine andere Stelle im Song. Das
+  gibt es jetzt für alle, auch ohne Spotify-Login, in der Zeitreise und in
+  der Gaming-Edition.
+
 - **Gaming-Edition: Rekordhalter in der Bestenliste** (2026-10-21, PR #280):
   In der Liste aller Spiele steht unter jedem Spiel jetzt der Rekord aller
   Gäste mit 🏆, direkt dahinter die Initialen dessen, der ihn hält – wie

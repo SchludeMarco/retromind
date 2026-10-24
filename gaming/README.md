@@ -122,7 +122,7 @@ zeigen dürfen.
   Zurück, Play/Pause, Weiter und der Song in gut lesbarer Schrift (auf dem
   Handy in eigener Zeile über den Knöpfen, lange Titel laufen als
   Laufschrift durch; ein Tipp darauf öffnet die ganze Steuerung); „Mehr Musik“ öffnet die ganze Steuerung
-  (Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
+  (Songdauer mit Balken zum Springen, Ton an/aus, Lautstärke-Regler; mit Spotify-Login auch Suche und „Musik zum
   Thema“, also der Soundtrack des offenen Spiels). Oben links steht klein,
   welcher Song spielt. Die Musik pausiert bei
   YouTube-Videos und wenn die App im Hintergrund liegt.
