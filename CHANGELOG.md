@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Schnellerer Start in beiden Apps** (2026-11-12, PR #284): Beide Apps
+  laden beim Öffnen deutlich weniger. Die Zeitreise lädt zum Start etwa halb
+  so viel wie vorher (rund 117 statt 236 KB), die Gaming-Halle gut ein Fünftel
+  weniger. „Was ist neu?“, Omas Kochbuch, Damals & heute, die Helden, der
+  Adventskalender und jedes Minispiel kommen erst, wenn man sie öffnet, und
+  sind dann nach einem kurzen „Lädt …“ da. Mit Google-Anmeldung lädt die App
+  außerdem schon, während der Abgleich mit dem Drive läuft, statt danach.
+  Wer die App vor einem Update offen hatte, bekommt beim nächsten Antippen
+  einmal automatisch die neue Version.
+
 - **Willkommensbrief in „Nachtschicht“ wieder lesbar** (2026-10-24, PR #283):
   Der Brief „Hallo …, wie schön, dass du wieder da bist“ in der Stube war im
   dunklen Design „Nachtschicht“ fast unsichtbar: helle Schrift auf hellem

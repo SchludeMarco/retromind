@@ -173,4 +173,3 @@ export const Merge2048: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const mergeBest = (n: number) => tr(`High score: ${n.toLocaleString('en-US')} points`, `Rekord: ${n.toLocaleString('de-DE')} Punkte`);

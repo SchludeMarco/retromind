@@ -1,5 +1,5 @@
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { execSync } from 'child_process';
@@ -24,6 +24,46 @@ function buildVersion() {
   return sha ? `${number} (${sha})` : number;
 }
 
+
+// Both apps first bring the saved data up to date (lib/sync.ts, up to a few
+// seconds with a Google sign-in) and only then import ./start. Without a hint
+// the browser would start downloading the app itself only after that wait, so
+// the start chunk, its imports and its CSS are announced in the HTML: they
+// download in parallel and run only once the sync is done.
+function preloadStart(): Plugin {
+  return {
+    name: 'retromind-preload-start',
+    transformIndexHtml: {
+      order: 'post',
+      handler(_html, ctx) {
+        const bundle = ctx.bundle;
+        const entry = ctx.chunk;
+        if (!bundle || !entry) return;
+        const tags: { tag: string; attrs: Record<string, string>; injectTo: 'head' }[] = [];
+        const seen = new Set<string>([entry.fileName, ...entry.imports]);
+        const visit = (file: string) => {
+          if (seen.has(file)) return;
+          seen.add(file);
+          const chunk = bundle[file];
+          if (!chunk || chunk.type !== 'chunk') return;
+          tags.push({ tag: 'link', attrs: { rel: 'modulepreload', crossorigin: '', href: `/${file}` }, injectTo: 'head' });
+          for (const css of chunk.viteMetadata?.importedCss ?? []) {
+            if (seen.has(css)) continue;
+            seen.add(css);
+            tags.push({ tag: 'link', attrs: { rel: 'preload', as: 'style', href: `/${css}` }, injectTo: 'head' });
+          }
+          chunk.imports.forEach(visit);
+        };
+        for (const file of entry.dynamicImports) {
+          const chunk = bundle[file];
+          if (chunk?.type === 'chunk' && chunk.moduleIds.some((id) => /[\\/]start\.tsx$/.test(id))) visit(file);
+        }
+        return tags;
+      },
+    },
+  };
+}
+
 // The Gemini API key is NOT exposed to the client anymore — all AI calls go
 // through the serverless functions in /api (see api/gemini.js). For local
 // development of those functions run `vercel dev` instead of `vite dev`.
@@ -32,7 +72,7 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
   },
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), preloadStart()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),

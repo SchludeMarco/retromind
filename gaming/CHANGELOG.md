@@ -8,6 +8,16 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Schnellerer Start in beiden Apps** (2026-11-12, PR #284): Beide Apps
+  laden beim Öffnen deutlich weniger. Die Zeitreise lädt zum Start etwa halb
+  so viel wie vorher (rund 117 statt 236 KB), die Gaming-Halle gut ein Fünftel
+  weniger. „Was ist neu?“, Omas Kochbuch, Damals & heute, die Helden, der
+  Adventskalender und jedes Minispiel kommen erst, wenn man sie öffnet, und
+  sind dann nach einem kurzen „Lädt …“ da. Mit Google-Anmeldung lädt die App
+  außerdem schon, während der Abgleich mit dem Drive läuft, statt danach.
+  Wer die App vor einem Update offen hatte, bekommt beim nächsten Antippen
+  einmal automatisch die neue Version.
+
 - **Songdauer in der Musiksteuerung** (2026-10-24, PR #282): In der großen
   Musiksteuerung steht unter dem Songtitel jetzt, wie lange der Song schon
   läuft und wie lang er insgesamt ist, mit einem Balken dazwischen. Auf den

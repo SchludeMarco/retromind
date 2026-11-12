@@ -234,4 +234,3 @@ export const VideoPoker: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const pokerBest = (n: number) => tr(`Best: ${n} credits`, `Bestes Spiel: ${n} Credits`);

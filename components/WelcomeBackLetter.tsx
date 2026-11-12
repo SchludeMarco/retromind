@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { tr } from '../lib/i18n';
 import { daysAway, previousVisitDay } from '../lib/visits';
-import { newsSince } from '../lib/whatsNew';
 import { newAnswersSince } from '../lib/familyBook';
 
 // "Since your last visit": whoever comes back after two days or more finds a
@@ -13,13 +12,17 @@ export const WelcomeBackLetter: React.FC<{ warm: boolean; userName: string; dail
   const [since] = useState(() => previousVisitDay('zeitreise'));
   const [open, setOpen] = useState(true);
   const [family, setFamily] = useState(0);
+  const [news, setNews] = useState<string[]>([]);
 
   useEffect(() => {
-    if (since && away !== null && away >= 2) newAnswersSince(since).then(setFamily);
+    if (since && away !== null && away >= 2) {
+      newAnswersSince(since).then(setFamily);
+      // What's New is its own download (the whole CHANGELOG), fetched only here.
+      import('../lib/whatsNew').then((m) => setNews(m.newsSince(since, 3))).catch(() => {});
+    }
   }, [since, away]);
 
   if (!open || away === null || away < 2 || !since) return null;
-  const news = newsSince(since, 3);
   const name = userName.trim();
   const items: string[] = [];
   if (!dailyAnswered) items.push(tr('a new question of the day is waiting for you, right below', 'unten wartet eine neue Frage des Tages auf dich'));

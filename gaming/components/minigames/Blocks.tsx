@@ -336,4 +336,3 @@ export const Blocks: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const blocksBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

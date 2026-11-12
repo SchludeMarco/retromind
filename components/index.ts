@@ -11,7 +11,6 @@ export { Modal } from './Modal';
 export { GalleryCard } from './GalleryCard';
 export { ChatBot } from './ChatBot';
 export { MemoryAnswer } from './MemoryAnswer';
-export { WhatsNewModal } from './WhatsNewModal';
 export { MusicConsentBanner } from './MusicConsentBanner';
 export { BackToTop } from './BackToTop';
 export { MusicDock } from './MusicDock';

@@ -176,4 +176,3 @@ export const Sudoku: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const sudokuBest = (n: number) => tr(`Best time: ${fmt(n)}`, `Bestzeit: ${fmt(n)}`);

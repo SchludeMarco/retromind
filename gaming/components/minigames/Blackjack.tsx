@@ -288,4 +288,3 @@ export const Blackjack: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const blackjackBest = (n: number) => tr(`Best: ${n} chips`, `Bestes Spiel: ${n} Chips`);
