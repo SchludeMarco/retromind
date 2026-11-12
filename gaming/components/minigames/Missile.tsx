@@ -305,4 +305,3 @@ export const Missile: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const missileBest = (n: number) => tr(`High score: ${n.toLocaleString('en-US')} points`, `Rekord: ${n.toLocaleString('de-DE')} Punkte`);

@@ -170,4 +170,3 @@ export const Snake: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const snakeBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

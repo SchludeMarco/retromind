@@ -302,4 +302,3 @@ export const Solitaire: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const solitaireBest = (n: number) => tr(`Best time: ${fmt(n)}`, `Bestzeit: ${fmt(n)}`);

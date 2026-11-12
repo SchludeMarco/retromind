@@ -573,6 +573,14 @@ Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. 
   so in beiden Apps und mit Google-Anmeldung auf allen Geräten. Die frühere
   eigene Datei `retromind-initials.json` wird beim ersten Abgleich übernommen
   und gelöscht.
+- **Schneller Start** ([`lib/lazyLoad.ts`](lib/lazyLoad.ts),
+  [`vite.config.ts`](vite.config.ts)) – beide Apps laden beim Öffnen nur, was
+  der erste Bildschirm braucht. „Was ist neu?“ (das ganze CHANGELOG), die
+  Erkunden-Ecken Helden, Omas Kochbuch, Adventskalender und Damals & heute
+  sowie jedes Gaming-Minispiel sind eigene Dateien, die erst beim Öffnen
+  kommen. Den App-Code kündigt die Seite im HTML an, so lädt er parallel zum
+  Daten-Abgleich. Fehlt nach einem Update eine alte Datei, lädt die Seite
+  einmal neu.
 - **Neu laden bleibt auf der Seite** ([`lib/pageMemory.ts`](lib/pageMemory.ts))
   – beide Apps merken sich pro Browser-Tab die offene Seite (Zeitreise: Etappe
   und ob der Willkommensbildschirm schon vorbei ist; Gaming: Halle oder Eingang,
@@ -919,6 +927,9 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
 Ideen nur für die Gaming-Edition stehen in deren
 [README](gaming/README.md#ideen-und-offene-punkte).
 
+- **Noch kleinerer Start:** Einstellungen, Stube (CozyRoom) und die
+  Spieldaten der Gaming-Halle (Katalog, Cover-Szenen, Legenden) könnten
+  ebenfalls erst bei Bedarf laden; das spart weitere 20 bis 30 KB.
 - **Ruhezeit für Benachrichtigungen:** nachts (etwa 22 bis 7 Uhr) keine
   Mitteilungen, sie kommen gesammelt am Morgen; dazu ein Gruppenchat-Modus
   „nur wenn ich eine Weile nicht da war“, damit ein lebhafter Raum nicht

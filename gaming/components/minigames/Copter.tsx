@@ -238,4 +238,3 @@ export const Copter: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const copterBest = (n: number) => tr(`Record: ${n} m`, `Rekord: ${n} m`);

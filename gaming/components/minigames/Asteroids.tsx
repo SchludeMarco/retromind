@@ -320,4 +320,3 @@ export const Asteroids: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const asteroidsBest = (n: number) => tr(`High score: ${n.toLocaleString('en-US')} points`, `Rekord: ${n.toLocaleString('de-DE')} Punkte`);

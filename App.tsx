@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StationCorner } from './components/StationCorner';
 import {
   AppPhase,
@@ -17,7 +17,7 @@ import {
 import { RetroTicker } from './components/RetroTicker';
 import { AmbientLife } from './components/AmbientLife';
 import { ChristmasDeco } from './components/ChristmasDeco';
-import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, WhatsNewModal, MusicConsentBanner, BackToTop, MusicDock } from './components';
+import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { ControlCenter, ControlHandle } from './components/ControlHandle';
 import { HelpBot } from './components/HelpBot';
 import { GuestChat } from './components/GuestChat';
@@ -30,7 +30,7 @@ import { setRoomEra } from './lib/roomEra';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
-import { hasUnseenNews } from './lib/whatsNew';
+import { lazyLoad } from './lib/lazyLoad';
 import { useWarmChrome } from './lib/theme';
 import { WarmTopBar } from './components/WarmChrome';
 import {
@@ -62,6 +62,8 @@ import { readPage, writePage } from './lib/pageMemory';
 import { findTrack, useAutoTheme, useSpotifyApi } from './lib/spotifyApi';
 
 // Where this tab was before a reload: the open page and whether the welcome screen was passed.
+const WhatsNewModal = lazyLoad(() => import('./components/WhatsNewModal').then((m) => m.WhatsNewModal));
+
 const PAGE_KEY = 'retromind.page';
 type OpenPage = { phase: AppPhase; splashDone: boolean };
 
@@ -149,7 +151,12 @@ const App: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isWhatsNewOpen, setIsWhatsNewOpen] = useState(false);
-  const [unseenNews, setUnseenNews] = useState(hasUnseenNews);
+  // What's New (the whole CHANGELOG) is a separate download, fetched after the
+  // start, so it doesn't slow down the first screen; it only lights the dot.
+  const [unseenNews, setUnseenNews] = useState(false);
+  useEffect(() => {
+    import('./lib/whatsNew').then((m) => setUnseenNews(m.hasUnseenNews())).catch(() => {});
+  }, []);
   const warm = useWarmChrome();
   const [aiAvailability, setAiAvailability] = useState<AiAvailability>('unknown');
   const [toast, setToast] = useState<string | null>(null);
@@ -816,11 +823,13 @@ const App: React.FC = () => {
 
 
       {isWhatsNewOpen && (
-        <WhatsNewModal
-          aboveSplash={showSplash}
-          onDismiss={() => setIsWhatsNewOpen(false)}
-          onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
-        />
+        <Suspense fallback={null}>
+          <WhatsNewModal
+            aboveSplash={showSplash}
+            onDismiss={() => setIsWhatsNewOpen(false)}
+            onCloseClick={() => { playSFX('click'); setIsWhatsNewOpen(false); }}
+          />
+        </Suspense>
       )}
 
       {!verified ? (

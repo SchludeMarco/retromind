@@ -265,4 +265,3 @@ export const Invaders: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const invadersBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

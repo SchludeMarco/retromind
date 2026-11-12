@@ -238,4 +238,3 @@ export const Breakout: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const breakoutBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { BuzzwordCategory, VideoStatus } from '../types';
 import { DECADES_DB } from '../constants';
 import { useMuted } from '../lib/mute';
 import { useWarmChrome } from '../lib/theme';
 import { tr } from '../lib/i18n';
-import { HeroesSection } from './HeroesSection';
-import { CookbookSection } from './CookbookSection';
-import { AdventSection } from './AdventSection';
-import { GlossarySection } from './GlossarySection';
 import type { SpotifyHit } from '../lib/spotifyApi';
 import { useChristmas } from '../lib/season';
 import { showAdvent } from '../lib/advent';
 import { PhaseNav, StopHeader } from '../components/PhaseNav';
+import { lazyLoad } from '../lib/lazyLoad';
+
+// The bigger corners (heroes, Grandma's cookbook, advent calendar, then & now)
+// are separate downloads, fetched when one is opened.
+const HeroesSection = lazyLoad(() => import('./HeroesSection').then((m) => m.HeroesSection));
+const CookbookSection = lazyLoad(() => import('./CookbookSection').then((m) => m.CookbookSection));
+const AdventSection = lazyLoad(() => import('./AdventSection').then((m) => m.AdventSection));
+const GlossarySection = lazyLoad(() => import('./GlossarySection').then((m) => m.GlossarySection));
 
 const CATEGORY: Record<BuzzwordCategory, { icon: string; label: string }> = {
   music: { icon: '🎵', label: tr('Music', 'Musik') },
@@ -385,6 +389,7 @@ export const ExplorationPhase: React.FC<{
         {lab}
       </div>
     )}
+    <Suspense fallback={<p className="text-center opacity-70 py-10">{tr('Loading…', 'Lädt …')}</p>}>
     {sparte === 'heroes' && (
       <HeroesSection aiOff={aiOff} focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
     )}
@@ -407,6 +412,7 @@ export const ExplorationPhase: React.FC<{
     {sparte === 'glossary' && (
       <GlossarySection focusDecade={focusDecade} isAnswered={isAnswered} onRemember={onOpenBuzzword} backButton={backButton} />
     )}
+    </Suspense>
     {sparte !== null && sparte !== 'lab' && sparte !== 'heroes' && sparte !== 'cookbook' && sparte !== 'advent' && sparte !== 'glossary' && sparteView(sparte)}
 
     <PhaseNav back={{ to: 'induction', onClick: onBack }} next={{ to: 'diary', onClick: onNext }} />

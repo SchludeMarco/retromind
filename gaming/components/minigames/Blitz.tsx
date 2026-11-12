@@ -725,4 +725,3 @@ export const BlitzCombo: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const blitzBest = (n: number) => tr(`High score: ${n}`, `Rekord: ${n}`);

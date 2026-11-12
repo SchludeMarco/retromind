@@ -787,4 +787,3 @@ function drawCherry(ctx: CanvasRenderingContext2D, x: number, y: number) {
   }
 }
 
-export const pacmanBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

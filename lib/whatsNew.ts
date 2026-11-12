@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Schnellerer Start in beiden Apps': {
+    title: 'Faster start in both apps',
+    text: 'Both apps download much less when they open. Time Travel now loads about half as much at the start (around 117 instead of 236 KB), the Gaming hall a good fifth less. “What’s new?”, Grandma’s cookbook, Then & now, the heroes, the advent calendar and every mini game only load when you open them, and appear after a short “Loading…”. With a Google sign-in the app also loads while the sync with your Drive runs, instead of after it. If you had the app open before an update, the next tap gets you the new version once, automatically.',
+  },
   'Willkommensbrief in „Nachtschicht“ wieder lesbar': {
     title: 'Welcome-back letter readable in “Night Shift”',
     text: 'The letter “Dear …, how lovely that you’re back” in the living room was nearly invisible in the dark “Night Shift” design: light ink on light paper. Now its paper is dark and the ink light there; in “Classic” and “Retro Warm” it looks as before.',

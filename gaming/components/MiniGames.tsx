@@ -1,24 +1,34 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { chip } from '../lib/chiptune';
 import { Done, loadBests, MiniGameId, saveBest, shuffle } from './minigames/shared';
-import { Sudoku, sudokuBest } from './minigames/Sudoku';
-import { Blocks, blocksBest } from './minigames/Blocks';
-import { Pinball, pinballBest } from './minigames/Pinball';
-import { PacMan, pacmanBest } from './minigames/PacMan';
-import { Breakout, breakoutBest } from './minigames/Breakout';
-import { Snake, snakeBest } from './minigames/Snake';
-import { Invaders, invadersBest } from './minigames/Invaders';
-import { Quiz, quizBest } from './minigames/Quiz';
-import { VideoPoker, pokerBest } from './minigames/VideoPoker';
-import { Blackjack, blackjackBest } from './minigames/Blackjack';
-import { Solitaire, solitaireBest } from './minigames/Solitaire';
-import { Asteroids, asteroidsBest } from './minigames/Asteroids';
-import { Frogger, froggerBest } from './minigames/Frogger';
-import { Copter, copterBest } from './minigames/Copter';
-import { Merge2048, mergeBest } from './minigames/Merge2048';
-import { Missile, missileBest } from './minigames/Missile';
-import { BlitzButtons, BlitzColor, BlitzCombo, BlitzConsole, BlitzPixel, BlitzYear, blitzBest } from './minigames/Blitz';
 import { tr } from '../../lib/i18n';
+import { lazyLoad } from '../../lib/lazyLoad';
+import { asteroidsBest, blackjackBest, blitzBest, blocksBest, breakoutBest, copterBest, froggerBest, invadersBest, mergeBest, missileBest, pacmanBest, pinballBest, pokerBest, quizBest, snakeBest, solitaireBest, sudokuBest } from './minigames/bests';
+
+// Each game is its own small download, fetched only when it is opened, so the
+// hall itself starts faster (the record labels above stay loaded).
+const Sudoku = lazyLoad(() => import('./minigames/Sudoku').then((m) => m.Sudoku));
+const Blocks = lazyLoad(() => import('./minigames/Blocks').then((m) => m.Blocks));
+const Pinball = lazyLoad(() => import('./minigames/Pinball').then((m) => m.Pinball));
+const PacMan = lazyLoad(() => import('./minigames/PacMan').then((m) => m.PacMan));
+const Breakout = lazyLoad(() => import('./minigames/Breakout').then((m) => m.Breakout));
+const Snake = lazyLoad(() => import('./minigames/Snake').then((m) => m.Snake));
+const Invaders = lazyLoad(() => import('./minigames/Invaders').then((m) => m.Invaders));
+const Quiz = lazyLoad(() => import('./minigames/Quiz').then((m) => m.Quiz));
+const VideoPoker = lazyLoad(() => import('./minigames/VideoPoker').then((m) => m.VideoPoker));
+const Blackjack = lazyLoad(() => import('./minigames/Blackjack').then((m) => m.Blackjack));
+const Solitaire = lazyLoad(() => import('./minigames/Solitaire').then((m) => m.Solitaire));
+const Asteroids = lazyLoad(() => import('./minigames/Asteroids').then((m) => m.Asteroids));
+const Frogger = lazyLoad(() => import('./minigames/Frogger').then((m) => m.Frogger));
+const Copter = lazyLoad(() => import('./minigames/Copter').then((m) => m.Copter));
+const Merge2048 = lazyLoad(() => import('./minigames/Merge2048').then((m) => m.Merge2048));
+const Missile = lazyLoad(() => import('./minigames/Missile').then((m) => m.Missile));
+const BlitzButtons = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzButtons));
+const BlitzColor = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzColor));
+const BlitzCombo = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzCombo));
+const BlitzConsole = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzConsole));
+const BlitzPixel = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzPixel));
+const BlitzYear = lazyLoad(() => import('./minigames/Blitz').then((m) => m.BlitzYear));
 
 // The "Zock-Ecke": small, calm games to unwind between the history
 // lessons. Memory, slide puzzle and Senso live here; Sudoku, the falling
@@ -590,6 +600,7 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
         <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
+        <Suspense fallback={<p className="dim mini-loading">{tr('Loading…', 'Lädt …')}</p>}>
         {id === 'memory' ? (
           <Memory onWin={onWin} />
         ) : id === 'puzzle' ? (
@@ -641,6 +652,7 @@ export const MiniGameDialog: React.FC<{ id: MiniGameId; onClose: () => void; onW
         ) : (
           <PacMan onWin={onWin} />
         )}
+        </Suspense>
       </div>
     </div>
   );

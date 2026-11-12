@@ -336,4 +336,3 @@ export const Pinball: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const pinballBest = (n: number) => tr(`High score: ${n} points`, `Rekord: ${n} Punkte`);

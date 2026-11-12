@@ -371,6 +371,10 @@ zeigen dürfen.
 
 ### Einstellungen und Konto
 
+- **Minispiele laden bei Bedarf** – jedes Minispiel und jedes Blitz-Spiel
+  ist eine eigene kleine Datei, die erst beim Öffnen kommt; die Rekorde stehen
+  trotzdem sofort in der Liste ([`components/minigames/bests.ts`](components/minigames/bests.ts)).
+  So startet die Halle schneller ([Haupt-README](../README.md#für-alle-module)).
 - **Benachrichtigungen** – in den Einstellungen ein Hauptschalter (🔔 AN /
   🔕 AUS) und je einer für „Überholt!“, Nachrichten an dich, den
   Gruppenchat und die Abend-Erinnerung an die Blitz-Challenge (beide

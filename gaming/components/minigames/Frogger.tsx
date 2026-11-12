@@ -363,4 +363,3 @@ export const Frogger: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   );
 };
 
-export const froggerBest = (n: number) => tr(`High score: ${n.toLocaleString('en-US')} points`, `Rekord: ${n.toLocaleString('de-DE')} Punkte`);

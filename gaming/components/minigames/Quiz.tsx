@@ -140,4 +140,3 @@ export const Quiz: React.FC<{ onWin: () => void; onEarn?: (coins: number) => voi
   );
 };
 
-export const quizBest = (n: number) => tr(`Best: ${n} of ${ROUNDS} right`, `Bestes Quiz: ${n} von ${ROUNDS} richtig`);
