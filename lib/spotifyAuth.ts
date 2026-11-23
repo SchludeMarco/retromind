@@ -134,7 +134,30 @@ async function exchangeCodeForToken(code: string, verifier: string): Promise<Spo
   return parseTokenResponse(await res.json());
 }
 
-export async function refreshSpotifyAccessToken(refreshToken: string): Promise<SpotifyToken> {
+// Spotify hands out a new refresh token with every renewal and retires the
+// old one. When the access token runs out, several parts (the browser
+// player, the Spotify-app player, search) ask for a new one at the same
+// moment: they must share ONE renewal, or the second one, sent with the
+// already retired token, fails and that part drops back to 30-second
+// previews (Marco, 2026-11-23: "immer nur kurze Ausschnitte").
+const renewals = new Map<string, Promise<SpotifyToken>>();
+
+export function refreshSpotifyAccessToken(refreshToken: string): Promise<SpotifyToken> {
+  let renewal = renewals.get(refreshToken);
+  if (!renewal) {
+    renewal = renew(refreshToken).finally(() => {
+      // Kept a moment longer: a late caller with the same token gets the result too.
+      window.setTimeout(() => renewals.delete(refreshToken), 30_000);
+    });
+    renewals.set(refreshToken, renewal);
+  }
+  return renewal;
+}
+
+/** Spotify said the refresh token is no good any more (not a network hiccup). */
+export class SpotifyLoginExpired extends Error {}
+
+async function renew(refreshToken: string): Promise<SpotifyToken> {
   const clientId = getSpotifyClientId();
   if (!clientId) throw new Error('not_configured');
   const res = await fetch(TOKEN_ENDPOINT, {
@@ -146,6 +169,7 @@ export async function refreshSpotifyAccessToken(refreshToken: string): Promise<S
       client_id: clientId,
     }),
   });
+  if (res.status === 400 || res.status === 401) throw new SpotifyLoginExpired('token_refresh_rejected');
   if (!res.ok) throw new Error('token_refresh_failed');
   return parseTokenResponse(await res.json(), refreshToken);
 }
@@ -182,6 +206,28 @@ export function persistSpotifyRefreshToken(token: string | null) {
     else localStorage.removeItem(REFRESH_TOKEN_KEY);
   } catch {
     /* storage unavailable — non-fatal, just means no silent re-login */
+  }
+}
+
+// Set while a Premium login is (or was) there, cleared only by signing out
+// on purpose: if the login gets lost on its own, the music player says so
+// instead of quietly playing previews (lib/spotifyPremium: useLoginLost).
+const PREMIUM_KEY = 'retromind.spotify.premium';
+
+export function rememberPremiumLogin(on: boolean) {
+  try {
+    if (on) localStorage.setItem(PREMIUM_KEY, '1');
+    else localStorage.removeItem(PREMIUM_KEY);
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+export function hadPremiumLogin(): boolean {
+  try {
+    return localStorage.getItem(PREMIUM_KEY) === '1';
+  } catch {
+    return false;
   }
 }
 

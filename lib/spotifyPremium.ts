@@ -55,6 +55,25 @@ export function setPremiumTokenSource(source: TokenSource | null, scope = '') {
   listeners.forEach((l) => l());
 }
 
+// A Premium login was there but got lost on its own (renewal rejected, token
+// gone): the music player shows "sign in again" instead of quietly playing
+// 30-second previews (Marco, 2026-11-23).
+let loginLost = false;
+export function setLoginLost(on: boolean) {
+  if (on === loginLost) return;
+  loginLost = on;
+  listeners.forEach((l) => l());
+}
+export function useLoginLost(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => loginLost
+  );
+}
+
 /** true while a Premium login can drive the browser player. */
 export function usePremiumPlayback(): boolean {
   return useSyncExternalStore(

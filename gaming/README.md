@@ -108,7 +108,9 @@ zeigen dürfen.
   Premium über Spotifys Browser-Player und langsamem Einblenden
   ([`lib/useHallSpotify.ts`](lib/useHallSpotify.ts)), auf dem Handy mit
   Premium als ganze Songs über die eigene Spotify-App (Spotify Connect,
-  [`lib/spotifyConnect.ts`](../lib/spotifyConnect.ts)); sonst eigene
+  [`lib/spotifyConnect.ts`](../lib/spotifyConnect.ts); geht der Premium-Login
+  verloren, steht oben „Nur Ausschnitte: für ganze Songs neu bei Spotify
+  anmelden“); sonst eigene
   Chiptune-Stücke ([`lib/chiptune.ts`](lib/chiptune.ts)). Beim ersten Besuch
   fragt die Halle einmal („Metal erlauben“ oder „Lieber Chiptune“), in den
   Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln.

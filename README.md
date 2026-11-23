@@ -391,6 +391,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   unbemerkt im Hintergrund starten); Logins von vor dieser Funktion
   bitten einmal um eine neue Anmeldung (Erlaubnis
   `user-read-playback-state`). Beim Verlassen der Seite hält die App an.
+  Die stündliche Erneuerung der Anmeldung teilen sich alle Teile der App
+  (Spotify gibt jeden Erneuerungs-Schlüssel nur einmal her), bei
+  Netzfehlern bleibt die Anmeldung erhalten; geht ein Premium-Login doch
+  verloren, steht oben „Nur Ausschnitte: für ganze Songs neu bei Spotify
+  anmelden“.
   Ohne Premium, ohne Anmeldung oder wenn Spotifys Player nicht startet,
   bleibt es beim eingebetteten Player. Kommt über Spotifys Player nach dem Start kein Song (Spotify lehnt
   das Abspielen ab oder es bleibt still), übernimmt nach spätestens etwa

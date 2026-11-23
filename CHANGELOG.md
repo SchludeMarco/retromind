@@ -7,6 +7,17 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Ganze Songs mit Premium bleiben ganze Songs** (2026-11-23, PR #287):
+  Mit Spotify Premium fiel die Musik nach einer Weile wieder auf kurze
+  Ausschnitte zurück. Grund: Wenn Spotifys Anmeldung nach etwa einer Stunde
+  erneuert wurde, fragten mehrere Teile der App gleichzeitig nach und der
+  zweite bekam eine Absage. Außerdem wurde die Anmeldung bei jedem kleinen
+  Fehler (zum Beispiel kurz kein Netz) auf allen Geräten gelöscht. Jetzt
+  teilen sich alle Teile eine Erneuerung, die Anmeldung bleibt bei
+  Netzproblemen erhalten, und geht sie doch einmal verloren, steht oben
+  „Nur Ausschnitte: für ganze Songs neu bei Spotify anmelden“ statt leise
+  Ausschnitte zu spielen.
+
 - **Schalter „Musik meiner Kindheit“** (2026-11-23, PR #286): Unter der
   Zielzeit und in den Einstellungen gibt es jetzt einen Schalter „Musik
   meiner Kindheit“. Ist er an, spielt die Musik aus dem Jahrzehnt deiner
