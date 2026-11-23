@@ -111,7 +111,10 @@ export interface SessionState {
   diaryEntry: string;
   memories: CapturedMemory[];
   clickedBuzzwords: string[];
+  /** Legacy: the decade picked in the settings before the travel date existed (read once, then null). */
   manualDecade: string | null;
+  /** "YYYY-MM-DD" the time machine travels to; null = the birthday (else 30.12.1989), see lib/travelDate.ts. */
+  travelDate?: string | null;
   fontScale: number;
   updatedAt: number;
 }

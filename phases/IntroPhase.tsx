@@ -8,7 +8,7 @@ import { GamingTeaser } from '../components/GamingTeaser';
 import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
-import { LivingRoom } from '../components/LivingRoom';
+import { LivingRoom, type TravelProps } from '../components/LivingRoom';
 import { DailyQuestion } from '../components/DailyQuestion';
 import { WelcomeBackLetter } from '../components/WelcomeBackLetter';
 import { YouthToday } from '../components/YouthToday';
@@ -30,6 +30,8 @@ export const IntroPhase: React.FC<{
   birthYear: number | null;
   memories: CapturedMemory[];
   onSaveMemory: (memory: CapturedMemory) => void;
+  /** The settable destination date above the Stube (components/TravelDatePicker). */
+  travel: TravelProps;
 }> = (props) => (useWarmChrome() ? <WarmIntro {...props} /> : <ClassicIntro {...props} />);
 
 type IntroProps = React.ComponentProps<typeof IntroPhase>;
@@ -71,6 +73,7 @@ const ClassicIntro: React.FC<IntroProps> = (props) => {
       onStart={onStart}
       onResume={onResume}
       onOpenStage={onOpenStage}
+      travel={props.travel}
     />
     <DailyCorner {...props} warm={false} />
     <div className="retro-card w-full p-5 sm:p-8 md:p-12 max-w-2xl bg-retro-cream mb-6 break-words">
@@ -197,6 +200,7 @@ const WarmIntro: React.FC<IntroProps> = (props) => {
           onStart={onStart}
           onResume={onResume}
           onOpenStage={onOpenStage}
+          travel={props.travel}
         />
         <div className="px-2">
           <p className="text-lg leading-relaxed mb-5">

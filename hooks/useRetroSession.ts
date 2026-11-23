@@ -2,6 +2,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AppPhase, CapturedMemory, SessionState, UserProfile } from '../types';
 import { EMPTY_USER, PHASES, clearSession, loadSession, persistSession } from '../lib/session';
 import { computeFocusDecade } from '../lib/format';
+import { destinationOf, isTravelDate, moveToDecade } from '../lib/travelDate';
+
+// The chosen travel date of a stored session. Sessions from before the date
+// picker only had a decade from the settings: that becomes the same day of
+// the birthday (or 30.12.1989) in that decade.
+function travelDateOf(s: Partial<SessionState>): string | null {
+  if (isTravelDate(s.travelDate)) return s.travelDate;
+  if (s.manualDecade) return moveToDecade(destinationOf(null, s.user?.birthDate), s.manualDecade);
+  return null;
+}
 
 // Bundles the whole journey — profile, captured memories, diary, UI prefs —
 // together with its localStorage persistence so App.tsx doesn't have to.
@@ -19,7 +29,7 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
   const [memories, setMemories] = useState<CapturedMemory[]>(saved.memories ?? []);
   const [diaryEntry, setDiaryEntry] = useState<string>(saved.diaryEntry ?? '');
   const [clickedBuzzwords, setClickedBuzzwords] = useState<string[]>(saved.clickedBuzzwords ?? []);
-  const [manualDecade, setManualDecade] = useState<string | null>(saved.manualDecade ?? null);
+  const [travelDate, setTravelDate] = useState<string | null>(() => travelDateOf(saved));
   const [fontScale, setFontScale] = useState<number>(saved.fontScale ?? 1);
 
   const focusDecade = useMemo(() => computeFocusDecade(user.birthDate), [user.birthDate]);
@@ -35,12 +45,13 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
       diaryEntry,
       memories,
       clickedBuzzwords,
-      manualDecade,
+      manualDecade: null,
+      travelDate,
       fontScale,
       updatedAt: Date.now(),
     };
     persistSession(state);
-  }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
+  }, [phase, resumeTarget, user, diaryEntry, memories, clickedBuzzwords, travelDate, fontScale]);
 
   const memoryFor = useCallback(
     (id: string) => memories.find((m) => m.kind === 'buzzword' && m.id === `bw-${id}`),
@@ -69,7 +80,7 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
     setMemories([]);
     setDiaryEntry('');
     setClickedBuzzwords([]);
-    setManualDecade(null);
+    setTravelDate(null);
     setPhase('intro');
   }, []);
 
@@ -80,7 +91,7 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
     setMemories(s.memories ?? []);
     setDiaryEntry(s.diaryEntry ?? '');
     setClickedBuzzwords(s.clickedBuzzwords ?? []);
-    setManualDecade(s.manualDecade ?? null);
+    setTravelDate(travelDateOf(s));
     setFontScale(s.fontScale ?? 1);
     setResumeTarget(null);
     setPhase(s.phase && PHASES.includes(s.phase) ? s.phase : 'book');
@@ -104,10 +115,11 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
     diaryEntry,
     memories,
     clickedBuzzwords,
-    manualDecade,
+    manualDecade: null,
+    travelDate,
     fontScale,
     updatedAt: Date.now(),
-  }), [phase, user, diaryEntry, memories, clickedBuzzwords, manualDecade, fontScale]);
+  }), [phase, user, diaryEntry, memories, clickedBuzzwords, travelDate, fontScale]);
 
   return {
     phase, setPhase,
@@ -116,7 +128,7 @@ export function useRetroSession(reloadedPhase?: AppPhase | null) {
     memories, setMemories, memoryFor, perspectiveFor, upsertMemory,
     diaryEntry, setDiaryEntry,
     clickedBuzzwords, setClickedBuzzwords,
-    manualDecade, setManualDecade,
+    travelDate, setTravelDate,
     fontScale, setFontScale,
     focusDecade,
     resetJourney, importSession, exportSession, loadRemoteState,
