@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Metal Christmas in der Spielhalle** (2026-11-23, PR #290): In der
+  Weihnachtszeit (1. November bis 6. Januar) läuft in der Gaming-Halle statt
+  80er-Metal die Spotify-Playlist „Metal Christmas“, in zufälliger
+  Reihenfolge. Danach kommt automatisch wieder der gewohnte 80er-Metal.
+
 - **Schnellerer Start in beiden Apps** (2026-11-12, PR #284): Beide Apps
   laden beim Öffnen deutlich weniger. Die Zeitreise lädt zum Start etwa halb
   so viel wie vorher (rund 117 statt 236 KB), die Gaming-Halle gut ein Fünftel

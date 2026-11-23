@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Metal Christmas in der Spielhalle': {
+    title: 'Metal Christmas in the arcade',
+    text: 'During the Christmas season (November 1 to January 6) the Gaming arcade plays Spotify’s “Metal Christmas” playlist in random order instead of ’80s metal. Afterwards the usual ’80s metal comes back on its own.',
+  },
   'Zeitmaschinen-Sog bei neuer Zielzeit': {
     title: 'The time machine pulls you in for a new destination',
     text: 'When you change the destination time, the time machine now pulls you in with sound and light, just like at the start: the page goes dark, a vortex of light rings spins faster and faster, the clock races and hums, then thunder cracks, a white flash fills the screen (with a short buzz on phones), and out of the light the time circuits race to the new date.',

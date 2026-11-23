@@ -303,6 +303,10 @@ export const GamingApp: React.FC = () => {
     screen === 'power' && state.music,
     spotifyAuth.status === 'signed_in' && spotifyAuth.user?.product === 'premium'
   );
+  // In the Christmas season the hall plays "Metal Christmas" (useHallSpotify).
+  const hallMusicName = spotify.christmas
+    ? tr('Arcade music · Metal Christmas', 'Hallenmusik · Metal Christmas')
+    : tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal');
   useEffect(() => {
     if (screen !== 'hub' || !spotify.active || !state.music || videoPlaying) return;
     // The entrance queues the intro unless the song already played outside.
@@ -1266,9 +1270,9 @@ export const GamingApp: React.FC = () => {
           <button
             className="gm-bottom-music-song"
             onClick={() => { chip.play('blip'); openMusicDock(); }}
-            aria-label={`${spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}. ${tr('Open music controls', 'Musiksteuerung öffnen')}`}
+            aria-label={`${spotify.songTitle ?? hallMusicName}. ${tr('Open music controls', 'Musiksteuerung öffnen')}`}
           >
-            <FitMarquee text={spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')} maxSize={22} minSize={18} />
+            <FitMarquee text={spotify.songTitle ?? hallMusicName} maxSize={22} minSize={18} />
           </button>
           {!spotify.fallback && (
             <FavoriteHeart
@@ -1276,7 +1280,7 @@ export const GamingApp: React.FC = () => {
               title={spotify.songTitle}
               uri={spotify.songUri}
               image={null}
-              where={tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+              where={hallMusicName}
             />
           )}
         </div>
@@ -1364,7 +1368,7 @@ export const GamingApp: React.FC = () => {
                         <button className="px-btn" onClick={() => { chip.play('blip'); spotify.playNext(); }} disabled={!spotify.canSkip} aria-label={tr('Next song', 'Nächster Song')} data-nav>
                           ►►
                         </button>
-                        <span className="gm-controls-song">{spotify.songTitle ?? tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}</span>
+                        <span className="gm-controls-song">{spotify.songTitle ?? hallMusicName}</span>
                         {/* A great song? Save it, a comment optional (Marco, 2026-10-19). */}
                         {!spotify.fallback && (
                           <FavoriteHeart
@@ -1372,7 +1376,7 @@ export const GamingApp: React.FC = () => {
                             title={spotify.songTitle}
                             uri={spotify.songUri}
                             image={null}
-                            where={tr("Arcade music · '80s heavy metal", 'Hallenmusik · 80er Heavy Metal')}
+                            where={hallMusicName}
                           />
                         )}
                       </div>
@@ -1449,7 +1453,7 @@ export const GamingApp: React.FC = () => {
               ownMusic
               title={spotify.songTitle}
               songUri={spotify.songUri}
-              source={tr('Arcade music · \'80s heavy metal', 'Hallenmusik · 80er Heavy Metal')}
+              source={hallMusicName}
               playing={spotify.playing}
               ready={spotify.ready || spotify.fallback}
               canSkip={spotify.canSkip}
@@ -1485,7 +1489,7 @@ export const GamingApp: React.FC = () => {
                   spotify.playUri(hit);
                 },
                 special: spotify.special,
-                themeName: tr("'80s Metal", '80er Metal'),
+                themeName: spotify.christmas ? 'Metal Christmas' : tr("'80s Metal", '80er Metal'),
                 onBackToTheme: () => {
                   chip.play('blip');
                   spotify.backToTheme();
