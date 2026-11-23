@@ -26,6 +26,7 @@ import { MusicMini } from './components/MusicMini';
 import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
+import { TimeWarp } from './components/TimeWarp';
 import { setRoomEra } from './lib/roomEra';
 import { useChildhoodMusic } from './lib/childhoodMusic';
 import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
@@ -534,18 +535,26 @@ const App: React.FC = () => {
   const dateSeenRef = useRef(destinationDate);
   const showSpeaksRef = useRef(false);
   const [arrivalKey, setArrivalKey] = useState(0);
+  const [warping, setWarping] = useState(0);
+  const arriveFromWarp = useCallback(() => {
+    showSpeaksRef.current = true;
+    setArrivalKey((k) => k + 1);
+    setArrivalShow(true);
+    setTravel((n) => n + 1);
+  }, []);
   useEffect(() => {
     if (dateSeenRef.current === destinationDate) return;
     const t = window.setTimeout(() => {
       dateSeenRef.current = destinationDate;
       if (!verified || showSplash) return;
       setDecadeOverXmas(true);
-      playRewind();
+      // With motion: the pull of the time machine first (components/TimeWarp),
+      // the arrival show comes out of its flash. Without: the rewind and the voice.
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        showSpeaksRef.current = true;
-        setArrivalKey((k) => k + 1);
-        setArrivalShow(true);
+        setWarping((n) => n + 1);
+        return;
       }
+      playRewind();
       setTravel((n) => n + 1);
     }, 1200);
     return () => window.clearTimeout(t);
@@ -782,6 +791,7 @@ const App: React.FC = () => {
         />
       )}
 
+      {warping > 0 && <TimeWarp key={warping} onFlash={arriveFromWarp} onDone={() => setWarping(0)} />}
       {arrivalShow && (
         <ArrivalShow
           key={arrivalKey}

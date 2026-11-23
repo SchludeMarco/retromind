@@ -3592,3 +3592,17 @@ html[data-ticker] .rm-bottom-music {
 }
 .rm-travel-date-reset:hover { opacity: 1; }
 .rm-splash .rm-travel-date-reset, .rm-travel-date.on-dark .rm-travel-date-reset { color: #ffb020; background: rgb(0 0 0 / 0.35); }
+
+/* A new destination: the pull of the time machine over the page
+   (components/TimeWarp), then a white flash the arrival show comes out of. */
+.rm-timewarp { position: fixed; inset: 0; z-index: 940; pointer-events: none; }
+.rm-timewarp.is-warp { pointer-events: auto; }
+.rm-timewarp-dark {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgb(20 12 6 / 0.55), rgb(4 3 2 / 0.95));
+  animation: splashWhiteIn 500ms ease-out both;
+}
+.rm-timewarp-light { position: absolute; inset: 0; }
+.rm-timewarp.is-fade .rm-timewarp-light { animation: rmTimewarpFade 700ms ease-out forwards; }
+@keyframes rmTimewarpFade { from { opacity: 1; } to { opacity: 0; } }

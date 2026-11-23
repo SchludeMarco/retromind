@@ -118,7 +118,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Einstellungen, standardmäßig aus) lässt die Musik im Jahrzehnt der eigenen
   Kindheit, egal welches Datum gewählt ist; die Stube folgt weiter dem Datum
   ([`lib/childhoodMusic.ts`](lib/childhoodMusic.ts)). Eine neue Zielzeit
-  ist eine **neue Zeitreise**: Die Zeitmaschine spult zurück, die
+  ist eine **neue Zeitreise**: Die Zeitmaschine zieht dich mit Strudel,
+  Uhrenrasen, Donner und weißem Blitz hinein wie beim Start
+  ([`components/TimeWarp.tsx`](components/TimeWarp.tsx)), die
   Ankunfts-Show rattert zum neuen Datum, die Roboterstimme nennt das Jahr,
   dann ist die Stube neu eingerichtet; die Musik wechselt in diese Zeit, in
   der Weihnachtszeit auch statt der Weihnachtsmusik.
