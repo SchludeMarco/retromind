@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Schalter „Musik meiner Kindheit“** (2026-11-23, PR #286): Unter der
+  Zielzeit und in den Einstellungen gibt es jetzt einen Schalter „Musik
+  meiner Kindheit“. Ist er an, spielt die Musik aus dem Jahrzehnt deiner
+  Kindheit (mit Spotify-Login die Hits der Jahre, in denen du 6 bis 19
+  warst), egal welches Datum eingestellt ist. Die Stube richtet sich weiter
+  nach dem Datum. Standardmäßig ist er aus.
+
 - **Reiseziel-Datum frei wählbar** (2026-11-23, PR #285): Auf dem
   Startbildschirm und unter der Stube kann man jetzt einstellen, in welches
   Datum die Zeitmaschine reist: einfach auf die rote Zielzeit tippen. Ohne

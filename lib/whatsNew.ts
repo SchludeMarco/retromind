@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Schalter „Musik meiner Kindheit“': {
+    title: '“Music of my childhood” switch',
+    text: 'Under the destination time and in the settings there is now a “Music of my childhood” switch. When it is on, the music comes from the decade of your childhood (signed in with Spotify, the hits of the years you were 6 to 19), whatever date is set. The living room still follows the date. It is off by default.',
+  },
   'Reiseziel-Datum frei wählbar': {
     title: 'Pick the date you travel to',
     text: 'On the welcome screen and under the living room you can now set the date the time machine travels to: just tap the red destination time. Without a choice it is your birthday, without a birthday December 30, 1989. The living room is furnished in that decade’s style, the music comes from that decade, and the arrival show, the year’s video and the robot voice travel to exactly that year. “Back to your birthday” resets the date. Before, the music followed the decade of your childhood; now the date decides everything.',

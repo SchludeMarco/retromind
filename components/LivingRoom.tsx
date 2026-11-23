@@ -7,6 +7,7 @@ import { useWindowWeather } from '../lib/weather';
 import { eraShort, useRoomEra } from '../lib/roomEra';
 import { gamingHref } from '../lib/gamingLink';
 import { TravelDatePicker } from './TravelDatePicker';
+import { ChildhoodMusicSwitch } from './ChildhoodMusicSwitch';
 
 export interface TravelProps {
   value: string;
@@ -14,6 +15,8 @@ export interface TravelProps {
   onChange: (date: string) => void;
   onReset: () => void;
   resetLabel: string;
+  /** The decade of your childhood, for the "music of my childhood" switch. */
+  childhoodDecade?: string;
 }
 
 // The Stube at the top of the start page, in every design (Marco,
@@ -75,8 +78,11 @@ export const LivingRoom: React.FC<{
       {travel && (
         <div className="mb-3 px-1">
           <TravelDatePicker {...travel} />
+          <div className="flex justify-center mt-2">
+            <ChildhoodMusicSwitch decade={travel.childhoodDecade} />
+          </div>
           <p className="text-xs text-retro-brown text-center mt-1 px-2 leading-snug">
-            {tr('Pick the date you want to travel to: the room and the music follow it.', 'Wähle das Datum, zu dem du reisen möchtest: Stube und Musik passen sich an.')}
+            {tr('Pick the date you want to travel to: the room and the music follow it (unless “Music of my childhood” is on).', 'Wähle das Datum, zu dem du reisen möchtest: Stube und Musik passen sich an (außer „Musik meiner Kindheit“ ist an).')}
           </p>
         </div>
       )}

@@ -114,6 +114,10 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   gewählte Jahrzehnt. Das Datum wird mit der Reise gespeichert und
   synchronisiert ([`lib/travelDate.ts`](lib/travelDate.ts),
   [`components/TravelDatePicker.tsx`](components/TravelDatePicker.tsx)).
+  Der Schalter **„Musik meiner Kindheit“** (unter der Zielzeit und in den
+  Einstellungen, standardmäßig aus) lässt die Musik im Jahrzehnt der eigenen
+  Kindheit, egal welches Datum gewählt ist; die Stube folgt weiter dem Datum
+  ([`lib/childhoodMusic.ts`](lib/childhoodMusic.ts)).
 - **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
   eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
   Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum
