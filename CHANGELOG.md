@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitmaschinen-Sog bei neuer Zielzeit** (2026-11-23, PR #289): Wenn du
+  die Zielzeit änderst, zieht dich die Zeitmaschine jetzt hörbar und
+  sichtbar hinein, genau wie beim Start: Die Seite wird dunkel, ein Strudel
+  aus Lichtringen dreht sich immer schneller, die Uhr rast und brummt, dann
+  kracht ein Donner, ein weißer Blitz füllt den Bildschirm (auf dem Handy
+  mit kurzem Vibrieren), und aus dem Licht rattern die Zeitschaltkreise zum
+  neuen Datum.
+
 - **Neue Zielzeit = neue Zeitreise** (2026-11-23, PR #288): Wer auf der
   Startseite (oder in den Einstellungen über das Jahrzehnt) die Zielzeit
   ändert, reist jetzt sofort dorthin: Die Zeitmaschine spult zurück, die

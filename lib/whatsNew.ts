@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zeitmaschinen-Sog bei neuer Zielzeit': {
+    title: 'The time machine pulls you in for a new destination',
+    text: 'When you change the destination time, the time machine now pulls you in with sound and light, just like at the start: the page goes dark, a vortex of light rings spins faster and faster, the clock races and hums, then thunder cracks, a white flash fills the screen (with a short buzz on phones), and out of the light the time circuits race to the new date.',
+  },
   'Neue Zielzeit = neue Zeitreise': {
     title: 'New destination = new time journey',
     text: 'If you change the destination time on the start page (or the decade in the settings), you now travel there right away: the time machine winds back, the time circuits race to the new date, the robot voice names the year, and then the living room is furnished anew. The music really changes now too: in the Christmas season it used to play Christmas music whatever the date. After a new destination it plays the music of that time.',

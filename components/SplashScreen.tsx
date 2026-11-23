@@ -82,7 +82,7 @@ const Storm = React.memo(({ thunder }: { thunder: boolean }) => {
  * faster, rings of light rushing to the centre, a bright core that grows
  * until it fills the screen.
  */
-const WarpVortex: React.FC<{ ms: number }> = ({ ms }) => {
+export const WarpVortex: React.FC<{ ms: number }> = ({ ms }) => {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
