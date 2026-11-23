@@ -30,6 +30,7 @@ import { setRoomEra } from './lib/roomEra';
 import { useChildhoodMusic } from './lib/childhoodMusic';
 import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
+import { playRewind } from './lib/clockSounds';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { lazyLoad } from './lib/lazyLoad';
@@ -121,7 +122,11 @@ const App: React.FC = () => {
   // Signed in with Spotify, the music mixes "hits of <year>" playlists of
   // the decade (lib/youthMusic: the years a person was 6 to 19). Passing the
   // year 12 years before the destination centres those years on it.
-  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, childhoodMusic ? birthYear : travelYear - 12);
+  // In the Christmas season the radio plays Christmas hits, until you pick
+  // a new date: then the music of that time plays (Marco, 2026-11-23: when
+  // the destination changes, the music should change with it).
+  const [decadeOverXmas, setDecadeOverXmas] = useState(false);
+  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, childhoodMusic ? birthYear : travelYear - 12, decadeOverXmas);
   const [travel, setTravel] = useState(0);
   const [arrivalShow, setArrivalShow] = useState(false);
   const muted = useMuted();
@@ -520,22 +525,38 @@ const App: React.FC = () => {
     if (birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrivalShow(true);
     setTravel((n) => n + 1);
   }, [showSplash, verified]);
-  // A new destination year is a journey of its own, once the picking has
-  // settled (typing a date changes it digit by digit).
-  const yearSeenRef = useRef(travelYear);
+  // A new destination is a time journey of its own (Marco, 2026-11-23: "Am
+  // besten automatisch eine neue Zeitreise"), once the picking has settled
+  // (typing a date changes it digit by digit): the time machine winds back,
+  // the time circuits race to the new date (ArrivalShow), the robot voice
+  // names the year at the lock-in, and then the Stube is furnished and the
+  // music plays in the style of that time.
+  const dateSeenRef = useRef(destinationDate);
+  const showSpeaksRef = useRef(false);
+  const [arrivalKey, setArrivalKey] = useState(0);
   useEffect(() => {
-    if (yearSeenRef.current === travelYear) return;
+    if (dateSeenRef.current === destinationDate) return;
     const t = window.setTimeout(() => {
-      yearSeenRef.current = travelYear;
-      if (verified && !showSplash) setTravel((n) => n + 1);
+      dateSeenRef.current = destinationDate;
+      if (!verified || showSplash) return;
+      setDecadeOverXmas(true);
+      playRewind();
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        showSpeaksRef.current = true;
+        setArrivalKey((k) => k + 1);
+        setArrivalShow(true);
+      }
+      setTravel((n) => n + 1);
     }, 1200);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [travelYear, verified]);
+  }, [destinationDate, verified]);
   useEffect(() => {
     if (!travel) return;
     const atStart = startTravelRef.current;
     startTravelRef.current = false;
+    // The show of a new destination speaks itself at its lock-in.
+    if (showSpeaksRef.current && !atStart) return;
     if (!atStart && !travelYear) return;
     // The start gets its show (components/ArrivalShow), which speaks at its
     // lock-in; without motion, the voice alone.
@@ -763,11 +784,15 @@ const App: React.FC = () => {
 
       {arrivalShow && (
         <ArrivalShow
+          key={arrivalKey}
           birthDate={destinationDate}
           year={travelYear}
           decade={String(Math.min(2020, Math.max(1960, Math.floor(travelYear / 10) * 10)))}
-          onLock={announceWelcomeBack}
-          onDone={() => setArrivalShow(false)}
+          onLock={() => {
+            if (showSpeaksRef.current) announceYear(travelYear);
+            else announceWelcomeBack();
+          }}
+          onDone={() => { showSpeaksRef.current = false; setArrivalShow(false); }}
           memories={memories}
           onMusic={handleFanfare}
           musicPlaying={spotify.isPlaying}

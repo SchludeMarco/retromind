@@ -53,8 +53,9 @@ const playlistOf = (key: string): string | undefined => (key === XMAS_MUSIC ? XM
 // Signed in with Spotify, the songs come from "hits of <year>" playlists of
 // the years the visitor grew up in (lib/youthMusic), not only from the
 // decade's one playlist; `youthLabel` then names those years.
-export function useSpotifyBackground(decade: string, enabled = true, birthYear: number | null = null) {
-  const christmas = useChristmas();
+export function useSpotifyBackground(decade: string, enabled = true, birthYear: number | null = null, decadeOverXmas = false) {
+  // `decadeOverXmas`: a destination was picked, so its decade plays even in the Christmas season.
+  const christmas = useChristmas() && !decadeOverXmas;
   const currentDecade = christmas ? XMAS_MUSIC : decade;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
