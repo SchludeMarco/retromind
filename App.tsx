@@ -27,6 +27,7 @@ import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
 import { setRoomEra } from './lib/roomEra';
+import { useChildhoodMusic } from './lib/childhoodMusic';
 import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
@@ -88,7 +89,11 @@ const App: React.FC = () => {
   // time circuits, else the birthday, else 30.12.1989. Its decade furnishes
   // the Stube and picks the music.
   const destinationDate = destinationOf(travelDate, user.birthDate);
-  const currentAudioDecade = musicDecadeOf(destinationDate);
+  // "Music of my childhood" (lib/childhoodMusic.ts) keeps the music in the
+  // decade you were a child in, whatever the date; the room follows the date.
+  const childhoodMusic = useChildhoodMusic();
+  const roomDecade = musicDecadeOf(destinationDate);
+  const currentAudioDecade = childhoodMusic ? focusDecade : roomDecade;
   const { playSFX } = useAudioPlayer();
   // Every tap, card and page answers with a little sound and motion (lib/microFx).
   useEffect(installMicroFx, []);
@@ -116,7 +121,7 @@ const App: React.FC = () => {
   // Signed in with Spotify, the music mixes "hits of <year>" playlists of
   // the decade (lib/youthMusic: the years a person was 6 to 19). Passing the
   // year 12 years before the destination centres those years on it.
-  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, travelYear - 12);
+  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, childhoodMusic ? birthYear : travelYear - 12);
   const [travel, setTravel] = useState(0);
   const [arrivalShow, setArrivalShow] = useState(false);
   const muted = useMuted();
@@ -543,8 +548,8 @@ const App: React.FC = () => {
   // After the landing (once the arrival show is over) the Stube is furnished
   // in the style of the decade you're in (lib/roomEra.ts).
   useEffect(() => {
-    setRoomEra(verified && !showSplash && !arrivalShow ? currentAudioDecade || null : null);
-  }, [verified, showSplash, arrivalShow, currentAudioDecade]);
+    setRoomEra(verified && !showSplash && !arrivalShow ? roomDecade || null : null);
+  }, [verified, showSplash, arrivalShow, roomDecade]);
   // The year's video, the arrival show's hit fanfare and the Spotify music
   // don't play at the same time. Each of the two reports itself on and off;
   // the music only comes back once neither plays any more (Marco,
@@ -785,7 +790,8 @@ const App: React.FC = () => {
         <SettingsModal
           fontScale={fontScale}
           onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
-          currentDecade={currentAudioDecade}
+          currentDecade={roomDecade}
+          childhoodDecade={focusDecade}
           onDecadeChange={(d) => { playSFX('click'); setTravelDate(moveToDecade(destinationDate, d)); }}
           isSpotifyReady={spotify.isReady}
           isSpotifyPlaying={spotify.isPlaying}
@@ -920,6 +926,7 @@ const App: React.FC = () => {
                 chosen: isTravelDate(travelDate),
                 onChange: (d) => { playSFX('click'); setTravelDate(d); },
                 onReset: () => { playSFX('click'); setTravelDate(null); },
+                childhoodDecade: focusDecade,
                 resetLabel: isTravelDate(user.birthDate)
                   ? tr('Back to your birthday', 'Zurück zu deinem Geburtstag')
                   : tr('Back to 30 Dec 1989', 'Zurück zum 30.12.1989'),

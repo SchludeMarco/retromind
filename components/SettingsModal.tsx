@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ChildhoodMusicSwitch } from './ChildhoodMusicSwitch';
 import { StayInTouch } from './StayInTouch';
 import { InitialsPicker } from './InitialsPicker';
 import { setInitials, useInitials } from '../lib/initials';
@@ -44,6 +45,8 @@ export const SettingsModal: React.FC<{
   fontScale: number;
   onFontScaleChange: (n: number) => void;
   currentDecade: string;
+  /** The decade of your childhood, for the "music of my childhood" switch. */
+  childhoodDecade?: string;
   onDecadeChange: (d: string) => void;
   isSpotifyReady: boolean;
   isSpotifyPlaying: boolean;
@@ -77,7 +80,7 @@ export const SettingsModal: React.FC<{
   onCloseClick: () => void;
 }> = ({
   fontScale, onFontScaleChange,
-  currentDecade, onDecadeChange,
+  currentDecade, childhoodDecade, onDecadeChange,
   isSpotifyReady, isSpotifyPlaying, onToggleSpotify, spotifyAllowed,
   onOpenWhatsNew, onBackToWelcome, hasUnseenNews,
   userName, userBirthDate, profile, onProfileChange, onEditProfile,
@@ -373,6 +376,9 @@ export const SettingsModal: React.FC<{
                 <option key={d} value={d}>{tr(`${d}s`, `${d}er`)}</option>
               ))}
             </select>
+          </div>
+          <div className="mb-3">
+            <ChildhoodMusicSwitch decade={childhoodDecade} />
           </div>
           {!spotifyAllowed ? (
             <div className="mb-2">
