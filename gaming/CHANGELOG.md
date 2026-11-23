@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Vor der Tür läuft dieselbe Musik wie drinnen** (2026-11-23, PR #291):
+  Vor dem Eingang der Spielhalle hört man jetzt immer gedämpft genau den
+  Song, der drinnen weiterläuft, auch ohne Spotify Premium. In der
+  Weihnachtszeit ist das also ein Song aus „Metal Christmas“, sonst 80er-Metal.
+
 - **Metal Christmas in der Spielhalle** (2026-11-23, PR #290): In der
   Weihnachtszeit (1. November bis 6. Januar) läuft in der Gaming-Halle statt
   80er-Metal die Spotify-Playlist „Metal Christmas“, in zufälliger
