@@ -46,10 +46,12 @@ zeigen dürfen.
   Buchstabe für Buchstabe an, bis alle sechs leuchten, dann beginnt es von
   vorn (`public/gaming/arcade-sign-0…5.webp`).
 - **Musik durch die Wand** – vor der Tür hört man leise und gedämpft Bass und
-  Drums der Metal-Musik aus der Halle (`gaming/lib/street.ts`). Mit Spotify
-  Premium läuft draußen schon der Song von drinnen, als 30-Sekunden-Ausschnitt
-  durch einen Tiefpass, dumpf wie durch die Wand (`api/spotify-preview.js`,
-  sonst Deezer, sonst die gedämpfte Hallen-Aufnahme).
+  Drums der Metal-Musik aus der Halle (`gaming/lib/street.ts`). Spielt die
+  Halle Spotify-Musik (mit oder ohne Premium), läuft draußen schon genau der
+  Song, der drinnen weiterläuft (in der Weihnachtszeit also ein „Metal
+  Christmas“-Song), als 30-Sekunden-Ausschnitt durch einen Tiefpass, dumpf wie
+  durch die Wand (`api/spotify-preview.js`, sonst Deezer, sonst die gedämpfte
+  Hallen-Aufnahme mit dem Metal-Intro drinnen).
 - **Rein durch die Tür** – ein Tipp auf die Tür mit blinkendem Neonrahmen
   öffnet sie mit langem Knarzen, ein Fiepen der Automaten wird lauter, das
   Logo leuchtet aus dem Eingang und das Bild wird weiß

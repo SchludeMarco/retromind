@@ -5,8 +5,9 @@
 // Nothing else plays out here: the street with its crowd, sirens and
 // scuffles was taken out the same day at Marco's request, see
 // _removed_content/.
-// Signed in with Spotify Premium, the wall lets through the very song that
-// plays inside instead (Marco, 2026-10-08): its 30-second preview clip
+// With Spotify music in the hall (with or without Premium, since
+// 2026-11-23), the wall lets through the very song that plays inside instead
+// (Marco, 2026-10-08; in the Christmas season a "Metal Christmas" song): its 30-second preview clip
 // (api/spotify-preview) runs through a low-pass with boosted bass, so it
 // sounds as muffled as the recording. If the clip can't be loaded, the
 // recording plays.

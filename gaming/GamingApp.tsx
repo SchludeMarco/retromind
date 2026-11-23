@@ -300,8 +300,7 @@ export const GamingApp: React.FC = () => {
   const spotify = useHallSpotify(
     state.musicSource === 'spotify',
     screen === 'hub' && state.music && !videoPlaying && !introRunning,
-    screen === 'power' && state.music,
-    spotifyAuth.status === 'signed_in' && spotifyAuth.user?.product === 'premium'
+    screen === 'power' && state.music
   );
   // In the Christmas season the hall plays "Metal Christmas" (useHallSpotify).
   const hallMusicName = spotify.christmas

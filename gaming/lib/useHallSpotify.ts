@@ -63,11 +63,10 @@ const WATCH_EVERY_MS = 1500;
 
 /**
  * `enabled`: plays in the hall (music on, no video). `outside`: the visitor
- * stands at the entrance with music on; with Premium the hook names the song
- * for the door (`doorSong`). `premiumAccount`: signed in with a Spotify Premium account, also on devices
- * where the embed plays (phones).
+ * stands at the entrance with music on; the hook names the song for the door
+ * (`doorSong`).
  */
-export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false, premiumAccount = false) {
+export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const christmas = useChristmas();
   const playlistId = christmas ? XMAS_HALL_PLAYLIST_ID : HALL_PLAYLIST_ID;
@@ -82,8 +81,11 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   // there. "Try again" in the music panel builds the player anew.
   const connect = useConnectPlayback();
   const connectAttempt = useConnectAttempt();
-  const doorMusic = premium || premiumAccount;
-  const atDoor = outside && doorMusic;
+  // The song heard muffled at the door is the one that plays inside, with or
+  // without Premium (Marco, 2026-11-23: "vor dem Eingang eine ganz andere
+  // Musik gedämpft … das sollte zueinander passen"). The clip comes from our
+  // own server (api/spotify-preview), so no Spotify login is needed for it.
+  const atDoor = outside;
   const on = enabled;
   const muted = useMuted();
   const startedRef = useRef(false);
@@ -410,7 +412,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     containerRef,
     /** Christmas season: "Metal Christmas" plays instead of the '80s metal. */
     christmas,
-    /** Premium at the door: the song that will play inside, heard muffled outside. */
+    /** At the door: the song that will play inside, heard muffled outside. */
     doorSong: atDoor && active && song && !special ? { id: song, name: trackName(song) } : null,
     /** Premium's browser player drives the hall music (with volume control). */
     premium: premium && active,

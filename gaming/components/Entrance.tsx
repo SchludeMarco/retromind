@@ -173,7 +173,7 @@ export const Entrance: React.FC<{
       chip.debug.ambient = 'aus (Musik ausgeschaltet)';
       return;
     }
-    // With Premium the song from inside, muffled (it restarts once its name is known).
+    // The song from inside, muffled (it restarts once its name is known).
     const door = chip.ambient(doorSong);
     ambient.current = door;
     const wake = () => chip.unlock();

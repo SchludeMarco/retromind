@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Vor der Tür läuft dieselbe Musik wie drinnen': {
+    title: 'Same music outside the door as inside',
+    text: 'In front of the arcade entrance you now always hear, muffled, the very song that keeps playing inside, also without Spotify Premium. During the Christmas season that is a song from “Metal Christmas”, otherwise ’80s metal.',
+  },
   'Metal Christmas in der Spielhalle': {
     title: 'Metal Christmas in the arcade',
     text: 'During the Christmas season (November 1 to January 6) the Gaming arcade plays Spotify’s “Metal Christmas” playlist in random order instead of ’80s metal. Afterwards the usual ’80s metal comes back on its own.',
