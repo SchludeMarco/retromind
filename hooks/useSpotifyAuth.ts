@@ -9,8 +9,11 @@ import {
   persistSpotifyRefreshToken,
   loadPersistedSpotifyRefreshToken,
   SpotifyToken,
+  SpotifyLoginExpired,
+  rememberPremiumLogin,
+  hadPremiumLogin,
 } from '../lib/spotifyAuth';
-import { setPremiumTokenSource } from '../lib/spotifyPremium';
+import { setLoginLost, setPremiumTokenSource } from '../lib/spotifyPremium';
 import { setSpotifyApiToken } from '../lib/spotifyApi';
 
 export type SpotifyAuthStatus = 'not_configured' | 'signed_out' | 'signing_in' | 'signed_in' | 'error';
@@ -32,6 +35,8 @@ export function useSpotifyAuth() {
     const profile = await fetchSpotifyProfile(token.accessToken);
     setUser(profile);
     setStatus('signed_in');
+    if (profile.product === 'premium') rememberPremiumLogin(true);
+    setLoginLost(false);
   }, []);
 
   // On mount: either finish a redirect we just came back from, or try a
@@ -55,12 +60,24 @@ export function useSpotifyAuth() {
         return;
       }
       const storedRefreshToken = loadPersistedSpotifyRefreshToken();
-      if (!storedRefreshToken) return;
+      if (!storedRefreshToken) {
+        // A Premium login that went missing: the player says so (hint).
+        if (hadPremiumLogin()) setLoginLost(true);
+        return;
+      }
       try {
         const fresh = await refreshSpotifyAccessToken(storedRefreshToken);
         await applyToken(fresh);
-      } catch {
-        persistSpotifyRefreshToken(null);
+      } catch (e) {
+        // The login used to be thrown away on ANY failure here, also a
+        // network hiccup or a token the other app or device had just
+        // renewed, and the removal then spread to every device (lib/sync):
+        // signed out everywhere, previews only. Now the stored token stays
+        // unless Spotify itself rejected it and no newer one arrived since.
+        if (e instanceof SpotifyLoginExpired && loadPersistedSpotifyRefreshToken() === storedRefreshToken) {
+          persistSpotifyRefreshToken(null);
+        }
+        if (hadPremiumLogin()) setLoginLost(true);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,12 +90,28 @@ export function useSpotifyAuth() {
     // login meanwhile (lib/sync.ts), which can retire the one held here.
     const refreshToken = loadPersistedSpotifyRefreshToken() || cached?.refreshToken;
     if (!refreshToken) return null;
-    try {
-      const fresh = await refreshSpotifyAccessToken(refreshToken);
+    const renew = async (rt: string) => {
+      const fresh = await refreshSpotifyAccessToken(rt);
       tokenRef.current = fresh;
-      persistSpotifyRefreshToken(fresh.refreshToken);
+      // Only the newest token is kept (a parallel caller may have stored it already).
+      if (loadPersistedSpotifyRefreshToken() !== fresh.refreshToken) persistSpotifyRefreshToken(fresh.refreshToken);
       return fresh.accessToken;
+    };
+    try {
+      return await renew(refreshToken);
     } catch {
+      // Renewed meanwhile by another part of the page, the other app or
+      // another device: use that token instead of giving up.
+      const newer = tokenRef.current;
+      if (newer && newer.refreshToken !== refreshToken && newer.expiresAt - Date.now() > 60_000) return newer.accessToken;
+      const stored = loadPersistedSpotifyRefreshToken();
+      if (stored && stored !== refreshToken) {
+        try {
+          return await renew(stored);
+        } catch {
+          return null;
+        }
+      }
       return null;
     }
   }, []);
@@ -99,6 +132,9 @@ export function useSpotifyAuth() {
   const signOut = useCallback(() => {
     tokenRef.current = null;
     persistSpotifyRefreshToken(null);
+    // Signed out on purpose: no "sign in again" hint.
+    rememberPremiumLogin(false);
+    setLoginLost(false);
     setUser(null);
     setStatus(configured ? 'signed_out' : 'not_configured');
   }, [configured]);

@@ -60,10 +60,10 @@ export function isSynced(key: string): boolean {
 }
 
 /** Keys the Gaming edition reads; anything else changing doesn't need its page reloaded. */
-const GAMING_KEYS = ['retromind.lang', 'retromind.muted', 'retromind.music.volume', 'retromind.initials', 'retromind.spotify.autoTheme', 'retromind.spotify.refresh_token'];
+const GAMING_KEYS = ['retromind.lang', 'retromind.muted', 'retromind.music.volume', 'retromind.initials', 'retromind.spotify.autoTheme', 'retromind.spotify.refresh_token', 'retromind.spotify.premium'];
 
 /** Read fresh on every use (hooks/useSpotifyAuth.ts): a renewed one needs no reload, only signing in or out does. */
-const QUIET_KEYS = ['retromind.spotify.refresh_token'];
+const QUIET_KEYS = ['retromind.spotify.refresh_token', 'retromind.spotify.premium'];
 
 function relevant(app: SyncApp, key: string): boolean {
   return app === 'gaming' ? key.startsWith('retromind.gaming') || GAMING_KEYS.includes(key) : !key.startsWith('retromind.gaming');

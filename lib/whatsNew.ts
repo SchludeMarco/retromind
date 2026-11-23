@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Ganze Songs mit Premium bleiben ganze Songs': {
+    title: 'Full songs with Premium stay full songs',
+    text: 'With Spotify Premium the music fell back to short previews after a while. The reason: when Spotify’s sign-in was renewed after about an hour, several parts of the app asked at the same time and the second one was turned down. On top of that, any small error (a moment without network, say) deleted the sign-in on all devices. Now all parts share one renewal, the sign-in survives network trouble, and if it does get lost, the top of the screen says “Only previews: sign in to Spotify again for full songs” instead of quietly playing previews.',
+  },
   'Schalter „Musik meiner Kindheit“': {
     title: '“Music of my childhood” switch',
     text: 'Under the destination time and in the settings there is now a “Music of my childhood” switch. When it is on, the music comes from the decade of your childhood (signed in with Spotify, the hits of the years you were 6 to 19), whatever date is set. The living room still follows the date. It is off by default.',

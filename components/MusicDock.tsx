@@ -6,6 +6,7 @@ import { setMusicVolume, useMusicVolume } from '../lib/musicVolume';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import { tr } from '../lib/i18n';
 import { openSpotifyApp, retryConnect, useConnectState } from '../lib/spotifyConnect';
+import { useLoginLost } from '../lib/spotifyPremium';
 import { beginSpotifyLogin } from '../lib/spotifyAuth';
 import { FavoriteCard, FavoriteHeart, FavoriteSongsList, HeartIcon } from './FavoriteSongs';
 import { useFavoriteSongs } from '../lib/favoriteSongs';
@@ -310,7 +311,11 @@ const ANDROID_TIP = () =>
     'Tipp: In der Spotify-App unter Einstellungen → Geräte „Spotify Connect im Hintergrund“ einschalten. Dann findet RetroMind die App auch, wenn sie zu ist, und du musst sie nicht mehr öffnen.'
   );
 const FullSongsHint: React.FC = () => {
-  const { state } = useConnectState();
+  const { state: connectState } = useConnectState();
+  // The Premium login got lost on its own (Marco, 2026-11-23: "immer nur
+  // kurze Ausschnitte"): same "sign in again" hint, on phones and computers.
+  const lost = useLoginLost();
+  const state = lost ? 'login' : connectState;
   // Closed for this state ("no-device" or "login") until the tab is closed.
   const [closedFor, setClosedFor] = useState<string | null>(() => {
     try {
