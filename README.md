@@ -117,7 +117,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Der Schalter **„Musik meiner Kindheit“** (unter der Zielzeit und in den
   Einstellungen, standardmäßig aus) lässt die Musik im Jahrzehnt der eigenen
   Kindheit, egal welches Datum gewählt ist; die Stube folgt weiter dem Datum
-  ([`lib/childhoodMusic.ts`](lib/childhoodMusic.ts)).
+  ([`lib/childhoodMusic.ts`](lib/childhoodMusic.ts)). Eine neue Zielzeit
+  ist eine **neue Zeitreise**: Die Zeitmaschine spult zurück, die
+  Ankunfts-Show rattert zum neuen Datum, die Roboterstimme nennt das Jahr,
+  dann ist die Stube neu eingerichtet; die Musik wechselt in diese Zeit, in
+  der Weihnachtszeit auch statt der Weihnachtsmusik.
 - **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
   eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
   Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum

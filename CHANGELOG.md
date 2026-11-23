@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Neue Zielzeit = neue Zeitreise** (2026-11-23, PR #287): Wer auf der
+  Startseite (oder in den Einstellungen über das Jahrzehnt) die Zielzeit
+  ändert, reist jetzt sofort dorthin: Die Zeitmaschine spult zurück, die
+  Zeitschaltkreise rattern zum neuen Datum, die Roboterstimme nennt das Jahr,
+  und danach ist die Stube neu eingerichtet. Auch die Musik wechselt jetzt
+  wirklich: In der Weihnachtszeit lief bisher immer Weihnachtsmusik, egal
+  welches Datum eingestellt war. Nach einer neuen Zielzeit spielt die Musik
+  dieser Zeit.
+
 - **Ganze Songs mit Premium bleiben ganze Songs** (2026-11-23, PR #287):
   Mit Spotify Premium fiel die Musik nach einer Weile wieder auf kurze
   Ausschnitte zurück. Grund: Wenn Spotifys Anmeldung nach etwa einer Stunde

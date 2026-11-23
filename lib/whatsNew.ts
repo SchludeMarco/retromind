@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Neue Zielzeit = neue Zeitreise': {
+    title: 'New destination = new time journey',
+    text: 'If you change the destination time on the start page (or the decade in the settings), you now travel there right away: the time machine winds back, the time circuits race to the new date, the robot voice names the year, and then the living room is furnished anew. The music really changes now too: in the Christmas season it used to play Christmas music whatever the date. After a new destination it plays the music of that time.',
+  },
   'Ganze Songs mit Premium bleiben ganze Songs': {
     title: 'Full songs with Premium stay full songs',
     text: 'With Spotify Premium the music fell back to short previews after a while. The reason: when Spotify’s sign-in was renewed after about an hour, several parts of the app asked at the same time and the second one was turned down. On top of that, any small error (a moment without network, say) deleted the sign-in on all devices. Now all parts share one renewal, the sign-in survives network trouble, and if it does get lost, the top of the screen says “Only previews: sign in to Spotify again for full songs” instead of quietly playing previews.',
