@@ -18,6 +18,7 @@ import { useConsent } from '../../lib/privacy';
 import { createMusicStatus, reportPlayback } from '../../lib/musicStatus';
 import { SpotifyHit } from '../../lib/spotifyApi';
 import { tr } from '../../lib/i18n';
+import { useChristmas } from '../../lib/season';
 
 // 80s heavy metal from Spotify as the hall's background music (Marco,
 // 2026-10-05), through the same Spotify player as the Zeitreise
@@ -34,6 +35,12 @@ import { tr } from '../../lib/i18n';
 // song, back = the song heard before.
 // "The 100 Best Metal Songs of 80s" (The Eighties Guy).
 export const HALL_PLAYLIST_ID = '1E2hgVebCef1A0yXos0aQP';
+// In the Christmas season (lib/season.ts: Nov 1 to Jan 6, or the
+// "Christmas look" setting, which syncs from the Zeitreise) the hall plays
+// Spotify's "Metal Christmas" instead (Marco, 2026-11-23: "Bei RetroMind
+// gaming sollte als Musik zur Weihnachtszeit die Playlist 'Metal Christmas'
+// laufen"). Same random order, same watchdog and chiptune fallback.
+export const XMAS_HALL_PLAYLIST_ID = '37i9dQZF1DX0LctmTPNQ3v';
 
 // Signed in with Premium, the song that plays inside is already heard in
 // front of the door (Marco, 2026-10-07 and 2026-10-08), muffled and bassy as
@@ -62,6 +69,8 @@ const WATCH_EVERY_MS = 1500;
  */
 export function useHallSpotify(wanted: boolean, enabled: boolean, outside = false, premiumAccount = false) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const christmas = useChristmas();
+  const playlistId = christmas ? XMAS_HALL_PLAYLIST_ID : HALL_PLAYLIST_ID;
   const controllerRef = useRef<SpotifyEmbedController | null>(null);
   const [ready, setReady] = useState(false);
   const allowed = useConsent('spotify') === true;
@@ -271,15 +280,16 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     if (!allowed || !wanted || !containerRef.current) return;
     let cancelled = false;
     const host = containerRef.current;
-    playlistTracksWithin(HALL_PLAYLIST_ID, 4000)
+    playlistTracksWithin(playlistId, 4000)
       .then((tracks) => {
         tracksRef.current = tracks;
+        historyRef.current = { ids: [] };
         const first = randomTrack(tracks);
         if (first) rememberSong(historyRef.current, first);
         // A new player (e.g. the embed taking over) starts with the own music.
         setSpecial(null);
         setSong(first);
-        return createSpotifyController(host, first ? trackUri(first) : playlistUri(HALL_PLAYLIST_ID), { connect: true });
+        return createSpotifyController(host, first ? trackUri(first) : playlistUri(playlistId), { connect: true });
       })
       .then((controller) => {
         if (cancelled) {
@@ -327,7 +337,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       setReady(false);
       setPlaying(false);
     };
-  }, [allowed, wanted, premium, connect, connectAttempt, sync, nextSong]);
+  }, [allowed, wanted, premium, connect, connectAttempt, sync, nextSong, playlistId]);
 
   useEffect(() => {
     const unlock = () => {
@@ -363,7 +373,7 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       kick();
       // The track list may have failed to load: ask again for the next try.
       if (!tracksRef.current.length) {
-        playlistTracksWithin(HALL_PLAYLIST_ID, 4000).then((t) => {
+        playlistTracksWithin(playlistId, 4000).then((t) => {
           if (t.length && !tracksRef.current.length) tracksRef.current = t;
         });
       }
@@ -394,10 +404,12 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       setFallback(true);
     }, WATCH_EVERY_MS);
     return () => window.clearInterval(timer);
-  }, [active, on, sync, nextSong, probe]);
+  }, [active, on, sync, nextSong, probe, playlistId]);
 
   return {
     containerRef,
+    /** Christmas season: "Metal Christmas" plays instead of the '80s metal. */
+    christmas,
     /** Premium at the door: the song that will play inside, heard muffled outside. */
     doorSong: atDoor && active && song && !special ? { id: song, name: trackName(song) } : null,
     /** Premium's browser player drives the hall music (with volume control). */

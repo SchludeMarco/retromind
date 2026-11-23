@@ -114,6 +114,10 @@ zeigen dürfen.
   Chiptune-Stücke ([`lib/chiptune.ts`](lib/chiptune.ts)). Beim ersten Besuch
   fragt die Halle einmal („Metal erlauben“ oder „Lieber Chiptune“), in den
   Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln.
+- **Metal Christmas zur Weihnachtszeit** – vom 1. November bis 6. Januar
+  (oder wenn der Weihnachtslook aus der Zeitreise auf „An“ steht) spielt die
+  Hallenmusik statt 80er-Metal die Spotify-Playlist „Metal Christmas“, ebenfalls
+  in zufälliger Reihenfolge und mit derselben Chiptune-Absicherung.
 - **Die Musik hört nie auf** – ein Wächter merkt, wenn Spotify ein paar
   Sekunden stillsteht, probiert einen anderen Song und lässt sonst die eigene
   Chiptune-Musik weiterlaufen, bis Spotify wieder spielt (neuer Versuch alle

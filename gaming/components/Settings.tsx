@@ -18,6 +18,7 @@ import { chip } from '../lib/chiptune';
 import { installSteps, promptInstall, useInstall } from '../../lib/install';
 import { downloadReminder, googleCalendarLink } from '../../lib/calendarReminder';
 import { PushTopic, useNotifySettings } from '../../lib/push';
+import { useChristmas } from '../../lib/season';
 
 export const PALETTES: { id: Palette; label: string }[] = [
   { id: 'modul', label: 'MODUL' },
@@ -56,6 +57,7 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
   const youtube = useConsent('youtube') === true;
   const onHeadingTap = useSecretAdminTaps();
   const spotify = useConsent('spotify') === true;
+  const christmas = useChristmas();
   const initials = useInitials();
   const [tag, setTag] = useState(initials || 'AAA');
   const saveTag = () => {
@@ -220,7 +222,9 @@ export const Settings: React.FC<Props> = ({ cloud, spotifyAuth, state, set, onCl
           <p className="dim">
             {state.musicSource === 'spotify'
               ? spotify
-                ? tr('’80s heavy metal from Spotify. Without a Spotify login, Spotify only plays short previews.', 'Heavy Metal aus den 80ern von Spotify. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.')
+                ? christmas
+                  ? tr('Christmas season: “Metal Christmas” from Spotify, otherwise ’80s heavy metal. Without a Spotify login, Spotify only plays short previews.', 'Weihnachtszeit: „Metal Christmas“ von Spotify, sonst Heavy Metal aus den 80ern. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.')
+                  : tr('’80s heavy metal from Spotify. Without a Spotify login, Spotify only plays short previews.', 'Heavy Metal aus den 80ern von Spotify. Ohne Spotify-Login spielt Spotify nur kurze Vorschauen.')
                 : tr('Spotify isn’t allowed yet, so the chiptune tracks play until then.', 'Spotify ist noch nicht erlaubt, bis dahin laufen die Chiptune-Stücke.')
               : tr('Original chiptune tracks from the sound chip. Pick your track below.', 'Selbst komponierte Chiptune-Stücke vom Soundchip, dein Stück wählst du unten.')}
           </p>

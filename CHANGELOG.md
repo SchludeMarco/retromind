@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Metal Christmas in der Spielhalle** (2026-11-23, PR #290): In der
+  Weihnachtszeit (1. November bis 6. Januar) läuft in der Gaming-Halle statt
+  80er-Metal die Spotify-Playlist „Metal Christmas“, in zufälliger
+  Reihenfolge. Danach kommt automatisch wieder der gewohnte 80er-Metal.
+
 - **Zeitmaschinen-Sog bei neuer Zielzeit** (2026-11-23, PR #289): Wenn du
   die Zielzeit änderst, zieht dich die Zeitmaschine jetzt hörbar und
   sichtbar hinein, genau wie beim Start: Die Seite wird dunkel, ein Strudel
