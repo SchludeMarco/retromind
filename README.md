@@ -103,6 +103,17 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Tapete, Couch, Kissen, Vorhänge und ein Radio der Zeit auf der
   Fensterbank, je nach Jahrzehnt), auch in den Stuben-Ecken
   ([`lib/roomEra.ts`](lib/roomEra.ts), [`components/EraDecor.tsx`](components/EraDecor.tsx)).
+- **Reiseziel-Datum frei wählbar** – auf dem Startbildschirm und unter der
+  Stube zeigt die rote Zeile der Zeitschaltkreise die **Zielzeit**: ein Tipp
+  darauf öffnet die Datumsauswahl des Handys oder Browsers. Ohne eigene Wahl
+  ist es der eigene Geburtstag, ohne Geburtstag der 30.12.1989. Das Jahrzehnt
+  des Datums richtet die Stube ein und wählt die Musik (mit Spotify-Login die
+  Hits der Jahre rund um das Datum), Ankunfts-Show, Jahresvideo und
+  Roboterstimme reisen in genau dieses Jahr. „↺ Zurück zu deinem Geburtstag“
+  setzt es zurück; das Jahrzehnt in den Einstellungen verschiebt das Datum ins
+  gewählte Jahrzehnt. Das Datum wird mit der Reise gespeichert und
+  synchronisiert ([`lib/travelDate.ts`](lib/travelDate.ts),
+  [`components/TravelDatePicker.tsx`](components/TravelDatePicker.tsx)).
 - **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
   eigene Ecke der Stube (Sessel, Fernseher, Plattenspieler, Schreibtisch,
   Bücherregal, Kuchen), mit der schlafenden Katze und je einem Ding zum
@@ -286,8 +297,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Kommt man durch die Zeitmaschine in die App, läuft eine kurze
   **Ankunfts-Show** ([`components/ArrivalShow.tsx`](components/ArrivalShow.tsx)):
   eine Zeitanzeige (Gegenwart grün, Ziel rot) rattert von heute zurück bis
-  zum Geburtstag, rastet mit Blitz, Druckwellen und Schlag ein, dann steht
-  das Geburtsjahr riesig da mit dem, wofür das Jahr steht („1989 … das Jahr
+  zur Zielzeit (Geburtstag oder gewähltes Datum), rastet mit Blitz, Druckwellen und Schlag ein, dann steht
+  das Zieljahr riesig da mit dem, wofür das Jahr steht („1989 … das Jahr
   des Mauerfalls“, [`lib/yearFacts.ts`](lib/yearFacts.ts)), Dinge des
   Jahrzehnts und die eigenen Fotos und Begriffe fliegen heraus, und ein paar
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
@@ -439,8 +450,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   kracht und grollt synthetischer Donner, nah laut, fern leiser und später
   ([`lib/clockSounds.ts`](lib/clockSounds.ts) `playThunder`). „RetroMind“
   steht schräg in Chrom und Feuer da, mit einer Feuerspur darunter. Darunter
-  zeigen Zeitschaltkreise die Zielzeit (dein Geburtstag, sobald bekannt, sonst
-  blinkende Striche) und die Gegenwart. Die Uhr hat ihren eigenen Platz
+  zeigen Zeitschaltkreise die Zielzeit (das gewählte Datum, sonst dein
+  Geburtstag, sonst der 30.12.1989; antippen zum Ändern) und die Gegenwart. Die Uhr hat ihren eigenen Platz
   zwischen Zeitschaltkreisen und Knopf, ihr Zifferblatt ist auf jedem
   Bildschirm frei zu sehen (`.splash-clock-slot`). Sie zeigt die echte Uhrzeit,
   ein roter Sekundenzeiger springt jede Sekunde; gezeichnet ist sie in Ebenen,

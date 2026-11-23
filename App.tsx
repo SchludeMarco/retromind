@@ -27,6 +27,7 @@ import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
 import { setRoomEra } from './lib/roomEra';
+import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
@@ -77,13 +78,17 @@ const App: React.FC = () => {
     memories, memoryFor, perspectiveFor, upsertMemory,
     diaryEntry, setDiaryEntry,
     clickedBuzzwords, setClickedBuzzwords,
-    manualDecade, setManualDecade,
+    travelDate, setTravelDate,
     fontScale, setFontScale,
     focusDecade,
     resetJourney, importSession, exportSession,
   } = session;
 
-  const currentAudioDecade = manualDecade || focusDecade;
+  // Where the time machine goes (lib/travelDate.ts): the date picked on the
+  // time circuits, else the birthday, else 30.12.1989. Its decade furnishes
+  // the Stube and picks the music.
+  const destinationDate = destinationOf(travelDate, user.birthDate);
+  const currentAudioDecade = musicDecadeOf(destinationDate);
   const { playSFX } = useAudioPlayer();
   // Every tap, card and page answers with a little sound and motion (lib/microFx).
   useEffect(installMicroFx, []);
@@ -105,11 +110,13 @@ const App: React.FC = () => {
   // after the start button press).
   const [menuRevealed, setMenuRevealed] = useState(false);
   const birthYear = /^\d{4}/.test(user.birthDate) ? Number(user.birthDate.slice(0, 4)) : null;
-  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, birthYear);
-  // Where the time machine has put you: the chosen decade, else your birth
-  // year (the ticket's departure). Every journey bumps `travel`: the robot
-  // voice says "Welcome to the year …" and YearWelcome opens its video.
-  const travelYear = manualDecade ? Number(manualDecade) : birthYear;
+  // The year the time machine has put you in. Every journey bumps `travel`:
+  // the robot voice says "Welcome to the year …" and YearWelcome opens its video.
+  const travelYear = yearOf(destinationDate);
+  // Signed in with Spotify, the music mixes "hits of <year>" playlists of
+  // the decade (lib/youthMusic: the years a person was 6 to 19). Passing the
+  // year 12 years before the destination centres those years on it.
+  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, travelYear - 12);
   const [travel, setTravel] = useState(0);
   const [arrivalShow, setArrivalShow] = useState(false);
   const muted = useMuted();
@@ -508,12 +515,18 @@ const App: React.FC = () => {
     if (birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrivalShow(true);
     setTravel((n) => n + 1);
   }, [showSplash, verified]);
-  const decadeSeenRef = useRef(manualDecade);
+  // A new destination year is a journey of its own, once the picking has
+  // settled (typing a date changes it digit by digit).
+  const yearSeenRef = useRef(travelYear);
   useEffect(() => {
-    if (decadeSeenRef.current === manualDecade) return;
-    decadeSeenRef.current = manualDecade;
-    if (verified) setTravel((n) => n + 1);
-  }, [manualDecade, verified]);
+    if (yearSeenRef.current === travelYear) return;
+    const t = window.setTimeout(() => {
+      yearSeenRef.current = travelYear;
+      if (verified && !showSplash) setTravel((n) => n + 1);
+    }, 1200);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [travelYear, verified]);
   useEffect(() => {
     if (!travel) return;
     const atStart = startTravelRef.current;
@@ -715,7 +728,7 @@ const App: React.FC = () => {
         <ControlHandle hasNews={unseenNews} chatNews={verified && chatUnread} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
       {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
-      {showSplash && <SplashScreen destinationDate={user.birthDate} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen destinationDate={destinationDate} onDestinationChange={setTravelDate} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from
@@ -743,11 +756,11 @@ const App: React.FC = () => {
         />
       )}
 
-      {arrivalShow && birthYear && (
+      {arrivalShow && (
         <ArrivalShow
-          birthDate={user.birthDate}
-          year={birthYear}
-          decade={String(Math.min(2020, Math.max(1960, Math.floor(birthYear / 10) * 10)))}
+          birthDate={destinationDate}
+          year={travelYear}
+          decade={String(Math.min(2020, Math.max(1960, Math.floor(travelYear / 10) * 10)))}
           onLock={announceWelcomeBack}
           onDone={() => setArrivalShow(false)}
           memories={memories}
@@ -773,7 +786,7 @@ const App: React.FC = () => {
           fontScale={fontScale}
           onFontScaleChange={(n) => { playSFX('click'); setFontScale(n); }}
           currentDecade={currentAudioDecade}
-          onDecadeChange={(d) => { playSFX('click'); setManualDecade(d); }}
+          onDecadeChange={(d) => { playSFX('click'); setTravelDate(moveToDecade(destinationDate, d)); }}
           isSpotifyReady={spotify.isReady}
           isSpotifyPlaying={spotify.isPlaying}
           onToggleSpotify={() => { playSFX('click'); spotify.togglePlay(); }}
@@ -853,7 +866,7 @@ const App: React.FC = () => {
               onSelect={(p) => { if (p === 'intro') goHome(); else if (p !== phase) goTo(p); }}
             />
           )}
-          {travelYear && <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />}
+          <YearWelcome year={travelYear} travel={travel} onPlayingChange={handleYearVideo} />
           {musicDock}
           <BackToTop warm={warm} hidden={isChatOpen} onClick={() => playSFX('click')} />
           {/* What's playing, between "Nach oben" and the "?" help (Marco, 2026-10-18). */}
@@ -902,6 +915,15 @@ const App: React.FC = () => {
               birthYear={birthYear}
               memories={memories}
               onSaveMemory={upsertMemory}
+              travel={{
+                value: destinationDate,
+                chosen: isTravelDate(travelDate),
+                onChange: (d) => { playSFX('click'); setTravelDate(d); },
+                onReset: () => { playSFX('click'); setTravelDate(null); },
+                resetLabel: isTravelDate(user.birthDate)
+                  ? tr('Back to your birthday', 'Zurück zu deinem Geburtstag')
+                  : tr('Back to 30 Dec 1989', 'Zurück zum 30.12.1989'),
+              }}
             />
           )}
 

@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Reiseziel-Datum frei wählbar** (2026-11-23, PR #285): Auf dem
+  Startbildschirm und unter der Stube kann man jetzt einstellen, in welches
+  Datum die Zeitmaschine reist: einfach auf die rote Zielzeit tippen. Ohne
+  eigene Wahl ist es der eigene Geburtstag, ohne Geburtstag der 30.12.1989.
+  Die Stube wird im Stil dieses Jahrzehnts eingerichtet, die Musik kommt aus
+  diesem Jahrzehnt, und Ankunfts-Show, Jahresvideo und Roboterstimme reisen
+  in genau dieses Jahr. „Zurück zu deinem Geburtstag“ stellt das Datum
+  zurück. Vorher richtete sich die Musik nach dem Jahrzehnt deiner Kindheit;
+  jetzt bestimmt das Datum alles.
+
 - **Schnellerer Start in beiden Apps** (2026-11-12, PR #284): Beide Apps
   laden beim Öffnen deutlich weniger. Die Zeitreise lädt zum Start etwa halb
   so viel wie vorher (rund 117 statt 236 KB), die Gaming-Halle gut ein Fünftel

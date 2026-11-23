@@ -6,6 +6,15 @@ import { WeatherSwitch } from './WeatherSwitch';
 import { useWindowWeather } from '../lib/weather';
 import { eraShort, useRoomEra } from '../lib/roomEra';
 import { gamingHref } from '../lib/gamingLink';
+import { TravelDatePicker } from './TravelDatePicker';
+
+export interface TravelProps {
+  value: string;
+  chosen: boolean;
+  onChange: (date: string) => void;
+  onReset: () => void;
+  resetLabel: string;
+}
 
 // The Stube at the top of the start page, in every design (Marco,
 // 2026-10-13: "das gemütliche Wohnzimmer fehlt immer noch ganz. Ich dachte
@@ -37,7 +46,9 @@ export const LivingRoom: React.FC<{
   onStart: () => void;
   onResume: () => void;
   onOpenStage: (phase: AppPhase) => void;
-}> = ({ warm, userName, resuming, onStart, onResume, onOpenStage }) => {
+  /** The destination date: set on the time circuits under the room, it furnishes the room and picks the music. */
+  travel?: TravelProps;
+}> = ({ warm, userName, resuming, onStart, onResume, onOpenStage, travel }) => {
   const time = dayTime();
   const weather = useWindowWeather();
   const greeting = cozyGreeting(time, userName);
@@ -61,6 +72,14 @@ export const LivingRoom: React.FC<{
           }}
         />
       </div>
+      {travel && (
+        <div className="mb-3 px-1">
+          <TravelDatePicker {...travel} />
+          <p className="text-xs text-retro-brown text-center mt-1 px-2 leading-snug">
+            {tr('Pick the date you want to travel to: the room and the music follow it.', 'Wähle das Datum, zu dem du reisen möchtest: Stube und Musik passen sich an.')}
+          </p>
+        </div>
+      )}
       {era && (
         <p key={era} className="rm-era-note text-center mb-2 px-2">
           {tr(`🛋️ Furnished like the ${eraShort(era)}s: wallpaper, couch and radio of your decade`, `🛋️ Eingerichtet wie in den ${eraShort(era)}ern: Tapete, Couch und Radio deines Jahrzehnts`)}

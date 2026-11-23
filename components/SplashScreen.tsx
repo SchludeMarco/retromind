@@ -6,6 +6,7 @@ import { LoudSign } from './LoudSign';
 import { tr } from '../lib/i18n';
 import { PRIVACY_URL, setConsent, useConsent } from '../lib/privacy';
 import { TimeCircuitRow, type Stamp } from './ArrivalShow';
+import { TravelDatePicker } from './TravelDatePicker';
 
 // After the start button the time machine pulls you in (Marco, 2026-10-14):
 // everything spirals into the clock's face while rings rush towards its
@@ -201,9 +202,11 @@ function toStamp(date?: string): Stamp | null {
 export const SplashScreen: React.FC<{
   onStart: () => void;
   onReveal?: () => void;
-  /** "YYYY-MM-DD" of the birthday, when known: the time circuits' destination. */
+  /** "YYYY-MM-DD" the time circuits travel to (lib/travelDate.ts: chosen date, else birthday, else 30.12.1989). */
   destinationDate?: string;
-}> = ({ onStart, onReveal, destinationDate }) => {
+  /** A new destination picked on the time circuits. */
+  onDestinationChange?: (date: string) => void;
+}> = ({ onStart, onReveal, destinationDate, onDestinationChange }) => {
   const [struck, setStruck] = useState(false);
   // 'warp' while being pulled in, 'flash' in the light, 'iris' while it opens.
   const [stage, setStage] = useState<'idle' | 'warp' | 'flash' | 'iris'>('idle');
@@ -310,10 +313,16 @@ export const SplashScreen: React.FC<{
       <p className="rm-tm-sub relative">
         {tr('The ticket to your past', 'Die Fahrkarte in deine Vergangenheit')}
       </p>
-      <div className="rm-tc rm-tc-mini relative" aria-label={tr('Time circuits', 'Zeitschaltkreise')} role="group">
-        <TimeCircuitRow label={tr('Destination time', 'Zielzeit')} stamp={destination} tone="red" />
-        <TimeCircuitRow label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
-      </div>
+      {onDestinationChange && destinationDate ? (
+        <TravelDatePicker mini value={destinationDate} onChange={onDestinationChange} className="relative">
+          <TimeCircuitRow label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
+        </TravelDatePicker>
+      ) : (
+        <div className="rm-tc rm-tc-mini relative" aria-label={tr('Time circuits', 'Zeitschaltkreise')} role="group">
+          <TimeCircuitRow label={tr('Destination time', 'Zielzeit')} stamp={destination} tone="red" />
+          <TimeCircuitRow label={tr('Present time', 'Gegenwart')} stamp={present} tone="green" />
+        </div>
+      )}
       {/* The clock gets its own gap between the time circuits and the start
           button, so nothing covers its face (Marco, 2026-10-18: "Der Button
           sollte die Uhr nicht verdecken!"). */}
