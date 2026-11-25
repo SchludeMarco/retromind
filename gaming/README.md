@@ -62,10 +62,10 @@ zeigen dürfen.
   eigenen Google Drive) und mit Spotify (Hallenmusik); beides geht auch später
   in den Einstellungen. Beide Anmeldungen bleiben auf dem Gerät, bis du dich
   abmeldest, und gelten auch in der Zeitreise.
-- **Zurück zu RetroMind** – wer aus der Zeitreise kommt (Wegweiser oder
-  Einstellungen, `?from=zeitreise`), sieht vor der Tür und oben in der Halle
-  den Knopf „Zurück zu RetroMind“, für den ganzen Besuch im Tab
-  ([`lib/cameFrom.ts`](lib/cameFrom.ts),
+- **Zurück zu RetroMind** – vor der Tür oben links und in der Halle direkt
+  über dem Logo „RetroMind Gaming“ steht immer der gelbe Knopf „Zurück zu
+  RetroMind“, der zur Zeitreise führt; Ton, Google-Anmeldung und alle Daten
+  kommen mit ([`lib/cameFrom.ts`](lib/cameFrom.ts),
   [`components/BackToZeitreise.tsx`](components/BackToZeitreise.tsx)).
 
 ### In der Halle
@@ -157,8 +157,7 @@ zeigen dürfen.
   ([`components/ControlHandle.tsx`](components/ControlHandle.tsx)). Ein Tipp
   schiebt von rechts ein Fenster herein: oben die Bereiche (Katalog, Kisten,
   Stash, Trophäen, Zocken, Quests), die Musik, Ton an/aus, der Guru,
-  Feedback, „Club verlassen“ und für Gäste aus der Zeitreise „Zurück zu
-  RetroMind“, darunter alle Einstellungen. Wie in der Zeitreise.
+  Feedback, „Club verlassen“ und „Zurück zu RetroMind“, darunter alle Einstellungen. Wie in der Zeitreise.
 - **Club verlassen** – im Fenster hinter dem Griff; führt zurück auf die
   Straße, die Musik ist dann wieder nur dumpf durch die Wand zu hören.
 - **Kopfleiste** – Coins (ein Tipp öffnet die Quests), Punktestand (SCORE)

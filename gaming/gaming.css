@@ -4303,7 +4303,14 @@ button.pcard {
   shape-rendering: crispEdges;
 }
 .back-hub {
-  margin: 4px 4px 10px;
+  margin: 0 0 12px;
+}
+/* Back button stacked above the RetroMind Gaming logo. */
+.brand-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 .back-door {
   position: absolute;

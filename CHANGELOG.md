@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo** (2026-11-25, PR #303):
+  In der Halle steht jetzt direkt über dem Logo „RetroMind Gaming“ ein
+  gelber Knopf „Zurück zu RetroMind“, der dich zur Zeitreise bringt. Er ist
+  immer da, auch vor der Tür und im Fenster hinter dem Griff, nicht mehr nur,
+  wenn du aus der Zeitreise gekommen bist. Ton, Google-Anmeldung und deine
+  Daten kommen mit.
+
 - **Zeitreise: die Stube ist nach der Ankunft erst eingefroren und taut dann auf** (2026-11-25, PR #302):
   Wenn nach Tafel und „Welcome back“ die Stube erscheint, liegt kurz eine
   eisblaue Frostschicht mit Eiskristallen über allem, die Farben sind blass
