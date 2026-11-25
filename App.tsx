@@ -32,7 +32,7 @@ import { setRoomEra } from './lib/roomEra';
 import { useChildhoodMusic } from './lib/childhoodMusic';
 import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
 import { announceWelcomeBack, announceYear } from './lib/robotVoice';
-import { playRewind } from './lib/clockSounds';
+import { playRewind, WARP_SECONDS } from './lib/clockSounds';
 import { JourneyBar } from './components/JourneyBar';
 import { IMPRINT_URL, PRIVACY_URL, setConsent } from './lib/privacy';
 import { lazyLoad } from './lib/lazyLoad';
@@ -137,6 +137,12 @@ const App: React.FC = () => {
   const spotify = useSpotifyBackground(currentAudioDecade, !showSplash && greetingDone, childhoodMusic ? birthYear : travelYear - 12, decadeOverXmas);
   const [travel, setTravel] = useState(0);
   const [arrivalShow, setArrivalShow] = useState(false);
+  // The board comes right with the time machine (Marco, 2026-11-25: "Diese
+  // Tafel sollte direkt kommen wenn man eine Zeitreise ausführt"): its dials
+  // race during the warp (this many ms) instead of after it.
+  const [arrivalOverWarp, setArrivalOverWarp] = useState<number | undefined>(undefined);
+  // The start's show already began with the start button.
+  const launchedShowRef = useRef(false);
   const muted = useMuted();
 
   const googleAuth = useGoogleAuth();
@@ -530,9 +536,24 @@ const App: React.FC = () => {
     startTravelRef.current = true;
     // Decided together with the journey, so the year's video already knows
     // it has to wait for the show.
-    if (birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrivalShow(true);
+    if (birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !launchedShowRef.current) {
+      setArrivalOverWarp(undefined);
+      setArrivalShow(true);
+    }
+    launchedShowRef.current = false;
     setTravel((n) => n + 1);
   }, [showSplash, verified]);
+  // The start button of the welcome screen: with name and birthday known, the
+  // time circuits come up at once and race while the time machine pulls.
+  const launchFromSplash = useCallback((warpMs: number) => {
+    if (!verified || !birthYear) return;
+    launchedShowRef.current = true;
+    showSpeaksRef.current = false;
+    setArrivalOverWarp(warpMs);
+    setArrivalKey((k) => k + 1);
+    setArrivalShow(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verified, birthYear]);
   // A new destination is a time journey of its own (Marco, 2026-11-23: "Am
   // besten automatisch eine neue Zeitreise"), once the picking has settled
   // (typing a date changes it digit by digit): the time machine winds back,
@@ -543,11 +564,15 @@ const App: React.FC = () => {
   const showSpeaksRef = useRef(false);
   const [arrivalKey, setArrivalKey] = useState(0);
   const [warping, setWarping] = useState(0);
-  const arriveFromWarp = useCallback(() => {
+  // A new destination: the board comes up with the pull of the time machine
+  // and its dials race while the vortex turns behind it.
+  const startWarpTravel = useCallback(() => {
     showSpeaksRef.current = true;
+    setArrivalOverWarp(WARP_SECONDS * 1000);
     setArrivalKey((k) => k + 1);
     setArrivalShow(true);
     setTravel((n) => n + 1);
+    setWarping((n) => n + 1);
   }, []);
   useEffect(() => {
     if (dateSeenRef.current === destinationDate) return;
@@ -558,7 +583,7 @@ const App: React.FC = () => {
       // With motion: the pull of the time machine first (components/TimeWarp),
       // the arrival show comes out of its flash. Without: the rewind and the voice.
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        setWarping((n) => n + 1);
+        startWarpTravel();
         return;
       }
       playRewind();
@@ -787,7 +812,7 @@ const App: React.FC = () => {
         <ControlHandle hasNews={unseenNews} chatNews={verified && chatUnread} onOpen={() => { playSFX('click'); setIsSettingsOpen(true); }} />
       )}
       {warm && !showSplash && verified && <WarmTopBar phase={phase} />}
-      {showSplash && <SplashScreen destinationDate={destinationDate} onDestinationChange={setTravelDate} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen destinationDate={destinationDate} onDestinationChange={setTravelDate} onLaunch={launchFromSplash} onReveal={() => setMenuRevealed(true)} onStart={() => setShowSplash(false)} />}
       {/* Off-screen, always mounted: autoplays the era's real Spotify
           playlist in the background once the first tap/click unlocks audio
           (see useSpotifyBackground) — invisible by design, controlled from
@@ -817,10 +842,11 @@ const App: React.FC = () => {
         />
       )}
 
-      {warping > 0 && <TimeWarp key={warping} onFlash={arriveFromWarp} onDone={() => setWarping(0)} />}
+      {warping > 0 && <TimeWarp key={warping} onDone={() => setWarping(0)} />}
       {arrivalShow && (
         <ArrivalShow
           key={arrivalKey}
+          overWarpMs={arrivalOverWarp}
           birthDate={destinationDate}
           year={travelYear}
           decade={String(Math.min(2020, Math.max(1960, Math.floor(travelYear / 10) * 10)))}

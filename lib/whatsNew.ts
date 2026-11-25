@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zeitreise: die Zeit-Tafel kommt sofort mit der Zeitreise': {
+    title: 'Time travel: the time circuits come up right away',
+    text: 'As soon as you press “Go back in time”, the big board with destination and present time is there and races to your date during the time travel itself, with the time machine’s vortex spinning behind it. It locks in with the flash, then the year and “Welcome back” follow. Before, the board only appeared after the journey was over. The same happens when you pick a new date.',
+  },
   'Gaming-Edition: eigener Controller für „Zocken“': {
     title: 'Gaming edition: our own controller for “Play”',
     text: 'At the top right, Marco’s own neon controller now glows instead of the placeholder.',

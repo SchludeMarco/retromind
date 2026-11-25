@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise: die Zeit-Tafel kommt sofort mit der Zeitreise** (2026-11-25, PR #300):
+  Sobald du „Ab in die Vergangenheit“ drückst, steht die große Tafel mit
+  Zielzeit und Gegenwart da und rattert während der Zeitreise selbst zum
+  Zieldatum, der Strudel der Zeitmaschine dreht sich dahinter. Beim Blitz
+  rastet sie ein, dann kommen Jahr und „Welcome back“. Vorher erschien die
+  Tafel erst, nachdem die Zeitreise schon vorbei war. Dasselbe gilt, wenn du
+  ein neues Datum wählst.
+
 - **Gaming-Edition: eigener Controller für „Zocken“** (2026-11-25, PR #299):
   Oben rechts leuchtet jetzt Marcos eigener Neon-Controller statt des
   Platzhalters.

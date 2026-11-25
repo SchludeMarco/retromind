@@ -158,7 +158,15 @@ export const ArrivalShow: React.FC<{
   onMusic?: (on: boolean) => void;
   /** The app's music is playing: then it keeps playing and the fanfare stays silent. */
   musicPlaying?: boolean;
-}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic, musicPlaying = false }) => {
+  /**
+   * Shown right as the time machine starts (Marco, 2026-11-25: "Diese Tafel
+   * sollte direkt kommen wenn man eine Zeitreise ausführt"): the dials race
+   * for as long as the warp pulls (ms) and the warp's vortex shows through
+   * behind the board until the lock-in.
+   */
+  overWarpMs?: number;
+}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic, musicPlaying = false, overWarpMs }) => {
+  const raceMs = overWarpMs ?? RACE_MS;
   const now = new Date();
   const present: Stamp = { month: now.getMonth(), day: now.getDate(), year: now.getFullYear() };
   const [, m, d] = birthDate.split('-').map(Number);
@@ -280,7 +288,7 @@ export const ArrivalShow: React.FC<{
     let raf = 0;
     let lastYear = present.year;
     const step = () => {
-      const p = Math.min(1, (performance.now() - started) / RACE_MS);
+      const p = Math.min(1, (performance.now() - started) / raceMs);
       // Fast at first, then slowing down onto the target, like a dial.
       const e = 1 - Math.pow(1 - p, 3);
       const y = Math.round(present.year + (target.year - present.year) * e);
@@ -349,7 +357,7 @@ export const ArrivalShow: React.FC<{
 
   return (
     <div
-      className={`rm-arrival-show is-${phase}`}
+      className={`rm-arrival-show is-${phase} ${overWarpMs ? 'is-over-warp' : ''}`}
       onClick={skip}
       role="dialog"
       aria-label={tr(`Arrived in ${year}`, `Angekommen in ${year}`)}
