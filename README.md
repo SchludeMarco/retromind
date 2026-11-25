@@ -315,8 +315,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
   schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
   Tipp überspringt die Show. Beim Einrasten sagt nach einem kurzen Synth-Sog
-  eine **klare Männerstimme mit einem Hauch Roboter** „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
-  freien Sprachmodellen, [`public/audio/voice/`](public/audio/voice/README.md));
+  eine **klare Männerstimme mit einem Hauch Roboter** „Welcome back“, in beiden Sprachen auf Englisch (aufgenommener Clip aus
+  einem freien Sprachmodell, [`public/audio/voice/`](public/audio/voice/README.md));
   währenddessen tritt die Musik kurz zurück (Premium wird leiser, der
   eingebettete Player pausiert einen Moment, die Fanfare taucht ab,
   [`lib/musicDuck.ts`](lib/musicDuck.ts)). Beim Start beginnt die

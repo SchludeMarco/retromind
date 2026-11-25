@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Begrüßung immer auf Englisch** (2026-11-25, PR #PRNUM): Auch in der
+  deutschen App sagt beim Ankommen jetzt die englische Stimme „Welcome
+  back“. Die deutsche Stimme ist raus.
+
 - **Musik erst nach dem „Welcome back“, Stimme klarer** (2026-11-25,
   PR #294): Beim Start der Zeitreise beginnt die Musik jetzt erst, wenn
   die Begrüßung gesprochen ist, statt schon auf dem Startbildschirm. Die

@@ -161,3 +161,7 @@ gebaut oder ausgeliefert.
   mit roten R und M und Kerzenschein-Glühen, „The ticket to your past🏳️“ und
   der Knopf „Go back...“ im Look des gewählten Designs. Ersetzt durch den
   Zeitreisefilm-Look (Blitze, Zeitschaltkreise, Flux-Knopf mit Tacho).
+- `welcome-back-de.mp3`: der deutsche Sprachclip „Willkommen zurück“ für die
+  Begrüßung beim Start der Zeitreise (entfernt am 2026-11-25, Marco gefiel
+  die deutsche Stimme nicht; die App sagt jetzt in beiden Sprachen das
+  englische „Welcome back“).
