@@ -314,8 +314,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
   `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
   schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
-  Tipp überspringt die Show. Beim Einrasten sagt eine **tiefe, leicht
-  dämonische Männerstimme** „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
+  Tipp überspringt die Show. Beim Einrasten sagt eine **Männerstimme mit
+  leichtem Roboter-Klang** „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
   freien Sprachmodellen, [`public/audio/voice/`](public/audio/voice/README.md));
   währenddessen tritt die Musik kurz zurück (Premium wird leiser, der
   eingebettete Player pausiert einen Moment, die Fanfare taucht ab,
