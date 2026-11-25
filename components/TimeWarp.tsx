@@ -7,14 +7,14 @@ import { playThunder, playWarp, WARP_SECONDS } from '../lib/clockSounds';
 // startet, sollten visuelle und audio Effekte auftreten"): the same pull as
 // at the start (lib/clockSounds playWarp: racing ticks, rising hum, gong),
 // the room darkens and spirals into a vortex of rings, a thunder crack and a
-// white flash, and out of the light the time circuits race to the new date
-// (ArrivalShow, started by `onFlash`).
+// white flash. The time circuits (ArrivalShow) come up with the pull itself
+// and race to the new date in front of the vortex (Marco, 2026-11-25).
 
 const WARP_MS = WARP_SECONDS * 1000;
 const FLASH_MS = 320;
 const FADE_MS = 700;
 
-export const TimeWarp: React.FC<{ onFlash: () => void; onDone: () => void }> = ({ onFlash, onDone }) => {
+export const TimeWarp: React.FC<{ onFlash?: () => void; onDone: () => void }> = ({ onFlash, onDone }) => {
   const [stage, setStage] = useState<'warp' | 'flash' | 'fade'>('warp');
   const cb = useRef({ onFlash, onDone });
   cb.current = { onFlash, onDone };
@@ -28,7 +28,7 @@ export const TimeWarp: React.FC<{ onFlash: () => void; onDone: () => void }> = (
     }, WARP_MS);
     const t2 = window.setTimeout(() => {
       setStage('fade');
-      cb.current.onFlash();
+      cb.current.onFlash?.();
     }, WARP_MS + FLASH_MS);
     const t3 = window.setTimeout(() => cb.current.onDone(), WARP_MS + FLASH_MS + FADE_MS);
     return () => [t1, t2, t3].forEach((t) => window.clearTimeout(t));

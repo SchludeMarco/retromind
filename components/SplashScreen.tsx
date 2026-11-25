@@ -201,12 +201,14 @@ function toStamp(date?: string): Stamp | null {
 // begins there), onStart once the splash is gone.
 export const SplashScreen: React.FC<{
   onStart: () => void;
+  /** The start button was pressed (with motion): the warp of WARP_MS begins. */
+  onLaunch?: (warpMs: number) => void;
   onReveal?: () => void;
   /** "YYYY-MM-DD" the time circuits travel to (lib/travelDate.ts: chosen date, else birthday, else 30.12.1989). */
   destinationDate?: string;
   /** A new destination picked on the time circuits. */
   onDestinationChange?: (date: string) => void;
-}> = ({ onStart, onReveal, destinationDate, onDestinationChange }) => {
+}> = ({ onStart, onLaunch, onReveal, destinationDate, onDestinationChange }) => {
   const [struck, setStruck] = useState(false);
   // 'warp' while being pulled in, 'flash' in the light, 'iris' while it opens.
   const [stage, setStage] = useState<'idle' | 'warp' | 'flash' | 'iris'>('idle');
@@ -269,6 +271,7 @@ export const SplashScreen: React.FC<{
     setStage('warp');
     playWarp();
     const warp = reduceMotion ? CALM_WARP_MS : WARP_MS;
+    if (!reduceMotion) onLaunch?.(WARP_MS);
     // The speedometer: slow off the line, then faster and faster up to 88.
     const t0 = performance.now();
     const step = (t: number) => {

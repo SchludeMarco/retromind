@@ -121,7 +121,7 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ist eine **neue Zeitreise**: Die Zeitmaschine zieht dich mit Strudel,
   Uhrenrasen, Donner und weißem Blitz hinein wie beim Start
   ([`components/TimeWarp.tsx`](components/TimeWarp.tsx)), die
-  Ankunfts-Show rattert zum neuen Datum, die Roboterstimme nennt das Jahr,
+  Zeit-Tafel kommt gleich mit dem Sog und rattert zum neuen Datum, die Roboterstimme nennt das Jahr,
   dann ist die Stube neu eingerichtet; die Musik wechselt in diese Zeit, in
   der Weihnachtszeit auch statt der Weihnachtsmusik.
 - **Stuben-Ecke in jeder Station** – über jeder Station der Reise steht eine
@@ -298,9 +298,11 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   (Spotify Connect, [`lib/spotifyConnect.ts`](lib/spotifyConnect.ts); siehe
   Spotify-Login unten). Sonst spielt der eingebettete Player Ausschnitte,
   außer man ist im selben Browser bei Spotify angemeldet.
-  Kommt man durch die Zeitmaschine in die App, läuft eine kurze
+  Mit dem Druck auf den Startknopf beginnt die
   **Ankunfts-Show** ([`components/ArrivalShow.tsx`](components/ArrivalShow.tsx)):
-  eine Zeitanzeige (Gegenwart grün, Ziel rot) rattert von heute zurück bis
+  die große Zeit-Tafel (Gegenwart grün, Ziel rot) erscheint sofort und
+  rattert während der Zeitreise selbst, mit dem Strudel der Zeitmaschine
+  dahinter, von heute zurück bis
   zur Zielzeit (Geburtstag oder gewähltes Datum), rastet mit Blitz, Druckwellen und Schlag ein, dann steht
   das Zieljahr riesig da mit dem, wofür das Jahr steht („1989 … das Jahr
   des Mauerfalls“, [`lib/yearFacts.ts`](lib/yearFacts.ts)), Dinge des
