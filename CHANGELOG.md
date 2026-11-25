@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Begrüßung immer auf Englisch** (2026-11-25, PR #PRNUM): Auch in der
+- **Begrüßung immer auf Englisch** (2026-11-25, PR #295): Auch in der
   deutschen App sagt beim Ankommen jetzt die englische Stimme „Welcome
   back“. Die deutsche Stimme ist raus.
 
