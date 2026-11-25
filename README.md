@@ -314,11 +314,16 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
   `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
   schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
-  Tipp überspringt die Show. Beim Einrasten sagt eine **Roboterstimme** nur „Welcome
-  back“ bzw. „Willkommen zurück“; beim Wechsel des Jahrzehnts
-  sagt sie „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
-  Sprachausgabe des Browsers, tief und langsam, still bei ausgeschaltetem
-  Ton). Über jedem
+  Tipp überspringt die Show. Beim Einrasten sagt eine **menschlich klingende
+  Stimme** „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
+  freien Sprachmodellen, [`public/audio/voice/`](public/audio/voice/README.md));
+  währenddessen tritt die Musik kurz zurück (Premium wird leiser, der
+  eingebettete Player pausiert einen Moment, die Fanfare taucht ab,
+  [`lib/musicDuck.ts`](lib/musicDuck.ts)). Ohne Clip spricht die
+  natürlichste Stimme des Geräts. Beim Wechsel des Jahrzehnts sagt eine
+  **Roboterstimme** „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
+  Sprachausgabe des Browsers, tief und langsam). Alles still bei
+  ausgeschaltetem Ton. Über jedem
   Halt steht der Satz groß, darunter wartet ein **Jahresrückblick-Video**
   aus diesem Jahr von YouTube, das erst auf Tippen startet ([`components/YearWelcome.tsx`](components/YearWelcome.tsx),
   über `/api/youtube`; erst nach Zustimmung, abwählbar in den Einstellungen
@@ -983,6 +988,9 @@ Ideen nur für die Gaming-Edition stehen in deren
   Sprachausgabe des Browsers (klingt je nach Gerät anders) eine einmal
   aufgenommene Roboterstimme für jedes Jahr, und statt des ersten
   Suchtreffers von YouTube ein von Hand ausgesuchtes Video pro Jahr.
+- **Bessere deutsche Stimme:** Das deutsche „Willkommen zurück“ kommt aus
+  dem frei lizenzierten Thorsten-Modell in der kleinen Qualitätsstufe; eine
+  höhere Stufe (oder eine eigene Aufnahme) klänge noch natürlicher.
 
 - **Deutsche Nummer-1-Hits:** Die Fanfare der Ankunfts-Show nimmt die Nr. 1
   der US-Jahrescharts; für die deutsche Sprache könnte es die Nr. 1 der
