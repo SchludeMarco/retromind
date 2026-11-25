@@ -1,0 +1,26 @@
+// Aus components/ArrivalShow.tsx (Ankunfts-Show), entfernt 2026-11-25
+            {/* Only while the hit really plays (Marco, 2026-11-25: the line
+                named a song that wasn't playing; show the song that plays
+                or nothing). */}
+            {hitOn && hit && (
+              <p className="rm-arrival-hit">
+                {'♪ '}
+                {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
+                <b>{hit.title}</b> · {hit.artist}
+              </p>
+            )}
+
+/* CSS aus index.css */
+.rm-arrival-hit {
+  margin-top: 0.7em;
+  max-width: 90vw;
+  padding: 0.4em 1em;
+  border-radius: 999px;
+  font: 600 clamp(13px, 3.6vw, 17px)/1.3 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #fff;
+  background: rgb(0 0 0 / 0.45);
+  box-shadow: 0 0 0 1px rgb(255 220 150 / 0.5);
+  animation: rmHitIn 500ms ease-out both;
+}
+.rm-arrival-hit b { color: #ffd36b; }
+@keyframes rmHitIn { from { opacity: 0; transform: translateY(8px); } }

@@ -165,3 +165,6 @@ gebaut oder ausgeliefert.
   Begrüßung beim Start der Zeitreise (entfernt am 2026-11-25, Marco gefiel
   die deutsche Stimme nicht; die App sagt jetzt in beiden Sprachen das
   englische „Welcome back“).
+- `ankunft-hit-zeile.tsx.txt`: die Zeile „US-Nr. 1 von … : Titel · Interpret“
+  in der Ankunfts-Show samt CSS (entfernt am 2026-11-25, Marco: störte nur
+  und nannte oft einen Song, der gar nicht lief).

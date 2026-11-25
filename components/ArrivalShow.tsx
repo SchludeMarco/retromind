@@ -176,7 +176,6 @@ export const ArrivalShow: React.FC<{
 
   // The No. 1 hit of the year, loaded while the dials race.
   const hit = hitOf(year);
-  const [hitOn, setHitOn] = useState(false);
   const hitBuffer = useRef<AudioBuffer | null>(null);
   const hitPlay = useRef<{ gain: GainNode; duck: GainNode; src: AudioBufferSourceNode } | null>(null);
   const lockedAt = useRef(0);
@@ -204,7 +203,6 @@ export const ArrivalShow: React.FC<{
     src.start(t, Math.min(HIT_OFFSET_S, Math.max(0, buf.duration - left)));
     src.stop(t + left + 0.05);
     hitPlay.current = { gain, duck, src };
-    setHitOn(true);
     onMusicRef.current?.(true);
   };
   const startHitRef = useRef(startHit);
@@ -386,16 +384,6 @@ export const ArrivalShow: React.FC<{
             <p className="rm-arrival-eyebrow">{tr('Welcome back', 'Willkommen zurück')}</p>
             <p className="rm-arrival-digits">{year}</p>
             {line ? <p className="rm-arrival-title">… {line}</p> : title && <p className="rm-arrival-title">{title}</p>}
-            {/* Only while the hit really plays (Marco, 2026-11-25: the line
-                named a song that wasn't playing; show the song that plays
-                or nothing). */}
-            {hitOn && hit && (
-              <p className="rm-arrival-hit">
-                {'♪ '}
-                {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
-                <b>{hit.title}</b> · {hit.artist}
-              </p>
-            )}
           </div>
         </>
       )}

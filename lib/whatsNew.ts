@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Begrüßung immer auf Englisch': {
     title: 'Greeting always in English',
-    text: 'In the German app too, the English voice now says “Welcome back” when you arrive. The German voice is gone. In the arrival show, the “US No. 1 of …” line only shows while that song is really playing.',
+    text: 'In the German app too, the English voice now says “Welcome back” when you arrive. The German voice is gone. The “US No. 1 of …” line in the arrival show is gone.',
   },
   'Musik erst nach dem „Welcome back“, Stimme klarer': {
     title: 'Music only after the “Welcome back”, clearer voice',
