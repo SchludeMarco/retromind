@@ -76,21 +76,30 @@ export function announceYear(year: number) {
  * (offline, very old browser) the best voice the device has speaks it, in
  * a normal pitch.
  */
-export function announceWelcomeBack() {
-  if (isMuted()) return;
+export function announceWelcomeBack(onDone?: () => void) {
+  // Called once when the greeting is over (or can't play), so the music
+  // can start after it (App.tsx).
+  let finished = false;
+  const done = () => {
+    if (finished) return;
+    finished = true;
+    onDone?.();
+  };
+  if (isMuted()) return done();
   const text = tr('Welcome back', 'Willkommen zurück');
   loadWelcomeClip().then((buf) => {
-    if (isMuted()) return;
+    if (isMuted()) return done();
     const c = sharedAudioContext();
     if (!buf || !c) {
-      speakHuman(text);
+      speakHuman(text, done);
       return;
     }
     c.resume()
       .catch(() => {})
       .then(() => {
         if (c.state !== 'running' || isMuted()) {
-          if (c.state !== 'running') speakHuman(text);
+          if (c.state !== 'running') speakHuman(text, done);
+          else done();
           return;
         }
         // The music goes down first, then the voice; it comes back after.
@@ -103,9 +112,12 @@ export function announceWelcomeBack() {
           const src = c.createBufferSource();
           src.buffer = buf;
           src.connect(g);
+          src.onended = done;
           src.start(t);
+          // Safety net, should onended never fire.
+          window.setTimeout(done, DUCK_LEAD_MS + buf.duration * 1000 + 1000);
         } catch {
-          speakHuman(text);
+          speakHuman(text, done);
         }
       });
   });
@@ -137,9 +149,9 @@ function loadWelcomeClip(): Promise<AudioBuffer | null> {
 const HUMAN_VOICE = /natural|neural|online|premium|enhanced|siri|google/i;
 
 /** The device's most human voice, normal pitch: the fallback without the clip. */
-function speakHuman(text: string) {
+function speakHuman(text: string, onDone: () => void = () => {}) {
   const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
-  if (!synth || isMuted()) return;
+  if (!synth || isMuted()) return onDone();
   const lang = isGerman ? 'de' : 'en';
   const speak = () => {
     try {
@@ -155,10 +167,14 @@ function speakHuman(text: string) {
         voices.find((v) => v.default) ??
         voices[0];
       if (voice) u.voice = voice;
+      u.onend = onDone;
+      u.onerror = onDone;
       duckMusic(DUCK_LEAD_MS + 1800);
       window.setTimeout(() => synth.speak(u), DUCK_LEAD_MS);
+      window.setTimeout(onDone, DUCK_LEAD_MS + 4000);
     } catch {
       /* speech unsupported: the big text still says it */
+      onDone();
     }
   };
   if (synth.getVoices().length) speak();

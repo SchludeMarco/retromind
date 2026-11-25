@@ -127,7 +127,13 @@ const App: React.FC = () => {
   // a new date: then the music of that time plays (Marco, 2026-11-23: when
   // the destination changes, the music should change with it).
   const [decadeOverXmas, setDecadeOverXmas] = useState(false);
-  const spotify = useSpotifyBackground(currentAudioDecade, menuRevealed || !showSplash, childhoodMusic ? birthYear : travelYear - 12, decadeOverXmas);
+  // The music only starts once the whole start is over, i.e. after the
+  // "Welcome back" (Marco, 2026-11-25: "Die Musik sollte erst starten wenn
+  // der komplette Startprozess beendet ist"). A reload of an open page has
+  // no start, so the music may play right away.
+  const [greetingDone, setGreetingDone] = useState(!showSplash);
+  const finishGreeting = useCallback(() => setGreetingDone(true), []);
+  const spotify = useSpotifyBackground(currentAudioDecade, !showSplash && greetingDone, childhoodMusic ? birthYear : travelYear - 12, decadeOverXmas);
   const [travel, setTravel] = useState(0);
   const [arrivalShow, setArrivalShow] = useState(false);
   const muted = useMuted();
@@ -571,10 +577,27 @@ const App: React.FC = () => {
     // lock-in; without motion, the voice alone.
     if (atStart && birthYear && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     // After the gong of the arrival / while the iris opens.
-    const t = window.setTimeout(() => (atStart ? announceWelcomeBack() : announceYear(travelYear!)), 900);
+    const t = window.setTimeout(() => (atStart ? announceWelcomeBack(finishGreeting) : announceYear(travelYear!)), 900);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [travel]);
+  // Back on the welcome screen, the next start greets again before the music.
+  // Not signed in yet (name form): the music doesn't wait for a greeting.
+  // If the greeting never comes (show skipped before its lock-in, no sound),
+  // the music starts anyway after a while.
+  useEffect(() => {
+    if (showSplash) {
+      setGreetingDone(false);
+      return;
+    }
+    if (greetingDone) return;
+    if (!verified) {
+      setGreetingDone(true);
+      return;
+    }
+    const t = window.setTimeout(finishGreeting, 14000);
+    return () => window.clearTimeout(t);
+  }, [showSplash, verified, greetingDone, finishGreeting]);
   // After the landing (once the arrival show is over) the Stube is furnished
   // in the style of the decade you're in (lib/roomEra.ts).
   useEffect(() => {
@@ -800,12 +823,12 @@ const App: React.FC = () => {
           decade={String(Math.min(2020, Math.max(1960, Math.floor(travelYear / 10) * 10)))}
           onLock={() => {
             if (showSpeaksRef.current) announceYear(travelYear);
-            else announceWelcomeBack();
+            else announceWelcomeBack(finishGreeting);
           }}
           onDone={() => { showSpeaksRef.current = false; setArrivalShow(false); }}
           memories={memories}
           onMusic={handleFanfare}
-          musicPlaying={spotify.isPlaying}
+          musicPlaying={spotify.isPlaying || !greetingDone}
         />
       )}
       {toast && (

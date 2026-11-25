@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik erst nach dem „Welcome back“, Stimme klarer** (2026-11-25,
+  PR #PRNUM): Beim Start der Zeitreise beginnt die Musik jetzt erst, wenn
+  die Begrüßung gesprochen ist, statt schon auf dem Startbildschirm. Die
+  Stimme klingt deutlich klarer und menschlicher, mit nur noch einem Hauch
+  Roboter; der kurze Zeitmaschinen-Sog davor bleibt.
+
 - **„Welcome back“ mit Zeitmaschinen-Sound** (2026-11-25, PR #293): Die
   Begrüßung beim Ankommen ist jetzt ein kleines Spektakel: Ein Synth-Sog
   baut sich auf, es wummst, und eine metallische Roboter-Männerstimme sagt

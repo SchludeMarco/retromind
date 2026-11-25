@@ -314,12 +314,14 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
   `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
   schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
-  Tipp überspringt die Show. Beim Einrasten sagt nach einem Synth-Sog und
-  einem Wumms eine **metallische Roboter-Männerstimme** mit großem Hall „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
+  Tipp überspringt die Show. Beim Einrasten sagt nach einem kurzen Synth-Sog
+  eine **klare Männerstimme mit einem Hauch Roboter** „Welcome back“ bzw. „Willkommen zurück“ (aufgenommene Clips aus
   freien Sprachmodellen, [`public/audio/voice/`](public/audio/voice/README.md));
   währenddessen tritt die Musik kurz zurück (Premium wird leiser, der
   eingebettete Player pausiert einen Moment, die Fanfare taucht ab,
-  [`lib/musicDuck.ts`](lib/musicDuck.ts)). Ohne Clip spricht die
+  [`lib/musicDuck.ts`](lib/musicDuck.ts)). Beim Start beginnt die
+  Hintergrundmusik erst nach dieser Begrüßung (spätestens nach 14 s), und
+  die Hit-Fanfare bleibt beim Start stumm. Ohne Clip spricht die
   natürlichste Stimme des Geräts. Beim Wechsel des Jahrzehnts sagt eine
   **Roboterstimme** „Welcome to the year 1980“ ([`lib/robotVoice.ts`](lib/robotVoice.ts),
   Sprachausgabe des Browsers, tief und langsam). Alles still bei
