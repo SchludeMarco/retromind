@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Verknüpfung jetzt oben rechts** (2026-11-25, PR #296): Der Weg
+  zu RetroMind – Gaming ist jetzt ein kleiner Neon-Joystick mit dem Schild
+  „GAMING“ ganz oben rechts, in Retro Warm in der oberen Leiste. Die große
+  Karte „Die Spielhalle nebenan“ mit dem Wegweiser mitten auf der Startseite
+  ist dafür weg. Der Spielautomat in der Stube und der Knopf „Spielhalle“ im
+  Schnellzugriff bleiben.
+
 - **Vor der Tür läuft dieselbe Musik wie drinnen** (2026-11-23, PR #291):
   Vor dem Eingang der Spielhalle hört man jetzt immer gedämpft genau den
   Song, der drinnen weiterläuft, auch ohne Spotify Premium. In der

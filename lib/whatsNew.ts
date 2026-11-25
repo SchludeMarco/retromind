@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Verknüpfung jetzt oben rechts': {
+    title: 'Gaming link now at the top right',
+    text: 'The way into RetroMind – Gaming is now a small neon joystick with a “GAMING” tag at the very top right, in Retro Warm in the top bar. The big “The arcade next door” card with the signpost in the middle of the start page is gone. The arcade machine in the living room and the “Gaming zone” button in quick access stay.',
+  },
   'Begrüßung immer auf Englisch': {
     title: 'Greeting always in English',
     text: 'In the German app too, the English voice now says “Welcome back” when you arrive. The German voice is gone. The “US No. 1 of …” line in the arrival show is gone.',

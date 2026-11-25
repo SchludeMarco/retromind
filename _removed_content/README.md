@@ -168,3 +168,9 @@ gebaut oder ausgeliefert.
 - `ankunft-hit-zeile.tsx.txt`: die Zeile „US-Nr. 1 von … : Titel · Interpret“
   in der Ankunfts-Show samt CSS (entfernt am 2026-11-25, Marco: störte nur
   und nannte oft einen Song, der gar nicht lief).
+- `spielhallen-karte-GamingTeaser.tsx.txt`, `spielhallen-karte-gamingTeaser.css.txt`,
+  `spielhallen-karte-GamingSignpost.tsx.txt`, `spielhallen-karte-gamingSignpost.css.txt`:
+  die Karte „Die Spielhalle nebenan“ unter „Zeitreise starten“ mit dem
+  ramponierten Wegweiser „To the gaming zone“ (entfernt am 2026-11-25, Marco:
+  störte „mittendrin im Nirgendwo“; ersetzt durch den kleinen Joystick
+  „Gaming“ oben rechts, `components/GamingCorner.tsx`).
