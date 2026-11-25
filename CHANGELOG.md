@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Welcome back“ mit Dämonenstimme** (2026-11-25, PR #PRNUM): Die
+  Begrüßung beim Ankommen spricht jetzt auf Englisch und Deutsch eine
+  tiefe Männerstimme mit dämonischem Hall.
+
 - **Menschliche Stimme sagt „Welcome back“** (2026-11-25, PR #292): Beim
   Ankommen in der Stube begrüßt dich jetzt eine natürlich klingende Stimme
   statt der Roboterstimme, auf Deutsch „Willkommen zurück“. Damit man sie
