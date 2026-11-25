@@ -19,6 +19,7 @@ import { AmbientLife } from './components/AmbientLife';
 import { ChristmasDeco } from './components/ChristmasDeco';
 import { Header, SettingsModal, FeedbackModal, ChatBot, BootOverlay, CrtOverlay, SplashScreen, VerifyGate, MusicConsentBanner, BackToTop, MusicDock } from './components';
 import { ControlCenter, ControlHandle } from './components/ControlHandle';
+import { GamingCorner } from './components/GamingCorner';
 import { HelpBot } from './components/HelpBot';
 import { GuestChat } from './components/GuestChat';
 import { useChatOpenRequest, useChatUnread } from './lib/chat';
@@ -803,6 +804,8 @@ const App: React.FC = () => {
       {!showSplash && verified && <MusicConsentBanner />}
 
       {verified && (!warm || phase === 'intro') && <Header compact={phase !== 'intro'} />}
+      {/* The way into Gaming at the very top right (Retro Warm has it in its top strip). */}
+      {verified && !showSplash && !warm && <GamingCorner />}
       {/* Coming out of the time machine: the dark clock room opens from the
           middle onto the app (after "Set the clock" on the ticket). */}
       {arrival && (

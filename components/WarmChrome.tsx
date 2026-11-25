@@ -1,9 +1,12 @@
 import React from 'react';
 import { AppPhase } from '../types';
 import { STATION_NAME } from '../lib/stations';
+import { GamingCorner } from './GamingCorner';
 
 // The top strip of the "Retro Warm" design (lib/theme.ts), after the Google
-// Stitch mock-ups: logo, RETROMIND and the stop you are at. Since
+// Stitch mock-ups: logo, RETROMIND and the stop you are at, and at the
+// right end the small Gaming joystick (components/GamingCorner, 2026-11-25).
+// Since
 // 2026-10-18 it holds no buttons any more: sound, settings, accounts, music
 // and the bottom navigation moved behind the handle at the right edge
 // (components/ControlHandle; the old bars are in _removed_content/).
@@ -15,6 +18,7 @@ export const WarmTopBar: React.FC<{ phase: AppPhase }> = ({ phase }) => (
         <span className="block font-serif font-bold text-base sm:text-lg md:text-xl tracking-tight text-retro-amber-dark truncate">RETROMIND</span>
         <span className="block text-xs text-retro-brown truncate">{STATION_NAME[phase]}</span>
       </div>
+      <GamingCorner inBar />
     </div>
     <div aria-hidden="true" className="rm-wood-rail" />
   </header>

@@ -4,7 +4,6 @@ import { DECADES_DB } from '../constants';
 import { useWarmChrome } from '../lib/theme';
 import { viaProxy } from '../lib/privacy';
 import { JourneyStages } from '../components/JourneyStages';
-import { GamingTeaser } from '../components/GamingTeaser';
 import { tr } from '../lib/i18n';
 import { EraSpotlight } from '../components/EraSpotlight';
 import { BookProgress } from '../components/BookProgress';
@@ -88,8 +87,6 @@ const ClassicIntro: React.FC<IntroProps> = (props) => {
         </button>
       )}
 
-      {!resumeTarget && <GamingTeaser className="mb-8" />}
-
       {!resumeTarget && (
         <EraSpotlight warm={false} userName={userName} focusDecade={focusDecade} onSelectGalleryItem={onSelectGalleryItem} />
       )}
@@ -124,8 +121,6 @@ const ClassicIntro: React.FC<IntroProps> = (props) => {
         />
       )}
 
-      {resumeTarget && <GamingTeaser className="mb-8" />}
-
       <p className="text-lg mb-8 leading-relaxed">
         {tr(
           'Open the treasure chest of your childhood. RetroMind takes you back decade by decade, asks you personal questions and gathers your answers into a memory book.',
@@ -142,7 +137,7 @@ const ClassicIntro: React.FC<IntroProps> = (props) => {
   );
 };
 
-// The gaming signpost moved up into the gaming card (components/GamingTeaser.tsx).
+// The way into Gaming is the joystick at the top right (components/GamingCorner.tsx).
 const IntroExtras: React.FC = () => (
   <>
       <details className="mt-2 text-left text-sm text-retro-brown">
@@ -248,8 +243,6 @@ const WarmIntro: React.FC<IntroProps> = (props) => {
       </section>
 
       <DailyCorner {...props} warm />
-
-      <GamingTeaser />
 
       <YouthToday warm birthYear={birthYear} focusDecade={focusDecade} />
 

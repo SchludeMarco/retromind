@@ -227,19 +227,12 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   und das Uhrenzimmer öffnet sich wie eine Blende auf die Stube
   ([`components/VerifyGate.tsx`](components/VerifyGate.tsx)). Das Profil
   danach heißt „Pack deinen Koffer“.
-- **Gaming-Karte „Die Spielhalle nebenan“** – direkt unter „Zeitreise
-  starten“ (bei begonnener Reise unter den Etappen) zeigt eine dunkle
-  Neon-Karte in allen Designs das Foto vom Eingang der Spielhalle, ein paar
-  Zeilen dazu, was RetroMind – Gaming alles bietet, und darin den Wegweiser
-  zur Gaming-Zone ([`components/GamingTeaser.tsx`](components/GamingTeaser.tsx)).
-  Der Wegweiser ist ein ramponierter Holzwegweiser „To the gaming zone“
-  (Schnitte, Brandspuren, abgeplatzte Kontur, staubiger roter Rahmen,
-  umwickelt von einem gelben Leuchtband mit Lauflichtern, oben auf dem
-  Pfosten zwei rote Warnlampen wie am Bahnübergang, die abwechselnd blinken)
-  in Metall-Großbuchstaben im Stil von God of War (freie Schrift Cinzel).
-  Karte, Wegweiser und Spielautomat führen zu RetroMind – Gaming und nehmen
-  Ton- und Google-Einstellung mit
-  ([`components/GamingSignpost.tsx`](components/GamingSignpost.tsx),
+- **Gaming-Joystick oben rechts** – ganz oben rechts steht in allen Designs
+  ein kleiner Neon-Joystick mit dem Schild „GAMING“ (in Retro Warm in der
+  oberen Leiste, sonst oben rechts auf der Seite). Ein Tipp führt zu
+  RetroMind – Gaming, genauso wie der Spielautomat in der Stube und der Knopf
+  „Spielhalle“ im Schnellzugriff; alle nehmen Ton- und Google-Einstellung mit
+  ([`components/GamingCorner.tsx`](components/GamingCorner.tsx),
   [`lib/gamingLink.ts`](lib/gamingLink.ts)).
 - **Etappen frei wählen** – sobald eine Reise begonnen ist, zeigt die Startseite
   „Deine Etappen“: Profil, Eindrücke, Erkunden, Tagebuch, Erinnerungsbuch und

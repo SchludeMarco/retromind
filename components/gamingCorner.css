@@ -1,0 +1,62 @@
+/* Small joystick + "Gaming" at the top right (components/GamingCorner.tsx). */
+.rm-gaming-corner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+  text-decoration: none;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+.rm-gaming-corner img {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: block;
+  transition: transform 0.18s ease-out;
+}
+.rm-gaming-corner span {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #1b1033;
+  border: 1px solid #22d3ee;
+  border-radius: 9999px;
+  padding: 2px 6px 1px;
+  box-shadow: 0 0 6px rgba(236, 72, 153, 0.55);
+  text-shadow: 0 0 4px rgba(236, 72, 153, 0.9);
+}
+.rm-gaming-corner:hover img,
+.rm-gaming-corner:focus-visible img {
+  transform: scale(1.1) rotate(-6deg);
+}
+.rm-gaming-corner:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+/* Classic and Night shift: at the top right of the page, under the fairy
+   lights, scrolling away with the page like the logo. */
+.rm-gaming-corner.is-on-page {
+  position: absolute;
+  top: 1.75rem;
+  right: 1rem;
+  z-index: 520; /* above the CRT overlay (510), under dialogs (650), like the logo */
+}
+@media (min-width: 768px) {
+  .rm-gaming-corner.is-on-page {
+    right: 2rem;
+  }
+  .rm-gaming-corner img {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-gaming-corner img {
+    transition: none;
+  }
+}

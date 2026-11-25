@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Verknüpfung jetzt oben rechts** (2026-11-25, PR #296): Der Weg
+  zu RetroMind – Gaming ist jetzt ein kleiner Neon-Joystick mit dem Schild
+  „GAMING“ ganz oben rechts, in Retro Warm in der oberen Leiste. Die große
+  Karte „Die Spielhalle nebenan“ mit dem Wegweiser mitten auf der Startseite
+  ist dafür weg. Der Spielautomat in der Stube und der Knopf „Spielhalle“ im
+  Schnellzugriff bleiben.
+
 - **Begrüßung immer auf Englisch** (2026-11-25, PR #295): Auch in der
   deutschen App sagt beim Ankommen jetzt die englische Stimme „Welcome
   back“. Die deutsche Stimme ist raus. Die Zeile „US-Nr. 1 von …“ in der
