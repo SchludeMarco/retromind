@@ -248,10 +248,19 @@ zeigen dürfen.
 - **Retro-Guru** – ein Chat, der in Gamer-Slang von den 80ern bis heute
   antwortet („Welches Game, Digga?“, „GG“, „no cap“)
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
-- **Die Retro-Konsole** – oben in der Zock-Ecke, mit zwei Listen, die
-  zugeklappt starten (Name mit Anzahl, ein Tipp klappt auf): „ROM-Spiele“,
-  „Browser-Spiele“ (die Minispiele, siehe Zock-Ecke) und darunter
-  „⚡ Blitz-Challenges“ (die Blitz-Spiele, siehe unten). Die ROM-Spiele
+- **Selbst zocken** – ganz oben rechts im HUD ein kleiner Neon-Controller
+  mit dem Schild „ZOCKEN“ (blinkt alle drei Sekunden kurz, nicht bei
+  „Bewegung reduzieren“; Platzhalter `public/gaming/play-icon.svg`). Er
+  öffnet die Seite „Selbst zocken“ (derselbe Bereich wie „Zocken“ im
+  Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
+  „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
+  ein Konsolen- oder Schnellspiel), die Bestenliste und die heutige
+  Blitz-Challenge angepinnt; darunter die Retro-Konsole als Kacheln, das
+  zuletzt gespielte zuerst mit Schild „Zuletzt“ (gemerkt in
+  `recentPlays`, synchronisiert), und alle Schnellspiele als Kacheln mit dem
+  eigenen Rekord. „Deine eigene Spieldatei“ und die Blitz-Spiele sind
+  aufklappbar.
+- **Die Retro-Konsole** – auf der Seite „Selbst zocken“. Die ROM-Spiele
   sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
   [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
   [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS) (GPL 3.0), den wir
@@ -520,6 +529,9 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   „Frag den Game-Guru“-Leiste (Entwurf in `docs/stitch/gaming/`).
 - **Mehr Spiele im kuratierten Katalog** mit eigenen Tipps.
 - **Eigene Domain** (kostet Geld, erst nach Rücksprache).
+- **Eigenes Symbol für „Selbst zocken“:** der Pixel-Controller oben rechts
+  ist ein Platzhalter (`public/gaming/play-icon.svg`); Marcos eigenes Bild
+  (transparentes PNG, Neon Pink/Cyan wie der Joystick) soll ihn ersetzen.
 
 ### Könnte
 

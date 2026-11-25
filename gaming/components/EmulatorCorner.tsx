@@ -40,7 +40,8 @@ export function useRomPicker(onFile: (file: File, system: EmuSystem) => void) {
 
 const systemName = (s: EmuSystem) => s.platforms.map(platformLabel).join(' / ');
 
-export const EmulatorCorner: React.FC<{ onPlay: (launch: EmuLaunch) => void }> = ({ onPlay }) => {
+/** `ownOnly`: just the own-file card and the credits (the free games are tiles on the PlayZone page). */
+export const EmulatorCorner: React.FC<{ onPlay: (launch: EmuLaunch) => void; ownOnly?: boolean }> = ({ onPlay, ownOnly = false }) => {
   const [system, setSystem] = useState(0);
   const picker = useRomPicker((file) => onPlay({ title: file.name.replace(/\.[^.]+$/, ''), core: EMU_SYSTEMS[system].core, file }));
 
@@ -53,7 +54,7 @@ export const EmulatorCorner: React.FC<{ onPlay: (launch: EmuLaunch) => void }> =
         )}
       </p>
       <div className="grid mini-list" style={{ marginTop: 12 }}>
-        {FREE_GAMES.map((g) => (
+        {!ownOnly && FREE_GAMES.map((g) => (
           <button key={g.id} className="panel mini-card" onClick={() => onPlay({ title: g.title, core: g.core, rom: g.rom })} data-nav>
             <span className="mini-icon" aria-hidden="true">
               {g.platform === 'NES' ? '🎮' : '🔋'}

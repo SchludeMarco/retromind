@@ -7,6 +7,15 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gaming-Edition: „Selbst zocken“ oben rechts** (2026-11-25, PR #298):
+  Ganz oben rechts in der Spielhalle sitzt jetzt ein kleiner Neon-Controller
+  mit dem Schild „ZOCKEN“, der alle drei Sekunden kurz aufblinkt. Ein Tipp
+  öffnet die neue Seite „Selbst zocken“: oben die heutige Blitz-Challenge
+  und ein Knopf „Zufallsspiel“, darunter die Spiele der Retro-Konsole (das
+  zuletzt gespielte zuerst) und alle Schnellspiele als Kacheln mit deinem
+  eigenen Rekord. Die Blitz-Spiele und die eigene Spieldatei sind unten
+  aufklappbar.
+
 - **Gaming-Joystick blinkt** (2026-11-25, PR #297): Der Joystick oben
   rechts flackert alle drei Sekunden kurz neonhell auf, damit man ihn
   bemerkt (nicht bei „Bewegung reduzieren“).
