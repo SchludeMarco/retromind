@@ -28,6 +28,7 @@ import { openMusicDock } from './components/MusicDock';
 import { YearWelcome } from './components/YearWelcome';
 import { ArrivalShow } from './components/ArrivalShow';
 import { TimeWarp } from './components/TimeWarp';
+import { startThaw } from './lib/thaw';
 import { setRoomEra } from './lib/roomEra';
 import { useChildhoodMusic } from './lib/childhoodMusic';
 import { destinationOf, isTravelDate, moveToDecade, musicDecadeOf, yearOf } from './lib/travelDate';
@@ -845,6 +846,8 @@ const App: React.FC = () => {
             if (showSpeaksRef.current) announceYear(travelYear);
             else announceWelcomeBack(finishGreeting);
           }}
+          // After the show the Stube is frozen for a moment and thaws (lib/thaw).
+          onFade={startThaw}
           onDone={() => { showSpeaksRef.current = false; setArrivalShow(false); }}
           memories={memories}
           onMusic={handleFanfare}

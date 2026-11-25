@@ -152,13 +152,15 @@ export const ArrivalShow: React.FC<{
   /** Called at the lock-in (the voice speaks then). */
   onLock: () => void;
   onDone: () => void;
+  /** The show starts to fade (or is skipped): what lies beneath comes into view. */
+  onFade?: () => void;
   /** The visitor's collected memories: their photos and terms fly along. */
   memories?: CapturedMemory[];
   /** The hit's fanfare starts (true) or is over (false). */
   onMusic?: (on: boolean) => void;
   /** The app's music is playing: then it keeps playing and the fanfare stays silent. */
   musicPlaying?: boolean;
-}> = ({ birthDate, year, decade, onLock, onDone, memories = [], onMusic, musicPlaying = false }) => {
+}> = ({ birthDate, year, decade, onLock, onDone, onFade, memories = [], onMusic, musicPlaying = false }) => {
   const now = new Date();
   const present: Stamp = { month: now.getMonth(), day: now.getDate(), year: now.getFullYear() };
   const [, m, d] = birthDate.split('-').map(Number);
@@ -169,6 +171,14 @@ export const ArrivalShow: React.FC<{
   onLockRef.current = onLock;
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
+  const onFadeRef = useRef(onFade);
+  onFadeRef.current = onFade;
+  const fadedRef = useRef(false);
+  const fade = () => {
+    if (fadedRef.current) return;
+    fadedRef.current = true;
+    onFadeRef.current?.();
+  };
   const onMusicRef = useRef(onMusic);
   onMusicRef.current = onMusic;
   const musicPlayingRef = useRef(musicPlaying);
@@ -307,6 +317,7 @@ export const ArrivalShow: React.FC<{
       return () => window.clearTimeout(t);
     }
     if (phase === 'fade') {
+      fade();
       const t = window.setTimeout(() => onDoneRef.current(), FADE_MS);
       return () => window.clearTimeout(t);
     }
@@ -316,7 +327,10 @@ export const ArrivalShow: React.FC<{
     if (phase === 'race') {
       setShown(target);
       lockIn();
-    } else onDoneRef.current();
+    } else {
+      fade();
+      onDoneRef.current();
+    }
   };
 
   const things = ERA_THINGS[decade] ?? ERA_THINGS['1980'];

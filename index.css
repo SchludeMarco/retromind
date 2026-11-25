@@ -3593,3 +3593,83 @@ html[data-ticker] .rm-bottom-music {
 .rm-timewarp-light { position: absolute; inset: 0; }
 .rm-timewarp.is-fade .rm-timewarp-light { animation: rmTimewarpFade 700ms ease-out forwards; }
 @keyframes rmTimewarpFade { from { opacity: 1; } to { opacity: 0; } }
+
+/* ------------------------------------------------------------------
+   Frozen Stube after the time travel (components/ThawOverlay.tsx):
+   frost and ice crystals over the whole screen, everything beneath
+   stands still, then the ice thaws from the middle outwards.
+   ------------------------------------------------------------------ */
+@property --thaw {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: -25%;
+}
+html.rm-frozen body *:not(.rm-thaw):not(.rm-thaw *):not(.rm-arrival-show):not(.rm-arrival-show *) {
+  animation-play-state: paused !important;
+}
+.rm-thaw {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  pointer-events: none;
+  overflow: hidden;
+  --thaw: -25%;
+  -webkit-mask-image: radial-gradient(circle farthest-corner at 50% 50%, transparent var(--thaw), #000 calc(var(--thaw) + 25%));
+  mask-image: radial-gradient(circle farthest-corner at 50% 50%, transparent var(--thaw), #000 calc(var(--thaw) + 25%));
+  animation: rmFreezeIn 500ms ease-out both;
+}
+.rm-thaw.is-thaw {
+  animation: rmThaw var(--thaw-ms, 5000ms) cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+@keyframes rmFreezeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rmThaw {
+  0% { --thaw: -25%; opacity: 1; }
+  85% { opacity: 1; }
+  100% { --thaw: 100%; opacity: 0; }
+}
+/* The cold: colours drained, a blue chill. */
+.rm-thaw-chill {
+  position: absolute;
+  inset: 0;
+  background: rgb(150 195 255 / 0.32);
+  -webkit-backdrop-filter: saturate(0.15) brightness(1.1) contrast(0.85) blur(1px);
+  backdrop-filter: saturate(0.15) brightness(1.1) contrast(0.85) blur(1px);
+}
+/* Frost on the glass, thickest at the edges and in the corners. */
+.rm-thaw-frost {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 75% at 50% 50%, rgb(225 240 255 / 0.22) 20%, rgb(215 235 255 / 0.65) 70%, rgb(240 248 255 / 0.95) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.98 0 0 0 0 1 0 0 0 1.6 -0.6'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.95;
+}
+/* Ice crystals: little six-armed stars scattered over the frost. */
+.rm-thaw-crystals {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cg fill='none' stroke='white' stroke-linecap='round' stroke-opacity='0.75'%3E%3Cg transform='translate(40 46)' stroke-width='1.4'%3E%3Cpath d='M0-16V16M-13.9-8L13.9 8M-13.9 8L13.9-8M0-10l-4-4M0-10l4-4M0 10l-4 4M0 10l4 4'/%3E%3C/g%3E%3Cg transform='translate(132 30) scale(.6)' stroke-width='1.8'%3E%3Cpath d='M0-16V16M-13.9-8L13.9 8M-13.9 8L13.9-8'/%3E%3C/g%3E%3Cg transform='translate(120 128) scale(.85)' stroke-width='1.5'%3E%3Cpath d='M0-16V16M-13.9-8L13.9 8M-13.9 8L13.9-8M0-10l-4-4M0-10l4-4M0 10l-4 4M0 10l4 4M8.7-5l1-5.5M-8.7 5l-1 5.5'/%3E%3C/g%3E%3Cg transform='translate(30 140) scale(.45)' stroke-width='2'%3E%3Cpath d='M0-16V16M-13.9-8L13.9 8M-13.9 8L13.9-8'/%3E%3C/g%3E%3Cpath d='M70 90l14-6 10 8 12-4M150 80l10 10M92 160l8-12 10 4' stroke-width='.8' stroke-opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, rgb(0 0 0 / 0.45) 10%, #000 70%);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, rgb(0 0 0 / 0.45) 10%, #000 70%);
+  filter: drop-shadow(0 0 2px rgb(255 255 255 / 0.8));
+}
+/* Melt water running down the glass. */
+.rm-thaw-drop {
+  position: absolute;
+  top: -2vh;
+  width: 6px;
+  height: 9px;
+  border-radius: 50% 50% 50% 50% / 35% 35% 65% 65%;
+  background: radial-gradient(circle at 35% 35%, rgb(255 255 255 / 0.95), rgb(170 210 255 / 0.55) 60%, rgb(120 170 230 / 0.35));
+  box-shadow: 0 -14px 0 -2px rgb(200 230 255 / 0.35);
+  animation: rmDrop 2.2s cubic-bezier(0.5, 0, 0.9, 0.6) both;
+}
+@keyframes rmDrop {
+  from { transform: translateY(8vh); opacity: 0; }
+  15% { opacity: 1; }
+  to { transform: translateY(calc(8vh + var(--fall, 30vh))); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rm-thaw { display: none; }
+}

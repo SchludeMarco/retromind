@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zeitreise: die Stube ist nach der Ankunft erst eingefroren und taut dann auf': {
+    title: 'Time travel: the living room is frozen on arrival and then thaws',
+    text: 'When the living room appears after the time circuits and the “Welcome back”, an icy blue layer of frost with ice crystals lies over everything for a moment, the colors are pale and nothing moves. Then the ice thaws from the middle outwards with a quiet crackle, a few drops run down, and the living room comes back to life.',
+  },
   'Zeitreise: erst die Reise, dann die Zeit-Tafel, dann die Stube': {
     title: 'Time travel: first the journey, then the time circuits, then the living room',
     text: 'After “Go back in time” the time travel animation plays as usual. Straight out of the white light comes the big board with destination and present time, races to your date and locks in, then the year and “Welcome back” follow, and only then does the living room open up. Before, the light briefly opened onto the living room first and the board only slid over it afterwards.',

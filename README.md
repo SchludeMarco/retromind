@@ -300,7 +300,9 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   außer man ist im selben Browser bei Spotify angemeldet.
   Nach der Zeitreise-Animation kommt aus dem weißen Licht direkt die
   **Ankunfts-Show** ([`components/ArrivalShow.tsx`](components/ArrivalShow.tsx)),
-  erst danach öffnet sich die Stube:
+  erst danach öffnet sich die Stube, die zuerst eingefroren ist (Frost,
+  Eiskristalle, alles steht still) und dann von der Mitte aus auftaut
+  ([`lib/thaw.ts`](lib/thaw.ts)):
   die große Zeit-Tafel (Gegenwart grün, Ziel rot) rattert von heute zurück bis
   zur Zielzeit (Geburtstag oder gewähltes Datum), rastet mit Blitz, Druckwellen und Schlag ein, dann steht
   das Zieljahr riesig da mit dem, wofür das Jahr steht („1989 … das Jahr
