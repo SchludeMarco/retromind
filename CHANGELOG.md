@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Menschliche Stimme sagt „Welcome back“** (2026-11-25, PR #PRNUM): Beim
+- **Menschliche Stimme sagt „Welcome back“** (2026-11-25, PR #292): Beim
   Ankommen in der Stube begrüßt dich jetzt eine natürlich klingende Stimme
   statt der Roboterstimme, auf Deutsch „Willkommen zurück“. Damit man sie
   gut hört, wird die Musik in dem Moment kurz leiser (mit Spotify Premium)
