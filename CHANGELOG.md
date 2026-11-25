@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zeitreise: die Stube ist nach der Ankunft erst eingefroren und taut dann auf** (2026-11-25, PR #302):
+  Wenn nach Tafel und „Welcome back“ die Stube erscheint, liegt kurz eine
+  eisblaue Frostschicht mit Eiskristallen über allem, die Farben sind blass
+  und nichts bewegt sich. Dann taut das Eis von der Mitte nach außen weg,
+  es knistert leise, ein paar Tropfen laufen herunter, und die Stube wird
+  wieder lebendig.
+
 - **Zeitreise: erst die Reise, dann die Zeit-Tafel, dann die Stube** (2026-11-25, PR #300, #301):
   Nach „Ab in die Vergangenheit“ läuft die Zeitreise-Animation wie gewohnt.
   Aus dem weißen Licht kommt direkt die große Tafel mit Zielzeit und
