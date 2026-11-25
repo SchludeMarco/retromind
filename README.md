@@ -228,7 +228,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   ([`components/VerifyGate.tsx`](components/VerifyGate.tsx)). Das Profil
   danach heißt „Pack deinen Koffer“.
 - **Gaming-Joystick oben rechts** – ganz oben rechts steht in allen Designs
-  ein kleiner Neon-Joystick mit dem Schild „GAMING“ (in Retro Warm in der
+  ein kleiner Neon-Joystick mit dem Schild „GAMING“, der alle drei Sekunden
+  kurz aufflackert (in Retro Warm in der
   oberen Leiste, sonst oben rechts auf der Seite). Ein Tipp führt zu
   RetroMind – Gaming, genauso wie der Spielautomat in der Stube und der Knopf
   „Spielhalle“ im Schnellzugriff; alle nehmen Ton- und Google-Einstellung mit

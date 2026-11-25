@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Joystick blinkt': {
+    title: 'Gaming joystick blinks',
+    text: 'The joystick at the top right briefly flickers neon-bright every three seconds so it catches your eye (not with “reduce motion”).',
+  },
   'Gaming-Verknüpfung jetzt oben rechts': {
     title: 'Gaming link now at the top right',
     text: 'The way into RetroMind – Gaming is now a small neon joystick with a “GAMING” tag at the very top right, in Retro Warm in the top bar. The big “The arcade next door” card with the signpost in the middle of the start page is gone. The arcade machine in the living room and the “Gaming zone” button in quick access stay.',

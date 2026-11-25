@@ -8,6 +8,10 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Joystick blinkt** (2026-11-25, PR #297): Der Joystick oben
+  rechts flackert alle drei Sekunden kurz neonhell auf, damit man ihn
+  bemerkt (nicht bei „Bewegung reduzieren“).
+
 - **Gaming-Verknüpfung jetzt oben rechts** (2026-11-25, PR #296): Der Weg
   zu RetroMind – Gaming ist jetzt ein kleiner Neon-Joystick mit dem Schild
   „GAMING“ ganz oben rechts, in Retro Warm in der oberen Leiste. Die große
