@@ -21,6 +21,7 @@ import { SpotifyHit, useSpotifyApi } from '../lib/spotifyApi';
 import { youthPool } from '../lib/youthMusic';
 import { useChristmas } from '../lib/season';
 import { tr } from '../lib/i18n';
+import { onMusicDuck } from '../lib/musicDuck';
 
 // In the Christmas season (lib/season.ts, Marco 2026-10-14: "im Radio soll
 // automatisch Weihnachtsmusik laufen") the radio plays Spotify's editorial
@@ -323,6 +324,32 @@ export function useSpotifyBackground(decade: string, enabled = true, birthYear: 
     if (!startedRef.current) start();
     else if (!isMuted()) controller?.resume();
   }, [enabled, start]);
+
+  // A voice speaks ("Welcome back", lib/robotVoice): the music steps back.
+  // Premium glides quieter and back; the embed, which has no volume, pauses
+  // for that moment and carries on.
+  const duckPausedRef = useRef(false);
+  useEffect(
+    () =>
+      onMusicDuck((on) => {
+        const controller = controllerRef.current;
+        if (!controller) return;
+        if (controller.setLevel) {
+          controller.setLevel(on ? 0.2 : 1, on ? 350 : 1500);
+          return;
+        }
+        if (on) {
+          if (!playingRef.current) return;
+          duckPausedRef.current = true;
+          controller.pause();
+          return;
+        }
+        if (!duckPausedRef.current) return;
+        duckPausedRef.current = false;
+        if (!userPausedRef.current && enabledRef.current && !isMuted()) controller.resume();
+      }),
+    []
+  );
 
   const togglePlay = useCallback(() => {
     const controller = controllerRef.current;

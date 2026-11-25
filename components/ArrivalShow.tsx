@@ -4,6 +4,7 @@ import { getConsent } from '../lib/privacy';
 import { isGerman, tr } from '../lib/i18n';
 import { DECADES_DB } from '../constants';
 import { sharedAudioContext } from '../lib/clockSounds';
+import { isMusicDucked, onMusicDuck } from '../lib/musicDuck';
 import { hitClipUrl, hitOf, yearOf } from '../lib/yearFacts';
 import type { CapturedMemory } from '../types';
 
@@ -177,7 +178,7 @@ export const ArrivalShow: React.FC<{
   const hit = hitOf(year);
   const [hitOn, setHitOn] = useState(false);
   const hitBuffer = useRef<AudioBuffer | null>(null);
-  const hitPlay = useRef<{ gain: GainNode; src: AudioBufferSourceNode } | null>(null);
+  const hitPlay = useRef<{ gain: GainNode; duck: GainNode; src: AudioBufferSourceNode } | null>(null);
   const lockedAt = useRef(0);
   const holdRef = useRef(HOLD_MS);
 
@@ -193,18 +194,39 @@ export const ArrivalShow: React.FC<{
     gain.gain.exponentialRampToValueAtTime(0.9, t + 0.6);
     gain.gain.setValueAtTime(0.9, t + left - HIT_FADE_S);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + left);
-    gain.connect(c.destination);
+    // The voice's "Welcome back" (lib/musicDuck) gets the fanfare out of its way.
+    const duck = c.createGain();
+    duck.gain.value = isMusicDucked() ? 0.2 : 1;
+    gain.connect(duck).connect(c.destination);
     const src = c.createBufferSource();
     src.buffer = buf;
     src.connect(gain);
     src.start(t, Math.min(HIT_OFFSET_S, Math.max(0, buf.duration - left)));
     src.stop(t + left + 0.05);
-    hitPlay.current = { gain, src };
+    hitPlay.current = { gain, duck, src };
     setHitOn(true);
     onMusicRef.current?.(true);
   };
   const startHitRef = useRef(startHit);
   startHitRef.current = startHit;
+
+  // While the voice says "Welcome back" the fanfare dips under it.
+  useEffect(
+    () =>
+      onMusicDuck((on) => {
+        const p = hitPlay.current;
+        if (!p) return;
+        try {
+          const t = p.duck.context.currentTime;
+          p.duck.gain.cancelScheduledValues(t);
+          p.duck.gain.setValueAtTime(p.duck.gain.value, t);
+          p.duck.gain.linearRampToValueAtTime(on ? 0.2 : 1, t + (on ? 0.35 : 1.2));
+        } catch {
+          /* already over */
+        }
+      }),
+    []
+  );
 
   useEffect(() => {
     // The clip is a piece of someone else's recording, so like the Spotify

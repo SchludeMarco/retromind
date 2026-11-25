@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Menschliche Stimme sagt „Welcome back“** (2026-11-25, PR #PRNUM): Beim
+  Ankommen in der Stube begrüßt dich jetzt eine natürlich klingende Stimme
+  statt der Roboterstimme, auf Deutsch „Willkommen zurück“. Damit man sie
+  gut hört, wird die Musik in dem Moment kurz leiser (mit Spotify Premium)
+  bzw. hält für einen Augenblick an und läuft dann weiter. Der Wechsel des
+  Jahrzehnts wird weiter von der Roboterstimme angesagt.
+
 - **Vor der Tür läuft dieselbe Musik wie drinnen** (2026-11-23, PR #291):
   Vor dem Eingang der Spielhalle hört man jetzt immer gedämpft genau den
   Song, der drinnen weiterläuft, auch ohne Spotify Premium. In der

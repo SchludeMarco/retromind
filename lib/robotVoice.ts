@@ -1,5 +1,7 @@
 import { isMuted } from './mute';
 import { tr, isGerman } from './i18n';
+import { sharedAudioContext } from './clockSounds';
+import { duckMusic } from './musicDuck';
 
 // The time machine's announcer (Marco, 2026-10-14: "Wenn zu irgendeiner Zeit
 // gereist wird, sollte eine Roboterstimme sagen: Welcome to the year x").
@@ -21,6 +23,8 @@ export function unlockSpeech() {
   } catch {
     /* no speech here */
   }
+  // The recorded "Welcome back" is fetched now, so it is ready on landing.
+  loadWelcomeClip();
 }
 
 /** Two quick computer beeps, rising, before the voice. */
@@ -61,12 +65,113 @@ export function announceYear(year: number) {
 }
 
 /**
- * At the start of the app, out of the time machine, the voice only says
+ * At the start of the app, out of the time machine, a voice says only
  * "Welcome back" (Marco, 2026-10-14: "Die Roboterstimme am Anfang der App
  * soll sagen welcome back und mehr nicht").
+ * Since 2026-11-25 (Marco: "Die Roboterstimme ist ein bisschen schlecht …
+ * man hört sie wegen der Hintergrundmusik gar nicht") it is a recorded,
+ * human-sounding voice instead of the robot, and the music steps back
+ * while it speaks (lib/musicDuck). The clips are made with free, openly
+ * licensed speech models (public/audio/voice/README.md). Without the clip
+ * (offline, very old browser) the best voice the device has speaks it, in
+ * a normal pitch.
  */
 export function announceWelcomeBack() {
-  announce(tr('Welcome back', 'Willkommen zurück'));
+  if (isMuted()) return;
+  const text = tr('Welcome back', 'Willkommen zurück');
+  loadWelcomeClip().then((buf) => {
+    if (isMuted()) return;
+    const c = sharedAudioContext();
+    if (!buf || !c) {
+      speakHuman(text);
+      return;
+    }
+    c.resume()
+      .catch(() => {})
+      .then(() => {
+        if (c.state !== 'running' || isMuted()) {
+          if (c.state !== 'running') speakHuman(text);
+          return;
+        }
+        // The music goes down first, then the voice; it comes back after.
+        duckMusic(DUCK_LEAD_MS + buf.duration * 1000 + 500);
+        try {
+          const t = c.currentTime + DUCK_LEAD_MS / 1000;
+          const g = c.createGain();
+          g.gain.value = 1;
+          g.connect(c.destination);
+          const src = c.createBufferSource();
+          src.buffer = buf;
+          src.connect(g);
+          src.start(t);
+        } catch {
+          speakHuman(text);
+        }
+      });
+  });
+}
+
+// How long the music has to get quieter before the voice starts.
+const DUCK_LEAD_MS = 450;
+
+const CLIP_URL = { en: '/audio/voice/welcome-back-en.mp3', de: '/audio/voice/welcome-back-de.mp3' };
+let clip: Promise<AudioBuffer | null> | null = null;
+
+function loadWelcomeClip(): Promise<AudioBuffer | null> {
+  if (clip) return clip;
+  const c = typeof window !== 'undefined' ? sharedAudioContext() : null;
+  if (!c) return Promise.resolve(null);
+  clip = fetch(isGerman ? CLIP_URL.de : CLIP_URL.en)
+    .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('no clip'))))
+    // Older Safari only knows the callback form.
+    .then((data) => new Promise<AudioBuffer>((resolve, reject) => c.decodeAudioData(data, resolve, reject)))
+    .catch(() => {
+      clip = null;
+      return null;
+    });
+  return clip;
+}
+
+// Names of the voices that sound most like a person (Edge/Windows "Natural",
+// Apple "Premium"/"Enhanced", Chrome's Google voices).
+const HUMAN_VOICE = /natural|neural|online|premium|enhanced|siri|google/i;
+
+/** The device's most human voice, normal pitch: the fallback without the clip. */
+function speakHuman(text: string) {
+  const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
+  if (!synth || isMuted()) return;
+  const lang = isGerman ? 'de' : 'en';
+  const speak = () => {
+    try {
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang === 'de' ? 'de-DE' : 'en-US';
+      u.rate = 0.95;
+      u.volume = 1;
+      const voices = synth.getVoices().filter((v) => v.lang.toLowerCase().startsWith(lang));
+      const voice =
+        voices.find((v) => HUMAN_VOICE.test(v.name) && v.lang.toLowerCase().includes(lang === 'de' ? 'de' : 'us')) ??
+        voices.find((v) => HUMAN_VOICE.test(v.name)) ??
+        voices.find((v) => v.default) ??
+        voices[0];
+      if (voice) u.voice = voice;
+      duckMusic(DUCK_LEAD_MS + 1800);
+      window.setTimeout(() => synth.speak(u), DUCK_LEAD_MS);
+    } catch {
+      /* speech unsupported: the big text still says it */
+    }
+  };
+  if (synth.getVoices().length) speak();
+  else {
+    let done = false;
+    const once = () => {
+      if (done) return;
+      done = true;
+      speak();
+    };
+    synth.addEventListener('voiceschanged', once, { once: true });
+    window.setTimeout(once, 600);
+  }
 }
 
 function announce(text: string) {

@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Menschliche Stimme sagt „Welcome back“': {
+    title: 'A human voice says “Welcome back”',
+    text: 'Arriving in the living room, a natural-sounding voice now greets you instead of the robot voice. So you can hear it well, the music gets quieter for that moment (with Spotify Premium) or pauses briefly and then carries on. Switching the decade is still announced by the robot voice.',
+  },
   'Vor der Tür läuft dieselbe Musik wie drinnen': {
     title: 'Same music outside the door as inside',
     text: 'In front of the arcade entrance you now always hear, muffled, the very song that keeps playing inside, also without Spotify Premium. During the Christmas season that is a song from “Metal Christmas”, otherwise ’80s metal.',
