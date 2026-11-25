@@ -49,6 +49,8 @@ export interface ArcadeState {
   streak?: Streak;
   /** Today's daily challenge (challenge.ts): best result, made or not, wins in total. */
   challenge?: ChallengeLog;
+  /** "Selbst zocken": last played first, "emu:<id>" or "mini:<id>" (components/PlayZone.tsx). */
+  recentPlays?: string[];
 }
 
 /** 2 = the "Modul" design from Google Stitch (PR #93), 3 = dark "Arcade" as default again. */

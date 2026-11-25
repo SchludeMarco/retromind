@@ -5206,3 +5206,169 @@ button.pcard {
   font-size: 20px;
   touch-action: manipulation;
 }
+
+/* --- "Selbst zocken" (components/PlayZone.tsx, Marco 2026-11-25) --- */
+/* The PLAY / ZOCKEN corner at the top right of the HUD, in the space the
+   old settings buttons left free; flickers like the Gaming joystick in the
+   Zeitreise (components/gamingCorner.css). */
+.play-corner {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+.play-corner img {
+  width: 56px;
+  height: 42px;
+  display: block;
+  image-rendering: pixelated;
+  transition: transform 0.18s ease-out;
+  animation: play-corner-blink 3s linear infinite;
+}
+@keyframes play-corner-blink {
+  0%, 84%, 100% { filter: none; }
+  87% { filter: brightness(1.7) drop-shadow(0 0 6px #ec4899) drop-shadow(0 0 10px #22d3ee); }
+  90% { filter: brightness(0.75); }
+  93% { filter: brightness(1.8) drop-shadow(0 0 8px #ec4899) drop-shadow(0 0 12px #22d3ee); }
+  97% { filter: none; }
+}
+.play-corner span {
+  font: 8px/1 'Press Start 2P', monospace;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: #1b1033;
+  border: 1px solid #22d3ee;
+  border-radius: 9999px;
+  padding: 4px 7px 3px;
+  box-shadow: 0 0 6px rgba(236, 72, 153, 0.55);
+  text-shadow: 0 0 4px rgba(236, 72, 153, 0.9);
+}
+.play-corner:hover img,
+.play-corner:focus-visible img {
+  transform: scale(1.1) rotate(-6deg);
+}
+.play-corner[aria-pressed='true'] span {
+  background: #ec4899;
+  border-color: #fff;
+}
+.play-corner:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .hud {
+    padding-right: 76px;
+  }
+  .play-corner img {
+    width: 48px;
+    height: 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play-corner img {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* The page itself. */
+.play-zone-title {
+  font-size: 15px;
+  color: var(--a3);
+  margin: 4px 0 14px;
+}
+.play-zone-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.play-zone-actions .px-btn.big {
+  flex: 1 1 260px;
+}
+.play-row {
+  margin: 22px 0 8px;
+}
+.play-row h3 {
+  margin: 0 0 12px;
+  color: var(--a1);
+  font-size: 12px;
+}
+.play-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 168px), 1fr));
+  gap: 12px;
+  margin-bottom: 10px;
+}
+@media (max-width: 640px) {
+  .play-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+.play-zone {
+  scroll-margin-top: 12px;
+}
+.play-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 10px 12px;
+  border: none;
+  color: var(--fg);
+  font: inherit;
+  text-align: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.play-tile:hover,
+.play-tile:focus-visible {
+  outline: 3px solid var(--a2);
+  outline-offset: 2px;
+}
+.play-tile .mini-icon {
+  font-size: 34px;
+}
+.play-tile-title {
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--a1);
+}
+.play-tile-sub {
+  font-size: 15px;
+  line-height: 1.2;
+}
+.play-best {
+  color: var(--a3);
+}
+.play-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font: 7px/1 'Press Start 2P', monospace;
+  color: #1b1033;
+  background: #22d3ee;
+  padding: 4px 6px 3px;
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.7);
+}
+.arcade[data-palette='modul'] .play-tile {
+  border-radius: 12px;
+}
+.arcade[data-palette='modul'] .play-tile-title,
+.arcade[data-palette='modul'] .play-zone-title {
+  font-size: 14px;
+}

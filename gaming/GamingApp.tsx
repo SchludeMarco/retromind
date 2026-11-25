@@ -24,16 +24,16 @@ import { getInitials } from '../lib/initials';
 import { ConsolePicker } from './components/ConsolePicker';
 import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
-import { isBlitz, MINI_GAMES, MiniGameCorner, MiniGameDialog, MiniGameId } from './components/MiniGames';
+import { MINI_GAMES, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { HallOfFame } from './components/HallOfFame';
 import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { challengeMade, rivalNotesWanted } from '../lib/push';
-import { EmulatorCorner } from './components/EmulatorCorner';
+import { emuPlayId, miniPlayId, PlayCorner, PlayZone, withRecent } from './components/PlayZone';
 import { LegendCorner } from './components/LegendCorner';
 import { Legend, legendOfTheDay } from './data/legends';
 import { EmulatorDialog } from './components/EmulatorDialog';
-import { EmuLaunch, FREE_GAMES } from './lib/emulator';
+import { EmuLaunch } from './lib/emulator';
 import { countOpened } from '../lib/usage';
 import { promptInstall, useInstall } from '../lib/install';
 import { readPage, writePage } from '../lib/pageMemory';
@@ -630,11 +630,11 @@ export const GamingApp: React.FC = () => {
     setSearchMore((m) => (m.term !== term ? m : { ...m, next: page.nextOffset, loading: false, related }));
   };
 
-  // Opening the Zock-Ecke (also from the dock) brings its games into view.
+  // Opening "Selbst zocken" (top-right corner or side panel) brings its games into view.
   useEffect(() => {
     if (view !== 'chill') return;
-    const btn = document.querySelector('.chill-btn');
-    if (btn) btn.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+    const page = document.querySelector('.play-zone');
+    if (page) page.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
   }, [view, reducedMotion]);
 
   // A reload keeps this page (Marco, 2026-10-13); only the search keeps its hits.
@@ -716,8 +716,9 @@ export const GamingApp: React.FC = () => {
       alive = false;
     };
   }, [screen]);
-  const play = (launch: EmuLaunch) => {
+  const play = (launch: EmuLaunch, freeId?: string) => {
     chip.play('select');
+    if (freeId) set('recentPlays', withRecent(state.recentPlays, emuPlayId(freeId)));
     countOpened('gaming', 'minigame', `EMULATOR: ${'rom' in launch ? launch.title : 'eigene Datei'}`);
     setEmu(launch);
   };
@@ -725,11 +726,37 @@ export const GamingApp: React.FC = () => {
   const dayLegend = useMemo(() => legendOfTheDay(), []);
   const pickMini = (id: MiniGameId) => {
     chip.play('select');
+    set('recentPlays', withRecent(state.recentPlays, miniPlayId(id)));
     countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === id)?.statKey ?? id);
     setMiniGame(id);
   };
   const challenge = useMemo(() => dailyChallenge(), []);
   const challengeToday = todaysLog(state.challenge);
+  // Today's Blitz Challenge: on the catalog and pinned on top of "Selbst zocken".
+  const challengeCard = (
+    <button
+      className={`day-game day-challenge${challengeToday.won ? ' won' : ''}`}
+      onClick={() => {
+        chip.play('select');
+        countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === challenge.game)?.statKey ?? challenge.game);
+        setMiniGame(challenge.game);
+      }}
+      data-nav
+    >
+      <span className="pixel-font">
+        {challengeToday.won
+          ? tr('⚡ BLITZ CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ BLITZ-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
+          : `⚡ ${tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE')} · ${challenge.length.toUpperCase()} · +${CHALLENGE_REWARD} COINS`}
+      </span>
+      <span>
+        {challenge.text}
+        {challengeToday.best !== undefined && !challengeToday.won
+          ? tr(` Your best today: ${formatScore(challenge.game, challengeToday.best)}.`, ` Dein Bestes heute: ${formatScore(challenge.game, challengeToday.best)}.`)
+          : ''}{' '}
+        ►
+      </span>
+    </button>
+  );
   // A legend's game: the catalog entry, or its Wikipedia article as a game page.
   const legendGame = (l: Legend) => {
     const game = l.gameId
@@ -848,6 +875,8 @@ export const GamingApp: React.FC = () => {
                 }[view]}
               </span>
             </h1>
+            {/* Top right: straight to the games you play yourself (Marco, 2026-11-25). */}
+            <PlayCorner active={view === 'chill'} onOpen={() => switchView('chill')} />
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>
                 <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
@@ -920,30 +949,7 @@ export const GamingApp: React.FC = () => {
           </div>
 
           {/* The daily challenge: one short task a day, the same for everyone (Marco, 2026-10-21). */}
-          {view === 'catalog' && (
-            <button
-              className={`day-game day-challenge${challengeToday.won ? ' won' : ''}`}
-              onClick={() => {
-                chip.play('select');
-                countOpened('gaming', 'minigame', MINI_GAMES.find((m) => m.id === challenge.game)?.statKey ?? challenge.game);
-                setMiniGame(challenge.game);
-              }}
-              data-nav
-            >
-              <span className="pixel-font">
-                {challengeToday.won
-                  ? tr('⚡ BLITZ CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ BLITZ-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
-                  : `⚡ ${tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE')} · ${challenge.length.toUpperCase()} · +${CHALLENGE_REWARD} COINS`}
-              </span>
-              <span>
-                {challenge.text}
-                {challengeToday.best !== undefined && !challengeToday.won
-                  ? tr(` Your best today: ${formatScore(challenge.game, challengeToday.best)}.`, ` Dein Bestes heute: ${formatScore(challenge.game, challengeToday.best)}.`)
-                  : ''}{' '}
-                ►
-              </span>
-            </button>
-          )}
+          {view === 'catalog' && challengeCard}
 
           {dayGame && view === 'catalog' && (
             <button className="day-game" onClick={openDayGame} data-nav>
@@ -979,43 +985,16 @@ export const GamingApp: React.FC = () => {
             />
           )}
 
-          {/* The mini games: one of the sections in the dock. */}
+          {/* "Selbst zocken": console games, quick games, random pick (Marco, 2026-11-25). */}
           {view === 'chill' && (
-            <div className="chill-panel">
-              {/* Two lists, both closed at first so the player sees what is there. */}
-              <section className="emu-corner" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
-                <h3 className="pixel-font">{tr('🕹️ THE RETRO CONSOLE', '🕹️ DIE RETRO-KONSOLE')}</h3>
-                <button
-                  className="px-btn hof-open"
-                  onClick={() => {
-                    chip.play('select');
-                    setHall({});
-                  }}
-                  data-nav
-                >
-                  {tr('🏆 HALL OF FAME', '🏆 BESTENLISTE')}
-                </button>
-                <details className="chill-list">
-                  <summary data-nav>
-                    {tr('💾 ROM GAMES', '💾 ROM-SPIELE')} ({FREE_GAMES.length})
-                  </summary>
-                  <EmulatorCorner onPlay={play} />
-                </details>
-                <details className="chill-list">
-                  <summary data-nav>
-                    {tr('🌐 BROWSER GAMES', '🌐 BROWSER-SPIELE')} ({MINI_GAMES.filter((m) => !isBlitz(m.id)).length})
-                  </summary>
-                  <MiniGameCorner onPick={pickMini} />
-                </details>
-                {/* The Blitz games, made for the Blitz-Challenge, in a list of their own (Marco, 2026-10-21). */}
-                <details className="chill-list">
-                  <summary data-nav>
-                    {tr('⚡ BLITZ CHALLENGES', '⚡ BLITZ-CHALLENGES')} ({MINI_GAMES.filter((m) => isBlitz(m.id)).length})
-                  </summary>
-                  <MiniGameCorner onPick={pickMini} blitz />
-                </details>
-              </section>
-            </div>
+            <PlayZone
+              recent={state.recentPlays ?? []}
+              reducedMotion={reducedMotion}
+              challenge={challengeCard}
+              onPlay={play}
+              onPickMini={pickMini}
+              onHall={() => setHall({})}
+            />
           )}
 
           {view === 'catalog' && (
