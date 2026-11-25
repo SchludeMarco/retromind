@@ -32,9 +32,9 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
-  '„Welcome back“ leicht roboterhaft': {
-    title: '“Welcome back” with a light robot touch',
-    text: 'The greeting when you arrive is now spoken in English and German by a male voice with a light robot sound: easy to understand, with a metallic hint, as if from the time machine.',
+  '„Welcome back“ mit Zeitmaschinen-Sound': {
+    title: '“Welcome back” with a time machine sound',
+    text: 'The greeting when you arrive is now a little spectacle: a synth swell builds up, there is a boom, and a metallic male robot voice says “Welcome back” with a big echo.',
   },
   'Menschliche Stimme sagt „Welcome back“': {
     title: 'A human voice says “Welcome back”',
