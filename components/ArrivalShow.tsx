@@ -386,9 +386,12 @@ export const ArrivalShow: React.FC<{
             <p className="rm-arrival-eyebrow">{tr('Welcome back', 'Willkommen zurück')}</p>
             <p className="rm-arrival-digits">{year}</p>
             {line ? <p className="rm-arrival-title">… {line}</p> : title && <p className="rm-arrival-title">{title}</p>}
-            {(hitOn || musicPlaying) && hit && (
+            {/* Only while the hit really plays (Marco, 2026-11-25: the line
+                named a song that wasn't playing; show the song that plays
+                or nothing). */}
+            {hitOn && hit && (
               <p className="rm-arrival-hit">
-                {hitOn ? '♪ ' : ''}
+                {'♪ '}
                 {tr(`US No. 1 of ${year}: `, `US-Nr. 1 von ${year}: `)}
                 <b>{hit.title}</b> · {hit.artist}
               </p>

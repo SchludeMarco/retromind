@@ -313,7 +313,8 @@ eigenen Google Drive ist freiwillig, und es gibt keinen zentralen Speicher.
   Jahrzehnts und die eigenen Fotos und Begriffe fliegen heraus, und ein paar
   Sekunden des Nummer-1-Hits des Jahres (US-Jahrescharts, Ausschnitt über
   `/api/spotify-preview`) klingen als Fanfare, die langsam ausblendet; läuft
-  schon Musik, spielt sie ruhig weiter und der Hit wird nur genannt. Ein
+  schon Musik, spielt sie ruhig weiter und der Hit wird nicht eingeblendet
+  (die Zeile mit dem Hit steht nur da, solange er wirklich läuft). Ein
   Tipp überspringt die Show. Beim Einrasten sagt nach einem kurzen Synth-Sog
   eine **klare Männerstimme mit einem Hauch Roboter** „Welcome back“, in beiden Sprachen auf Englisch (aufgenommener Clip aus
   einem freien Sprachmodell, [`public/audio/voice/`](public/audio/voice/README.md));
