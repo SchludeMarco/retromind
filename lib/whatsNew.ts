@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Musik erst nach dem „Welcome back“, Stimme klarer': {
+    title: 'Music only after the “Welcome back”, clearer voice',
+    text: 'When the time journey starts, the music now only begins once the greeting has been spoken, instead of already on the welcome screen. The voice sounds much clearer and more human, with just a hint of robot; the short time machine swell before it stays.',
+  },
   '„Welcome back“ mit Zeitmaschinen-Sound': {
     title: '“Welcome back” with a time machine sound',
     text: 'The greeting when you arrive is now a little spectacle: a synth swell builds up, there is a boom, and a metallic male robot voice says “Welcome back” with a big echo.',
