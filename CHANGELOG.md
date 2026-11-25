@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Welcome back“ mit Zeitmaschinen-Sound** (2026-11-25, PR #293): Die
+  Begrüßung beim Ankommen ist jetzt ein kleines Spektakel: Ein Synth-Sog
+  baut sich auf, es wummst, und eine metallische Roboter-Männerstimme sagt
+  mit großem Hall „Welcome back“ bzw. „Willkommen zurück“.
+
 - **Menschliche Stimme sagt „Welcome back“** (2026-11-25, PR #292): Beim
   Ankommen in der Stube begrüßt dich jetzt eine natürlich klingende Stimme
   statt der Roboterstimme, auf Deutsch „Willkommen zurück“. Damit man sie
