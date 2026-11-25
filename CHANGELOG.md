@@ -7,13 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Zeitreise: die Zeit-Tafel kommt sofort mit der Zeitreise** (2026-11-25, PR #300):
-  Sobald du „Ab in die Vergangenheit“ drückst, steht die große Tafel mit
-  Zielzeit und Gegenwart da und rattert während der Zeitreise selbst zum
-  Zieldatum, der Strudel der Zeitmaschine dreht sich dahinter. Beim Blitz
-  rastet sie ein, dann kommen Jahr und „Welcome back“. Vorher erschien die
-  Tafel erst, nachdem die Zeitreise schon vorbei war. Dasselbe gilt, wenn du
-  ein neues Datum wählst.
+- **Zeitreise: erst die Reise, dann die Zeit-Tafel, dann die Stube** (2026-11-25, PR #300, #301):
+  Nach „Ab in die Vergangenheit“ läuft die Zeitreise-Animation wie gewohnt.
+  Aus dem weißen Licht kommt direkt die große Tafel mit Zielzeit und
+  Gegenwart, rattert zu deinem Datum, rastet ein, dann folgen Jahr und
+  „Welcome back“, und erst danach öffnet sich die Stube. Vorher öffnete sich
+  das Licht zuerst kurz auf die Stube, und die Tafel schob sich erst danach
+  darüber.
 
 - **Gaming-Edition: eigener Controller für „Zocken“** (2026-11-25, PR #299):
   Oben rechts leuchtet jetzt Marcos eigener Neon-Controller statt des
