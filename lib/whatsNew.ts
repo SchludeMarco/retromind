@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Begrüßung immer auf Englisch': {
+    title: 'Greeting always in English',
+    text: 'In the German app too, the English voice now says “Welcome back” when you arrive. The German voice is gone. The “US No. 1 of …” line in the arrival show is gone.',
+  },
   'Musik erst nach dem „Welcome back“, Stimme klarer': {
     title: 'Music only after the “Welcome back”, clearer voice',
     text: 'When the time journey starts, the music now only begins once the greeting has been spoken, instead of already on the welcome screen. The voice sounds much clearer and more human, with just a hint of robot; the short time machine swell before it stays.',

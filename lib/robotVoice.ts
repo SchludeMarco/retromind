@@ -86,7 +86,9 @@ export function announceWelcomeBack(onDone?: () => void) {
     onDone?.();
   };
   if (isMuted()) return done();
-  const text = tr('Welcome back', 'Willkommen zurück');
+  // Always English, also in the German app (Marco, 2026-11-25: "wir brauchen
+  // eigentlich nur die englische Stimme"); the German clip is archived.
+  const text = 'Welcome back';
   loadWelcomeClip().then((buf) => {
     if (isMuted()) return done();
     const c = sharedAudioContext();
@@ -126,14 +128,14 @@ export function announceWelcomeBack(onDone?: () => void) {
 // How long the music has to get quieter before the voice starts.
 const DUCK_LEAD_MS = 450;
 
-const CLIP_URL = { en: '/audio/voice/welcome-back-en.mp3', de: '/audio/voice/welcome-back-de.mp3' };
+const CLIP_URL = '/audio/voice/welcome-back-en.mp3';
 let clip: Promise<AudioBuffer | null> | null = null;
 
 function loadWelcomeClip(): Promise<AudioBuffer | null> {
   if (clip) return clip;
   const c = typeof window !== 'undefined' ? sharedAudioContext() : null;
   if (!c) return Promise.resolve(null);
-  clip = fetch(isGerman ? CLIP_URL.de : CLIP_URL.en)
+  clip = fetch(CLIP_URL)
     .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('no clip'))))
     // Older Safari only knows the callback form.
     .then((data) => new Promise<AudioBuffer>((resolve, reject) => c.decodeAudioData(data, resolve, reject)))
@@ -149,10 +151,9 @@ function loadWelcomeClip(): Promise<AudioBuffer | null> {
 const HUMAN_VOICE = /natural|neural|online|premium|enhanced|siri|google/i;
 
 /** The device's most human voice, normal pitch: the fallback without the clip. */
-function speakHuman(text: string, onDone: () => void = () => {}) {
+function speakHuman(text: string, onDone: () => void = () => {}, lang: 'en' | 'de' = 'en') {
   const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
   if (!synth || isMuted()) return onDone();
-  const lang = isGerman ? 'de' : 'en';
   const speak = () => {
     try {
       synth.cancel();
