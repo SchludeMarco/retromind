@@ -1,6 +1,6 @@
 import React from 'react';
 import { tr } from '../../lib/i18n';
-import { cameFromZeitreise, zeitreiseHref } from '../lib/cameFrom';
+import { zeitreiseHref } from '../lib/cameFrom';
 
 // All of the hall's controls behind one small handle at the right edge,
 // halfway down the screen, like in the Zeitreise (Marco, 2026-10-18). The
@@ -109,18 +109,16 @@ export function GamingControls<V extends string>({
           <button className="px-btn" onClick={onLeave} data-nav>
             {tr('⏏ LEAVE THE CLUB', '⏏ CLUB VERLASSEN')}
           </button>
-          {cameFromZeitreise() && (
-            <a
-              className="px-btn"
-              href={zeitreiseHref()}
-              onClick={(e) => {
-                e.currentTarget.href = zeitreiseHref();
-              }}
-              data-nav
-            >
-              {tr('◄ BACK TO RETROMIND', '◄ ZURÜCK ZU RETROMIND')}
-            </a>
-          )}
+          <a
+            className="px-btn"
+            href={zeitreiseHref()}
+            onClick={(e) => {
+              e.currentTarget.href = zeitreiseHref();
+            }}
+            data-nav
+          >
+            {tr('◄ BACK TO RETROMIND', '◄ ZURÜCK ZU RETROMIND')}
+          </a>
         </div>
       </section>
     </div>

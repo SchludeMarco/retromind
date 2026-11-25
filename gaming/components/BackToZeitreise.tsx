@@ -1,13 +1,12 @@
 import React from 'react';
 import { tr } from '../../lib/i18n';
-import { cameFromZeitreise, zeitreiseHref } from '../lib/cameFrom';
+import { zeitreiseHref } from '../lib/cameFrom';
 
-// Visible way back for visitors who came over from the Zeitreise (Marco,
-// 2026-10-13). Shown at the door and on top of the hall; others still find
-// the plain link in the footer. The href is built at click time so a mute or
-// Google choice made in here travels back too.
+// Visible way back to the Zeitreise (Marco, 2026-10-13). Since 2026-11-25
+// shown for everyone: at the door and right above the RetroMind Gaming logo
+// in the hall. The href is built at click time so a mute or Google choice
+// made in here, and the synced data (lib/sync.ts), travel back too.
 export const BackToZeitreise: React.FC<{ className?: string }> = ({ className = '' }) => {
-  if (!cameFromZeitreise()) return null;
   return (
     <a
       className={`px-btn back-zeitreise ${className}`}

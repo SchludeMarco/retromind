@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo': {
+    title: 'Gaming edition: “Back to RetroMind” always above the logo',
+    text: 'In the hall there is now a yellow “Back to RetroMind” button right above the RetroMind Gaming logo that takes you to the time travel. It is always there, also at the door and in the panel behind the handle, not only when you came over from the time travel. Your sound, Google sign-in and data come along.',
+  },
   'Zeitreise: die Stube ist nach der Ankunft erst eingefroren und taut dann auf': {
     title: 'Time travel: the living room is frozen on arrival and then thaws',
     text: 'When the living room appears after the time circuits and the “Welcome back”, an icy blue layer of frost with ice crystals lies over everything for a moment, the colors are pale and nothing moves. Then the ice thaws from the middle outwards with a quiet crackle, a few drops run down, and the living room comes back to life.',

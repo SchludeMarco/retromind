@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo** (2026-11-25, PR #303):
+  In der Halle steht jetzt direkt über dem Logo „RetroMind Gaming“ ein
+  gelber Knopf „Zurück zu RetroMind“, der dich zur Zeitreise bringt. Er ist
+  immer da, auch vor der Tür und im Fenster hinter dem Griff, nicht mehr nur,
+  wenn du aus der Zeitreise gekommen bist. Ton, Google-Anmeldung und deine
+  Daten kommen mit.
+
 - **Gaming-Edition: eigener Controller für „Zocken“** (2026-11-25, PR #299):
   Oben rechts leuchtet jetzt Marcos eigener Neon-Controller statt des
   Platzhalters.

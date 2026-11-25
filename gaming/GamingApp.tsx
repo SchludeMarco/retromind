@@ -29,6 +29,7 @@ import { HallOfFame } from './components/HallOfFame';
 import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { challengeMade, rivalNotesWanted } from '../lib/push';
+import { BackToZeitreise } from './components/BackToZeitreise';
 import { emuPlayId, miniPlayId, PlayCorner, PlayZone, withRecent } from './components/PlayZone';
 import { LegendCorner } from './components/LegendCorner';
 import { Legend, legendOfTheDay } from './data/legends';
@@ -858,6 +859,9 @@ export const GamingApp: React.FC = () => {
       ) : (
         <main className="hub">
           <header className="hud pixel-font">
+            {/* Way back to the Zeitreise, right above the logo, for everyone (Marco, 2026-11-25). */}
+            <div className="brand-wrap">
+            <BackToZeitreise className="back-hub" />
             <h1 className="brand rgb-split" onClick={tapLogo}>
               <img className="brand-motif" src="/gaming/motif.webp" alt="" />
               RETROMIND
@@ -875,6 +879,7 @@ export const GamingApp: React.FC = () => {
                 }[view]}
               </span>
             </h1>
+            </div>
             {/* Top right: straight to the games you play yourself (Marco, 2026-11-25). */}
             <PlayCorner active={view === 'chill'} onOpen={() => switchView('chill')} />
             {cloud.status === 'signed_in' && cloud.user?.name && (
