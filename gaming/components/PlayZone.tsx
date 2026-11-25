@@ -31,7 +31,7 @@ export const PlayCorner: React.FC<{ active: boolean; onOpen: () => void }> = ({ 
     title={tr('Play yourself: retro console and quick games', 'Selbst zocken: Retro-Konsole und Schnellspiele')}
     data-nav
   >
-    <img src="/gaming/play-icon.svg" alt="" width={64} height={48} decoding="async" />
+    <img src="/gaming/play-icon.webp" alt="" width={200} height={160} decoding="async" />
     <span>{tr('PLAY', 'ZOCKEN')}</span>
   </button>
 );
