@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Gaming-Edition: eigener Controller für „Zocken“': {
+    title: 'Gaming edition: our own controller for “Play”',
+    text: 'At the top right, Marco’s own neon controller now glows instead of the placeholder.',
+  },
   'Gaming-Edition: „Selbst zocken“ oben rechts': {
     title: 'Gaming edition: “Play yourself” at the top right',
     text: 'At the very top right of the arcade there is now a small neon controller with a “PLAY” tag that briefly lights up every three seconds. A tap opens the new “Play yourself” page: today’s Blitz Challenge and a “Random game” button on top, then the retro console games (last played first) and every quick game as a tile with your own record. The Blitz games and your own game file fold out at the bottom.',

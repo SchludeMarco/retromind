@@ -5213,7 +5213,7 @@ button.pcard {
    Zeitreise (components/gamingCorner.css). */
 .play-corner {
   position: absolute;
-  top: 6px;
+  top: 0;
   right: 0;
   display: flex;
   flex-direction: column;
@@ -5227,10 +5227,9 @@ button.pcard {
   -webkit-tap-highlight-color: transparent;
 }
 .play-corner img {
-  width: 56px;
-  height: 42px;
+  width: 62px;
+  height: 50px;
   display: block;
-  image-rendering: pixelated;
   transition: transform 0.18s ease-out;
   animation: play-corner-blink 3s linear infinite;
 }
@@ -5269,8 +5268,8 @@ button.pcard {
     padding-right: 76px;
   }
   .play-corner img {
-    width: 48px;
-    height: 36px;
+    width: 54px;
+    height: 43px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

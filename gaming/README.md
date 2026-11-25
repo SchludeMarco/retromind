@@ -250,7 +250,7 @@ zeigen dürfen.
   ([`components/GuruChat.tsx`](components/GuruChat.tsx)).
 - **Selbst zocken** – ganz oben rechts im HUD ein kleiner Neon-Controller
   mit dem Schild „ZOCKEN“ (blinkt alle drei Sekunden kurz, nicht bei
-  „Bewegung reduzieren“; Platzhalter `public/gaming/play-icon.svg`). Er
+  „Bewegung reduzieren“; Marcos eigenes Bild `public/gaming/play-icon.webp`). Er
   öffnet die Seite „Selbst zocken“ (derselbe Bereich wie „Zocken“ im
   Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
   „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
@@ -529,9 +529,6 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
   „Frag den Game-Guru“-Leiste (Entwurf in `docs/stitch/gaming/`).
 - **Mehr Spiele im kuratierten Katalog** mit eigenen Tipps.
 - **Eigene Domain** (kostet Geld, erst nach Rücksprache).
-- **Eigenes Symbol für „Selbst zocken“:** der Pixel-Controller oben rechts
-  ist ein Platzhalter (`public/gaming/play-icon.svg`); Marcos eigenes Bild
-  (transparentes PNG, Neon Pink/Cyan wie der Joystick) soll ihn ersetzen.
 
 ### Könnte
 

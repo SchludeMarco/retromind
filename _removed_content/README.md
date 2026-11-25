@@ -174,3 +174,7 @@ gebaut oder ausgeliefert.
   ramponierten Wegweiser „To the gaming zone“ (entfernt am 2026-11-25, Marco:
   störte „mittendrin im Nirgendwo“; ersetzt durch den kleinen Joystick
   „Gaming“ oben rechts, `components/GamingCorner.tsx`).
+- `gaming-play-icon-platzhalter.svg`: der gezeichnete Pixel-Controller als
+  Platzhalter für „ZOCKEN“ oben rechts in der Gaming-Edition (entfernt am
+  2026-11-25, ersetzt durch Marcos eigenen Neon-Controller
+  `public/gaming/play-icon.webp`).

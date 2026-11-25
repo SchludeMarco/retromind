@@ -8,6 +8,10 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Gaming-Edition: eigener Controller für „Zocken“** (2026-11-25, PR #299):
+  Oben rechts leuchtet jetzt Marcos eigener Neon-Controller statt des
+  Platzhalters.
+
 - **Gaming-Edition: „Selbst zocken“ oben rechts** (2026-11-25, PR #298):
   Ganz oben rechts in der Spielhalle sitzt jetzt ein kleiner Neon-Controller
   mit dem Schild „ZOCKEN“, der alle drei Sekunden kurz aufblinkt. Ein Tipp
