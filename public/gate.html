@@ -67,6 +67,15 @@
     var target = params.get('next') || '/';
     if (!/^\/(?!\/)/.test(target) || target.indexOf('/gate.html') === 0) target = '/';
 
+    // Coming from one of Marco's other apps (api/admin.js ?view=pass): same
+    // guest list, so say so instead of naming only RetroMind.
+    if (target.indexOf('/api/admin?view=pass') === 0) {
+      document.getElementById('intro').textContent = t(
+        "Marco's apps are private for invited friends and family. Sign in once with the Google account Marco invited.",
+        'Marcos Apps sind privat für eingeladene Freunde und Familie. Melde dich einmal mit dem Google-Konto an, das Marco eingeladen hat.'
+      );
+    }
+
     var btn = document.getElementById('signin');
     var msg = document.getElementById('msg');
     var say = function (text, error) { msg.textContent = text; msg.className = error ? 'msg error' : 'msg'; };

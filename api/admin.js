@@ -18,6 +18,10 @@
 //                              sign-in cookie (api/_googleKeep.js)
 // POST {action:"googleRefresh"} → public: fresh token from that cookie
 // POST {action:"googleSignOut"} → public: removes it (this device only)
+// GET  ?view=pass&to=URL     → public: Gästepass für Marcos andere Apps
+//                              (APP_ORIGINS); ohne Anmeldung erst zur Gästetür
+// POST {action:"appRedeem", code} / {action:"appGuest", email} → nur mit
+//                              Header x-apps-secret: Pass einlösen / Gast prüfen
 // GET  ?view=guests          → the guest list
 // POST {action:"guestAdd"|"guestRemove", email} → change the guest list
 
@@ -39,6 +43,10 @@ import {
   addGuest,
   HANDOFF_ORIGINS,
   HANDOFF_PARAM,
+  APP_ORIGINS,
+  APP_PASS_PATH,
+  appSecretOk,
+  redeemHandoff,
   clearCookie,
   createHandoff,
   googleEmail,
@@ -192,6 +200,48 @@ async function handoff(req, res) {
   return res.status(302).end();
 }
 
+// Gästepass für Marcos andere Apps (api/_guests.js, APP_ORIGINS).
+async function appPass(req, res) {
+  let target;
+  try {
+    target = new URL(String(req.query?.to || ""));
+  } catch {
+    return res.status(400).json({ error: "bad_target" });
+  }
+  if (!APP_ORIGINS.includes(target.origin)) return res.status(400).json({ error: "bad_target" });
+  const back = target.pathname + target.search;
+  let guest = null;
+  try {
+    guest = guestsConfigured() ? await readCookie(req.headers.cookie) : null;
+    if (guest && !(await isGuest(guest.email))) guest = null;
+  } catch (err) {
+    console.error("app pass failed", err);
+  }
+  if (!guest) {
+    const self = `/api/admin?view=pass&to=${encodeURIComponent(target.toString())}`;
+    res.setHeader("Location", `/gate.html?next=${encodeURIComponent(self)}`);
+    return res.status(302).end();
+  }
+  const pass = new URL(APP_PASS_PATH, target.origin);
+  pass.searchParams.set("code", await createHandoff(guest.email));
+  pass.searchParams.set("next", back);
+  res.setHeader("Location", pass.toString());
+  return res.status(302).end();
+}
+
+async function appApi(req, body, res) {
+  if (!appSecretOk(req.headers["x-apps-secret"])) return res.status(403).json({ error: "forbidden" });
+  try {
+    const email =
+      body.action === "appRedeem" ? await redeemHandoff(body.code) : normalizeEmail(body.email);
+    const guest = !!email && (await isGuest(email));
+    return res.status(200).json({ guest, email: guest ? email : null });
+  } catch (err) {
+    console.error("app api failed", err);
+    return res.status(502).json({ error: "upstream" });
+  }
+}
+
 async function liveCheck(res) {
   const master = await github(`commits/${BRANCH}`);
   const domains = await Promise.all(
@@ -244,9 +294,11 @@ export default async function handler(req, res) {
     });
   }
   if (req.method === "GET" && view === "handoff") return handoff(req, res);
+  if (req.method === "GET" && view === "pass") return appPass(req, res);
   if (req.method === "GET" && view === "google") return res.status(200).json({ keep: keepConfigured() });
   const body = req.method === "POST" ? await readJsonBody(req) : {};
   if (req.method === "POST" && String(body.action || "").startsWith("google")) return googleKeep(req, body, res);
+  if (req.method === "POST" && (body.action === "appRedeem" || body.action === "appGuest")) return appApi(req, body, res);
   if (req.method === "POST" && body.action === "guestLogin") return guestLogin(body, res);
   if (req.method === "POST" && body.action === "guestLogout") {
     res.setHeader("Set-Cookie", clearCookie());
