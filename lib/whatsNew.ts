@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  "Gäste nur für einzelne Apps einladen": {
+    title: "Invite guests to single apps only",
+    text: "Marco can now choose which of his apps a guest may use, for example only Rumble. If you open an app you're not invited to, you see a short “No access” note instead of the door. Nothing changes for existing guests, they can still use all apps.",
+  },
   "Eine Gästeliste für alle Apps von Marco": {
     title: "One guest list for all of Marco's apps",
     text: "If you're invited to RetroMind, you can now also open ToolPulse, Sm@rtCraft 3.0, Rumble, AI Investment Manager, MS Akku and AboCheck. Their door sends you here once to sign in with Google and then straight on. Marco keeps all guests in one place in the admin area.",

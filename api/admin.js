@@ -22,8 +22,10 @@
 //                              (APP_ORIGINS); ohne Anmeldung erst zur Gästetür
 // POST {action:"appRedeem", code} / {action:"appGuest", email} → nur mit
 //                              Header x-apps-secret: Pass einlösen / Gast prüfen
-// GET  ?view=guests          → the guest list
-// POST {action:"guestAdd"|"guestRemove", email} → change the guest list
+// GET  ?view=guests          → the guest list (+ access: which guests may use
+//                              only some apps, for Omni Admin)
+// POST {action:"guestAdd"|"guestRemove", email, apps?} → change the guest list
+// POST {action:"guestApps", email, apps} → apps a guest may use (null = all)
 
 import {
   FEEDBACK_PATH,
@@ -45,6 +47,11 @@ import {
   HANDOFF_PARAM,
   APP_ORIGINS,
   APP_PASS_PATH,
+  appIdForOrigin,
+  listAccess,
+  mayUseApp,
+  noAccessPage,
+  setGuestApps,
   appSecretOk,
   redeemHandoff,
   clearCookie,
@@ -214,6 +221,11 @@ async function appPass(req, res) {
   try {
     guest = guestsConfigured() ? await readCookie(req.headers.cookie) : null;
     if (guest && !(await isGuest(guest.email))) guest = null;
+    // Invited, but not to this app (Omni Admin): a short note instead of the door.
+    if (guest && !(await mayUseApp(guest.email, appIdForOrigin(target.origin)))) {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(noAccessPage(appIdForOrigin(target.origin)));
+    }
   } catch (err) {
     console.error("app pass failed", err);
   }
@@ -234,7 +246,9 @@ async function appApi(req, body, res) {
   try {
     const email =
       body.action === "appRedeem" ? await redeemHandoff(body.code) : normalizeEmail(body.email);
-    const guest = !!email && (await isGuest(email));
+    let guest = !!email && (await isGuest(email));
+    // Apps that say who they are only let in guests allowed for them (Omni Admin).
+    if (guest && typeof body.app === "string") guest = await mayUseApp(email, body.app);
     return res.status(200).json({ guest, email: guest ? email : null });
   } catch (err) {
     console.error("app api failed", err);
@@ -309,14 +323,22 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET" && view === "guests") {
       if (!guestsConfigured()) return res.status(200).json({ configured: false, guests: [], admin: ADMIN_EMAIL });
-      return res.status(200).json({ configured: true, guests: await listGuests(), admin: ADMIN_EMAIL });
+      const [guests, access] = await Promise.all([listGuests(), listAccess()]);
+      return res.status(200).json({ configured: true, guests, access, admin: ADMIN_EMAIL });
     }
-    if (req.method === "POST" && (body.action === "guestAdd" || body.action === "guestRemove")) {
+    if (req.method === "POST" && ["guestAdd", "guestRemove", "guestApps"].includes(body.action)) {
       const email = normalizeEmail(body.email);
       if (!validEmail(email)) return res.status(400).json({ error: "bad_email" });
-      if (body.action === "guestAdd") await addGuest(email);
-      else await removeGuest(email);
-      return res.status(200).json({ guests: await listGuests() });
+      const apps = Array.isArray(body.apps) ? body.apps.map(String) : null;
+      if (body.action === "guestAdd") {
+        await addGuest(email);
+        await setGuestApps(email, apps);
+      } else if (body.action === "guestApps") {
+        if (body.apps !== null && (!apps || apps.length === 0)) return res.status(400).json({ error: "bad_apps" });
+        await setGuestApps(email, apps);
+      } else await removeGuest(email);
+      const [guests, access] = await Promise.all([listGuests(), listAccess()]);
+      return res.status(200).json({ guests, access });
     }
     if (req.method === "GET" && view === "feedback") return await feedbackList(res);
     if (req.method === "POST") return await feedbackAction(body, res);

@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Gäste nur für einzelne Apps einladen** (2026-11-26, PR #305):
+  Marco kann jetzt festlegen, welche seiner Apps ein Gast benutzen darf,
+  zum Beispiel nur Rumble. Wer eine App öffnet, für die er nicht
+  freigeschaltet ist, sieht statt der Tür einen kurzen Hinweis „Kein Zugang“.
+  Für alle bisherigen Gäste ändert sich nichts, sie dürfen weiter alle Apps
+  benutzen.
+
 - **Eine Gästeliste für alle Apps von Marco** (2026-11-26, PR #304):
   Wer bei RetroMind eingeladen ist, kommt jetzt auch in ToolPulse,
   Sm@rtCraft 3.0, Rumble, AI Investment Manager, MS Akku und AboCheck. Die
