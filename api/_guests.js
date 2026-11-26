@@ -41,7 +41,61 @@ export async function isGuest(email) {
 }
 export const listGuests = async () => ((await redis(["SMEMBERS", GUESTS_KEY])) || []).sort();
 export const addGuest = (email) => redis(["SADD", GUESTS_KEY, normalizeEmail(email)]);
-export const removeGuest = (email) => redis(["SREM", GUESTS_KEY, normalizeEmail(email)]);
+export async function removeGuest(email) {
+  await redis(["SREM", GUESTS_KEY, normalizeEmail(email)]);
+  await redis(["HDEL", ACCESS_KEY, normalizeEmail(email)]);
+}
+
+// ---- Welche Apps ein Gast benutzen darf (Omni Admin, Marco 2026-11-26)
+// Ohne Eintrag darf ein Gast alle Apps benutzen (so wie bisher). Mit Eintrag
+// (Hash rm:guest-apps, Feld = Adresse, Wert = JSON-Liste von App-IDs) nur die
+// genannten. Marco (ADMIN_EMAIL) darf immer alles.
+
+const ACCESS_KEY = "rm:guest-apps";
+export const APP_IDS = ["retromind", "toolpulse", "smartcraft", "rumble", "ai-investment", "abocheck", "ms-akku"];
+
+const parseApps = (raw) => {
+  try {
+    const list = JSON.parse(raw);
+    return Array.isArray(list) ? list.filter((id) => APP_IDS.includes(id)) : null;
+  } catch {
+    return null;
+  }
+};
+
+/** The apps a guest may use, or null for all of them. */
+export async function guestApps(email) {
+  const raw = await redis(["HGET", ACCESS_KEY, normalizeEmail(email)]);
+  return raw ? parseApps(raw) : null;
+}
+
+/** { email: [appIds] } for every guest limited to some apps. */
+export async function listAccess() {
+  const flat = (await redis(["HGETALL", ACCESS_KEY])) || [];
+  const out = {};
+  for (let i = 0; i + 1 < flat.length; i += 2) {
+    const apps = parseApps(flat[i + 1]);
+    if (apps) out[flat[i]] = apps;
+  }
+  return out;
+}
+
+/** apps = list of app ids, or null for "all apps". */
+export async function setGuestApps(email, apps) {
+  const e = normalizeEmail(email);
+  if (apps === null) return redis(["HDEL", ACCESS_KEY, e]);
+  const list = [...new Set(apps.filter((id) => APP_IDS.includes(id)))];
+  if (list.length === APP_IDS.length) return redis(["HDEL", ACCESS_KEY, e]);
+  return redis(["HSET", ACCESS_KEY, e, JSON.stringify(list)]);
+}
+
+/** Whether an address on the guest list may use one app. */
+export async function mayUseApp(email, appId) {
+  const e = normalizeEmail(email);
+  if (e === ADMIN_EMAIL) return true;
+  const apps = await guestApps(e);
+  return !apps || apps.includes(appId);
+}
 
 // ---- signed cookie: base64url(email).issuedAt.hmac
 
@@ -149,6 +203,37 @@ export const APP_ORIGINS = [
   "https://abocheck-frontend.vercel.app",
 ];
 export const APP_PASS_PATH = "/_gate/pass";
+
+const ORIGIN_APP = {
+  "https://toolpulse-phi.vercel.app": "toolpulse",
+  "https://smartcraft-v3.vercel.app": "smartcraft",
+  "https://rumble-party.vercel.app": "rumble",
+  "https://ai-investment-manager-one.vercel.app": "ai-investment",
+  "https://ms-akku.vercel.app": "ms-akku",
+  "https://abocheck-frontend.vercel.app": "abocheck",
+};
+/** App id for one of APP_ORIGINS. */
+export const appIdForOrigin = (origin) => ORIGIN_APP[origin] || null;
+
+const APP_NAMES = {
+  retromind: "RetroMind",
+  toolpulse: "ToolPulse",
+  smartcraft: "Sm@rtCraft 3.0",
+  rumble: "Rumble",
+  "ai-investment": "AI Investment Manager",
+  abocheck: "AboCheck",
+  "ms-akku": "MS Akku",
+};
+
+/** A small page for a guest who is invited, but not to this app. */
+export function noAccessPage(appId) {
+  const name = APP_NAMES[appId] || "this app";
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title>
+<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#051424;color:#d4e4fa;font:16px/1.5 system-ui,sans-serif;padding:24px;box-sizing:border-box}div{max-width:360px;text-align:center}h1{font-size:20px;margin:0 0 8px}p{margin:0 0 6px;color:#c7c4d7}</style></head>
+<body><div><h1>No access to ${name}</h1><p>You are invited to Marco's apps, but not to this one. Ask Marco if you'd like to use it.</p>
+<h1 lang="de" style="margin-top:20px">Kein Zugang zu ${name}</h1><p lang="de">Du bist zu Marcos Apps eingeladen, aber nicht zu dieser. Frag Marco, wenn du sie benutzen möchtest.</p></div></body></html>`;
+  return html;
+}
 
 /** Constant-time check of the shared secret the apps send along. */
 export function appSecretOk(given) {

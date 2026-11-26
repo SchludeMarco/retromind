@@ -728,6 +728,17 @@ Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. 
   serverseitig mit `APPS_GUEST_SECRET` einlöst und dann ihr eigenes Cookie
   setzt. Wer nicht angemeldet ist, geht vorher durch `/gate.html`.
 
+- **Gäste nur für einzelne Apps** ([`api/_guests.js`](api/_guests.js)
+  `mayUseApp`, Upstash-Hash `rm:guest-apps`) – Marco legt in
+  [Omni Admin](https://omni-admin-eta.vercel.app) fest, welche Apps ein Gast
+  benutzen darf (2026-11-26). Ohne Eintrag gelten wie bisher alle Apps.
+  `?view=pass` gibt nur für erlaubte Apps einen Gästepass aus, sonst eine
+  kurze Seite „Kein Zugang“; dieselbe Seite zeigt die Middleware Gästen ohne
+  RetroMind-Freigabe (ihr Cookie bleibt, damit die Tür weiter Pässe für die
+  anderen Apps ausgibt). `?view=guests` liefert die Freigaben als `access`
+  mit, `guestApps` ändert sie. `appGuest` prüft die App, wenn sie ihre ID als
+  `app` mitschickt.
+
 - **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
   [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter
   `/admin/` auf beiden Domains, bewusst nirgends in den Apps verlinkt. Marco
@@ -950,6 +961,12 @@ Feedback-Mail). Alles Eingegangene steht in [feedback.md](feedback.md).
   nicht mehr in `feedback.md`, und der „Als To Do übernehmen“-Link geht nicht.
 
 ### Sollte
+
+- **Die anderen Apps schicken bei der täglichen Gästeprüfung ihre App-ID mit**
+  (`appGuest` mit `app`): Dann wirkt das Wegnehmen einer einzelnen App
+  spätestens nach einem Tag. Bisher greift es erst, wenn der Gast in der
+  App neu durch die Tür muss; ganz entfernte Gäste fliegen weiter nach
+  spätestens einem Tag raus.
 
 - **Design-System auf die übrigen Bildschirme übertragen:** Die Halte der
   Reise, die Reiseleiste und die Fahrkarte nutzen es schon

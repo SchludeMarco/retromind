@@ -16,6 +16,8 @@ import {
   guestsConfigured,
   isGuest,
   makeCookie,
+  mayUseApp,
+  noAccessPage,
   readCookie,
   redeemHandoff,
   takeHandoffGoogle,
@@ -96,6 +98,22 @@ export default async function middleware(request) {
 
   const guest = await readCookie(request.headers.get("cookie"));
   if (!guest) return deny(request, url);
+  // Invited to some of Marco's apps, but not to RetroMind (Omni Admin): the
+  // cookie stays, so the door can still hand out passes for the other apps.
+  if (isPage(request)) {
+    let allowed = true;
+    try {
+      allowed = await mayUseApp(guest.email, "retromind");
+    } catch {
+      // Database hiccup: let the guest in, the next page view checks again.
+    }
+    if (!allowed) {
+      return new Response(noAccessPage("retromind"), {
+        status: 403,
+        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
+      });
+    }
+  }
   if (guest.age > RECHECK_AFTER && isPage(request)) {
     let still = true;
     try {
