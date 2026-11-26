@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  "Eine Gästeliste für alle Apps von Marco": {
+    title: "One guest list for all of Marco's apps",
+    text: "If you're invited to RetroMind, you can now also open ToolPulse, Sm@rtCraft 3.0, Rumble, AI Investment Manager, MS Akku and AboCheck. Their door sends you here once to sign in with Google and then straight on. Marco keeps all guests in one place in the admin area.",
+  },
   'Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo': {
     title: 'Gaming edition: “Back to RetroMind” always above the logo',
     text: 'In the hall there is now a yellow “Back to RetroMind” button right above the RetroMind Gaming logo that takes you to the time travel. It is always there, also at the door and in the panel behind the handle, not only when you came over from the time travel. Your sound, Google sign-in and data come along.',

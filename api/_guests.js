@@ -131,3 +131,31 @@ export async function takeHandoffGoogle(code) {
   if (!/^[0-9a-f]{48}$/.test(String(code || ""))) return null;
   return (await redis(["GETDEL", `rm:handoff:g:${code}`])) || null;
 }
+
+// ---- Marcos andere Apps (Marco, 2026-11-26: "alle Apps so wie RetroMind")
+// ToolPulse, Sm@rtCraft 3.0, Rumble, AI Investment Manager, MS Akku und
+// AboCheck teilen sich diese Gästeliste. Ihre Gästetür schickt Besucher zu
+// /api/admin?view=pass&to=URL: wer hier als Gast angemeldet ist, kommt mit
+// einem Einmal-Code (2 Minuten) zurück; die App löst ihn serverseitig mit
+// APPS_GUEST_SECRET ein (action "appRedeem") und prüft später einmal am Tag
+// nach (action "appGuest").
+
+export const APP_ORIGINS = [
+  "https://toolpulse-phi.vercel.app",
+  "https://smartcraft-v3.vercel.app",
+  "https://rumble-party.vercel.app",
+  "https://ai-investment-manager-one.vercel.app",
+  "https://ms-akku.vercel.app",
+  "https://abocheck-frontend.vercel.app",
+];
+export const APP_PASS_PATH = "/_gate/pass";
+
+/** Constant-time check of the shared secret the apps send along. */
+export function appSecretOk(given) {
+  const want = process.env.APPS_GUEST_SECRET || "";
+  const got = String(given || "");
+  if (!want || got.length !== want.length) return false;
+  let diff = 0;
+  for (let i = 0; i < want.length; i++) diff |= want.charCodeAt(i) ^ got.charCodeAt(i);
+  return diff === 0;
+}

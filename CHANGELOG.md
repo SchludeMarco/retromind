@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Eine Gästeliste für alle Apps von Marco** (2026-11-26, PR #304):
+  Wer bei RetroMind eingeladen ist, kommt jetzt auch in ToolPulse,
+  Sm@rtCraft 3.0, Rumble, AI Investment Manager, MS Akku und AboCheck. Die
+  Tür dieser Apps schickt dich einmal hierher zur Google-Anmeldung und dann
+  gleich weiter. Marco pflegt alle Gäste an einer Stelle im Adminbereich.
+
 - **Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo** (2026-11-25, PR #303):
   In der Halle steht jetzt direkt über dem Logo „RetroMind Gaming“ ein
   gelber Knopf „Zurück zu RetroMind“, der dich zur Zeitreise bringt. Er ist

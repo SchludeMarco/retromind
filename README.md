@@ -719,6 +719,15 @@ Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. 
   Einmal-Code (2 Minuten, Upstash) bringt den Gästezugang mit, die
   Google-Sitzung reist im `#`-Teil der Adresse.
 
+- **Eine Gästeliste für alle Apps** ([`api/admin.js`](api/admin.js)
+  `?view=pass`, `appRedeem`, `appGuest`; [`api/_guests.js`](api/_guests.js)
+  `APP_ORIGINS`) – ToolPulse, Sm@rtCraft 3.0, Rumble, AI Investment Manager,
+  MS Akku und AboCheck nutzen die RetroMind-Gästeliste (Marco, 2026-11-26).
+  Ihre Tür leitet zu `/api/admin?view=pass&to=URL`; ein angemeldeter Gast
+  bekommt einen Einmal-Code (2 Minuten), den die App über `/_gate/pass`
+  serverseitig mit `APPS_GUEST_SECRET` einlöst und dann ihr eigenes Cookie
+  setzt. Wer nicht angemeldet ist, geht vorher durch `/gate.html`.
+
 - **Adminbereich mit Nutzungszahlen** ([`admin/`](admin/AdminApp.tsx),
   [`api/stats.js`](api/stats.js), [`lib/usage.ts`](lib/usage.ts)) – unter
   `/admin/` auf beiden Domains, bewusst nirgends in den Apps verlinkt. Marco
