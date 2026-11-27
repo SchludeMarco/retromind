@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Zocken aufgeräumt: Listen eingeklappt, Tages-Challenge immer sichtbar**
+  (2026-11-27, PR #317): Unter „Zocken“ steht die Tages-Challenge mit ihrer
+  Erinnerungs-Glocke jetzt immer ganz oben. Darunter starten alle Listen
+  eingeklappt: Blitz-Challenges, Retro-Konsole und Schnellspiele (jetzt mit
+  🕹️ statt ⚡, damit nur die Blitz-Challenges den Blitz tragen). Jede Liste
+  zeigt, wie viele Spiele drin sind, und klappt mit einem Tipp auf.
+
 - **Blitz-Challenges mit Tages-Challenge vorne und Erinnerungs-Glocke**
   (2026-11-27, PR #316): Die Liste ganz oben in „Zocken“ heißt jetzt
   „Blitz-Challenges“ (englisch „Lightning Challenges“). Ihr erster Punkt ist

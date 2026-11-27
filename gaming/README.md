@@ -265,12 +265,13 @@ zeigen dürfen.
   öffnet die Seite „Selbst zocken“ (derselbe Bereich wie „Zocken“ im
   Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
   „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
-  ein Konsolen- oder Schnellspiel) und die Bestenliste; als Erstes die
-  „⚡ Blitz-Challenges“ (englisch „Lightning Challenges“, mit blinkendem Blitz,
-  schon aufgeklappt): zuerst die Tages-Challenge mit blinkendem rotem „!“ und
-  der Erinnerungs-Glocke daneben, dann die 30-Sekunden-Spiele; dann die Retro-Konsole als Kacheln, das
+  ein Konsolen- oder Schnellspiel) und die Bestenliste; dann immer sichtbar
+  die Tages-Challenge mit blinkendem rotem „!“ und der
+  Erinnerungs-Glocke daneben; darunter drei Listen, die eingeklappt starten:
+  „⚡ Blitz-Challenges“ (englisch „Lightning Challenges“, mit blinkendem
+  Blitz) mit den 30-Sekunden-Spielen, „📺 Die Retro-Konsole“ als Kacheln, das
   zuletzt gespielte zuerst mit Schild „Zuletzt“ (gemerkt in
-  `recentPlays`, synchronisiert), und alle Schnellspiele als Kacheln mit dem
+  `recentPlays`, synchronisiert), und „🕹️ Schnellspiele“ als Kacheln mit dem
   eigenen Rekord. „Deine eigene Spieldatei“ ist aufklappbar.
 - **Die Retro-Konsole** – auf der Seite „Selbst zocken“. Die ROM-Spiele
   sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
