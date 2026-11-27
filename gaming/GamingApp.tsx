@@ -32,7 +32,7 @@ import { BoardGame, formatScore } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { challengeMade, rivalNotesWanted } from '../lib/push';
 import { BackToZeitreise } from './components/BackToZeitreise';
-import { emuPlayId, miniPlayId, PlayCorner, PlayZone, withRecent } from './components/PlayZone';
+import { CounterCorner, emuPlayId, miniPlayId, PlayCorner, PlayZone, withRecent } from './components/PlayZone';
 import { LegendCorner } from './components/LegendCorner';
 import { Legend, legendOfTheDay } from './data/legends';
 import { EmulatorDialog } from './components/EmulatorDialog';
@@ -667,6 +667,20 @@ export const GamingApp: React.FC = () => {
     } else switchView('chill');
   };
 
+  // The ticket button under the controller: to the quests and down to the
+  // prize counter, which may still be loading the first time.
+  const openCounter = () => {
+    chip.play('blip');
+    if (view !== 'quests') setView('quests');
+    const start = performance.now();
+    const tick = () => {
+      const el = document.querySelector('.prize-counter');
+      if (el) el.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+      else if (performance.now() - start < 2000) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
   // A reload keeps this page (Marco, 2026-10-13); only the search keeps its hits.
   useEffect(() => {
     writePage(PAGE_KEY, {
@@ -918,8 +932,12 @@ export const GamingApp: React.FC = () => {
             {/* Explains the open area again any time (Marco, 2026-11-27). */}
             <GuideButton open={guide.open} onToggle={guide.toggle} className="brand-guide" withText />
             </div>
-            {/* Top right: straight to the games you play yourself (Marco, 2026-11-25). */}
-            <PlayCorner active={view === 'chill'} onOpen={openPlayZone} />
+            {/* Top right: straight to the games you play yourself (Marco, 2026-11-25),
+                and right under it to the prize counter (Marco, 2026-11-27). */}
+            <div className="hud-corners">
+              <PlayCorner active={view === 'chill'} onOpen={openPlayZone} />
+              <CounterCorner active={view === 'quests'} tokens={state.tokens} onOpen={openCounter} />
+            </div>
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>
                 <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>

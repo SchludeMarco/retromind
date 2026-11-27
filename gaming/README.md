@@ -75,6 +75,10 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Knopf zum Preis-Tresen** – unter dem Controller oben rechts sitzt eine
+  goldene Ticket-Münze „Tresen“; ein Tipp öffnet die Quests und scrollt
+  direkt zum Preis-Tresen (`CounterCorner` in
+  [`components/PlayZone.tsx`](components/PlayZone.tsx)).
 - **Spielanleitung im 80er-Look** – beim ersten Betreten der Halle schlägt
   sich ein Anleitungsheft auf, wie es früher in der Spieleschachtel lag
   (Papier, Heftklammern, Titelbild, Inhaltsverzeichnis, sieben Seiten zum

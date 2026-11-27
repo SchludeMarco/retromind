@@ -201,7 +201,7 @@ export const QuestBoard: React.FC<{
         </ul>
       </section>
 
-      <section className="panel quest-panel">
+      <section className="panel quest-panel prize-counter">
         <h3 className="pixel-font">{tr('PRIZE COUNTER', 'PREIS-TRESEN')}</h3>
         <p className="dim">
           {tr(

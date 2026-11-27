@@ -39,6 +39,23 @@ export const PlayCorner: React.FC<{ active: boolean; onOpen: () => void }> = ({ 
   </button>
 );
 
+/** Right under the controller: straight to the prize counter (Marco, 2026-11-27). */
+export const CounterCorner: React.FC<{ active: boolean; tokens: number; onOpen: () => void }> = ({ active, tokens, onOpen }) => (
+  <button
+    className="counter-corner"
+    onClick={onOpen}
+    aria-pressed={active}
+    aria-label={tr(`Prize counter: spend your ${tokens} coins`, `Preis-Tresen: deine ${tokens} Coins ausgeben`)}
+    title={tr('Prize counter: spend your coins', 'Preis-Tresen: Coins ausgeben')}
+    data-nav
+  >
+    <span className="counter-corner-icon" aria-hidden="true">
+      🎟️
+    </span>
+    <span className="counter-corner-label">{tr('PRIZES', 'TRESEN')}</span>
+  </button>
+);
+
 type Pick = { title: string; go: () => void };
 
 export const PlayZone: React.FC<{
