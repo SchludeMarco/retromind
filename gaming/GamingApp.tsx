@@ -761,9 +761,16 @@ export const GamingApp: React.FC = () => {
       data-nav
     >
       <span className="pixel-font">
+        {/* A flashing red "!" while today's challenge is open (Marco, 2026-11-27). */}
+        {!challengeToday.won && (
+          <span className="challenge-bang" aria-hidden="true">
+            !
+          </span>
+        )}
         {challengeToday.won
-          ? tr('⚡ BLITZ CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ BLITZ-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
-          : `⚡ ${tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE')} · ${challenge.length.toUpperCase()} · +${CHALLENGE_REWARD} COINS`}
+          ? tr('⚡ DAILY CHALLENGE · MADE! NEW ONE TOMORROW', '⚡ TAGES-CHALLENGE · GESCHAFFT! MORGEN KOMMT DIE NÄCHSTE')
+          : `⚡ ${tr('DAILY CHALLENGE', 'TAGES-CHALLENGE')} · ${challenge.length.toUpperCase()} · +${CHALLENGE_REWARD} COINS`}
+        {!challengeToday.won && <span className="sr-only">{tr(' (still open)', ' (noch offen)')}</span>}
       </span>
       <span>
         {challenge.text}

@@ -6,13 +6,15 @@ import { isBlitz, MINI_GAMES, MiniGameCorner, MiniGameId } from './MiniGames';
 import { EmulatorCorner } from './EmulatorCorner';
 import { loadBests } from './minigames/shared';
 import { tr } from '../../lib/i18n';
+import { ChallengeBell } from './ChallengeBell';
 
 // "Selbst zocken" (Marco, 2026-11-25: "ganz oben rechts ein Symbol zum
 // Selbstzocken. Die ganzen Spiele, die man selbst zocken kann mit der
 // integrierten Konsole und die Schnellspiele"). The page behind the PLAY /
 // ZOCKEN corner at the top right (PlayCorner) and the ZOCKEN section in the
-// side panel: a random pick, the Lightning Games (the 30-second games, open
-// on top), today's Blitz Challenge pinned under it, the Retro-Konsole games (last played first) and every quick game as a tile
+// side panel: a random pick, the Lightning Challenges (Blitz-Challenges: today's
+// daily challenge first with its reminder bell, then the 30-second games,
+// open on top), the Retro-Konsole games (last played first) and every quick game as a tile
 // with the player's own record.
 
 /** Ids in ArcadeState.recentPlays: "emu:<FreeGame id>" or "mini:<MiniGameId>". */
@@ -41,7 +43,7 @@ type Pick = { title: string; go: () => void };
 export const PlayZone: React.FC<{
   recent: string[];
   reducedMotion: boolean;
-  /** Today's Blitz Challenge card, pinned on top. */
+  /** Today's daily challenge card, first in the Lightning Challenges. */
   challenge: React.ReactNode;
   onPlay: (launch: EmuLaunch, id?: string) => void;
   onPickMini: (id: MiniGameId) => void;
@@ -105,21 +107,25 @@ export const PlayZone: React.FC<{
 
       {/* The 30-second games come first and stand open (Marco, 2026-11-27:
           "Die Blitz spiele sollen im Zocken-Abteil als erstes kommen und die
-          Liste soll direkt ausgeklappt sein"), under an American name: “Lightning Games” with a flashing bolt. */}
-      <section className="play-row" aria-label="Lightning Games">
+          Liste soll direkt ausgeklappt sein"), with a flashing bolt. Named
+          "Lightning Challenges" / "Blitz-Challenges"; today's daily challenge
+          leads the list, with the bell for its reminder next to it. */}
+      <section className="play-row" aria-label={tr('Lightning Challenges', 'Blitz-Challenges')}>
         <details className="chill-list lightning-games" open>
           <summary data-nav>
             {/* The bolt flickers like a lightning strike (Marco, 2026-11-27). */}
             <span className="bolt-flash" aria-hidden="true">
               ⚡
             </span>{' '}
-            LIGHTNING GAMES ({blitz.length})
+            {tr('LIGHTNING CHALLENGES', 'BLITZ-CHALLENGES')} ({blitz.length + 1})
           </summary>
+          <div className="challenge-row">
+            {challenge}
+            <ChallengeBell />
+          </div>
           <MiniGameCorner onPick={onPickMini} blitz />
         </details>
       </section>
-
-      {challenge}
 
       <section className="play-row" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
         <h3 className="pixel-font">{tr('📺 THE RETRO CONSOLE', '📺 DIE RETRO-KONSOLE')}</h3>

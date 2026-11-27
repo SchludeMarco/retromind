@@ -5415,3 +5415,100 @@ button.pcard {
 .arcade[data-palette='modul'] .play-zone-title {
   font-size: 14px;
 }
+
+/* Lightning Challenges: today's daily challenge leads the list, with the
+   bell for its reminder next to it (Marco, 2026-11-27). */
+.challenge-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+.challenge-row .day-game {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.challenge-bell {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 56px;
+  padding: 6px 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+.challenge-bell-time {
+  font: 8px/1 'Press Start 2P', monospace;
+}
+.challenge-bell.on .challenge-bell-time {
+  color: var(--ok);
+}
+.challenge-bell-panel {
+  margin: -4px 0 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid var(--a1);
+}
+.challenge-bell-panel .pixel-font {
+  margin: 0 0 8px;
+  font-size: 10px;
+  color: var(--a1);
+}
+.challenge-bell-panel .dim {
+  margin: 8px 0 0;
+  font-size: 0.9em;
+}
+.challenge-bell-hours {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.challenge-bell-hours .px-btn {
+  min-width: 52px;
+  padding: 8px 6px;
+}
+.challenge-bell-hours .px-btn.on {
+  background: var(--a1);
+  color: #fff;
+}
+.arcade[data-palette='modul'] .challenge-bell-panel {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-radius: 12px;
+}
+/* The red "!" flashes while today's challenge is still open. */
+.challenge-bang {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #e11d2e;
+  color: #fff;
+  font: 10px/1 'Press Start 2P', monospace;
+  vertical-align: middle;
+  box-shadow: 0 0 8px #ff3b3b;
+  /* Blinks, and every few seconds it also pulses (Marco, 2026-11-27). */
+  animation: challenge-bang 4s linear infinite;
+}
+@keyframes challenge-bang {
+  0%, 14% { opacity: 1; transform: none; }
+  15%, 24% { opacity: 0.15; transform: none; }
+  25%, 39% { opacity: 1; transform: none; }
+  40%, 49% { opacity: 0.15; transform: none; }
+  50%, 64% { opacity: 1; transform: none; box-shadow: 0 0 8px #ff3b3b; }
+  72% { opacity: 1; transform: scale(1.6); box-shadow: 0 0 18px 4px #ff3b3b; }
+  80% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px #ff3b3b; }
+  86% { opacity: 1; transform: scale(1.4); box-shadow: 0 0 14px 3px #ff3b3b; }
+  94%, 100% { opacity: 1; transform: none; box-shadow: 0 0 8px #ff3b3b; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .challenge-bang {
+    animation: none;
+  }
+}
