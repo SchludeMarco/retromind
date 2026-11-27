@@ -348,7 +348,12 @@ export const GamingApp: React.FC = () => {
   const ownMusic = !spotify.active || (spotify.fallback && !spotify.paused);
   useEffect(() => {
     chip.track = state.track;
-    if (screen === 'hub') chip.setMusic(state.music && !videoPlaying && !introRunning && ownMusic);
+    if (screen === 'hub') {
+      // Straight into the hall without the door (reload): wake the sound
+      // now instead of waiting for a tap; browsers that allow it play at once.
+      chip.unlock();
+      chip.setMusic(state.music && !videoPlaying && !introRunning && ownMusic);
+    }
     return () => chip.stopMusic();
   }, [screen, state.music, state.track, videoPlaying, introRunning, ownMusic]);
   // Phones suspend the sound when the screen locks, a call comes in or the

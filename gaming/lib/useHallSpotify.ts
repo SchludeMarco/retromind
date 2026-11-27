@@ -19,6 +19,7 @@ import { createMusicStatus, reportPlayback } from '../../lib/musicStatus';
 import { SpotifyHit } from '../../lib/spotifyApi';
 import { tr } from '../../lib/i18n';
 import { useChristmas } from '../../lib/season';
+import { chip } from './chiptune';
 
 // 80s heavy metal from Spotify as the hall's background music (Marco,
 // 2026-10-05), through the same Spotify player as the Zeitreise
@@ -347,9 +348,24 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
       unlockedRef.current = true;
       sync();
     };
+    // Landing straight in the hall (page reloaded, back from the Zeitreise)
+    // there was no tap yet, and the music stayed silent until one came
+    // (Marco, 2026-11-27: "Nachdem man die Halle betreten hat, sollte direkt
+    // Musik laufen"). Browsers that already allow sound here (the page was
+    // used before, or the hall's audio is running) need no tap: start now.
+    const allowedAlready = () =>
+      !!(navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive || chip.ready;
+    const tryNow = () => {
+      if (allowedAlready()) unlock();
+    };
+    tryNow();
+    const retry = window.setTimeout(tryNow, 700);
     const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     events.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
-    return () => events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
+    return () => {
+      window.clearTimeout(retry);
+      events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
+    };
   }, [sync]);
 
   useEffect(sync, [on, muted, userPaused, fallback, sync]);

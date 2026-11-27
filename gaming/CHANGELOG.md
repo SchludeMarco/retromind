@@ -8,6 +8,12 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Musik läuft sofort, auch nach dem Neuladen** (2026-11-27, PR #309):
+  Wer die Seite in der Gaming-Halle neu lädt oder zurück in die Halle kommt,
+  landet direkt drinnen, ohne die Tür. Bisher blieb es dann still, bis man
+  irgendwo hintippte, und die Musikleiste stand auf Pause. Jetzt startet die
+  Hallenmusik gleich, sobald der Browser Ton erlaubt (am PC fast immer).
+
 - **Dämonenlachen und rotes Licht hinter der Tür** (2026-11-27, PR #306):
   Wenn du die Tür zur Gaming-Halle aufstößt, lacht von drinnen eine tiefe,
   dämonische Stimme „Ha ha ha … haaa“ mit Kellerhall, und das Licht hinter

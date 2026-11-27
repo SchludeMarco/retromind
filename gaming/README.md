@@ -116,7 +116,9 @@ zeigen dürfen.
   anmelden“); sonst eigene
   Chiptune-Stücke ([`lib/chiptune.ts`](lib/chiptune.ts)). Beim ersten Besuch
   fragt die Halle einmal („Metal erlauben“ oder „Lieber Chiptune“), in den
-  Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln.
+  Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln. Landet
+  man ohne Tür direkt in der Halle (Neuladen), startet die Musik sofort, wenn
+  der Browser Ton erlaubt; sonst beim ersten Tipp.
 - **Metal Christmas zur Weihnachtszeit** – vom 1. November bis 6. Januar
   (oder wenn der Weihnachtslook aus der Zeitreise auf „An“ steht) spielt die
   Hallenmusik statt 80er-Metal die Spotify-Playlist „Metal Christmas“, ebenfalls
