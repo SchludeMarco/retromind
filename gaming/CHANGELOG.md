@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Hall of Fame: jedes Spiel 6 Sekunden** (2026-11-27, PR #311): Im
+  Bildschirmschoner der Gaming-Halle wechselten die Spiele nach 3,5
+  Sekunden, oft bevor man sie richtig gesehen oder geliked hatte. Jetzt
+  bleibt jedes Spiel 6 Sekunden stehen.
+
 - **Ganze Songs mit Premium, und ein klarer Hinweis, wenn's nicht geht**
   (2026-11-27, PR #310): Nach dem Neuladen in der Gaming-Halle schaltete
   Spotify Premium manchmal für den ganzen Besuch auf 30-Sekunden-Ausschnitte
