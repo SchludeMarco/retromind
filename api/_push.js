@@ -17,6 +17,13 @@ import webpush from "web-push";
 
 const PUSH_DAYS = 180;
 export const TOPICS = ["rivals", "chat", "room", "challenge"];
+// When the daily challenge reminder comes (Berlin time, full hours; Marco
+// 2026-11-27: "Zeitmäßig umstellen"). Same list as lib/push.ts; vercel.json
+// has one daily cron per UTC hour that can land on these hours in winter and
+// summer, and each run sends to the players whose hour it is.
+export const CHALLENGE_HOURS = [12, 14, 16, 18, 19, 20, 21];
+export const DEFAULT_CHALLENGE_HOUR = 18;
+const hourOf = (h) => (CHALLENGE_HOURS.includes(Number(h)) ? Number(h) : DEFAULT_CHALLENGE_HOUR);
 
 const redisUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -109,6 +116,7 @@ export async function setPrefs(pid, prefs) {
   if (!prefs || typeof prefs !== "object") return { ok: false };
   const clean = { on: prefs.on !== false };
   for (const t of TOPICS) clean[t] = prefs[t] === true;
+  clean.challengeHour = hourOf(prefs.challengeHour);
   await redis([
     ["SET", prefsKey(pid), JSON.stringify(clean), "EX", PUSH_DAYS * 86_400],
     clean.on && clean.challenge ? ["SADD", REMIND, pid] : ["SREM", REMIND, pid],
@@ -162,6 +170,8 @@ export async function sendPush(pid, topic, message) {
 
 /** Today in Germany, where the guests live (the app counts days by the device's clock). */
 const berlinDay = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Berlin" });
+/** The hour in Germany right now (0–23). */
+const berlinHour = () => Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: "Europe/Berlin" }).format(new Date()));
 
 /** A player made today's challenge: no reminder for them tonight. */
 export async function challengeWon(pid, day) {
@@ -171,24 +181,38 @@ export async function challengeWon(pid, day) {
 }
 
 /**
- * Sends the reminder to everyone who switched it on and hasn't made today's
- * challenge. Runs once a day (Vercel cron, vercel.json); a second call on
- * the same day sends nothing.
+ * Sends the reminder to everyone who switched it on, hasn't made today's
+ * challenge and picked the hour it is now in Germany (default 18:00). Runs
+ * once per UTC hour in the afternoon and evening (Vercel crons, vercel.json;
+ * both projects run them); each player gets at most one reminder a day.
  */
 export async function sendChallengeReminders() {
   const day = berlinDay();
-  const [first, players] = await redis([["SET", `rm:ch:sent:${day}`, "1", "NX", "EX", 2 * 86_400], ["SMEMBERS", REMIND]]);
-  if (first !== "OK" || !players?.length) return { day, sent: 0 };
-  const won = await redis(players.map((pid) => ["EXISTS", wonKey(day, pid)]));
-  const open = players.filter((_, i) => !won[i]);
+  const hour = berlinHour();
+  const [players] = await redis([["SMEMBERS", REMIND]]);
+  if (!players?.length) return { day, hour, sent: 0 };
+  const rows = await redis(players.flatMap((pid) => [["GET", prefsKey(pid)], ["EXISTS", wonKey(day, pid)]]));
+  const due = players.filter((pid, i) => {
+    if (rows[2 * i + 1]) return false;
+    let wanted = DEFAULT_CHALLENGE_HOUR;
+    try {
+      wanted = hourOf(JSON.parse(rows[2 * i])?.challengeHour);
+    } catch {
+      /* broken entry: the default hour */
+    }
+    return wanted === hour;
+  });
+  if (!due.length) return { day, hour, sent: 0 };
+  const first = await redis(due.map((pid) => ["SET", `rm:ch:sent:${day}:${pid}`, "1", "NX", "EX", 2 * 86_400]));
+  const open = due.filter((_, i) => first[i] === "OK");
   await Promise.all(
     open.map((pid) =>
       sendPush(pid, "challenge", (lang) =>
         lang === "de"
-          ? { title: "⚡ Deine Blitz-Challenge wartet", body: "Noch offen: ein, zwei Minuten in der Spielhalle, 25 Coins. Um Mitternacht kommt die nächste.", tag: "rm-challenge", open: "/gaming/" }
-          : { title: "⚡ Your Blitz Challenge is waiting", body: "Still open: a minute or two in the arcade, 25 Coins. A new one starts at midnight.", tag: "rm-challenge", open: "/gaming/" }
+          ? { title: "⚡ Deine Tages-Challenge wartet", body: "Noch offen: ein, zwei Minuten in der Spielhalle, 25 Coins. Um Mitternacht kommt die nächste.", tag: "rm-challenge", open: "/gaming/" }
+          : { title: "⚡ Your daily challenge is waiting", body: "Still open: a minute or two in the arcade, 25 Coins. A new one starts at midnight.", tag: "rm-challenge", open: "/gaming/" }
       ).catch((e) => console.error("challenge push:", e?.message || e))
     )
   );
-  return { day, sent: open.length };
+  return { day, hour, sent: open.length };
 }

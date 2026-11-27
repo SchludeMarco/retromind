@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Blitz-Challenges mit Tages-Challenge vorne und Erinnerungs-Glocke**
+  (2026-11-27, PR #316): Die Liste ganz oben in „Zocken“ heißt jetzt
+  „Blitz-Challenges“ (englisch „Lightning Challenges“). Ihr erster Punkt ist
+  die Tages-Challenge (früher „Blitz-Challenge“), die bisher einzeln unter
+  der Liste stand; solange sie offen ist, blinkt davor ein rotes
+  Ausrufezeichen und pulsiert alle paar Sekunden. Daneben sitzt eine Glocke: Damit schaltest du die
+  Erinnerung an die Tages-Challenge an oder aus und wählst die Uhrzeit (12,
+  14, 16, 18, 19, 20 oder 21 Uhr). Die Erinnerung kommt nur, wenn die
+  Challenge an dem Tag noch offen ist, und gilt für all deine Geräte.
+
 - **Controller oben rechts springt immer zu den Spielen** (2026-11-27, PR #314):
   War „Zocken“ schon offen (zum Beispiel nach dem Neuladen), stellte sich
   der Controller beim Antippen nur schräg, und sonst passierte nichts. Jetzt

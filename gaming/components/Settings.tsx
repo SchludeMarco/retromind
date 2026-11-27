@@ -455,8 +455,11 @@ const Notifications: React.FC = () => {
     {
       id: 'challenge',
       icon: '⚡',
-      label: tr('BLITZ CHALLENGE', 'BLITZ-CHALLENGE'),
-      hint: tr('A reminder in the evening if you haven’t made today’s challenge yet.', 'Abends eine Erinnerung, wenn du die Challenge des Tages noch nicht geschafft hast.'),
+      label: tr('DAILY CHALLENGE', 'TAGES-CHALLENGE'),
+      hint: tr(
+        `A reminder around ${n.prefs.challengeHour % 12 || 12} ${n.prefs.challengeHour < 12 ? 'AM' : 'PM'} if you haven’t made today’s challenge yet. Change the time with the bell next to it under Play.`,
+        `Gegen ${n.prefs.challengeHour}:00 Uhr eine Erinnerung, wenn du die Challenge des Tages noch nicht geschafft hast. Die Uhrzeit stellst du mit der Glocke daneben unter Zocken um.`
+      ),
     },
   ];
   const click = (fn: () => unknown) => () => {

@@ -21,14 +21,19 @@ export interface NotifyPrefs {
   chat: boolean;
   room: boolean;
   challenge: boolean;
+  /** When the challenge reminder comes, a full hour in German time (api/_push.js). */
+  challengeHour: number;
 }
+
+/** The hours the challenge reminder can come at (same list as api/_push.js). */
+export const CHALLENGE_HOURS = [12, 14, 16, 18, 19, 20, 21];
 
 const PREFS = 'retromind.notify';
 // Which topics this device asked for before the settings existed (PR #261,
 // #262). Device only (lib/sync.ts); only read to carry the old choice over.
 const OLD_TOPICS = 'retromind.push.topics';
 
-const DEFAULTS: NotifyPrefs = { on: true, rivals: true, chat: true, room: false, challenge: false };
+const DEFAULTS: NotifyPrefs = { on: true, rivals: true, chat: true, room: false, challenge: false, challengeHour: 18 };
 
 function storedPrefs(): NotifyPrefs | null {
   try {
@@ -181,6 +186,8 @@ export function useNotifySettings() {
     busy,
     setMain: (on: boolean) => change({ ...prefs, on }),
     setTopic: (topic: PushTopic, on: boolean) => change({ ...prefs, on: on ? true : prefs.on, [topic]: on }),
+    /** The challenge reminder at this hour (switches it on, too). */
+    setChallengeHour: (hour: number) => change({ ...prefs, on: true, challenge: true, challengeHour: hour }),
     /** Signs this device up (the others keep their own choice). */
     allowHere: async () => {
       setBusy(true);

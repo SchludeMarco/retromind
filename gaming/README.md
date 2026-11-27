@@ -266,8 +266,9 @@ zeigen dürfen.
   Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
   „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
   ein Konsolen- oder Schnellspiel) und die Bestenliste; als Erstes die
-  „⚡ Lightning Games“ (mit blinkendem Blitz) mit den 30-Sekunden-Spielen, schon aufgeklappt, darunter
-  die heutige Blitz-Challenge angepinnt; dann die Retro-Konsole als Kacheln, das
+  „⚡ Blitz-Challenges“ (englisch „Lightning Challenges“, mit blinkendem Blitz,
+  schon aufgeklappt): zuerst die Tages-Challenge mit blinkendem rotem „!“ und
+  der Erinnerungs-Glocke daneben, dann die 30-Sekunden-Spiele; dann die Retro-Konsole als Kacheln, das
   zuletzt gespielte zuerst mit Schild „Zuletzt“ (gemerkt in
   `recentPlays`, synchronisiert), und alle Schnellspiele als Kacheln mit dem
   eigenen Rekord. „Deine eigene Spieldatei“ ist aufklappbar.
@@ -306,7 +307,7 @@ zeigen dürfen.
   10.000 Punkte eine Stadt zurück)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
-- **Lightning Games** (früher „Blitz-Spiele“, Liste mit blinkendem ⚡) – sechs Spiele, gemacht für die
+- **Blitz-Spiele** (in der Liste „Blitz-Challenges“ mit blinkendem ⚡) – sechs Spiele, gemacht für die
   Blitz-Challenge, ganz oben in „Zocken“ und gleich aufgeklappt: genau 30
   Sekunden mit 3-2-1-Countdown, und an einem Tag für alle exakt dieselbe
   Runde (Zufall aus dem Datum). Knopf-Blitz (leuchtenden Automatenknopf
@@ -365,21 +366,27 @@ zeigen dürfen.
   Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
-- **Blitz-Challenge** – jeden Tag eine kurze Aufgabe, für alle gleich: ab dem
+- **Tages-Challenge** (früher „Blitz-Challenge“) – jeden Tag eine kurze Aufgabe, für alle gleich: ab dem
   22. Oktober 2026 etwa jeden zweiten Tag eins der sechs Blitz-Spiele (30
   Sekunden), sonst ein Minispiel mit Zielwert in ein bis zwei Minuten (z. B.
   „Snake: futter 8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das
-  Spiel des Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und startet
+  Spiel des Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und
+  als Erstes in den Blitz-Challenges unter „Zocken“, mit blinkendem rotem „!“,
+  solange sie offen ist; sie startet
   das Spiel direkt; geschafft bringt einmal am Tag 25 Coins und färbt die
   Karte grün. Nach dem Spiel steht, ob es gereicht hat; die besten Ergebnisse
   des Tages stehen auf einer eigenen Tages-Tafel unter „Quests“ und nach dem
   Spiel (`day` in [`api/highscores.js`](../api/highscores.js), 3 Tage
   aufbewahrt) ([`lib/challenge.ts`](lib/challenge.ts)). Auf Wunsch kommt
-  abends um 18 Uhr (Sommerzeit 19 Uhr) eine Push-Erinnerung, wenn die
-  Challenge noch offen ist: Schalter „⚡ Blitz-Challenge“ unter
-  „Benachrichtigungen“, standardmäßig aus. Ein täglicher Vercel-Cron
-  (`/api/cron-challenge`, `vercel.json`) schickt sie nur an Gäste, die sie
-  eingeschaltet und die Challenge noch nicht geschafft haben.
+  eine Push-Erinnerung, wenn die Challenge noch offen ist: an/aus und die
+  Uhrzeit (12, 14, 16, 18, 19, 20 oder 21 Uhr, Standard 18 Uhr) über die
+  Glocke neben der Tages-Challenge
+  ([`components/ChallengeBell.tsx`](components/ChallengeBell.tsx)) oder den
+  Schalter „⚡ Tages-Challenge“ unter „Benachrichtigungen“, standardmäßig aus.
+  Vercel-Crons zu jeder vollen Stunde nachmittags und abends
+  (`/api/cron-challenge`, `vercel.json`) schicken sie nur an Gäste, die sie
+  eingeschaltet, diese Stunde gewählt und die Challenge noch nicht geschafft
+  haben, höchstens einmal am Tag.
 - **Serie und Wochen-Duell** – jeder Tag in Folge in der Halle bringt Coins
   (5, 10, 15 … bis 30, jeder 7. Tag 25 extra, ein verpasster Tag pro Woche
   verziehen), die Serie steht in der Kopfleiste. Jede Woche ist ein Minispiel

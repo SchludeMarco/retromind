@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Blitz-Challenges mit Tages-Challenge vorne und Erinnerungs-Glocke': {
+    title: 'Lightning Challenges with the daily challenge first and a reminder bell',
+    text: 'The list at the top of “Play” is now called “Lightning Challenges”. Its first item is the daily challenge (formerly “Blitz Challenge”), which used to sit on its own below the list; while it’s open, a red exclamation mark flashes in front of it and pulses every few seconds. Next to it is a bell: use it to switch the daily challenge reminder on or off and pick the time (12, 2, 4, 6, 7, 8 or 9 PM). The reminder only comes if the challenge is still open that day, and it applies to all your devices.',
+  },
   'Controller oben rechts springt immer zu den Spielen': {
     title: 'The controller top right always takes you to the games',
     text: 'When “Play” was already open (after a reload, for example), tapping the controller only tilted it and nothing else happened. Now it scrolls straight down to the games every time.',
