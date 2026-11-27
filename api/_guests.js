@@ -212,8 +212,12 @@ const ORIGIN_APP = {
   "https://ms-akku.vercel.app": "ms-akku",
   "https://abocheck-frontend.vercel.app": "abocheck",
 };
-/** Which edition this domain serves: Gaming has its own app id (own access). */
-export const editionAppId = (hostname) => (hostname.startsWith("retromind-gaming") ? "retromind-gaming" : "retromind");
+/** Which edition a page belongs to: Gaming (own domain or /gaming/ on the main
+ *  domain) has its own app id, so its own access. */
+export const editionAppId = (hostname, pathname = "/") =>
+  hostname.startsWith("retromind-gaming") || pathname === "/gaming" || pathname.startsWith("/gaming/")
+    ? "retromind-gaming"
+    : "retromind";
 
 /** App id for one of APP_ORIGINS. */
 export const appIdForOrigin = (origin) => ORIGIN_APP[origin] || null;

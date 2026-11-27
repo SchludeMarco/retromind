@@ -102,7 +102,7 @@ export default async function middleware(request) {
   // Invited to some of Marco's apps, but not to this edition (Omni Admin;
   // RetroMind and RetroMind Gaming are separate apps there): the cookie
   // stays, so the door can still hand out passes for the other apps.
-  const edition = editionAppId(url.hostname);
+  const edition = editionAppId(url.hostname, url.pathname);
   if (isPage(request)) {
     let allowed = true;
     try {
