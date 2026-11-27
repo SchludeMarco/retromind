@@ -75,6 +75,13 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Erklärung für jeden Bereich** – beim ersten Besuch eines Bereichs
+  (Katalog, Stash, Suche, Trophäen, Zocken, Quests, Legenden und die
+  Bestenliste) erscheint oben eine kurze Erklärung; „Alles klar!“ schließt
+  sie für immer. Mit „ℹ️ So geht’s“ unterm Logo (in der Bestenliste ℹ️ neben
+  dem Titel) holt man sie jederzeit zurück. Die Quests-Erklärung sagt genau,
+  wofür und wie man Coins ausgibt. Gemerkt in `retromind.gaming.guides`,
+  synchronisiert ([`components/AreaGuide.tsx`](components/AreaGuide.tsx)).
 - **Bereich unterm Logo** – unter „RETROMIND GAMING“ steht immer, welcher
   Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Zocken, Quests,
   Legenden).
@@ -371,9 +378,9 @@ zeigen dürfen.
   22. Oktober 2026 etwa jeden zweiten Tag eins der sechs Blitz-Spiele (30
   Sekunden), sonst ein Minispiel mit Zielwert in ein bis zwei Minuten (z. B.
   „Snake: futter 8 Äpfel“, „Pixel-Memory in höchstens 18 Zügen“; nie das
-  Spiel des Wochen-Duells). Die Karte steht im Katalog unter „Insert Coin“ und
-  als Erstes in den Blitz-Challenges unter „Zocken“, mit blinkendem rotem „!“,
-  solange sie offen ist; sie startet
+  Spiel des Wochen-Duells). Die Karte steht immer sichtbar oben unter „Zocken“
+  (nicht mehr im Katalog), mit blinkendem rotem „!“, solange sie offen ist;
+  sie startet
   das Spiel direkt; geschafft bringt einmal am Tag 25 Coins und färbt die
   Karte grün. Nach dem Spiel steht, ob es gereicht hat; die besten Ergebnisse
   des Tages stehen auf einer eigenen Tages-Tafel unter „Quests“ und nach dem

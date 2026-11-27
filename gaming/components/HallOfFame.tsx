@@ -8,6 +8,7 @@ import { ScoreTable } from './minigames/HighscoreBoard';
 import { MINI_GAMES } from './MiniGames';
 import { loadBests } from './minigames/shared';
 import { LOCALE, tr } from '../../lib/i18n';
+import { AreaGuide, GuideButton, useAreaGuide } from './AreaGuide';
 
 // The "Hall of Fame" (Marco, 2026-10-19: a high score board per game in
 // retro style): every mini game's table of all guests on one glowing screen,
@@ -30,6 +31,8 @@ function ago(at: number): string {
 
 export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame) => void; onClose: () => void }> = ({ start, onPlay, onClose }) => {
   const [game, setGame] = useState<BoardGame | null>(start ?? null);
+  // Explained the first time, then via ℹ️ (components/AreaGuide.tsx).
+  const guide = useAreaGuide('hof');
   const [query, setQuery] = useState('');
   const [board, setBoard] = useState<Entry[] | null>(null);
   const [week, setWeek] = useState<Entry[] | null>(null);
@@ -77,7 +80,10 @@ export const HallOfFame: React.FC<{ start?: BoardGame; onPlay: (game: BoardGame)
         <button className="px-btn close-x" onClick={onClose} aria-label={tr('Close', 'Schließen')} data-nav>
           ✕
         </button>
-        <h2 className="pixel-font hof-title">{tr('★ HALL OF FAME ★', '★ BESTENLISTE ★')}</h2>
+        <h2 className="pixel-font hof-title">
+          {tr('★ HALL OF FAME ★', '★ BESTENLISTE ★')} <GuideButton open={guide.open} onToggle={guide.toggle} />
+        </h2>
+        {guide.open && <AreaGuide area="hof" onClose={guide.close} />}
 
         {!game || !info ? (
           <div>
