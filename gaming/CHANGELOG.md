@@ -8,6 +8,12 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Eigene ROM wieder leicht zu finden** (2026-11-27, PR #318): Seit die
+  Listen unter „Zocken“ eingeklappt starten, steckte „Deine eigene
+  Spieldatei“ versteckt in der eingeklappten Retro-Konsole. Jetzt ist
+  „💾 Eigene ROM spielen“ wieder eine eigene Liste, direkt unter der
+  Retro-Konsole.
+
 - **Zocken aufgeräumt: Listen eingeklappt, Tages-Challenge immer sichtbar**
   (2026-11-27, PR #317): Unter „Zocken“ steht die Tages-Challenge mit ihrer
   Erinnerungs-Glocke jetzt immer ganz oben. Darunter starten alle Listen
