@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Lightning Games“ mit blinkendem Blitz** (2026-11-27, PR #308): Die
+  Liste mit den 30-Sekunden-Spielen ganz oben in „Zocken“ heißt jetzt
+  „Lightning Games“ statt „Lightning Round“, und der Blitz davor zuckt
+  immer wieder kurz auf wie ein Blitzschlag.
+
 - **„Lightning Round“ ganz oben in Zocken** (2026-11-27, PR #307): Die
   30-Sekunden-Spiele heißen jetzt „⚡ Lightning Round“ statt „Blitz-Spiele“,
   stehen im Bereich „Zocken“ ganz oben und sind gleich aufgeklappt, ohne

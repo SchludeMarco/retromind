@@ -2316,6 +2316,23 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
 .chill-list[open] summary {
   color: var(--a1);
 }
+/* Lightning Games: the bolt flashes like a strike, twice, then rests. */
+.bolt-flash {
+  display: inline-block;
+  animation: bolt-flash 2.4s steps(1) infinite;
+}
+@keyframes bolt-flash {
+  0% { opacity: 1; filter: drop-shadow(0 0 6px #ffe14d) brightness(1.4); }
+  6% { opacity: 0.15; filter: none; }
+  12% { opacity: 1; filter: drop-shadow(0 0 8px #ffe14d) brightness(1.6); }
+  18% { opacity: 0.3; filter: none; }
+  24%, 100% { opacity: 1; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bolt-flash {
+    animation: none;
+  }
+}
 .chill-list > :last-child {
   margin-bottom: 14px;
 }

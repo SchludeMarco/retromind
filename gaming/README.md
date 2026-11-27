@@ -255,7 +255,7 @@ zeigen dürfen.
   Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
   „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
   ein Konsolen- oder Schnellspiel) und die Bestenliste; als Erstes die
-  „⚡ Lightning Round“ mit den 30-Sekunden-Spielen, schon aufgeklappt, darunter
+  „⚡ Lightning Games“ (mit blinkendem Blitz) mit den 30-Sekunden-Spielen, schon aufgeklappt, darunter
   die heutige Blitz-Challenge angepinnt; dann die Retro-Konsole als Kacheln, das
   zuletzt gespielte zuerst mit Schild „Zuletzt“ (gemerkt in
   `recentPlays`, synchronisiert), und alle Schnellspiele als Kacheln mit dem
@@ -295,7 +295,7 @@ zeigen dürfen.
   10.000 Punkte eine Stadt zurück)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
-- **Lightning Round** (früher „Blitz-Spiele“) – sechs Spiele, gemacht für die
+- **Lightning Games** (früher „Blitz-Spiele“, Liste mit blinkendem ⚡) – sechs Spiele, gemacht für die
   Blitz-Challenge, ganz oben in „Zocken“ und gleich aufgeklappt: genau 30
   Sekunden mit 3-2-1-Countdown, und an einem Tag für alle exakt dieselbe
   Runde (Zufall aus dem Datum). Knopf-Blitz (leuchtenden Automatenknopf
