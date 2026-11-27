@@ -7,6 +7,10 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **RetroMind Gaming eigene App bei den Einladungen** (2026-11-27, PR #313):
+  Marco kann Gäste jetzt getrennt für RetroMind und für RetroMind Gaming
+  freischalten. Wer alle Apps benutzen darf, kommt wie bisher in beide.
+
 - **Hall of Fame: später und langsamer** (2026-11-27, PR #311, #312): Der
   Bildschirmschoner der Gaming-Halle kommt erst nach 5 Minuten ohne
   Eingabe statt nach einer. Und die Spiele wechselten dort nach 3,5
