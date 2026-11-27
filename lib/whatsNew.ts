@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Ganze Songs mit Premium, und ein klarer Hinweis, wenn\'s nicht geht': {
+    title: 'Full songs with Premium, and a clear note when it can’t work',
+    text: 'After a reload in the gaming hall, Spotify Premium sometimes switched to 30-second previews for the whole visit, just because the browser player was still silent before the first tap. Now the hall’s own music bridges the gap, and the first tap brings back full songs. Some browsers (such as the Claude app’s built-in browser) can’t play full Spotify songs at all because they lack the component needed for it (Widevine). There the top of the screen now says “Only previews: this browser can’t play full Spotify songs. Open RetroMind in Chrome, Edge or Firefox.”',
+  },
   'Musik läuft sofort, auch nach dem Neuladen': {
     title: 'The music starts right away, even after a reload',
     text: 'Reloading the page in the gaming hall, or coming back to it, takes you straight inside without the door. Until now it then stayed silent until you tapped somewhere, and the music bar sat on pause. Now the hall music starts at once whenever the browser allows sound (almost always on a computer).',

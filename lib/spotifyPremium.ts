@@ -74,6 +74,41 @@ export function useLoginLost(): boolean {
   );
 }
 
+// Spotify's browser player needs Widevine (DRM) for full songs. Some browsers
+// have none (the Claude app's built-in browser, Chromium builds, some Linux
+// setups): there only previews can play, so the screen says why instead of
+// silently playing 30-second clips (Marco, 2026-11-27: "Es werden nur kurze
+// Ausschnitte abgespielt, obwohl ich mit Premium angemeldet bin").
+let noDrm = false;
+let drmChecked: Promise<boolean> | null = null;
+function hasWidevine(): Promise<boolean> {
+  if (!drmChecked) {
+    const rmksa = typeof navigator !== 'undefined' ? navigator.requestMediaKeySystemAccess?.bind(navigator) : undefined;
+    drmChecked = !rmksa
+      ? Promise.resolve(false)
+      : rmksa('com.widevine.alpha', [{ initDataTypes: ['cenc'], audioCapabilities: [{ contentType: 'audio/mp4;codecs="mp4a.40.2"' }] }])
+          .then(() => true)
+          .catch(() => false);
+    drmChecked.then((ok) => {
+      if (!ok && !noDrm) {
+        noDrm = true;
+        listeners.forEach((l) => l());
+      }
+    });
+  }
+  return drmChecked;
+}
+/** Premium login, but this browser can't play full songs (no Widevine). */
+export function useNoDrm(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => noDrm && !!tokenSource && sdkSupported()
+  );
+}
+
 /** true while a Premium login can drive the browser player. */
 export function usePremiumPlayback(): boolean {
   return useSyncExternalStore(
@@ -176,6 +211,8 @@ function hookGesture() {
 
 /** Resolves to null whenever the SDK can't be used, so the caller falls back. */
 async function createPremiumController(source: TokenSource, initialUri: string): Promise<SpotifyEmbedController | null> {
+  // Without Widevine the SDK never sounds: straight to the embed (previews).
+  if (!(await hasWidevine())) return null;
   if (!(await loadSdk()) || !window.Spotify?.Player) return null;
   const player = new window.Spotify.Player({
     name: 'RetroMind',

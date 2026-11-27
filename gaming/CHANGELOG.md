@@ -8,6 +8,17 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Ganze Songs mit Premium, und ein klarer Hinweis, wenn's nicht geht**
+  (2026-11-27, PR #310): Nach dem Neuladen in der Gaming-Halle schaltete
+  Spotify Premium manchmal für den ganzen Besuch auf 30-Sekunden-Ausschnitte
+  um, nur weil der Browser-Player vor dem ersten Tipp noch stumm war. Jetzt
+  überbrückt die eigene Hallenmusik kurz, und beim ersten Tipp laufen wieder
+  ganze Songs. Manche Browser (etwa der eingebaute Browser der Claude-App)
+  können gar keine ganzen Spotify-Songs abspielen, weil ihnen der dafür
+  nötige Baustein (Widevine) fehlt. Dort steht jetzt oben „Nur Ausschnitte:
+  Dieser Browser kann keine ganzen Spotify-Songs abspielen. Öffne RetroMind
+  in Chrome, Edge oder Firefox.“
+
 - **Musik läuft sofort, auch nach dem Neuladen** (2026-11-27, PR #309):
   Wer die Seite in der Gaming-Halle neu lädt oder zurück in die Halle kommt,
   landet direkt drinnen, ohne die Tür. Bisher blieb es dann still, bis man

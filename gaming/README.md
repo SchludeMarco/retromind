@@ -119,6 +119,10 @@ zeigen dürfen.
   Einstellungen unter „Hallenmusik“ lässt es sich jederzeit wechseln. Landet
   man ohne Tür direkt in der Halle (Neuladen), startet die Musik sofort, wenn
   der Browser Ton erlaubt; sonst beim ersten Tipp.
+  Bleibt Premium vor dem ersten Tipp stumm, überbrückt die eigene Musik und der
+  erste Tipp holt die ganzen Songs zurück; fehlt dem Browser Widevine, steht
+  oben „Nur Ausschnitte: Dieser Browser kann keine ganzen Spotify-Songs
+  abspielen“.
 - **Metal Christmas zur Weihnachtszeit** – vom 1. November bis 6. Januar
   (oder wenn der Weihnachtslook aus der Zeitreise auf „An“ steht) spielt die
   Hallenmusik statt 80er-Metal die Spotify-Playlist „Metal Christmas“, ebenfalls

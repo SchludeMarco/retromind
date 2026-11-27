@@ -92,6 +92,10 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
   const startedRef = useRef(false);
   // Browsers block audio until the first tap or key press.
   const unlockedRef = useRef(false);
+  // A real tap or key press happened on this page. Before one, Spotify's
+  // browser player (Premium) may stay silent although the page may sound
+  // (it needs its own activation): that is no reason to give up Premium.
+  const gestureRef = useRef(false);
   // Paused with the player bar: stays paused until play is pressed again.
   const [userPaused, setUserPaused] = useState(false);
   const userPausedRef = useRef(userPaused);
@@ -362,11 +366,20 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
     const retry = window.setTimeout(tryNow, 700);
     const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart'];
     events.forEach((evt) => document.addEventListener(evt, unlock, { once: true, capture: true }));
+    // The first real tap: Premium bridged by the own music gets its chance.
+    const gesture = () => {
+      if (gestureRef.current) return;
+      gestureRef.current = true;
+      if (fallbackRef.current && !probingRef.current) probe();
+    };
+    const gestureEvents: (keyof DocumentEventMap)[] = ['pointerup', 'keydown', 'touchend', 'click'];
+    gestureEvents.forEach((evt) => document.addEventListener(evt, gesture, { capture: true }));
     return () => {
       window.clearTimeout(retry);
       events.forEach((evt) => document.removeEventListener(evt, unlock, { capture: true }));
+      gestureEvents.forEach((evt) => document.removeEventListener(evt, gesture, { capture: true }));
     };
-  }, [sync]);
+  }, [sync, probe]);
 
   useEffect(sync, [on, muted, userPaused, fallback, sync]);
 
@@ -401,6 +414,17 @@ export function useHallSpotify(wanted: boolean, enabled: boolean, outside = fals
         probingRef.current = false;
         controller?.pause();
         console.warn('[RetroMind] Spotify still silent, own music keeps playing');
+        return;
+      }
+      // Spotify's browser player (Premium) silent before any tap (the page was
+      // reloaded inside the hall): the own music bridges the gap, and the
+      // first tap tries Premium again. Giving up here would mean previews
+      // for the whole visit (Marco, 2026-11-27).
+      if (controller?.setVolume && !gestureRef.current) {
+        console.warn('[RetroMind] Spotify Premium waits for a tap, own music bridges');
+        probeAtRef.current = now;
+        controller.pause();
+        setFallback(true);
         return;
       }
       // Spotify's browser player (Premium) stays silent: the embed takes over
