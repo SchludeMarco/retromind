@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spielanleitung wie aus den 80ern': {
+    title: 'An instruction booklet straight from the 80s',
+    text: 'The first time you enter the Gaming arcade, an instruction booklet opens like the one that used to come in the game box: yellowed paper, staples, a cover with a chrome logo and striped sun, a table of contents and seven pages to flip through. It explains the whole app: controls, playing yourself, how to earn coins and what to spend them on, collecting and discovering, settings and help. After that it doesn’t come by itself anymore, but you can open it again any time via the handle on the right edge and “📖 Manual”.',
+  },
   'Neun neue Preise am Preis-Tresen': {
     title: 'Nine new prizes at the prize counter',
     text: 'So your coins don’t just pile up, there are now 14 prizes instead of 5, worth 840 coins in all. New are four designs (Commodore in C64 blue, Terminal in green on black, Outrun in sunset colors, Famicom in cream and dark red), two new hall tunes (Night Drive and Castle) and three effects: the pixel pointer instead of the mouse pointer, the tube TV look with scanlines and dark corners over the whole hall and, as the big goal, the golden VIP crown for 200 coins. Effects can be switched on and off at the counter. The prizes are now sorted by price, and the top shows how many you’ve collected.',

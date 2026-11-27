@@ -25,7 +25,7 @@ function readSeen(): GuideArea[] {
   }
 }
 
-function markSeen(area: GuideArea) {
+export function markGuideSeen(area: GuideArea) {
   try {
     const seen = readSeen();
     if (!seen.includes(area)) localStorage.setItem(KEY, JSON.stringify([...seen, area]));
@@ -41,7 +41,7 @@ export function useAreaGuide(area: GuideArea, active = true) {
     if (active) setOpen(!readSeen().includes(area));
   }, [area, active]);
   const close = useCallback(() => {
-    markSeen(area);
+    markGuideSeen(area);
     setOpen(false);
   }, [area]);
   const toggle = useCallback(() => {

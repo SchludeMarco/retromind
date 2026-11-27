@@ -42,6 +42,7 @@ export function GamingControls<V extends string>({
   guruOpen,
   onGuru,
   onFeedback,
+  onManual,
   onChat,
   chatNews = false,
   onLeave,
@@ -56,6 +57,8 @@ export function GamingControls<V extends string>({
   guruOpen: boolean;
   onGuru: () => void;
   onFeedback: () => void;
+  /** The 80s-style manual of the whole app (components/GameManual.tsx). */
+  onManual?: () => void;
   /** The chat corner with the other guests (components/GuestChat.tsx). */
   onChat?: () => void;
   chatNews?: boolean;
@@ -101,6 +104,11 @@ export function GamingControls<V extends string>({
             <button className="px-btn gm-chat-btn" onClick={onChat} data-nav>
               {tr('☏ CHAT CORNER', '☏ PLAUDERECKE')}
               {chatNews && <span className="gm-control-dot" aria-label={tr('new messages', 'neue Nachrichten')} />}
+            </button>
+          )}
+          {onManual && (
+            <button className="px-btn" onClick={onManual} data-nav>
+              {tr('📖 MANUAL', '📖 ANLEITUNG')}
             </button>
           )}
           <button className="px-btn gm-feedback" onClick={onFeedback} data-nav>
