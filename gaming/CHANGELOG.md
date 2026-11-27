@@ -8,9 +8,10 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
-- **Hall of Fame: jedes Spiel 6 Sekunden** (2026-11-27, PR #311): Im
-  Bildschirmschoner der Gaming-Halle wechselten die Spiele nach 3,5
-  Sekunden, oft bevor man sie richtig gesehen oder geliked hatte. Jetzt
+- **Hall of Fame: später und langsamer** (2026-11-27, PR #311): Der
+  Bildschirmschoner der Gaming-Halle kommt erst nach 2 Minuten ohne
+  Eingabe statt nach einer. Und die Spiele wechselten dort nach 3,5
+  Sekunden, oft bevor man sie richtig gesehen oder geliked hatte; jetzt
   bleibt jedes Spiel 6 Sekunden stehen.
 
 - **Ganze Songs mit Premium, und ein klarer Hinweis, wenn's nicht geht**
