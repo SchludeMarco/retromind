@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Controller oben rechts springt immer zu den Spielen** (2026-11-27, PR #313):
+  War „Zocken“ schon offen (zum Beispiel nach dem Neuladen), stellte sich
+  der Controller beim Antippen nur schräg, und sonst passierte nichts. Jetzt
+  scrollt er jedes Mal direkt zu den Spielen.
+
 - **RetroMind Gaming eigene App bei den Einladungen** (2026-11-27, PR #313):
   Marco kann Gäste jetzt getrennt für RetroMind und für RetroMind Gaming
   freischalten. Wer alle Apps benutzen darf, kommt wie bisher in beide.

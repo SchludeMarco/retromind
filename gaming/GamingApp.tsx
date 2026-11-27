@@ -637,11 +637,22 @@ export const GamingApp: React.FC = () => {
   };
 
   // Opening "Selbst zocken" (top-right corner or side panel) brings its games into view.
-  useEffect(() => {
-    if (view !== 'chill') return;
+  const showPlayZone = useCallback(() => {
     const page = document.querySelector('.play-zone');
     if (page) page.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
-  }, [view, reducedMotion]);
+  }, [reducedMotion]);
+  useEffect(() => {
+    if (view === 'chill') showPlayZone();
+  }, [view, showPlayZone]);
+  // The controller top right: when "Zocken" is already open (it stays open
+  // after a reload), a tap only tilted it and nothing happened (Marco,
+  // 2026-11-27). Now it always scrolls down to the games.
+  const openPlayZone = () => {
+    if (view === 'chill') {
+      chip.play('blip');
+      showPlayZone();
+    } else switchView('chill');
+  };
 
   // A reload keeps this page (Marco, 2026-10-13); only the search keeps its hits.
   useEffect(() => {
@@ -886,7 +897,7 @@ export const GamingApp: React.FC = () => {
             </h1>
             </div>
             {/* Top right: straight to the games you play yourself (Marco, 2026-11-25). */}
-            <PlayCorner active={view === 'chill'} onOpen={() => switchView('chill')} />
+            <PlayCorner active={view === 'chill'} onOpen={openPlayZone} />
             {cloud.status === 'signed_in' && cloud.user?.name && (
               <div>
                 <span className="label">PLAYER</span> <span className="value">{cloud.user.name.split(' ')[0].toUpperCase()}</span>
