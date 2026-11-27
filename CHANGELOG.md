@@ -7,7 +7,7 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Controller oben rechts springt immer zu den Spielen** (2026-11-27, PR #313):
+- **Controller oben rechts springt immer zu den Spielen** (2026-11-27, PR #314):
   War „Zocken“ schon offen (zum Beispiel nach dem Neuladen), stellte sich
   der Controller beim Antippen nur schräg, und sonst passierte nichts. Jetzt
   scrollt er jedes Mal direkt zu den Spielen.
