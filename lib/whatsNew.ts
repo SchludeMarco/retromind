@@ -34,7 +34,7 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 const EN: Record<string, { title: string; text: string }> = {
   'Hall of Fame: später und langsamer': {
     title: 'Hall of Fame: later and slower',
-    text: 'The gaming hall’s screensaver now starts after 2 minutes without input instead of one. And the games there changed after 3.5 seconds, often before you had a proper look or could like them; now each game stays for 6 seconds.',
+    text: 'The gaming hall’s screensaver now starts after 5 minutes without input instead of one. And the games there changed after 3.5 seconds, often before you had a proper look or could like them; now each game stays for 6 seconds.',
   },
   'Ganze Songs mit Premium, und ein klarer Hinweis, wenn\'s nicht geht': {
     title: 'Full songs with Premium, and a clear note when it can’t work',
