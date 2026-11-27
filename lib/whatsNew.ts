@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Eigene ROM wieder leicht zu finden': {
+    title: 'Your own ROM is easy to find again',
+    text: 'Since the lists under “Play” start folded, “Your own game file” was hidden inside the folded retro console. Now “💾 Play your own ROM” is its own list again, right under the retro console.',
+  },
   'Zocken aufgeräumt: Listen eingeklappt, Tages-Challenge immer sichtbar': {
     title: 'Play tidied up: lists folded, daily challenge always in view',
     text: 'Under “Play”, the daily challenge with its reminder bell now always sits at the top. Below it, all lists start folded: Lightning Challenges, the retro console and quick games (now with 🕹️ instead of ⚡, so only the Lightning Challenges carry the bolt). Each list shows how many games it holds and opens with a tap.',
