@@ -5300,10 +5300,16 @@ button.pcard {
 /* The PLAY / ZOCKEN corner at the top right of the HUD, in the space the
    old settings buttons left free; flickers like the Gaming joystick in the
    Zeitreise (components/gamingCorner.css). */
-.play-corner {
+.hud-corners {
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.play-corner {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6092,5 +6098,72 @@ button.pcard {
   }
   .manual-dots {
     gap: 3px;
+  }
+}
+
+/* The ticket button under the controller: to the prize counter (Marco, 2026-11-27). */
+.counter-corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+.counter-corner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 21px;
+  background: radial-gradient(circle at 35% 30%, #fff3a8, #f5b301 55%, #a86b00);
+  border: 2px solid #1b1033;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #facc15, 0 0 10px rgba(250, 204, 21, 0.6);
+  transition: transform 0.18s ease-out;
+  animation: counter-corner-shine 4s linear infinite;
+}
+@keyframes counter-corner-shine {
+  0%, 70%, 100% { filter: none; }
+  74% { filter: brightness(1.5) drop-shadow(0 0 6px #facc15); }
+  78% { filter: none; }
+}
+.counter-corner-label {
+  font: 8px/1 'Press Start 2P', monospace;
+  letter-spacing: 0.06em;
+  color: #1b1033;
+  background: #facc15;
+  border: 1px solid #fff3a8;
+  border-radius: 9999px;
+  padding: 4px 7px 3px;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.55);
+}
+.counter-corner:hover .counter-corner-icon,
+.counter-corner:focus-visible .counter-corner-icon {
+  transform: scale(1.1) rotate(8deg);
+}
+.counter-corner[aria-pressed='true'] .counter-corner-label {
+  background: #fff;
+}
+.counter-corner:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .counter-corner-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 17px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .counter-corner-icon {
+    transition: none;
+    animation: none;
   }
 }

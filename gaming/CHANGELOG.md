@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Knopf zum Preis-Tresen** (2026-11-27, PR #322): Oben rechts, direkt
+  unter dem Controller zum Zocken, sitzt jetzt eine goldene Ticket-Münze
+  „Tresen“. Ein Tipp führt sofort zu den Quests und scrollt gleich hinunter
+  zum Preis-Tresen, wo man seine Coins ausgibt.
+
 - **Spielanleitung wie aus den 80ern** (2026-11-27, PR #321): Beim
   ersten Betreten der Gaming-Halle schlägt sich ein Anleitungsheft auf, wie
   es früher in der Spieleschachtel lag: vergilbtes Papier, Heftklammern,

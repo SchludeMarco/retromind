@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Knopf zum Preis-Tresen': {
+    title: 'A button to the prize counter',
+    text: 'At the top right, right under the controller for playing, there is now a golden ticket coin “Prizes”. One tap takes you to the quests and scrolls straight down to the prize counter, where you spend your coins.',
+  },
   'Spielanleitung wie aus den 80ern': {
     title: 'An instruction booklet straight from the 80s',
     text: 'The first time you enter the Gaming arcade, an instruction booklet opens like the one that used to come in the game box: yellowed paper, staples, a cover with a chrome logo and striped sun, a table of contents and seven pages to flip through. It explains the whole app: controls, playing yourself, how to earn coins and what to spend them on, collecting and discovering, settings and help. After that it doesn’t come by itself anymore, but you can open it again any time via the handle on the right edge and “📖 Manual”.',
