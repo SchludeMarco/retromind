@@ -11,7 +11,7 @@ import { tr } from '../../lib/i18n';
 // Selbstzocken. Die ganzen Spiele, die man selbst zocken kann mit der
 // integrierten Konsole und die Schnellspiele"). The page behind the PLAY /
 // ZOCKEN corner at the top right (PlayCorner) and the ZOCKEN section in the
-// side panel: a random pick, the Lightning Round (the 30-second games, open
+// side panel: a random pick, the Lightning Games (the 30-second games, open
 // on top), today's Blitz Challenge pinned under it, the Retro-Konsole games (last played first) and every quick game as a tile
 // with the player's own record.
 
@@ -105,11 +105,15 @@ export const PlayZone: React.FC<{
 
       {/* The 30-second games come first and stand open (Marco, 2026-11-27:
           "Die Blitz spiele sollen im Zocken-Abteil als erstes kommen und die
-          Liste soll direkt ausgeklappt sein"), under an American name. */}
-      <section className="play-row" aria-label="Lightning Round">
-        <details className="chill-list lightning-round" open>
+          Liste soll direkt ausgeklappt sein"), under an American name: “Lightning Games” with a flashing bolt. */}
+      <section className="play-row" aria-label="Lightning Games">
+        <details className="chill-list lightning-games" open>
           <summary data-nav>
-            ⚡ LIGHTNING ROUND ({blitz.length})
+            {/* The bolt flickers like a lightning strike (Marco, 2026-11-27). */}
+            <span className="bolt-flash" aria-hidden="true">
+              ⚡
+            </span>{' '}
+            LIGHTNING GAMES ({blitz.length})
           </summary>
           <MiniGameCorner onPick={onPickMini} blitz />
         </details>

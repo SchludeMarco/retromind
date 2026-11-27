@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  '„Lightning Games“ mit blinkendem Blitz': {
+    title: '“Lightning Games” with a flashing bolt',
+    text: 'The list of 30-second games at the top of the Play section is now called “Lightning Games” instead of “Lightning Round”, and the bolt in front of it flashes now and then like a lightning strike.',
+  },
   '„Lightning Round“ ganz oben in Zocken': {
     title: 'The Lightning Round leads the Play section',
     text: 'The 30-second games are now called “⚡ Lightning Round” instead of “Blitz games”, sit at the very top of the Play section and are open right away, no need to expand the list first.',
