@@ -28,6 +28,10 @@ export const PALETTES: { id: Palette; label: string }[] = [
   // From the prize counter (quests.ts); only shown once bought.
   { id: 'vapor', label: 'VAPORWAVE' },
   { id: 'virtualboy', label: 'VIRTUAL BOY' },
+  { id: 'commodore', label: 'COMMODORE' },
+  { id: 'matrix', label: 'TERMINAL' },
+  { id: 'outrun', label: 'OUTRUN' },
+  { id: 'famicom', label: 'FAMICOM' },
 ];
 
 const SYNC_TEXT: Record<Cloud['sync'], string> = {

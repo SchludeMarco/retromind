@@ -370,8 +370,11 @@ zeigen dürfen.
   Zeitreise und mit Google-Anmeldung auf allen Geräten
   ([`lib/initials.ts`](../lib/initials.ts), [`lib/sync.ts`](../lib/sync.ts)).
 - **Quests und Preis-Tresen** – jeden Tag drei kleine Aufgaben und eine
-  größere pro Woche. Sie bringen Coins für Designs (Vaporwave, Virtual Boy),
-  Hallen-Musik (Weltraum, Bosskampf) und das Party-Logo
+  größere pro Woche. Sie bringen Coins für 14 Preise, günstigste zuerst:
+  Designs (Vaporwave, Virtual Boy, Commodore, Terminal, Outrun, Famicom),
+  Hallen-Musik (Weltraum, Bosskampf, Nachtfahrt, Schloss) und Effekte
+  (Party-Logo, Pixel-Zeiger, Röhrenbild, VIP-Krone für 200 Coins); oben steht,
+  wie viele man schon gesammelt hat
   ([`lib/quests.ts`](lib/quests.ts),
   [`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
 - **Tages-Challenge** (früher „Blitz-Challenge“) – jeden Tag eine kurze Aufgabe, für alle gleich: ab dem

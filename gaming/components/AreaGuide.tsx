@@ -125,8 +125,8 @@ const GUIDES: Record<GuideArea, Guide> = {
         `Ausgeben: Am Preis-Tresen (weiter unten auf dieser Seite) kostet jeder Preis einmal Coins und gehört dann dir: ${PRIZES.map((p) => `${p.label} (${p.price})`).join(', ')}.`
       ),
       tr(
-        'Designs change the colors of the whole hall, music changes the hall’s own chiptune music (when Spotify isn’t playing), the party logo makes the logo glow in rainbow colors. After buying, “Use” switches it on, and you can switch back any time in the settings.',
-        'Designs ändern die Farben der ganzen Halle, Musik die eigene Chiptune-Hallenmusik (wenn kein Spotify läuft), das Party-Logo lässt das Logo in Regenbogenfarben leuchten. Nach dem Kauf schaltet „Benutzen“ es ein; zurückwechseln kannst du jederzeit in den Einstellungen.'
+        'Designs change the colors of the whole hall, music changes the hall’s own chiptune music (when Spotify isn’t playing), effects add something extra: rainbow logo, tube TV look, pixel pointer or the golden VIP crown. After buying, “Use” or “On/Off” switches it; designs and music can be changed back any time in the settings.',
+        'Designs ändern die Farben der ganzen Halle, Musik die eigene Chiptune-Hallenmusik (wenn kein Spotify läuft), Effekte bringen ein Extra: Regenbogen-Logo, Röhrenbild, Pixel-Zeiger oder die goldene VIP-Krone. Nach dem Kauf schaltet „Benutzen“ bzw. „An/Aus“ es um; Designs und Musik wechselst du jederzeit in den Einstellungen zurück.'
       ),
       tr(
         'Earn: quests, the daily challenge (+25), your streak, Easter eggs and the quiz “Do you know the game?”.',
