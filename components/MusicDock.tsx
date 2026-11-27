@@ -6,7 +6,7 @@ import { setMusicVolume, useMusicVolume } from '../lib/musicVolume';
 import { searchSpotify, setAutoTheme, SpotifyHit, useAutoTheme } from '../lib/spotifyApi';
 import { tr } from '../lib/i18n';
 import { openSpotifyApp, retryConnect, useConnectState } from '../lib/spotifyConnect';
-import { useLoginLost } from '../lib/spotifyPremium';
+import { useLoginLost, useNoDrm } from '../lib/spotifyPremium';
 import { beginSpotifyLogin } from '../lib/spotifyAuth';
 import { FavoriteCard, FavoriteHeart, FavoriteSongsList, HeartIcon } from './FavoriteSongs';
 import { useFavoriteSongs } from '../lib/favoriteSongs';
@@ -315,7 +315,9 @@ const FullSongsHint: React.FC = () => {
   // The Premium login got lost on its own (Marco, 2026-11-23: "immer nur
   // kurze Ausschnitte"): same "sign in again" hint, on phones and computers.
   const lost = useLoginLost();
-  const state = lost ? 'login' : connectState;
+  // Premium, but this browser has no Widevine: say so (lib/spotifyPremium).
+  const noDrm = useNoDrm();
+  const state = lost ? 'login' : noDrm ? 'no-drm' : connectState;
   // Closed for this state ("no-device" or "login") until the tab is closed.
   const [closedFor, setClosedFor] = useState<string | null>(() => {
     try {
@@ -324,7 +326,7 @@ const FullSongsHint: React.FC = () => {
       return null;
     }
   });
-  if ((state !== 'no-device' && state !== 'login') || closedFor === state) return null;
+  if ((state !== 'no-device' && state !== 'login' && state !== 'no-drm') || closedFor === state) return null;
   const close = () => {
     setClosedFor(state);
     try {
@@ -335,6 +337,14 @@ const FullSongsHint: React.FC = () => {
   };
   return createPortal(
     <div className="music-full-hint no-print" role="status">
+      {state === 'no-drm' ? (
+        <p className="music-full-hint-go">
+          {tr(
+            '♪ Only previews: this browser can’t play full Spotify songs. Open RetroMind in Chrome, Edge or Firefox.',
+            '♪ Nur Ausschnitte: Dieser Browser kann keine ganzen Spotify-Songs abspielen. Öffne RetroMind in Chrome, Edge oder Firefox.'
+          )}
+        </p>
+      ) : (
       <button
         type="button"
         className="music-full-hint-go"
@@ -344,6 +354,7 @@ const FullSongsHint: React.FC = () => {
           ? tr('♪ Only previews: sign in to Spotify again for full songs', '♪ Nur Ausschnitte: für ganze Songs neu bei Spotify anmelden')
           : tr('♪ Only previews: open your Spotify app for full songs', '♪ Nur Ausschnitte: für ganze Songs Spotify-App öffnen')}
       </button>
+      )}
       {state === 'no-device' && ANDROID && <p className="music-full-hint-tip">{ANDROID_TIP()}</p>}
       <button type="button" className="music-full-hint-x" onClick={close} aria-label={tr('Close', 'Schließen')}>
         ×

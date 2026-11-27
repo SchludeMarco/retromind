@@ -720,3 +720,7 @@
   color: #1a1203;
   background: #ffd34d;
 }
+
+p.music-full-hint-go {
+  margin: 0;
+}
