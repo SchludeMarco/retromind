@@ -75,6 +75,14 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Spielanleitung im 80er-Look** – beim ersten Betreten der Halle schlägt
+  sich ein Anleitungsheft auf, wie es früher in der Spieleschachtel lag
+  (Papier, Heftklammern, Titelbild, Inhaltsverzeichnis, sieben Seiten zum
+  Blättern mit ◄/► oder den Pfeiltasten). Es erklärt die ganze App, auch
+  Coins und Preis-Tresen. Danach jederzeit über den Griff → „📖 Anleitung“.
+  Gemerkt in `retromind.gaming.manual`, synchronisiert; solange es offen
+  ist, warten Bereichs-Erklärung, Spotify-Frage und Tagesbesuch-Hinweis
+  ([`components/GameManual.tsx`](components/GameManual.tsx)).
 - **Erklärung für jeden Bereich** – beim ersten Besuch eines Bereichs
   (Katalog, Stash, Suche, Trophäen, Zocken, Quests, Legenden und die
   Bestenliste) erscheint oben eine kurze Erklärung; „Alles klar!“ schließt

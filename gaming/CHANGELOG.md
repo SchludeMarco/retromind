@@ -8,6 +8,16 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Spielanleitung wie aus den 80ern** (2026-11-27, PR #321): Beim
+  ersten Betreten der Gaming-Halle schlägt sich ein Anleitungsheft auf, wie
+  es früher in der Spieleschachtel lag: vergilbtes Papier, Heftklammern,
+  ein Titelbild mit Chrom-Logo und Streifensonne, Inhaltsverzeichnis und
+  sieben Seiten zum Durchblättern. Es erklärt die ganze App: Steuerung,
+  Selbst zocken, wie man Coins verdient und wofür man sie ausgibt, Sammeln
+  und Entdecken, Einstellungen und Hilfe. Danach kommt es nicht mehr von
+  allein, aber über den Griff am rechten Rand und „📖 Anleitung“ kann man es
+  jederzeit wieder aufschlagen.
+
 - **Neun neue Preise am Preis-Tresen** (2026-11-27, PR #320): Damit die
   Coins nicht nur herumliegen, gibt es jetzt 14 statt 5 Preise, insgesamt
   für 840 Coins. Neu sind vier Designs (Commodore in C64-Blau, Terminal in
