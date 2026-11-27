@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Zocken aufgeräumt: Listen eingeklappt, Tages-Challenge immer sichtbar': {
+    title: 'Play tidied up: lists folded, daily challenge always in view',
+    text: 'Under “Play”, the daily challenge with its reminder bell now always sits at the top. Below it, all lists start folded: Lightning Challenges, the retro console and quick games (now with 🕹️ instead of ⚡, so only the Lightning Challenges carry the bolt). Each list shows how many games it holds and opens with a tap.',
+  },
   'Blitz-Challenges mit Tages-Challenge vorne und Erinnerungs-Glocke': {
     title: 'Lightning Challenges with the daily challenge first and a reminder bell',
     text: 'The list at the top of “Play” is now called “Lightning Challenges”. Its first item is the daily challenge (formerly “Blitz Challenge”), which used to sit on its own below the list; while it’s open, a red exclamation mark flashes in front of it and pulses every few seconds. Next to it is a bell: use it to switch the daily challenge reminder on or off and pick the time (12, 2, 4, 6, 7, 8 or 9 PM). The reminder only comes if the challenge is still open that day, and it applies to all your devices.',

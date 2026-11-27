@@ -5512,3 +5512,43 @@ button.pcard {
     animation: none;
   }
 }
+
+/* The folded lists under "Zocken" read as big tappable rows with an arrow
+   (Marco, 2026-11-27: all lists start folded). */
+.play-list > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 2px solid var(--a2);
+  background: rgba(0, 0, 0, 0.45);
+  list-style: none;
+}
+.play-list > summary::-webkit-details-marker {
+  display: none;
+}
+.play-list > summary::after {
+  content: '▸';
+  margin-left: auto;
+  font-size: 14px;
+}
+.play-list[open] > summary {
+  border-color: var(--a1);
+  margin-bottom: 10px;
+}
+.play-list[open] > summary::after {
+  content: '▾';
+}
+.play-list > summary:focus-visible {
+  outline: 2px solid var(--a3);
+  outline-offset: 2px;
+}
+.arcade[data-palette='modul'] .play-list > summary {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 3px;
+  border-radius: 12px;
+}
+.play-row + .play-row {
+  margin-top: 8px;
+}

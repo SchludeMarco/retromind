@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Zocken aufgeräumt: Listen eingeklappt, Tages-Challenge immer sichtbar**
+  (2026-11-27, PR #317): Unter „Zocken“ steht die Tages-Challenge mit ihrer
+  Erinnerungs-Glocke jetzt immer ganz oben. Darunter starten alle Listen
+  eingeklappt: Blitz-Challenges, Retro-Konsole und Schnellspiele (jetzt mit
+  🕹️ statt ⚡, damit nur die Blitz-Challenges den Blitz tragen). Jede Liste
+  zeigt, wie viele Spiele drin sind, und klappt mit einem Tipp auf.
+
 - **RetroMind Gaming eigene App bei den Einladungen** (2026-11-27, PR #313):
   Marco kann Gäste jetzt getrennt für RetroMind und für RetroMind Gaming
   freischalten. Wer alle Apps benutzen darf, kommt wie bisher in beide.
