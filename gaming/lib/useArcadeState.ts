@@ -11,7 +11,7 @@ import { tr } from '../../lib/i18n';
 // Everything the Gaming edition remembers between visits, in localStorage
 // only (separate key from the main RetroMind journey).
 
-export type Palette = 'modul' | 'arcade' | 'gameboy' | 'amber' | 'vapor' | 'virtualboy';
+export type Palette = 'modul' | 'arcade' | 'gameboy' | 'amber' | 'vapor' | 'virtualboy' | 'commodore' | 'matrix' | 'outrun' | 'famicom';
 
 export type MusicSource = 'spotify' | 'chip';
 const isMusicSource = (v: unknown): v is MusicSource => v === 'spotify' || v === 'chip';
@@ -42,6 +42,8 @@ export interface ArcadeState {
   eggs: string[];
   /** The rainbow logo from the prize counter, switched on. */
   partyLogo: boolean;
+  /** Other effects from the prize counter that are switched on (quests.ts, kind 'effect'). */
+  effects?: string[];
   /** "Had it back then": games and systems the player really owned as a kid. */
   hadBack: string[];
   hadSystems: string[];

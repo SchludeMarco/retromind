@@ -5,7 +5,7 @@
 
 import { tr } from '../../lib/i18n';
 
-export type TrackId = 'quest' | 'c64' | 'turbo' | 'dungeon' | 'beach' | 'space' | 'boss';
+export type TrackId = 'quest' | 'c64' | 'turbo' | 'dungeon' | 'beach' | 'space' | 'boss' | 'night' | 'castle';
 
 export interface StepTrack {
   bpm: number;
@@ -180,6 +180,55 @@ const BOSS: StepTrack = {
   hats: 'all',
 };
 
+// The night drive pumps its synth bass in octaves, like TURBO (pump above).
+
+// prettier-ignore
+const NIGHT: StepTrack = {
+  bpm: 112,
+  lead: [
+    'E5','=','=','-','B4','-','E5','F#5',  'G5','=','F#5','-','E5','-','D5','-',
+    'C5','=','=','-','E5','-','G5','-',    'B5','=','=','-','A5','=','G5','-',
+    'E5','=','=','-','B4','-','E5','F#5',  'G5','=','A5','-','B5','-','D6','-',
+    'C6','=','B5','-','A5','-','G5','F#5', 'E5','=','=','=','-','-','-','-',
+  ],
+  bass: [
+    ...pump('E2','E3'), ...pump('E2','E3'), ...pump('C2','C3'), ...pump('D2','D3'),
+    ...pump('E2','E3'), ...pump('G2','G3'), ...pump('A2','A3'), ...pump('B1','B2'),
+  ],
+  chords: [
+    ['E4','G4','B4'], ['E4','G4','B4'], ['C4','E4','G4'], ['D4','F#4','A4'],
+    ['E4','G4','B4'], ['G4','B4','D5'], ['A4','C5','E5'], ['B3','D#4','F#4'],
+  ],
+  leadWave: 'sawtooth', leadGain: 0.04,
+  bassWave: 'square', bassGain: 0.08,
+  hats: 'offbeat',
+};
+
+/** Root, fifth, octave, fifth: a slow walk up the castle stairs. */
+const stairs = (root: string, fifth: string, oct: string) => [root, '-', fifth, '-', oct, '-', fifth, '-'];
+
+// prettier-ignore
+const CASTLE: StepTrack = {
+  bpm: 96,
+  lead: [
+    'D5','=','=','F5','E5','=','D5','-',   'C#5','=','=','-','A4','=','=','-',
+    'D5','=','F5','A5','G5','=','F5','E5', 'F5','=','=','-','E5','=','=','-',
+    'A5','=','=','G5','F5','=','E5','-',   'D5','=','=','C5','A#4','=','=','-',
+    'G4','=','A#4','D5','C#5','=','E5','-', 'D5','=','=','=','-','-','-','-',
+  ],
+  bass: [
+    ...stairs('D2','A2','D3'), ...stairs('A1','E2','A2'), ...stairs('D2','A2','D3'), ...stairs('C2','G2','C3'),
+    ...stairs('F2','C3','F3'), ...stairs('A#1','F2','A#2'), ...stairs('G1','D2','G2'), ...stairs('D2','A2','D3'),
+  ],
+  chords: [
+    ['D4','F4','A4'], ['A3','C#4','E4'], ['D4','F4','A4'], ['C4','E4','G4'],
+    ['F4','A4','C5'], ['A#3','D4','F4'], ['G3','A#3','D4'], ['D4','F4','A4'],
+  ],
+  leadWave: 'triangle', leadGain: 0.12,
+  bassWave: 'square', bassGain: 0.07,
+  hats: 'sparse',
+};
+
 export const TRACKS: Track[] = [
   { id: 'quest', label: tr('ADVENTURE', 'ABENTEUER'), text: tr('The classic hub melody in A minor.', 'Die klassische Hub-Melodie in a-Moll.'), steps: QUEST },
   { id: 'c64', label: 'C64', text: tr('The theme song in the style of the Commodore 64 sound chip.', 'Der Titelsong im Stil des Commodore-64-Soundchips.'), steps: null },
@@ -189,6 +238,8 @@ export const TRACKS: Track[] = [
   // From the prize counter (quests.ts); only listed once bought.
   { id: 'space', label: tr('OUTER SPACE', 'WELTRAUM'), text: tr('Like a shoot ’em up in space.', 'Wie ein Shoot ’em up im All.'), steps: SPACE },
   { id: 'boss', label: tr('BOSS FIGHT', 'BOSSKAMPF'), text: tr('Frantic and dramatic, for the final boss.', 'Hektisch und dramatisch, für den Endgegner.'), steps: BOSS },
+  { id: 'night', label: tr('NIGHT DRIVE', 'NACHTFAHRT'), text: tr('A drive through neon city at night.', 'Eine Fahrt durch die Neonstadt bei Nacht.'), steps: NIGHT },
+  { id: 'castle', label: tr('CASTLE', 'SCHLOSS'), text: tr('Stately and a bit spooky, for the last castle.', 'Feierlich und ein bisschen gruselig, fürs letzte Schloss.'), steps: CASTLE },
 ];
 
 export const isTrackId = (v: unknown): v is TrackId => TRACKS.some((t) => t.id === v);

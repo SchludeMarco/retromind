@@ -8,6 +8,17 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Neun neue Preise am Preis-Tresen** (2026-11-27, PR #320): Damit die
+  Coins nicht nur herumliegen, gibt es jetzt 14 statt 5 Preise, insgesamt
+  für 840 Coins. Neu sind vier Designs (Commodore in C64-Blau, Terminal in
+  Grün auf Schwarz, Outrun in Sonnenuntergangsfarben, Famicom in Creme und
+  Dunkelrot), zwei neue Hallen-Stücke (Nachtfahrt und Schloss) und drei
+  Effekte: der Pixel-Zeiger statt des Mauszeigers, das Röhrenbild mit
+  Zeilen und dunklen Ecken über der ganzen Halle und, als großes Ziel, die
+  goldene VIP-Krone für 200 Coins. Effekte lassen sich am Tresen an- und
+  ausschalten. Die Preise stehen jetzt nach Preis sortiert, und oben steht,
+  wie viele du schon gesammelt hast.
+
 - **Erklärung für jeden Bereich, und die Tages-Challenge raus aus dem
   Katalog** (2026-11-27, PR #319): Wer einen Bereich der Gaming-Halle zum
   ersten Mal öffnet (Katalog, Stash, Suche, Trophäen, Zocken, Quests,

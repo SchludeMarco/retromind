@@ -47,7 +47,7 @@ import { MusicDock, openMusicDock } from '../components/MusicDock';
 import { FitMarquee } from '../components/FitMarquee';
 import { FavoriteHeart } from '../components/FavoriteSongs';
 import { QuestBoard } from './components/QuestBoard';
-import { ActiveQuest, PRIZES, today } from './lib/quests';
+import { ActiveQuest, effectOn, PRIZES, today } from './lib/quests';
 import { CHALLENGE_REWARD, dailyChallenge, RESULT_EVENT, todaysLog } from './lib/challenge';
 import { asksMeaningOfLife, cheatFor, Egg } from './lib/eggs';
 import { toggleMuted, useMuted, withMuteParam } from '../lib/mute';
@@ -839,7 +839,7 @@ export const GamingApp: React.FC = () => {
 
   return (
     <div
-      className={`arcade${rainbow ? ' rainbow' : ''}${flicker ? ' flicker' : ''}${state.partyLogo && state.owned.includes('party') ? ' party' : ''}`}
+      className={`arcade${rainbow ? ' rainbow' : ''}${flicker ? ' flicker' : ''}${effectOn('party', state) ? ' party' : ''}${effectOn('crt', state) ? ' fx-crt' : ''}${effectOn('cursor', state) ? ' fx-cursor' : ''}${effectOn('vip', state) ? ' fx-vip' : ''}`}
       data-palette={state.palette}
     >
       <div className="stars" aria-hidden="true" />
@@ -926,6 +926,11 @@ export const GamingApp: React.FC = () => {
               title={cloud.status === 'signed_in' ? tr('Coins: to the prize counter', 'Coins: zum Preis-Tresen') : tr('Coins: only saved on this device. Sign in with Google to keep them safe.', 'Coins: nur auf diesem Gerät gespeichert. Mit Google anmelden, um sie zu sichern.')}
               data-nav
             >
+              {effectOn('vip', state) && (
+                <span className="vip-crown" aria-label="VIP">
+                  👑
+                </span>
+              )}
               <span className="label">🪙 COINS</span>{' '}
               <span key={state.tokens} className="value bump">
                 {state.tokens}
@@ -1148,7 +1153,8 @@ export const GamingApp: React.FC = () => {
                 const prize = PRIZES.find((p) => p.id === id)!;
                 chip.play('powerup');
                 if (prize.kind === 'effect') {
-                  set('partyLogo', true);
+                  if (id === 'party') set('partyLogo', true);
+                  else set('effects', [...(state.effects ?? []).filter((e) => e !== id), id]);
                   showToast(tr(`UNLOCKED: ${prize.label}`, `FREIGESCHALTET: ${prize.label}`), tr('Active right now. You can switch it off and back on at the prize counter anytime.', 'Läuft ab sofort. Am Preis-Tresen kannst du es jederzeit aus- und wieder anschalten.'), '🪙');
                   return;
                 }
@@ -1158,8 +1164,10 @@ export const GamingApp: React.FC = () => {
               onUse={(id) => {
                 const prize = PRIZES.find((p) => p.id === id)!;
                 chip.play('select');
-                if (prize.kind === 'effect') set('partyLogo', !state.partyLogo);
-                else set(prize.kind, id as never);
+                if (prize.kind === 'effect') {
+                  if (id === 'party') set('partyLogo', !state.partyLogo);
+                  else set('effects', effectOn(id, state) ? (state.effects ?? []).filter((e) => e !== id) : [...(state.effects ?? []), id]);
+                } else set(prize.kind, id as never);
               }}
             />
           ) : view === 'trophies' ? (

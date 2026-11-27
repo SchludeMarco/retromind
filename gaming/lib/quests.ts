@@ -127,7 +127,22 @@ export const PRIZES: Prize[] = [
   { id: 'space', kind: 'track', label: tr('OUTER SPACE', 'WELTRAUM'), text: tr('Hall music like a shoot ’em up in space.', 'Hallen-Musik wie ein Shoot ’em up im All.'), price: 30 },
   { id: 'boss', kind: 'track', label: tr('BOSS FIGHT', 'BOSSKAMPF'), text: tr('Hall music for the final boss: frantic and dramatic.', 'Hallen-Musik für den Endgegner: hektisch und dramatisch.'), price: 30 },
   { id: 'party', kind: 'effect', label: tr('PARTY LOGO', 'PARTY-LOGO'), text: tr('The logo up top glows in every color of the rainbow, all the time.', 'Das Logo oben leuchtet dauerhaft in allen Regenbogenfarben.'), price: 35 },
+  // More to spend coins on (Marco, 2026-11-27: "damit man genügend Material
+  // hat, um seine verdienten Coins auch auszugeben").
+  { id: 'cursor', kind: 'effect', label: tr('PIXEL POINTER', 'PIXEL-ZEIGER'), text: tr('A blocky 8-bit arrow instead of the mouse pointer (on computers).', 'Ein klobiger 8-Bit-Pfeil statt des Mauszeigers (am Computer).'), price: 30 },
+  { id: 'night', kind: 'track', label: tr('NIGHT DRIVE', 'NACHTFAHRT'), text: tr('Hall music like a drive through neon city at night.', 'Hallen-Musik wie eine Fahrt durch die Neonstadt bei Nacht.'), price: 45 },
+  { id: 'castle', kind: 'track', label: tr('CASTLE', 'SCHLOSS'), text: tr('Hall music for the last castle: stately and a bit spooky.', 'Hallen-Musik fürs letzte Schloss: feierlich und ein bisschen gruselig.'), price: 45 },
+  { id: 'crt', kind: 'effect', label: tr('CRT TUBE', 'RÖHRENBILD'), text: tr('Scanlines and dark corners like an old tube TV over the whole hall.', 'Zeilen und dunkle Ecken wie ein alter Röhrenfernseher über der ganzen Halle.'), price: 50 },
+  { id: 'commodore', kind: 'palette', label: 'COMMODORE', text: tr('A design in light blue on dark blue like the C64 start screen.', 'Design in Hellblau auf Dunkelblau wie der Startbildschirm des C64.'), price: 60 },
+  { id: 'matrix', kind: 'palette', label: 'TERMINAL', text: tr('A design in green on black like an old computer terminal.', 'Design in Grün auf Schwarz wie ein altes Computerterminal.'), price: 60 },
+  { id: 'outrun', kind: 'palette', label: 'OUTRUN', text: tr('A design in sunset orange and magenta like an ’80s racing game.', 'Design in Sonnenuntergangs-Orange und Magenta wie ein 80er-Rennspiel.'), price: 75 },
+  { id: 'famicom', kind: 'palette', label: 'FAMICOM', text: tr('A design in cream and dark red like the Japanese Famicom.', 'Design in Creme und Dunkelrot wie das japanische Famicom.'), price: 90 },
+  { id: 'vip', kind: 'effect', label: tr('VIP CROWN', 'VIP-KRONE'), text: tr('A golden crown at your coins and a golden glow: for the real arcade royals.', 'Eine goldene Krone an deinen Coins und goldener Glanz: für echte Spielhallen-Könige.'), price: 200 },
 ];
+
+/** Whether an effect from the prize counter is switched on. */
+export const effectOn = (id: string, s: { owned: string[]; partyLogo: boolean; effects?: string[] }) =>
+  s.owned.includes(id) && (id === 'party' ? s.partyLogo : (s.effects ?? []).includes(id));
 
 /** Designs and tunes that are only available from the prize counter. */
 export const PRIZE_IDS = new Set(PRIZES.map((p) => p.id));

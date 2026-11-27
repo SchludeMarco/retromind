@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Neun neue Preise am Preis-Tresen': {
+    title: 'Nine new prizes at the prize counter',
+    text: 'So your coins don’t just pile up, there are now 14 prizes instead of 5, worth 840 coins in all. New are four designs (Commodore in C64 blue, Terminal in green on black, Outrun in sunset colors, Famicom in cream and dark red), two new hall tunes (Night Drive and Castle) and three effects: the pixel pointer instead of the mouse pointer, the tube TV look with scanlines and dark corners over the whole hall and, as the big goal, the golden VIP crown for 200 coins. Effects can be switched on and off at the counter. The prizes are now sorted by price, and the top shows how many you’ve collected.',
+  },
   'Erklärung für jeden Bereich, und die Tages-Challenge raus aus dem Katalog': {
     title: 'An explanation for every area, and the daily challenge leaves the catalog',
     text: 'The first time you open an area of the gaming hall (catalog, stash, search, trophies, play, quests, legends, Hall of Fame), a short explanation at the top tells you what’s there and how it works. “Got it!” closes it, and it won’t come back by itself. With “ℹ️ How it works” under the logo (ℹ️ next to the title in the Hall of Fame) you can bring it back any time. The quests explanation tells you exactly what you can spend your coins on and how: at the prize counter, on designs, hall music and the party logo. The daily challenge now only sits under “Play”, no longer in the catalog.',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { activeQuests, duelGame, freshLog, PRIZES, streakReward, today } from '../lib/quests';
+import { activeQuests, duelGame, effectOn, freshLog, PRIZES, streakReward, today } from '../lib/quests';
 import { Entry, fetchDayBoard, fetchWeekBoard, formatScore } from '../lib/highscores';
 import { CHALLENGE_REWARD, dailyChallenge, todaysLog } from '../lib/challenge';
 import { MINI_GAMES, MiniGameId } from './MiniGames';
@@ -215,10 +215,14 @@ export const QuestBoard: React.FC<{
             </>
           )}
         </p>
+        <p className="pixel-font prize-count">
+          {tr(`COLLECTED: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`, `GESAMMELT: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`)}
+        </p>
         <div className="prize-list">
-          {PRIZES.map((p) => {
+          {/* Cheapest first, the VIP crown last (Marco, 2026-11-27: more to spend coins on). */}
+          {[...PRIZES].sort((a, b) => a.price - b.price).map((p) => {
             const owned = state.owned.includes(p.id);
-            const inUse = p.kind === 'palette' ? state.palette === p.id : p.kind === 'track' ? state.track === p.id : state.partyLogo;
+            const inUse = p.kind === 'palette' ? state.palette === p.id : p.kind === 'track' ? state.track === p.id : effectOn(p.id, state);
             return (
               <div key={p.id} className={`prize${owned ? ' owned' : ''}`}>
                 <span className="pixel-font prize-kind">{p.kind === 'palette' ? 'DESIGN' : p.kind === 'track' ? tr('MUSIC', 'MUSIK') : tr('EFFECT', 'EFFEKT')}</span>
