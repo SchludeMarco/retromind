@@ -196,12 +196,14 @@ export const Entrance: React.FC<{
     // Inside the hall a heavy metal riff kicks in before the hub tune, unless
     // the song from inside already played out here and simply goes on.
     if (!songOutside) chip.queueMetalIntro();
+    // From deep inside, a demon laughs as the door gives way.
+    chip.laugh(reducedMotion ? 0 : 0.3);
     if (reducedMotion) {
       chip.chime();
       setTimeout(onEnter, 300);
       return;
     }
-    // The door creaks open (1.2 s), the logo shines out of the doorway, the
+    // The door creaks open (1.2 s), red light flickers inside, the logo shines out of the doorway, the
     // picture fades to white, then the hub. While you walk up to the door a
     // whine grows louder until everything is white.
     chip.door();

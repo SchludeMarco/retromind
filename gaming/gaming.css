@@ -2122,7 +2122,8 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 55%, #fff 0, #fff7de 35%, #ffd98a 75%, #e8a84f 100%);
+  /* Behind the door burns a red light, like a hellish emergency lamp. */
+  background: radial-gradient(ellipse at 50% 55%, #ffb3a6 0, #ff2a1a 30%, #b80000 70%, #3a0000 100%);
   opacity: 0;
 }
 .door-leaf {
@@ -2218,14 +2219,33 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
 @keyframes door-open {
   to { transform: rotateY(100deg); }
 }
+/* The red light flickers like a dying tube, then burns steadily. */
 .entering .door-inside::after {
-  animation: fade-up 0.6s ease-out 0.5s forwards;
+  animation: red-flicker 1.9s steps(1) 0.4s forwards;
+}
+@keyframes red-flicker {
+  0% { opacity: 0.9; }
+  6% { opacity: 0.1; }
+  10% { opacity: 1; }
+  17% { opacity: 0.25; }
+  21% { opacity: 0.85; }
+  30% { opacity: 0.05; }
+  36% { opacity: 1; }
+  44% { opacity: 0.4; }
+  47% { opacity: 1; }
+  58% { opacity: 0.15; }
+  61% { opacity: 0.95; }
+  70% { opacity: 0.5; }
+  73% { opacity: 1; }
+  84% { opacity: 0.3; }
+  87%, 100% { opacity: 1; }
 }
 .entering .hall-door {
-  animation: door-glow 0.8s ease-out 0.6s forwards;
+  animation: door-glow 1.9s steps(1) 0.4s forwards;
 }
 @keyframes door-glow {
-  to { box-shadow: 0 0 8cqw 3cqw rgba(255, 228, 160, 0.75); }
+  0%, 10%, 36%, 47%, 61%, 73%, 87%, 100% { box-shadow: 0 0 8cqw 3cqw rgba(255, 30, 20, 0.7); }
+  6%, 30%, 58%, 84% { box-shadow: 0 0 2cqw 0.5cqw rgba(255, 30, 20, 0.2); }
 }
 .entering .entrance-controls {
   animation: fade-down 0.4s ease-out forwards;
@@ -2237,7 +2257,7 @@ html[data-ticker] .arcade[data-palette='modul'] .hub {
   to {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
-    filter: drop-shadow(0 0 18px rgba(255, 240, 200, 0.9));
+    filter: drop-shadow(0 0 18px rgba(255, 40, 20, 0.9));
   }
 }
 .entering .white-out {

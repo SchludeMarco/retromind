@@ -8,6 +8,13 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Dämonenlachen und rotes Licht hinter der Tür** (2026-11-27, PR #306):
+  Wenn du die Tür zur Gaming-Halle aufstößt, lacht von drinnen eine tiefe,
+  dämonische Stimme „Ha ha ha … haaa“ mit Kellerhall, und das Licht hinter
+  der Tür flackert rot wie eine kaputte Notlampe, bevor es ruhig brennt.
+  Auch das Logo im Eingang glüht jetzt rot. Mit ausgeschaltetem Ton bleibt
+  es still, bei reduzierter Bewegung flackert nichts.
+
 - **Gaming-Edition: „Zurück zu RetroMind“ immer über dem Logo** (2026-11-25, PR #303):
   In der Halle steht jetzt direkt über dem Logo „RetroMind Gaming“ ein
   gelber Knopf „Zurück zu RetroMind“, der dich zur Zeitreise bringt. Er ist

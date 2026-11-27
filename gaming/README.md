@@ -53,7 +53,8 @@ zeigen dürfen.
   durch die Wand (`api/spotify-preview.js`, sonst Deezer, sonst die gedämpfte
   Hallen-Aufnahme mit dem Metal-Intro drinnen).
 - **Rein durch die Tür** – ein Tipp auf die Tür mit blinkendem Neonrahmen
-  öffnet sie mit langem Knarzen, ein Fiepen der Automaten wird lauter, das
+  öffnet sie mit langem Knarzen, von drinnen lacht ein Dämon „Ha ha ha“,
+  dahinter flackert rotes Licht, ein Fiepen der Automaten wird lauter, das
   Logo leuchtet aus dem Eingang und das Bild wird weiß
   ([`components/Entrance.tsx`](components/Entrance.tsx)). Darunter steht
   mittig das Warnschild „Warning, extreme loud!“; bei Ton aus vergräbt es sich
