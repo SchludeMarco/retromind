@@ -40,6 +40,10 @@ zeigen dürfen.
 
 ### Vor der Tür
 
+- **Eigene Freigabe** – in Omni Admin ist RetroMind Gaming eine eigene App:
+  Marco kann Gäste nur für Gaming, nur für die Zeitreise oder für beides
+  freischalten (2026-11-27). Wer nicht für Gaming freigeschaltet ist, sieht
+  einen kurzen Hinweis „Kein Zugang“.
 - **Eingang einer verranzten Spielhalle** – Marcos Bild einer Spielhalle im
   Regen mit Sticker-Tür (`public/gaming/arcade-entrance.webp`, nur eigene,
   allgemeine Pixel-Symbole statt fremder Logos). Das Neonschild „ARCADE“ geht

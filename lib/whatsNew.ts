@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  "RetroMind Gaming eigene App bei den Einladungen": {
+    title: "RetroMind Gaming is its own app for invites",
+    text: "Marco can now invite guests to RetroMind and RetroMind Gaming separately. Anyone allowed to use all apps still gets into both.",
+  },
   'Hall of Fame: später und langsamer': {
     title: 'Hall of Fame: later and slower',
     text: 'The gaming hall’s screensaver now starts after 5 minutes without input instead of one. And the games there changed after 3.5 seconds, often before you had a proper look or could like them; now each game stays for 6 seconds.',

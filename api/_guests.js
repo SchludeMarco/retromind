@@ -52,7 +52,7 @@ export async function removeGuest(email) {
 // genannten. Marco (ADMIN_EMAIL) darf immer alles.
 
 const ACCESS_KEY = "rm:guest-apps";
-export const APP_IDS = ["retromind", "toolpulse", "smartcraft", "rumble", "ai-investment", "abocheck", "ms-akku"];
+export const APP_IDS = ["retromind", "retromind-gaming", "toolpulse", "smartcraft", "rumble", "ai-investment", "abocheck", "ms-akku"];
 
 const parseApps = (raw) => {
   try {
@@ -212,11 +212,19 @@ const ORIGIN_APP = {
   "https://ms-akku.vercel.app": "ms-akku",
   "https://abocheck-frontend.vercel.app": "abocheck",
 };
+/** Which edition a page belongs to: Gaming (own domain or /gaming/ on the main
+ *  domain) has its own app id, so its own access. */
+export const editionAppId = (hostname, pathname = "/") =>
+  hostname.startsWith("retromind-gaming") || pathname === "/gaming" || pathname.startsWith("/gaming/")
+    ? "retromind-gaming"
+    : "retromind";
+
 /** App id for one of APP_ORIGINS. */
 export const appIdForOrigin = (origin) => ORIGIN_APP[origin] || null;
 
 const APP_NAMES = {
   retromind: "RetroMind",
+  "retromind-gaming": "RetroMind Gaming",
   toolpulse: "ToolPulse",
   smartcraft: "Sm@rtCraft 3.0",
   rumble: "Rumble",

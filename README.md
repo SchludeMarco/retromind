@@ -732,6 +732,9 @@ Quests, eine kurze Blitz-Challenge am Tag, Coins, Preis-Tresen und Easter Eggs. 
   `mayUseApp`, Upstash-Hash `rm:guest-apps`) – Marco legt in
   [Omni Admin](https://omni-admin-eta.vercel.app) fest, welche Apps ein Gast
   benutzen darf (2026-11-26). Ohne Eintrag gelten wie bisher alle Apps.
+  RetroMind und RetroMind Gaming sind dabei getrennte Apps (`retromind`,
+  `retromind-gaming`, 2026-11-27); die Middleware erkennt die Edition an der
+  Domain bzw. am Pfad `/gaming/` (`editionAppId`).
   `?view=pass` gibt nur für erlaubte Apps einen Gästepass aus, sonst eine
   kurze Seite „Kein Zugang“; dieselbe Seite zeigt die Middleware Gästen ohne
   RetroMind-Freigabe (ihr Cookie bleibt, damit die Tür weiter Pässe für die
