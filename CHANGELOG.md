@@ -7,6 +7,12 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Musik läuft sofort, auch nach dem Neuladen** (2026-11-27, PR #309):
+  Wer die Seite in der Gaming-Halle neu lädt oder zurück in die Halle kommt,
+  landet direkt drinnen, ohne die Tür. Bisher blieb es dann still, bis man
+  irgendwo hintippte, und die Musikleiste stand auf Pause. Jetzt startet die
+  Hallenmusik gleich, sobald der Browser Ton erlaubt (am PC fast immer).
+
 - **„Lightning Games“ mit blinkendem Blitz** (2026-11-27, PR #308): Die
   Liste mit den 30-Sekunden-Spielen ganz oben in „Zocken“ heißt jetzt
   „Lightning Games“ statt „Lightning Round“, und der Blitz davor zuckt

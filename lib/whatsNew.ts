@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Musik läuft sofort, auch nach dem Neuladen': {
+    title: 'The music starts right away, even after a reload',
+    text: 'Reloading the page in the gaming hall, or coming back to it, takes you straight inside without the door. Until now it then stayed silent until you tapped somewhere, and the music bar sat on pause. Now the hall music starts at once whenever the browser allows sound (almost always on a computer).',
+  },
   '„Lightning Games“ mit blinkendem Blitz': {
     title: '“Lightning Games” with a flashing bolt',
     text: 'The list of 30-second games at the top of the Play section is now called “Lightning Games” instead of “Lightning Round”, and the bolt in front of it flashes now and then like a lightning strike.',
