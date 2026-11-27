@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  '„Lightning Round“ ganz oben in Zocken': {
+    title: 'The Lightning Round leads the Play section',
+    text: 'The 30-second games are now called “⚡ Lightning Round” instead of “Blitz games”, sit at the very top of the Play section and are open right away, no need to expand the list first.',
+  },
   'Dämonenlachen und rotes Licht hinter der Tür': {
     title: 'A demon laughs behind the door, and the light flickers red',
     text: 'When you push open the door to the gaming hall, a deep demonic voice laughs “Ha ha ha … haaa” from inside, echoing like a cellar, and the light behind the door flickers red like a broken emergency lamp before it burns steadily. The logo in the doorway now glows red too. With sound off it stays silent, and with reduced motion nothing flickers.',

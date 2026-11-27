@@ -563,7 +563,7 @@ export const MiniGameCorner: React.FC<{ onPick: (id: MiniGameId) => void; blitz?
     <>
       <p className="dim archive-count">
         {blitz
-          ? tr('30 seconds each, and everyone gets the same round today. One of them is often the Blitz Challenge of the day.', 'Je 30 Sekunden, und heute bekommen alle dieselbe Runde. Oft ist eins davon die Blitz-Challenge des Tages.')
+          ? tr('30 seconds on the clock, and everyone gets the same round today. One of them is often the Blitz Challenge of the day.', '30 Sekunden auf der Uhr, und heute bekommen alle dieselbe Runde. Oft ist eins davon die Blitz-Challenge des Tages.')
           : tr('Take a quick break: mini games to unwind, no ads and no sign-up.', 'Kurz mal abschalten: Minispiele zum Entspannen, ohne Werbung und ohne Anmeldung.')}
       </p>
       <div className="grid mini-list" style={{ marginTop: 12 }}>
