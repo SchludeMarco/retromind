@@ -12,8 +12,12 @@ import { tr } from '../../lib/i18n';
 // the previous game or on to the next random one, and tapping the game opens
 // its page. The heart under the game likes it (Marco, 2026-10-21), the same
 // likes as in the high score list and on the game's page.
-export const ATTRACT_AFTER_MS = 60_000;
-const SLIDE_MS = 3500;
+// Two minutes without input (Marco, 2026-11-27: one minute came too soon).
+export const ATTRACT_AFTER_MS = 120_000;
+// Each game stays at least 5 seconds, long enough to read it and tap the
+// heart (Marco, 2026-11-27: "mindestens 5 Sekunden zu sehen sein, da man
+// sonst was verpasst").
+const SLIDE_MS = 6000;
 const SWIPE_PX = 40;
 
 const Slide: React.FC<{ game: Game; onOpen: () => void }> = ({ game, onOpen }) => {

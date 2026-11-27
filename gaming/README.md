@@ -153,8 +153,9 @@ zeigen dürfen.
   hinterher, der unter den Knöpfen kreuz und quer läuft und Punkte frisst
   ([`components/MuncherWander.tsx`](components/MuncherWander.tsx), eigene
   Figuren statt Pac-Man, aus bei
-  „Bewegung reduzieren“). Nach einer Minute ohne Eingabe startet der Attract
-  Mode wie bei alten Automaten, die „Hall of Fame“: Mit ◀ / ▶, Wischen oder
+  „Bewegung reduzieren“). Nach zwei Minuten ohne Eingabe startet der Attract
+  Mode wie bei alten Automaten, die „Hall of Fame“ (jedes Spiel 6 Sekunden
+  lang): Mit ◀ / ▶, Wischen oder
   den Pfeiltasten geht es zum vorherigen oder zum nächsten zufälligen Spiel,
   ein Tipp aufs Spiel öffnet seine Seite, das Herz darunter liked es, ein
   Tipp daneben führt zurück in die Halle

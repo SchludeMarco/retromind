@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Hall of Fame: später und langsamer': {
+    title: 'Hall of Fame: later and slower',
+    text: 'The gaming hall’s screensaver now starts after 2 minutes without input instead of one. And the games there changed after 3.5 seconds, often before you had a proper look or could like them; now each game stays for 6 seconds.',
+  },
   'Ganze Songs mit Premium, und ein klarer Hinweis, wenn\'s nicht geht': {
     title: 'Full songs with Premium, and a clear note when it can’t work',
     text: 'After a reload in the gaming hall, Spotify Premium sometimes switched to 30-second previews for the whole visit, just because the browser player was still silent before the first tap. Now the hall’s own music bridges the gap, and the first tap brings back full songs. Some browsers (such as the Claude app’s built-in browser) can’t play full Spotify songs at all because they lack the component needed for it (Widevine). There the top of the screen now says “Only previews: this browser can’t play full Spotify songs. Open RetroMind in Chrome, Edge or Firefox.”',
