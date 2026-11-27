@@ -5552,3 +5552,75 @@ button.pcard {
 .play-row + .play-row {
   margin-top: 8px;
 }
+
+/* Guides for every area (components/AreaGuide.tsx, Marco 2026-11-27). */
+.brand-wrap {
+  position: relative;
+}
+.guide-btn {
+  padding: 4px 7px;
+  font-size: 14px;
+  line-height: 1;
+}
+.brand-guide {
+  margin-top: 4px;
+}
+.hof-title .guide-btn {
+  vertical-align: middle;
+  margin-left: 6px;
+  font-size: 12px;
+}
+.area-guide {
+  margin: 10px 0 14px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--a3);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--a3) 35%, transparent);
+  animation: area-guide-in 0.25s ease-out;
+}
+.area-guide-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: var(--a3);
+}
+.area-guide p {
+  margin: 0 0 8px;
+}
+.area-guide ul {
+  margin: 0 0 10px;
+  padding-left: 1.2em;
+}
+.area-guide li {
+  margin: 0 0 6px;
+}
+.area-guide-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.area-guide-foot .dim {
+  font-size: 0.85em;
+}
+.arcade[data-palette='modul'] .area-guide {
+  background: #fff;
+  border: 1px solid var(--ridge);
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+@keyframes area-guide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .area-guide {
+    animation: none;
+  }
+}
+.guide-btn-text {
+  font-size: 8px;
+  vertical-align: middle;
+}

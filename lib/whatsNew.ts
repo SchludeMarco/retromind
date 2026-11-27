@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Erklärung für jeden Bereich, und die Tages-Challenge raus aus dem Katalog': {
+    title: 'An explanation for every area, and the daily challenge leaves the catalog',
+    text: 'The first time you open an area of the gaming hall (catalog, stash, search, trophies, play, quests, legends, Hall of Fame), a short explanation at the top tells you what’s there and how it works. “Got it!” closes it, and it won’t come back by itself. With “ℹ️ How it works” under the logo (ℹ️ next to the title in the Hall of Fame) you can bring it back any time. The quests explanation tells you exactly what you can spend your coins on and how: at the prize counter, on designs, hall music and the party logo. The daily challenge now only sits under “Play”, no longer in the catalog.',
+  },
   'Eigene ROM wieder leicht zu finden': {
     title: 'Your own ROM is easy to find again',
     text: 'Since the lists under “Play” start folded, “Your own game file” was hidden inside the folded retro console. Now “💾 Play your own ROM” is its own list again, right under the retro console.',

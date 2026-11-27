@@ -8,6 +8,17 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Erklärung für jeden Bereich, und die Tages-Challenge raus aus dem
+  Katalog** (2026-11-27, PR #319): Wer einen Bereich der Gaming-Halle zum
+  ersten Mal öffnet (Katalog, Stash, Suche, Trophäen, Zocken, Quests,
+  Legenden, Bestenliste), bekommt oben eine kurze Erklärung, was es dort
+  gibt und wie es geht. „Alles klar!“ schließt sie, danach kommt sie nicht
+  mehr von selbst. Mit „ℹ️ So geht’s“ unter dem Logo (in der Bestenliste ℹ️
+  neben dem Titel) holst du sie jederzeit zurück. Die Erklärung bei den
+  Quests sagt genau, wofür und wie du deine Coins ausgibst: am Preis-Tresen
+  für Designs, Hallenmusik und das Party-Logo. Die Tages-Challenge steht nur
+  noch unter „Zocken“, nicht mehr im Katalog.
+
 - **Eigene ROM wieder leicht zu finden** (2026-11-27, PR #318): Seit die
   Listen unter „Zocken“ eingeklappt starten, steckte „Deine eigene
   Spieldatei“ versteckt in der eingeklappten Retro-Konsole. Jetzt ist

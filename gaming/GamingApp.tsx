@@ -18,6 +18,7 @@ import { MuncherWander } from './components/MuncherWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { HelpBot } from '../components/HelpBot';
+import { AreaGuide, GuideButton, useAreaGuide } from './components/AreaGuide';
 import { GuestChat } from '../components/GuestChat';
 import { useChatOpenRequest, useChatUnread } from '../lib/chat';
 import { getInitials } from '../lib/initials';
@@ -222,6 +223,8 @@ export const GamingApp: React.FC = () => {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const [view, setView] = useState<View>(reloaded.view ?? 'catalog');
+  // The guide of the area that is open: by itself the first time, then via ℹ️ (components/AreaGuide.tsx).
+  const guide = useAreaGuide(view, screen === 'hub');
   const [decade, setDecade] = useState<string | null>(reloaded.decade ?? null);
   // A single year inside the chosen decade narrows the filter further.
   const [year, setYear] = useState<number | null>(reloaded.year ?? null);
@@ -902,6 +905,8 @@ export const GamingApp: React.FC = () => {
                 }[view]}
               </span>
             </h1>
+            {/* Explains the open area again any time (Marco, 2026-11-27). */}
+            <GuideButton open={guide.open} onToggle={guide.toggle} className="brand-guide" withText />
             </div>
             {/* Top right: straight to the games you play yourself (Marco, 2026-11-25). */}
             <PlayCorner active={view === 'chill'} onOpen={openPlayZone} />
@@ -976,8 +981,10 @@ export const GamingApp: React.FC = () => {
             )}
           </div>
 
-          {/* The daily challenge: one short task a day, the same for everyone (Marco, 2026-10-21). */}
-          {view === 'catalog' && challengeCard}
+          {/* The daily challenge lives under "Zocken" only (Marco, 2026-11-27: "Die
+              Tageschallenge hat doch im Katalog nichts verloren"). */}
+
+          {guide.open && <AreaGuide area={view} onClose={guide.close} />}
 
           {dayGame && view === 'catalog' && (
             <button className="day-game" onClick={openDayGame} data-nav>
