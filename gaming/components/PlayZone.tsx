@@ -11,8 +11,8 @@ import { tr } from '../../lib/i18n';
 // Selbstzocken. Die ganzen Spiele, die man selbst zocken kann mit der
 // integrierten Konsole und die Schnellspiele"). The page behind the PLAY /
 // ZOCKEN corner at the top right (PlayCorner) and the ZOCKEN section in the
-// side panel: today's Blitz Challenge pinned on top, a random pick, the
-// Retro-Konsole games (last played first) and every quick game as a tile
+// side panel: a random pick, the Lightning Round (the 30-second games, open
+// on top), today's Blitz Challenge pinned under it, the Retro-Konsole games (last played first) and every quick game as a tile
 // with the player's own record.
 
 /** Ids in ArcadeState.recentPlays: "emu:<FreeGame id>" or "mini:<MiniGameId>". */
@@ -103,6 +103,18 @@ export const PlayZone: React.FC<{
         </button>
       </div>
 
+      {/* The 30-second games come first and stand open (Marco, 2026-11-27:
+          "Die Blitz spiele sollen im Zocken-Abteil als erstes kommen und die
+          Liste soll direkt ausgeklappt sein"), under an American name. */}
+      <section className="play-row" aria-label="Lightning Round">
+        <details className="chill-list lightning-round" open>
+          <summary data-nav>
+            ⚡ LIGHTNING ROUND ({blitz.length})
+          </summary>
+          <MiniGameCorner onPick={onPickMini} blitz />
+        </details>
+      </section>
+
       {challenge}
 
       <section className="play-row" aria-label={tr('The retro console', 'Die Retro-Konsole')}>
@@ -148,12 +160,6 @@ export const PlayZone: React.FC<{
             </button>
           ))}
         </div>
-        <details className="chill-list">
-          <summary data-nav>
-            {tr('⏱️ BLITZ GAMES', '⏱️ BLITZ-SPIELE')} ({blitz.length})
-          </summary>
-          <MiniGameCorner onPick={onPickMini} blitz />
-        </details>
       </section>
     </div>
   );

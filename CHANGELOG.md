@@ -7,6 +7,11 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **„Lightning Round“ ganz oben in Zocken** (2026-11-27, PR #307): Die
+  30-Sekunden-Spiele heißen jetzt „⚡ Lightning Round“ statt „Blitz-Spiele“,
+  stehen im Bereich „Zocken“ ganz oben und sind gleich aufgeklappt, ohne
+  dass man erst die Liste öffnen muss.
+
 - **Dämonenlachen und rotes Licht hinter der Tür** (2026-11-27, PR #306):
   Wenn du die Tür zur Gaming-Halle aufstößt, lacht von drinnen eine tiefe,
   dämonische Stimme „Ha ha ha … haaa“ mit Kellerhall, und das Licht hinter

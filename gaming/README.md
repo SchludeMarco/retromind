@@ -254,12 +254,12 @@ zeigen dürfen.
   öffnet die Seite „Selbst zocken“ (derselbe Bereich wie „Zocken“ im
   Seitenpanel, [`components/PlayZone.tsx`](components/PlayZone.tsx)): oben
   „🎲 Zufallsspiel“ (dreht wie der Münzschlitz durch die Titel und startet
-  ein Konsolen- oder Schnellspiel), die Bestenliste und die heutige
-  Blitz-Challenge angepinnt; darunter die Retro-Konsole als Kacheln, das
+  ein Konsolen- oder Schnellspiel) und die Bestenliste; als Erstes die
+  „⚡ Lightning Round“ mit den 30-Sekunden-Spielen, schon aufgeklappt, darunter
+  die heutige Blitz-Challenge angepinnt; dann die Retro-Konsole als Kacheln, das
   zuletzt gespielte zuerst mit Schild „Zuletzt“ (gemerkt in
   `recentPlays`, synchronisiert), und alle Schnellspiele als Kacheln mit dem
-  eigenen Rekord. „Deine eigene Spieldatei“ und die Blitz-Spiele sind
-  aufklappbar.
+  eigenen Rekord. „Deine eigene Spieldatei“ ist aufklappbar.
 - **Die Retro-Konsole** – auf der Seite „Selbst zocken“. Die ROM-Spiele
   sind echte alte Konsolen im Browser ([`components/EmulatorCorner.tsx`](components/EmulatorCorner.tsx),
   [`lib/emulator.ts`](lib/emulator.ts)). Der Emulator ist
@@ -295,8 +295,8 @@ zeigen dürfen.
   10.000 Punkte eine Stadt zurück)
   ([`components/MiniGames.tsx`](components/MiniGames.tsx),
   [`components/minigames/`](components/minigames/)).
-- **Blitz-Spiele** – sechs Spiele, gemacht für die Blitz-Challenge, in einer
-  eigenen Liste „⚡ Blitz-Challenges“: genau 30
+- **Lightning Round** (früher „Blitz-Spiele“) – sechs Spiele, gemacht für die
+  Blitz-Challenge, ganz oben in „Zocken“ und gleich aufgeklappt: genau 30
   Sekunden mit 3-2-1-Countdown, und an einem Tag für alle exakt dieselbe
   Runde (Zufall aus dem Datum). Knopf-Blitz (leuchtenden Automatenknopf
   antippen), Konsolen-Sprint (bekanntes Spiel, vier Konsolen zur Wahl) und
