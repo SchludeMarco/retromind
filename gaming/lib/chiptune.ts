@@ -321,6 +321,129 @@ class ChipSound {
   }
 
   /**
+   * A demonic "Ha ha ha ... haaa" from deep inside the hall as the door
+   * opens. A synthesized voice (pulses through the formants of an "a", with
+   * a breathy "h" in front), doubled an octave below so it growls, falling a
+   * little lower with every "ha", a touch of distortion and a big cellar
+   * echo behind it.
+   */
+  laugh(delay = 0) {
+    if (!this.sfxEnabled || !this.ctx || !this.sfxBus) return void this.note('laugh', 'aus');
+    this.note('laugh', `gespielt (Audio: ${this.ctx.state})`);
+    const ctx = this.ctx;
+    const t = ctx.currentTime + 0.01 + delay;
+    const src = ctx.createBufferSource();
+    src.buffer = this.laughBuffer();
+    const drive = ctx.createWaveShaper();
+    const curve = new Float32Array(1024);
+    for (let i = 0; i < curve.length; i++) curve[i] = Math.tanh(2.2 * ((i / (curve.length - 1)) * 2 - 1));
+    drive.curve = curve;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 3800;
+    const dry = ctx.createGain();
+    dry.gain.value = 0.75;
+    const wet = ctx.createGain();
+    wet.gain.value = 0.45;
+    const echo = ctx.createConvolver();
+    echo.buffer = this.cellarEcho(2.2);
+    src.connect(drive).connect(lp);
+    lp.connect(dry).connect(this.sfxBus);
+    lp.connect(echo).connect(wet).connect(this.sfxBus);
+    src.start(t);
+  }
+
+  private laughBuffer(): AudioBuffer {
+    const ctx = this.ctx!;
+    const sr = ctx.sampleRate;
+    // [start, vowel length, pitch in Hz]: four short "ha", then a long one.
+    const sylls: [number, number, number][] = [
+      [0, 0.17, 118],
+      [0.3, 0.17, 108],
+      [0.6, 0.17, 99],
+      [0.9, 0.17, 90],
+      [1.22, 0.62, 82],
+    ];
+    const H = 0.07; // the breathy "h" before each vowel
+    const total = 1.22 + H + 0.62 + 0.15;
+    const n = Math.floor(total * sr);
+    const src = new Float32Array(n);
+    const breath = new Float32Array(n);
+    for (const [start, len, f0] of sylls) {
+      const i0 = Math.floor(start * sr);
+      const hN = Math.floor(H * sr);
+      for (let k = 0; k < hN && i0 + k < n; k++) breath[i0 + k] += (Math.random() * 2 - 1) * 0.5 * Math.sin((Math.PI * k) / hN);
+      const v0 = i0 + Math.floor(H * 0.6 * sr);
+      const vN = Math.floor(len * sr);
+      let ph1 = 0;
+      let ph2 = 0;
+      for (let k = 0; k < vN && v0 + k < n; k++) {
+        const p = k / vN;
+        // The pitch drops through each "ha"; a little wobble makes it a throat.
+        const f = f0 * (1.08 - 0.22 * p) * (1 + 0.012 * Math.sin(k / sr * 2 * Math.PI * 6) + (Math.random() - 0.5) * 0.01);
+        ph1 = (ph1 + f / sr) % 1;
+        ph2 = (ph2 + (f * 0.5) / sr) % 1;
+        const env = Math.min(1, k / (0.025 * sr)) * Math.min(1, (vN - k) / (0.07 * sr));
+        // Sawtooth-like glottal pulses, the second voice an octave below.
+        src[v0 + k] += env * ((1 - 2 * ph1) * 0.55 + (1 - 2 * ph2) * 0.6);
+        breath[v0 + k] += env * (Math.random() * 2 - 1) * 0.08;
+      }
+    }
+    // Formants of a dark, open "a" (big throat, so a bit lower than a human).
+    const formants: [number, number, number][] = [
+      [620, 90, 1],
+      [1050, 110, 0.6],
+      [2300, 160, 0.22],
+      [3100, 200, 0.1],
+    ];
+    const out = new Float32Array(n);
+    for (const [F, bw, g] of formants) {
+      const r = Math.exp((-Math.PI * bw) / sr);
+      const b1 = 2 * r * Math.cos((2 * Math.PI * F) / sr);
+      const b2 = -r * r;
+      const a = (1 - r) * g;
+      let y1 = 0;
+      let y2 = 0;
+      for (let i = 0; i < n; i++) {
+        const y = a * (src[i] + breath[i] * 3) + b1 * y1 + b2 * y2;
+        y2 = y1;
+        y1 = y;
+        out[i] += y;
+      }
+    }
+    // A little of the raw low growl under the formants.
+    let lp = 0;
+    for (let i = 0; i < n; i++) {
+      lp += (src[i] - lp) * 0.02;
+      out[i] += lp * 0.5;
+    }
+    let peak = 0;
+    for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(out[i]));
+    const buf = ctx.createBuffer(1, n, sr);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = peak ? (out[i] / peak) * 0.9 : 0;
+    return buf;
+  }
+
+  /** The echo of a big stone cellar: decaying noise, darker towards the end. */
+  private cellarEcho(dur: number): AudioBuffer {
+    const ctx = this.ctx!;
+    const sr = ctx.sampleRate;
+    const n = Math.floor(dur * sr);
+    const buf = ctx.createBuffer(2, n, sr);
+    for (let c = 0; c < 2; c++) {
+      const d = buf.getChannelData(c);
+      let lp = 0;
+      for (let i = 0; i < n; i++) {
+        const p = i / n;
+        lp += ((Math.random() * 2 - 1) - lp) * (0.6 - 0.5 * p);
+        d[i] = lp * Math.pow(1 - p, 2.5) * (i < sr * 0.02 ? i / (sr * 0.02) : 1);
+      }
+    }
+    return buf;
+  }
+
+  /**
    * A high electric whine (old arcade cabinets and neon) that gets louder
    * and a little higher while you walk up to the door. Returns a stop
    * function for when the picture has gone white.

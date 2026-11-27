@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Dämonenlachen und rotes Licht hinter der Tür': {
+    title: 'A demon laughs behind the door, and the light flickers red',
+    text: 'When you push open the door to the gaming hall, a deep demonic voice laughs “Ha ha ha … haaa” from inside, echoing like a cellar, and the light behind the door flickers red like a broken emergency lamp before it burns steadily. The logo in the doorway now glows red too. With sound off it stays silent, and with reduced motion nothing flickers.',
+  },
   "Gäste nur für einzelne Apps einladen": {
     title: "Invite guests to single apps only",
     text: "Marco can now choose which of his apps a guest may use, for example only Rumble. If you open an app you're not invited to, you see a short “No access” note instead of the door. Nothing changes for existing guests, they can still use all apps.",
