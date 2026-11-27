@@ -7,8 +7,8 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
-- **Hall of Fame: später und langsamer** (2026-11-27, PR #311): Der
-  Bildschirmschoner der Gaming-Halle kommt erst nach 2 Minuten ohne
+- **Hall of Fame: später und langsamer** (2026-11-27, PR #311, #312): Der
+  Bildschirmschoner der Gaming-Halle kommt erst nach 5 Minuten ohne
   Eingabe statt nach einer. Und die Spiele wechselten dort nach 3,5
   Sekunden, oft bevor man sie richtig gesehen oder geliked hatte; jetzt
   bleibt jedes Spiel 6 Sekunden stehen.
