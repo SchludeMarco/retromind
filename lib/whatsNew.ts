@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Controller oben rechts springt immer zu den Spielen': {
+    title: 'The controller top right always takes you to the games',
+    text: 'When “Play” was already open (after a reload, for example), tapping the controller only tilted it and nothing else happened. Now it scrolls straight down to the games every time.',
+  },
   "RetroMind Gaming eigene App bei den Einladungen": {
     title: "RetroMind Gaming is its own app for invites",
     text: "Marco can now invite guests to RetroMind and RetroMind Gaming separately. Anyone allowed to use all apps still gets into both.",
