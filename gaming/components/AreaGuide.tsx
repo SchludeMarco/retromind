@@ -110,6 +110,7 @@ const GUIDES: Record<GuideArea, Guide> = {
     intro: () => tr('Here you play yourself: real old consoles in the browser and quick games for in between.', 'Hier zockst du selbst: echte alte Konsolen im Browser und Schnellspiele für zwischendurch.'),
     points: () => [
       tr('The daily challenge is the same for everyone and brings 25 coins. The red “!” flashes while it is open; the bell sets a reminder.', 'Die Tages-Challenge ist für alle gleich und bringt 25 Coins. Das rote „!“ blinkt, solange sie offen ist; die Glocke stellt eine Erinnerung ein.'),
+      tr('The boss of the day waits right below: beat him in three 30-second rounds with three hearts. Up to 105 coins, on Sundays the Overlord pays double.', 'Darunter wartet der Endgegner des Tages: Besieg ihn in drei 30-Sekunden-Runden mit drei Herzen. Bis zu 105 Coins, sonntags zahlt der Overlord doppelt.'),
       tr('Lightning Challenges: six games of exactly 30 seconds each.', 'Blitz-Challenges: sechs Spiele mit genau 30 Sekunden.'),
       tr('The retro console runs real NES and Game Boy games; with “Play your own ROM” you can load your own game file.', 'Die Retro-Konsole spielt echte NES- und Game-Boy-Spiele; mit „Eigene ROM spielen“ lädst du deine eigene Spieldatei.'),
       tr('Quick games: classics like Snake, Tetris-style blocks, pinball and cards. Good runs go on the high score tables.', 'Schnellspiele: Klassiker wie Snake, Blockstapler, Flipper und Karten. Gute Runden kommen auf die Highscore-Tafeln.'),
@@ -129,8 +130,8 @@ const GUIDES: Record<GuideArea, Guide> = {
         'Designs ändern die Farben der ganzen Halle, Musik die eigene Chiptune-Hallenmusik (wenn kein Spotify läuft), Effekte bringen ein Extra: Regenbogen-Logo, Röhrenbild, Pixel-Zeiger oder die goldene VIP-Krone. Nach dem Kauf schaltet „Benutzen“ bzw. „An/Aus“ es um; Designs und Musik wechselst du jederzeit in den Einstellungen zurück.'
       ),
       tr(
-        'Earn: quests, the daily challenge (+25), your streak, Easter eggs and the quiz “Do you know the game?”.',
-        'Verdienen: Quests, die Tages-Challenge (+25), deine Serie, Easter Eggs und das Quiz „Erkennst du das Spiel?“.'
+        'Earn: quests, the daily challenge (+25), the boss of the day (up to +105, Sundays double), your streak, Easter eggs and the quiz “Do you know the game?”. Out of hearts against the boss, a continue costs 10 coins.',
+        'Verdienen: Quests, die Tages-Challenge (+25), der Endgegner des Tages (bis zu +105, sonntags doppelt), deine Serie, Easter Eggs und das Quiz „Erkennst du das Spiel?“. Keine Herzen mehr gegen den Boss? Ein Continue kostet 10 Coins.'
       ),
       tr('Three new quests every day, plus a bigger one each week. Each brings coins.', 'Jeden Tag drei neue Quests, dazu jede Woche eine größere. Jede bringt Coins.'),
       tr('Days in a row in the hall build your streak and bring more coins each day.', 'Tage in Folge in der Halle bauen deine Serie auf und bringen jeden Tag mehr Coins.'),

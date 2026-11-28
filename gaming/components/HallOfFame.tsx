@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { chip } from '../lib/chiptune';
-import { BOARD_GAMES, BoardGame, Entry, fetchBoard, fetchTops, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
+import { BOARD_GAMES, MiniBoardGame as BoardGame, Entry, fetchBoard, fetchTops, fetchWeekBoard, formatScore, isDuelGame } from '../lib/highscores';
 import { useLikes } from '../lib/likes';
 import { LikeButton } from './LikeButton';
 import { RivalNews, fetchRivalNews } from '../lib/rivals';

@@ -75,6 +75,17 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Endgegner des Tages** – unter der Tages-Challenge in „Zocken“ jeden Tag
+  ein Boss (Glitch-König, Mecha-Kong, Pixel-Hexe, Dr. Bit im Wechsel,
+  sonntags der Arcade-Overlord mit 4 Runden, höheren Zielen und doppelten
+  Coins). Jede Runde ist ein Blitz-Spiel mit eigener Zufallsrunde und Ziel
+  (steigt von Runde zu Runde), 3 Herzen, Continue für 10 Coins; wer eine
+  laufende Runde abbricht, verliert ein Herz. Coins: +5/Runde, +50 Sieg,
+  +25 makellos, +15 Erste:r in der Halle (Tagestabelle `boss` in
+  `api/highscores.js`, ohne „Überholt“-Nachrichten). Trophäen Bossbezwinger,
+  Makellos, Gestürzt, Boss-Jäger. Logik in [`lib/boss.ts`](lib/boss.ts),
+  Kampf in [`components/BossFight.tsx`](components/BossFight.tsx), Runden
+  über `minigames/bossContext.ts`; Stand in `boss` im Spielstand (synchronisiert).
 - **Coins immer im Blick am Tresen** – beim Scrollen durch den Preis-Tresen
   bleibt oben eine Leiste mit den übrigen Coins und „Gesammelt x / 14“
   stehen; nach einem Kauf springt die Zahl kurz auf
@@ -585,6 +596,10 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 - **Mehr eigene Szenen für das Archiv:** Oft angeschaute Archivspiele könnten
   wie die Katalogspiele ein von Hand gezeichnetes Pixelbild bekommen.
 - **Mehr Easter Eggs**, z. B. in Spieleseiten oder Minispielen.
+- **Endgegner ausbauen:** Push „Ein neuer Endgegner ist da“, Bosskampf-Musik
+  während des Kampfs, mehr Bosse und Bosse mit Schnellspielen (Snake,
+  Invaders …), ein Gemeinschafts-Boss, den alle zusammen besiegen, oder ein
+  Kopfgeld auf den Ersten einer Highscore-Tafel.
 - **Beliebteste Spiele zuerst:** die Bestenliste nach Likes sortieren oder ein
   „Lieblingsspiel der Halle“ auf der Startseite zeigen.
 - **Mehr Blitz-Spiele:** etwa ein Sound-Sprint (welches Spiel klingt so?), dazu mehr

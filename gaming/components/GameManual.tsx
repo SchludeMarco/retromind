@@ -131,6 +131,7 @@ const PAGES: Page[] = [
     body: () => (
       <ul className="manual-list">
         <Row icon="❗">{tr('DAILY CHALLENGE: the same game for everyone, every day. Win it for 25 coins. The bell next to it sets a reminder.', 'TAGES-CHALLENGE: jeden Tag dasselbe Spiel für alle. Schaffst du sie, gibt es 25 Coins. Die Glocke daneben stellt eine Erinnerung ein.')}</Row>
+        <Row icon="☠">{tr('BOSS OF THE DAY: three rounds, three hearts, up to 105 coins. On Sundays the Overlord: four rounds, double coins.', 'ENDGEGNER DES TAGES: drei Runden, drei Herzen, bis zu 105 Coins. Sonntags der Overlord: vier Runden, doppelte Coins.')}</Row>
         <Row icon="⚡">{tr('LIGHTNING CHALLENGES: six games of exactly 30 seconds.', 'BLITZ-CHALLENGES: sechs Spiele mit genau 30 Sekunden.')}</Row>
         <Row icon="📺">{tr('RETRO CONSOLE: real NES and Game Boy games right in the browser.', 'RETRO-KONSOLE: echte NES- und Game-Boy-Spiele direkt im Browser.')}</Row>
         <Row icon="💾">{tr('PLAY YOUR OWN ROM: load a game file of your own.', 'EIGENE ROM SPIELEN: lade eine eigene Spieldatei.')}</Row>
@@ -147,6 +148,7 @@ const PAGES: Page[] = [
         <ul className="manual-list">
           <Row icon="📜">{tr('Three new quests every day, plus a bigger one each week.', 'Jeden Tag drei neue Quests, dazu jede Woche eine größere.')}</Row>
           <Row icon="❗">{tr('The daily challenge: +25.', 'Die Tages-Challenge: +25.')}</Row>
+          <Row icon="☠">{tr('The boss of the day: up to +105, on Sundays up to +210.', 'Der Endgegner des Tages: bis zu +105, sonntags bis zu +210.')}</Row>
           <Row icon="🔥">{tr('Your streak: days in a row bring more each day.', 'Deine Serie: Tage in Folge bringen jeden Tag mehr.')}</Row>
           <Row icon="🥚">{tr('Easter eggs hidden all over the hall, and the quiz.', 'Easter Eggs, überall in der Halle versteckt, und das Quiz.')}</Row>
         </ul>

@@ -66,6 +66,8 @@ const GAMES = {
   blitzpixel: { max: 60 },
   blitzcolor: { max: 200 },
   blitzcombo: { max: 600 },
+  // The boss of the day (gaming/lib/boss.ts): rounds above goal, hearts, continues.
+  boss: { max: 9_999 },
 };
 const KEEP = 50;
 const SHOW = 10;
@@ -168,6 +170,7 @@ const GAME_NAMES = {
   blitzpixel: ["Pixel Blitz", "Pixel-Blitz"],
   blitzcolor: ["Color Blitz", "Farb-Blitz"],
   blitzcombo: ["Combo Blitz", "Combo-Blitz"],
+  boss: ["the boss of the day", "Endgegner des Tages"],
 };
 
 function sendAlerts(pid, game, name) {
@@ -343,7 +346,8 @@ export default async function handler(req, res) {
     }
     await redis(commands);
     try {
-      await notifyBeaten(parse(beforeFlat || []), game, name, score, me);
+      // The boss table is a day's list of slayers, not a duel: nobody gets "beaten" news for it.
+      if (game !== "boss") await notifyBeaten(parse(beforeFlat || []), game, name, score, me);
     } catch (e) {
       console.error("highscores notify:", e?.message || e);
     }

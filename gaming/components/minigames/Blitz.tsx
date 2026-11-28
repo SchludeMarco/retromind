@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { BlitzBoss, BlitzBossContext } from './bossContext';
 import { chip } from '../../lib/chiptune';
 import { seeded, today } from '../../lib/quests';
 import { tr } from '../../../lib/i18n';
@@ -16,8 +17,8 @@ export const BLITZ_SECONDS = 30;
 
 type BlitzId = 'blitzbuttons' | 'blitzconsole' | 'blitzyear' | 'blitzpixel' | 'blitzcolor' | 'blitzcombo';
 
-/** The day's random numbers for a Blitz game: the same sequence for everyone today. */
-const dayRandom = (id: BlitzId) => seeded(`blitz:${id}:${today()}`);
+/** The day's random numbers for a Blitz game: the same sequence for everyone today; a boss round has its own. */
+const dayRandom = (id: BlitzId, boss?: BlitzBoss | null) => seeded(boss ? `boss:${boss.seed}:${id}` : `blitz:${id}:${today()}`);
 
 /** The 30-second clock with a 3-2-1 countdown in front. */
 function useBlitzClock(onEnd: () => void) {
@@ -73,10 +74,13 @@ const Frame: React.FC<{
   score: number;
   intro: string;
   children: React.ReactNode;
-}> = ({ clock, score, intro, children }) => (
+}> = ({ clock, score, intro, children }) => {
+  const boss = useContext(BlitzBossContext);
+  return (
   <>
-    <p className="mini-score">
-      {tr('Score', 'Punkte')}: {score} · {tr('Time', 'Zeit')}: {clock.left} s
+    <p className={`mini-score${boss && score >= boss.goal ? ' boss-goal-made' : ''}`}>
+      {tr('Score', 'Punkte')}: {score}
+      {boss ? ` / ${boss.goal}` : ''} · {tr('Time', 'Zeit')}: {clock.left} s
     </p>
     <div className="blitz-bar" aria-hidden="true">
       <span style={{ width: `${(100 * clock.left) / BLITZ_SECONDS}%` }} />
@@ -84,18 +88,38 @@ const Frame: React.FC<{
     {clock.phase === 'ready' && (
       <div className="blitz-ready">
         <p>{intro}</p>
-        <p className="dim">{tr('Everyone gets the same round today.', 'Heute bekommen alle dieselbe Runde.')}</p>
-        <button className="px-btn big" onClick={clock.start} data-nav autoFocus>
-          ⚡ START
+        {boss ? (
+          <p className="pixel-font boss-goal">{tr(`🎯 GOAL: ${boss.goal} POINTS`, `🎯 ZIEL: ${boss.goal} PUNKTE`)}</p>
+        ) : (
+          <p className="dim">{tr('Everyone gets the same round today.', 'Heute bekommen alle dieselbe Runde.')}</p>
+        )}
+        <button
+          className="px-btn big"
+          onClick={() => {
+            boss?.onStart?.();
+            clock.start();
+          }}
+          data-nav
+          autoFocus
+        >
+          {boss ? tr('⚔ FIGHT!', '⚔ KÄMPFEN!') : '⚡ START'}
         </button>
       </div>
     )}
     {clock.phase === 'count' && <p className="blitz-count pixel-font">{clock.count}</p>}
     {clock.phase === 'run' && children}
   </>
-);
+  );
+};
 
-const result = (id: BlitzId, score: number) => ({ score, record: score > 0 && saveBest(id, score, true) });
+/** The end of a round: the score and whether it's a record, or, against the boss, handed to the fight (no end screen). */
+const result = (id: BlitzId, score: number, boss?: BlitzBoss | null) => {
+  if (boss) {
+    boss.onEnd(score);
+    return null;
+  }
+  return { score, record: score > 0 && saveBest(id, score, true) };
+};
 
 /* ------------------------------------------------------------ Knopf-Blitz */
 
@@ -103,7 +127,8 @@ const BUTTONS = 9;
 const BUTTON_NOTES = ['C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6', 'D6'];
 
 export const BlitzButtons: React.FC<{ onWin: () => void }> = ({ onWin }) => {
-  const rnd = useRef(dayRandom('blitzbuttons'));
+  const boss = useContext(BlitzBossContext);
+  const rnd = useRef(dayRandom('blitzbuttons', boss));
   const nextLit = (prev: number) => {
     const n = Math.floor(rnd.current() * (BUTTONS - 1));
     return n >= prev ? n + 1 : n;
@@ -114,7 +139,7 @@ export const BlitzButtons: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   const scoreRef = useRef(0);
   const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
   const clock = useBlitzClock(() => {
-    setDone(result('blitzbuttons', scoreRef.current));
+    setDone(result('blitzbuttons', scoreRef.current, boss));
     if (scoreRef.current >= 40) onWin();
   });
 
@@ -140,7 +165,7 @@ export const BlitzButtons: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   };
 
   const again = () => {
-    rnd.current = dayRandom('blitzbuttons');
+    rnd.current = dayRandom('blitzbuttons', boss);
     scoreRef.current = 0;
     setScore(0);
     setLit(-1);
@@ -305,8 +330,9 @@ function yearQuestion(rnd: () => number): Question {
 
 /** A 30-second quiz sprint: as many right answers as possible; a wrong one costs a point and a moment, so guessing doesn't pay. */
 const Sprint: React.FC<{ id: 'blitzconsole' | 'blitzyear'; onWin: () => void; winAt: number; intro: string }> = ({ id, onWin, winAt, intro }) => {
+  const boss = useContext(BlitzBossContext);
   const make = id === 'blitzconsole' ? consoleQuestion : yearQuestion;
-  const rnd = useRef(dayRandom(id));
+  const rnd = useRef(dayRandom(id, boss));
   const [q, setQ] = useState<Question>(() => make(rnd.current));
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -315,7 +341,7 @@ const Sprint: React.FC<{ id: 'blitzconsole' | 'blitzyear'; onWin: () => void; wi
   const timer = useRef<number | null>(null);
   useEffect(() => () => void (timer.current && clearTimeout(timer.current)), []);
   const clock = useBlitzClock(() => {
-    setDone(result(id, scoreRef.current));
+    setDone(result(id, scoreRef.current, boss));
     if (scoreRef.current >= winAt) onWin();
   });
 
@@ -343,7 +369,7 @@ const Sprint: React.FC<{ id: 'blitzconsole' | 'blitzyear'; onWin: () => void; wi
   };
 
   const again = () => {
-    rnd.current = dayRandom(id);
+    rnd.current = dayRandom(id, boss);
     scoreRef.current = 0;
     setScore(0);
     setQ(make(rnd.current));
@@ -419,7 +445,8 @@ function pattern(rnd: () => number, round: number): number[] {
 }
 
 export const BlitzPixel: React.FC<{ onWin: () => void }> = ({ onWin }) => {
-  const rnd = useRef(dayRandom('blitzpixel'));
+  const boss = useContext(BlitzBossContext);
+  const rnd = useRef(dayRandom('blitzpixel', boss));
   const round = useRef(0);
   const [cells, setCells] = useState<number[]>([]);
   const [show, setShow] = useState(true);
@@ -431,7 +458,7 @@ export const BlitzPixel: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   useEffect(() => () => void (timer.current && clearTimeout(timer.current)), []);
   const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
   const clock = useBlitzClock(() => {
-    setDone(result('blitzpixel', scoreRef.current));
+    setDone(result('blitzpixel', scoreRef.current, boss));
     if (scoreRef.current >= 8) onWin();
   });
 
@@ -474,7 +501,7 @@ export const BlitzPixel: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   };
 
   const again = () => {
-    rnd.current = dayRandom('blitzpixel');
+    rnd.current = dayRandom('blitzpixel', boss);
     round.current = 0;
     scoreRef.current = 0;
     setScore(0);
@@ -530,7 +557,8 @@ const COLORS = [
 ];
 
 export const BlitzColor: React.FC<{ onWin: () => void }> = ({ onWin }) => {
-  const rnd = useRef(dayRandom('blitzcolor'));
+  const boss = useContext(BlitzBossContext);
+  const rnd = useRef(dayRandom('blitzcolor', boss));
   // The word names one color, the ink is another: tap the ink.
   const make = () => {
     const word = Math.floor(rnd.current() * COLORS.length);
@@ -544,7 +572,7 @@ export const BlitzColor: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   const lock = useRef(false);
   const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
   const clock = useBlitzClock(() => {
-    setDone(result('blitzcolor', scoreRef.current));
+    setDone(result('blitzcolor', scoreRef.current, boss));
     if (scoreRef.current >= 20) onWin();
   });
 
@@ -567,7 +595,7 @@ export const BlitzColor: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   };
 
   const again = () => {
-    rnd.current = dayRandom('blitzcolor');
+    rnd.current = dayRandom('blitzcolor', boss);
     scoreRef.current = 0;
     setScore(0);
     setCard(make());
@@ -627,7 +655,8 @@ function combo(rnd: () => number, n: number): number[] {
 }
 
 export const BlitzCombo: React.FC<{ onWin: () => void }> = ({ onWin }) => {
-  const rnd = useRef(dayRandom('blitzcombo'));
+  const boss = useContext(BlitzBossContext);
+  const rnd = useRef(dayRandom('blitzcombo', boss));
   const count = useRef(0);
   const [moves, setMoves] = useState<number[]>(() => combo(rnd.current, count.current++));
   const [pos, setPos] = useState(0);
@@ -636,7 +665,7 @@ export const BlitzCombo: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   const scoreRef = useRef(0);
   const [done, setDone] = useState<{ score: number; record: boolean } | null>(null);
   const clock = useBlitzClock(() => {
-    setDone(result('blitzcombo', scoreRef.current));
+    setDone(result('blitzcombo', scoreRef.current, boss));
     if (scoreRef.current >= 60) onWin();
   });
 
@@ -671,7 +700,7 @@ export const BlitzCombo: React.FC<{ onWin: () => void }> = ({ onWin }) => {
   });
 
   const again = () => {
-    rnd.current = dayRandom('blitzcombo');
+    rnd.current = dayRandom('blitzcombo', boss);
     count.current = 0;
     scoreRef.current = 0;
     setScore(0);
