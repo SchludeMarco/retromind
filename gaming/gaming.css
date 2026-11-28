@@ -6234,3 +6234,44 @@ button.pcard {
     animation: none;
   }
 }
+
+/* The initials at the door (Entrance.tsx, Marco 2026-11-28). */
+.door-hello {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: #facc15;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.7), 2px 2px 0 #7f1d1d;
+}
+.door-initials {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid #facc15;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.4);
+}
+.door-initials-title {
+  margin: 0;
+  font-size: 10px;
+  color: #facc15;
+}
+.door-initials-note {
+  margin: 0;
+  font-size: 16px;
+}
+.door-initials.shake {
+  animation: door-initials-shake 0.5s;
+}
+@keyframes door-initials-shake {
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .door-initials.shake {
+    animation: none;
+  }
+}

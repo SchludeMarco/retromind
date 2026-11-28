@@ -195,19 +195,34 @@ export const GamingApp: React.FC = () => {
   // the hall, each area's picture the first time it opens, all of them in the
   // gallery behind the handle (components/GuidePosters.tsx).
   const posters = usePosters(screen === 'hub');
+  // Greeted once per visit to the hall.
+  const greeted = useRef(false);
+  useEffect(() => {
+    if (screen !== 'hub') greeted.current = false;
+  }, [screen]);
   useEffect(() => {
     // The coins for the visit wait until the picture is closed, so nothing covers it.
-    if (screen !== 'hub' || !streakNews || posters.busy) return;
+    if (screen !== 'hub' || posters.busy) return;
+    // Greeted with the initials (Marco, 2026-11-28), together with the day's coins when there are any.
+    const me = getInitials();
+    const hello = me && !greeted.current ? `Hi ${me}! ` : '';
+    if (!streakNews) {
+      if (me && !greeted.current) showToast(tr(`WELCOME BACK, ${me}!`, `WILLKOMMEN ZURÜCK, ${me}!`), tr('Ready, Player One? The hall is yours.', 'Bereit, Player One? Die Halle gehört dir.'), '👾');
+      greeted.current = true;
+      return;
+    }
+    greeted.current = true;
     const { days, coins, forgiven } = streakNews;
     setStreakNews(null);
     chip.play('coin');
     showToast(
       days === 1 ? tr(`DAILY VISIT: +${coins} COINS`, `TAGESBESUCH: +${coins} COINS`) : tr(`${days}-DAY STREAK: +${coins} COINS`, `${days} TAGE IN FOLGE: +${coins} COINS`),
-      forgiven
+      hello +
+      (forgiven
         ? tr('You missed a day, but one per week is forgiven. Come back tomorrow and the streak grows.', 'Einen Tag hast du verpasst, aber einer pro Woche wird verziehen. Komm morgen wieder, dann wächst die Serie.')
         : days === 1
           ? tr('Come back tomorrow: every day in a row pays more, up to 30 Coins, and every 7th day 25 extra.', 'Komm morgen wieder: Jeder Tag in Folge bringt mehr, bis zu 30 Coins, und jeder 7. Tag 25 extra.')
-          : tr(`Every day in a row pays more. Your best: ${state.streak?.best ?? days} days.`, `Jeder Tag in Folge bringt mehr. Dein Rekord: ${state.streak?.best ?? days} Tage.`),
+          : tr(`Every day in a row pays more. Your best: ${state.streak?.best ?? days} days.`, `Jeder Tag in Folge bringt mehr. Dein Rekord: ${state.streak?.best ?? days} Tage.`)),
       '🔥'
     );
   }, [screen, streakNews, showToast, state.streak?.best, posters.busy]);

@@ -12,6 +12,8 @@ import { isGerman, tr } from '../../lib/i18n';
 import { checkSpotifyApp, useConnectPlayback, useLoginLost } from '../../lib/spotifyPremium';
 import { openSpotifyApp } from '../../lib/spotifyConnect';
 import { beginSpotifyLogin } from '../../lib/spotifyAuth';
+import { setInitials, useInitials } from '../../lib/initials';
+import { InitialsPicker } from '../../components/InitialsPicker';
 
 // The way in: a run-down arcade on a rainy street, the ARCADE neon sign
 // lighting up letter by letter and the hall's metal thumping muffled through the wall. Tapping the door throws it open,
@@ -201,6 +203,51 @@ const SpotifyAppCheck: React.FC = () => {
   );
 };
 
+/**
+ * The player's three initials, settled at the door (Marco, 2026-11-28:
+ * "Direkt am Eingang sollten die 3 Spielerbuchstaben festgelegt werden …
+ * Man soll nur nach den Buchstaben gefragt werden, wenn diese nicht bekannt
+ * sind"). They live in lib/initials.ts: in this browser and, signed in, in
+ * the Google account (lib/sync.ts), so a known player is only greeted.
+ */
+const DoorInitials: React.FC<{ nudge: number }> = ({ nudge }) => {
+  // Starts at AAA like a fresh cabinet; the arrows (or typing) change it.
+  const [tag, setTag] = useState('AAA');
+  const [shake, setShake] = useState(false);
+  useEffect(() => {
+    if (!nudge) return;
+    setShake(true);
+    const id = setTimeout(() => setShake(false), 600);
+    return () => clearTimeout(id);
+  }, [nudge]);
+  const save = () => {
+    if (tag.length !== 3) return chip.play('error');
+    chip.play('powerup');
+    setInitials(tag);
+  };
+  return (
+    <form
+      className={`door-initials${shake ? ' shake' : ''}`}
+      onSubmit={(e) => {
+        e.preventDefault();
+        save();
+      }}
+    >
+      <p className="pixel-font door-initials-title blink">{tr('NEW PLAYER! ENTER YOUR INITIALS', 'NEUER SPIELER! DEINE 3 BUCHSTABEN')}</p>
+      <InitialsPicker value={tag} onChange={setTag} onEnter={save} />
+      <button className="px-btn big" type="submit" disabled={tag.length !== 3} data-nav>
+        OK
+      </button>
+      <p className="dim door-initials-note">
+        {tr(
+          'Like on the old high score tables. They stay on this device and, signed in with Google, in your account.',
+          'Wie früher auf den Highscore-Tafeln. Sie bleiben auf diesem Gerät und mit Google-Anmeldung in deinem Konto.'
+        )}
+      </p>
+    </form>
+  );
+};
+
 export const Entrance: React.FC<{
   onEnter: () => void;
   reducedMotion: boolean;
@@ -216,6 +263,11 @@ export const Entrance: React.FC<{
 }> = ({ onEnter, reducedMotion, muted, music, doorSong, onToggleMute, cloud, spotifyAuth, spotifyMusic }) => {
   const [entering, setEntering] = useState(false);
   const [soundWaiting, setSoundWaiting] = useState(false);
+  const initials = useInitials();
+  // Signed in, the initials may still be on their way from Google: don't ask yet.
+  const loading = cloud.status === 'signing_in' || (cloud.status === 'signed_in' && cloud.sync === 'loading');
+  const needInitials = !initials && !loading;
+  const [nudge, setNudge] = useState(0);
   const ambient = useRef<{ stop: () => void; songPlaying: () => boolean }>({
     stop: () => {},
     songPlaying: () => false,
@@ -244,6 +296,12 @@ export const Entrance: React.FC<{
 
   const enter = () => {
     if (entering) return;
+    // No initials yet: the door stays shut and points at the form.
+    if (needInitials) {
+      chip.play('error');
+      setNudge((n) => n + 1);
+      return;
+    }
     setEntering(true);
     chip.unlock();
     const songOutside = ambient.current.songPlaying();
@@ -292,12 +350,14 @@ export const Entrance: React.FC<{
         <img className="door-logo" src="/gaming/logo.webp" alt="" />
       </div>
       <div className="entrance-controls">
+        {initials && <p className="pixel-font door-hello">{tr(`WELCOME BACK, ${initials}!`, `WILLKOMMEN ZURÜCK, ${initials}!`)}</p>}
+        {needInitials && <DoorInitials nudge={nudge} />}
         <p className="dim entrance-hint">
           {muted
             ? tr('The old games are waiting inside. Tap the door. Sound is off.', 'Da drin warten die alten Games. Tipp auf die Tür. Der Ton ist aus.')
             : soundWaiting
               ? tr('Psst … tap anywhere once and you’ll hear what’s going on inside.', 'Psst … einmal irgendwo hintippen, dann hörst du, was drinnen los ist.')
-              : tr('The old games are waiting inside. Tap the door, Player 1.', 'Da drin warten die alten Games. Tipp auf die Tür, Player 1.')}
+              : tr(`The old games are waiting inside. Tap the door, ${initials || 'Player 1'}.`, `Da drin warten die alten Games. Tipp auf die Tür, ${initials || 'Player 1'}.`)}
         </p>
         <div className="entrance-row">
           <LoudSign show={!muted} />
