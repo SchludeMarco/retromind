@@ -11,6 +11,9 @@ import { PRIZES } from '../lib/quests';
 // ℹ️ button next to the area's name brings it back any time. Which guides
 // were seen is kept in retromind.gaming.guides (synced like the savegame,
 // lib/sync.ts), so a guide shows once per person, not once per device.
+// Since 2026-11-28 the first visit shows the area's picture instead
+// (GuidePosters.tsx); this written guide opens with ℹ️ or the picture's
+// "Details" button.
 
 export type GuideArea = 'catalog' | 'collection' | 'search' | 'trophies' | 'chill' | 'quests' | 'legends' | 'hof';
 
@@ -34,22 +37,22 @@ export function markGuideSeen(area: GuideArea) {
   }
 }
 
-/** Whether the guide of `area` is open: on by itself the first time, then by the ℹ️ button. */
-export function useAreaGuide(area: GuideArea, active = true) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (active) setOpen(!readSeen().includes(area));
-  }, [area, active]);
+/** Whether the written guide of `area` is open: by the ℹ️ button or a picture's "Details". */
+export function useAreaGuide(area: GuideArea) {
+  // Remembered with its area, so switching areas closes it, and "Details" can open the guide of the area it switches to.
+  const [st, setSt] = useState<{ area: GuideArea; open: boolean }>({ area, open: false });
+  const open = st.open && st.area === area;
   const close = useCallback(() => {
     markGuideSeen(area);
-    setOpen(false);
+    setSt({ area, open: false });
   }, [area]);
   const toggle = useCallback(() => {
     chip.play('blip');
     if (open) close();
-    else setOpen(true);
-  }, [open, close]);
-  return { open, close, toggle };
+    else setSt({ area, open: true });
+  }, [open, close, area]);
+  const show = useCallback((forArea?: GuideArea) => setSt({ area: forArea ?? area, open: true }), [area]);
+  return { open, close, toggle, show };
 }
 
 interface Guide {

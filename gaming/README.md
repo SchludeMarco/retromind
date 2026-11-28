@@ -94,21 +94,24 @@ zeigen dürfen.
   goldene Ticket-Münze „Tresen“; ein Tipp öffnet die Quests und scrollt
   direkt zum Preis-Tresen (`CounterCorner` in
   [`components/PlayZone.tsx`](components/PlayZone.tsx)).
-- **Spielanleitung im 80er-Look** – beim ersten Betreten der Halle schlägt
-  sich ein Anleitungsheft auf, wie es früher in der Spieleschachtel lag
-  (Papier, Heftklammern, Titelbild, Inhaltsverzeichnis, sieben Seiten zum
-  Blättern mit ◄/► oder den Pfeiltasten). Es erklärt die ganze App, auch
-  Coins und Preis-Tresen. Danach jederzeit über den Griff → „📖 Anleitung“.
-  Gemerkt in `retromind.gaming.manual`, synchronisiert; solange es offen
-  ist, warten Bereichs-Erklärung, Spotify-Frage und Tagesbesuch-Hinweis
-  ([`components/GameManual.tsx`](components/GameManual.tsx)).
-- **Erklärung für jeden Bereich** – beim ersten Besuch eines Bereichs
-  (Katalog, Stash, Suche, Trophäen, Zocken, Quests, Legenden und die
-  Bestenliste) erscheint oben eine kurze Erklärung; „Alles klar!“ schließt
-  sie für immer. Mit „ℹ️ So geht’s“ unterm Logo (in der Bestenliste ℹ️ neben
-  dem Titel) holt man sie jederzeit zurück. Die Quests-Erklärung sagt genau,
-  wofür und wie man Coins ausgibt. Gemerkt in `retromind.gaming.guides`,
-  synchronisiert ([`components/AreaGuide.tsx`](components/AreaGuide.tsx)).
+- **Bild-Anleitungen** – zehn große Erklärbilder im 80er-Anleitungsheft-Look
+  (mit ChatGPT erstellt, alle auf Englisch): ein Überblick über die ganze App
+  beim ersten Betreten der Halle, dazu je ein Bild für Katalog, Suche, Zocken,
+  Endgegner, Quests & Preis-Tresen, Stash, Trophäen, Legenden und Bestenliste,
+  das beim ersten Besuch des Bereichs (bzw. vor dem ersten Bosskampf) kommt.
+  Antippen vergrößert das Bild, „ⓘ Details“ öffnet die geschriebene
+  Erklärung. Alle Bilder jederzeit über den Griff → „📖 Anleitungen“.
+  Solange ein Bild offen ist, warten Spotify-Frage und Tagesbesuch-Hinweis.
+  Bilder in `public/gaming/guide/` (WebP + Vorschau), gemerkt in
+  `retromind.gaming.posters`, synchronisiert
+  ([`components/GuidePosters.tsx`](components/GuidePosters.tsx)).
+- **Erklärung für jeden Bereich** – Katalog, Stash, Suche, Trophäen, Zocken,
+  Quests, Legenden und Bestenliste haben eine kurze geschriebene Erklärung.
+  Sie öffnet sich mit „ℹ️ So geht’s“ unterm Logo (in der Bestenliste ℹ️ neben
+  dem Titel) oder mit „ⓘ Details“ am Bild des Bereichs; von selbst kommt seit
+  den Bild-Anleitungen nur noch das Bild. Die Quests-Erklärung sagt genau,
+  wofür und wie man Coins ausgibt
+  ([`components/AreaGuide.tsx`](components/AreaGuide.tsx)).
 - **Bereich unterm Logo** – unter „RETROMIND GAMING“ steht immer, welcher
   Bereich gerade offen ist (Katalog, Stash, Suche, Trophäen, Zocken, Quests,
   Legenden).
@@ -580,6 +583,12 @@ Feedback-To-Dos stehen in der [Haupt-README](../README.md#to-do).
 
 ### Sollte
 
+- **Bild-Anleitungen nachbessern:** Auf den Bildern Zocken, Stash, Trophäen
+  und Legenden sind noch Figuren, die den Space-Invaders-Aliens sehr ähneln
+  (Jacke, Module, Rucksack); besser gegen eigene Pixel-Monster tauschen. Auf
+  dem Zocken-Bild heißt die Liste „Blitz Challenges“ statt „Lightning
+  Challenges“, auf dem Boss-Bild steht „Beginner’s Bonus“/„First Defeat“
+  statt „First in the hall“.
 - **Weitere Gaming-Stitch-Screens umsetzen:** Trophäen-Schrank mit
   Fortschrittsbalken und Seltenheit, Spieleseite mit großem Screenshot oben und
   „Frag den Game-Guru“-Leiste (Entwurf in `docs/stitch/gaming/`).

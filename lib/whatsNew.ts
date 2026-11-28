@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Bild-Anleitungen statt Anleitungsheft': {
+    title: 'Picture guides instead of the booklet',
+    text: 'The Gaming arcade now explains itself with ten big pictures in the style of an 80s instruction booklet. The first time you enter, an overview of the whole app appears, and the first time you visit an area, its own picture: catalog, search, play, boss, quests & prize counter, stash, trophies, legends and Hall of Fame. Tap a picture to enlarge it, “Details” opens the written guide as before. All pictures are always there via the handle on the right edge under “📖 Guides”. The flip-through booklet is gone in return.',
+  },
   'Endgegner des Tages': {
     title: 'Boss of the day',
     text: 'Under “Play”, right below the daily challenge, a boss now waits every day: the Glitch King, Mecha-Kong, the Pixel Witch or Dr. Bit, and on Sundays the Arcade Overlord. You beat him in three rounds, each a Blitz game with a hard goal, and you have three hearts; miss a goal and a heart is gone. The boss laughs, rants, shakes when hit and topples over at the end. Out of hearts, “Continue?” gives them all back for 10 coins. Coins: +5 per round, +50 for the win, +25 without losing a heart, +15 if you’re the first in the hall, all doubled on Sundays (four rounds). Plus a list of today’s boss slayers and four new trophies.',

@@ -57,7 +57,7 @@ export function GamingControls<V extends string>({
   guruOpen: boolean;
   onGuru: () => void;
   onFeedback: () => void;
-  /** The 80s-style manual of the whole app (components/GameManual.tsx). */
+  /** The picture guides of the whole app (components/GuidePosters.tsx). */
   onManual?: () => void;
   /** The chat corner with the other guests (components/GuestChat.tsx). */
   onChat?: () => void;
@@ -108,7 +108,7 @@ export function GamingControls<V extends string>({
           )}
           {onManual && (
             <button className="px-btn" onClick={onManual} data-nav>
-              {tr('📖 MANUAL', '📖 ANLEITUNG')}
+              {tr('📖 GUIDES', '📖 ANLEITUNGEN')}
             </button>
           )}
           <button className="px-btn gm-feedback" onClick={onFeedback} data-nav>
