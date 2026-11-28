@@ -122,6 +122,10 @@ body {
   line-height: 1.35;
   position: relative;
   overflow-x: hidden;
+  /* clip instead of hidden where the browser can: hidden turns the hall into
+     its own scroll box, so nothing inside could stay sticky while scrolling
+     (the coins at the prize counter, Marco 2026-11-28). */
+  overflow-x: clip;
 }
 .pixel-font {
   font-family: 'Press Start 2P', 'Courier New', monospace;
@@ -5703,9 +5707,43 @@ button.pcard {
   text-shadow: 0 0 6px #ffb000, 0 0 12px rgba(255, 176, 0, 0.6);
 }
 .prize-count {
-  margin: 0 0 10px;
   font-size: 10px;
   color: var(--a3);
+}
+/* The coins left, sticky at the top of the screen while scrolling through
+   the prize counter (Marco, 2026-11-28). */
+.prize-wallet {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 14px;
+  margin: 0 -6px 12px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 2px solid var(--a2);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45), 0 0 12px rgba(250, 204, 21, 0.25);
+}
+.prize-wallet-coins {
+  font-size: 12px;
+  color: var(--fg);
+}
+.prize-wallet-num {
+  display: inline-block;
+  font-size: 16px;
+  animation: prize-wallet-bump 0.5s ease-out;
+}
+@keyframes prize-wallet-bump {
+  0% { transform: scale(1.6); color: #fff; text-shadow: 0 0 10px #facc15; }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prize-wallet-num {
+    animation: none;
+  }
 }
 
 /* The manual of the whole app, like the booklet in an 80s game box

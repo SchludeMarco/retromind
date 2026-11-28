@@ -8,6 +8,11 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Coins immer im Blick am Preis-Tresen** (2026-11-28, PR #323): Wer am
+  Tresen nach unten scrollt, sieht oben jetzt immer, wie viele Coins noch
+  übrig sind und wie viele Preise schon gesammelt sind. Nach jedem Kauf
+  springt die Zahl sofort auf den neuen Stand.
+
 - **Knopf zum Preis-Tresen** (2026-11-27, PR #322): Oben rechts, direkt
   unter dem Controller zum Zocken, sitzt jetzt eine goldene Ticket-Münze
   „Tresen“. Ein Tipp führt sofort zu den Quests und scrollt gleich hinunter

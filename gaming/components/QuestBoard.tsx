@@ -215,9 +215,20 @@ export const QuestBoard: React.FC<{
             </>
           )}
         </p>
-        <p className="pixel-font prize-count">
-          {tr(`COLLECTED: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`, `GESAMMELT: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`)}
-        </p>
+        {/* Stays at the top while scrolling down the counter, and shows the
+            coins left right after every purchase (Marco, 2026-11-28). */}
+        <div className="prize-wallet" role="status" aria-live="polite">
+          <span className="pixel-font prize-wallet-coins">
+            🪙{' '}
+            <strong key={state.tokens} className="tokens prize-wallet-num">
+              {state.tokens}
+            </strong>{' '}
+            {tr('COINS LEFT', 'COINS ÜBRIG')}
+          </span>
+          <span className="pixel-font prize-count">
+            {tr(`COLLECTED: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`, `GESAMMELT: ${PRIZES.filter((p) => state.owned.includes(p.id)).length} / ${PRIZES.length}`)}
+          </span>
+        </div>
         <div className="prize-list">
           {/* Cheapest first, the VIP crown last (Marco, 2026-11-27: more to spend coins on). */}
           {[...PRIZES].sort((a, b) => a.price - b.price).map((p) => {

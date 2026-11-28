@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Coins immer im Blick am Preis-Tresen': {
+    title: 'Your coins always in view at the prize counter',
+    text: 'When you scroll down the prize counter, the top now always shows how many coins you have left and how many prizes you’ve collected. After every purchase the number jumps to the new amount right away.',
+  },
   'Knopf zum Preis-Tresen': {
     title: 'A button to the prize counter',
     text: 'At the top right, right under the controller for playing, there is now a golden ticket coin “Prizes”. One tap takes you to the quests and scrolls straight down to the prize counter, where you spend your coins.',

@@ -75,6 +75,10 @@ zeigen dürfen.
 
 ### In der Halle
 
+- **Coins immer im Blick am Tresen** – beim Scrollen durch den Preis-Tresen
+  bleibt oben eine Leiste mit den übrigen Coins und „Gesammelt x / 14“
+  stehen; nach einem Kauf springt die Zahl kurz auf
+  ([`components/QuestBoard.tsx`](components/QuestBoard.tsx)).
 - **Knopf zum Preis-Tresen** – unter dem Controller oben rechts sitzt eine
   goldene Ticket-Münze „Tresen“; ein Tipp öffnet die Quests und scrollt
   direkt zum Preis-Tresen (`CounterCorner` in
