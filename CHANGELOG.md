@@ -7,6 +7,14 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Spotify-Hinweis schon vor der Tür** (2026-11-28, PR #326): Auf dem
+  Handy laufen ganze Songs über die eigene Spotify-App. Bisher kam der
+  Hinweis „Spotify-App öffnen“ erst in der Halle, die dann mit kurzen
+  Ausschnitten startete. Jetzt prüft schon der Eingang, ob die App bereit
+  ist: Wenn nicht, öffnet ein grüner Knopf sie. Kommt man zurück, steht da
+  „Spotify bereit: drinnen ganze Songs“, und die Halle startet direkt mit
+  vollen Titeln. Ist die Spotify-Anmeldung abgelaufen, bietet der Knopf
+  gleich die neue Anmeldung an.
 - **Bild-Anleitungen statt Anleitungsheft** (2026-11-28, PR #325): Die
   Gaming-Halle erklärt sich jetzt mit zehn großen Bildern im Stil eines
   80er-Anleitungshefts. Beim ersten Betreten kommt ein Überblick über die

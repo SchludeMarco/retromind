@@ -9,6 +9,9 @@ import { MuteButton } from './MuteButton';
 import { BackToZeitreise } from './BackToZeitreise';
 import { LoudSign } from '../../components/LoudSign';
 import { isGerman, tr } from '../../lib/i18n';
+import { checkSpotifyApp, useConnectPlayback, useLoginLost } from '../../lib/spotifyPremium';
+import { openSpotifyApp } from '../../lib/spotifyConnect';
+import { beginSpotifyLogin } from '../../lib/spotifyAuth';
 
 // The way in: a run-down arcade on a rainy street, the ARCADE neon sign
 // lighting up letter by letter and the hall's metal thumping muffled through the wall. Tapping the door throws it open,
@@ -148,6 +151,56 @@ const DoorLogins: React.FC<{ cloud: Cloud; spotifyAuth: SpotifyAuth; disabled: b
   );
 };
 
+/**
+ * On phones the full songs play in the visitor's Spotify app (lib/spotifyConnect).
+ * Marco, 2026-11-28: the hint to open it came only inside the hall, so the
+ * hall started with previews. Now the door checks first: no app found, a
+ * button opens it; back here, it checks again and says when it's ready.
+ */
+const SpotifyAppCheck: React.FC = () => {
+  const connect = useConnectPlayback();
+  const lost = useLoginLost();
+  const [app, setApp] = useState<'ready' | 'missing' | 'login' | null>(null);
+  useEffect(() => {
+    if (!connect) return setApp(null);
+    let alive = true;
+    const check = () => {
+      if (document.hidden) return;
+      checkSpotifyApp().then((r) => alive && setApp(r));
+    };
+    check();
+    // Back from the Spotify app (or every few seconds meanwhile): look again.
+    const poll = window.setInterval(check, 6000);
+    document.addEventListener('visibilitychange', check);
+    window.addEventListener('focus', check);
+    return () => {
+      alive = false;
+      window.clearInterval(poll);
+      document.removeEventListener('visibilitychange', check);
+      window.removeEventListener('focus', check);
+    };
+  }, [connect]);
+  const state = lost ? 'login' : app;
+  if (!state) return null;
+  if (state === 'ready')
+    return <p className="pixel-font door-spotify ready">{tr('♪ SPOTIFY READY: FULL SONGS INSIDE', '♪ SPOTIFY BEREIT: DRINNEN GANZE SONGS')}</p>;
+  return (
+    <button
+      type="button"
+      className="px-btn door-spotify"
+      onClick={() => {
+        chip.play('select');
+        if (state === 'login') beginSpotifyLogin().catch(() => undefined);
+        else openSpotifyApp();
+      }}
+    >
+      {state === 'login'
+        ? tr('♪ Sign in to Spotify again for full songs', '♪ Für ganze Songs neu bei Spotify anmelden')
+        : tr('♪ Open your Spotify app first for full songs, then come back', '♪ Für ganze Songs erst die Spotify-App öffnen, dann zurückkommen')}
+    </button>
+  );
+};
+
 export const Entrance: React.FC<{
   onEnter: () => void;
   reducedMotion: boolean;
@@ -158,7 +211,9 @@ export const Entrance: React.FC<{
   onToggleMute: () => void;
   cloud: Cloud;
   spotifyAuth: SpotifyAuth;
-}> = ({ onEnter, reducedMotion, muted, music, doorSong, onToggleMute, cloud, spotifyAuth }) => {
+  /** The hall plays Spotify (not the chiptunes): check the Spotify app at the door. */
+  spotifyMusic?: boolean;
+}> = ({ onEnter, reducedMotion, muted, music, doorSong, onToggleMute, cloud, spotifyAuth, spotifyMusic }) => {
   const [entering, setEntering] = useState(false);
   const [soundWaiting, setSoundWaiting] = useState(false);
   const ambient = useRef<{ stop: () => void; songPlaying: () => boolean }>({
@@ -248,6 +303,7 @@ export const Entrance: React.FC<{
           <LoudSign show={!muted} />
           <MuteButton muted={muted} onToggle={onToggleMute} />
         </div>
+        {spotifyMusic && !entering && <SpotifyAppCheck />}
         <DoorLogins cloud={cloud} spotifyAuth={spotifyAuth} disabled={entering} />
       </div>
       <BackToZeitreise className="pixel-font back-door" />

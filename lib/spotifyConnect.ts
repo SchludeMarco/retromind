@@ -182,6 +182,16 @@ async function wakeRemembered(source: TokenSource): Promise<Device | null> {
   return devices.find((d) => d.id === saved!.id && !d.is_restricted) ?? null;
 }
 
+/**
+ * Before the gaming hall (Marco, 2026-11-28: the "open Spotify" hint should
+ * come at the door, so the hall starts with full songs): is the visitor's
+ * Spotify app there to play on? Wakes the remembered phone app if it can.
+ */
+export async function findSpotifyApp(source: TokenSource, scope: string): Promise<'ready' | 'missing' | 'login'> {
+  if (!new RegExp(`\\b${NEEDED_SCOPE}\\b`).test(scope)) return 'login';
+  return (await pickDevice(source)) ? 'ready' : 'missing';
+}
+
 // Spotify may play the same song under another id in the visitor's country.
 const isTrack = (item: any, u: string) => item?.uri === u || item?.linked_from?.uri === u;
 
