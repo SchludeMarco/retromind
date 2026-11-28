@@ -1,0 +1,393 @@
+/* The manual of the whole app, like the booklet in an 80s game box
+   (components/GameManual.tsx, Marco 2026-11-27). Its own paper look, the same
+   in every design of the hall. */
+.manual-overlay {
+  z-index: 650;
+}
+.manual {
+  --paper: #f2e8cf;
+  --ink: #1d1a16;
+  --red: #c8102e;
+  --blue: #1b3a8c;
+  position: relative;
+  width: min(520px, calc(100vw - 24px));
+  height: min(640px, calc(100dvh - 24px));
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background:
+    radial-gradient(rgba(120, 90, 40, 0.13) 1px, transparent 1.2px) 0 0 / 5px 5px,
+    linear-gradient(135deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(150, 110, 50, 0.12)),
+    var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow:
+    8px 8px 0 rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(0, 0, 0, 0.6);
+  font-family: 'Futura', 'Trebuchet MS', 'Century Gothic', system-ui, sans-serif;
+  animation: manual-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  transform-origin: left center;
+}
+/* Two staples on the spine. */
+.manual::before,
+.manual::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  width: 9px;
+  height: 22px;
+  background: linear-gradient(90deg, #8d8d8d, #e6e6e6 50%, #7a7a7a);
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+.manual::before {
+  top: 22%;
+}
+.manual::after {
+  bottom: 22%;
+}
+.manual-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  font: 700 16px/1 'Press Start 2P', monospace;
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+.manual-close:hover,
+.manual-close:focus-visible {
+  background: var(--red);
+}
+.manual-page {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 22px 8px 28px;
+  animation: manual-flip 0.3s ease-out;
+}
+.manual-title {
+  margin: 0 34px 14px 0;
+  padding: 8px 10px;
+  font: 13px/1.5 'Press Start 2P', monospace;
+  color: #fff;
+  background: var(--red);
+  border-left: 8px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.manual-body {
+  font-size: 15px;
+  line-height: 1.45;
+}
+.manual-body p {
+  margin: 0 0 10px;
+}
+.manual-sub {
+  margin: 10px 0 6px !important;
+  font: 10px/1.4 'Press Start 2P', monospace;
+  color: var(--blue);
+  border-bottom: 2px dashed var(--blue);
+  padding-bottom: 4px;
+}
+.manual-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.manual-list li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 8px;
+  align-items: start;
+  margin: 0 0 8px;
+}
+.manual-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 15px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.manual-warning {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 3px double var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+}
+.manual-warning strong {
+  display: block;
+  margin-bottom: 6px;
+  font: 11px/1.4 'Press Start 2P', monospace;
+  color: var(--red);
+}
+.manual-warning p {
+  margin: 0;
+  font-size: 14px;
+}
+.manual-toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: toc;
+}
+.manual-toc li {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 7px;
+  font-weight: 700;
+}
+.manual-toc li span:first-child {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* Dotted leader lines between chapter and page, like in the old booklets. */
+.manual-toc li span:first-child::after {
+  content: '';
+  flex: 1;
+  border-bottom: 2px dotted rgba(29, 26, 22, 0.55);
+  margin-bottom: 5px;
+}
+.manual-diagram {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 190px;
+  margin: 0 auto 14px;
+  padding: 10px 18px;
+  background: #b9b3a8;
+  border: 3px solid var(--ink);
+  border-radius: 6px 6px 22px 22px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.manual-pad {
+  font-size: 34px;
+  line-height: 1;
+  color: var(--ink);
+}
+.manual-buttons {
+  display: flex;
+  gap: 8px;
+  transform: rotate(-18deg);
+}
+.manual-buttons i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font: 9px 'Press Start 2P', monospace;
+  font-style: normal;
+  color: #fff;
+  background: var(--red);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+.manual-stamp {
+  margin: 12px auto 4px;
+  max-width: 340px;
+  padding: 8px 10px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--red);
+  border: 3px solid var(--red);
+  border-radius: 6px;
+  transform: rotate(-2deg);
+  opacity: 0.9;
+}
+.manual-folio {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  font: 9px 'Press Start 2P', monospace;
+  opacity: 0.6;
+}
+
+/* The cover. */
+.manual-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0 12px;
+  text-align: center;
+  background: linear-gradient(180deg, #120a2e 0%, #2a0d4a 55%, #5b1458 100%);
+  color: #fff;
+}
+.manual-band {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 44px 8px 18px;
+  font: 9px/1.4 'Press Start 2P', monospace;
+  color: #fff;
+  background: var(--red);
+  border-bottom: 3px solid var(--ink);
+}
+.manual-band-low {
+  margin-top: auto;
+  padding-right: 18px;
+  background: var(--ink);
+  border: 0;
+  border-top: 3px solid var(--red);
+}
+.manual-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+  transform: skewX(-10deg);
+}
+.manual-logo-top,
+.manual-logo-main {
+  font: clamp(30px, 9vw, 46px)/1.05 'Press Start 2P', monospace;
+  background: linear-gradient(180deg, #fff 0%, #9be7ff 45%, #2b59c3 50%, #e9f7ff 75%, #fff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(3px 3px 0 #ff2bd6) drop-shadow(0 0 6px rgba(255, 43, 214, 0.5));
+}
+.manual-logo-sub {
+  margin-top: 8px;
+  padding: 4px 10px;
+  font: 13px 'Press Start 2P', monospace;
+  letter-spacing: 6px;
+  color: #ffe14d;
+  border: 2px solid #ffe14d;
+  text-shadow: 0 0 8px rgba(255, 225, 77, 0.7);
+}
+/* A striped 80s sun over a neon grid. */
+.manual-sun {
+  position: relative;
+  width: 150px;
+  height: 75px;
+  margin-top: 6px;
+  border-radius: 150px 150px 0 0;
+  background: repeating-linear-gradient(180deg, transparent 0 9px, #2a0d4a 9px 12px), linear-gradient(180deg, #ffe14d, #ff7a18 55%, #ff2bd6);
+}
+.manual-sun::after {
+  content: '';
+  position: absolute;
+  left: -60px;
+  right: -60px;
+  top: 100%;
+  height: 34px;
+  background:
+    linear-gradient(90deg, rgba(255, 43, 214, 0.7) 1px, transparent 1px) 0 0 / 18px 100%,
+    linear-gradient(0deg, rgba(255, 43, 214, 0.7) 1px, transparent 1px) 0 0 / 100% 9px;
+  transform: perspective(80px) rotateX(45deg);
+  transform-origin: top;
+}
+.manual-cover-line {
+  margin: 40px 16px 0;
+  font: 10px/1.6 'Press Start 2P', monospace;
+  color: #9be7ff;
+}
+.manual-cover-small {
+  margin: 0 16px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Page turning. */
+.manual-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px 12px 20px;
+  border-top: 3px solid var(--ink);
+  background: rgba(255, 255, 255, 0.35);
+}
+.manual-btn {
+  padding: 8px 10px;
+  font: 9px/1.2 'Press Start 2P', monospace;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+}
+.manual-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.manual-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.manual-next {
+  color: #fff;
+  background: var(--red);
+}
+.manual-btn:focus-visible,
+.manual-dots button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.manual-dots {
+  display: flex;
+  gap: 5px;
+}
+.manual-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.manual-dots button.on {
+  background: var(--red);
+  border-color: var(--red);
+}
+@keyframes manual-in {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(-35deg) scale(0.9);
+  }
+}
+@keyframes manual-flip {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .manual,
+  .manual-page {
+    animation: none;
+  }
+}
+@media (max-width: 420px) {
+  .manual-page {
+    padding: 18px 14px 6px 20px;
+  }
+  .manual-title {
+    font-size: 11px;
+  }
+  .manual-body {
+    font-size: 14px;
+  }
+  .manual-btn {
+    padding: 7px 7px;
+    font-size: 8px;
+  }
+  .manual-dots {
+    gap: 3px;
+  }
+}
+

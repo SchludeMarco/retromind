@@ -178,3 +178,4 @@ gebaut oder ausgeliefert.
   Platzhalter für „ZOCKEN“ oben rechts in der Gaming-Edition (entfernt am
   2026-11-25, ersetzt durch Marcos eigenen Neon-Controller
   `public/gaming/play-icon.webp`).
+- `GameManual.tsx.txt`, `game-manual.css.txt`: die Spielanleitung der Gaming-Edition im Stil eines 80er-Jahre-Anleitungshefts (Titelbild, Inhaltsverzeichnis, sieben Seiten zum Blättern), die beim ersten Betreten der Halle aufging und über den Griff → „📖 Anleitung“ wieder aufzurufen war (entfernt am 2026-11-28, ersetzt durch die Bild-Anleitungen in `gaming/components/GuidePosters.tsx`).

@@ -8,6 +8,16 @@ nicht von Hand bearbeiten.
 
 ## Unreleased
 
+- **Bild-Anleitungen statt Anleitungsheft** (2026-11-28, PR #325): Die
+  Gaming-Halle erklärt sich jetzt mit zehn großen Bildern im Stil eines
+  80er-Anleitungshefts. Beim ersten Betreten kommt ein Überblick über die
+  ganze App, beim ersten Besuch eines Bereichs dessen eigenes Bild:
+  Katalog, Suche, Zocken, Endgegner, Quests & Preis-Tresen, Stash,
+  Trophäen, Legenden und Bestenliste. Antippen vergrößert das Bild,
+  „Details“ öffnet die geschriebene Erklärung wie bisher. Alle Bilder
+  findet man jederzeit über den Griff am rechten Rand unter
+  „📖 Anleitungen“. Das blätterbare Anleitungsheft gibt es dafür nicht mehr.
+
 - **Endgegner des Tages** (2026-11-28, PR #324): Unter „Zocken“ wartet jetzt
   direkt unter der Tages-Challenge jeden Tag ein Endgegner: der
   Glitch-König, Mecha-Kong, die Pixel-Hexe oder Dr. Bit, sonntags der

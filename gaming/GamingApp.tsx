@@ -18,8 +18,8 @@ import { MuncherWander } from './components/MuncherWander';
 import { GameDetail } from './components/GameDetail';
 import { GuruChat } from './components/GuruChat';
 import { HelpBot } from '../components/HelpBot';
-import { AreaGuide, GuideButton, markGuideSeen, useAreaGuide } from './components/AreaGuide';
-import { GameManual, useGameManual } from './components/GameManual';
+import { AreaGuide, GuideButton, useAreaGuide } from './components/AreaGuide';
+import { PosterGallery, PosterView, usePosters } from './components/GuidePosters';
 import { BossFight, BossSprite, bossMaxCoins, Hearts } from './components/BossFight';
 import { bossOfDay, CONTINUE_COST, todaysBoss } from './lib/boss';
 import { GuestChat } from '../components/GuestChat';
@@ -191,12 +191,13 @@ export const GamingApp: React.FC = () => {
   // Easter eggs that count taps within one visit (eggs.ts).
   const [flicker, setFlicker] = useState(false);
   const eggCounts = useRef({ logo: 0, logoAt: 0, coins: 0, colors: 0 });
-  // The manual of the whole app, like an 80s game booklet: by itself the
-  // first time in the hall, then via the handle (components/GameManual.tsx).
-  const manual = useGameManual(screen === 'hub');
+  // The picture guides (Marco, 2026-11-28): the overview the first time in
+  // the hall, each area's picture the first time it opens, all of them in the
+  // gallery behind the handle (components/GuidePosters.tsx).
+  const posters = usePosters(screen === 'hub');
   useEffect(() => {
-    // The coins for the visit wait until the manual is closed, so nothing covers it.
-    if (screen !== 'hub' || !streakNews || manual.open) return;
+    // The coins for the visit wait until the picture is closed, so nothing covers it.
+    if (screen !== 'hub' || !streakNews || posters.busy) return;
     const { days, coins, forgiven } = streakNews;
     setStreakNews(null);
     chip.play('coin');
@@ -209,7 +210,7 @@ export const GamingApp: React.FC = () => {
           : tr(`Every day in a row pays more. Your best: ${state.streak?.best ?? days} days.`, `Jeder Tag in Folge bringt mehr. Dein Rekord: ${state.streak?.best ?? days} Tage.`),
       '🔥'
     );
-  }, [screen, streakNews, showToast, state.streak?.best, manual.open]);
+  }, [screen, streakNews, showToast, state.streak?.best, posters.busy]);
   // "Nachteule": in the hall between midnight and four in the morning.
   useEffect(() => {
     if (screen === 'hub' && new Date().getHours() < 4) findEgg('night');
@@ -230,13 +231,8 @@ export const GamingApp: React.FC = () => {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const [view, setView] = useState<View>(reloaded.view ?? 'catalog');
-  const closeManual = () => {
-    // The booklet already explains the catalog, so its guide doesn't follow right after.
-    markGuideSeen('catalog');
-    manual.close();
-  };
-  // The guide of the area that is open: by itself the first time, then via ℹ️ (components/AreaGuide.tsx).
-  const guide = useAreaGuide(view, screen === 'hub' && !manual.open);
+  // The written guide of the area that is open, via ℹ️ or a picture's "Details" (components/AreaGuide.tsx).
+  const guide = useAreaGuide(view);
   const [decade, setDecade] = useState<string | null>(reloaded.decade ?? null);
   // A single year inside the chosen decade narrows the filter further.
   const [year, setYear] = useState<number | null>(reloaded.year ?? null);
@@ -883,7 +879,14 @@ export const GamingApp: React.FC = () => {
 
   // Attract mode: a minute without input in the hall and the covers run by.
   const [attract, setAttract] = useState(false);
-  const attractAllowed = screen === 'hub' && !manual.open && !selected && !inserting && !miniGame && !bossOpen && !hall && !rival && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
+  // An area's picture the first time it opens; the Hall of Fame and the boss have theirs too.
+  useEffect(() => {
+    if (screen !== 'hub' || posters.open) return;
+    if (bossOpen) posters.showOnce('boss');
+    else if (hall) posters.showOnce('hof');
+    else posters.showOnce(view);
+  }, [screen, view, hall, bossOpen, posters.open, posters.showOnce]); // eslint-disable-line react-hooks/exhaustive-deps
+  const attractAllowed = screen === 'hub' && !posters.busy && !selected && !inserting && !miniGame && !bossOpen && !hall && !rival && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
   useEffect(() => {
     if (!attractAllowed || reducedMotion) return;
     let id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
@@ -1496,9 +1499,8 @@ export const GamingApp: React.FC = () => {
                   setFeedbackOpen(true);
                 }}
                 onManual={() => {
-                  chip.play('select');
                   setSettingsOpen(false);
-                  manual.show();
+                  posters.openGallery();
                 }}
                 onChat={() => {
                   chip.play('select');
@@ -1772,8 +1774,30 @@ export const GamingApp: React.FC = () => {
         </div>
       )}
 
-      {screen === 'hub' && !emu && !manual.open && state.music && state.musicSource === 'spotify' && <SpotifyAsk />}
-      {screen === 'hub' && manual.open && <GameManual onClose={closeManual} />}
+      {screen === 'hub' && !emu && !posters.busy && state.music && state.musicSource === 'spotify' && <SpotifyAsk />}
+      {screen === 'hub' && posters.gallery && !posters.open && <PosterGallery onPick={posters.show} onClose={posters.closeGallery} />}
+      {screen === 'hub' && posters.open && (
+        <PosterView
+          id={posters.open}
+          onClose={() => {
+            chip.play('back');
+            posters.close();
+            posters.closeGallery();
+          }}
+          onGallery={posters.gallery ? () => posters.close() : undefined}
+          onDetails={
+            posters.open !== 'overview' && posters.open !== 'boss' && posters.open !== 'hof'
+              ? () => {
+                  const area = posters.open as View;
+                  posters.close();
+                  posters.closeGallery();
+                  if (view !== area) setView(area);
+                  guide.show(area);
+                }
+              : undefined
+          }
+        />
+      )}
 
       {fromDoor && <div className="white-in" aria-hidden="true" onAnimationEnd={() => setFromDoor(false)} />}
       <div className="crt-glass" aria-hidden="true" />
