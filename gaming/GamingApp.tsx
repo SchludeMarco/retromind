@@ -20,6 +20,8 @@ import { GuruChat } from './components/GuruChat';
 import { HelpBot } from '../components/HelpBot';
 import { AreaGuide, GuideButton, markGuideSeen, useAreaGuide } from './components/AreaGuide';
 import { GameManual, useGameManual } from './components/GameManual';
+import { BossFight, BossSprite, bossMaxCoins, Hearts } from './components/BossFight';
+import { bossOfDay, CONTINUE_COST, todaysBoss } from './lib/boss';
 import { GuestChat } from '../components/GuestChat';
 import { useChatOpenRequest, useChatUnread } from '../lib/chat';
 import { getInitials } from '../lib/initials';
@@ -28,7 +30,7 @@ import { Settings } from './components/Settings';
 import { Feedback } from './components/Feedback';
 import { MINI_GAMES, MiniGameDialog, MiniGameId } from './components/MiniGames';
 import { HallOfFame } from './components/HallOfFame';
-import { BoardGame, formatScore } from './lib/highscores';
+import { BoardGame, formatScore, MiniBoardGame } from './lib/highscores';
 import { RivalNews, markRivalsSeen, unseenRivalNews } from './lib/rivals';
 import { challengeMade, rivalNotesWanted } from '../lib/push';
 import { BackToZeitreise } from './components/BackToZeitreise';
@@ -172,7 +174,7 @@ export const GamingApp: React.FC = () => {
   // The daily streak is counted at start but announced once the player is in the hall.
   const [streakNews, setStreakNews] = useState<{ days: number; coins: number; forgiven: boolean } | null>(null);
   const onStreak = useCallback((days: number, coins: number, forgiven: boolean) => setStreakNews({ days, coins, forgiven }), []);
-  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult } = useArcadeState(onAchievement, onQuest, onEgg, onStreak);
+  const { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult, bossRound, bossContinue, bossFirst, bossEntered } = useArcadeState(onAchievement, onQuest, onEgg, onStreak);
   const cloud = useCloudSync();
   // The daily challenge (Marco, 2026-10-21): every finished mini game reports its result (minigames/shared Done).
   useEffect(() => {
@@ -265,8 +267,10 @@ export const GamingApp: React.FC = () => {
   });
   const [pickerOpen, setPickerOpen] = useState(false);
   const [miniGame, setMiniGame] = useState<MiniGameId | null>(null);
+  // The fight against the boss of the day (components/BossFight.tsx).
+  const [bossOpen, setBossOpen] = useState(false);
   // The Hall of Fame (all tables) and the note that someone passed you (lib/rivals.ts).
-  const [hall, setHall] = useState<{ start?: BoardGame } | null>(null);
+  const [hall, setHall] = useState<{ start?: MiniBoardGame } | null>(null);
   // The legend card to scroll to when the Legenden-Ecke opens from the catalog.
   const [legendFocus, setLegendFocus] = useState<string | null>(null);
   const [rival, setRival] = useState<RivalNews | null>(null);
@@ -454,6 +458,7 @@ export const GamingApp: React.FC = () => {
     onBack: () => {
       if (selected) closeDetail();
       else if (miniGame) setMiniGame(null);
+      else if (bossOpen) setBossOpen(false);
       else if (hall) setHall(null);
       else if (pickerOpen) setPickerOpen(false);
       else if (guruOpen) setGuruOpen(false);
@@ -808,6 +813,39 @@ export const GamingApp: React.FC = () => {
       </span>
     </button>
   );
+  // The boss of the day (Marco, 2026-11-28): under the daily challenge in "Selbst zocken".
+  const boss = useMemo(() => bossOfDay(), []);
+  const bossLog = todaysBoss(state.boss);
+  const bossCard = (
+    <button
+      className={`boss-card${bossLog.won ? ' won' : ''}${boss.super ? ' super' : ''}`}
+      onClick={() => {
+        chip.play('select');
+        countOpened('gaming', 'minigame', 'boss');
+        setBossOpen(true);
+      }}
+      data-nav
+    >
+      <BossSprite boss={boss} size={4} className="boss-card-sprite" />
+      <span className="boss-card-text">
+        <span className="pixel-font boss-card-kicker">
+          {boss.super ? tr('☠ SUNDAY FINAL BOSS', '☠ SONNTAGS-ENDBOSS') : tr('☠ BOSS OF THE DAY', '☠ ENDGEGNER DES TAGES')}
+        </span>
+        <span className="pixel-font boss-card-name">{boss.name}</span>
+        <span className="boss-card-line">
+          {bossLog.won
+            ? tr('DEFEATED! A new boss comes tomorrow.', 'BESIEGT! Morgen kommt ein neuer Boss.')
+            : bossLog.hearts <= 0
+              ? tr(`Out of hearts. Continue for ${CONTINUE_COST} coins?`, `Keine Herzen mehr. Continue für ${CONTINUE_COST} Coins?`)
+              : bossLog.round > 0
+                ? tr(`Round ${bossLog.round + 1} of ${boss.fight.length}. Finish him!`, `Runde ${bossLog.round + 1} von ${boss.fight.length}. Gib ihm den Rest!`)
+                : tr(`${boss.fight.length} rounds · up to +${bossMaxCoins(boss)} coins`, `${boss.fight.length} Runden · bis zu +${bossMaxCoins(boss)} Coins`)}{' '}
+          ►
+        </span>
+      </span>
+      {!bossLog.won && <Hearts left={bossLog.hearts} />}
+    </button>
+  );
   // A legend's game: the catalog entry, or its Wikipedia article as a game page.
   const legendGame = (l: Legend) => {
     const game = l.gameId
@@ -845,7 +883,7 @@ export const GamingApp: React.FC = () => {
 
   // Attract mode: a minute without input in the hall and the covers run by.
   const [attract, setAttract] = useState(false);
-  const attractAllowed = screen === 'hub' && !manual.open && !selected && !inserting && !miniGame && !hall && !rival && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
+  const attractAllowed = screen === 'hub' && !manual.open && !selected && !inserting && !miniGame && !bossOpen && !hall && !rival && !emu && !videoPlaying && !settingsOpen && !feedbackOpen && !guruOpen && !pickerOpen;
   useEffect(() => {
     if (!attractAllowed || reducedMotion) return;
     let id = window.setTimeout(() => setAttract(true), ATTRACT_AFTER_MS);
@@ -1059,6 +1097,7 @@ export const GamingApp: React.FC = () => {
               recent={state.recentPlays ?? []}
               reducedMotion={reducedMotion}
               challenge={challengeCard}
+              boss={bossCard}
               onPlay={play}
               onPickMini={pickMini}
               onHall={() => setHall({})}
@@ -1592,6 +1631,22 @@ export const GamingApp: React.FC = () => {
           onClose={() => {
             chip.play('back');
             setMiniGame(null);
+          }}
+        />
+      )}
+
+      {bossOpen && (
+        <BossFight
+          log={bossLog}
+          tokens={state.tokens}
+          reducedMotion={reducedMotion}
+          onRound={bossRound}
+          onContinue={bossContinue}
+          onFirst={bossFirst}
+          onEntered={bossEntered}
+          onClose={() => {
+            chip.play('back');
+            setBossOpen(false);
           }}
         />
       )}

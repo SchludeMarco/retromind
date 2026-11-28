@@ -6205,3 +6205,282 @@ button.pcard {
     animation: none;
   }
 }
+
+/* --- The boss of the day (components/BossFight.tsx, Marco 2026-11-28) --- */
+.boss-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 18px;
+  text-align: left;
+  color: var(--fg);
+  background:
+    repeating-linear-gradient(-45deg, rgba(185, 28, 28, 0.12) 0 10px, transparent 10px 20px),
+    rgba(20, 0, 0, 0.7);
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.45), inset 0 0 18px rgba(239, 68, 68, 0.15);
+  cursor: pointer;
+}
+.boss-card:hover,
+.boss-card:focus-visible {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.7), inset 0 0 18px rgba(239, 68, 68, 0.25);
+}
+.boss-card.super {
+  border-color: #facc15;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.5), inset 0 0 18px rgba(250, 204, 21, 0.15);
+}
+.boss-card.won {
+  border-color: var(--ok);
+  box-shadow: none;
+  opacity: 0.85;
+}
+.boss-card-sprite {
+  flex: none;
+  animation: boss-idle 1.6s steps(2) infinite;
+}
+.boss-card.won .boss-card-sprite {
+  animation: none;
+  filter: grayscale(1) brightness(0.6);
+  transform: rotate(90deg);
+}
+.boss-card-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.boss-card-kicker {
+  font-size: 9px;
+  color: #ef4444;
+}
+.boss-card.super .boss-card-kicker {
+  color: #facc15;
+}
+.boss-card.won .boss-card-kicker {
+  color: var(--ok);
+}
+.boss-card-name {
+  font-size: 12px;
+  color: var(--fg);
+}
+.boss-card-line {
+  font-size: 17px;
+  color: var(--dim);
+}
+.boss-hearts {
+  display: inline-flex;
+  gap: 3px;
+  flex: none;
+  font-size: 20px;
+  line-height: 1;
+}
+.boss-hearts .on {
+  color: #ef4444;
+  text-shadow: 0 0 6px rgba(239, 68, 68, 0.7);
+}
+.boss-hearts .off {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* The fight. */
+.boss-dialog {
+  width: min(560px, 100%);
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(185, 28, 28, 0.35), transparent 65%),
+    var(--bg);
+  border-color: #ef4444;
+}
+.boss-dialog.super {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(250, 204, 21, 0.25), rgba(185, 28, 28, 0.3) 45%, transparent 70%),
+    var(--bg);
+  border-color: #facc15;
+}
+.boss-kicker {
+  margin: 2px 40px 6px;
+  font-size: 10px;
+  color: #ef4444;
+  animation: boss-kicker-blink 1.2s steps(2) infinite;
+}
+.boss-dialog.super .boss-kicker {
+  color: #facc15;
+}
+.boss-name {
+  margin: 0 0 12px;
+  font-size: clamp(16px, 4.5vw, 22px);
+  color: #fff;
+  text-shadow: 3px 3px 0 #7f1d1d, 0 0 12px rgba(239, 68, 68, 0.8);
+}
+.boss-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 8px;
+}
+.boss-life {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+  height: 16px;
+  padding: 2px;
+  background: #1f0a0a;
+  border: 2px solid #fff;
+}
+.boss-life span {
+  flex: 1;
+  background: linear-gradient(180deg, #f87171, #b91c1c);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.boss-life span.gone {
+  opacity: 0.12;
+  transform: scaleY(0.4);
+}
+.boss-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0 6px;
+}
+.boss-sprite {
+  max-width: 60vw;
+  height: auto;
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0 0 14px rgba(239, 68, 68, 0.45));
+  animation: boss-idle 1.6s steps(2) infinite;
+}
+.boss-stage.fx-hit .boss-sprite {
+  animation: boss-hit 0.6s steps(2);
+}
+.boss-stage.fx-miss .boss-sprite {
+  animation: boss-laugh 0.7s ease-in-out;
+}
+.boss-stage.fx-down .boss-sprite,
+.boss-dialog:has(.boss-victory) .boss-sprite {
+  animation: boss-down 1.2s ease-in forwards;
+}
+.boss-says {
+  max-width: 420px;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 19px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+.boss-paid {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #facc15;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.7);
+  animation: boss-paid 0.8s ease-out;
+}
+.boss-rounds {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  text-align: left;
+}
+.boss-rounds li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 10px;
+  margin: 0 0 4px;
+  font-size: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.boss-rounds li .pixel-font {
+  font-size: 9px;
+}
+.boss-rounds li.done {
+  color: var(--ok);
+  opacity: 0.8;
+}
+.boss-rounds li.now {
+  border-color: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+.boss-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.boss-go {
+  background: #b91c1c;
+  color: #fff;
+}
+.boss-over {
+  margin: 4px 0;
+  font-size: 18px;
+  color: #ef4444;
+}
+.boss-rules {
+  margin: 0;
+  font-size: 17px;
+}
+.boss-round-title {
+  font-size: 10px;
+  color: #ef4444;
+  margin: 4px 0 10px;
+}
+.boss-goal {
+  font-size: 12px;
+  color: #facc15;
+}
+.mini-score.boss-goal-made {
+  color: var(--ok);
+}
+.boss-victory {
+  margin-top: 6px;
+}
+.boss-win {
+  font-size: 15px;
+  color: #facc15;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+  animation: boss-paid 0.8s ease-out;
+}
+@keyframes boss-idle {
+  50% { transform: translateY(-3px); }
+}
+@keyframes boss-hit {
+  0%, 100% { transform: translateX(0); filter: none; }
+  25% { transform: translateX(-8px); filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(6); }
+  75% { transform: translateX(8px); filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(6); }
+}
+@keyframes boss-laugh {
+  25% { transform: scale(1.08) rotate(-4deg); }
+  50% { transform: scale(1.12) rotate(4deg); }
+  75% { transform: scale(1.08) rotate(-3deg); }
+}
+@keyframes boss-down {
+  0% { transform: none; filter: none; }
+  30% { filter: brightness(2.5); }
+  100% { transform: translateY(14px) rotate(90deg) scale(0.85); filter: grayscale(1) brightness(0.5); }
+}
+@keyframes boss-paid {
+  0% { transform: scale(1.8); opacity: 0; }
+  60% { transform: scale(0.95); opacity: 1; }
+}
+@keyframes boss-kicker-blink {
+  50% { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boss-card-sprite,
+  .boss-sprite,
+  .boss-kicker,
+  .boss-paid,
+  .boss-win {
+    animation: none !important;
+  }
+}

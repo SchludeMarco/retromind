@@ -5,6 +5,7 @@ import { DEFAULT_TRACK, TrackId, isTrackId } from './tracks';
 import { ActiveQuest, activeQuests, freshLog, PRIZES, QuestEvent, QuestLog, record, Streak, visitStreak } from './quests';
 import { Egg, EGGS } from './eggs';
 import { CHALLENGE_REWARD, ChallengeLog, recordChallenge } from './challenge';
+import { bossOfDay, BossLog, continued, CONTINUE_COST, coinsFor, BOSS_COINS, playRound, todaysBoss } from './boss';
 import { BoardGame } from './highscores';
 import { tr } from '../../lib/i18n';
 
@@ -51,6 +52,8 @@ export interface ArcadeState {
   streak?: Streak;
   /** Today's daily challenge (challenge.ts): best result, made or not, wins in total. */
   challenge?: ChallengeLog;
+  /** Today's fight against the boss of the day (boss.ts), and the bosses beaten in total. */
+  boss?: BossLog;
   /** "Selbst zocken": last played first, "emu:<id>" or "mini:<id>" (components/PlayZone.tsx). */
   recentPlays?: string[];
 }
@@ -117,6 +120,10 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'digger', title: tr('Bargain Bin', 'Grabbelkiste'), text: tr('Dug around beyond the catalog. A true crate digger.', 'Abseits des Katalogs gewühlt. Echter Digger.') },
   { id: 'chill', title: tr('Game On', 'Selbst gezockt'), text: tr('Beat a minigame in the Play Zone. Nice!', 'Ein Minispiel in der Zock-Ecke geschafft. Stark!') },
   { id: 'legends', title: tr('Mythbuster', 'Mythenjäger'), text: tr('Uncovered 8 gaming legends. Nobody fools you anymore!', '8 Gaming-Legenden aufgedeckt. Dir macht keiner mehr was vor!') },
+  { id: 'boss-1', title: tr('Boss Slayer', 'Bossbezwinger'), text: tr('Beat your first boss of the day. The hall trembles!', 'Den ersten Endgegner des Tages besiegt. Die Halle bebt!') },
+  { id: 'boss-perfect', title: tr('Flawless', 'Makellos'), text: tr('Beat a boss without losing a single heart.', 'Einen Endgegner besiegt, ohne ein einziges Herz zu verlieren.') },
+  { id: 'boss-overlord', title: tr('Overthrown', 'Gestürzt'), text: tr('Beat the Arcade Overlord on a Sunday. The hall is yours!', 'Den Arcade-Overlord an einem Sonntag besiegt. Die Halle gehört dir!') },
+  { id: 'boss-7', title: tr('Boss Hunter', 'Boss-Jäger'), text: tr('Beat 7 bosses. They fear you now.', '7 Endgegner besiegt. Jetzt fürchten sie dich.') },
   { id: 'konami', title: '↑↑↓↓←→←→BA', text: tr('Entered the most famous cheat in the world. Old-school legend!', 'Den berühmtesten Cheat der Welt eingegeben. Oldschool-Legende!') },
 ];
 
@@ -173,7 +180,10 @@ export function useArcadeState(
     if (state.discovered.length >= 15) unlock('explorer-15');
     if (state.favorites.length >= 1) unlock('collector');
     if (state.completed.length >= 1) unlock('finisher');
-  }, [state.discovered.length, state.favorites.length, state.completed.length, unlock]);
+    if ((state.boss?.wins ?? 0) >= 1) unlock('boss-1');
+    if ((state.boss?.wins ?? 0) >= 7) unlock('boss-7');
+    if ((state.boss?.perfects ?? 0) >= 1) unlock('boss-perfect');
+  }, [state.discovered.length, state.favorites.length, state.completed.length, state.boss?.wins, state.boss?.perfects, unlock]);
 
   useEffect(() => {
     const score = scoreOf(state);
@@ -237,6 +247,50 @@ export function useArcadeState(
     return next.paid;
   }, []);
 
+  /** A finished round against the boss of the day: pays its Coins; tells whether the goal was hit. */
+  const bossRound = useCallback(
+    (score: number) => {
+      const boss = bossOfDay();
+      const log = todaysBoss(stateRef.current.boss);
+      if (log.won || log.hearts <= 0) return { hit: false, coins: 0, log };
+      const next = playRound(log, boss, score);
+      stateRef.current = { ...stateRef.current, boss: next.log, tokens: stateRef.current.tokens + next.coins };
+      setState((s) => ({ ...s, boss: next.log, tokens: s.tokens + next.coins }));
+      if (next.log.won && boss.super) unlock('boss-overlord');
+      return next;
+    },
+    [unlock]
+  );
+
+  /** A continue against the boss: all hearts back for Coins; false when they aren't enough. */
+  const bossContinue = useCallback(() => {
+    const s = stateRef.current;
+    const log = todaysBoss(s.boss);
+    if (s.tokens < CONTINUE_COST || log.won) return false;
+    const next = continued(log);
+    stateRef.current = { ...s, boss: next, tokens: s.tokens - CONTINUE_COST };
+    setState((x) => ({ ...x, boss: next, tokens: x.tokens - CONTINUE_COST }));
+    return true;
+  }, []);
+
+  /** First boss slayer in the hall today: checked once after the win, paid once. */
+  const bossFirst = useCallback((first: boolean) => {
+    const log = todaysBoss(stateRef.current.boss);
+    if (!log.won || log.firstChecked) return 0;
+    const coins = first ? coinsFor(bossOfDay(), BOSS_COINS.first) : 0;
+    const next = { ...log, firstChecked: true, first, coins: log.coins + coins };
+    stateRef.current = { ...stateRef.current, boss: next, tokens: stateRef.current.tokens + coins };
+    setState((s) => ({ ...s, boss: next, tokens: s.tokens + coins }));
+    return coins;
+  }, []);
+
+  /** Entered on today's table of boss slayers. */
+  const bossEntered = useCallback(() => {
+    const next = { ...todaysBoss(stateRef.current.boss), entered: true };
+    stateRef.current = { ...stateRef.current, boss: next };
+    setState((s) => ({ ...s, boss: { ...todaysBoss(s.boss), entered: true } }));
+  }, []);
+
   const discover = useCallback((game: Game) => {
     setState((s) =>
       s.discovered.includes(game.id)
@@ -258,5 +312,5 @@ export function useArcadeState(
     setState((s) => ({ ...s, [key]: value }));
   }, []);
 
-  return { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult };
+  return { state, discover, toggleIn, unlock, set, track, buy, findEgg, earn, challengeResult, bossRound, bossContinue, bossFirst, bossEntered };
 }

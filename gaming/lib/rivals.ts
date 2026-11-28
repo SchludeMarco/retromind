@@ -4,10 +4,10 @@
 // comes as a push message, even with the app closed, as the notification
 // settings allow (lib/push.ts, topic "rivals").
 
-import { BoardGame } from './highscores';
+import { MiniBoardGame } from './highscores';
 
 export interface RivalNews {
-  game: BoardGame;
+  game: MiniBoardGame;
   /** The rival's initials. */
   name: string;
   score: number;
@@ -48,5 +48,6 @@ export async function fetchRivalNews(): Promise<RivalNews[]> {
 export async function unseenRivalNews(): Promise<RivalNews[]> {
   const news = await fetchRivalNews();
   const since = seenAt();
-  return since ? news.filter((n) => n.at > since) : [];
+  // The boss table sends no news (api/highscores.js); skip any anyway, it isn't a mini game.
+  return since ? news.filter((n) => n.at > since && (n.game as string) !== 'boss') : [];
 }

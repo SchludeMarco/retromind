@@ -1,5 +1,5 @@
 import { tr } from '../../lib/i18n';
-import { BoardGame, lowerIsBetter } from './highscores';
+import { BoardGame, lowerIsBetter, MiniBoardGame } from './highscores';
 import { duelGame, seeded, today } from './quests';
 
 // The daily challenge (Marco, 2026-10-21: "nobody has much time anymore"):
@@ -8,7 +8,7 @@ import { duelGame, seeded, today } from './quests';
 // stand on their own table (api/highscores.js `day`) until midnight.
 
 export interface Challenge {
-  game: BoardGame;
+  game: MiniBoardGame;
   /** Points, rounds or meters to reach, or at most this many moves. */
   goal: number;
   /** About how long it takes, shown on the card ("30 s", "about 1 min"). */

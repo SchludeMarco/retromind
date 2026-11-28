@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Endgegner des Tages': {
+    title: 'Boss of the day',
+    text: 'Under “Play”, right below the daily challenge, a boss now waits every day: the Glitch King, Mecha-Kong, the Pixel Witch or Dr. Bit, and on Sundays the Arcade Overlord. You beat him in three rounds, each a Blitz game with a hard goal, and you have three hearts; miss a goal and a heart is gone. The boss laughs, rants, shakes when hit and topples over at the end. Out of hearts, “Continue?” gives them all back for 10 coins. Coins: +5 per round, +50 for the win, +25 without losing a heart, +15 if you’re the first in the hall, all doubled on Sundays (four rounds). Plus a list of today’s boss slayers and four new trophies.',
+  },
   'Coins immer im Blick am Preis-Tresen': {
     title: 'Your coins always in view at the prize counter',
     text: 'When you scroll down the prize counter, the top now always shows how many coins you have left and how many prizes you’ve collected. After every purchase the number jumps to the new amount right away.',

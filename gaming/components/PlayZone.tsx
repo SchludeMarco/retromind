@@ -63,10 +63,12 @@ export const PlayZone: React.FC<{
   reducedMotion: boolean;
   /** Today's daily challenge card, first in the Lightning Challenges. */
   challenge: React.ReactNode;
+  /** The boss of the day, right under the challenge (components/BossFight.tsx). */
+  boss?: React.ReactNode;
   onPlay: (launch: EmuLaunch, id?: string) => void;
   onPickMini: (id: MiniGameId) => void;
   onHall: () => void;
-}> = ({ recent, reducedMotion, challenge, onPlay, onPickMini, onHall }) => {
+}> = ({ recent, reducedMotion, challenge, boss, onPlay, onPickMini, onHall }) => {
   const bests = loadBests();
   const quick = MINI_GAMES.filter((g) => !isBlitz(g.id));
   const blitz = MINI_GAMES.filter((g) => isBlitz(g.id));
@@ -131,6 +133,7 @@ export const PlayZone: React.FC<{
         {challenge}
         <ChallengeBell />
       </div>
+      {boss}
 
       {/* The 30-second games first, as "Lightning Challenges" /
           "Blitz-Challenges" with a flashing bolt (Marco, 2026-11-27). */}

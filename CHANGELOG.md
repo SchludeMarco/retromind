@@ -7,6 +7,16 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Endgegner des Tages** (2026-11-28, PR #324): Unter „Zocken“ wartet jetzt
+  direkt unter der Tages-Challenge jeden Tag ein Endgegner: der
+  Glitch-König, Mecha-Kong, die Pixel-Hexe oder Dr. Bit, sonntags der
+  Arcade-Overlord. Man besiegt ihn in drei Runden, jede ein Blitz-Spiel mit
+  hartem Ziel, und hat drei Herzen; verfehlt man ein Ziel, ist ein Herz weg.
+  Der Boss lacht, schimpft, wackelt bei Treffern und kippt am Ende um. Sind
+  alle Herzen weg, gibt „Continue?“ für 10 Coins alle Herzen zurück. Coins:
+  +5 pro Runde, +50 für den Sieg, +25 ohne Herz verloren, +15 als Erste:r
+  in der Halle, sonntags alles doppelt (vier Runden). Dazu eine Liste
+  „Boss-Bezwinger heute“ und vier neue Trophäen.
 - **Coins immer im Blick am Preis-Tresen** (2026-11-28, PR #323): Wer am
   Tresen nach unten scrollt, sieht oben jetzt immer, wie viele Coins noch
   übrig sind und wie viele Preise schon gesammelt sind. Nach jedem Kauf

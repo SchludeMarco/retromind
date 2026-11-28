@@ -33,7 +33,12 @@ export type BoardGame =
   | 'blitzyear'
   | 'blitzpixel'
   | 'blitzcolor'
-  | 'blitzcombo';
+  | 'blitzcombo'
+  // The boss of the day (lib/boss.ts): only the day's table matters.
+  | 'boss';
+/** The tables of the mini games (everything but the boss). */
+export type MiniBoardGame = Exclude<BoardGame, 'boss'>;
+
 export interface Entry {
   name: string;
   score: number;
@@ -70,10 +75,11 @@ const UNIT: Record<BoardGame, 'points' | 'rounds' | 'right' | 'moves' | 'time' |
   blitzpixel: 'points',
   blitzcolor: 'points',
   blitzcombo: 'points',
+  boss: 'points',
 };
 
 /** Every game with a table, in the order of the Zock-Ecke. */
-export const BOARD_GAMES: BoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear', 'blitzpixel', 'blitzcolor', 'blitzcombo'];
+export const BOARD_GAMES: MiniBoardGame[] = ['senso', 'memory', 'puzzle', 'sudoku', 'blocks', 'pinball', 'pacman', 'quiz', 'breakout', 'snake', 'invaders', 'poker', 'blackjack', 'solitaire', 'asteroids', 'frogger', 'copter', 'merge', 'missile', 'blitzbuttons', 'blitzconsole', 'blitzyear', 'blitzpixel', 'blitzcolor', 'blitzcombo'];
 
 export const lowerIsBetter = (game: BoardGame) => UNIT[game] === 'moves' || UNIT[game] === 'time';
 
@@ -196,7 +202,7 @@ export async function submitScore(game: BoardGame, name: string, score: number):
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // This week's duel game also goes on the weekly table, today's challenge game on the day's.
-      body: JSON.stringify({ game, name, score, week: isDuelGame(game) ? weekOf() : undefined, day: isChallengeGame(game) ? today() : undefined }),
+      body: JSON.stringify({ game, name, score, week: isDuelGame(game) ? weekOf() : undefined, day: isChallengeGame(game) || game === 'boss' ? today() : undefined }),
     });
     const data = await res.json();
     if (data.ready) board = data.scores;
