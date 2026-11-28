@@ -7,6 +7,13 @@ Eintrag in Alltagssprache: was sich für Nutzer:innen ändert, nicht wie.
 
 ## Unreleased
 
+- **Deine drei Buchstaben direkt am Eingang** (2026-11-28, PR #327): Wer
+  zum ersten Mal vor der Gaming-Halle steht und noch kein Kürzel hat, legt
+  seine drei Buchstaben jetzt gleich an der Tür fest, wie an den alten
+  Highscore-Tafeln. Erst dann geht die Tür auf. Die Buchstaben bleiben auf
+  dem Gerät und mit Google-Anmeldung im Konto, also auch auf anderen
+  Geräten. Wer schon bekannt ist, wird nicht gefragt, sondern begrüßt:
+  „Willkommen zurück, LIQ!“ an der Tür und „Hi LIQ!“ in der Halle.
 - **Spotify-Hinweis schon vor der Tür** (2026-11-28, PR #326): Auf dem
   Handy laufen ganze Songs über die eigene Spotify-App. Bisher kam der
   Hinweis „Spotify-App öffnen“ erst in der Halle, die dann mit kurzen

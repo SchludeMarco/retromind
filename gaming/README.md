@@ -75,6 +75,13 @@ zeigen dürfen.
 
 ### Am Eingang
 
+- **Drei Buchstaben an der Tür** – ohne Kürzel (`lib/initials.ts`) steht vor
+  der Tür „Neuer Spieler! Deine 3 Buchstaben“ mit der Initialen-Auswahl, die
+  Tür bleibt bis dahin zu (wackelt beim Antippen). Angemeldet wird erst
+  gewartet, bis Google die Buchstaben geliefert hat. Bekannte Spieler sehen
+  „Willkommen zurück, LIQ!“ und in der Halle „Hi LIQ!“ (mit dem Tagesbonus
+  oder als eigene Begrüßung) (`DoorInitials` in
+  [`components/Entrance.tsx`](components/Entrance.tsx)).
 - **Spotify-Prüfung vor der Tür** – auf Handys mit Spotify-Premium-Anmeldung
   (ganze Songs über die eigene Spotify-App, `lib/spotifyConnect.ts`) prüft
   der Eingang, ob die App als Gerät da ist; sonst ein grüner Knopf „Erst die

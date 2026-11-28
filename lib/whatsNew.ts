@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Deine drei Buchstaben direkt am Eingang': {
+    title: 'Your three initials right at the entrance',
+    text: 'The first time you stand in front of the Gaming arcade without initials, you now set your three letters right at the door, like on the old high score tables. Only then does the door open. The letters stay on this device and, signed in with Google, in your account, so on your other devices too. Known players aren’t asked, they’re greeted: “Welcome back, LIQ!” at the door and “Hi LIQ!” inside the hall.',
+  },
   'Spotify-Hinweis schon vor der Tür': {
     title: 'The Spotify hint now comes at the door',
     text: 'On phones, full songs play through your own Spotify app. Until now the “open Spotify” hint only came inside the hall, which then started with short previews. Now the entrance already checks whether the app is ready: if not, a green button opens it. When you come back it says “Spotify ready: full songs inside”, and the hall starts right away with full tracks. If your Spotify sign-in has expired, the button offers to sign in again.',
