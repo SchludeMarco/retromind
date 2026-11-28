@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { getMusicVolume, onMusicVolume, setMusicVolume } from './musicVolume';
 import { createSpotifyEmbedController, SpotifyEmbedController } from './spotifyEmbed';
-import { connectOff, createConnectController } from './spotifyConnect';
+import { connectOff, createConnectController, findSpotifyApp } from './spotifyConnect';
 
 // Spotify's own browser player (Web Playback SDK) for visitors signed in with
 // Spotify Premium (Marco, 2026-10-07: "Die Musik sollte langsam immer lauter
@@ -142,6 +142,16 @@ function sdkSupported(): boolean {
   const ua = navigator.userAgent;
   const iOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
   return !iOS && !/Android/i.test(ua);
+}
+
+/**
+ * On phones with a Premium login: is the Spotify app there for full songs?
+ * null where it doesn't matter (no login, or a computer with the browser player).
+ */
+export async function checkSpotifyApp(): Promise<'ready' | 'missing' | 'login' | null> {
+  const source = tokenSource;
+  if (!source || sdkSupported()) return null;
+  return findSpotifyApp(source, tokenScope);
 }
 
 /**

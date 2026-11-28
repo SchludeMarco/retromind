@@ -73,6 +73,15 @@ zeigen dürfen.
   kommen mit ([`lib/cameFrom.ts`](lib/cameFrom.ts),
   [`components/BackToZeitreise.tsx`](components/BackToZeitreise.tsx)).
 
+### Am Eingang
+
+- **Spotify-Prüfung vor der Tür** – auf Handys mit Spotify-Premium-Anmeldung
+  (ganze Songs über die eigene Spotify-App, `lib/spotifyConnect.ts`) prüft
+  der Eingang, ob die App als Gerät da ist; sonst ein grüner Knopf „Erst die
+  Spotify-App öffnen“, nach der Rückkehr „Spotify bereit“. Abgelaufene
+  Anmeldung → Knopf zur neuen Anmeldung (`SpotifyAppCheck` in
+  [`components/Entrance.tsx`](components/Entrance.tsx)).
+
 ### In der Halle
 
 - **Endgegner des Tages** – unter der Tages-Challenge in „Zocken“ jeden Tag

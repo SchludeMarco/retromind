@@ -32,6 +32,10 @@ const HIDDEN_TITLES = /^(Dokumentation|Entwicklung)\b/;
 // without a translation here appear in German in the English UI, marked
 // "German only".
 const EN: Record<string, { title: string; text: string }> = {
+  'Spotify-Hinweis schon vor der Tür': {
+    title: 'The Spotify hint now comes at the door',
+    text: 'On phones, full songs play through your own Spotify app. Until now the “open Spotify” hint only came inside the hall, which then started with short previews. Now the entrance already checks whether the app is ready: if not, a green button opens it. When you come back it says “Spotify ready: full songs inside”, and the hall starts right away with full tracks. If your Spotify sign-in has expired, the button offers to sign in again.',
+  },
   'Bild-Anleitungen statt Anleitungsheft': {
     title: 'Picture guides instead of the booklet',
     text: 'The Gaming arcade now explains itself with ten big pictures in the style of an 80s instruction booklet. The first time you enter, an overview of the whole app appears, and the first time you visit an area, its own picture: catalog, search, play, boss, quests & prize counter, stash, trophies, legends and Hall of Fame. Tap a picture to enlarge it, “Details” opens the written guide as before. All pictures are always there via the handle on the right edge under “📖 Guides”. The flip-through booklet is gone in return.',
